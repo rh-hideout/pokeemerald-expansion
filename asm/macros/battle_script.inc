@@ -688,10 +688,6 @@
 	.byte B_SCR_OP_TRANSFORMDATAEXECUTION
 	.endm
 
-	.macro setsubstitute
-	.byte B_SCR_OP_SETSUBSTITUTE
-	.endm
-
 	.macro setcalledmove
 	.byte B_SCR_OP_SETCALLEDMOVE
 	.endm
@@ -715,11 +711,6 @@
 	.byte \battler
 	.byte \volatile
 	.byte \value
-	.endm
-
-	.macro trysetperishsong failInstr:req
-	.byte B_SCR_OP_TRYSETPERISHSONG
-	.4byte \failInstr
 	.endm
 
 	.macro jumpifconfusedandstatmaxed stat:req, jumpInstr:req
@@ -1334,10 +1325,6 @@
 	.macro tryillusionoff battler:req
 	callnative BS_TryIllusionOff
 	.byte \battler
-	.endm
-
-	.macro seteffectbattlerfromspeedorder
-	callnative BS_SetEffectBattlerFromSpeedOrder
 	.endm
 
 	.macro updatenick

@@ -460,11 +460,9 @@ static void Cmd_updatestatusicon(void);
 static void Cmd_setmist(void);
 static void Cmd_setfocusenergy(void);
 static void Cmd_transformdataexecution(void);
-static void Cmd_setsubstitute(void);
 static void Cmd_setcalledmove(void);
 static void Cmd_healpartystatus(void);
 static void Cmd_setvolatile(void);
-static void Cmd_trysetperishsong(void);
 static void Cmd_jumpifconfusedandstatmaxed(void);
 static void Cmd_setembargo(void);
 static void Cmd_jumpifnopursuitswitchdmg(void);
@@ -616,11 +614,9 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_SETMIST]                               = Cmd_setmist,
     [B_SCR_OP_SETFOCUSENERGY]                        = Cmd_setfocusenergy,
     [B_SCR_OP_TRANSFORMDATAEXECUTION]                = Cmd_transformdataexecution,
-    [B_SCR_OP_SETSUBSTITUTE]                         = Cmd_setsubstitute,
     [B_SCR_OP_SETCALLEDMOVE]                         = Cmd_setcalledmove,
     [B_SCR_OP_HEALPARTYSTATUS]                       = Cmd_healpartystatus,
     [B_SCR_OP_SETVOLATILE]                           = Cmd_setvolatile,
-    [B_SCR_OP_TRYSETPERISHSONG]                      = Cmd_trysetperishsong,
     [B_SCR_OP_JUMPIFCONFUSEDANDSTATMAXED]            = Cmd_jumpifconfusedandstatmaxed,
     [B_SCR_OP_SETEMBARGO]                            = Cmd_setembargo,
     [B_SCR_OP_JUMPIFNOPURSUITSWITCHDMG]              = Cmd_jumpifnopursuitswitchdmg,
@@ -745,6 +741,8 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_UNUSED_91]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_92]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_93]                             = Cmd_dummy,
+    [B_SCR_OP_UNUSED_94]                             = Cmd_dummy,
+    [B_SCR_OP_UNUSED_95]                             = Cmd_dummy,
 
     [B_SCR_OP_CALLNATIVE]                            = Cmd_callnative,
 };
@@ -5073,41 +5071,6 @@ static void Cmd_transformdataexecution(void)
     }
 }
 
-static void Cmd_setsubstitute(void)
-{
-    CMD_ARGS();
-
-    u32 factor = GetMoveEffect(gCurrentMove) == EFFECT_SHED_TAIL ? 2 : 4;
-    s32 hp = 0;
-
-    if (factor == 2)
-        hp = (GetNonDynamaxMaxHP(gBattlerAttacker)+1) / factor; // shed tail rounds up
-    else
-        hp = GetNonDynamaxMaxHP(gBattlerAttacker) / factor; // one bit value will only work for Pokémon which max hp can go to 1020(which is more than possible in games)
-
-    if (hp == 0)
-        hp = 1;
-
-    if (gBattleMons[gBattlerAttacker].hp <= hp)
-    {
-        hp = 0;
-        // gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SUBSTITUTE_FAILED;
-    }
-    else
-    {
-        gBattleMons[gBattlerAttacker].volatiles.substitute = TRUE;
-        gBattleMons[gBattlerAttacker].volatiles.wrapped = FALSE;
-        if (factor == 2)
-            gBattleMons[gBattlerAttacker].volatiles.substituteHP = hp / 2;
-        else
-            gBattleMons[gBattlerAttacker].volatiles.substituteHP = hp;
-        // gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SET_SUBSTITUTE;
-    }
-
-    gBattleStruct->passiveHpUpdate[gBattlerAttacker] = hp;
-    gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
 static void Cmd_setcalledmove(void)
 {
     CMD_ARGS();
@@ -5219,34 +5182,6 @@ static void Cmd_setvolatile(void)
 
     SetMonVolatile(GetBattlerForBattleScript(cmd->battler), cmd->_volatile, cmd->value);
     gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
-static void Cmd_trysetperishsong(void)
-{
-    CMD_ARGS(const u8 *failInstr);
-
-    s32 notAffectedCount = 0;
-
-    for (enum BattlerId i = 0; i < gBattlersCount; i++)
-    {
-        if (gBattleMons[i].volatiles.perishSong
-            || IsBattlerUnaffectedByMove(i)
-            || BlocksPrankster(gCurrentMove, gBattlerAttacker, i, TRUE)
-            || gBattleMons[i].volatiles.semiInvulnerable == STATE_COMMANDER)
-        {
-            notAffectedCount++;
-        }
-        else
-        {
-            gBattleMons[i].volatiles.perishSong = TRUE;
-            gBattleMons[i].volatiles.perishSongTimer = 3;
-        }
-    }
-
-    if (notAffectedCount == gBattlersCount)
-        gBattlescriptCurrInstr = cmd->failInstr;
-    else
-        gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
 static void Cmd_jumpifconfusedandstatmaxed(void)
@@ -8114,13 +8049,6 @@ void BS_TryIllusionOff(void)
     enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
     if (TryClearIllusion(battler, GetBattlerAbility(battler)))
         return;
-    gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
-void BS_SetEffectBattlerFromSpeedOrder(void)
-{
-    NATIVE_ARGS();
-    gEffectBattler = gBattlersBySpeed[gBattlerOrderIndex];
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 

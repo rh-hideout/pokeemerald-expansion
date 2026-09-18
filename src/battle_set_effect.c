@@ -103,7 +103,11 @@ static void HandleSetEffectNonVolatile(struct BattleCalcValues *cv, struct SetEf
 
     se->effectFailed = isSafeguardProtected || !CanSetNonVolatile(cv, se, CHECK_TRIGGER);
 
-    if (cv->onlyChecking) return;
+    if (cv->onlyChecking)
+    {
+        gBattleStruct->battlerState[se->effectBattler].sleepClauseEffectExempt = exemptSleepClause;
+        return;
+    }
 
     if (se->effectFailed)
     {
@@ -147,7 +151,7 @@ static void HandleSetEffectConfusion(struct BattleCalcValues *cv, struct SetEffe
     else if (IsSafeguardProtected(cv->battlerAtk, se->effectBattler, atkAbility))
     {
         SetEffectFailAndCheckReturn;
-        PrepareStringBattleWithWait(STRINGID_MISTYTERRAINPREVENTS, se->effectBattler);
+        PrepareStringBattleWithWait(STRINGID_PKMNUSEDSAFEGUARD, se->effectBattler);
         BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
     }
     else if (!cv->onlyChecking)
@@ -285,6 +289,21 @@ static void HandleSetEffectPayday(struct BattleCalcValues *cv, struct SetEffect 
     }
 }
 
+static void SetWrapTurns(enum BattlerId battler, enum HoldEffect holdEffect)
+{
+    u32 normalWrapTurns = B_WRAP_TURNS - 2; // 5 turns
+    if (holdEffect == HOLD_EFFECT_GRIP_CLAW)
+    {
+        gBattleMons[battler].volatiles.wrapTurns = GetConfig(B_BINDING_TURNS) >= GEN_5 ? B_WRAP_TURNS : normalWrapTurns;
+        gBattleMons[battler].volatiles.wrappedBindingBand = FALSE;
+    }
+    else
+    {
+        gBattleMons[battler].volatiles.wrapTurns = GetConfig(B_BINDING_TURNS) >= GEN_5 ? RandomUniform(RNG_WRAP, 4, normalWrapTurns) : RandomUniform(RNG_WRAP, 2, normalWrapTurns);
+        gBattleMons[battler].volatiles.wrappedBindingBand = holdEffect == HOLD_EFFECT_BINDING_BAND;
+    }
+}
+
 static void HandleSetEffectWrap(struct BattleCalcValues *cv, struct SetEffect *se)
 {
     if (gBattleMons[se->effectBattler].volatiles.wrapped)
@@ -293,7 +312,7 @@ static void HandleSetEffectWrap(struct BattleCalcValues *cv, struct SetEffect *s
     }
     else
     {
-        SetWrapTurns(se->effectBattler, GetBattlerHoldEffect(cv->battlerAtk));
+        SetWrapTurns(se->effectBattler, cv->holdEffects[cv->battlerAtk]);
         gBattleMons[se->effectBattler].volatiles.wrapped = TRUE;
         gBattleMons[se->effectBattler].volatiles.wrappedMove = cv->move;
         gBattleMons[se->effectBattler].volatiles.wrappedBy = cv->battlerAtk;
@@ -539,14 +558,6 @@ static void HandleSetEffectDoNothing(struct BattleCalcValues *cv, struct SetEffe
 
     PrepareStringBattleWithWait(STRINGID_BUTNOTHINGHAPPENED, se->effectBattler);
     BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
-}
-
-static void HandleSetEffectHoldHands(struct BattleCalcValues *cv, struct SetEffect *se)
-{
-    if (cv->battlerAtk == se->effectBattler)
-    {
-        SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
-    }
 }
 
 static void HandleSetEffectCelebrate(struct BattleCalcValues *cv, struct SetEffect *se)
@@ -884,7 +895,7 @@ static void HandleSetEffectLeechSeed(struct BattleCalcValues *cv, struct SetEffe
 {
     if (gBattleMons[se->effectBattler].volatiles.leechSeed)
     {
-        SetEffectFail(BattleScript_EffBattlerAvoidedAttack, cv->isStatusMove);
+        SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
     }
     else if (IS_BATTLER_OF_TYPE(se->effectBattler, TYPE_GRASS))
     {
@@ -1177,7 +1188,8 @@ static void HandleSetEffectSwallow(struct BattleCalcValues *cv, struct SetEffect
 
 static void HandleSetEffectPurify(struct BattleCalcValues *cv, struct SetEffect *se)
 {
-    if (!(gBattleMons[se->effectBattler].status1 & STATUS1_ANY))
+    if (!(gBattleMons[se->effectBattler].status1 & STATUS1_ANY)
+     || gBattleMons[cv->battlerAtk].volatiles.healBlockTimer)
     {
         SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
     }
@@ -1190,6 +1202,11 @@ static void HandleSetEffectPurify(struct BattleCalcValues *cv, struct SetEffect 
             SetHealAmount(cv->battlerAtk, healAmount);
             BattleScriptPushAndSet(se->script, BattleScript_Purify);
         }
+        else
+        {
+            BattleScriptPushAndSet(se->script, BattleScript_PurifyCureStatus);
+        }
+
     }
 }
 
@@ -1792,8 +1809,8 @@ static void SetWrapForOpposingSide(struct BattleCalcValues *cv, struct SetEffect
         {
             gBattleMons[battler].volatiles.wrapped = TRUE;
             SetWrapTurns(battler, cv->holdEffects[cv->battlerAtk]);
-            // The Wrap effect does not expire when the user switches, so here's some cheese.
-            gBattleMons[battler].volatiles.wrappedBy = se->effectBattler;
+            // The Wrap effect does not expire when attacker switches out so set it to self
+            gBattleMons[battler].volatiles.wrappedBy = battler;
             gBattleMons[battler].volatiles.wrappedMove = move;
         }
     }
@@ -2344,6 +2361,7 @@ static void HandleSetEffectSubstitute(struct BattleCalcValues *cv, struct SetEff
 {
     u32 factor = 4;
     u32 hp = GetNonDynamaxMaxHP(se->effectBattler) / factor; // one bit value will only work for Pokémon which max hp can go to 1020(which is more than possible in games)
+    gBattleScripting.savedStringId = STRINGID_PKMNMADESUBSTITUTE;
     TrySubstitute(cv, se, max(hp, 1), factor, BattleScript_MoveEffectSubstitute);
 }
 
@@ -2361,7 +2379,8 @@ static void HandleSetEffectShedTail(struct BattleCalcValues *cv, struct SetEffec
     }
     else
     {
-        TrySubstitute(cv, se, max(hp, 1), factor, BattleScript_MoveEffectShedTail);
+        gBattleScripting.savedStringId = STRINGID_SHEDITSTAIL;
+        TrySubstitute(cv, se, max(hp, 1), factor, BattleScript_MoveEffectSubstitute);
     }
 }
 
@@ -2947,7 +2966,7 @@ static void HandleSetEffectTypeHalver(struct BattleCalcValues *cv, struct SetEff
 
     bool32 shouldSet = GetConfig(B_SPORT_TURNS) >= GEN_6
                        ? !(gFieldStatuses & halver.statusField)
-                       : !GetBattlerVolatile(se->effectBattler, halver.voaltileStatus);
+                       : !GetBattlerVolatile(se->effectBattler, halver.volatileStatis);
 
     if (gBattleStruct->isSkyBattle || !shouldSet)
     {
@@ -2964,7 +2983,7 @@ static void HandleSetEffectTypeHalver(struct BattleCalcValues *cv, struct SetEff
         }
         else
         {
-            TryEffectVolatile(cv, se, halver.voaltileStatus, TRUE, halver.effectString);
+            TryEffectVolatile(cv, se, halver.volatileStatis, TRUE, halver.effectString);
             gBattlescriptCurrInstr = se->script;
         }
     }
@@ -3226,18 +3245,19 @@ static void HandleSetEffectRolePlay(struct BattleCalcValues *cv, struct SetEffec
     }
 }
 
-#define BATTLE_TYPE_NOT_REGULAR (BATTLE_TYPE_LINK | BATTLE_TYPE_EREADER_TRAINER | BATTLE_TYPE_FRONTIER | BATTLE_TYPE_SECRET_BASE | BATTLE_TYPE_RECORDED_LINK)
-#define BATTLE_TYPE_TRAINER_CHECK_CONFIG (B_TRAINERS_KNOCK_OFF_ITEMS == TRUE ? BATTLE_TYPE_TRAINER : 0)
 static void HandleSetEffectTrick(struct BattleCalcValues *cv, struct SetEffect *se)
 {
     enum Item oldItemAtk = gBattleMons[cv->battlerAtk].item;
     enum Item oldItemDef = gBattleMons[se->effectBattler].item;
 
+    bool32 notRegularBattleType = (BATTLE_TYPE_LINK | BATTLE_TYPE_EREADER_TRAINER | BATTLE_TYPE_FRONTIER | BATTLE_TYPE_SECRET_BASE | BATTLE_TYPE_RECORDED_LINK);
+    bool32 battleTypeTrainer = (B_TRAINERS_KNOCK_OFF_ITEMS == TRUE ? BATTLE_TYPE_TRAINER : 0);
+
     bool32 opponentCantSwapItems = (gBattleTypeFlags & BATTLE_TYPE_TRAINER_HILL)
-                                || (!IsOnPlayerSide(cv->battlerAtk) && !(gBattleTypeFlags & (BATTLE_TYPE_NOT_REGULAR | BATTLE_TYPE_TRAINER_CHECK_CONFIG)));
+                                || (!IsOnPlayerSide(cv->battlerAtk) && !(gBattleTypeFlags & (notRegularBattleType | battleTypeTrainer)));
 
     bool32 isKnockedOff = (GetBattlerPartyState(cv->battlerAtk)->isKnockedOff || GetBattlerPartyState(se->effectBattler)->isKnockedOff);
-    bool32 cantSwapIfKnockedOff = !(gBattleTypeFlags & BATTLE_TYPE_NOT_REGULAR) && isKnockedOff;
+    bool32 cantSwapIfKnockedOff = !(gBattleTypeFlags & battleTypeTrainer) && isKnockedOff;
 
     if (opponentCantSwapItems || cantSwapIfKnockedOff)
     {
@@ -3680,7 +3700,7 @@ static bool32 DoesRoarFail(enum BattlerId battlerAtk, enum BattlerId effectBattl
 
 static void HandleSetEffectRoar(struct BattleCalcValues *cv, struct SetEffect *se)
 {
-    if (DoesRoarFail(cv->battlerAtk, se->effectBattler) || cv->abilities[se->effectBattler] == ABILITY_GUARD_DOG) // TODO: There is no ability popup?
+    if (DoesRoarFail(cv->battlerAtk, se->effectBattler) || cv->abilities[se->effectBattler] == ABILITY_GUARD_DOG)
     {
         SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
     }
@@ -4199,7 +4219,6 @@ static void (*const sSetEffectHandlers[])(struct BattleCalcValues *cv, struct Se
     [MOVE_EFFECT_FEINT] = HandleSetEffectFeint,
     [MOVE_EFFECT_HAPPY_HOUR] = HandleSetEffectHappyHour,
     [MOVE_EFFECT_DO_NOTHING] = HandleSetEffectDoNothing,
-    [MOVE_EFFECT_HOLD_HANDS] = HandleSetEffectHoldHands,
     [MOVE_EFFECT_CELEBRATE] = HandleSetEffectCelebrate,
     [MOVE_EFFECT_CORE_ENFORCER] = HandleSetEffectCoreEnforcer,
     [MOVE_EFFECT_THROAT_CHOP] = HandleSetEffectThroatChop,

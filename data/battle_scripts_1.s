@@ -83,7 +83,7 @@ BattleScript_TeraFormChange::
 BattleScript_StatChangeHalfHp::
 	healthbarupdate BS_ATTACKER
 	datahpupdate BS_ATTACKER, ASSURANCE_IGNORE
-	goto BattleScript_MoveEnd
+    return
 
 BattleScript_PlayMoveAnim::
     playmoveanimation MOVE_NONE
@@ -547,14 +547,7 @@ BattleScript_MoveEffectSetStatus::
 BattleScript_MoveEffectSubstitute::
 	healthbarupdate BS_EFFECT_BATTLER
 	datahpupdate BS_EFFECT_BATTLER, ASSURANCE_IGNORE
-	printstring STRINGID_PKMNMADESUBSTITUTE
-	waitmessage B_WAIT_TIME_LONG
-	return
-
-BattleScript_MoveEffectShedTail::
-	healthbarupdate BS_EFFECT_BATTLER
-	datahpupdate BS_EFFECT_BATTLER, ASSURANCE_IGNORE
-	printstring STRINGID_SHEDITSTAIL
+	printsavedstring
 	waitmessage B_WAIT_TIME_LONG
 	return
 
@@ -583,6 +576,11 @@ BattleScript_Purify::
 	datahpupdate BS_ATTACKER, ASSURANCE_DOUBLE
 	printstring STRINGID_PKMNREGAINEDHEALTH
 	waitmessage B_WAIT_TIME_LONG
+	return
+
+BattleScript_PurifyCureStatus::
+	curestatus BS_EFFECT_BATTLER
+	updatestatusicon BS_EFFECT_BATTLER
 	return
 
 BattleScript_MoveEffectTrick::
@@ -790,12 +788,12 @@ BattleScript_EffectHealingWishRestore:
 	return
 
 BattleScript_MoveEffectOverwriteAbility::
-	switchinabilities BS_EFFECT_BATTLER
 	tryillusionoff BS_EFFECT_BATTLER
 	trytoclearprimalweather
 	call BattleScript_TryRevertWeatherform
 	flushtextbox
 	tryendneutralizinggas
+	switchinabilities BS_EFFECT_BATTLER
 	return
 
 BattleScript_MoveEffectGastroAcid::
@@ -1072,8 +1070,7 @@ BattleScript_MoveEffectRest::
 	waitmessage B_WAIT_TIME_LONG
 	updatestatusicon BS_EFFECT_BATTLER
 	waitstate
-	attackanimation
-	waitanimation
+	statusanimation BS_EFFECT_BATTLER
 	playanimation BS_EFFECT_BATTLER, B_ANIM_SIMPLE_HEAL
 	healthbarupdate BS_EFFECT_BATTLER
 	datahpupdate BS_EFFECT_BATTLER, ASSURANCE_IGNORE
@@ -3824,7 +3821,7 @@ BattleScript_TryIllusionOff:
 	setbyte gBattlerOrderIndex, 0
 	sortbattlers
 BattleScript_TryIllusionOffLoop:
-	seteffectbattlerfromspeedorder
+	copyarraywithindex gEffectBattler, gBattlersBySpeed, gBattlerOrderIndex, 1
 	tryillusionoff BS_EFFECT_BATTLER
 	addbyte gBattlerOrderIndex, 1
 	jumpifbytenotequal gBattlerOrderIndex, gBattlersCount, BattleScript_TryIllusionOffLoop

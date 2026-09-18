@@ -6,7 +6,7 @@ ASSUMPTIONS
     ASSUME(GetMoveEffect(MOVE_JUNGLE_HEALING) == EFFECT_JUNGLE_HEALING);
 }
 
-DOUBLE_BATTLE_TEST("Jungle Healing fails if user and partner are both at full hp")
+DOUBLE_BATTLE_TEST("Jungle Healing fails if user and partner are both at full hp and not statused")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
