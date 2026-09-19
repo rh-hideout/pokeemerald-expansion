@@ -12,6 +12,8 @@
 #include "battle_tower.h"
 #include "battle_z_move.h"
 #include "caps.h"
+#include "config_changes.h"
+#include "wild_encounter.h"
 #include "data.h"
 #include "daycare.h"
 #include "dexnav.h"
@@ -864,6 +866,11 @@ void CreateMonWithIVs(struct Pokemon *mon, enum Species species, u8 level, u32 p
     CalculateMonStats(mon);
 }
 
+static bool32 RequiresPokeballForCapture(enum GeneratedMonOrigin origin)
+{
+    return origin == WILDMON_ORIGIN || origin == STATIC_WILDMON_ORIGIN;
+}
+
 bool32 ComputePlayerShinyOdds(u32 personality, u32 value)
 {
     if (FlagGet(P_FLAG_FORCE_NO_SHINY))
@@ -875,7 +882,7 @@ bool32 ComputePlayerShinyOdds(u32 personality, u32 value)
     if (P_ONLY_OBTAINABLE_SHINIES && (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE || (FlagGet(WE_FLAG_NO_CATCHING))))
         return FALSE;
 
-    if (P_NO_SHINIES_WITHOUT_POKEBALLS && !HasAtLeastOnePokeBall() && FlagGet(FLAG_SYS_POKEDEX_GET))
+    if (GetConfig(NO_SHINIES_WITHOUT_POKEBALLS) && RequiresPokeballForCapture(ENCOUNTER_ORIGIN(gEncounterType)) && HasNoPokeball())
         return FALSE;
 
     u32 totalRerolls = 0;
@@ -1017,6 +1024,10 @@ void CreateBoxMon(struct BoxPokemon *boxMon, enum Species species, u8 level, u32
     //using gen 3-4 ability formula, it was changed in later gens
     if (GetSpeciesAbility(species, 1))
         SetBoxMonData(boxMon, MON_DATA_ABILITY_NUM, &value);
+
+    if (ENCOUNTER_ORIGIN(gEncounterType) == GIFTMON_ORIGIN
+     || ENCOUNTER_ORIGIN(gEncounterType) == ROAMER_ORIGIN)
+        SET_ENCOUNTER_ORIGIN(gEncounterType, UNDEFINED_MON_ORIGIN);
 }
 
 static bool32 IsValidGender(u32 gender)
@@ -6924,6 +6935,7 @@ void CreateMonFromTemplate(struct Pokemon *mon, const struct PokemonTemplate *mo
     enum Species species = ResolveSpecies(monTemplate->species);
     u8 level = ResolveLevel(monTemplate->level);
     u32 personality = ResolvePersonality(species, monTemplate->gender, monTemplate->nature, monTemplate->origin);
+    SET_ENCOUNTER_ORIGIN(gEncounterType, monTemplate->origin);
     CreateMon(mon, species, level, personality, OTID_STRUCT_PLAYER_ID);
 
     enum Item heldItem = ResolveHeldItem(monTemplate->heldItem);

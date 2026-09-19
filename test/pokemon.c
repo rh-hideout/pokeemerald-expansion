@@ -1,7 +1,10 @@
 #include "global.h"
 #include "battle.h"
+#include "config_changes.h"
+#include "wild_encounter.h"
 #include "egg_hatch.h"
 #include "event_data.h"
+#include "item.h"
 #include "new_game.h"
 #include "pokemon.h"
 #include "test/overworld_script.h"
@@ -109,6 +112,46 @@ TEST("Shininess set on an Egg persists after hatching")
 
     EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_IS_EGG), FALSE);
     EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_IS_SHINY), TRUE);
+}
+
+TEST("P_NO_SHINIES_WITHOUT_POKEBALLS does not block Shiny gift Pokémon")
+{
+    u32 personality;
+
+    ZeroPlayerPartyMons();
+    ClearBag();
+    SetConfig(CONFIG_NO_SHINIES_WITHOUT_POKEBALLS, TRUE);
+
+    SeedRng(0);
+    personality = GetMonPersonality(SPECIES_CASTFORM_NORMAL, MON_GENDER_RANDOM, NATURE_RANDOM, RANDOM_UNOWN_LETTER);
+    SetTrainerId(personality, gSaveBlock2Ptr->playerTrainerId);
+
+    SET_ENCOUNTER_ORIGIN(gEncounterType, WILDMON_ORIGIN);
+    EXPECT_EQ(ComputePlayerShinyOdds(personality, personality), FALSE);
+    gEncounterType = ENCOUNTER_TYPE_NONE;
+
+    SeedRng(0);
+    RUN_OVERWORLD_SCRIPT(
+        givemon SPECIES_CASTFORM_NORMAL, 25, nature=NATURE_RANDOM, gender=MON_GENDER_RANDOM, hpIv=0, atkIv=0, defIv=0, speedIv=0, spAtkIv=0, spDefIv=0;
+    );
+
+    EXPECT_EQ(ENCOUNTER_ORIGIN(gEncounterType), UNDEFINED_MON_ORIGIN);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_PERSONALITY), personality);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_IS_SHINY), TRUE);
+}
+
+TEST("Gift and roamer origins are reset after Pokémon generation")
+{
+    enum GeneratedMonOrigin origin;
+    struct Pokemon mon;
+
+    PARAMETRIZE { origin = GIFTMON_ORIGIN; }
+    PARAMETRIZE { origin = ROAMER_ORIGIN; }
+
+    SET_ENCOUNTER_ORIGIN(gEncounterType, origin);
+    CreateMon(&mon, SPECIES_WOBBUFFET, 50, 0, OTID_STRUCT_PLAYER_ID);
+
+    EXPECT_EQ(ENCOUNTER_ORIGIN(gEncounterType), UNDEFINED_MON_ORIGIN);
 }
 
 TEST("Hyper Training increases stats without affecting IVs")

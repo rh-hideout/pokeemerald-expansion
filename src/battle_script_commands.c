@@ -37,6 +37,8 @@
 #include "m4a.h"
 #include "mail.h"
 #include "event_data.h"
+#include "field_player_avatar.h"
+#include "fieldmap.h"
 #include "pokemon_storage_system.h"
 #include "task.h"
 #include "naming_screen.h"
@@ -7625,6 +7627,7 @@ struct BallData
 static void ComputeBallData(u32 wildMonBattler, u32 playerBattler, struct BallData *ball)
 {
     u32 i;
+    s16 x, y;
     enum PokeBall ballId = ItemIdToBallId(gLastUsedItem);
     struct BattlePokemon *battleMon = &gBattleMons[wildMonBattler];
 
@@ -7673,8 +7676,10 @@ static void ComputeBallData(u32 wildMonBattler, u32 playerBattler, struct BallDa
         }
         break;
     case BALL_DIVE:
+        PlayerGetDestCoords(&x, &y);
         if (GetCurrentMapType() == MAP_TYPE_UNDERWATER
-            || (B_DIVE_BALL_MODIFIER >= GEN_4 && (gIsFishingEncounter || gIsSurfingEncounter)))
+            || (B_DIVE_BALL_MODIFIER >= GEN_4 && (ENCOUNTER_AREA(gEncounterType) == WILD_AREA_FISHING
+                                              || MapGridGetMetatileAttributeAt(x, y, METATILE_ATTRIBUTE_ENCOUNTER_TYPE) == TILE_ENCOUNTER_WATER)))
         {
             ball->multiplier = 350;
         }
@@ -7714,7 +7719,7 @@ static void ComputeBallData(u32 wildMonBattler, u32 playerBattler, struct BallDa
             ball->multiplier = 200;
         break;
     case BALL_LURE:
-        if (gIsFishingEncounter)
+        if (ENCOUNTER_AREA(gEncounterType) == WILD_AREA_FISHING)
         {
             if (B_LURE_BALL_MODIFIER >= GEN_8)
                 ball->multiplier = 400;
