@@ -82,6 +82,7 @@ extern u16 gPartnerTrainerId;
         battleParameter->params.cannotBattleText)
 
 void BattleSetup_StartWildBattle(void);
+void BattleSetup_StartMassOutbreakBattle(void);
 void BattleSetup_StartDoubleWildBattle(void);
 void BattleSetup_StartBattlePikeWildBattle(void);
 void BattleSetup_StartRoamerBattle(void);

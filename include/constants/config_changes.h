@@ -254,6 +254,7 @@
 
 
 #define POKEMON_CONFIG_DEFINITIONS(F) \
+    F(SHINY_THRESHOLD,           shinyThreshold,          (u32, 65536))         \
     F(POKERUS_ENABLED,           pokerusEnabled,          (u32, TRUE))          \
     F(POKERUS_SPREAD_ADJACENCY,  pokerusSpreadAdjacency,  (u32, GEN_COUNT - 1)) \
     F(POKERUS_SPREAD_DAYS_LEFT,  pokerusSpreadDaysLeft,   (u32, GEN_COUNT - 1)) \
