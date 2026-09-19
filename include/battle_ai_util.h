@@ -89,13 +89,6 @@ struct AiCalcValues
     enum Gimmick gimmickDef:8;
 };
 
-static inline bool32 IsMoveUnusable(enum MoveSlot moveIndex, enum Move move, u32 moveLimitations)
-{
-    return move == MOVE_NONE
-        || move == MOVE_UNAVAILABLE
-        || moveLimitations & 1u << moveIndex;
-}
-
 typedef bool32 (*MoveFlag)(enum Move move);
 
 bool32 AI_IsFaster(enum BattlerId battlerAi, enum BattlerId battlerDef, enum Move aiMove, enum Move playerMove, enum ConsiderPriority considerPriority);

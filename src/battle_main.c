@@ -187,7 +187,6 @@ EWRAM_DATA u16 gLastUsedMoveType[MAX_BATTLERS_COUNT] = {0};
 EWRAM_DATA u16 gLastResultingMoves[MAX_BATTLERS_COUNT] = {0};
 EWRAM_DATA u16 gLockedMoves[MAX_BATTLERS_COUNT] = {0};
 EWRAM_DATA u16 gLastUsedMove = 0;
-EWRAM_DATA u8 gLastHitBy[MAX_BATTLERS_COUNT] = {0};
 EWRAM_DATA u16 gChosenMoveByBattler[MAX_BATTLERS_COUNT] = {0};
 EWRAM_DATA u32 gHitMarker = 0;
 EWRAM_DATA u8 gBideTarget[MAX_BATTLERS_COUNT] = {0};
@@ -2788,7 +2787,6 @@ static void BattleStartClearSetData(void)
         gLastHitByType[i] = 0;
         gLastUsedMoveType[i] = 0;
         gLastResultingMoves[i] = MOVE_NONE;
-        gLastHitBy[i] = 0xFF;
         gLockedMoves[i] = MOVE_NONE;
         gLastPrintedMoves[i] = MOVE_NONE;
         gSelectionBattleScripts[i] = NULL;
@@ -2927,7 +2925,6 @@ static void ClearSetDataOnLeave(enum BattlerId battler)
     gLastUsedMoveType[battler] = 0;
     gLastResultingMoves[battler] = MOVE_NONE;
     gLastPrintedMoves[battler] = MOVE_NONE;
-    gLastHitBy[battler] = 0xFF;
 
     for (u32 i = 0; i < NUM_BATTLE_SIDES; i++)
     {
