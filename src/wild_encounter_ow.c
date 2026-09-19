@@ -235,7 +235,7 @@ void UpdateOverworldWildEncounter(void)
 
     bool32 shouldSpawnWaterMons = ShouldSpawnWaterOWE();
     
-    if (ArePlayerFieldControlsLocked() || FlagGet(DN_FLAG_SEARCHING) || !CheckCurrentWildMonHeaderForOWE(shouldSpawnWaterMons))
+    if (ArePlayerFieldControlsLocked() || !CheckCurrentWildMonHeaderForOWE(shouldSpawnWaterMons))
         return;
 
     if (!WE_OW_ENCOUNTERS
@@ -584,9 +584,9 @@ static bool32 StartWildBattleWithOWE_CheckMassOutbreak(enum CategoryOWE category
     {
         return FALSE;
     }
-    ZeroEnemyPartyMons();
-    SetUpMassOutbreakEncounter(0);
-    BattleSetup_StartWildBattle();
+    // The Pokémon already has the gender and shininess shown by its overworld object.
+    SetMassOutbreakMonMoves(&gParties[B_TRAINER_OPPONENT_A][0]);
+    BattleSetup_StartMassOutbreakBattle();
     return TRUE;
 }
 
@@ -650,6 +650,9 @@ void TryTriggerOverworldWildEncounter(struct ObjectEvent *obstacle, struct Objec
 
     struct ObjectEvent *wildMon = playerFollowerIsColliderOWE ? obstacle : collider;
     enum CategoryOWE category = GetOWECategory(wildMon);
+    if (category == OWE_CATEGORY_MASS_OUTBREAK && FlagGet(DN_FLAG_SEARCHING))
+        return;
+
     if (category < ROAMER_COUNT
      && !IsRoamerAt(category, gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum))
     {
@@ -670,6 +673,9 @@ void TryTriggerOverworldWildEncounter(struct ObjectEvent *obstacle, struct Objec
 const u8 *GetOverworlWildEncounterScript(u32 objectEventId)
 {
     const u8 *script;
+    if (GetOWECategory(&gObjectEvents[objectEventId]) == OWE_CATEGORY_MASS_OUTBREAK && FlagGet(DN_FLAG_SEARCHING))
+        return NULL;
+
     if (GetOverworldWildEncounterType(&gObjectEvents[objectEventId]) == OWE_MANUAL
      && (script = GetObjectEventScriptPointerByObjectEventId(objectEventId)) != NULL)
         return script;

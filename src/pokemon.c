@@ -31,6 +31,7 @@
 #include "m4a.h"
 #include "main.h"
 #include "mail.h"
+#include "mass_outbreak.h"
 #include "move_relearner.h"
 #include "naming_screen.h"
 #include "overworld.h"
@@ -891,6 +892,7 @@ bool32 ComputePlayerShinyOdds(u32 personality, u32 value)
         totalRerolls += 1;
 
     totalRerolls += CalculateChainFishingShinyRolls();
+    totalRerolls += CalculateMassOutbreakShinyRolls();
 
     if (gDexNavSpecies)
         totalRerolls += CalculateDexNavShinyRolls();
