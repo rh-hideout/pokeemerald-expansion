@@ -11,12 +11,38 @@
 #define P_UPDATED_EXP_YIELDS        GEN_LATEST  // Since Gen 5, some Pokémon have received base Experience changes.
 
 // Learnsets
-#define P_LVL_UP_LEARNSETS          GEN_LATEST  // Choose which set of Level Up Learnsets to use.
+#define P_LEVEL_UP_TM_COMPATIBILITY FALSE // Grant TM/HM compatibility from current level-up learnsets. No pre-evolution inheritance.
+#define LEVEL_UP_LEARNSETS_GAME_DEFAULT  0
+#define LEVEL_UP_LEARNSETS_GAME_RB       1
+#define LEVEL_UP_LEARNSETS_GAME_YELLOW   2
+#define LEVEL_UP_LEARNSETS_GAME_GS       3
+#define LEVEL_UP_LEARNSETS_GAME_CRYSTAL  4
+#define LEVEL_UP_LEARNSETS_GAME_RSE      5
+#define LEVEL_UP_LEARNSETS_GAME_FRLG     6
+#define LEVEL_UP_LEARNSETS_GAME_DP       7
+#define LEVEL_UP_LEARNSETS_GAME_PLATINUM 8
+#define LEVEL_UP_LEARNSETS_GAME_HGSS     9
+#define LEVEL_UP_LEARNSETS_GAME_BW       10
+#define LEVEL_UP_LEARNSETS_GAME_B2W2     11
+#define LEVEL_UP_LEARNSETS_GAME_XY       12
+#define LEVEL_UP_LEARNSETS_GAME_ORAS     13
+#define LEVEL_UP_LEARNSETS_GAME_SM       14
+#define LEVEL_UP_LEARNSETS_GAME_USUM     15
+#define LEVEL_UP_LEARNSETS_GAME_LGPE     16
+#define LEVEL_UP_LEARNSETS_GAME_SWSH     17
+#define LEVEL_UP_LEARNSETS_GAME_BDSP     18
+#define LEVEL_UP_LEARNSETS_GAME_LA       19
+#define LEVEL_UP_LEARNSETS_GAME_SV       20
+#define LEVEL_UP_LEARNSETS_GAME_ZA       21
+
+#define P_LVL_UP_LEARNSETS          GEN_LATEST  // Select the official learnsets used when level_up_learnsets.h is created or explicitly regenerated.
                                                 // For generations that hadn't introduced a species yet, we use their first appearence (eg. Chikorita's Gen2 data if the config is set to GEN_1).
                                                 // For generations that don't include a previously introduced species, we use their last apperance (eg. Snivy's Gen7 data if the config is set to GEN_8).
                                                 // GEN_1/2/3/4/5/6/7: Yellow, Crystal, RSE, HGSS, B2W2, ORAS, USUM learnsets respectively.
                                                 // GEN_8: Use the following priority: BDSP for Gen1-4 Pokémon, then LA for species introduced in that game, then SwSh for species present in those games. Otherwise, use GEN_7.
                                                 // GEN_9: SV For species present in those games. Otherwise use GEN_8.
+#define P_LVL_UP_LEARNSETS_GAME     LEVEL_UP_LEARNSETS_GAME_DEFAULT // Select a specific game's data instead of the generation default above.
+                                                                    // Missing species fall back to the most recent earlier game, or their first later appearance.
 #define P_EVOLUTION_LEVEL_1_LEARN   GEN_LATEST  // Since Gen 8, Pokémon evolving while at level 1 do not get the chance to learn their level 1 moves, while before they did.
 
 // Evolution settings
