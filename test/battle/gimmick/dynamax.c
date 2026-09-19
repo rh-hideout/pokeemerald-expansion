@@ -988,7 +988,7 @@ SINGLE_BATTLE_TEST("Dynamax: G-Max Hydrosnipe has fixed power and ignores abilit
 DOUBLE_BATTLE_TEST("Dynamax: G-Max Volt Crash paralyzes both opponents")
 {
     GIVEN {
-        ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_VOLT_CRASH, MOVE_EFFECT_PARALYZE_SIDE));
+        ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_VOLT_CRASH, MOVE_EFFECT_PARALYSIS));
         PLAYER(SPECIES_PIKACHU) { GigantamaxFactor(TRUE); }
         PLAYER(SPECIES_PICHU);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -1013,17 +1013,17 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Stun Shock paralyzes or poisons both opponent
 {
     u8 statusAnim;
     u32 rng;
-    PARAMETRIZE { statusAnim = B_ANIM_STATUS_PRZ; rng = STATUS1_PARALYSIS; }
-    PARAMETRIZE { statusAnim = B_ANIM_STATUS_PSN; rng = STATUS1_POISON; }
+    PARAMETRIZE { statusAnim = B_ANIM_STATUS_PRZ; rng = 0; }
+    PARAMETRIZE { statusAnim = B_ANIM_STATUS_PSN; rng = 1; }
     GIVEN {
-        ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_STUN_SHOCK, MOVE_EFFECT_POISON_PARALYZE_SIDE));
+        ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_STUN_SHOCK, MOVE_EFFECT_RANDOM_FROM_LIST));
         PLAYER(SPECIES_TOXTRICITY) { GigantamaxFactor(TRUE); }
         PLAYER(SPECIES_TOXEL);
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_THUNDERBOLT, target: opponentLeft, gimmick: GIMMICK_DYNAMAX, \
-               WITH_RNG(RNG_G_MAX_STUN_SHOCK, rng)); }
+               WITH_RNG(RNG_RANDOM_FROM_LIST, rng)); }
     } SCENE {
         MESSAGE("Toxtricity used G-Max Stun Shock!");
         // opponent left
@@ -1053,14 +1053,14 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Stun Shock paralyzes or poisons both opponent
 DOUBLE_BATTLE_TEST("Dynamax: G-Max Stun Shock chooses statuses before considering immunities")
 {
     GIVEN {
-        ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_STUN_SHOCK, MOVE_EFFECT_POISON_PARALYZE_SIDE));
+        ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_STUN_SHOCK, MOVE_EFFECT_RANDOM_FROM_LIST));
         PLAYER(SPECIES_TOXTRICITY) { GigantamaxFactor(TRUE); }
         PLAYER(SPECIES_TOXEL);
         OPPONENT(SPECIES_GARBODOR);
         OPPONENT(SPECIES_TRUBBISH);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_NUZZLE, target: opponentLeft, gimmick: GIMMICK_DYNAMAX, \
-               WITH_RNG(RNG_G_MAX_STUN_SHOCK, STATUS1_POISON)); }
+               WITH_RNG(RNG_RANDOM_FROM_LIST, 1)); }
     } SCENE {
         MESSAGE("Toxtricity used G-Max Stun Shock!");
         NONE_OF {
@@ -1082,18 +1082,18 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Befuddle paralyzes, poisons, or sleeps both o
 {
     u8 statusAnim;
     u32 rng;
-    PARAMETRIZE { statusAnim = B_ANIM_STATUS_PRZ; rng = STATUS1_PARALYSIS; }
-    PARAMETRIZE { statusAnim = B_ANIM_STATUS_PSN; rng = STATUS1_POISON; }
-    PARAMETRIZE { statusAnim = B_ANIM_STATUS_SLP; rng = STATUS1_SLEEP; }
+    PARAMETRIZE { statusAnim = B_ANIM_STATUS_PRZ; rng = 0; }
+    PARAMETRIZE { statusAnim = B_ANIM_STATUS_PSN; rng = 1; }
+    PARAMETRIZE { statusAnim = B_ANIM_STATUS_SLP; rng = 2; }
     GIVEN {
-        ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_BEFUDDLE, MOVE_EFFECT_EFFECT_SPORE_SIDE));
+        ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_BEFUDDLE, MOVE_EFFECT_RANDOM_FROM_LIST));
         PLAYER(SPECIES_BUTTERFREE) { GigantamaxFactor(TRUE); }
         PLAYER(SPECIES_CATERPIE);
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_BUG_BITE, target: opponentLeft, gimmick: GIMMICK_DYNAMAX,
-               WITH_RNG(RNG_G_MAX_BEFUDDLE, rng)); }
+               WITH_RNG(RNG_RANDOM_FROM_LIST, rng)); }
     } SCENE {
         MESSAGE("Butterfree used G-Max Befuddle!");
         // opponent left
@@ -1130,7 +1130,8 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Befuddle paralyzes, poisons, or sleeps both o
 DOUBLE_BATTLE_TEST("Dynamax: G-Max Gold Rush confuses both opponents and generates money")
 {
     GIVEN {
-        ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_GOLD_RUSH, MOVE_EFFECT_CONFUSE_PAY_DAY_SIDE));
+        ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_GOLD_RUSH, MOVE_EFFECT_CONFUSION));
+        ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_GOLD_RUSH, MOVE_EFFECT_PAYDAY));
         PLAYER(SPECIES_MEOWTH) { GigantamaxFactor(TRUE); }
         PLAYER(SPECIES_PERSIAN);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -1150,7 +1151,7 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Gold Rush confuses both opponents and generat
 DOUBLE_BATTLE_TEST("Dynamax: G-Max Smite confuses both opponents")
 {
     GIVEN {
-        ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_SMITE, MOVE_EFFECT_CONFUSE_SIDE));
+        ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_SMITE, MOVE_EFFECT_CONFUSION));
         PLAYER(SPECIES_HATTERENE) { GigantamaxFactor(TRUE); }
         PLAYER(SPECIES_HATENNA);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -1784,7 +1785,7 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Replenish recycles allies' berries 50\% of th
 DOUBLE_BATTLE_TEST("Dynamax: G-Max Volt Crash paralyzes other opponent even if its target faints")
 {
     GIVEN {
-        ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_VOLT_CRASH, MOVE_EFFECT_PARALYZE_SIDE));
+        ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_VOLT_CRASH, MOVE_EFFECT_PARALYSIS));
         PLAYER(SPECIES_PIKACHU) { GigantamaxFactor(TRUE); }
         PLAYER(SPECIES_PICHU);
         OPPONENT(SPECIES_WOBBUFFET) { HP(1); }

@@ -119,7 +119,7 @@ static void HandleSetEffectAbsorb(struct BattleCalcValues *cv, struct SetEffect 
         gBattlerAbility = gBattleScripting.battler = cv->battlerDef;
 
         if (cv->abilities[cv->battlerDef] == ABILITY_LIQUID_OOZE
-         && (GetMoveEffect(cv->move)!= EFFECT_DREAM_EATER || GetConfig(B_DREAM_EATER_LIQUID_OOZE) >= GEN_5))
+         && (GetMoveEffect(cv->move) != EFFECT_DREAM_EATER || GetConfig(B_DREAM_EATER_LIQUID_OOZE) >= GEN_5))
         {
             SetPassiveDamageAmount(cv->battlerAtk, healAmount);
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ABSORB_OOZE;
@@ -228,8 +228,6 @@ static void HandleSetEffectStatChange(struct BattleCalcValues *cv, struct SetEff
             stage = -1 * stage;
 
         SetStatChange(se->effectBattler, stat, stage);
-        if (se->additionalEffect->onSide)
-            SetStatChange(GetPartnerBattler(se->effectBattler), stat, stage);
     }
 
     BattleScriptPush(se->script);
