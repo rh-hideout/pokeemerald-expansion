@@ -251,8 +251,10 @@ void PrintSeqLoopLabel(const Event& event)
     ResetTrackVars();
 }
 
-void PrintMemAcc(const Event& event)
+bool PrintMemAcc(const Event& event)
 {
+    bool condJump = false;
+
     switch (s_memaccOp)
     {
     case 0x00:
@@ -276,56 +278,69 @@ void PrintMemAcc(const Event& event)
     case 0x06:
         PrintByte("MEMACC, mem_beq, 0x%02X, %u", s_memaccParam1, event.param2);
         PrintWord("%s_%u_L%u", g_asmLabel.c_str(), g_agbTrack, s_memaccParam2);
+        condJump = true;
         break;
     case 0x07:
         PrintByte("MEMACC, mem_bne, 0x%02X, %u", s_memaccParam1, event.param2);
         PrintWord("%s_%u_L%u", g_asmLabel.c_str(), g_agbTrack, s_memaccParam2);
+        condJump = true;
         break;
     case 0x08:
         PrintByte("MEMACC, mem_bhi, 0x%02X, %u", s_memaccParam1, event.param2);
         PrintWord("%s_%u_L%u", g_asmLabel.c_str(), g_agbTrack, s_memaccParam2);
+        condJump = true;
         break;
     case 0x09:
         PrintByte("MEMACC, mem_bhs, 0x%02X, %u", s_memaccParam1, event.param2);
         PrintWord("%s_%u_L%u", g_asmLabel.c_str(), g_agbTrack, s_memaccParam2);
+        condJump = true;
         break;
     case 0x0A:
         PrintByte("MEMACC, mem_bls, 0x%02X, %u", s_memaccParam1, event.param2);
         PrintWord("%s_%u_L%u", g_asmLabel.c_str(), g_agbTrack, s_memaccParam2);
+        condJump = true;
         break;
     case 0x0B:
         PrintByte("MEMACC, mem_blo, 0x%02X, %u", s_memaccParam1, event.param2);
         PrintWord("%s_%u_L%u", g_asmLabel.c_str(), g_agbTrack, s_memaccParam2);
+        condJump = true;
         break;
     case 0x0C:
         PrintByte("MEMACC, mem_mem_beq, 0x%02X, 0x%02X", s_memaccParam1, event.param2);
         PrintWord("%s_%u_L%u", g_asmLabel.c_str(), g_agbTrack, s_memaccParam2);
+        condJump = true;
         break;
     case 0x0D:
         PrintByte("MEMACC, mem_mem_bne, 0x%02X, 0x%02X", s_memaccParam1, event.param2);
         PrintWord("%s_%u_L%u", g_asmLabel.c_str(), g_agbTrack, s_memaccParam2);
+        condJump = true;
         break;
     case 0x0E:
         PrintByte("MEMACC, mem_mem_bhi, 0x%02X, 0x%02X", s_memaccParam1, event.param2);
         PrintWord("%s_%u_L%u", g_asmLabel.c_str(), g_agbTrack, s_memaccParam2);
+        condJump = true;
         break;
     case 0x0F:
         PrintByte("MEMACC, mem_mem_bhs, 0x%02X, 0x%02X", s_memaccParam1, event.param2);
         PrintWord("%s_%u_L%u", g_asmLabel.c_str(), g_agbTrack, s_memaccParam2);
+        condJump = true;
         break;
     case 0x10:
         PrintByte("MEMACC, mem_mem_bls, 0x%02X, 0x%02X", s_memaccParam1, event.param2);
         PrintWord("%s_%u_L%u", g_asmLabel.c_str(), g_agbTrack, s_memaccParam2);
+        condJump = true;
         break;
     case 0x11:
         PrintByte("MEMACC, mem_mem_blo, 0x%02X, 0x%02X", s_memaccParam1, event.param2);
         PrintWord("%s_%u_L%u", g_asmLabel.c_str(), g_agbTrack, s_memaccParam2);
+        condJump = true;
         break;
     default:
         break;
     }
 
     PrintWait(event.time);
+    return condJump;
 }
 
 void PrintExtendedOp(const Event& event)
@@ -346,8 +361,9 @@ void PrintExtendedOp(const Event& event)
     }
 }
 
-void PrintControllerOp(const Event& event)
+bool PrintControllerOp(const Event& event)
 {
+    bool foundCondJump = false;
     switch (event.param1)
     {
     case 0x01:
@@ -361,7 +377,7 @@ void PrintControllerOp(const Event& event)
         break;
     case 0x0C:
     case 0x10:
-        PrintMemAcc(event);
+        foundCondJump = PrintMemAcc(event);
         break;
     case 0x0D:
         s_memaccOp = event.param2;
@@ -412,6 +428,8 @@ void PrintControllerOp(const Event& event)
         PrintWait(event.time);
         break;
     }
+
+    return foundCondJump;
 }
 
 void PrintAgbTrack(std::vector<Event>& events)
@@ -425,6 +443,7 @@ void PrintAgbTrack(std::vector<Event>& events)
     ResetTrackVars();
 
     bool foundVolBeforeNote = false;
+    bool foundCondJump = false;
 
     for (const Event& event : events)
     {
@@ -513,12 +532,16 @@ void PrintAgbTrack(std::vector<Event>& events)
             PrintOp(event.time, "BEND  ", "c_v%+d", event.param2 - 64);
             break;
         case EventType::Controller:
-            PrintControllerOp(event);
+            foundCondJump |= PrintControllerOp(event);
             break;
         default:
             PrintWait(event.time);
             break;
         }
+
+        // Review/remove if mid2agb ever implements conditional loop break/jumps
+        if (event.type == EventType::LoopEnd && !foundCondJump)
+            break;
     }
 
     PrintByte("FINE");
