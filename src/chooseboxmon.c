@@ -183,7 +183,7 @@ void PickPartyMon(struct ScriptContext *ctx)
             return;
         }
     }
-    gSpecialVar_0x8004 = PARTY_NOTHING_CHOSEN;
+    gSpecialVar_0x8004 = PARTY_MON_CANCEL;
 }
 
 enum LearnMoveState

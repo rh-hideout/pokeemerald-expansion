@@ -3308,7 +3308,7 @@ void Script_TriggerMultipleEvolutions(struct ScriptContext *ctx)
 void Script_TriggerUniqueEvolution(struct ScriptContext *ctx)
 {
     ctx->waitAfterCallNative = TRUE;
-    if (gSpecialVar_0x8004 == PARTY_NOTHING_CHOSEN)
+    if (gSpecialVar_0x8004 == PARTY_MON_CANCEL)
     {
         gSpecialVar_Result = EVO_EVENT_IMPOSSIBLE;
         return;

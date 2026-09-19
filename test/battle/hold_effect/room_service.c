@@ -6,7 +6,7 @@ ASSUMPTIONS
     ASSUME(gItemsInfo[ITEM_ROOM_SERVICE].holdEffect == HOLD_EFFECT_ROOM_SERVICE);
 }
 
-SINGLE_BATTLE_TEST("Room Serive decreases the holder's seep by one stage")
+SINGLE_BATTLE_TEST("Room Service decreases the holder's Speed by one stage")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_U_TURN) == EFFECT_HIT_ESCAPE);
@@ -25,6 +25,7 @@ SINGLE_BATTLE_TEST("Room Serive decreases the holder's seep by one stage")
         HP_BAR(opponent);
         MESSAGE("2 sent out Wynaut!");
         ABILITY_POPUP(player, ABILITY_INTIMIDATE);
+        ITEM_POPUP(player, ITEM_ROOM_SERVICE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
     } THEN {

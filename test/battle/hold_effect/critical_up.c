@@ -24,6 +24,7 @@ SINGLE_BATTLE_TEST("Lansat Berry raises the holder's critical-hit-ratio by two s
         ANIMATION(ANIM_TYPE_MOVE, move, opponent);
         if (move == MOVE_SCRATCH) {
             NONE_OF {
+                ITEM_POPUP(player, ITEM_LANSAT_BERRY);
                 ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
                 MESSAGE("Wobbuffet used the Lansat Berry to get pumped!");
             }
@@ -43,6 +44,7 @@ SINGLE_BATTLE_TEST("Lansat Berry raises the holder's critical-hit-ratio by two s
         TURN { MOVE(opponent, MOVE_DRAGON_RAGE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_RAGE, opponent);
+        ITEM_POPUP(player, ITEM_LANSAT_BERRY);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
         MESSAGE("Bellsprout used the Lansat Berry to get pumped!");
     }
@@ -65,6 +67,7 @@ SINGLE_BATTLE_TEST("Lansat Berry raises the holder's critical-hit-ratio by 2 sta
         TURN { MOVE(opponent, MOVE_DRAGON_RAGE); MOVE(player, MOVE_SCRATCH); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_RAGE, opponent);
+        ITEM_POPUP(player, ITEM_LANSAT_BERRY);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
         MESSAGE("Wobbuffet used the Lansat Berry to get pumped!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);

@@ -70,7 +70,9 @@ DOUBLE_BATTLE_TEST("Spread Moves: A spread move attack will activate both resist
         TURN { MOVE(playerLeft, MOVE_HYPER_VOICE); }
         TURN { MOVE(playerLeft, MOVE_HYPER_VOICE); }
     } SCENE {
+        ITEM_POPUP(opponentLeft, ITEM_CHILAN_BERRY);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentLeft);
+        ITEM_POPUP(opponentRight, ITEM_CHILAN_BERRY);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentRight);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, playerLeft);
         EFFECTIVENESS_SE(opponentLeft, SE_EFFECTIVE); // effective against both
@@ -107,6 +109,7 @@ DOUBLE_BATTLE_TEST("Spread Moves: If a spread move attack will activate a resist
         TURN { MOVE(playerLeft, MOVE_HYPER_VOICE); }
         TURN { MOVE(playerLeft, MOVE_HYPER_VOICE); }
     } SCENE {
+        ITEM_POPUP(opponentRight, ITEM_CHILAN_BERRY);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentRight);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, playerLeft);
         HP_BAR(opponentLeft, captureDamage: &opponentLeftDmg[0]);
@@ -267,7 +270,9 @@ DOUBLE_BATTLE_TEST("Spread Moves: Spread move, Gem Boosted, vs Resist Berries")
         TURN { MOVE(playerLeft, MOVE_HYPER_VOICE); }
     } SCENE {
         MESSAGE("The Normal Gem strengthened Wobbuffet's power!");
+        ITEM_POPUP(opponentLeft, ITEM_CHILAN_BERRY);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentLeft);
+        ITEM_POPUP(opponentRight, ITEM_CHILAN_BERRY);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentRight);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, playerLeft);
         HP_BAR(opponentLeft);
@@ -294,7 +299,9 @@ DOUBLE_BATTLE_TEST("Spread Moves: Explosion, Gem Boosted, vs Resist Berries")
         MESSAGE("It doesn't affect Misdreavus…");
         MESSAGE("The Normal Gem strengthened Wobbuffet's power!");
 
+        ITEM_POPUP(opponentLeft, ITEM_CHILAN_BERRY);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentLeft);
+        ITEM_POPUP(opponentRight, ITEM_CHILAN_BERRY);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentRight);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EXPLOSION, playerLeft);
         HP_BAR(opponentLeft);

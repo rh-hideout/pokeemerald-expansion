@@ -477,7 +477,7 @@ const u8 *const gBattleStringsTable[STRINGID_COUNT] =
     [STRINGID_SOOTHINGAROMA]                        = COMPOUND_STRING("A soothing aroma wafted through the area!"),
     [STRINGID_ITEMSCANTBEUSEDNOW]                   = COMPOUND_STRING("Items can't be used now.{PAUSE 64}"), // Not present in Gen 5+
     [STRINGID_USINGITEMSTATOFPKMNROSE]              = COMPOUND_STRING("The {B_LAST_ITEM}{B_BUFF2} boosted {B_SCR_NAME_WITH_PREFIX2}'s {B_BUFF1}!"),
-    [STRINGID_USINGITEMSTATOFPKMNFELL]              = COMPOUND_STRING("The {B_LAST_ITEM}{B_BUFF2} lowered {B_SCR_NAME_WITH_PREFIX2}'s {B_BUFF1}!"), // This string does not exist in Gen 5+. Used to print more info that's otherwise obscured such as using Room Service
+    [STRINGID_USINGITEMSTATOFPKMNFELL]              = COMPOUND_STRING("The {B_LAST_ITEM} {B_BUFF2}lowered {B_SCR_NAME_WITH_PREFIX2}'s {B_BUFF1}!"), // This string does not exist in Gen 5+. Used to print more info that's otherwise obscured such as using Room Service
     [STRINGID_PKMNUSEDXTOGETPUMPED]                 = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX} used the {B_LAST_ITEM} to get pumped!"),
     [STRINGID_PKMNSXMADEYUSELESS]                   = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX}'s {B_SCR_ABILITY} made {B_CURRENT_MOVE} useless!"), //not in gen 5+, ability popup
     [STRINGID_PKMNTRAPPEDBYSANDTOMB]                = COMPOUND_STRING("{B_EFF_NAME_WITH_PREFIX} became trapped by the quicksand!"),
@@ -1170,7 +1170,7 @@ const u16 gStatUpStringIds[] =
     [B_MSG_STAT_WONT_CHANGE]        = STRINGID_STATSWONTINCREASE,
     [B_MSG_STAT_MAXED]              = STRINGID_STATWASMAXEDOUT,
     [B_MSG_STAT_CHANGE_EMPTY]       = STRINGID_EMPTYSTRING3,
-    [B_MSG_STAT_CHANGED_ITEM]       = STRINGID_USINGITEMSTATOFPKMNROSE,
+    [B_MSG_STAT_CHANGED_ITEM]       = STRINGID_STATROSE,
     [B_MSG_STAT_CHANGED_BELLY_DRUM] = STRINGID_PKMNCUTHPMAXEDATTACK,
     [B_MSG_USED_DIRE_HIT]           = STRINGID_PKMNUSEDXTOGETPUMPED,
 };
@@ -1181,7 +1181,7 @@ const u16 gStatDownStringIds[] =
     [B_MSG_STAT_CHANGED]            = STRINGID_STATFELL,
     [B_MSG_STAT_WONT_CHANGE]        = STRINGID_STATSWONTDECREASE,
     [B_MSG_STAT_CHANGE_EMPTY]       = STRINGID_EMPTYSTRING3,
-    [B_MSG_STAT_CHANGED_ITEM]       = STRINGID_USINGITEMSTATOFPKMNFELL,
+    [B_MSG_STAT_CHANGED_ITEM]       = STRINGID_STATFELL,
     [B_MSG_STAT_CHANGED_BELLY_DRUM] = STRINGID_PKMNCUTHPMAXEDATTACK, // Message for contrary is still printed
 };
 

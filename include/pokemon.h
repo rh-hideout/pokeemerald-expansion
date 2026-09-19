@@ -19,7 +19,6 @@
 #include "contest_effect.h"
 #include "constants/trainers.h"
 
-#define GET_BASE_SPECIES_ID(speciesId) (GetFormSpeciesId(speciesId, 0))
 #define FORM_SPECIES_END (0xffff)
 
 // Property labels for Get(Box)MonData / Set(Box)MonData
@@ -965,6 +964,7 @@ void UpdateDaysPassedSinceFormChange(u16 days);
 void TrySetDayLimitToFormChange(struct Pokemon *mon);
 enum Type CheckDynamicMoveType(struct Pokemon *mon, enum Move move, enum BattlerId battler, enum MonState state);
 uq4_12_t GetDynamaxLevelHPMultiplier(u32 dynamaxLevel, bool32 inverseMultiplier);
+enum Species GetBaseSpecies(enum Species species);
 enum Species GetRegionalFormByRegion(enum Species species, enum Region region);
 bool32 IsSpeciesForeignRegionalForm(enum Species species, enum Region currentRegion);
 enum Type GetTeraTypeFromPersonality(struct Pokemon *mon);
