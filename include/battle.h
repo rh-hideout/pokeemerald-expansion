@@ -58,6 +58,8 @@ enum BattleAction
     B_ACTION_UNK_15,
     B_ACTION_DEBUG = 20,
     B_ACTION_THROW_BALL, // R to throw last used ball
+    B_ACTION_SAFARI_BAIT,
+    B_ACTION_SAFARI_ROCK,
     B_ACTION_NONE = 0xFF
 };
 
