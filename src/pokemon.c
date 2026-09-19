@@ -1377,6 +1377,54 @@ void CalculateMonStats(struct Pokemon *mon)
     CalculateMonStatsCont(mon, TRUE);
 }
 
+static u32 ComputeIntermediateStatValue(struct BoxPokemon *boxmon, enum Species species, enum Stat stat)
+{
+    bool32 hyperTrained = GetBoxMonData(boxmon, MON_DATA_HYPER_TRAINED_HP + stat);
+    u32 iv = GetBoxMonData(boxmon, MON_DATA_HP_IV + stat);
+    u32 ev = GetBoxMonData(boxmon, MON_DATA_HP_EV + stat);
+
+    if (hyperTrained)
+    {
+        iv = MAX_PER_STAT_IVS;
+    }
+
+    u32 baseStat = GetSpeciesBaseStat(species, stat);
+    return (2 * baseStat + iv + ev / 4);
+}
+
+s32 GetBoxMonCurrentDamage(struct BoxPokemon *boxmon)
+{
+    enum Species species = GetBoxMonData(boxmon, MON_DATA_SPECIES);
+    u32 level = GetLevelFromBoxMonExp(boxmon);
+    u32 maxHp = 1;
+    if (!HasShedinjaHPHandling(species))
+    {
+        maxHp = ComputeIntermediateStatValue(boxmon, species, STAT_HP);
+        maxHp = (maxHp * level) / 100 + level + 10;
+    }
+    if (boxmon->hpLost >= maxHp)
+        return -1;
+    return boxmon->hpLost;
+}
+
+s32 CompareBoxmonAttackDefense(struct BoxPokemon *boxmon)
+{
+    enum Species species = GetBoxMonData(boxmon, MON_DATA_SPECIES);
+    u32 level = GetLevelFromBoxMonExp(boxmon);
+    u32 nature = GetBoxMonData(boxmon, MON_DATA_HIDDEN_NATURE);
+    u32 attack = ComputeIntermediateStatValue(boxmon, species,STAT_ATK);
+    u32 defense = ComputeIntermediateStatValue(boxmon, species, STAT_DEF);
+    attack = ModifyStatByNature(nature, (attack * level) / 100 + 5, STAT_ATK);
+    defense = ModifyStatByNature(nature, (defense * level) / 100 + 5, STAT_DEF);
+
+    if (attack > defense)
+        return 1;
+    else if (attack == defense)
+        return 0;
+    else
+        return -1;
+}
+
 void CalculateMonStatsCont(struct Pokemon *mon, bool32 updateSpeedStat)
 {
     s32 oldMaxHP = GetMonData(mon, MON_DATA_MAX_HP);
@@ -1387,42 +1435,23 @@ void CalculateMonStatsCont(struct Pokemon *mon, bool32 updateSpeedStat)
     s32 newMaxHP;
 
     u8 nature = GetMonData(mon, MON_DATA_HIDDEN_NATURE);
-
     SetMonData(mon, MON_DATA_LEVEL, &level);
 
-    bool32 hyperTrained[NUM_STATS]; //In a battle test, hyper training flag indicates a fixed stat
-    s32 iv[NUM_STATS];
-    s32 ev[NUM_STATS];
-    for (u32 i = 0; i < NUM_STATS; i++)
+    for (u32 i = STAT_ATK; i < NUM_STATS; i++)
     {
-        hyperTrained[i] = GetMonData(mon, MON_DATA_HYPER_TRAINED_HP + i);
-        iv[i] = GetMonData(mon, MON_DATA_HP_IV + i);
-        ev[i] = GetMonData(mon, MON_DATA_HP_EV + i);
-
-        if (hyperTrained[i])
-        {
-        #if TESTING
-            if (gMain.inBattle)
-                continue;
-        #endif
-            iv[i] = MAX_PER_STAT_IVS;
-        }
-
-        if (i == STAT_HP)
+        //In a battle test, hyper training flag indicates a fixed stat
+        if (TESTING && gMain.inBattle && GetMonData(mon, MON_DATA_HYPER_TRAINED_HP + i))
             continue;
-
-        u8 baseStat = GetSpeciesBaseStat(species, i);
-        s32 n = (((2 * baseStat + iv[i] + ev[i] / 4) * level) / 100) + 5;
+        s32 n = (ComputeIntermediateStatValue(&mon->box, species, i) * level) / 100 + 5;
         n = ModifyStatByNature(nature, n, i);
         if (B_FRIENDSHIP_BOOST == TRUE)
             n = n + ((n * 10 * friendship) / (MAX_FRIENDSHIP * 100));
+
         SetMonData(mon, MON_DATA_MAX_HP + i, &n);
     }
 
-#if TESTING
-    if (hyperTrained[STAT_HP] && gMain.inBattle)
+    if (TESTING && gMain.inBattle && GetMonData(mon, MON_DATA_HYPER_TRAINED_HP))
         return;
-#endif
 
     if (HasShedinjaHPHandling(species))
     {
@@ -1430,8 +1459,7 @@ void CalculateMonStatsCont(struct Pokemon *mon, bool32 updateSpeedStat)
     }
     else
     {
-        s32 n = 2 * GetSpeciesBaseHP(species) + iv[STAT_HP];
-        newMaxHP = (((n + ev[STAT_HP] / 4) * level) / 100) + level + 10;
+        newMaxHP = (ComputeIntermediateStatValue(&mon->box, species, STAT_HP)  * level) / 100 + level + 10;
     }
 
     gBattleScripting.levelUpHP = newMaxHP - oldMaxHP;
@@ -3771,13 +3799,11 @@ bool8 PokemonUseItemEffects(struct Pokemon *mon, enum Item item, u8 partyIndex, 
 
                     case 7: // ITEM4_EVO_STONE
                         {
-                            bool32 canStopEvo = TRUE;
-                            enum Species targetSpecies = GetEvolutionTargetSpecies(mon, EVO_MODE_ITEM_USE, item, NULL, &canStopEvo, CHECK_EVO);
-
-                            if (targetSpecies != SPECIES_NONE)
+                            struct EvolutionData evoData;
+                            evoData.method = EVO_ITEM;
+                            evoData.param = item;
+                            if (TryEvolution(partyIndex, &evoData, FALSE))
                             {
-                                GetEvolutionTargetSpecies(mon, EVO_MODE_ITEM_USE, item, NULL, &canStopEvo, DO_EVO);
-                                BeginEvolutionScene(mon, targetSpecies, canStopEvo, partyIndex);
                                 return FALSE;
                             }
                         }
@@ -4104,6 +4130,7 @@ enum Species GetGMaxTargetSpecies(enum Species species)
     return species;
 }
 
+/*
 bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct EvolutionParam *params, struct Pokemon *tradePartner, u32 partyId, bool32 *canStopEvo, enum EvoState evoState)
 {
     u32 i, j;
@@ -4615,6 +4642,7 @@ enum Species GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode m
 
     return targetSpecies;
 }
+*/
 
 bool8 IsMonPastEvolutionLevel(struct Pokemon *mon)
 {
@@ -4755,15 +4783,6 @@ enum NationalDexOrder HoennToNationalOrder(enum HoennDexOrder hoennNum)
         return 0;
 
     return sHoennToNationalOrder[hoennNum - 1];
-}
-
-void EvolutionRenameMon(struct Pokemon *mon, enum Species oldSpecies, enum Species newSpecies)
-{
-    u8 language;
-    GetMonData(mon, MON_DATA_NICKNAME, gStringVar1);
-    language = GetMonData(mon, MON_DATA_LANGUAGE, &language);
-    if (language == GAME_LANGUAGE && !StringCompare(GetSpeciesName(oldSpecies), gStringVar1))
-        SetMonData(mon, MON_DATA_NICKNAME, GetSpeciesName(newSpecies));
 }
 
 // The below two functions determine which side of a multi battle the trainer battles on
@@ -6198,38 +6217,6 @@ bool32 DoesSpeciesHaveFormChangeMethod(enum Species species, enum FormChanges me
     return FALSE;
 }
 
-u16 MonTryLearningNewMoveEvolution(struct Pokemon *mon, bool8 firstMove)
-{
-    enum Species species = GetMonData(mon, MON_DATA_SPECIES);
-    u8 level = GetMonData(mon, MON_DATA_LEVEL);
-    const struct LevelUpMove *learnset = GetSpeciesLevelUpLearnset(species);
-    bool32 canLearn;
-    // Since you can learn more than one move per level,
-    // the game needs to know whether you decided to
-    // learn it or keep the old set to avoid asking
-    // you to learn the same move over and over again.
-    if (firstMove)
-    {
-        sLearningMoveTableID = 0;
-    }
-    while (learnset[sLearningMoveTableID].move != LEVEL_UP_MOVE_END)
-    {
-        canLearn = TRUE;
-        if (learnset[sLearningMoveTableID].level == 0)
-            ;
-        else if (learnset[sLearningMoveTableID].level != level)
-             canLearn = FALSE;
-        else if (P_EVOLUTION_LEVEL_1_LEARN >= GEN_8 && level == 1)
-            canLearn = FALSE;
-        sLearningMoveTableID++;
-        if (canLearn)
-        {
-            return learnset[sLearningMoveTableID - 1].move;
-        }
-    }
-    return MOVE_NONE;
-}
-
 // Removes the selected index from the given IV list and shifts the remaining
 // elements to the left.
 void RemoveIVIndexFromList(u8 *ivs, u8 selectedIv)
@@ -6253,28 +6240,21 @@ void RemoveIVIndexFromList(u8 *ivs, u8 selectedIv)
 
 void TrySpecialOverworldEvo(void)
 {
-    u8 i;
-    bool32 canStopEvo = FALSE;
-
-    for (i = 0; i < PARTY_SIZE; i++)
+    struct EvolutionData evoData;
+    evoData.method = gSpecialVar_0x8000;
+    evoData.param = gSpecialVar_0x8001;
+    for (u32 i = 0; i < PARTY_SIZE; i++)
     {
-        enum Species targetSpecies = GetEvolutionTargetSpecies(&gParties[B_TRAINER_PLAYER][i], EVO_MODE_OVERWORLD_SPECIAL, 0, NULL, &canStopEvo, CHECK_EVO);
-
-        if (targetSpecies != SPECIES_NONE && !(gTriedEvolving & (1u << i)))
+        if (gTriedEvolving & (1u << i))
+            continue;
+        gTriedEvolving |= 1u << i;
+        bool32 noFadeout = (gMain.callback2 == TrySpecialOverworldEvo);
+        if (TryEvolution(i, &evoData, noFadeout))
         {
-            GetEvolutionTargetSpecies(&gParties[B_TRAINER_PLAYER][i], EVO_MODE_OVERWORLD_SPECIAL, 0, NULL, &canStopEvo, DO_EVO);
-            gTriedEvolving |= 1u << i;
-
-            if (gMain.callback2 == TrySpecialOverworldEvo) // This fixes small graphics glitches.
-                EvolutionScene(&gParties[B_TRAINER_PLAYER][i], targetSpecies, canStopEvo, i);
-            else
-                BeginEvolutionScene(&gParties[B_TRAINER_PLAYER][i], targetSpecies, canStopEvo, i);
-
             gCB2_AfterEvolution = TrySpecialOverworldEvo;
             return;
         }
     }
-
     gTriedEvolving = 0;
     SetMainCallback2(CB2_ReturnToField);
 }
@@ -6700,6 +6680,18 @@ struct BoxPokemon *GetBoxMonFromPartyIndex(u32 partyIndex)
 struct BoxPokemon *GetSelectedBoxMonFromPcOrParty(void)
 {
     return GetBoxMonFromPartyIndex(gSpecialVar_0x8004);
+}
+
+u32 GetPartyIndexFromBoxMonPointer(struct BoxPokemon *boxmon)
+{
+    for (u32 i = 0; i < PARTY_SIZE; i++)
+    {
+        if (&(gParties[B_TRAINER_PLAYER][i].box) == boxmon)
+            return i;
+    }
+    if (GetBoxedMonPtr(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos) == boxmon)
+        return PC_MON_CHOSEN;
+    return PARTY_SIZE;
 }
 
 u32 GiveScriptedMonToPlayer(struct Pokemon *mon, u8 slot)

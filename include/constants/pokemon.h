@@ -326,6 +326,7 @@ enum EvolutionMethods {
     EVO_LEVEL,                  // Pokémon reaches the specified level
     EVO_TRADE,                  // Pokémon is traded
     EVO_ITEM,                   // specified item is used on Pokémon
+    EVO_BATTLE,                 // Pokemon evolves in battle
     EVO_SPLIT_FROM_EVO,         // A clone is generated and evolved when another evolution happens
     EVO_SCRIPT_TRIGGER,         // Player interacts with an overworld trigger
     EVO_LEVEL_BATTLE_ONLY,      // Pokémon reaches the specified level, in battle only
@@ -333,6 +334,7 @@ enum EvolutionMethods {
     EVO_SPIN                    // The player spins in the overworld
 };
 
+/*
 enum EvolutionMode {
     EVO_MODE_NORMAL,
     EVO_MODE_TRADE,
@@ -343,6 +345,7 @@ enum EvolutionMode {
     EVO_MODE_SCRIPT_TRIGGER,
     EVO_MODE_BATTLE_ONLY,        // This mode is only used in battles to support Tandemaus' unique requirement
 };
+*/
 
 enum EvoTriggerVersion {
     EVO_TRIGGER_TABLET_CURSE,

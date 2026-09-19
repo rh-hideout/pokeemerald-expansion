@@ -42,6 +42,7 @@
 struct EvoScene
 {
     struct EvolutionData data;
+    u8 partyIndex;
     u8 preEvoSpriteId;
     u8 postEvoSpriteId;
     u8 evoTaskId;
@@ -58,6 +59,7 @@ COMMON_DATA void (*gCB2_AfterEvolution)(void) = NULL;
 #define sEvoCursorPos           gBattleCommunication[1] // when learning a new move
 #define sEvoGraphicsTaskId      gBattleCommunication[2]
 
+static void Task_BeginEvolutionScene(u8 taskId);
 static void Task_EvolutionScene(u8 taskId);
 static void CB2_EvolutionSceneUpdate(void);
 static void EvoDummyFunc(void);
@@ -149,30 +151,30 @@ static const u8 sBgAnim_PalIndexes[][16] = {
     {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }
 };
 
-bool32 DoesMonMeetAdditionalConditions(struct BoxPokemon *boxmon, struct EvolutionData *evo, const struct EvolutionParam *params)
+#include "field_weather.h"
+#include "rtc.h"
+#include "regions.h"
+#include "event_object_movement.h"
+
+bool32 DoesBoxMonMeetConditions(struct BoxPokemon *boxmon, struct EvolutionData *evo, const struct Evolution *conditions)
 {
     u32 i, j;
     enum Item heldItem = GetBoxMonData(boxmon, MON_DATA_HELD_ITEM);
     u32 gender = GetBoxMonGender(boxmon);
     u32 friendship = GetBoxMonData(boxmon, MON_DATA_FRIENDSHIP);
-    u32 attack = GetBoxMonData(boxmon, MON_DATA_ATK);
-    u32 defense = GetBoxMonData(boxmon, MON_DATA_DEF);
     u32 personality = GetBoxMonData(boxmon, MON_DATA_PERSONALITY);
     u16 upperPersonality = personality >> 16;
-    u32 weather = GetCurrentWeather();
+    enum OverworldWeather weather;
     u32 nature = GetNatureFromPersonality(personality);
-    bool32 removeHoldItem = FALSE;
-    enum Item removeBagItem = ITEM_NONE;
-    u32 removeBagItemCount = 0;
     u32 evolutionTracker = GetBoxMonData(boxmon, MON_DATA_EVOLUTION_TRACKER);
     enum Species partnerSpecies;
     enum Item partnerHeldItem;
     enum HoldEffect partnerHoldEffect;
 
-    if (tradePartner != NULL)
+    if (conditions->method == EVO_TRADE)
     {
-        partnerSpecies = GetBoxMonData(tradePartner, MON_DATA_SPECIES);
-        partnerHeldItem = GetBoxMonData(tradePartner, MON_DATA_HELD_ITEM);
+        partnerSpecies = GetMonData(evo->tradePartner, MON_DATA_SPECIES);
+        partnerHeldItem = GetMonData(evo->tradePartner, MON_DATA_HELD_ITEM);
         partnerHoldEffect = GetItemHoldEffect(partnerHeldItem);
     }
     else
@@ -182,75 +184,90 @@ bool32 DoesMonMeetAdditionalConditions(struct BoxPokemon *boxmon, struct Evoluti
         partnerHoldEffect = HOLD_EFFECT_NONE;
     }
 
-    // Check for additional conditions (only if the primary method passes). Skips if there's no additional conditions.
-    for (i = 0; params != NULL && params[i].condition != CONDITIONS_END; i++)
+    switch(conditions->method)
     {
-        enum EvolutionConditions condition = params[i].condition;
+        case EVO_LEVEL:
+        case EVO_LEVEL_BATTLE_ONLY:
+            if (GetLevelFromBoxMonExp(boxmon) < conditions->param)
+                return FALSE;
+            break;
+        case EVO_ITEM:
+        case EVO_SCRIPT_TRIGGER:
+        case EVO_SPIN:
+            if (evo->param != conditions->param)
+                return FALSE;
+            break;
+        default:
+            break;
+    }
+    // Check for additional conditions (only if the primary method passes). Skips if there's no additional conditions.
+    for (i = 0; conditions->params != NULL && conditions->params[i].condition != CONDITIONS_END; i++)
+    {
+        const struct EvolutionParam param = conditions->params[i];
         bool32 currentCondition = FALSE;
 
-        switch (condition)
+        switch (param.condition)
         {
         // Gen 2
         case IF_GENDER:
-            if (gender == params[i].arg1)
+            if (gender == param.arg1)
                 currentCondition = TRUE;
             break;
         case IF_MIN_FRIENDSHIP:
-            if (friendship >= params[i].arg1)
+            if (friendship >= param.arg1)
                 currentCondition = TRUE;
             break;
         case IF_ATK_GT_DEF:
-            if (attack > defense)
+            if (CompareBoxmonAttackDefense(boxmon) == 1)
                 currentCondition = TRUE;
             break;
         case IF_ATK_EQ_DEF:
-            if (attack == defense)
+            if (CompareBoxmonAttackDefense(boxmon) == 0)
                 currentCondition = TRUE;
             break;
         case IF_ATK_LT_DEF:
-            if (attack < defense)
+            if (CompareBoxmonAttackDefense(boxmon) == -1)
                 currentCondition = TRUE;
             break;
         case IF_TIME:
-            if (GetTimeOfDay() == params[i].arg1)
+            if (GetTimeOfDay() == param.arg1)
                 currentCondition = TRUE;
-
             break;
         case IF_NOT_TIME:
-            if (GetTimeOfDay() != params[i].arg1)
+            if (GetTimeOfDay() != param.arg1)
                 currentCondition = TRUE;
             break;
         case IF_HOLD_ITEM:
-            if (heldItem == params[i].arg1)
+            if (heldItem == param.arg1)
             {
                 currentCondition = TRUE;
-                removeHoldItem = TRUE;
+                evo->cannotStopEvo |= TRUE;
             }
             break;
         // Gen 3
         case IF_PID_UPPER_MODULO_10_GT:
-            if ((upperPersonality % 10) > params[i].arg1)
+            if ((upperPersonality % 10) > param.arg1)
                 currentCondition = TRUE;
             break;
         case IF_PID_UPPER_MODULO_10_EQ:
-            if ((upperPersonality % 10) == params[i].arg1)
+            if ((upperPersonality % 10) == param.arg1)
                 currentCondition = TRUE;
             break;
         case IF_PID_UPPER_MODULO_10_LT:
-            if ((upperPersonality % 10) < params[i].arg1)
+            if ((upperPersonality % 10) < param.arg1)
                 currentCondition = TRUE;
             break;
         case IF_MIN_BEAUTY:
         {
             u32 beauty = GetBoxMonData(boxmon, MON_DATA_BEAUTY, 0);
-            if (beauty >= params[i].arg1)
+            if (beauty >= param.arg1)
                 currentCondition = TRUE;
             break;
         }
         case IF_MIN_COOLNESS:
         {
             u32 coolness = GetBoxMonData(boxmon, MON_DATA_COOL, 0);
-            if (coolness >= params[i].arg1)
+            if (coolness >= param.arg1)
                 currentCondition = TRUE;
             break;
         }
@@ -259,21 +276,21 @@ bool32 DoesMonMeetAdditionalConditions(struct BoxPokemon *boxmon, struct Evoluti
         // from gen 6 and up it's known as "Clever/Cleverness."
         {
             u32 smartness = GetBoxMonData(boxmon, MON_DATA_SMART, 0);
-            if (smartness >= params[i].arg1)
+            if (smartness >= param.arg1)
                 currentCondition = TRUE;
             break;
         }
         case IF_MIN_TOUGHNESS:
         {
             u32 toughness = GetBoxMonData(boxmon, MON_DATA_TOUGH, 0);
-            if (toughness >= params[i].arg1)
+            if (toughness >= param.arg1)
                 currentCondition = TRUE;
             break;
         }
         case IF_MIN_CUTENESS:
         {
             u32 cuteness = GetBoxMonData(boxmon, MON_DATA_CUTE, 0);
-            if (cuteness >= params[i].arg1)
+            if (cuteness >= param.arg1)
                 currentCondition = TRUE;
             break;
         }
@@ -281,7 +298,7 @@ bool32 DoesMonMeetAdditionalConditions(struct BoxPokemon *boxmon, struct Evoluti
         case IF_SPECIES_IN_PARTY:
             for (j = 0; j < PARTY_SIZE; j++)
             {
-                if (GetBoxMonData(&gParties[B_TRAINER_PLAYER][j], MON_DATA_SPECIES) == params[i].arg1)
+                if (GetMonData(&gParties[B_TRAINER_PLAYER][j], MON_DATA_SPECIES) == param.arg1)
                 {
                     currentCondition = TRUE;
                     break;
@@ -289,29 +306,29 @@ bool32 DoesMonMeetAdditionalConditions(struct BoxPokemon *boxmon, struct Evoluti
             }
             break;
         case IF_IN_MAP:
-            if (params[i].arg1 == ((gSaveBlock1Ptr->location.mapGroup) << 8 | gSaveBlock1Ptr->location.mapNum))
+            if (param.arg1 == ((gSaveBlock1Ptr->location.mapGroup) << 8 | gSaveBlock1Ptr->location.mapNum))
                 currentCondition = TRUE;
             break;
         case IF_IN_MAPSEC:
-            if (gMapHeader.regionMapSectionId == params[i].arg1)
+            if (gMapHeader.regionMapSectionId == param.arg1)
                 currentCondition = TRUE;
             break;
         case IF_KNOWS_MOVE:
-            if (BoxMonKnowsMove(boxmon, params[i].arg1))
+            if (BoxMonKnowsMove(boxmon, param.arg1))
                 currentCondition = TRUE;
             break;
         // Gen 5
         case IF_TRADE_PARTNER_SPECIES:
-            if (params[i].arg1 == partnerSpecies && partnerHoldEffect != HOLD_EFFECT_PREVENT_EVOLVE)
+            if (param.arg1 == partnerSpecies && partnerHoldEffect != HOLD_EFFECT_PREVENT_EVOLVE)
                 currentCondition = TRUE;
             break;
         // Gen 6
         case IF_TYPE_IN_PARTY:
             for (j = 0; j < PARTY_SIZE; j++)
             {
-                enum Species currSpecies = GetBoxMonData(&gParties[B_TRAINER_PLAYER][j], MON_DATA_SPECIES);
-                if (GetSpeciesType(currSpecies, 0) == params[i].arg1
-                 || GetSpeciesType(currSpecies, 1) == params[i].arg1)
+                enum Species currSpecies = GetMonData(&gParties[B_TRAINER_PLAYER][j], MON_DATA_SPECIES);
+                if (GetSpeciesType(currSpecies, 0) == param.arg1
+                 || GetSpeciesType(currSpecies, 1) == param.arg1)
                 {
                     currentCondition = TRUE;
                     break;
@@ -319,17 +336,18 @@ bool32 DoesMonMeetAdditionalConditions(struct BoxPokemon *boxmon, struct Evoluti
             }
             break;
         case IF_WEATHER:
-            if (params[i].arg1 == WEATHER_RAIN)
+            weather = GetCurrentWeather();
+            if (param.arg1 == WEATHER_RAIN)
             {
                 if (weather == WEATHER_RAIN || weather == WEATHER_RAIN_THUNDERSTORM || weather == WEATHER_DOWNPOUR)
                     currentCondition = TRUE;
             }
-            else if (params[i].arg1 == WEATHER_FOG)
+            else if (param.arg1 == WEATHER_FOG)
             {
                 if (weather == WEATHER_FOG_DIAGONAL || weather == WEATHER_FOG_HORIZONTAL)
                     currentCondition = TRUE;
             }
-            else if (weather == params[i].arg1)
+            else if (weather == param.arg1)
             {
                 currentCondition = TRUE;
             }
@@ -337,7 +355,7 @@ bool32 DoesMonMeetAdditionalConditions(struct BoxPokemon *boxmon, struct Evoluti
         case IF_KNOWS_MOVE_TYPE:
             for (j = 0; j < MAX_MON_MOVES; j++)
             {
-                if (GetMoveType(GetBoxMonData(boxmon, MON_DATA_MOVE1 + j)) == params[i].arg1)
+                if (GetMoveType(GetBoxMonData(boxmon, MON_DATA_MOVE1 + j)) == param.arg1)
                 {
                     currentCondition = TRUE;
                     break;
@@ -346,7 +364,7 @@ bool32 DoesMonMeetAdditionalConditions(struct BoxPokemon *boxmon, struct Evoluti
             break;
         // Gen 8
         case IF_NATURE:
-            if (nature == params[i].arg1)
+            if (nature == param.arg1)
                 currentCondition = TRUE;
             break;
         case IF_AMPED_NATURE:
@@ -389,79 +407,64 @@ bool32 DoesMonMeetAdditionalConditions(struct BoxPokemon *boxmon, struct Evoluti
             }
             break;
         case IF_RECOIL_DAMAGE_GE:
-            if (evolutionTracker >= params[i].arg1)
+            if (evolutionTracker >= param.arg1)
                 currentCondition = TRUE;
             break;
         case IF_CURRENT_DAMAGE_GE:
         {
-            u32 currentHp = GetBoxMonData(boxmon, MON_DATA_HP);
-            if (currentHp != 0 && (GetBoxMonData(boxmon, MON_DATA_MAX_HP) - currentHp >= params[i].arg1))
+            if (GetBoxMonCurrentDamage(boxmon) >= param.arg1)
                 currentCondition = TRUE;
             break;
         }
         case IF_CRITICAL_HITS_GE:
-            if (partyId != PARTY_SIZE && gPartyCriticalHits[partyId] >= params[i].arg1)
+            u32 partyId = GetPartyIndexFromBoxMonPointer(boxmon);
+            if (partyId != PARTY_SIZE && gPartyCriticalHits[partyId] >= param.arg1)
                 currentCondition = TRUE;
             break;
         case IF_USED_MOVE_X_TIMES:
-            if (evolutionTracker >= params[i].arg2)
+            if (evolutionTracker >= param.arg2)
                 currentCondition = TRUE;
             break;
         // Gen 9
         case IF_DEFEAT_X_WITH_ITEMS:
-            if (evolutionTracker >= params[i].arg3)
+            if (evolutionTracker >= param.arg3)
                 currentCondition = TRUE;
             break;
         case IF_PID_MODULO_100_GT:
-            if ((personality % 100) > params[i].arg1)
+            if ((personality % 100) > param.arg1)
                 currentCondition = TRUE;
             break;
         case IF_PID_MODULO_100_EQ:
-            if ((personality % 100) == params[i].arg1)
+            if ((personality % 100) == param.arg1)
                 currentCondition = TRUE;
             break;
         case IF_PID_MODULO_100_LT:
-            if ((personality % 100) < params[i].arg1)
+            if ((personality % 100) < param.arg1)
                 currentCondition = TRUE;
             break;
         case IF_MIN_OVERWORLD_STEPS:
-            if (evo->partyIndex == 0 && gFollowerSteps >= params[i].arg1)
+            struct Pokemon *follower = GetFirstLiveMon();
+            if (OW_FOLLOWERS_ENABLED && boxmon == &follower->box && gFollowerSteps >= param.arg1)
                 currentCondition = TRUE;
             break;
         case IF_BAG_ITEM_COUNT:
-            if (CheckBagHasItem(params[i].arg1, params[i].arg2))
+            if (CheckBagHasItem(param.arg1, param.arg2))
             {
                 currentCondition = TRUE;
-                removeBagItem = params[i].arg1;
-                removeBagItemCount = params[i].arg2;
                 evo->cannotStopEvo |= TRUE;
             }
             break;
         case IF_REGION:
-            if (GetCurrentRegion() == params[i].arg1)
+            if (GetCurrentRegion() == param.arg1)
                 currentCondition = TRUE;
             break;
         case IF_NOT_REGION:
-            if (GetCurrentRegion() != params[i].arg1)
+            if (GetCurrentRegion() != param.arg1)
                 currentCondition = TRUE;
             break;
         case CONDITIONS_END:
             break;
         }
-
-        /*
-        if (evoState == DO_EVO)
-        {
-            if (removeHoldItem)
-            {
-                enum Item heldItem = ITEM_NONE;
-                SetMonData(mon, MON_DATA_HELD_ITEM, &heldItem);
-            }
-
-            if (removeBagItem != ITEM_NONE)
-                RemoveBagItem(removeBagItem, removeBagItemCount);
-        }
-        */
 
         if (currentCondition == FALSE)
             return FALSE;
@@ -470,50 +473,47 @@ bool32 DoesMonMeetAdditionalConditions(struct BoxPokemon *boxmon, struct Evoluti
     return TRUE;
 }
 
-bool32 TryEvolution(u32 partyIndex, struct EvolutionStruct *evo, bool32 noFade)
+struct EvolutionData InitTradeEvolutionData(struct Pokemon *mon)
 {
-    enum Species species = GetEvolutionTargetSpecies(GetBoxMonFromIndex(partyIndex), evo);
-    if (species == SPECIES_NONE)
-        return FALSE;
-
-    if (evo->method == EVO_ITEM || evo->method == EVO_TRADE)
-        evo->cannotStopEvo |= TRUE;
-
-    sEvoStructPtr = AllocZeroed(sizeof(struct EvoScene));
-    memcpy(&sEvoStructPtr->data, evo, sizeof(struct EvolutionData));
-
-    u8 taskId = CreateTask(Task_BeginEvolutionScene, 0);
-    if (noFade)
-        gTasks[taskId].tState = 1;
-    else
-        gTasks[taskId].tState = 0;
-    gTasks[taskId].tPartyId = partyIndex;
-    gTasks[taskId].tPostEvoSpecies = species;
-
-    
-    SetMainCallback2(CB2_BeginEvolutionScene);
+    struct EvolutionData data;
+    data.method = EVO_TRADE;
+    data.tradePartner = mon;
+    return data;
 }
 
-enum Species GetEvolutionTargetSpecies(struct BoxPokemon *boxmon, struct EvolutionStruct *evo)
+
+static bool32 AreEvoMethodsMatching(enum EvolutionMethods method, struct EvolutionData *evo)
 {
+    if (method == evo->method)
+        return TRUE;
+    if (method == EVO_LEVEL && evo->leveledUpInBattle)
+        return TRUE;
+    if (method == EVO_BATTLE_END && evo->method == EVO_BATTLE)
+        return TRUE;
+    if (method == EVO_LEVEL_BATTLE_ONLY && evo->method == EVO_BATTLE && evo->leveledUpInBattle)
+        return TRUE;
+    return FALSE;
+}
+
+enum Species GetEvolutionTargetSpecies(struct BoxPokemon *boxmon, struct EvolutionData *evo)
+{
+    enum Species targetSpecies = SPECIES_NONE;
     enum Species species = GetBoxMonData(boxmon, MON_DATA_SPECIES, 0);
     const struct Evolution *evolutions = GetSpeciesEvolutions(species);
 
     if (evolutions == NULL)
         return SPECIES_NONE;
 
-    enum HoldEffect holdEffect = GetItemHoldEffect(GetBoxMonData(boxmon, MON_DATA_HELD_ITEM, 0));
+    enum HoldEffect holdEffect = GetItemHoldEffect(GetBoxMonData(boxmon, MON_DATA_HELD_ITEM));
     if (holdEffect == HOLD_EFFECT_PREVENT_EVOLVE)
         return SPECIES_NONE;
 
-    for (i = 0; evolutions[i].method != EVOLUTIONS_END; i++)
+    for (u32 i = 0; evolutions[i].method != EVOLUTIONS_END; i++)
     {
-       
-
-        if (evo->method != method)
+        if (!AreEvoMethodsMatching(evolutions[i].method, evo))
             continue;
 
-        if (!DoesMonMeetAdditionalConditions(boxmon, evo, evolutions[i].params))
+        if (!DoesBoxMonMeetConditions(boxmon, evo, &evolutions[i]))
             continue;
 
         evo->evoIndex = i;
@@ -528,7 +528,7 @@ enum Species GetEvolutionTargetSpecies(struct BoxPokemon *boxmon, struct Evoluti
     // Pikachu, Meowth, Eevee and Duraludon cannot evolve if they have the
     // Gigantamax Factor. We assume that is because their evolutions
     // do not have a Gigantamax Form.
-    if (GetMonData(boxmon, MON_DATA_GIGANTAMAX_FACTOR)
+    if (GetBoxMonData(boxmon, MON_DATA_GIGANTAMAX_FACTOR)
      && GetGMaxTargetSpecies(species) != species
      && GetGMaxTargetSpecies(targetSpecies) == targetSpecies)
     {
@@ -546,15 +546,44 @@ static void CB2_BeginEvolutionScene(void)
 #define tState              data[0]
 #define tPreEvoSpecies      data[1]
 #define tPostEvoSpecies     data[2]
-#define tCanStop            data[3]
-#define tLearnsFirstMove    data[4]
-#define tEvoWasStopped      data[5]
-#define tPartyId            data[6]
-#define tLearnMoveTaskId    data[7]
+#define tLearnsetIndex  data[3]
+#define tEvoWasStopped      data[4]
+#define tLearnMoveTaskId    data[5]
+
+bool32 TryEvolution(u32 partyIndex, struct EvolutionData *evo, u32 noFadeoutOrSpriteId)
+{
+    enum Species species = GetEvolutionTargetSpecies(GetBoxMonFromPartyIndex(partyIndex), evo);
+    if (species == SPECIES_NONE)
+        return FALSE;
+
+    if (evo->method == EVO_ITEM || evo->method == EVO_TRADE)
+        evo->cannotStopEvo |= TRUE;
+
+    sEvoStructPtr = AllocZeroed(sizeof(struct EvoScene));
+    memcpy(&sEvoStructPtr->data, evo, sizeof(struct EvolutionData));
+
+    sEvoStructPtr->partyIndex = partyIndex;
+    if (evo->method == EVO_TRADE)
+    {
+        sEvoStructPtr->isTradeEvo = TRUE;
+        sEvoStructPtr->preEvoSpriteId = noFadeoutOrSpriteId;
+    }
+    else
+    {
+        sEvoStructPtr->isTradeEvo = FALSE;
+    }
+    u8 taskId = CreateTask(Task_BeginEvolutionScene, 0);
+    if (sEvoStructPtr->isTradeEvo || noFadeoutOrSpriteId)
+        gTasks[taskId].tState = 1;
+    else
+        gTasks[taskId].tState = 0;
+
+    SetMainCallback2(CB2_BeginEvolutionScene);
+    return TRUE;
+}
 
 static void Task_BeginEvolutionScene(u8 taskId)
 {
-    struct Pokemon *mon = NULL;
     switch (gTasks[taskId].tState)
     {
     case 0:
@@ -564,22 +593,20 @@ static void Task_BeginEvolutionScene(u8 taskId)
     case 1:
         if (!gPaletteFade.active)
         {
-            enum Species postEvoSpecies;
-            bool32 canStopEvo;
-            u8 partyId;
-
-            mon = &gParties[B_TRAINER_PLAYER][gTasks[taskId].tPartyId];
-            postEvoSpecies = gTasks[taskId].tPostEvoSpecies;
-            canStopEvo = gTasks[taskId].tCanStop;
-            partyId = gTasks[taskId].tPartyId;
-
-            DestroyTask(taskId);
-            EvolutionScene(mon, postEvoSpecies, canStopEvo, partyId);
+            if (sEvoStructPtr->isTradeEvo)
+            {
+                TradeEvolutionScene();
+            }
+            else
+            {
+                EvolutionScene();
+            }
         }
         break;
     }
 }
 
+/*
 void BeginEvolutionScene(struct Pokemon *mon, enum Species postEvoSpecies, bool32 canStopEvo, u8 partyId)
 {
     u8 taskId = CreateTask(Task_BeginEvolutionScene, 0);
@@ -589,6 +616,7 @@ void BeginEvolutionScene(struct Pokemon *mon, enum Species postEvoSpecies, bool3
     gTasks[taskId].tPartyId = partyId;
     SetMainCallback2(CB2_BeginEvolutionScene);
 }
+*/
 
 static void SetBattleBgs(void)
 {
@@ -659,7 +687,7 @@ static void EvolutionScene_FadeIn(void)
     SetMainCallback2(CB2_EvolutionSceneUpdate);
 }
 
-void EvolutionScene(struct Pokemon *mon, enum Species postEvoSpecies, bool32 canStopEvo, u8 partyId)
+void EvolutionScene(void)
 {
     u8 name[POKEMON_NAME_BUFFER_SIZE];
     u8 id;
@@ -672,16 +700,16 @@ void EvolutionScene(struct Pokemon *mon, enum Species postEvoSpecies, bool32 can
     AllocateMonSpritesGfx();
     LoadEvoSparkleSpriteAndPal();
 
-    sEvoStructPtr = AllocZeroed(sizeof(struct EvoScene));
-    sEvoStructPtr->isTradeEvo = FALSE;
+    struct BoxPokemon *boxmon = GetBoxMonFromPartyIndex(sEvoStructPtr->partyIndex);
+    enum Species currSpecies = GetBoxMonData(boxmon, MON_DATA_SPECIES);
+    enum Species postEvoSpecies = GetSpeciesEvolutions(currSpecies)[sEvoStructPtr->data.evoIndex].targetSpecies;
 
-    GetMonData(mon, MON_DATA_NICKNAME, name);
+    GetBoxMonData(boxmon, MON_DATA_NICKNAME, name);
     StringCopy_Nickname(gStringVar1, name);
     StringCopy(gStringVar2, GetSpeciesName(postEvoSpecies));
 
-    enum Species currSpecies = GetMonData(mon, MON_DATA_SPECIES);
-    bool32 isShiny = GetMonData(mon, MON_DATA_IS_SHINY);
-    u32 personality = GetMonData(mon, MON_DATA_PERSONALITY);
+    u32 personality = GetBoxMonData(boxmon, MON_DATA_PERSONALITY);
+    bool32 isShiny = GetBoxMonData(boxmon, MON_DATA_IS_SHINY);
     sEvoStructPtr->preEvoSpriteId = LoadEvoPokemonSprite(currSpecies, isShiny, personality, 0);
 
     sEvoStructPtr->postEvoSpriteId = LoadEvoPokemonSprite(postEvoSpecies, isShiny, personality, 1);
@@ -691,10 +719,8 @@ void EvolutionScene(struct Pokemon *mon, enum Species postEvoSpecies, bool32 can
     gTasks[id].tState = 0;
     gTasks[id].tPreEvoSpecies = currSpecies;
     gTasks[id].tPostEvoSpecies = postEvoSpecies;
-    gTasks[id].tCanStop = canStopEvo;
-    gTasks[id].tLearnsFirstMove = TRUE;
+    gTasks[id].tLearnsetIndex = 0;
     gTasks[id].tEvoWasStopped = FALSE;
-    gTasks[id].tPartyId = partyId;
 
     memcpy(&sEvoStructPtr->savedPalette, &gPlttBufferUnfaded[BG_PLTT_ID(2)], sizeof(sEvoStructPtr->savedPalette));
 
@@ -703,13 +729,13 @@ void EvolutionScene(struct Pokemon *mon, enum Species postEvoSpecies, bool32 can
 
 static void CB2_EvolutionSceneLoadGraphics(void)
 {
-    struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][gTasks[sEvoStructPtr->evoTaskId].tPartyId];
+    struct BoxPokemon *boxmon = GetBoxMonFromPartyIndex(sEvoStructPtr->partyIndex);
 
     EvoScene_InitGraphics_Standard();
 
     enum Species postEvoSpecies = gTasks[sEvoStructPtr->evoTaskId].tPostEvoSpecies;
-    bool32 isShiny = GetMonData(mon, MON_DATA_IS_SHINY);
-    u32 personality = GetMonData(mon, MON_DATA_PERSONALITY);
+    bool32 isShiny = GetBoxMonData(boxmon, MON_DATA_IS_SHINY);
+    u32 personality = GetBoxMonData(boxmon, MON_DATA_PERSONALITY);
     sEvoStructPtr->postEvoSpriteId = LoadEvoPokemonSprite(postEvoSpecies, isShiny, personality, 1);
 
     EvolutionScene_FadeIn();
@@ -717,11 +743,7 @@ static void CB2_EvolutionSceneLoadGraphics(void)
 
 static void CB2_TradeEvolutionSceneLoadGraphics(void)
 {
-    struct Pokemon *mon;
-    if (gTasks[sEvoStructPtr->evoTaskId].tPartyId == PC_MON_CHOSEN)
-        mon = &gParties[B_TRAINER_OPPONENT_A][TRADEMON_FROM_PC];
-    else
-        mon = &gParties[B_TRAINER_PLAYER][gTasks[sEvoStructPtr->evoTaskId].tPartyId];
+    struct BoxPokemon *boxmon = GetBoxMonFromPartyIndex(sEvoStructPtr->partyIndex);
     enum Species postEvoSpecies = gTasks[sEvoStructPtr->evoTaskId].tPostEvoSpecies;
 
     switch (gMain.state)
@@ -753,8 +775,8 @@ static void CB2_TradeEvolutionSceneLoadGraphics(void)
         break;
     case 4:
         {
-            bool8 isShiny = GetMonData(mon, MON_DATA_IS_SHINY);
-            u32 personality = GetMonData(mon, MON_DATA_PERSONALITY);
+            bool8 isShiny = GetBoxMonData(boxmon, MON_DATA_IS_SHINY);
+            u32 personality = GetBoxMonData(boxmon, MON_DATA_PERSONALITY);
             sEvoStructPtr->postEvoSpriteId = LoadEvoPokemonSprite(postEvoSpecies, isShiny, personality, 1);
             gMain.state++;
         }
@@ -785,7 +807,7 @@ static void CB2_TradeEvolutionSceneLoadGraphics(void)
     }
 }
 
-void TradeEvolutionScene(struct Pokemon *mon, enum Species postEvoSpecies, u8 preEvoSpriteId, u8 partyId)
+void TradeEvolutionScene(void)
 {
     u8 name[POKEMON_NAME_BUFFER_SIZE];
     u8 id;
@@ -794,17 +816,16 @@ void TradeEvolutionScene(struct Pokemon *mon, enum Species postEvoSpecies, u8 pr
     SetBattleBgs();
     LoadEvoSparkleSpriteAndPal();
 
-    sEvoStructPtr = AllocZeroed(sizeof(struct EvoScene));
-    sEvoStructPtr->isTradeEvo = TRUE;
-    sEvoStructPtr->preEvoSpriteId = preEvoSpriteId;
+    struct BoxPokemon *boxmon = GetBoxMonFromPartyIndex(sEvoStructPtr->partyIndex);
+    enum Species currSpecies = GetBoxMonData(boxmon, MON_DATA_SPECIES);
+    enum Species postEvoSpecies = GetSpeciesEvolutions(currSpecies)[sEvoStructPtr->data.evoIndex].targetSpecies;
 
-    GetMonData(mon, MON_DATA_NICKNAME, name);
+    GetBoxMonData(boxmon, MON_DATA_NICKNAME, name);
     StringCopy_Nickname(gStringVar1, name);
     StringCopy(gStringVar2, GetSpeciesName(postEvoSpecies));
 
-    enum Species currSpecies = GetMonData(mon, MON_DATA_SPECIES);
-    u32 personality = GetMonData(mon, MON_DATA_PERSONALITY);
-    bool32 isShiny = GetMonData(mon, MON_DATA_IS_SHINY);
+    u32 personality = GetBoxMonData(boxmon, MON_DATA_PERSONALITY);
+    bool32 isShiny = GetBoxMonData(boxmon, MON_DATA_IS_SHINY);
     sEvoStructPtr->postEvoSpriteId = LoadEvoPokemonSprite(postEvoSpecies, isShiny, personality, 1);
     gSprites[sEvoStructPtr->postEvoSpriteId].invisible = TRUE;
 
@@ -812,9 +833,8 @@ void TradeEvolutionScene(struct Pokemon *mon, enum Species postEvoSpecies, u8 pr
     gTasks[id].tState = 0; // EVOSTATE_INTRO_MSG
     gTasks[id].tPreEvoSpecies = currSpecies;
     gTasks[id].tPostEvoSpecies = postEvoSpecies;
-    gTasks[id].tLearnsFirstMove = TRUE;
+    gTasks[id].tLearnsetIndex = 0;
     gTasks[id].tEvoWasStopped = FALSE;
-    gTasks[id].tPartyId = partyId;
 
     gTextFlags.useAlternateDownArrow = TRUE;
 
@@ -831,7 +851,37 @@ static void CB2_EvolutionSceneUpdate(void)
     RunTasks();
 }
 
-static void CreateShedinja(enum Species preEvoSpecies, enum Species postEvoSpecies, struct Pokemon *mon)
+static void ConsumeEvolutionItems(u8 taskId)
+{
+    const struct Evolution *evo = GetSpeciesEvolutions(gTasks[taskId].tPreEvoSpecies);
+    evo = &evo[sEvoStructPtr->data.evoIndex];
+
+    if (evo->method == EVO_ITEM)
+    {
+        RemoveBagItem(evo->param, 1);
+    }
+
+    for (u32 i = 0; evo->params != NULL && evo->params[i].condition != CONDITIONS_END; i++)
+    {
+        const struct EvolutionParam *param = &evo->params[i];
+
+        switch (param->condition)
+        {
+            case IF_HOLD_ITEM:
+                enum Item item = ITEM_NONE;
+                struct BoxPokemon *boxmon = GetBoxMonFromPartyIndex(sEvoStructPtr->partyIndex);
+                SetBoxMonData(boxmon, MON_DATA_HELD_ITEM, &item);
+                break;
+            case IF_BAG_ITEM_COUNT:
+                RemoveBagItem(param->arg1, param->arg2);
+                break;
+            default:
+                break;
+        }
+    }
+}
+
+static void CreateShedinja(enum Species preEvoSpecies, enum Species postEvoSpecies, struct BoxPokemon *boxmon)
 {
     u32 data = 0;
     enum Item ball = ITEM_POKE_BALL;
@@ -845,12 +895,12 @@ static void CreateShedinja(enum Species preEvoSpecies, enum Species postEvoSpeci
         if (evolutions[i].method == EVO_SPLIT_FROM_EVO
          && evolutions[i].param == postEvoSpecies
          && gPartiesCount[B_TRAINER_PLAYER] < PARTY_SIZE
-         && DoesMonMeetAdditionalConditions(mon, evolutions[i].params, NULL, PARTY_SIZE, NULL, CHECK_EVO))
+         && DoesBoxMonMeetConditions(boxmon, &sEvoStructPtr->data, &evolutions[i]))
         {
             s32 j;
             struct Pokemon *shedinja = &gParties[B_TRAINER_PLAYER][gPartiesCount[B_TRAINER_PLAYER]];
 
-            CopyMon(&gParties[B_TRAINER_PLAYER][gPartiesCount[B_TRAINER_PLAYER]], mon, sizeof(struct Pokemon));
+            BoxMonToMon(boxmon, &gParties[B_TRAINER_PLAYER][gPartiesCount[B_TRAINER_PLAYER]]);
             SetMonData(&gParties[B_TRAINER_PLAYER][gPartiesCount[B_TRAINER_PLAYER]], MON_DATA_SPECIES, &evolutions[i].targetSpecies);
             SetMonData(&gParties[B_TRAINER_PLAYER][gPartiesCount[B_TRAINER_PLAYER]], MON_DATA_NICKNAME, GetSpeciesName(evolutions[i].targetSpecies));
             SetMonData(&gParties[B_TRAINER_PLAYER][gPartiesCount[B_TRAINER_PLAYER]], MON_DATA_HELD_ITEM, &data);
@@ -879,7 +929,7 @@ static void CreateShedinja(enum Species preEvoSpecies, enum Species postEvoSpeci
 
             if (GetMonData(shedinja, MON_DATA_SPECIES) == SPECIES_SHEDINJA
                 && GetMonData(shedinja, MON_DATA_LANGUAGE) == LANGUAGE_JAPANESE
-                && GetMonData(mon, MON_DATA_SPECIES) == SPECIES_NINJASK)
+                && GetBoxMonData(boxmon, MON_DATA_SPECIES) == SPECIES_NINJASK)
                     SetMonData(shedinja, MON_DATA_NICKNAME, sText_ShedinjaJapaneseName);
 
         }
@@ -1009,16 +1059,50 @@ static const struct MoveLearnUI sMoveLearnUI =
     .endTask = UIEndTask
 };
 
+static void EvolutionRenameBoxMon(struct BoxPokemon *boxmon, enum Species oldSpecies, enum Species newSpecies)
+{
+    u8 language;
+    GetBoxMonData(boxmon, MON_DATA_NICKNAME, gStringVar1);
+    language = GetBoxMonData(boxmon, MON_DATA_LANGUAGE, &language);
+    if (language == GAME_LANGUAGE && !StringCompare(GetSpeciesName(oldSpecies), gStringVar1))
+        SetBoxMonData(boxmon, MON_DATA_NICKNAME, GetSpeciesName(newSpecies));
+}
+
+static u16 BoxMonTryLearningNewMoveEvolution(struct BoxPokemon *boxmon, u8 taskId)
+{
+    enum Species species = gTasks[taskId].tPostEvoSpecies;
+    u8 level = GetLevelFromBoxMonExp(boxmon);
+    const struct LevelUpMove *learnset = GetSpeciesLevelUpLearnset(species);
+    bool32 canLearn;
+
+    while (learnset[gTasks[taskId].tLearnsetIndex].move != LEVEL_UP_MOVE_END)
+    {
+        canLearn = TRUE;
+        if (learnset[gTasks[taskId].tLearnsetIndex].level == 0)
+            ;
+        else if (learnset[gTasks[taskId].tLearnsetIndex].level != level)
+             canLearn = FALSE;
+        else if (P_EVOLUTION_LEVEL_1_LEARN >= GEN_8 && level == 1)
+            canLearn = FALSE;
+        gTasks[taskId].tLearnsetIndex++;
+        if (canLearn)
+        {
+            return learnset[gTasks[taskId].tLearnsetIndex - 1].move;
+        }
+    }
+    return MOVE_NONE;
+}
+
 static void Task_EvolutionScene(u8 taskId)
 {
     u32 var;
-    struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][gTasks[taskId].tPartyId];
+    struct BoxPokemon *boxmon = GetBoxMonFromPartyIndex(sEvoStructPtr->partyIndex);
 
     // check if B Button was held, so the evolution gets stopped
     if (gMain.heldKeys == B_BUTTON
         && gTasks[taskId].tState == EVOSTATE_WAIT_CYCLE_MON_SPRITE
         && gTasks[sEvoGraphicsTaskId].isActive
-        && gTasks[taskId].tCanStop)
+        && !sEvoStructPtr->data.cannotStopEvo)
     {
         gTasks[taskId].tState = EVOSTATE_CANCEL;
         gSpecialVar_Result = EVO_EVENT_INTERRUPTED;
@@ -1139,10 +1223,11 @@ static void Task_EvolutionScene(u8 taskId)
             PrintEvolutionText(gStringVar4);
             PlayFanfare(MUS_EVOLVED);
             gTasks[taskId].tState++;
-            SetMonData(mon, MON_DATA_SPECIES, (void *)(&gTasks[taskId].tPostEvoSpecies));
-            SetMonData(mon, MON_DATA_EVOLUTION_TRACKER, &zero);
-            CalculateMonStats(mon);
-            EvolutionRenameMon(mon, gTasks[taskId].tPreEvoSpecies, gTasks[taskId].tPostEvoSpecies);
+            SetBoxMonData(boxmon, MON_DATA_SPECIES, (void *)(&gTasks[taskId].tPostEvoSpecies));
+            SetBoxMonData(boxmon, MON_DATA_EVOLUTION_TRACKER, &zero);
+            if (sEvoStructPtr->partyIndex < PARTY_SIZE)
+                CalculateMonStats(&gParties[B_TRAINER_PLAYER][sEvoStructPtr->partyIndex]);
+            EvolutionRenameBoxMon(boxmon, gTasks[taskId].tPreEvoSpecies, gTasks[taskId].tPostEvoSpecies);
             GetSetPokedexFlag(SpeciesToNationalPokedexNum(gTasks[taskId].tPostEvoSpecies), FLAG_SET_SEEN);
             GetSetPokedexFlag(SpeciesToNationalPokedexNum(gTasks[taskId].tPostEvoSpecies), FLAG_SET_CAUGHT);
             IncrementGameStat(GAME_STAT_EVOLVED_POKEMON);
@@ -1158,19 +1243,18 @@ static void Task_EvolutionScene(u8 taskId)
     case EVOSTATE_TRY_LEARN_MOVE:
         if (!IsTextPrinterActiveOnWindow(0))
         {
-            var = MonTryLearningNewMoveEvolution(mon, gTasks[taskId].tLearnsFirstMove);
+            var = BoxMonTryLearningNewMoveEvolution(boxmon, taskId);
             if (var == MOVE_NONE)
             {
                 gTasks[taskId].tState++;
                 break;
             }
-            gTasks[taskId].tLearnsFirstMove = FALSE;
-            if (MonKnowsMove(mon, var))
+            if (BoxMonKnowsMove(boxmon, var))
                 break;
 
             u32 learnTaskId = CreateTask(TaskDummy, 0);
             gTasks[learnTaskId].data[0] = GetLearnMoveLevelUpStartState();
-            gTasks[learnTaskId].data[1] = gTasks[taskId].tPartyId;
+            gTasks[learnTaskId].data[1] = sEvoStructPtr->partyIndex;
             gTasks[learnTaskId].data[2] = var;
             gTasks[learnTaskId].data[3] = TRUE;
             gTasks[learnTaskId].data[4] = taskId;
@@ -1194,8 +1278,9 @@ static void Task_EvolutionScene(u8 taskId)
         if (!gPaletteFade.active)
         {
             if (!gTasks[taskId].tEvoWasStopped)
-                CreateShedinja(gTasks[taskId].tPreEvoSpecies, gTasks[taskId].tPostEvoSpecies, mon);
+                CreateShedinja(gTasks[taskId].tPreEvoSpecies, gTasks[taskId].tPostEvoSpecies, boxmon);
 
+            ConsumeEvolutionItems(taskId);
             if (sEvoStructPtr->isTradeEvo)
             {
                 gTextFlags.useAlternateDownArrow = FALSE;
@@ -1252,10 +1337,8 @@ static void Task_EvolutionScene(u8 taskId)
 #undef tState
 #undef tPreEvoSpecies
 #undef tPostEvoSpecies
-#undef tCanStop
-#undef tLearnsFirstMove
+#undef tLearnsetIndex
 #undef tEvoWasStopped
-#undef tPartyId
 #undef tLearnMoveTaskId
 
 static void EvoDummyFunc(void)

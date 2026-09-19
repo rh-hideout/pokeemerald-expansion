@@ -5,19 +5,23 @@
 
 struct EvolutionData
 {
-    u8 partyIndex;
     u8 evoIndex;
-    bool8 canStopEvo;
-    enum EvolutionMode mode;
-    enum Item item;
-    struct Pokemon *tradePartner;
-}
+    bool8 cannotStopEvo:1;
+    bool8 leveledUpInBattle:1;
+    enum EvolutionMethods method;
+    union
+    {
+        u32 param;
+        struct Pokemon *tradePartner;
+    };
+};
 
-bool32 TryEvolution(u32 partyIndex, struct EvolutionData *evo, bool32 noFade);
-enum Species GetEvolutionTargetSpecies(struct BoxPokemon *boxmon, struct EvolutionStruct *evo);
-void BeginEvolutionScene(struct Pokemon *mon, enum Species postEvoSpecies, bool32 canStopEvo, u8 partyId);
-void EvolutionScene(struct Pokemon *mon, enum Species postEvoSpecies, bool32 canStopEvo, u8 partyId);
-void TradeEvolutionScene(struct Pokemon *mon, enum Species postEvoSpecies, u8 preEvoSpriteId, u8 partyId);
+bool32 TryEvolution(u32 partyIndex, struct EvolutionData *evo, u32 noFadeoutOrSpriteId);
+enum Species GetEvolutionTargetSpecies(struct BoxPokemon *boxmon, struct EvolutionData *evo);
+//void BeginEvolutionScene(struct Pokemon *mon, enum Species postEvoSpecies, bool32 canStopEvo, u8 partyId);
+void EvolutionScene(void);
+void TradeEvolutionScene(void);
+struct EvolutionData InitTradeEvolutionData(struct Pokemon *mon);
 
 extern void (*gCB2_AfterEvolution)(void);
 

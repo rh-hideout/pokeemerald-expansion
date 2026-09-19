@@ -3261,20 +3261,23 @@ bool8 ScrCmd_fwdweekday(struct ScriptContext *ctx)
     return FALSE;
 }
 
+static void TriggerMultipleEvolutions_Repeatable(void);
+
 static bool32 EventEvolution(u32 partyIndex)
 {
-    bool32 canStopEvo = gSpecialVar_0x8000;
-    enum Species targetSpecies = GetEvolutionTargetSpecies(&gParties[B_TRAINER_PLAYER][partyIndex], EVO_MODE_SCRIPT_TRIGGER, gSpecialVar_0x8005, NULL, &canStopEvo, CHECK_EVO);
-    if (targetSpecies == SPECIES_NONE)
+    struct EvolutionData evoData;
+    evoData.method = EVO_SCRIPT_TRIGGER;
+    evoData.cannotStopEvo = !gSpecialVar_0x8000;
+    evoData.param = gSpecialVar_0x8005;
+    bool32 noFadeout = (gMain.callback2 == TriggerMultipleEvolutions_Repeatable);
+    if (TryEvolution(partyIndex, &evoData, noFadeout))
     {
-        gSpecialVar_Result = EVO_EVENT_IMPOSSIBLE;
-        return FALSE;
+        gSpecialVar_Result = EVO_EVENT_SUCCESSFUL;
+        ScriptContext_Stop();
+        return TRUE;
     }
-    gSpecialVar_Result = EVO_EVENT_SUCCESSFUL;
-    GetEvolutionTargetSpecies(&gParties[B_TRAINER_PLAYER][partyIndex], EVO_MODE_SCRIPT_TRIGGER, gSpecialVar_0x8005, NULL, &canStopEvo, DO_EVO);
-    BeginEvolutionScene(&gParties[B_TRAINER_PLAYER][partyIndex], targetSpecies, canStopEvo, partyIndex);
-    ScriptContext_Stop();
-    return TRUE;
+    gSpecialVar_Result = EVO_EVENT_IMPOSSIBLE;
+    return FALSE;
 }
 
 static void TriggerMultipleEvolutions_Repeatable(void)

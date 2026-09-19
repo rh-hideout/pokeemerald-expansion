@@ -3664,6 +3664,7 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, enum Species species
                 StringCopy(gStringVar4, COMPOUND_STRING("Splits from "));
                 StringAppend(gStringVar4, GetSpeciesName(evolutions[i].param)); //mon name
                 break;
+            case EVO_BATTLE:
             case EVO_BATTLE_END:
                 StringExpandPlaceholders(gStringVar4, COMPOUND_STRING("End battle"));
                 break;

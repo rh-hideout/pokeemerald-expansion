@@ -1180,7 +1180,10 @@ static bool8 DisplayPartyPokemonDataForMoveTutorOrEvolutionItem(u8 slot)
             DisplayPartyPokemonDataToTeachMove(slot, ItemIdToBattleMoveId(item));
             break;
         case ITEM_IS_EVOLUTION_STONE: // Evolution stone
-            if (!GetMonData(currentPokemon, MON_DATA_IS_EGG) && GetEvolutionTargetSpecies(currentPokemon, EVO_MODE_ITEM_CHECK, item, NULL, NULL, CHECK_EVO) != SPECIES_NONE)
+            struct EvolutionData evoData;
+            evoData.method = EVO_ITEM;
+            evoData.param = item;
+            if (!GetMonData(currentPokemon, MON_DATA_IS_EGG) && GetEvolutionTargetSpecies(&currentPokemon->box, &evoData) != SPECIES_NONE)
                 return FALSE;
             DisplayPartyPokemonDescriptionData(slot, PARTYBOX_DESC_NO_USE);
             break;
@@ -5521,14 +5524,7 @@ enum Move ItemIdToBattleMoveId(enum Item item)
 
 bool8 MonKnowsMove(struct Pokemon *mon, enum Move move)
 {
-    u8 i;
-
-    for (i = 0; i < MAX_MON_MOVES; i++)
-    {
-        if (GetMonData(mon, MON_DATA_MOVE1 + i) == move)
-            return TRUE;
-    }
-    return FALSE;
+    return BoxMonKnowsMove(&mon->box, move);
 }
 
 bool8 BoxMonKnowsMove(struct BoxPokemon *boxMon, enum Move move)
@@ -5836,37 +5832,31 @@ void ItemUseCB_RareCandy(u8 taskId, TaskFunc task)
     PlaySE(SE_SELECT);
     if (cannotUseEffect)
     {
-        enum Species targetSpecies = SPECIES_NONE;
-        bool32 canStopEvo = TRUE;
-
         // Resets values to 0 so other means of teaching moves doesn't overwrite levels
         sInitialLevel = 0;
         sFinalLevel = 0;
 
         if (holdEffectParam == 0) // Rare Candy
         {
-            targetSpecies = GetEvolutionTargetSpecies(mon, EVO_MODE_NORMAL, ITEM_NONE, NULL, &canStopEvo, CHECK_EVO);
+            struct EvolutionData evoData;
+            evoData.method = EVO_LEVEL;
+            if (TryEvolution(gPartyMenu.slotId, &evoData, FALSE))
+            {
+                gCB2_AfterEvolution = gPartyMenu.exitCallback;
+                FreePartyPointers();
+                RemoveBagItem(gSpecialVar_ItemId, 1);
+                DestroyTask(taskId);
+                return;
+            }
         }
 
-        if (targetSpecies != SPECIES_NONE)
-        {
-            GetEvolutionTargetSpecies(mon, EVO_MODE_NORMAL, ITEM_NONE, NULL, &canStopEvo, DO_EVO);
-            RemoveBagItem(gSpecialVar_ItemId, 1);
-            FreePartyPointers();
-            gCB2_AfterEvolution = gPartyMenu.exitCallback;
-            BeginEvolutionScene(mon, targetSpecies, canStopEvo, gPartyMenu.slotId);
-            DestroyTask(taskId);
-        }
+        gPartyMenuUseExitCallback = FALSE;
+        DisplayPartyMenuMessage(gText_WontHaveEffect, TRUE);
+        ScheduleBgCopyTilemapToVram(2);
+        if (gPartyMenu.menuType == PARTY_MENU_TYPE_FIELD && CheckBagHasItem(gSpecialVar_ItemId, 1))
+            gTasks[taskId].func = Task_ReturnToChooseMonAfterText;
         else
-        {
-            gPartyMenuUseExitCallback = FALSE;
-            DisplayPartyMenuMessage(gText_WontHaveEffect, TRUE);
-            ScheduleBgCopyTilemapToVram(2);
-            if (gPartyMenu.menuType == PARTY_MENU_TYPE_FIELD && CheckBagHasItem(gSpecialVar_ItemId, 1))
-                gTasks[taskId].func = Task_ReturnToChooseMonAfterText;
-            else
-                gTasks[taskId].func = task;
-        }
+            gTasks[taskId].func = task;
     }
     else
     {
@@ -6032,34 +6022,27 @@ static void CB2_ReturnToPartyMenuUsingRareCandy(void)
 
 static void PartyMenuTryEvolution(u8 taskId)
 {
-    struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][gPartyMenu.slotId];
-    enum Species targetSpecies = SPECIES_NONE;
-    bool32 canStopEvo = TRUE;
-
     // Resets values to 0 so other means of teaching moves doesn't overwrite levels
     sInitialLevel = 0;
     sFinalLevel = 0;
 
-    targetSpecies = GetEvolutionTargetSpecies(mon, EVO_MODE_NORMAL, ITEM_NONE, NULL, &canStopEvo, CHECK_EVO);
-
-    if (targetSpecies != SPECIES_NONE)
+    struct EvolutionData evoData;
+    evoData.method = EVO_LEVEL;
+    if (TryEvolution(gPartyMenu.slotId, &evoData, FALSE))
     {
-        GetEvolutionTargetSpecies(mon, EVO_MODE_NORMAL, ITEM_NONE, NULL, &canStopEvo, DO_EVO);
-        FreePartyPointers();
         if (GetItemFieldFunc(gSpecialVar_ItemId) == ItemUseOutOfBattle_RareCandy && gPartyMenu.menuType == PARTY_MENU_TYPE_FIELD && CheckBagHasItem(gSpecialVar_ItemId, 1))
             gCB2_AfterEvolution = CB2_ReturnToPartyMenuUsingRareCandy;
         else
             gCB2_AfterEvolution = gPartyMenu.exitCallback;
-        BeginEvolutionScene(mon, targetSpecies, canStopEvo, gPartyMenu.slotId);
+        FreePartyPointers();
         DestroyTask(taskId);
+        return;
+
     }
+    if (gPartyMenu.menuType == PARTY_MENU_TYPE_FIELD && CheckBagHasItem(gSpecialVar_ItemId, 1))
+        gTasks[taskId].func = Task_ReturnToChooseMonAfterText;
     else
-    {
-        if (gPartyMenu.menuType == PARTY_MENU_TYPE_FIELD && CheckBagHasItem(gSpecialVar_ItemId, 1))
-            gTasks[taskId].func = Task_ReturnToChooseMonAfterText;
-        else
-            gTasks[taskId].func = Task_ClosePartyMenuAfterText;
-    }
+        gTasks[taskId].func = Task_ClosePartyMenuAfterText;
 }
 
 static void DisplayMonNeedsToReplaceMove(u8 taskId)

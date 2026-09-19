@@ -5282,44 +5282,42 @@ static void HandleEndTurn_FinishBattle(void)
     }
 }
 
+static bool32 CanBattleTriggerEvolution(void)
+{
+    if (gBattleTypeFlags & (BATTLE_TYPE_LINK
+                              | BATTLE_TYPE_RECORDED_LINK
+                              | BATTLE_TYPE_FIRST_BATTLE
+                              | BATTLE_TYPE_SAFARI
+                              | BATTLE_TYPE_FRONTIER
+                              | BATTLE_TYPE_EREADER_TRAINER
+                              | BATTLE_TYPE_CATCH_TUTORIAL))
+        return FALSE;
+    if (gBattleOutcome == B_OUTCOME_WON || gBattleOutcome == B_OUTCOME_CAUGHT)
+        return TRUE;
+    if (B_EVOLUTION_AFTER_WHITEOUT >= GEN_6)
+        return TRUE;
+    return FALSE;
+}
+
 static void FreeResetData_ReturnToOvOrDoEvolutions(void)
 {
-    if (!gPaletteFade.active)
+    if (gPaletteFade.active)
+        return;
+
+    memset(&gBattleMons, 0, sizeof(struct BattlePokemon) * MAX_BATTLERS_COUNT);
+    gIsFishingEncounter = FALSE;
+    gIsSurfingEncounter = FALSE;
+    if (gDexNavSpecies && (gBattleOutcome == B_OUTCOME_WON || gBattleOutcome == B_OUTCOME_CAUGHT))
     {
-        memset(&gBattleMons, 0, sizeof(struct BattlePokemon) * MAX_BATTLERS_COUNT);
-        gIsFishingEncounter = FALSE;
-        gIsSurfingEncounter = FALSE;
-        if (gDexNavSpecies && (gBattleOutcome == B_OUTCOME_WON || gBattleOutcome == B_OUTCOME_CAUGHT))
-        {
-            IncrementDexNavChain();
-            TryIncrementSpeciesSearchLevel();
-        }
-        else
-            gSaveBlock3Ptr->dexNavChain = 0;
-
-        ClearCurrentTrainerWantRematchVsSeeker();
-        gDexNavSpecies = SPECIES_NONE;
-        ResetSpriteData();
-        if (!(gBattleTypeFlags & (BATTLE_TYPE_LINK
-                                  | BATTLE_TYPE_RECORDED_LINK
-                                  | BATTLE_TYPE_FIRST_BATTLE
-                                  | BATTLE_TYPE_SAFARI
-                                  | BATTLE_TYPE_FRONTIER
-                                  | BATTLE_TYPE_EREADER_TRAINER
-                                  | BATTLE_TYPE_CATCH_TUTORIAL))
-            && (B_EVOLUTION_AFTER_WHITEOUT >= GEN_6
-                || gBattleOutcome == B_OUTCOME_WON
-                || gBattleOutcome == B_OUTCOME_CAUGHT))
-        {
-            gBattleMainFunc = TryEvolvePokemon;
-        }
-        else
-        {
-            gBattleMainFunc = ReturnFromBattleToOverworld;
-            return;
-        }
+        IncrementDexNavChain();
+        TryIncrementSpeciesSearchLevel();
     }
+    else
+        gSaveBlock3Ptr->dexNavChain = 0;
+    gDexNavSpecies = SPECIES_NONE;
+    ClearCurrentTrainerWantRematchVsSeeker();
 
+    ResetSpriteData();
     FreeAllWindowBuffers();
     if (!(gBattleTypeFlags & BATTLE_TYPE_LINK))
     {
@@ -5334,39 +5332,25 @@ static void FreeResetData_ReturnToOvOrDoEvolutions(void)
         FreeBattleResources();
         FreeBattleSpritesData();
     }
+
+    if (CanBattleTriggerEvolution())
+        gBattleMainFunc = WaitForEvoSceneToFinish;
+    else
+        gBattleMainFunc = ReturnFromBattleToOverworld;
 }
 
 static void TryEvolvePokemon(void)
 {
-    s32 i;
-
-    for (i = 0; i < PARTY_SIZE; i++)
+    struct EvolutionData evoData;
+    evoData.method = EVO_BATTLE;
+    for (u32 i = 0; i < PARTY_SIZE; i++)
     {
         if (!(gTriedEvolving & (1u << i)))
         {
-            bool32 canStopEvo = TRUE;
-            enum EvolutionMode mode = EVO_MODE_BATTLE_SPECIAL;
-            u32 evolutionItemArg = i;
-
-            enum Species species = GetEvolutionTargetSpecies(&gParties[B_TRAINER_PLAYER][i], mode, evolutionItemArg, NULL, &canStopEvo, CHECK_EVO);
+            evoData.leveledUpInBattle = gLeveledUpInBattle & (1u << i);
             gTriedEvolving |= 1u << i;
-
-            if (species == SPECIES_NONE && (gLeveledUpInBattle & (1u << i)))
-            {
-                gLeveledUpInBattle &= ~(1u << i);
-                mode = EVO_MODE_BATTLE_ONLY;
-                evolutionItemArg = gLeveledUpInBattle;
-                species = GetEvolutionTargetSpecies(&gParties[B_TRAINER_PLAYER][i], mode, evolutionItemArg, NULL, &canStopEvo, CHECK_EVO);
-            }
-
-            if (species != SPECIES_NONE)
-            {
-                CloseMainBattleScreen();
-                gBattleMainFunc = WaitForEvoSceneToFinish;
-                GetEvolutionTargetSpecies(&gParties[B_TRAINER_PLAYER][i], mode, evolutionItemArg, NULL, &canStopEvo, DO_EVO);
-                EvolutionScene(&gParties[B_TRAINER_PLAYER][i], species, canStopEvo, i);
+            if (TryEvolution(i, &evoData, TRUE))
                 return;
-            }
         }
     }
     gTriedEvolving = 0;
@@ -5377,7 +5361,9 @@ static void TryEvolvePokemon(void)
 static void WaitForEvoSceneToFinish(void)
 {
     if (gMain.callback2 == BattleMainCB2)
-        gBattleMainFunc = TryEvolvePokemon;
+    {
+        TryEvolvePokemon();
+    }
 }
 
 static void ReturnFromBattleToOverworld(void)

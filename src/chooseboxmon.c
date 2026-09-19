@@ -3,6 +3,7 @@
 #include "daycare.h"
 #include "event_data.h"
 #include "event_scripts.h"
+#include "evolution_scene.h"
 #include "field_weather.h"
 #include "malloc.h"
 #include "menu.h"
@@ -118,7 +119,10 @@ static u32 ChooseBoxMon_CanEvolve(struct BoxPokemon *boxmon)
     if (IsFromPC((u32)boxmon))
         return INVALID_MON;
     BoxMonToMon(boxmon, mon);
-    if (GetEvolutionTargetSpecies(mon, EVO_MODE_SCRIPT_TRIGGER, gSpecialVar_0x8005, NULL, NULL, CHECK_EVO))
+    struct EvolutionData evoData;
+    evoData.method = EVO_SCRIPT_TRIGGER;
+    evoData.param = gSpecialVar_0x8005;
+    if (GetEvolutionTargetSpecies(boxmon, &evoData))
         result = VALID_MON;
     else
         result = INVALID_MON;
@@ -227,7 +231,7 @@ enum LearnMoveState
 // Remember to update Task_LearnMove is you wish to change to an explicit waitMessage system
 s32 LearnMove(const struct MoveLearnUI *ui, u8 taskId)
 {
-    struct BoxPokemon *boxmon = LearnMove_GetBoxMonFromTaskData(partyIndex);
+    struct BoxPokemon *boxmon = GetBoxMonFromPartyIndex(partyIndex);
     switch (state)
     {
     case PROMPT_BEFORE_LEARNING_1:
