@@ -181,6 +181,7 @@ struct SpriteTemplate
     const struct SpriteFrameImage *images;
     const union AffineAnimCmd *const *affineAnims;
     SpriteCallback callback;
+    bool16 compressedFast;
 };
 
 // UB: template pointer is often used to point to temporary storage,
@@ -234,7 +235,9 @@ struct Sprite
              u16 usingSheet:1;              //0x40
              u16 anchored:1;                //0x80
 
-    /*0x40*/ u16 sheetTileStart;
+    /*0x40*/ u16 sheetTileStart:10;
+             bool16 compressedFast:1;
+             u16 unused:5;
 
     /*0x42*/ u8 subspriteTableNum:6;
              u8 subspriteMode:2;
@@ -287,7 +290,7 @@ void SetOamMatrix(u8 matrixNum, u16 a, u16 b, u16 c, u16 d);
 void CalcCenterToCornerVec(struct Sprite *sprite, u8 shape, u8 size, u8 affineMode);
 void SpriteCallbackDummy(struct Sprite *sprite);
 void ProcessSpriteCopyRequests(void);
-void RequestSpriteCopy(const u8 *src, u8 *dest, u16 size);
+void RequestSpriteCopy(const u8 *src, u8 *dest, u16 size, bool8 compressedFast, u16 index);
 void FreeSpriteTiles(struct Sprite *sprite);
 void FreeSpritePalette(struct Sprite *sprite);
 void FreeSpriteOamMatrix(struct Sprite *sprite);
@@ -309,6 +312,7 @@ void SetOamMatrixRotationScaling(u8 matrixNum, s16 xScale, s16 yScale, u16 rotat
 u16 LoadSpriteSheet(const struct SpriteSheet *sheet);
 u16 LoadSpriteSheetByTemplate(const struct SpriteTemplate *template, u32 frame, s32 offset);
 void LoadSpriteSheets(const struct SpriteSheet *sheets);
+u16 LoadSpriteSheetCompressedFast(const struct SpriteSheet *sheet);
 s16 AllocSpriteTiles(u16 tileCount);
 bool32 CanAllocSpriteTiles(u16 tileCount);
 void FreeSpriteTilesByTag(u16 tag);
@@ -333,7 +337,7 @@ u8 SpriteTileAllocBitmapOp(u16 bit, u8 op);
 void ClearSpriteCopyRequests(void);
 void ResetAffineAnimData(void);
 u32 GetSpanPerImage(u32 shape, u32 size);
-void RequestSpriteFrameImageCopy(u16 index, u16 tileNum, const struct SpriteFrameImage *images);
+void RequestSpriteFrameImageCopy(u16 index, u16 tileNum, const struct SpriteFrameImage *images, bool8 compressedFast);
 void SetSpriteOamFlipBits(struct Sprite *sprite, u8 hFlip, u8 vFlip);
 u8 IndexOfSpriteTileTag(u16 tag);
 void FillSpriteRectColor(u32 spriteId, u32 left, u32 top, u32 width, u32 height, u32 color);

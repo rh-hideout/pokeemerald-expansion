@@ -861,7 +861,8 @@ static const struct SpriteTemplate sSpriteTemplate_MonIconOnLvlUpBanner =
     .tileTag = TAG_LVLUP_BANNER_MON_ICON,
     .paletteTag = TAG_LVLUP_BANNER_MON_ICON,
     .oam = &sOamData_MonIconOnLvlUpBanner,
-    .callback = SpriteCB_MonIconOnLvlUpBanner
+    .callback = SpriteCB_MonIconOnLvlUpBanner,
+    .compressedFast = TRUE
 };
 
 #define _ 0
@@ -4431,7 +4432,7 @@ static void PutMonIconOnLvlUpBanner(void)
     iconPalSheet.data = GetValidMonIconPalettePtr(species);
     iconPalSheet.tag = TAG_LVLUP_BANNER_MON_ICON;
 
-    LoadSpriteSheet(&iconSheet);
+    LoadSpriteSheetCompressedFast(&iconSheet);
     LoadSpritePalette(&iconPalSheet);
 
     spriteId = CreateSprite(&sSpriteTemplate_MonIconOnLvlUpBanner, 256, 10, 0);
