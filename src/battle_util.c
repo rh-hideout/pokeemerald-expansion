@@ -4972,6 +4972,42 @@ enum Ability GetBattlerAbility(enum BattlerId battler)
     return GetBattlerAbilityInternal(battler, FALSE, FALSE);
 }
 
+enum Ability GetBattlerAbilityInternal(enum BattlerId battler, bool32 ignoreMoldBreaker, bool32 noAbilityShield)
+{
+    bool32 hasAbilityShield = !noAbilityShield && GetBattlerHoldEffectIgnoreAbility(battler) == HOLD_EFFECT_ABILITY_SHIELD;
+    bool32 abilityCantBeSuppressed = gAbilitiesInfo[gBattleMons[battler].ability].cantBeSuppressed;
+
+    if (gBattleStruct->battlerState[battler].notOnField || gSpecialStatuses[battler].attackerInParty)
+        return ABILITY_NONE;
+
+    if (abilityCantBeSuppressed)
+    {
+        // Edge case: Pokémon under the effect of gastro acid transforms into a Pokémon with Comatose (Todo: verify how other unsuppressable abilities behave)
+        if (gBattleMons[battler].volatiles.transformed
+            && gBattleMons[battler].volatiles.gastroAcid
+            && gBattleMons[battler].ability == ABILITY_COMATOSE)
+                return ABILITY_NONE;
+
+        if (CanBreakThroughAbility(gBattlerAttacker, battler, hasAbilityShield, ignoreMoldBreaker))
+            return ABILITY_NONE;
+
+        return gBattleMons[battler].ability;
+    }
+
+    if (gBattleMons[battler].volatiles.gastroAcid)
+        return ABILITY_NONE;
+
+    if (!hasAbilityShield
+     && IsNeutralizingGasOnField()
+     && (gBattleMons[battler].ability != ABILITY_NEUTRALIZING_GAS || gBattleMons[battler].volatiles.gastroAcid))
+        return ABILITY_NONE;
+
+    if (CanBreakThroughAbility(gBattlerAttacker, battler, hasAbilityShield, ignoreMoldBreaker))
+        return ABILITY_NONE;
+
+    return gBattleMons[battler].ability;
+}
+
 bool32 IsBattlerLoafing(enum BattlerId battler)
 {
     return GetBattlerAbility(battler) == ABILITY_TRUANT
@@ -5078,42 +5114,6 @@ void UpdateTruantTogglesOnNeutralizingGasEnd(void)
          && GetBattlerHoldEffectIgnoreAbility(battler) != HOLD_EFFECT_ABILITY_SHIELD)
             UpdateTruantToggle(battler);
     }
-}
-
-enum Ability GetBattlerAbilityInternal(enum BattlerId battler, bool32 ignoreMoldBreaker, bool32 noAbilityShield)
-{
-    bool32 hasAbilityShield = !noAbilityShield && GetBattlerHoldEffectIgnoreAbility(battler) == HOLD_EFFECT_ABILITY_SHIELD;
-    bool32 abilityCantBeSuppressed = gAbilitiesInfo[gBattleMons[battler].ability].cantBeSuppressed;
-
-    if (gBattleStruct->battlerState[battler].notOnField || gSpecialStatuses[battler].attackerInParty)
-        return ABILITY_NONE;
-
-    if (abilityCantBeSuppressed)
-    {
-        // Edge case: Pokémon under the effect of gastro acid transforms into a Pokémon with Comatose (Todo: verify how other unsuppressable abilities behave)
-        if (gBattleMons[battler].volatiles.transformed
-            && gBattleMons[battler].volatiles.gastroAcid
-            && gBattleMons[battler].ability == ABILITY_COMATOSE)
-                return ABILITY_NONE;
-
-        if (CanBreakThroughAbility(gBattlerAttacker, battler, hasAbilityShield, ignoreMoldBreaker))
-            return ABILITY_NONE;
-
-        return gBattleMons[battler].ability;
-    }
-
-    if (gBattleMons[battler].volatiles.gastroAcid)
-        return ABILITY_NONE;
-
-    if (!hasAbilityShield
-     && IsNeutralizingGasOnField()
-     && (gBattleMons[battler].ability != ABILITY_NEUTRALIZING_GAS || gBattleMons[battler].volatiles.gastroAcid))
-        return ABILITY_NONE;
-
-    if (CanBreakThroughAbility(gBattlerAttacker, battler, hasAbilityShield, ignoreMoldBreaker))
-        return ABILITY_NONE;
-
-    return gBattleMons[battler].ability;
 }
 
 u32 IsAbilityOnSide(enum BattlerId battler, enum Ability ability)
