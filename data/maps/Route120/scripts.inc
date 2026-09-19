@@ -11,11 +11,7 @@ Route120_OnResume:
 
 Route120_EventScript_RemoveKecleonObject::
 	call_if_eq VAR_0x8009, 0, Route120_EventScript_RemoveBridgeKecleon
-	call_if_eq VAR_0x8009, 1, Route120_EventScript_RemoveKecleon
-	call_if_eq VAR_0x8009, 2, Route120_EventScript_RemoveKecleon
-	call_if_eq VAR_0x8009, 3, Route120_EventScript_RemoveKecleon
-	call_if_eq VAR_0x8009, 4, Route120_EventScript_RemoveKecleon
-	call_if_eq VAR_0x8009, 5, Route120_EventScript_RemoveKecleon
+	call_if_between VAR_0x8009, 1, 5, Route120_EventScript_RemoveKecleon
 	return
 
 Route120_EventScript_RemoveBridgeKecleon::
