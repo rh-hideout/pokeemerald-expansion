@@ -249,9 +249,24 @@ static u32 RibbonsSummaryHandleInput(struct Pokenav_RibbonsSummaryList *list)
     return RIBBONS_SUMMARY_FUNC_NONE;
 }
 
+static u32 GetRibbonId(void)
+{
+    struct Pokenav_RibbonsSummaryList *list = GetSubstructPtr(POKENAV_SUBSTRUCT_RIBBONS_SUMMARY_LIST);
+    int ribbonPos = list->selectedPos;
+    if (ribbonPos < FIRST_GIFT_RIBBON)
+        return list->ribbonIds[ribbonPos];
+    else
+        return list->giftRibbonIds[ribbonPos - GIFT_RIBBON_START_POS];
+}
+
 // Handles input when a ribbon is selected
 static u32 HandleExpandedRibbonInput(struct Pokenav_RibbonsSummaryList *list)
 {
+    u32 ribbonId = GetRibbonId();
+    u32 assignedRibbon;
+    struct PokenavMonList *mons = list->monList;
+    struct PokenavMonListItem *monInfo = &mons->monData[mons->currIndex];
+
     // Handle movement while a ribbon is selected
     if (JOY_REPEAT(DPAD_UP) && TrySelectRibbonUp(list))
         return RIBBONS_SUMMARY_FUNC_EXPANDED_CURSOR_MOVE;
@@ -261,6 +276,41 @@ static u32 HandleExpandedRibbonInput(struct Pokenav_RibbonsSummaryList *list)
         return RIBBONS_SUMMARY_FUNC_EXPANDED_CURSOR_MOVE;
     if (JOY_REPEAT(DPAD_RIGHT) && TrySelectRibbonRight(list))
         return RIBBONS_SUMMARY_FUNC_EXPANDED_CURSOR_MOVE;
+
+    // Select or deselect the Ribbon used for the Pokémon's battle title.
+    if (JOY_NEW(A_BUTTON))
+    {
+        u32 currentRibbon;
+
+        assignedRibbon = ASSIGNED_RIBBON_FROM_ID(ribbonId);
+        if (monInfo->boxId == TOTAL_BOXES_COUNT)
+        {
+            currentRibbon = GetMonData(&gParties[B_TRAINER_PLAYER][monInfo->monId], MON_DATA_ASSIGNED_RIBBON);
+        }
+        else
+        {
+            currentRibbon = GetBoxMonDataAt(monInfo->boxId, monInfo->monId, MON_DATA_ASSIGNED_RIBBON);
+        }
+
+        if (currentRibbon == assignedRibbon)
+        {
+            PlaySE(SE_PC_OFF);
+            assignedRibbon = ASSIGNED_RIBBON_NONE;
+        }
+        else
+        {
+            PlaySE(SE_PC_LOGIN);
+        }
+
+        if (monInfo->boxId == TOTAL_BOXES_COUNT)
+        {
+            SetMonData(&gParties[B_TRAINER_PLAYER][monInfo->monId], MON_DATA_ASSIGNED_RIBBON, &assignedRibbon);
+        }
+        else
+        {
+            SetBoxMonDataAt(monInfo->boxId, monInfo->monId, MON_DATA_ASSIGNED_RIBBON, &assignedRibbon);
+        }
+    }
 
     if (JOY_NEW(B_BUTTON))
     {
@@ -502,16 +552,6 @@ static u16 GetSelectedPosition(void)
 {
     struct Pokenav_RibbonsSummaryList *list = GetSubstructPtr(POKENAV_SUBSTRUCT_RIBBONS_SUMMARY_LIST);
     return list->selectedPos;
-}
-
-static u32 GetRibbonId(void)
-{
-    struct Pokenav_RibbonsSummaryList *list = GetSubstructPtr(POKENAV_SUBSTRUCT_RIBBONS_SUMMARY_LIST);
-    int ribbonPos = list->selectedPos;
-    if (ribbonPos < FIRST_GIFT_RIBBON)
-        return list->ribbonIds[ribbonPos];
-    else
-        return list->giftRibbonIds[ribbonPos - GIFT_RIBBON_START_POS];
 }
 
 bool32 OpenRibbonsSummaryMenu(void)
