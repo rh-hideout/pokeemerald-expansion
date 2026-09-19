@@ -4022,7 +4022,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                     .move = MOVE_NONE,
                 };
 
-                for (enum BattlerId i < 0; i < gBattlersCount; i++)
+                for (enum BattlerId i = 0; i < gBattlersCount; i++)
                 {
                     cv.abilities[i] = GetBattlerAbility(i);
                     cv.holdEffects[i] = GetBattlerHoldEffect(i);
