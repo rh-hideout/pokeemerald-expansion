@@ -946,7 +946,7 @@ static void UseTMHM(u8 taskId)
     SetUpItemUseCallback(taskId);
 }
 
-static void RemoveUsedItem(void)
+static void ConsumeUsedItem(void)
 {
     ConsumeBagItem(gSpecialVar_ItemId, 1);
     CopyItemName(gSpecialVar_ItemId, gStringVar2);
@@ -993,7 +993,7 @@ static void Task_UseRepel(u8 taskId)
     #if VAR_LAST_REPEL_LURE_USED != 0
         VarSet(VAR_LAST_REPEL_LURE_USED, gSpecialVar_ItemId);
     #endif
-        RemoveUsedItem();
+        ConsumeUsedItem();
         if (CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE)
             DisplayItemMessage(taskId, FONT_NORMAL, gStringVar4, CloseItemMessage);
         else
@@ -1031,7 +1031,7 @@ static void Task_UseLure(u8 taskId)
     #if VAR_LAST_REPEL_LURE_USED != 0
         VarSet(VAR_LAST_REPEL_LURE_USED, gSpecialVar_ItemId);
     #endif
-        RemoveUsedItem();
+        ConsumeUsedItem();
         if (CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE)
             DisplayItemMessage(taskId, FONT_NORMAL, gStringVar4, CloseItemMessage);
         else
@@ -1339,7 +1339,7 @@ void ItemUseInBattle_BagMenu(u8 taskId)
     {
         PlaySE(SE_SELECT);
         if (!(B_TRY_CATCH_TRAINER_BALL >= GEN_4 && (GetItemBattleUsage(gSpecialVar_ItemId) == EFFECT_ITEM_THROW_BALL) && (gBattleTypeFlags & BATTLE_TYPE_TRAINER)))
-            RemoveUsedItem();
+            ConsumeUsedItem();
         ScheduleBgCopyTilemapToVram(2);
         if (CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE)
             gTasks[taskId].func = Task_FadeAndCloseBagMenu;
