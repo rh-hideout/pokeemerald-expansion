@@ -1,4 +1,5 @@
 #include "global.h"
+#include "battle_message.h"
 #include "decompress.h"
 #include "dynamic_placeholder_text_util.h"
 #include "graphics.h"
@@ -25,6 +26,8 @@ enum
 };
 
 #define GFXTAG_RIBBON_ICONS_BIG 9
+#define GFXTAG_NO_TITLE_ICON 10
+#define NO_TITLE_ICON_BG_TILE 25 // After the 12 pairs of small ribbon tiles.
 
 #define PALTAG_RIBBON_ICONS_1 15
 #define PALTAG_RIBBON_ICONS_2 16
@@ -40,7 +43,9 @@ enum
 #define MON_SPRITE_X_OFF -32
 #define MON_SPRITE_Y     104
 
-static const u8 gText_RibbonsF700[] = _("RIBBONS {DYNAMIC 0}");
+static const u8 sText_RibbonCount[] = _("{DYNAMIC 0} ribbons");
+static const u8 sText_NoTitle[] = _("No title");
+static const u8 sText_RemoveTitle[] = _("Remove the assigned title.");
 
 struct Pokenav_RibbonsSummaryList
 {
@@ -50,7 +55,7 @@ struct Pokenav_RibbonsSummaryList
     u16 normalRibbonLastRowStart;
     u16 numNormalRibbons;
     u16 numGiftRibbons;
-    u32 ribbonIds[FIRST_GIFT_RIBBON];
+    u32 ribbonIds[FIRST_GIFT_RIBBON + 1]; // Includes the empty ribbon slot.
     u32 giftRibbonIds[NUM_GIFT_RIBBONS];
     u32 unused2;
     u32 (*callback)(struct Pokenav_RibbonsSummaryList *);
@@ -92,6 +97,7 @@ static void DrawAllRibbonsSmall(struct Pokenav_RibbonsSummaryMenu *);
 static bool32 IsRibbonAnimating(struct Pokenav_RibbonsSummaryMenu *);
 static bool32 IsMonSpriteAnimating(struct Pokenav_RibbonsSummaryMenu *);
 static void GetMonRibbons(struct Pokenav_RibbonsSummaryList *);
+static void SelectAssignedRibbon(struct Pokenav_RibbonsSummaryList *);
 static u32 HandleExpandedRibbonInput(struct Pokenav_RibbonsSummaryList *);
 static u32 RibbonsSummaryHandleInput(struct Pokenav_RibbonsSummaryList *);
 static u32 ReturnToRibbonsListFromSummary(struct Pokenav_RibbonsSummaryList *);
@@ -154,6 +160,27 @@ static const u16 sRibbonIcons5_Pal[] = INCGFX_U16("graphics/pokenav/ribbons/icon
 static const u16 sMonInfo_Pal[] = INCGFX_U16("graphics/pokenav/ribbons/mon_info.pal", ".gbapal"); // palette for Pokémon's name/gender/level text
 static const u32 sRibbonIconsSmall_Gfx[] = INCGFX_U32("graphics/pokenav/ribbons/icons.png", ".4bpp.smol");
 static const u32 sRibbonIconsBig_Gfx[] = INCGFX_U32("graphics/pokenav/ribbons/icons_big.png", ".4bpp.smol");
+
+// Empty outline for the no-title slot, using ribbon palette color 1.
+static const u32 sNoTitleIconGfx[] =
+{
+    0x11111111, 0x00000001, 0x00000001, 0x00000001, 0x00000001, 0x00000001, 0x00000001, 0x00000001,
+    0x11111111, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
+    0x11111111, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
+    0x11111111, 0x10000000, 0x10000000, 0x10000000, 0x10000000, 0x10000000, 0x10000000, 0x10000000,
+    0x00000001, 0x00000001, 0x00000001, 0x00000001, 0x00000001, 0x00000001, 0x00000001, 0x00000001,
+    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
+    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
+    0x10000000, 0x10000000, 0x10000000, 0x10000000, 0x10000000, 0x10000000, 0x10000000, 0x10000000,
+    0x00000001, 0x00000001, 0x00000001, 0x00000001, 0x00000001, 0x00000001, 0x00000001, 0x00000001,
+    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
+    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
+    0x10000000, 0x10000000, 0x10000000, 0x10000000, 0x10000000, 0x10000000, 0x10000000, 0x10000000,
+    0x00000001, 0x00000001, 0x00000001, 0x00000001, 0x00000001, 0x00000001, 0x00000001, 0x11111111,
+    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x11111111,
+    0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x11111111,
+    0x10000000, 0x10000000, 0x10000000, 0x10000000, 0x10000000, 0x10000000, 0x10000000, 0x11111111,
+};
 
 static const struct BgTemplate sBgTemplates[] =
 {
@@ -236,7 +263,8 @@ static u32 RibbonsSummaryHandleInput(struct Pokenav_RibbonsSummaryList *list)
 
     if (JOY_NEW(A_BUTTON))
     {
-        // Enter ribbon selection
+        // Enter ribbon selection at the assigned ribbon.
+        SelectAssignedRibbon(list);
         list->callback = HandleExpandedRibbonInput;
         return RIBBONS_SUMMARY_FUNC_SELECT_RIBBON;
     }
@@ -253,7 +281,7 @@ static u32 GetRibbonId(void)
 {
     struct Pokenav_RibbonsSummaryList *list = GetSubstructPtr(POKENAV_SUBSTRUCT_RIBBONS_SUMMARY_LIST);
     int ribbonPos = list->selectedPos;
-    if (ribbonPos < FIRST_GIFT_RIBBON)
+    if (ribbonPos < GIFT_RIBBON_START_POS)
         return list->ribbonIds[ribbonPos];
     else
         return list->giftRibbonIds[ribbonPos - GIFT_RIBBON_START_POS];
@@ -277,12 +305,12 @@ static u32 HandleExpandedRibbonInput(struct Pokenav_RibbonsSummaryList *list)
     if (JOY_REPEAT(DPAD_RIGHT) && TrySelectRibbonRight(list))
         return RIBBONS_SUMMARY_FUNC_EXPANDED_CURSOR_MOVE;
 
-    // Select or deselect the Ribbon used for the Pokémon's battle title.
+    // Assign the selected ribbon, or clear the title using the empty slot.
     if (JOY_NEW(A_BUTTON))
     {
         u32 currentRibbon;
 
-        assignedRibbon = ASSIGNED_RIBBON_FROM_ID(ribbonId);
+        assignedRibbon = ribbonId == NUM_RIBBONS ? ASSIGNED_RIBBON_NONE : ASSIGNED_RIBBON_FROM_ID(ribbonId);
         if (monInfo->boxId == TOTAL_BOXES_COUNT)
         {
             currentRibbon = GetMonData(&gParties[B_TRAINER_PLAYER][monInfo->monId], MON_DATA_ASSIGNED_RIBBON);
@@ -293,14 +321,9 @@ static u32 HandleExpandedRibbonInput(struct Pokenav_RibbonsSummaryList *list)
         }
 
         if (currentRibbon == assignedRibbon)
-        {
-            PlaySE(SE_PC_OFF);
-            assignedRibbon = ASSIGNED_RIBBON_NONE;
-        }
-        else
-        {
-            PlaySE(SE_PC_LOGIN);
-        }
+            return RIBBONS_SUMMARY_FUNC_NONE;
+
+        PlaySE(SE_SAVE);
 
         if (monInfo->boxId == TOTAL_BOXES_COUNT)
         {
@@ -328,7 +351,7 @@ static u32 ReturnToRibbonsListFromSummary(struct Pokenav_RibbonsSummaryList *lis
 
 static bool32 TrySelectRibbonUp(struct Pokenav_RibbonsSummaryList *list)
 {
-    if (list->selectedPos < FIRST_GIFT_RIBBON)
+    if (list->selectedPos < GIFT_RIBBON_START_POS)
     {
         // In normal ribbons, try to move up a row
         if (list->selectedPos < RIBBONS_PER_ROW)
@@ -353,7 +376,7 @@ static bool32 TrySelectRibbonUp(struct Pokenav_RibbonsSummaryList *list)
 
 static bool32 TrySelectRibbonDown(struct Pokenav_RibbonsSummaryList *list)
 {
-    if (list->selectedPos >= FIRST_GIFT_RIBBON)
+    if (list->selectedPos >= GIFT_RIBBON_START_POS)
         return FALSE;
     if (list->selectedPos < list->normalRibbonLastRowStart)
     {
@@ -428,7 +451,7 @@ static u32 GetRibbonsSummaryMonListCount(void)
     return list->monList->listCount;
 }
 
-static void GetMonNicknameLevelGender(u8 *nick, u8 *level, u8 *gender)
+static void GetMonSpeciesLevelGender(u8 *speciesName, u8 *level, u8 *gender)
 {
     struct Pokenav_RibbonsSummaryList *list = GetSubstructPtr(POKENAV_SUBSTRUCT_RIBBONS_SUMMARY_LIST);
     struct PokenavMonList *mons = list->monList;
@@ -438,7 +461,7 @@ static void GetMonNicknameLevelGender(u8 *nick, u8 *level, u8 *gender)
     {
         // Get info for party mon
         struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][monInfo->monId];
-        GetMonData(mon, MON_DATA_NICKNAME, nick);
+        StringCopy(speciesName, GetSpeciesName(GetMonData(mon, MON_DATA_SPECIES)));
         *level = GetLevelFromMonExp(mon);
         *gender = GetMonGender(mon);
     }
@@ -448,9 +471,8 @@ static void GetMonNicknameLevelGender(u8 *nick, u8 *level, u8 *gender)
         struct BoxPokemon *boxMon = GetBoxedMonPtr(monInfo->boxId, monInfo->monId);
         *gender = GetBoxMonGender(boxMon);
         *level = GetLevelFromBoxMonExp(boxMon);
-        GetBoxMonData(boxMon, MON_DATA_NICKNAME, nick);
+        StringCopy(speciesName, GetSpeciesName(GetBoxMonData(boxMon, MON_DATA_SPECIES)));
     }
-    StringGet_Nickname(nick);
 }
 
 static void GetMonSpeciesPersonalityShiny(enum Species *species, u32 *personality, bool32 *isShiny)
@@ -501,7 +523,8 @@ static void GetMonRibbons(struct Pokenav_RibbonsSummaryList *list)
     else
         ribbonFlags = GetBoxMonDataAt(monInfo->boxId, monInfo->monId, MON_DATA_RIBBONS);
 
-    list->numNormalRibbons = 0;
+    list->numNormalRibbons = 1;
+    list->ribbonIds[0] = NUM_RIBBONS; // Empty slot for removing the title.
     list->numGiftRibbons = 0;
     for (i = 0; i < ARRAY_COUNT(sRibbonData); i++)
     {
@@ -521,17 +544,62 @@ static void GetMonRibbons(struct Pokenav_RibbonsSummaryList *list)
         ribbonFlags >>= sRibbonData[i].numBits;
     }
 
-    if (list->numNormalRibbons != 0)
+    list->normalRibbonLastRowStart = ((list->numNormalRibbons - 1) / RIBBONS_PER_ROW) * RIBBONS_PER_ROW;
+    SelectAssignedRibbon(list);
+}
+
+static u32 GetAssignedRibbon(void)
+{
+    struct Pokenav_RibbonsSummaryList *list = GetSubstructPtr(POKENAV_SUBSTRUCT_RIBBONS_SUMMARY_LIST);
+    struct PokenavMonListItem *monInfo = &list->monList->monData[list->monList->currIndex];
+
+    if (monInfo->boxId == TOTAL_BOXES_COUNT)
+        return GetMonData(&gParties[B_TRAINER_PLAYER][monInfo->monId], MON_DATA_ASSIGNED_RIBBON);
+    return GetBoxMonDataAt(monInfo->boxId, monInfo->monId, MON_DATA_ASSIGNED_RIBBON);
+}
+
+static void SelectAssignedRibbon(struct Pokenav_RibbonsSummaryList *list)
+{
+    u32 assignedRibbon = GetAssignedRibbon();
+    u32 i;
+
+    list->selectedPos = 0;
+    if (assignedRibbon == ASSIGNED_RIBBON_NONE)
+        return;
+
+    for (i = 1; i < list->numNormalRibbons; i++)
     {
-        list->normalRibbonLastRowStart = ((list->numNormalRibbons - 1) / RIBBONS_PER_ROW) * RIBBONS_PER_ROW;
-        list->selectedPos = 0;
+        if (ASSIGNED_RIBBON_FROM_ID(list->ribbonIds[i]) == assignedRibbon)
+        {
+            list->selectedPos = i;
+            return;
+        }
     }
+    for (i = 0; i < list->numGiftRibbons; i++)
+    {
+        if (ASSIGNED_RIBBON_FROM_ID(list->giftRibbonIds[i]) == assignedRibbon)
+        {
+            list->selectedPos = GIFT_RIBBON_START_POS + i;
+            return;
+        }
+    }
+}
+
+static void BufferMonNameWithTitle(u32 assignedRibbon)
+{
+    struct Pokenav_RibbonsSummaryList *list = GetSubstructPtr(POKENAV_SUBSTRUCT_RIBBONS_SUMMARY_LIST);
+    struct PokenavMonListItem *monInfo = &list->monList->monData[list->monList->currIndex];
+    const u8 *title = GetRibbonTitle(assignedRibbon);
+
+    if (monInfo->boxId == TOTAL_BOXES_COUNT)
+        GetMonData(&gParties[B_TRAINER_PLAYER][monInfo->monId], MON_DATA_NICKNAME, gStringVar1);
     else
-    {
-        // There are no normal ribbons, move cursor to first gift ribbon
-        list->normalRibbonLastRowStart = 0;
-        list->selectedPos = GIFT_RIBBON_START_POS;
-    }
+        GetBoxMonData(GetBoxedMonPtr(monInfo->boxId, monInfo->monId), MON_DATA_NICKNAME, gStringVar1);
+    StringGet_Nickname(gStringVar1);
+    if (title == NULL)
+        StringCopy(gStringVar4, gStringVar1);
+    else
+        StringExpandPlaceholders(gStringVar4, title);
 }
 
 static u32 *GetNormalRibbonIds(u32 *size)
@@ -589,6 +657,7 @@ void FreeRibbonsSummaryScreen2(void)
 #endif
     DestroyRibbonsMonFrontPic(menu);
     FreeSpriteTilesByTag(GFXTAG_RIBBON_ICONS_BIG);
+    FreeSpriteTilesByTag(GFXTAG_NO_TITLE_ICON);
     FreeSpritePaletteByTag(PALTAG_RIBBON_ICONS_1);
     FreeSpritePaletteByTag(PALTAG_RIBBON_ICONS_2);
     FreeSpritePaletteByTag(PALTAG_RIBBON_ICONS_3);
@@ -638,6 +707,7 @@ static u32 LoopedTask_OpenRibbonsSummaryMenu(s32 state)
     case 2:
         if (!FreeTempTileDataBuffersIfPossible())
         {
+            LoadBgTiles(1, sNoTitleIconGfx, sizeof(sNoTitleIconGfx), NO_TITLE_ICON_BG_TILE);
             AddRibbonCountWindow(menu);
             return LT_INC_AND_PAUSE;
         }
@@ -764,6 +834,7 @@ static u32 LoopedTask_ExpandSelectedRibbon(s32 state)
         if (!IsRibbonAnimating(menu))
         {
             PrintRibbonNameAndDescription(menu);
+            PrintRibbbonsSummaryMonInfo(menu);
             PrintHelpBarText(HELPBAR_RIBBONS_CHECK);
             return LT_INC_AND_PAUSE;
         }
@@ -795,6 +866,7 @@ static u32 LoopedTask_MoveRibbonsCursorExpanded(s32 state)
         if (!IsRibbonAnimating(menu))
         {
             PrintRibbonNameAndDescription(menu);
+            PrintRibbbonsSummaryMonInfo(menu);
             return LT_INC_AND_PAUSE;
         }
         return LT_PAUSE;
@@ -818,6 +890,7 @@ static u32 LoopedTask_ShrinkExpandedRibbon(s32 state)
         if (!IsRibbonAnimating(menu))
         {
             PrintCurrentMonRibbonCount(menu);
+            PrintRibbbonsSummaryMonInfo(menu);
             PrintHelpBarText(HELPBAR_RIBBONS_LIST);
             return LT_INC_AND_PAUSE;
         }
@@ -851,12 +924,14 @@ static void PrintCurrentMonRibbonCount(struct Pokenav_RibbonsSummaryMenu *menu)
 {
     u8 color[] = {TEXT_COLOR_RED, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_LIGHT_GRAY};
 
+    FillWindowPixelBuffer(menu->ribbonCountWindowId, PIXEL_FILL(4));
+    BufferMonNameWithTitle(GetAssignedRibbon());
+    AddTextPrinterParameterized3(menu->ribbonCountWindowId, FONT_SMALL, 0, 1, color, TEXT_SKIP_DRAW, gStringVar4);
     ConvertIntToDecimalStringN(gStringVar1, GetCurrMonRibbonCount(), STR_CONV_MODE_LEFT_ALIGN, 2);
     DynamicPlaceholderTextUtil_Reset();
     DynamicPlaceholderTextUtil_SetPlaceholderPtr(0, gStringVar1);
-    DynamicPlaceholderTextUtil_ExpandPlaceholders(gStringVar4, gText_RibbonsF700);
-    FillWindowPixelBuffer(menu->ribbonCountWindowId, PIXEL_FILL(4));
-    AddTextPrinterParameterized3(menu->ribbonCountWindowId, FONT_NORMAL, 0, 1, color, TEXT_SKIP_DRAW, gStringVar4);
+    DynamicPlaceholderTextUtil_ExpandPlaceholders(gStringVar4, sText_RibbonCount);
+    AddTextPrinterParameterized3(menu->ribbonCountWindowId, FONT_SMALL, 0, 17, color, TEXT_SKIP_DRAW, gStringVar4);
     CopyWindowToVram(menu->ribbonCountWindowId, COPYWIN_GFX);
 }
 
@@ -867,7 +942,12 @@ static void PrintRibbonNameAndDescription(struct Pokenav_RibbonsSummaryMenu *men
     u8 color[] = {TEXT_COLOR_RED, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_LIGHT_GRAY};
 
     FillWindowPixelBuffer(menu->ribbonCountWindowId, PIXEL_FILL(4));
-    if (ribbonId < FIRST_GIFT_RIBBON)
+    if (ribbonId == NUM_RIBBONS)
+    {
+        AddTextPrinterParameterized3(menu->ribbonCountWindowId, FONT_NORMAL, 0, 1, color, TEXT_SKIP_DRAW, sText_NoTitle);
+        AddTextPrinterParameterized3(menu->ribbonCountWindowId, FONT_SMALL, 0, 17, color, TEXT_SKIP_DRAW, sText_RemoveTitle);
+    }
+    else if (ribbonId < FIRST_GIFT_RIBBON)
     {
         // Print normal ribbon name/description
         for (i = 0; i < 2; i++)
@@ -882,7 +962,10 @@ static void PrintRibbonNameAndDescription(struct Pokenav_RibbonsSummaryMenu *men
 
         // If 0, this gift ribbon slot is unoccupied
         if (ribbonId == 0)
+        {
+            CopyWindowToVram(menu->ribbonCountWindowId, COPYWIN_GFX);
             return;
+        }
 
         // Print gift ribbon name/description
         ribbonId--;
@@ -921,9 +1004,19 @@ static void PrintRibbbonsSummaryMonInfo(struct Pokenav_RibbonsSummaryMenu *menu)
     u8 *txtPtr;
     u8 level, gender;
     u16 windowId = menu->nameWindowId;
+    struct Pokenav_RibbonsSummaryList *list = GetSubstructPtr(POKENAV_SUBSTRUCT_RIBBONS_SUMMARY_LIST);
 
     FillWindowPixelBuffer(windowId, PIXEL_FILL(1));
-    GetMonNicknameLevelGender(gStringVar3, &level, &gender);
+    if (list->callback == HandleExpandedRibbonInput)
+    {
+        u32 ribbonId = GetRibbonId();
+        BufferMonNameWithTitle(ribbonId == NUM_RIBBONS ? ASSIGNED_RIBBON_NONE : ASSIGNED_RIBBON_FROM_ID(ribbonId));
+        AddTextPrinterParameterized(windowId, FONT_SMALL, gStringVar4, 0, 1, TEXT_SKIP_DRAW, NULL);
+        CopyWindowToVram(windowId, COPYWIN_GFX);
+        return;
+    }
+
+    GetMonSpeciesLevelGender(gStringVar3, &level, &gender);
     switch (gender)
     {
     case MON_MALE:
@@ -936,14 +1029,14 @@ static void PrintRibbbonsSummaryMonInfo(struct Pokenav_RibbonsSummaryMenu *menu)
         genderTxt = sText_NoGenderSymbol;
         break;
     }
-    AddTextPrinterParameterized(windowId, GetFontIdToFit(gStringVar3, FONT_NORMAL, 0, 60), gStringVar3, 0, 1, TEXT_SKIP_DRAW, NULL);
-
-    txtPtr = StringCopy(gStringVar1, genderTxt);
+    txtPtr = StringCopy(gStringVar4, gStringVar3);
+    *(txtPtr++) = CHAR_SPACE;
+    txtPtr = StringCopy(txtPtr, genderTxt);
     *(txtPtr++) = CHAR_SLASH;
     *(txtPtr++) = CHAR_EXTRA_SYMBOL;
     *(txtPtr++) = CHAR_LV_2;
     ConvertIntToDecimalStringN(txtPtr, level, STR_CONV_MODE_LEFT_ALIGN, 3);
-    AddTextPrinterParameterized(windowId, FONT_NORMAL, gStringVar1, 60, 1, TEXT_SKIP_DRAW, NULL);
+    AddTextPrinterParameterized(windowId, FONT_SMALL, gStringVar4, 0, 1, TEXT_SKIP_DRAW, NULL);
     CopyWindowToVram(windowId, COPYWIN_GFX);
 }
 
@@ -1109,7 +1202,17 @@ static void DrawRibbonSmall(u32 i, u32 ribbonId)
     u32 destX = (i % RIBBONS_PER_ROW) * 2 + 11;
     u32 destY = (i / RIBBONS_PER_ROW) * 2 + 4;
 
-    BufferSmallRibbonGfxData(bgData, ribbonId);
+    if (ribbonId == NUM_RIBBONS)
+    {
+        bgData[0] = (NO_TITLE_ICON_BG_TILE + 0) | (2 << 12);
+        bgData[1] = (NO_TITLE_ICON_BG_TILE + 3) | (2 << 12);
+        bgData[2] = (NO_TITLE_ICON_BG_TILE + 12) | (2 << 12);
+        bgData[3] = (NO_TITLE_ICON_BG_TILE + 15) | (2 << 12);
+    }
+    else
+    {
+        BufferSmallRibbonGfxData(bgData, ribbonId);
+    }
     CopyToBgTilemapBufferRect(1, bgData, destX, destY, 2, 2);
 }
 
@@ -1189,6 +1292,11 @@ static const struct CompressedSpriteSheet sSpriteSheet_RibbonIconsBig =
     sRibbonIconsBig_Gfx, 0x1800, GFXTAG_RIBBON_ICONS_BIG
 };
 
+static const struct SpriteSheet sSpriteSheet_NoTitleIcon =
+{
+    sNoTitleIconGfx, sizeof(sNoTitleIconGfx), GFXTAG_NO_TITLE_ICON
+};
+
 static const struct SpritePalette sSpritePalettes_RibbonIcons[] =
 {
     {sRibbonIcons1_Pal, PALTAG_RIBBON_ICONS_1},
@@ -1263,6 +1371,7 @@ static void CreateBigRibbonSprite(struct Pokenav_RibbonsSummaryMenu *menu)
     u8 spriteId;
 
     LoadCompressedSpriteSheet(&sSpriteSheet_RibbonIconsBig);
+    LoadSpriteSheet(&sSpriteSheet_NoTitleIcon);
     Pokenav_AllocAndLoadPalettes(sSpritePalettes_RibbonIcons);
 
     spriteId = CreateSprite(&sSpriteTemplate_RibbonIconBig, 0, 0, 0);
@@ -1284,8 +1393,16 @@ static void UpdateAndZoomInSelectedRibbon(struct Pokenav_RibbonsSummaryMenu *men
 
     // Set new selected ribbon's gfx data
     ribbonId = GetRibbonId();
-    menu->bigRibbonSprite->oam.tileNum = (sRibbonGfxData[ribbonId].tileNumOffset * 16) + GetSpriteTileStartByTag(GFXTAG_RIBBON_ICONS_BIG);
-    menu->bigRibbonSprite->oam.paletteNum = IndexOfSpritePaletteTag(sRibbonGfxData[ribbonId].palNumOffset + PALTAG_RIBBON_ICONS_1);
+    if (ribbonId == NUM_RIBBONS)
+    {
+        menu->bigRibbonSprite->oam.tileNum = GetSpriteTileStartByTag(GFXTAG_NO_TITLE_ICON);
+        menu->bigRibbonSprite->oam.paletteNum = IndexOfSpritePaletteTag(PALTAG_RIBBON_ICONS_1);
+    }
+    else
+    {
+        menu->bigRibbonSprite->oam.tileNum = (sRibbonGfxData[ribbonId].tileNumOffset * 16) + GetSpriteTileStartByTag(GFXTAG_RIBBON_ICONS_BIG);
+        menu->bigRibbonSprite->oam.paletteNum = IndexOfSpritePaletteTag(sRibbonGfxData[ribbonId].palNumOffset + PALTAG_RIBBON_ICONS_1);
+    }
 
     // Start zoom in animation
     StartSpriteAffineAnim(menu->bigRibbonSprite, RIBBONANIM_ZOOM_IN);

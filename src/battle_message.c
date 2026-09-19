@@ -2890,15 +2890,10 @@ static void GetBattlerNick(enum BattlerId battler, u8 *dst)
     StringGet_Nickname(dst);
 }
 
-static const u8 *GetBattlerRibbonTitle(enum BattlerId battler)
+const u8 *GetRibbonTitle(u32 assignedRibbon)
 {
-    struct Pokemon *illusionMon = GetIllusionMonPtr(battler);
-    struct Pokemon *mon = GetBattlerMon(battler);
-    u32 assignedRibbon, ribbonId;
+    u32 ribbonId;
 
-    if (illusionMon != NULL)
-        mon = illusionMon;
-    assignedRibbon = GetMonData(mon, MON_DATA_ASSIGNED_RIBBON);
     if (assignedRibbon == ASSIGNED_RIBBON_NONE)
         return NULL;
 
@@ -2907,6 +2902,16 @@ static const u8 *GetBattlerRibbonTitle(enum BattlerId battler)
         return NULL;
 
     return sRibbonTitles[ribbonId];
+}
+
+static const u8 *GetBattlerRibbonTitle(enum BattlerId battler)
+{
+    struct Pokemon *illusionMon = GetIllusionMonPtr(battler);
+    struct Pokemon *mon = GetBattlerMon(battler);
+
+    if (illusionMon != NULL)
+        mon = illusionMon;
+    return GetRibbonTitle(GetMonData(mon, MON_DATA_ASSIGNED_RIBBON));
 }
 
 static const u8 *GetBattlerTitledNick(enum BattlerId battler, u8 *dst)

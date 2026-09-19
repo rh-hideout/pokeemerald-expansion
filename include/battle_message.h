@@ -254,6 +254,7 @@ struct BattleMsgData
     u8 textBuffs[3][TEXT_BUFF_ARRAY_COUNT];
 };
 
+const u8 *GetRibbonTitle(u32 assignedRibbon);
 void BufferStringBattle(enum StringID stringID, enum BattlerId battler);
 u32 BattleStringExpandPlaceholdersToDisplayedString(const u8 *src);
 u32 BattleStringExpandPlaceholders(const u8 *src, u8 *dst, u32 dstSize);
