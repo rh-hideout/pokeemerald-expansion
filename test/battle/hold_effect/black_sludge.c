@@ -140,7 +140,7 @@ SINGLE_BATTLE_TEST("Black Sludge deals 1/8 max HP after its holder loses the Poi
         ASSUME(GetSpeciesType(SPECIES_EKANS, 0) == TYPE_POISON);
         ASSUME(GetMoveEffect(MOVE_SONIC_BOOM) == EFFECT_FIXED_HP_DAMAGE);
         ASSUME(GetMoveFixedHPDamage(MOVE_SONIC_BOOM) == 20);
-        ASSUME(GetMoveEffect(MOVE_SOAK) == EFFECT_SOAK);
+        ASSUME(GetMoveEffect(MOVE_SOAK) == EFFECT_OVERWRITE_TYPE);
         PLAYER(SPECIES_EKANS) { MaxHP(160); HP(160); Item(ITEM_BLACK_SLUDGE); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

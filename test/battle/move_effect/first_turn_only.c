@@ -113,12 +113,12 @@ AI_DOUBLE_BATTLE_TEST("AI will Fake Out a target if its ally has slow KO on the 
             SCORE_EQ_VAL(opponentRight, MOVE_SEISMIC_TOSS, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE, target:playerRight);
             if (speed == 2)
             {
-                SCORE_EQ_VAL(opponentRight, MOVE_FAKE_OUT, AI_SCORE_DEFAULT + GOOD_EFFECT, target:playerLeft); 
+                SCORE_EQ_VAL(opponentRight, MOVE_FAKE_OUT, AI_SCORE_DEFAULT + GOOD_EFFECT, target:playerLeft);
                 SCORE_EQ_VAL(opponentRight, MOVE_FAKE_OUT, AI_SCORE_DEFAULT + SLOW_KILL + 2, target:playerRight);
             }
             else
             {
-                SCORE_EQ_VAL(opponentRight, MOVE_FAKE_OUT, AI_SCORE_DEFAULT + DECENT_EFFECT, target:playerLeft); 
+                SCORE_EQ_VAL(opponentRight, MOVE_FAKE_OUT, AI_SCORE_DEFAULT + DECENT_EFFECT, target:playerLeft);
                 SCORE_EQ_VAL(opponentRight, MOVE_FAKE_OUT, AI_SCORE_DEFAULT + FAST_KILL + 2, target:playerRight);
             }
         }
@@ -141,7 +141,7 @@ AI_DOUBLE_BATTLE_TEST("AI may prioritize Fake Out over fast KO when its ally is 
         TURN { EXPECT_MOVE(opponentRight, MOVE_FAKE_OUT, target:playerRight);
             SCORE_EQ_VAL(opponentRight, MOVE_SEISMIC_TOSS, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE + FAST_KILL, target:playerLeft);
             SCORE_EQ_VAL(opponentRight, MOVE_SEISMIC_TOSS, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE, target:playerRight);
-            SCORE_EQ_VAL(opponentRight, MOVE_FAKE_OUT, AI_SCORE_DEFAULT + DECENT_EFFECT, target:playerLeft); 
+            SCORE_EQ_VAL(opponentRight, MOVE_FAKE_OUT, AI_SCORE_DEFAULT + DECENT_EFFECT, target:playerLeft);
             SCORE_EQ_VAL(opponentRight, MOVE_FAKE_OUT, AI_SCORE_DEFAULT + FAST_KILL + 2, target:playerRight);
         }
     } SCENE {
@@ -162,7 +162,7 @@ AI_DOUBLE_BATTLE_TEST("AI will Fake Out a target that its ally has slow KO on wh
             SCORE_EQ_VAL(opponentRight, MOVE_SEISMIC_TOSS, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE, target:playerLeft);
             SCORE_EQ_VAL(opponentRight, MOVE_SEISMIC_TOSS, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE, target:playerRight);
             SCORE_EQ_VAL(opponentRight, MOVE_FAKE_OUT, AI_SCORE_DEFAULT + GOOD_EFFECT, target:playerLeft);
-            SCORE_EQ_VAL(opponentRight, MOVE_FAKE_OUT, AI_SCORE_DEFAULT + DECENT_EFFECT, target:playerRight); 
+            SCORE_EQ_VAL(opponentRight, MOVE_FAKE_OUT, AI_SCORE_DEFAULT + DECENT_EFFECT, target:playerRight);
         }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FAKE_OUT, opponentRight);
@@ -182,7 +182,7 @@ AI_DOUBLE_BATTLE_TEST("AI will not Fake Out a target that its ally has slow KO o
             SCORE_EQ_VAL(opponentRight, MOVE_SEISMIC_TOSS, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE + FAST_KILL, target:playerLeft);
             SCORE_EQ_VAL(opponentRight, MOVE_SEISMIC_TOSS, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE, target:playerRight);
             SCORE_EQ_VAL(opponentRight, MOVE_FAKE_OUT, AI_SCORE_DEFAULT + DECENT_EFFECT, target:playerLeft);
-            SCORE_EQ_VAL(opponentRight, MOVE_FAKE_OUT, AI_SCORE_DEFAULT + DECENT_EFFECT, target:playerRight); 
+            SCORE_EQ_VAL(opponentRight, MOVE_FAKE_OUT, AI_SCORE_DEFAULT + DECENT_EFFECT, target:playerRight);
         }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SEISMIC_TOSS, opponentRight);
@@ -217,7 +217,7 @@ SINGLE_BATTLE_TEST("First Impression can only be used on the user's first turn a
 SINGLE_BATTLE_TEST("First Impression fails if it's called via Instruct")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_FIRST_IMPRESSION); };
         OPPONENT(SPECIES_ORANGURU);
     } WHEN {
         TURN { MOVE(player, MOVE_FIRST_IMPRESSION); MOVE(opponent, MOVE_INSTRUCT); }
