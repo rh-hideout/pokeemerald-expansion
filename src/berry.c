@@ -2451,6 +2451,7 @@ bool32 BerryTreeGrow(struct BerryTree *tree)
         return FALSE;
     case BERRY_STAGE_FLOWERING:
         tree->berryYield = CalcBerryYield(tree);
+        [[fallthrough]];
     case BERRY_STAGE_PLANTED:
     case BERRY_STAGE_SPROUTED:
     case BERRY_STAGE_TRUNK:

@@ -2070,6 +2070,7 @@ static void Task_DoPlayerSpinExit(u8 taskId)
         sprite->subpriority = 0;
         sprite->subspriteMode = SUBSPRITES_OFF;
         tState++;
+        [[fallthrough]];
     case 1: // Spin while rising
         TrySpinPlayerForWarp(object, &tSpinDelayTimer);
 
@@ -2139,6 +2140,7 @@ static void Task_DoPlayerSpinEntrance(u8 taskId)
         sprite->subpriority = 0;
         sprite->subspriteMode = SUBSPRITES_OFF;
         tState++;
+        [[fallthrough]];
     case 1: // Spin while descending
         TrySpinPlayerForWarp(object, &tSpinDelayTimer);
 

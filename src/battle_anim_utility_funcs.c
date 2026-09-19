@@ -64,7 +64,7 @@ void AnimTask_BlendBattleAnimPalExclude(u8 taskId)
     {
     case ANIM_ATK_PARTNER:
         selectedPalettes = 0;
-        // fall through
+        [[fallthrough]];
     case ANIM_ATTACKER:
 #ifdef UBFIX
     default:
@@ -73,7 +73,7 @@ void AnimTask_BlendBattleAnimPalExclude(u8 taskId)
         break;
     case ANIM_DEF_PARTNER:
         selectedPalettes = 0;
-        // fall through
+        [[fallthrough]];
     case ANIM_TARGET:
         animBattlers[0] = gBattleAnimTarget;
         break;
