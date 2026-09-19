@@ -51,6 +51,8 @@ include/constants/script_commands.h
 tools/trainerproc/trainerproc
 src/data/battle_partners.h
 src/data/pokemon/teachable_learnsets.h
+src/data/pokemon/level_up_learnsets.h
+/level_up_learnsets_legacy_backup.zip
 src/data/trainers.h
 src/data/trainers_frlg.h
 src/data/debug_trainers.h
