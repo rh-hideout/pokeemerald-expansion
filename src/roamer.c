@@ -101,7 +101,7 @@ void MoveAllRoamers(void)
 
 static void CreateInitialRoamerMon(u8 index, enum Species species, u8 level)
 {
-    assertf(ENCOUNTER_ORIGIN(gEncounterType) == UNDEFINED_MON_ORIGIN, "trying to generate a roamer while encounter origin is set");
+    assertf(ENCOUNTER_ORIGIN(gEncounterType) == UNDEFINED_MON_ORIGIN, "trying to generate a roamer while encounter origin is set\nDo not run unrelated commands between setting up a static wild battle and starting it.");
     ClearRoamerLocationHistory(index);
     u32 personality = GetMonPersonality(species,
         GetSynchronizedGender(ROAMER_ORIGIN, species),

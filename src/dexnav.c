@@ -1182,19 +1182,12 @@ static void CreateDexNavWildMon(enum Species species, u8 potential, u8 level, u8
     struct Pokemon *mon = &gParties[B_TRAINER_OPPONENT_A][0];
     enum WildPokemonArea wildArea;
 
-    switch (sDexNavSearchDataPtr->environment)
-    {
-    case ENCOUNTER_TYPE_WATER:
-        wildArea = WILD_AREA_WATER;
-        break;
-    case ENCOUNTER_TYPE_HIDDEN:
+    if (sDexNavSearchDataPtr->isHiddenMon)
         wildArea = WILD_AREA_HIDDEN;
-        break;
-    case ENCOUNTER_TYPE_LAND:
-    default:
+    else if (sDexNavSearchDataPtr->environment == ENCOUNTER_TYPE_WATER)
+        wildArea = WILD_AREA_WATER;
+    else
         wildArea = WILD_AREA_LAND;
-        break;
-    }
 
     SET_ENCOUNTER_AREA(gEncounterType, wildArea);
     SET_ENCOUNTER_ORIGIN(gEncounterType, WILDMON_ORIGIN);

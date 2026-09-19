@@ -389,7 +389,7 @@ u32 ScriptGiveMon(enum Species species, u8 level, enum Item item)
     struct Pokemon mon;
     u8 heldItem[2];
 
-    assertf(ENCOUNTER_ORIGIN(gEncounterType) == UNDEFINED_MON_ORIGIN, "trying to give a Pokemon while encounter origin is set");
+    assertf(ENCOUNTER_ORIGIN(gEncounterType) == UNDEFINED_MON_ORIGIN, "trying to give a Pokemon while encounter origin is set\nDo not run unrelated commands between setting up a static wild battle and starting it.");
     SET_ENCOUNTER_ORIGIN(gEncounterType, GIFTMON_ORIGIN);
     CreateRandomMon(&mon, species, level);
     if (item)
@@ -457,7 +457,7 @@ void ScrCmd_createmon(struct ScriptContext *ctx)
     monTemplate.isEgg        = PARSE_FLAG(25, FALSE);
     if (side == B_SIDE_PLAYER)
     {
-        assertf(ENCOUNTER_ORIGIN(gEncounterType) == UNDEFINED_MON_ORIGIN, "trying to give a Pokemon while encounter origin is set");
+        assertf(ENCOUNTER_ORIGIN(gEncounterType) == UNDEFINED_MON_ORIGIN, "trying to give a Pokemon while encounter origin is set\nDo not run unrelated commands between setting up a static wild battle and starting it.");
         Script_RequestEffects(SCREFF_V1 | SCREFF_SAVE);
         monTemplate.origin = GIFTMON_ORIGIN;
     }

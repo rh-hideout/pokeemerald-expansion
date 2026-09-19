@@ -386,9 +386,6 @@ void StartWildBattleWithOWE(struct ScriptContext *ctx)
     if (category < ROAMER_COUNT && StartWildBattleWithOWE_CheckRoamer(category))
         return;
 
-    if (category != OWE_CATEGORY_MASS_OUTBREAK)
-        SET_ENCOUNTER_AREA(gEncounterType, wildArea);
-
     enum Species speciesId = OW_SPECIES(owe);
     bool32 shiny = OW_SHINY(owe) ? TRUE : FALSE;
     u32 gender = OW_FEMALE(owe) ? MON_FEMALE : MON_MALE;
@@ -413,6 +410,7 @@ void StartWildBattleWithOWE(struct ScriptContext *ctx)
     if (StartWildBattleWithOWE_CheckMassOutbreak(category, speciesId, level))
         return;
 
+    SET_ENCOUNTER_AREA(gEncounterType, wildArea);
     if (StartWildBattleWithOWE_CheckDoubleBattle(owe, headerId))
         return;
 
@@ -851,10 +849,11 @@ static bool32 TrySelectTileForOWE(s32* outX, s32* outY)
 static void SetSpeciesInfoForOWE(struct InfoOWE *info, u32 x, u32 y)
 {
     u32 personality;
+    bool32 created = CreateEnemyPartyOWE(info, x, y);
 
-    if (!CreateEnemyPartyOWE(info, x, y))
+    SET_ENCOUNTER_ORIGIN(gEncounterType, UNDEFINED_MON_ORIGIN);
+    if (!created)
     {
-        SET_ENCOUNTER_ORIGIN(gEncounterType, UNDEFINED_MON_ORIGIN);
         ZeroEnemyPartyMons();
         info->speciesId = SPECIES_NONE;
         return;
@@ -867,7 +866,7 @@ static void SetSpeciesInfoForOWE(struct InfoOWE *info, u32 x, u32 y)
     if (info->speciesId == SPECIES_UNOWN)
         info->speciesId = GetUnownSpeciesId(personality);
 
-    info->isShiny = ComputePlayerShinyOdds(personality, READ_OTID_FROM_SAVE);
+    info->isShiny = GetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_IS_SHINY);
     if (GetGenderFromSpeciesAndPersonality(info->speciesId, personality) == MON_FEMALE)
         info->isFemale = TRUE;
     else
@@ -879,7 +878,6 @@ static void SetSpeciesInfoForOWE(struct InfoOWE *info, u32 x, u32 y)
     if (info->category == OWE_CATEGORY_UNDEFINED)
         info->category = OWE_CATEGORY_WILD;
 
-    SET_ENCOUNTER_ORIGIN(gEncounterType, UNDEFINED_MON_ORIGIN);
     ZeroEnemyPartyMons();
 }
 

@@ -831,10 +831,8 @@ void RockSmashWildEncounter(void)
         }
         else if (WildEncounterCheck(wildPokemonInfo->encounterRate, TRUE) == TRUE)
         {
-            SET_ENCOUNTER_AREA(gEncounterType, WILD_AREA_ROCKS);
             if (TryGenerateWildMon(wildPokemonInfo, WILD_AREA_ROCKS, WILD_CHECK_REPEL | WILD_CHECK_KEEN_EYE) != TRUE)
             {
-                SET_ENCOUNTER_AREA(gEncounterType, WILD_AREA_NONE);
                 gSpecialVar_Result = FALSE;
             }
             else if (TryDoDoubleWildBattle())
@@ -842,11 +840,13 @@ void RockSmashWildEncounter(void)
                 struct Pokemon mon1 = gParties[B_TRAINER_OPPONENT_A][0];
                 TryGenerateWildMon(wildPokemonInfo, WILD_AREA_ROCKS, WILD_CHECK_REPEL | WILD_CHECK_KEEN_EYE);
                 gParties[B_TRAINER_OPPONENT_A][1] = mon1;
+                SET_ENCOUNTER_AREA(gEncounterType, WILD_AREA_ROCKS);
                 BattleSetup_StartDoubleWildBattle();
                 gSpecialVar_Result = TRUE;
             }
             else
             {
+                SET_ENCOUNTER_AREA(gEncounterType, WILD_AREA_ROCKS);
                 BattleSetup_StartWildBattle();
                 gSpecialVar_Result = TRUE;
             }
@@ -877,14 +877,11 @@ bool8 SweetScentWildEncounter(void)
             headerId = GetBattlePikeWildMonHeaderId();
             timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_LAND);
 
-            SET_ENCOUNTER_AREA(gEncounterType, WILD_AREA_LAND);
             if (TryGenerateWildMon(gBattlePikeWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo, WILD_AREA_LAND, 0) != TRUE)
-            {
-                SET_ENCOUNTER_AREA(gEncounterType, WILD_AREA_NONE);
                 return FALSE;
-            }
 
             TryGenerateBattlePikeWildMon(FALSE);
+            SET_ENCOUNTER_AREA(gEncounterType, WILD_AREA_LAND);
             BattleSetup_StartBattlePikeWildBattle();
             return TRUE;
         }
@@ -893,14 +890,11 @@ bool8 SweetScentWildEncounter(void)
             headerId = gSaveBlock2Ptr->frontier.curChallengeBattleNum;
             timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_LAND);
 
-            SET_ENCOUNTER_AREA(gEncounterType, WILD_AREA_LAND);
             if (TryGenerateWildMon(gBattlePyramidWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo, WILD_AREA_LAND, 0) != TRUE)
-            {
-                SET_ENCOUNTER_AREA(gEncounterType, WILD_AREA_NONE);
                 return FALSE;
-            }
 
             GenerateBattlePyramidWildMon(SPECIES_NONE);
+            SET_ENCOUNTER_AREA(gEncounterType, WILD_AREA_LAND);
             BattleSetup_StartWildBattle();
             return TRUE;
         }
@@ -924,8 +918,8 @@ bool8 SweetScentWildEncounter(void)
                 SetUpMassOutbreakEncounter(0);
             else
             {
-                SET_ENCOUNTER_AREA(gEncounterType, WILD_AREA_LAND);
                 TryGenerateWildMon(gWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo, WILD_AREA_LAND, 0);
+                SET_ENCOUNTER_AREA(gEncounterType, WILD_AREA_LAND);
             }
 
             BattleSetup_StartWildBattle();
@@ -946,8 +940,8 @@ bool8 SweetScentWildEncounter(void)
                 return TRUE;
             }
 
-            SET_ENCOUNTER_AREA(gEncounterType, WILD_AREA_WATER);
             TryGenerateWildMon(gWildMonHeaders[headerId].encounterTypes[timeOfDay].waterMonsInfo, WILD_AREA_WATER, 0);
+            SET_ENCOUNTER_AREA(gEncounterType, WILD_AREA_WATER);
             BattleSetup_StartWildBattle();
             return TRUE;
         }
