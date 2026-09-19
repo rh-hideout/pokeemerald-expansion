@@ -4022,10 +4022,11 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                     .move = MOVE_NONE,
                 };
 
-                cv.abilities[gBattlerAttacker] = GetBattlerAbility(gBattlerAttacker);
-                cv.abilities[gBattlerTarget] = ability;
-                cv.holdEffects[gBattlerAttacker] = GetBattlerHoldEffect(gBattlerAttacker);
-                cv.holdEffects[gBattlerTarget] = GetBattlerHoldEffect(gBattlerTarget);
+                for (enum BattlerId i = 0; i < gBattlersCount; i++)
+                {
+                    cv.abilities[i] = GetBattlerAbility(i);
+                    cv.holdEffects[i] = GetBattlerHoldEffect(i);
+                }
 
                 struct StatChange st = {
                     .onlyChecking = TRUE,
