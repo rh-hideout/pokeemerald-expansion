@@ -289,4 +289,43 @@ SINGLE_BATTLE_TEST("Contrary does not invert stat changes that have been Baton-p
     }
 }
 
-TO_DO_BATTLE_TEST("Contrary inverts stat changes from X Attack and other stat-boosting items.")
+SINGLE_BATTLE_TEST("Contrary inverts stat changes from X items")
+{
+    enum Item item;
+    enum Stat stat;
+
+    PARAMETRIZE { item = ITEM_X_ATTACK;   stat = STAT_ATK; }
+    PARAMETRIZE { item = ITEM_X_DEFENSE;  stat = STAT_DEF; }
+    PARAMETRIZE { item = ITEM_X_SP_ATK;   stat = STAT_SPATK; }
+    PARAMETRIZE { item = ITEM_X_SP_DEF;   stat = STAT_SPDEF; }
+    PARAMETRIZE { item = ITEM_X_SPEED;    stat = STAT_SPEED; }
+    PARAMETRIZE { item = ITEM_X_ACCURACY; stat = STAT_ACC; }
+
+    GIVEN {
+        WITH_CONFIG(B_X_ITEMS_BUFF, GEN_7);
+        ASSUME(gItemsInfo[item].battleUsage == EFFECT_ITEM_INCREASE_STAT);
+        PLAYER(SPECIES_SNIVY) { Ability(ABILITY_CONTRARY); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { USE_ITEM(player, item); }
+    } THEN {
+        EXPECT_EQ(player->statStages[stat], DEFAULT_STAT_STAGE - 2);
+    }
+}
+
+SINGLE_BATTLE_TEST("Contrary inverts stat changes from Max Mushrooms")
+{
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_MAX_MUSHROOMS].battleUsage == EFFECT_ITEM_INCREASE_ALL_STATS);
+        PLAYER(SPECIES_SNIVY) { Ability(ABILITY_CONTRARY); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { USE_ITEM(player, ITEM_MAX_MUSHROOMS); }
+    } THEN {
+        EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE - 1);
+        EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE - 1);
+        EXPECT_EQ(player->statStages[STAT_SPATK], DEFAULT_STAT_STAGE - 1);
+        EXPECT_EQ(player->statStages[STAT_SPDEF], DEFAULT_STAT_STAGE - 1);
+        EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE - 1);
+    }
+}

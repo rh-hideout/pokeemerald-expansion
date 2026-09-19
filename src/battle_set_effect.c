@@ -647,10 +647,21 @@ static void HandleSetEffectBugBite(struct BattleCalcValues *cv, struct SetEffect
 
 static void HandleSetEffectRecoilHp25(struct BattleCalcValues *cv, struct SetEffect *se)
 {
-    u32 maxHP = gBattleMons[se->effectBattler].maxHP;
-    s32 recoil = maxHP / 4;
-    if (B_UPDATED_MOVE_DATA >= GEN_5 && (maxHP % 4) >= 2) // Account for standard rounding (Gen5+)
+    s32 recoil;
+
+    if (GetConfig(B_STRUGGLE_RECOIL) < GEN_4)
+    {
+        u32 recoilPercentage = GetConfig(B_STRUGGLE_RECOIL) == GEN_1 ? 50 : 25;
+        recoil = gBattleStruct->moveDamage[gBattlerTarget] * recoilPercentage / 100;
+    }
+    else
+    {
+        recoil = (gBattleMons[se->effectBattler].maxHP) / 4;
+    }
+
+    if (GetConfig(B_STRUGGLE_RECOIL) >= GEN_5 && (gBattleMons[se->effectBattler].maxHP % 4) >= 2) // Account for standard rounding (Gen5+)
         recoil++;
+
     recoil = max(1, recoil);
 
     SetPassiveDamageAmount(se->effectBattler, recoil);
@@ -886,7 +897,11 @@ static void HandleSetEffectHaze(struct BattleCalcValues *cv, struct SetEffect *s
     if (cv->onlyChecking) return;
 
     for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
+    {
         TryResetBattlerStatChanges(battler);
+        if (GetConfig(B_HAZE_FOCUS_ENERGY) == GEN_1 || GetConfig(B_HAZE_FOCUS_ENERGY) == GEN_4)
+            gBattleMons[battler].volatiles.criticalHitBoost = CRIT_BOOST_NONE;
+    }
     PrepareStringBattleWithWait(STRINGID_STATCHANGESGONE, se->effectBattler);
     BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
 }
@@ -3648,7 +3663,7 @@ static void HandleSetEffectAfterYou(struct BattleCalcValues *cv, struct SetEffec
 
 static void HandleSetEffectReflectType(struct BattleCalcValues *cv, struct SetEffect *se)
 {
-    enum Species targetBaseSpecies = GET_BASE_SPECIES_ID(gBattleMons[se->effectBattler].species);
+    enum Species targetBaseSpecies = GetBaseSpecies(gBattleMons[se->effectBattler].species);
     enum Type targetTypes[3];
     GetBattlerTypes(se->effectBattler, FALSE, targetTypes);
 
@@ -4464,6 +4479,7 @@ static bool32 ShouldTryToApplyEffect(struct BattleCalcValues *cv, struct SetEffe
         return FALSE;
 
     if (!se->primary
+     && !se->bypassSheerForce
      && IsSheerForceAffected(cv->move, cv->abilities[cv->battlerAtk])
      && !(se->moveEffect == MOVE_EFFECT_ORDER_UP && gBattleStruct->battlerState[cv->battlerAtk].commanderSpecies != SPECIES_NONE))
         return FALSE;
@@ -4494,8 +4510,9 @@ void SetMoveEffectHelper(enum BattlerId battlerAtk, enum BattlerId effectBattler
     se.moveEffect = moveEffect;
     se.script = battleScript;
     se.effectBattler = effectBattler;
-    se.primary = effectFlags & EFFECT_PRIMARY;
-    se.certain = effectFlags & EFFECT_CERTAIN;
+    se.primary = (effectFlags & EFFECT_PRIMARY) != 0;
+    se.certain = (effectFlags & EFFECT_CERTAIN) != 0;
+    se.bypassSheerForce = (effectFlags & EFFECT_BYPASS_SHEER_FORCE) != 0;
 
     SetMoveEffect(&cv, &se);
 }

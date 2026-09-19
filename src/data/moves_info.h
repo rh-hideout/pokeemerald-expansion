@@ -2040,7 +2040,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         #endif
         .effect = EFFECT_GROWTH,
         .power = 0,
-        .type = B_UPDATED_MOVE_DATA >= GEN_CHAMPIONS ? TYPE_GRASS : TYPE_NORMAL,
+        .type = B_UPDATED_MOVE_TYPES >= GEN_CHAMPIONS ? TYPE_GRASS : TYPE_NORMAL,
         .accuracy = 0,
         .pp = B_UPDATED_MOVE_DATA >= GEN_6 ? 20 : 40,
         .target = TARGET_USER,
@@ -4632,7 +4632,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .argument = { .recoilPercentage = 50 },
     #endif
         .power = 50,
-        .type = TYPE_NORMAL,
+        .type = B_UPDATED_MOVE_TYPES >= GEN_2 ? TYPE_MYSTERY : TYPE_NORMAL,
         .accuracy = B_UPDATED_MOVE_DATA >= GEN_4 ? 0 : 100,
         .pp = B_UPDATED_MOVE_DATA >= GEN_2 ? 1: 10,
         .target = TARGET_SELECTED,
@@ -8218,7 +8218,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "An attack with effects\n"
             "that vary by location."),
-        .effect = EFFECT_HIT,
+        .effect = EFFECT_SECRET_POWER,
         .power = 70,
         .type = TYPE_NORMAL,
         .accuracy = 100,
@@ -8226,9 +8226,9 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .target = TARGET_SELECTED,
         .priority = 0,
         .category = DAMAGE_CATEGORY_PHYSICAL,
+        .argument = { .secondaryEffectChance = 30 },
         .additionalEffects = ADDITIONAL_EFFECTS({
-            .moveEffect = MOVE_EFFECT_SECRET_POWER,
-            .chance = 30,
+            .sheerForceOverride = TRUE,
         }),
         .contestEffect = CONTEST_EFFECT_BETTER_WITH_GOOD_CONDITION,
         .contestCategory = CONTEST_CATEGORY_SMART,
@@ -19285,7 +19285,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             "trap for four to five turns."),
         .effect = EFFECT_HIT,
         .power = 35,
-        .type = B_UPDATED_MOVE_DATA >= GEN_CHAMPIONS ? TYPE_STEEL : TYPE_GRASS,
+        .type = B_UPDATED_MOVE_TYPES >= GEN_CHAMPIONS ? TYPE_STEEL : TYPE_GRASS,
         .accuracy = 100,
         .pp = 15,
         .target = TARGET_SELECTED,

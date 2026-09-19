@@ -1204,7 +1204,7 @@ void ShowPokemonSummaryScreen(u8 mode, void *mons, u8 monIndex, u8 maxMonIndex, 
     else
         sMonSummaryScreen->isBoxMon = FALSE;
 
-    u32 maxPageIndex = PSS_PAGE_COUNT - (C_HIDE_CONTEST_DATA) ? 2 : 1;
+    u32 maxPageIndex = PSS_PAGE_COUNT - (C_HIDE_CONTEST_DATA ? 2 : 1);
     switch (mode)
     {
     case SUMMARY_MODE_NORMAL:
@@ -3232,7 +3232,7 @@ static void PrintNotEggInfo(void)
     if (BXPY_SummaryScreen_HideSpecies(sMonSummaryScreen->mode))
         PrintTextOnWindowToFitPx(PSS_LABEL_WINDOW_PORTRAIT_SPECIES, COMPOUND_STRING("???"), 6, 1, 0, 1, WindowWidthPx(PSS_LABEL_WINDOW_PORTRAIT_SPECIES) - 9);
     else if (BXPY_SummaryScreen_ShowBaseSpecies(sMonSummaryScreen->mode))
-        PrintTextOnWindowToFitPx(PSS_LABEL_WINDOW_PORTRAIT_SPECIES, GetSpeciesName(GET_BASE_SPECIES_ID(summary->species2)), 6, 1, 0, 1, WindowWidthPx(PSS_LABEL_WINDOW_PORTRAIT_SPECIES) - 9);
+        PrintTextOnWindowToFitPx(PSS_LABEL_WINDOW_PORTRAIT_SPECIES, GetSpeciesName(GetBaseSpecies(summary->species2)), 6, 1, 0, 1, WindowWidthPx(PSS_LABEL_WINDOW_PORTRAIT_SPECIES) - 9);
     else
         PrintTextOnWindowToFitPx(PSS_LABEL_WINDOW_PORTRAIT_SPECIES, GetSpeciesName(summary->species2), 6, 1, 0, 1, WindowWidthPx(PSS_LABEL_WINDOW_PORTRAIT_SPECIES) - 9);
 

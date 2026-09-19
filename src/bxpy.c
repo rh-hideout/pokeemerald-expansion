@@ -490,7 +490,7 @@ enum Type BXPY_TransformType(enum BXPYTeamPreviewSpeciesModes mode, enum Type or
     case BXPY_SPECIES_HIDE:
         return TYPE_MYSTERY;
     case BXPY_SPECIES_SHOW_BASE:
-        return GetSpeciesType(GET_BASE_SPECIES_ID(species), typeIndex);
+        return GetSpeciesType(GetBaseSpecies(species), typeIndex);
     default:
     case BXPY_SPECIES_SHOW_TRUE:
         return originalTypeId;
@@ -667,7 +667,7 @@ u32 BXPY_TransformSpeciesId(u32 originalSpeciesId)
     case BXPY_SPECIES_SHOW_TRUE:
         return originalSpeciesId;
     case BXPY_SPECIES_SHOW_BASE:
-        return GET_BASE_SPECIES_ID(originalSpeciesId);
+        return GetBaseSpecies(originalSpeciesId);
     default:
     case BXPY_SPECIES_HIDE:
         return SPECIES_NONE;

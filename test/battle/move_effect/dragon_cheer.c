@@ -110,27 +110,21 @@ DOUBLE_BATTLE_TEST("Baton Pass passes Dragon Cheer's effect")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_BATON_PASS) == EFFECT_BATON_PASS);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(100); }
-        PLAYER(SPECIES_WOBBUFFET) { Speed(50); }
-        PLAYER(SPECIES_WYNAUT) { Speed(40); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(25); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(20); }
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        PLAYER(SPECIES_CATERPIE);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN {
-            MOVE(playerLeft, MOVE_DRAGON_CHEER, target: playerRight);
-            MOVE(playerRight, MOVE_CELEBRATE);
-        }
-        TURN {
-            MOVE(playerLeft, MOVE_CELEBRATE);
-            MOVE(playerRight, MOVE_BATON_PASS);
-            SEND_OUT(playerRight, 2);
-        }
+        TURN { MOVE(playerRight, MOVE_DRAGON_CHEER, target: playerLeft); }
+        TURN { MOVE(playerLeft, MOVE_BATON_PASS); SEND_OUT(playerLeft, 2); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_CHEER, playerLeft);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_BATON_PASS, playerRight);
-        SEND_IN_MESSAGE("Wynaut");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_CHEER, playerRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BATON_PASS, playerLeft);
+        SEND_IN_MESSAGE("Caterpie");
     } THEN {
-        EXPECT_EQ((u32)playerRight->volatiles.criticalHitBoost, CRIT_BOOST_ONE_STAGE);
+        EXPECT_EQ(playerLeft->species, SPECIES_CATERPIE);
+        EXPECT_EQ((u32)playerLeft->volatiles.criticalHitBoost, CRIT_BOOST_ONE_STAGE);
     }
 }
 
