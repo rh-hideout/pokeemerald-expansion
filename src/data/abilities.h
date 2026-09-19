@@ -2545,6 +2545,12 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("No special ability."),
     },
 
+    [ABILITY_AURA_GUARD] =
+    {
+        .name = _("Aura Guard"),
+        .description = COMPOUND_STRING("Halves damage from contact."),
+    },
+
     [ABILITY_SPICY_SPRAY] =
     {
         .name = _("Spicy Spray"),
