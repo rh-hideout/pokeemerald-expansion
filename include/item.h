@@ -247,6 +247,7 @@ bool32 CheckBagHasSpace(enum Item itemId, u16 count);
 u32 GetFreeSpaceForItemInBag(enum Item itemId);
 bool32 AddBagItem(enum Item itemId, u16 count);
 bool32 RemoveBagItem(enum Item itemId, u16 count);
+bool32 ConsumeBagItem(enum Item itemId, u16 count);
 void RemoveBagItemFromSlot(struct BagPocket *pocket, u16 slotId, u16 count);
 u8 CountUsedPCItemSlots(void);
 bool32 CheckPCHasItem(enum Item itemId, u16 count);
