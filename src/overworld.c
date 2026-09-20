@@ -3730,16 +3730,11 @@ void ScriptShowItemDescription(struct ScriptContext *ctx)
     struct WindowTemplate template;
     enum Item item = gSpecialVar_0x8006;
     u8 textY;
-    u8 *dst;
+    u8 dst[0x100];
     bool8 handleFlash = FALSE;
 
     if (GetFlashLevel() > 0 || InBattlePyramid())
         handleFlash = TRUE;
-
-    if (headerType == 1) // berry
-        dst = gStringVar3;
-    else
-        dst = gStringVar1;
 
     if (GetSetItemObtained(item, FLAG_GET_ITEM_OBTAINED))
     {
