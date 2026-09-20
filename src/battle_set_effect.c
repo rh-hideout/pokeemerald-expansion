@@ -183,22 +183,12 @@ static void HandleSetEffectPayday(struct BattleCalcValues *cv, struct SetEffect 
     if (IsOnPlayerSide(cv->battlerAtk))
     {
         u16 payday = gPaydayMoney;
-        enum MoveTarget moveTarget = GetBattlerMoveTargetType(cv->battlerAtk, cv->move);
         gPaydayMoney += (gBattleMons[cv->battlerAtk].level * 5);
         if (payday > gPaydayMoney)
             gPaydayMoney = 0xFFFF;
 
-        // For a move that hits multiple targets (i.e. Make it Rain)
-        // we only want to print the message on the final hit
-        if (!(NumAffectedSpreadMoveTargets() > 1 && GetNextTarget(moveTarget, TRUE) != MAX_BATTLERS_COUNT))
-        {
-            BattleScriptPush(se->script);
-            gBattlescriptCurrInstr = BattleScript_MoveEffectPayDay;
-        }
-        else
-        {
-            gBattlescriptCurrInstr = se->script;
-        }
+        BattleScriptPush(se->script);
+        gBattlescriptCurrInstr = BattleScript_MoveEffectPayDay;
     }
     else
     {
@@ -320,14 +310,14 @@ static void HandleSetEffectRemoveStatus(struct BattleCalcValues *cv, struct SetE
         switch (argStatus)
         {
         case STATUS1_PARALYSIS:
-            gBattlescriptCurrInstr = BattleScript_TargetPRLZHeal;
+            gBattlescriptCurrInstr = BattleScript_BattlerParalyzeHeal;
             break;
         case STATUS1_SLEEP:
             TryDeactivateSleepClause(se->effectBattler, gBattlerPartyIndexes[se->effectBattler]);
-            gBattlescriptCurrInstr = BattleScript_TargetWokeUp;
+            gBattlescriptCurrInstr = BattleScript_BattlerWokeUp;
             break;
         case STATUS1_BURN:
-            gBattlescriptCurrInstr = BattleScript_TargetBurnHeal;
+            gBattlescriptCurrInstr = BattleScript_BattlerBurnHeal;
             break;
         case STATUS1_FREEZE:
             gBattlescriptCurrInstr = BattleScript_BattlerDefrosted;
@@ -338,7 +328,7 @@ static void HandleSetEffectRemoveStatus(struct BattleCalcValues *cv, struct SetE
         case STATUS1_POISON:
         case STATUS1_TOXIC_POISON:
         case STATUS1_PSN_ANY:
-            gBattlescriptCurrInstr = BattleScript_TargetPoisonHealed;
+            gBattlescriptCurrInstr = BattleScript_BattlerPoisonHealed;
             break;
         }
     }
@@ -449,7 +439,7 @@ static void HandleSetEffectThroatChop(struct BattleCalcValues *cv, struct SetEff
 
 static void HandleSetEffectIncinerate(struct BattleCalcValues *cv, struct SetEffect *se)
 {
-    if (cv->abilities[se->effectBattler] == ABILITY_STICKY_HOLD)
+    if (cv->abilities[se->effectBattler] == ABILITY_STICKY_HOLD || gSpecialStatuses[se->effectBattler].berryReduced)
         return;
 
     if (gItemsInfo[gBattleMons[se->effectBattler].item].pocket == POCKET_BERRIES
@@ -490,8 +480,17 @@ static void HandleSetEffectBugBite(struct BattleCalcValues *cv, struct SetEffect
 
 static void HandleSetEffectRecoilHp25(struct BattleCalcValues *cv, struct SetEffect *se)
 {
-    s32 recoil = (gBattleMons[se->effectBattler].maxHP) / 4;
-    if (B_UPDATED_MOVE_DATA >= GEN_5 && (gBattleMons[se->effectBattler].maxHP % 4) >= 2) // Account for standard rounding (Gen5+)
+    s32 recoil;
+    if (GetConfig(B_STRUGGLE_RECOIL) < GEN_4)
+    {
+        u32 recoilPercentage = GetConfig(B_STRUGGLE_RECOIL) == GEN_1 ? 50 : 25;
+        recoil = gBattleStruct->moveDamage[gBattlerTarget] * recoilPercentage / 100;
+    }
+    else
+    {
+        recoil = (gBattleMons[se->effectBattler].maxHP) / 4;
+    }
+    if (GetConfig(B_STRUGGLE_RECOIL) >= GEN_5 && (gBattleMons[se->effectBattler].maxHP % 4) >= 2) // Account for standard rounding (Gen5+)
         recoil++;
     if (recoil == 0)
         recoil = 1;
@@ -925,7 +924,7 @@ static void HandleSetEffectWeather(struct BattleCalcValues *cv, struct SetEffect
         msg = B_MSG_STARTED_SANDSTORM;
         break;
     case MOVE_EFFECT_HAIL:
-        if (B_PREFERRED_ICE_WEATHER == B_ICE_WEATHER_SNOW)
+        if (GetConfig(B_PREFERRED_ICE_WEATHER) == B_ICE_WEATHER_SNOW)
         {
             weather = BATTLE_WEATHER_SNOW;
             msg = B_MSG_STARTED_SNOW;
@@ -1426,6 +1425,7 @@ void SetMoveEffect(struct BattleCalcValues *cv, struct SetEffect *se)
     if (!se->primary && !affectsUser && IsMoveEffectBlockedByTarget(cv->abilities[se->effectBattler]))
         se->moveEffect = MOVE_EFFECT_NONE;
     else if (!se->primary
+          && !se->bypassSheerForce
           && IsSheerForceAffected(cv->move, cv->abilities[cv->battlerAtk])
           && !(se->moveEffect == MOVE_EFFECT_ORDER_UP && gBattleStruct->battlerState[cv->battlerAtk].commanderSpecies != SPECIES_NONE))
         se->moveEffect = MOVE_EFFECT_NONE;
@@ -1456,8 +1456,9 @@ void SetMoveEffectHelper(enum BattlerId battlerAtk, enum BattlerId effectBattler
     se.moveEffect = moveEffect;
     se.script = battleScript;
     se.effectBattler = effectBattler;
-    se.primary = effectFlags & EFFECT_PRIMARY;
-    se.certain = effectFlags & EFFECT_CERTAIN;
+    se.primary = (effectFlags & EFFECT_PRIMARY) != 0;
+    se.certain = (effectFlags & EFFECT_CERTAIN) != 0;
+    se.bypassSheerForce = (effectFlags & EFFECT_BYPASS_SHEER_FORCE) != 0;
 
     SetMoveEffect(&cv, &se);
 }
@@ -1539,4 +1540,3 @@ static bool32 IsFinalStrikeEffect(enum MoveEffect moveEffect)
         return FALSE;
     }
 }
-

@@ -572,7 +572,7 @@ bool32 TryOpenPokedexPage_HGSS(u8 taskId, u8 page)
 {
     if (!POKEDEX_PLUS_HGSS)
         return FALSE;
-    
+
     if (LoadPokedexListPage(page))
         gTasks[taskId].func = Task_HandlePokedexInput;
 
@@ -2312,10 +2312,13 @@ static void PrintStatsScreen_Moves_Top(u8 taskId)
 
     //Egg/TM/Level/Tutor Item Icon
     gTasks[taskId].data[3] = AddItemIconSprite(ITEM_TAG, ITEM_TAG, item);
-    gSprites[gTasks[taskId].data[3]].x2 = 203;
-    gSprites[gTasks[taskId].data[3]].y2 = 39;
-    gSprites[gTasks[taskId].data[3]].oam.priority = 0;
-
+// The associated sprite gets cleared a bunch below - I assume that's still okay if it is MAX_SPRITES?
+    if (gTasks[taskId].data[3] != MAX_SPRITES)
+    {
+        gSprites[gTasks[taskId].data[3]].x2 = 203;
+        gSprites[gTasks[taskId].data[3]].y2 = 39;
+        gSprites[gTasks[taskId].data[3]].oam.priority = 0;
+    }
 }
 
 static void PrintStatsScreen_Moves_Description(u8 taskId)
@@ -3541,7 +3544,7 @@ static u32 GetSpeciesNameWidthInChars(const u8 *speciesName)
 
 static bool32 IsSpeciesAlcremie(enum Species targetSpecies)
 {
-    return GET_BASE_SPECIES_ID(targetSpecies) == SPECIES_ALCREMIE;
+    return GetBaseSpecies(targetSpecies) == SPECIES_ALCREMIE;
 }
 
 static bool32 IsItemSweet(enum Item item)

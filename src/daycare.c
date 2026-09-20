@@ -183,7 +183,7 @@ static void TransferEggMovesFromBoxmonToBoxmon(struct BoxPokemon *receiver, stru
     if (GetBoxMonData(receiver, MON_DATA_MOVE4) != MOVE_NONE)
         return;
 
-    if (GetConfig(EGG_MOVE_TRANSFER) == GEN_8 && GET_BASE_SPECIES_ID(receiverSpecies) != GET_BASE_SPECIES_ID(giverSpecies))
+    if (GetConfig(EGG_MOVE_TRANSFER) == GEN_8 && GetBaseSpecies(receiverSpecies) != GetBaseSpecies(giverSpecies))
         return;
 
     if (GetConfig(EGG_MOVE_TRANSFER) >= GEN_9 && GetBoxMonData(receiver, MON_DATA_HELD_ITEM) != ITEM_MIRROR_HERB)
@@ -693,7 +693,7 @@ static void InheritPokeball(struct Pokemon *egg, struct DayCare *daycare)
         enum Species species0 = GetBoxMonData(&daycare->mons[0].mon, MON_DATA_SPECIES);
         enum Species species1 = GetBoxMonData(&daycare->mons[1].mon, MON_DATA_SPECIES);
 
-        if (GET_BASE_SPECIES_ID(species0) == GET_BASE_SPECIES_ID(species1))
+        if (GetBaseSpecies(species0) == GetBaseSpecies(species1))
             ballSlot = RandomPercentage(RNG_DAYCARE_PICK_BALL_PARENT, 50);
         inheritBall = GetBoxMonData(&daycare->mons[ballSlot].mon, MON_DATA_POKEBALL);
     }
@@ -856,7 +856,7 @@ static void GiveMoveIfParentHeldItem(struct Pokemon *egg, struct BoxPokemon *fat
 
 static void BuildEggMoveset(struct Pokemon *egg, struct BoxPokemon *father, struct BoxPokemon *mother)
 {
-    enum Species eggSpecies = GetMonData(egg, MON_DATA_SPECIES); 
+    enum Species eggSpecies = GetMonData(egg, MON_DATA_SPECIES);
     enum Move fatherMoves[MAX_MON_MOVES];
     enum Move motherMoves[MAX_MON_MOVES];
 
@@ -964,11 +964,11 @@ static enum Species DetermineEggSpeciesAndParentSlots(struct DayCare *daycare, u
         eggSpecies = SPECIES_ILLUMISE;
     else if (eggSpecies == SPECIES_MANAPHY)
         eggSpecies = SPECIES_PHIONE;
-    else if (GET_BASE_SPECIES_ID(eggSpecies) == SPECIES_ROTOM)
+    else if (GetBaseSpecies(eggSpecies) == SPECIES_ROTOM)
         eggSpecies = SPECIES_ROTOM;
-    else if (GET_BASE_SPECIES_ID(eggSpecies) == SPECIES_SCATTERBUG)
+    else if (GetBaseSpecies(eggSpecies) == SPECIES_SCATTERBUG)
         eggSpecies = P_SCATTERBUG_LINE_FORM_BREED;
-    else if (GET_BASE_SPECIES_ID(eggSpecies) == SPECIES_FURFROU)
+    else if (GetBaseSpecies(eggSpecies) == SPECIES_FURFROU)
         eggSpecies = SPECIES_FURFROU;
     else if (eggSpecies == SPECIES_SINISTEA_ANTIQUE)
         eggSpecies = SPECIES_SINISTEA_PHONY;

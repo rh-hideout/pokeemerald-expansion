@@ -67,7 +67,7 @@ MoveRelearner_EventScript_TeachMove::
 	msgbox MoveRelearner_Text_ChoosePkmn, MSGBOX_DEFAULT
 	chooseboxmon SELECT_PC_MON_MOVE_RELEARNER
 	waitstate
-	call_if_eq VAR_0x8004, PARTY_NOTHING_CHOSEN, MoveRelearner_EventScript_AnythingElse
+	call_if_eq VAR_0x8004, PARTY_MON_CANCEL, MoveRelearner_EventScript_AnythingElse
 	special IsSelectedMonEgg
 	call_if_eq VAR_RESULT, TRUE, MoveRelearner_EventScript_CantTeachMoveToEgg
 	special Special_HasMoveToRelearn
