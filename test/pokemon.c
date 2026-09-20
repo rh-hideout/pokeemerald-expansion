@@ -1,7 +1,6 @@
 #include "global.h"
 #include "battle.h"
 #include "config_changes.h"
-#include "dexnav.h"
 #include "wild_encounter.h"
 #include "egg_hatch.h"
 #include "event_data.h"
@@ -9,6 +8,7 @@
 #include "new_game.h"
 #include "pokemon.h"
 #include "random.h"
+#include "script_pokemon_util.h"
 #include "test/overworld_script.h"
 #include "test/test.h"
 #include "constants/characters.h"
@@ -120,51 +120,41 @@ TEST("Shininess set on an Egg persists after hatching")
 TEST("P_NO_SHINIES_WITHOUT_POKEBALLS does not block Shiny gift Pokémon")
 {
     bool32 useScript = FALSE;
-    bool32 useLure = FALSE;
-    PARAMETRIZE { useScript = FALSE; useLure = FALSE; }
-    PARAMETRIZE { useScript = FALSE; useLure = TRUE; }
-    PARAMETRIZE { useScript = TRUE; useLure = FALSE; }
-    PARAMETRIZE { useScript = TRUE; useLure = TRUE; }
+    bool32 blockWildShinies = FALSE;
+    PARAMETRIZE { useScript = FALSE; blockWildShinies = FALSE; }
+    PARAMETRIZE { useScript = FALSE; blockWildShinies = TRUE; }
+    PARAMETRIZE { useScript = TRUE; blockWildShinies = FALSE; }
+    PARAMETRIZE { useScript = TRUE; blockWildShinies = TRUE; }
 
-    ASSUME(SHINY_ODDS > 1 && SHINY_ODDS <= 16);
+    ASSUME(SHINY_ODDS > 1 && SHINY_ODDS <= MAX_u16);
 
     ZeroPlayerPartyMons();
     ClearBag();
-    SetConfig(CONFIG_NO_SHINIES_WITHOUT_POKEBALLS, TRUE);
+    SetConfig(CONFIG_NO_SHINIES_WITHOUT_POKEBALLS, blockWildShinies);
     SetTrainerId(0, gSaveBlock2Ptr->playerTrainerId);
     FlagClear(P_FLAG_FORCE_SHINY);
     FlagClear(P_FLAG_FORCE_NO_SHINY);
-    FlagClear(WE_FLAG_NO_CATCHING);
-    gDexNavSpecies = SPECIES_NONE;
-    VarSet(VAR_REPEL_STEP_COUNT, useLure ? REPEL_LURE_MASK | 1 : 0);
+    VarSet(VAR_REPEL_STEP_COUNT, REPEL_LURE_MASK | 1);
+    SET_RNG(RNG_SHINY_REROLL, 1);
 
     SET_ENCOUNTER_ORIGIN(gEncounterType, WILDMON_ORIGIN);
-    gRngValue = (rng_value_t){.a = 1};
-    EXPECT_EQ(ComputePlayerShinyOdds(16, 0), FALSE);
+    EXPECT_EQ(ComputePlayerShinyOdds(SHINY_ODDS, 0), !blockWildShinies);
     gEncounterType = ENCOUNTER_TYPE_NONE;
 
     if (useScript)
     {
-        // The initial personality is 16; the lure's reroll is 1, below SHINY_ODDS.
-        gRngValue = (rng_value_t){.a = 16};
         RUN_OVERWORLD_SCRIPT(
             givemon SPECIES_CASTFORM_NORMAL, 25, nature=NATURE_RANDOM, gender=MON_GENDER_RANDOM, hpIv=0, atkIv=0, defIv=0, speedIv=0, spAtkIv=0, spDefIv=0;
         );
     }
     else
     {
-        struct Pokemon mon;
-        SET_ENCOUNTER_ORIGIN(gEncounterType, GIFTMON_ORIGIN);
-        gRngValue = (rng_value_t){.a = 1};
-        CreateMon(&mon, SPECIES_CASTFORM_NORMAL, 25, 16, OTID_STRUCT_PLAYER_ID);
-        EXPECT_EQ(IsMonShiny(&mon), useLure);
-        EXPECT_EQ(GiveScriptedMonToPlayer(&mon, PARTY_SIZE), MON_GIVEN_TO_PARTY);
+        EXPECT_EQ(ScriptGiveMon(SPECIES_CASTFORM_NORMAL, 25, ITEM_NONE), MON_GIVEN_TO_PARTY);
     }
 
     EXPECT_EQ(ENCOUNTER_ORIGIN(gEncounterType), UNDEFINED_MON_ORIGIN);
-    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_PERSONALITY), 16);
     EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_OT_ID), 0);
-    EXPECT_EQ(IsMonShiny(&gParties[B_TRAINER_PLAYER][0]), useLure);
+    EXPECT_EQ(IsMonShiny(&gParties[B_TRAINER_PLAYER][0]), TRUE);
     VarSet(VAR_REPEL_STEP_COUNT, 0);
 }
 
