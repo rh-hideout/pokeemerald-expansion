@@ -497,7 +497,7 @@ static struct ChosenAction ChooseMoveOrAction(enum BattlerId battler)
 
 static void SetupRandomRollsForAIMoveSelection(enum BattlerId battler)
 {
-    gAiLogicData->shouldConsiderExplosion = RandomPercentage(RNG_AI_CONSIDER_EXPLOSION, GetAIExplosionChanceFromHP(gAiLogicData->hpPercents[battler]));
+    gAiLogicData->shouldConsiderExplosion = RandomPercentage(RNG_AI_CONSIDER_EXPLOSION, GetAIExplosionChanceFromHP(GetHealthPercentage(battler)));
     gAiLogicData->shouldConsiderFinalGambit = RandomPercentage(RNG_AI_FINAL_GAMBIT, FINAL_GAMBIT_CHANCE);
 }
 
@@ -746,7 +746,6 @@ void SetBattlerAiData(enum BattlerId battler, struct AiLogicData *aiData)
     aiData->items[battler] = gBattleMons[battler].item;
     holdEffect = aiData->holdEffects[battler] = AI_DecideHoldEffectForTurn(battler);
     aiData->lastUsedMove[battler] = (gLastMoves[battler] == MOVE_UNAVAILABLE) ? MOVE_NONE : gLastMoves[battler];
-    aiData->hpPercents[battler] = GetHealthPercentage(battler);
     aiData->moveLimitations[battler] = CheckMoveLimitations(battler, 0, ~(MOVE_LIMITATION_UNUSABLE));
     aiData->speedStats[battler] = GetBattlerTotalSpeedStat(battler, ability, holdEffect);
     aiData->dragonDartsHitsBothTarget = 0;
@@ -1588,7 +1587,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
     default:
         break;
     case EFFECT_HIT: // only applies to Vital Throw - This probably should not be here
-        if (GetBattleMovePriority(battlerAtk, aiData->abilities[battlerAtk], move) < 0 && AI_IsFaster(battlerAtk, battlerDef, move, predictedMove, CONSIDER_PRIORITY) && aiData->hpPercents[battlerAtk] < 40)
+        if (GetBattleMovePriority(battlerAtk, aiData->abilities[battlerAtk], move) < 0 && AI_IsFaster(battlerAtk, battlerDef, move, predictedMove, CONSIDER_PRIORITY) && GetHealthPercentage(battlerAtk) < 40)
             ADJUST_SCORE(-2);    // don't want to move last
         break;
     case EFFECT_FINAL_GAMBIT:
@@ -1707,7 +1706,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
             {
                 ADJUST_SCORE(-10);
             }
-            else if (aiData->hpPercents[battlerAtk] <= 50)
+            else if (GetHealthPercentage(battlerAtk) <= 50)
             {
                 ADJUST_SCORE(-10);
             }
@@ -1724,7 +1723,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
             ADJUST_SCORE(-10);
         break;
     case EFFECT_CLANGOROUS_SOUL:
-        if (aiData->hpPercents[battlerAtk] <= 50)
+        if (GetHealthPercentage(battlerAtk) <= 50)
             ADJUST_SCORE(-10);
         else if (!AI_CanAnyStatChange(battlerAtk, battlerAtk, move))
             ADJUST_SCORE(-10);
@@ -1733,7 +1732,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
     case EFFECT_BELLY_DRUM:
         if (AI_IsAbilityOnSide(battlerDef, ABILITY_UNAWARE))
             ADJUST_SCORE(-10);
-        else if (aiData->hpPercents[battlerAtk] <= 60 && !IsConsideringZMove(battlerAtk, battlerDef, move))
+        else if (GetHealthPercentage(battlerAtk) <= 60 && !IsConsideringZMove(battlerAtk, battlerDef, move))
             ADJUST_SCORE(-10);
         else if (!AI_CanAnyStatChange(battlerAtk, battlerAtk, move))
             ADJUST_SCORE(-10);
@@ -1863,7 +1862,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
     case EFFECT_SUBSTITUTE:
         if (gBattleMons[battlerAtk].volatiles.substitute || aiData->abilities[battlerDef] == ABILITY_INFILTRATOR)
             ADJUST_SCORE(-8);
-        else if (aiData->hpPercents[battlerAtk] <= 25)
+        else if (GetHealthPercentage(battlerAtk) <= 25)
             ADJUST_SCORE(-10);
         else if (HasMoveWithFlag(battlerDef, MoveIgnoresSubstitute))
             ADJUST_SCORE(-8);
@@ -1873,7 +1872,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
             ADJUST_SCORE(-10);
         if (gBattleMons[battlerAtk].volatiles.substitute || aiData->abilities[battlerDef] == ABILITY_INFILTRATOR)
             ADJUST_SCORE(-8);
-        else if (aiData->hpPercents[battlerAtk] <= 50)
+        else if (GetHealthPercentage(battlerAtk) <= 50)
             ADJUST_SCORE(-10);
         else if (HasMoveWithFlag(battlerDef, MoveIgnoresSubstitute))
             ADJUST_SCORE(-8);
@@ -2097,9 +2096,9 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         }
         else
         {
-            if (AI_BattlerAtMaxHp(battlerAtk))
+            if (IsBattlerAtMaxHp(battlerAtk))
                 ADJUST_SCORE(-10);
-            else if (aiData->hpPercents[battlerAtk] >= 80)
+            else if (GetHealthPercentage(battlerAtk) >= 80)
                 ADJUST_SCORE(-5); // do it if nothing better
         }
         break;
@@ -2213,14 +2212,14 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         break;
     case EFFECT_BIDE:
         if (!HasDamagingMove(battlerDef)
-          || aiData->hpPercents[battlerAtk] < 30 //Close to death
+          || GetHealthPercentage(battlerAtk) < 30 //Close to death
           || gBattleMons[battlerDef].status1 & STATUS1_INCAPACITATED) //No point in biding if can't take damage
             ADJUST_SCORE(-10);
         break;
     case EFFECT_HIT_SWITCH_TARGET:
         if (DoesPartnerHaveSameMoveEffect(GetPartnerBattler(battlerAtk), battlerDef, move, aiData->partnerMove))
             ADJUST_SCORE(-10); // don't scare away Pokémon twice
-        else if (aiData->hpPercents[battlerDef] < 10 && GetBattlerSecondaryDamage(battlerDef))
+        else if (GetHealthPercentage(battlerDef) < 10 && GetBattlerSecondaryDamage(battlerDef))
             ADJUST_SCORE(-10);    // don't blow away mon that will faint soon
         else if (gBattleMons[battlerDef].volatiles.perishSong)
             ADJUST_SCORE(-10);
@@ -2237,27 +2236,27 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
     case EFFECT_RESTORE_HP:
     case EFFECT_SOFTBOILED:
     case EFFECT_ROOST:
-        if (AI_BattlerAtMaxHp(battlerAtk))
+        if (IsBattlerAtMaxHp(battlerAtk))
             ADJUST_SCORE(-10);
-        else if (aiData->hpPercents[battlerAtk] >= 90)
+        else if (GetHealthPercentage(battlerAtk) >= 90)
             ADJUST_SCORE(-9); //No point in healing, but should at least do it if nothing better
         break;
     case EFFECT_MORNING_SUN:
     case EFFECT_SYNTHESIS:
     case EFFECT_MOONLIGHT:
-        if (AI_BattlerAtMaxHp(battlerAtk))
+        if (IsBattlerAtMaxHp(battlerAtk))
             ADJUST_SCORE(-10);
-        else if (aiData->hpPercents[battlerAtk] >= 90)
+        else if (GetHealthPercentage(battlerAtk) >= 90)
             ADJUST_SCORE(-9); //No point in healing, but should at least do it if nothing better
         else if ((AI_GetWeather() & (B_WEATHER_LOW_LIGHT)))
             ADJUST_SCORE(-3);
         break;
     case EFFECT_LIFE_DEW:
-        if (AI_BattlerAtMaxHp(battlerAtk))
+        if (IsBattlerAtMaxHp(battlerAtk))
         {
             if (hasPartner)
             {
-                if (AI_BattlerAtMaxHp(GetPartnerBattler(battlerAtk)))
+                if (IsBattlerAtMaxHp(GetPartnerBattler(battlerAtk)))
                     ADJUST_SCORE(-10);
             }
             else
@@ -2273,9 +2272,9 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
             break; //Always heal your ally
         else if (!ShouldCureStatus(battlerAtk, battlerDef, aiData))
         {
-            if (AI_BattlerAtMaxHp(battlerAtk))
+            if (IsBattlerAtMaxHp(battlerAtk))
                 ADJUST_SCORE(-10);
-            else if (aiData->hpPercents[battlerAtk] >= 90)
+            else if (GetHealthPercentage(battlerAtk) >= 90)
                 ADJUST_SCORE(-8); //No point in healing, but should at least do it if nothing better
         }
         break;
@@ -2815,7 +2814,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         {
             if (gBattleMons[battlerDef].volatiles.healBlockTimer)
                 return 0; // cannot even select
-            if (AI_BattlerAtMaxHp(battlerDef))
+            if (IsBattlerAtMaxHp(battlerDef))
                 ADJUST_SCORE(-10);
             else if (gBattleMons[battlerDef].hp > gBattleMons[battlerDef].maxHP / 2)
                 ADJUST_SCORE(-5);
@@ -2937,7 +2936,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         break;
     case EFFECT_FLAIL:
         if (AI_IsSlower(battlerAtk, battlerDef, move, predictedMove, CONSIDER_PRIORITY) // Opponent should go first
-            || aiData->hpPercents[battlerAtk] > 50)
+            || GetHealthPercentage(battlerAtk) > 50)
             ADJUST_SCORE(-4);
         break;
     //TODO
@@ -2967,8 +2966,8 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         bool32 canCureSelf = (gBattleMons[battlerAtk].status1 & STATUS1_ANY) && ShouldCureStatus(battlerAtk, battlerAtk, aiData);
         bool32 canCurePartner = (gBattleMons[GetPartnerBattler(battlerAtk)].status1 & STATUS1_ANY) && ShouldCureStatus(battlerAtk, GetPartnerBattler(battlerAtk), aiData);
 
-        if (AI_BattlerAtMaxHp(battlerAtk)
-            && AI_BattlerAtMaxHp(GetPartnerBattler(battlerAtk))
+        if (IsBattlerAtMaxHp(battlerAtk)
+            && IsBattlerAtMaxHp(GetPartnerBattler(battlerAtk))
             && !canCureSelf
             && !canCurePartner)
             ADJUST_SCORE(-10);
@@ -4623,7 +4622,7 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
         IncreaseConfusionScore(battlerAtk, battlerDef, move, &score);
         break;
     case EFFECT_BIDE:
-        if (aiData->hpPercents[battlerAtk] < 90)
+        if (GetHealthPercentage(battlerAtk) < 90)
             ADJUST_SCORE(-2); // Should be either removed or turned into increasing score
         break;
     // treat as offense booster
@@ -5275,7 +5274,7 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
             enum Item item = GetBattlerPartyState(battlerAtk)->usedHeldItem;
             u32 toHeal = (GetItemHoldEffectParam(item) == 10) ? 10 : gBattleMons[battlerAtk].maxHP / GetItemHoldEffectParam(item);
 
-            if (IsStatBoostingBerry(item) && aiData->hpPercents[battlerAtk] > 60)
+            if (IsStatBoostingBerry(item) && GetHealthPercentage(battlerAtk) > 60)
                 ADJUST_SCORE(WEAK_EFFECT);
             else if (ShouldRestoreHpBerry(battlerAtk, item) && !CanAIFaintTarget(battlerAtk, battlerDef, 0)
               && ((AI_GetWhichBattlerFasterOrTies(battlerAtk, battlerDef, TRUE) == 1 && CanTargetFaintAiWithMod(battlerDef, battlerAtk, 0, 0))
@@ -5852,7 +5851,7 @@ static s32 AI_CalcAdditionalEffectScore(enum BattlerId battlerAtk, enum BattlerI
             {
                 if (ShouldBoostCritRate(battlerAtk, battlerDef) && gBattleMons[battlerAtk].volatiles.bonusCritStages < 3)
                     score +=10;
-                
+
                 break;
             }
             case MOVE_EFFECT_ORDER_UP:
@@ -6202,8 +6201,6 @@ static s32 AI_ForceSetupFirstTurn(enum BattlerId battlerAtk, enum BattlerId batt
 // Adds score bonus to 'riskier' move effects and high crit moves
 static s32 AI_Risky(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, s32 score)
 {
-    struct AiLogicData *aiData = gAiLogicData;
-
     if (IsTargetingPartner(battlerAtk, battlerDef))
         return score;
 
@@ -6230,7 +6227,7 @@ static s32 AI_Risky(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum M
 
     // +2 Score
     case EFFECT_MEMENTO:
-        if (aiData->hpPercents[battlerAtk] < 50 && AI_RandLessThan(128))
+        if (GetHealthPercentage(battlerAtk) < 50 && AI_RandLessThan(128))
             ADJUST_SCORE(AVERAGE_RISKY_EFFECT);
         break;
     case EFFECT_REVENGE:
@@ -6239,11 +6236,11 @@ static s32 AI_Risky(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum M
         break;
     case EFFECT_STAT_CHANGE_HALF_HP:
     case EFFECT_BELLY_DRUM:
-        if (aiData->hpPercents[battlerAtk] >= 90)
+        if (GetHealthPercentage(battlerAtk) >= 90)
             ADJUST_SCORE(AVERAGE_RISKY_EFFECT);
         break;
     case EFFECT_CLANGOROUS_SOUL:
-        if (aiData->hpPercents[battlerAtk] >= 70)
+        if (GetHealthPercentage(battlerAtk) >= 70)
             ADJUST_SCORE(AVERAGE_RISKY_EFFECT);
         break;
     case EFFECT_MAX_HP_50_RECOIL:
@@ -6334,7 +6331,7 @@ static s32 AI_PreferBatonPass(enum BattlerId battlerAtk, enum BattlerId battlerD
     {
         if (gBattleResults.battleTurnCounter == 0)
             ADJUST_SCORE(GOOD_EFFECT);
-        else if (gAiLogicData->hpPercents[battlerAtk] < 60)
+        else if (GetHealthPercentage(battlerAtk) < 60)
             ADJUST_SCORE(-10);
         else
             ADJUST_SCORE(WEAK_EFFECT);
@@ -6393,18 +6390,18 @@ static s32 AI_HPAware(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum
              || CanTargetFaintAi(GetBattlerRightFoe(battlerAtk), GetPartnerBattler(battlerAtk)))
                 ADJUST_SCORE(-1);
 
-            if (gAiLogicData->hpPercents[battlerDef] <= 50)
+            if (GetHealthPercentage(battlerDef) <= 50)
                 ADJUST_SCORE(WEAK_EFFECT);
         }
     }
     else
     {
         // Consider AI HP
-        if (IsExplosionMove(move) && gAiLogicData->hpPercents[battlerAtk] > 70)
+        if (IsExplosionMove(move) && GetHealthPercentage(battlerAtk) > 70)
         {
             ADJUST_SCORE(-2);
         }
-        else if (gAiLogicData->hpPercents[battlerAtk] > 70)
+        else if (GetHealthPercentage(battlerAtk) > 70)
         {
             // high hp
             switch (effect)
@@ -6428,7 +6425,7 @@ static s32 AI_HPAware(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum
                 break;
             }
         }
-        else if (gAiLogicData->hpPercents[battlerAtk] > 30)
+        else if (GetHealthPercentage(battlerAtk) > 30)
         {
             // med hp
             if (IsStatRaisingMove(move)
@@ -6492,12 +6489,13 @@ static s32 AI_HPAware(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum
     }
     else
     {
-        if (gAiLogicData->hpPercents[battlerDef] > 70)
+        u32 defhealthPercentage = GetHealthPercentage(battlerDef);
+        if (defhealthPercentage > 70)
         {
             // high HP
             ; // nothing yet
         }
-        else if (gAiLogicData->hpPercents[battlerDef] > 30)
+        else if (defhealthPercentage > 30)
         {
             // med HP - check discouraged effects
             switch (effect)
@@ -6723,7 +6721,7 @@ static s32 AI_PredictSwitch(enum BattlerId battlerAtk, enum BattlerId battlerDef
             ADJUST_SCORE(DECENT_EFFECT);
         break;
     case EFFECT_RESTORE_HP:
-        if (gAiLogicData->hpPercents[battlerAtk] < 60)
+        if (GetHealthPercentage(battlerAtk) < 60)
             ADJUST_SCORE(GOOD_EFFECT);
         break;
 
@@ -6839,7 +6837,7 @@ static s32 AI_Safari(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum 
 // First battle logic
 static s32 AI_FirstBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, s32 score)
 {
-    if (!IS_FRLG && gAiLogicData->hpPercents[battlerDef] <= 20)
+    if (!IS_FRLG && GetHealthPercentage(battlerDef) <= 20)
         AI_Flee();
 
     return score;
