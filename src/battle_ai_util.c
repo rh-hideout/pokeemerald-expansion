@@ -870,11 +870,39 @@ static s32 HandleKOThroughBerryReduction(struct DamageContext *ctx, s32 dmg)
     return dmg;
 }
 
-static s32 AI_ApplyModifiersAfterDmgRoll(struct DamageContext *ctx, s32 dmg)
+#define AI_DAMAGE_APPLY_MODIFIER(modifier) do {            \
+    simDamage->minimum = uq4_12_multiply_by_int_half_down(modifier, simDamage->minimum); \
+    simDamage->median = uq4_12_multiply_by_int_half_down(modifier, simDamage->median); \
+    simDamage->maximum = uq4_12_multiply_by_int_half_down(modifier, simDamage->maximum); \
+    simDamage->random = uq4_12_multiply_by_int_half_down(modifier, simDamage->random); \
+} while (0)
+
+static void AI_ApplyModifiersAfterDmgRoll(struct DamageContext *ctx, struct SimulatedDamage *simDamage)
 {
-    dmg = ApplyModifiersAfterDmgRoll(ctx, dmg);
-    dmg = HandleKOThroughBerryReduction(ctx, dmg);
-    return dmg;
+    // Precalculate modifiers to apply to all 4 considered AI rolls at once
+    if (GetActiveGimmick(ctx->battlerAtk) == GIMMICK_TERA)
+    {
+        uq4_12_t teraModifier = GetTeraMultiplier(ctx);
+        AI_DAMAGE_APPLY_MODIFIER(teraModifier);
+    }
+    else
+    {
+        uq4_12_t sameTypeAttackBonusModifier = GetSameTypeAttackBonusModifier(ctx);
+        AI_DAMAGE_APPLY_MODIFIER(sameTypeAttackBonusModifier);
+    }   
+    uq4_12_t burnFrostbiteModifier = GetBurnOrFrostBiteModifier(ctx);
+    uq4_12_t protectionModifier = GetMoveAgainstProtectionModifier(ctx);
+    uq4_12_t otherModifier = GetOtherModifiers(ctx);
+
+    AI_DAMAGE_APPLY_MODIFIER(ctx->typeEffectivenessModifier);
+    AI_DAMAGE_APPLY_MODIFIER(burnFrostbiteModifier);
+    AI_DAMAGE_APPLY_MODIFIER(protectionModifier);
+    AI_DAMAGE_APPLY_MODIFIER(otherModifier);
+
+    simDamage->maximum = HandleKOThroughBerryReduction(ctx, simDamage->maximum);
+    simDamage->median = HandleKOThroughBerryReduction(ctx, simDamage->median);
+    simDamage->minimum = HandleKOThroughBerryReduction(ctx, simDamage->minimum);
+    simDamage->random = HandleKOThroughBerryReduction(ctx, simDamage->random);
 }
 
 struct SimulatedDamage AI_CalcDamage(struct AiCalcValues *aiCalc, enum BattlerId battlerAtk, enum BattlerId battlerDef)
@@ -965,21 +993,14 @@ struct SimulatedDamage AI_CalcDamage(struct AiCalcValues *aiCalc, enum BattlerId
         {
             for (gMultiHitCounter = GetMoveStrikeCount(move); gMultiHitCounter > 0; gMultiHitCounter--) // The global is used to simulate actual damage done
             {
-                s32 damageByRollType = 0;
-
                 s32 oneTripleKickHit = CalculateMoveDamageVars(&ctx);
 
-                damageByRollType = GetDamageByRollType(oneTripleKickHit, DMG_ROLL_LOWEST);
-                simDamage.minimum += AI_ApplyModifiersAfterDmgRoll(&ctx, damageByRollType);
+                simDamage.minimum = GetDamageByRollType(oneTripleKickHit, DMG_ROLL_LOWEST);
+                simDamage.median = GetDamageByRollType(oneTripleKickHit, DMG_ROLL_MEDIAN);
+                simDamage.maximum = GetDamageByRollType(oneTripleKickHit, DMG_ROLL_HIGHEST);
+                simDamage.random = GetDamageByRollType(oneTripleKickHit, DMG_ROLL_RANDOM);
 
-                damageByRollType = GetDamageByRollType(oneTripleKickHit, DMG_ROLL_MEDIAN);
-                simDamage.median += AI_ApplyModifiersAfterDmgRoll(&ctx, damageByRollType);
-
-                damageByRollType = GetDamageByRollType(oneTripleKickHit, DMG_ROLL_HIGHEST);
-                simDamage.maximum += AI_ApplyModifiersAfterDmgRoll(&ctx, damageByRollType);
-
-                damageByRollType = GetDamageByRollType(oneTripleKickHit, DMG_ROLL_RANDOM);
-                simDamage.random += AI_ApplyModifiersAfterDmgRoll(&ctx, damageByRollType);
+                AI_ApplyModifiersAfterDmgRoll(&ctx, &simDamage);
             }
         }
         else
@@ -987,16 +1008,11 @@ struct SimulatedDamage AI_CalcDamage(struct AiCalcValues *aiCalc, enum BattlerId
             u32 damage = CalculateMoveDamageVars(&ctx);
 
             simDamage.minimum = GetDamageByRollType(damage, DMG_ROLL_LOWEST);
-            simDamage.minimum = AI_ApplyModifiersAfterDmgRoll(&ctx, simDamage.minimum);
-
             simDamage.median = GetDamageByRollType(damage, DMG_ROLL_MEDIAN);
-            simDamage.median = AI_ApplyModifiersAfterDmgRoll(&ctx, simDamage.median);
-
             simDamage.maximum = GetDamageByRollType(damage, DMG_ROLL_HIGHEST);
-            simDamage.maximum = AI_ApplyModifiersAfterDmgRoll(&ctx, simDamage.maximum);
-
             simDamage.random = GetDamageByRollType(damage, DMG_ROLL_RANDOM);
-            simDamage.random = AI_ApplyModifiersAfterDmgRoll(&ctx, simDamage.random);
+
+            AI_ApplyModifiersAfterDmgRoll(&ctx, &simDamage);
         }
 
         if (GetActiveGimmick(battlerAtk) != GIMMICK_Z_MOVE)

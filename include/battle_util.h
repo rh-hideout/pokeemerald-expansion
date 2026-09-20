@@ -327,4 +327,10 @@ enum BattleTerrain GetBattleTerrainFromOverworldWeather(u32 owWeather);
 bool32 IsCommanderActive(enum BattlerId battler);
 bool32 IsWholeSideAlive(enum BattlerId sideBattler);
 
+// Damage calc modifiers
+uq4_12_t GetBurnOrFrostBiteModifier(struct DamageContext *ctx);
+uq4_12_t GetSameTypeAttackBonusModifier(struct DamageContext *ctx);
+uq4_12_t GetMoveAgainstProtectionModifier(struct DamageContext *ctx);
+uq4_12_t GetOtherModifiers(struct DamageContext *ctx);
+
 #endif // GUARD_BATTLE_UTIL_H

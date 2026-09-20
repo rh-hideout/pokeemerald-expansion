@@ -5806,7 +5806,7 @@ void SetTypeBeforeUsingMove(enum Move move, enum BattlerId battler, enum Ability
     // Check if a gem should activate.
     u32 effect = GetMoveEffect(move);
     if (holdEffect == HOLD_EFFECT_GEMS
-        && GetBattleMoveType(move) == GetItemSecondaryId(heldItem)
+        && moveType == GetItemSecondaryId(heldItem)
         && effect != EFFECT_PLEDGE
         && effect != EFFECT_OHKO)
     {
