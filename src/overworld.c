@@ -3717,13 +3717,9 @@ static u8 ReformatItemDescription(enum Item item, u8 *dest)
 
 void ScriptShowItemDescription(struct ScriptContext *ctx)
 {
+    ScriptReadByte(ctx);
     if (OW_SHOW_ITEM_DESCRIPTIONS == OW_ITEM_DESCRIPTIONS_OFF)
-    {
-        (void) ScriptReadByte(ctx);
         return;
-    }
-
-    u8 headerType = ScriptReadByte(ctx);
 
     Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);
 
