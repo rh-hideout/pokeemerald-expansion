@@ -3,6 +3,7 @@
 
 /* Config definitions */
 #define BATTLE_CONFIG_DEFINITIONS(F) \
+    F(I_FISHING_CHAIN,             fishingChain,            (u32, TRUE))          \
     /* Calculation settings */ \
     F(B_CRIT_CHANCE,               critChance,              (u32, GEN_COUNT - 1)) \
     F(B_CRIT_MULTIPLIER,           critMultiplier,          (u32, GEN_COUNT - 1)) \
@@ -254,19 +255,21 @@
 
 
 #define POKEMON_CONFIG_DEFINITIONS(F) \
-    F(SHINY_THRESHOLD,           shinyThreshold,          (u32, 65536))         \
-    F(POKERUS_ENABLED,           pokerusEnabled,          (u32, TRUE))          \
-    F(POKERUS_SPREAD_ADJACENCY,  pokerusSpreadAdjacency,  (u32, GEN_COUNT - 1)) \
-    F(POKERUS_SPREAD_DAYS_LEFT,  pokerusSpreadDaysLeft,   (u32, GEN_COUNT - 1)) \
-    F(POKERUS_INFECT_AGAIN,      pokerusInfectAgain,      (u32, GEN_COUNT - 1)) \
-    F(POKERUS_INFECT_EGG,        pokerusInfectEgg,        (u32, TRUE))          \
-    F(POKERUS_HERD_IMMUNITY,     pokerusHerdImmunity,     (u32, TRUE))          \
-    F(POKERUS_WEAK_VARIANT,      pokerusWeakVariant,      (u32, TRUE))          \
-    F(BALL_INHERITANCE,          ballInheritance,         (u32, GEN_COUNT - 1)) \
-    F(MOVE_INHERITANCE,          moveInheritance,         (u32, GEN_COUNT - 1)) \
-    F(NATURE_INHERITANCE,        natureInheritance,       (u32, GEN_COUNT - 1)) \
-    F(ABILITY_INHERITANCE,       abilityInheritance,      (u32, GEN_COUNT - 1)) \
-    F(EGG_MOVE_TRANSFER,         eggMoveTransfer,         (u32, GEN_COUNT - 1)) \
+    F(SHINY_THRESHOLD,              shinyThreshold,            (u32, MAX_u16 + 1))   \
+    F(ONLY_OBTAINABLE_SHINIES,      onlyObtainableShinies,     (u32, TRUE))          \
+    F(NO_SHINIES_WITHOUT_POKEBALLS, noShiniesWithoutPokeBalls, (u32, TRUE))          \
+    F(POKERUS_ENABLED,              pokerusEnabled,            (u32, TRUE))          \
+    F(POKERUS_SPREAD_ADJACENCY,     pokerusSpreadAdjacency,    (u32, GEN_COUNT - 1)) \
+    F(POKERUS_SPREAD_DAYS_LEFT,     pokerusSpreadDaysLeft,     (u32, GEN_COUNT - 1)) \
+    F(POKERUS_INFECT_AGAIN,         pokerusInfectAgain,        (u32, GEN_COUNT - 1)) \
+    F(POKERUS_INFECT_EGG,           pokerusInfectEgg,          (u32, TRUE))          \
+    F(POKERUS_HERD_IMMUNITY,        pokerusHerdImmunity,       (u32, TRUE))          \
+    F(POKERUS_WEAK_VARIANT,         pokerusWeakVariant,        (u32, TRUE))          \
+    F(BALL_INHERITANCE,             ballInheritance,           (u32, GEN_COUNT - 1)) \
+    F(MOVE_INHERITANCE,             moveInheritance,           (u32, GEN_COUNT - 1)) \
+    F(NATURE_INHERITANCE,           natureInheritance,         (u32, GEN_COUNT - 1)) \
+    F(ABILITY_INHERITANCE,          abilityInheritance,        (u32, GEN_COUNT - 1)) \
+    F(EGG_MOVE_TRANSFER,            eggMoveTransfer,           (u32, GEN_COUNT - 1)) \
 
 #define AI_CONFIG_DEFINITIONS(F) \
     F(AI_DOUBLE_TARGET_COORDINATION,           doubleTargetCoordination,   (u32, 1)) \

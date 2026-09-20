@@ -82,7 +82,7 @@ extern enum Item gSpecialVar_ItemId;
 
 #define FRIENDSHIP_EVO_THRESHOLD ((P_FRIENDSHIP_EVO_THRESHOLD >= GEN_8) ? 160 : 220)
 
-STATIC_ASSERT(P_SHINY_THRESHOLD >= 0 && P_SHINY_THRESHOLD <= 65536, InvalidShinyThreshold);
+STATIC_ASSERT(P_SHINY_THRESHOLD >= 0 && P_SHINY_THRESHOLD <= MAX_u16 + 1, InvalidShinyThreshold);
 
 struct SpeciesItem
 {
@@ -875,14 +875,15 @@ bool32 ComputePlayerShinyOdds(u32 personality, u32 value)
     if (FlagGet(P_FLAG_FORCE_SHINY))
         return TRUE;
 
-    if (P_ONLY_OBTAINABLE_SHINIES && (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE || (FlagGet(WE_FLAG_NO_CATCHING))))
+    if (GetConfig(ONLY_OBTAINABLE_SHINIES) && (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE || (FlagGet(WE_FLAG_NO_CATCHING))))
         return FALSE;
 
-    if (P_NO_SHINIES_WITHOUT_POKEBALLS && !HasAtLeastOnePokeBall() && FlagGet(FLAG_SYS_POKEDEX_GET))
+    if (GetConfig(NO_SHINIES_WITHOUT_POKEBALLS) && !HasAtLeastOnePokeBall() && FlagGet(FLAG_SYS_POKEDEX_GET))
         return FALSE;
 
     u32 totalRerolls = 0;
     u32 shinyThreshold = GetConfig(SHINY_THRESHOLD);
+    u32 shinyValue = GET_SHINY_VALUE(value, personality);
 
     if (CheckBagHasItem(ITEM_SHINY_CHARM, 1))
         totalRerolls += I_SHINY_CHARM_ADDITIONAL_ROLLS;
@@ -895,13 +896,13 @@ bool32 ComputePlayerShinyOdds(u32 personality, u32 value)
     if (gDexNavSpecies)
         totalRerolls += CalculateDexNavShinyRolls();
 
-    while (GET_SHINY_VALUE(value, personality) >= shinyThreshold && totalRerolls > 0)
+    while (shinyValue >= shinyThreshold && totalRerolls > 0)
     {
-        personality = Random32();
+        shinyValue = RandomUniform(RNG_SHINY_REROLL, 0, MAX_u16);
         totalRerolls--;
     }
 
-    return GET_SHINY_VALUE(value, personality) < shinyThreshold;
+    return shinyValue < shinyThreshold;
 }
 
 void SetBoxMonIVs(struct BoxPokemon *mon, u8 fixedIV)

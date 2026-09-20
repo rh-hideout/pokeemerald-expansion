@@ -103,7 +103,8 @@ enum __attribute__((packed)) Stat
 #define DEFAULT_STAT_STAGE 6
 #define MAX_STAT_STAGE    12
 
-// This threshold is part of the saved Pokémon format. Configure creation odds with P_SHINY_THRESHOLD instead.
+// This threshold is part of the saved Pokémon format. Keep the value the same to preserve compatibility.
+// Configure creation odds with P_SHINY_THRESHOLD instead.
 #define SHINY_STORAGE_THRESHOLD 8
 
 // Ribbon IDs used by TV and Pokénav
