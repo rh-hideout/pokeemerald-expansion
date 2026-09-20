@@ -73,5 +73,27 @@ SINGLE_BATTLE_TEST("Fillet Away's HP cost doesn't trigger effects that trigger o
     }
 }
 
-TO_DO_BATTLE_TEST("Fillet Away fails if the user's Attack, Sp. Atk and Speed are all maxed out")
-
+SINGLE_BATTLE_TEST("Fillet Away fails if the user's Attack, Sp. Atk and Speed are all maxed out")
+{
+    GIVEN {
+        PLAYER(SPECIES_BIBAREL) { Ability(ABILITY_SIMPLE); MaxHP(300); HP(300); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        for (u32 j = 0; j < 2; j++)
+        {
+            TURN { MOVE(player, MOVE_FILLET_AWAY); }
+            TURN { MOVE(player, MOVE_RECOVER); }
+        }
+        TURN { MOVE(player, MOVE_FILLET_AWAY); }
+    } SCENE {
+        for (u32 j = 0; j < 2; j++)
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_FILLET_AWAY, player);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_FILLET_AWAY, player);
+        MESSAGE("But it failed!");
+    } THEN {
+        EXPECT_EQ(player->hp, player->maxHP);
+        EXPECT_EQ(player->statStages[STAT_ATK], MAX_STAT_STAGE);
+        EXPECT_EQ(player->statStages[STAT_SPATK], MAX_STAT_STAGE);
+        EXPECT_EQ(player->statStages[STAT_SPEED], MAX_STAT_STAGE);
+    }
+}

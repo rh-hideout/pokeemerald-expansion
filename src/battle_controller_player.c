@@ -579,7 +579,7 @@ static void HideAllTargets(void)
 {
     for (enum BattlerId i = 0; i < MAX_BATTLERS_COUNT; i++)
     {
-        if (IsBattlerAlive(i) && gBattleSpritesDataPtr->healthBoxesData[i].healthboxIsBouncing)
+        if (ShouldHideBattler(i))
         {
             gSprites[gBattlerSpriteIds[i]].callback = SpriteCB_HideAsMoveTarget;
             EndBounceEffect(i, BOUNCE_HEALTHBOX);
@@ -704,21 +704,23 @@ void HandleInputChooseMove(enum BattlerId battler)
             moveTarget = GetMoveTarget(GetMaxMove(battler, moveInfo->moves[gMoveSelectionCursor[battler]]));
 
         gMultiUsePlayerCursor = GetDefaultSelectionTarget(battler, moveTarget);
+        
+        enum BattlerId partner = GetPartnerBattler(battler);
 
         if (gBattleResources->bufferA[battler][1]) // a double battle
         {
             if (!CanSelectBattler(moveTarget))
                 canSelectTarget = 1; // either selected or user
-            if (moveTarget == TARGET_USER_OR_ALLY && IsBattlerAlive(GetPartnerBattler(battler)))
+            if (moveTarget == TARGET_USER_OR_ALLY && IsBattlerAlive(partner))
                 canSelectTarget = 1;
 
             if (moveInfo->currentPP[gMoveSelectionCursor[battler]] == 0)
             {
                 canSelectTarget = 0;
             }
-            else if (isUserOrAlly && CountAliveMonsInBattle(BATTLE_ALIVE_EXCEPT_BATTLER, battler) <= 1)
+            else if (isUserOrAlly && !IsBattlerAlive(partner))
             {
-                gMultiUsePlayerCursor = GetDefaultMoveTarget(battler);
+                gMultiUsePlayerCursor = battler;
                 canSelectTarget = 0;
             }
 
@@ -928,7 +930,7 @@ static void ReloadMoveNames(enum BattlerId battler)
     else
     {
         gBattleStruct->zmove.viewing = FALSE;
-        MoveSelectionDestroyCursorAt(battler);
+        MoveSelectionDestroyCursorAt(MOVESLOT_0);
         MoveSelectionDisplayMoveNames(battler);
         MoveSelectionCreateCursorAt(gMoveSelectionCursor[battler], 0);
         if (B_SHOW_EFFECTIVENESS)
@@ -1086,7 +1088,7 @@ void HandleMoveSwitching(enum BattlerId battler)
             gBattlerControllerFuncs[battler] = OakOldManHandleInputChooseMove;
         else
             gBattlerControllerFuncs[battler] = HandleInputChooseMove;
-        gMoveSelectionCursor[battler] = gMultiUsePlayerCursor;
+        gMoveSelectionCursor[battler] = (enum MoveSlot)gMultiUsePlayerCursor;
         MoveSelectionCreateCursorAt(gMoveSelectionCursor[battler], 0);
         if (B_SHOW_EFFECTIVENESS)
             MoveSelectionDisplayMoveEffectiveness(CheckTargetTypeEffectiveness(battler), battler);
@@ -1581,7 +1583,7 @@ static void WaitForMonSelection(enum BattlerId battler)
         if (gPartyMenuUseExitCallback == TRUE)
             BtlController_EmitChosenMonReturnValue(battler, B_COMM_TO_ENGINE, gSelectedMonPartyId, gBattlePartyCurrentOrder);
         else
-            BtlController_EmitChosenMonReturnValue(battler, B_COMM_TO_ENGINE, PARTY_SIZE, NULL);
+            BtlController_EmitChosenMonReturnValue(battler, B_COMM_TO_ENGINE, PARTY_MON_NONE, NULL);
 
         if (gBattleResources->bufferA[battler][1] == PARTY_ACTION_SEND_OUT)
             PrintLinkStandbyMsg();
@@ -1755,7 +1757,7 @@ static void MoveSelectionDisplayMoveDescription(enum BattlerId battler)
 
     if (GetActiveGimmick(battler) == GIMMICK_DYNAMAX || IsGimmickSelected(battler, GIMMICK_DYNAMAX))
     {
-        pwr = GetMaxMovePower(move);
+        pwr = GetMaxMovePower(move, move);
         move = GetMaxMove(battler, move);
         acc = 0;
     }
@@ -1798,7 +1800,7 @@ static void MoveSelectionDisplayMoveDescription(enum BattlerId battler)
     CopyWindowToVram(B_WIN_MOVE_DESCRIPTION, COPYWIN_FULL);
 }
 
-void MoveSelectionCreateCursorAt(u8 cursorPosition, u8 baseTileNum)
+void MoveSelectionCreateCursorAt(enum MoveSlot cursorPosition, u8 baseTileNum)
 {
     u16 src[2];
     src[0] = baseTileNum + 1;
@@ -1808,7 +1810,7 @@ void MoveSelectionCreateCursorAt(u8 cursorPosition, u8 baseTileNum)
     CopyBgTilemapBufferToVram(0);
 }
 
-void MoveSelectionDestroyCursorAt(u8 cursorPosition)
+void MoveSelectionDestroyCursorAt(enum MoveSlot cursorPosition)
 {
     u16 src[2];
     src[0] = 0x1016;
@@ -2163,7 +2165,7 @@ static void PlayerHandleChoosePokemon(enum BattlerId battler)
         && gBattleResources->bufferA[battler][1] != PARTY_ACTION_CHOOSE_FAINTED_MON
         && gBattleResources->bufferA[battler][1] != PARTY_ACTION_SEND_MON_TO_BOX)
     {
-        BtlController_EmitChosenMonReturnValue(battler, B_COMM_TO_ENGINE, gBattlerPartyIndexes[battler] + 1, gBattlePartyCurrentOrder);
+        BtlController_EmitChosenMonReturnValue(battler, B_COMM_TO_ENGINE, (enum PartyMon)(gBattlerPartyIndexes[battler] + 1), gBattlePartyCurrentOrder);
         BtlController_Complete(battler);
     }
     else
@@ -2171,7 +2173,7 @@ static void PlayerHandleChoosePokemon(enum BattlerId battler)
         gBattleControllerData[battler] = CreateTask(TaskDummy, 0xFF);
         gTasks[gBattleControllerData[battler]].data[0] = gBattleResources->bufferA[battler][1];
         *(&gBattleStruct->battlerPreventingSwitchout) = gBattleResources->bufferA[battler][8];
-        *(&gBattleStruct->prevSelectedPartySlot) = gBattleResources->bufferA[battler][2];
+        gBattleStruct->prevSelectedPartySlot = (enum PartyMon)gBattleResources->bufferA[battler][2];
         *(&gBattleStruct->abilityPreventingSwitchout) = (gBattleResources->bufferA[battler][3] & 0xFF) | (gBattleResources->bufferA[battler][7] << 8);
         BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 0x10, RGB_BLACK);
         gBattlerControllerFuncs[battler] = OpenPartyMenuToChooseMon;
@@ -2248,7 +2250,7 @@ static void PlayerHandleTwoReturnValues(enum BattlerId battler)
 
 static void PlayerHandleChosenMonReturnValue(enum BattlerId battler)
 {
-    BtlController_EmitChosenMonReturnValue(battler, B_COMM_TO_ENGINE, 0, NULL);
+    BtlController_EmitChosenMonReturnValue(battler, B_COMM_TO_ENGINE, PARTY_MON_0, NULL);
     BtlController_Complete(battler);
 }
 

@@ -17,6 +17,7 @@ SINGLE_BATTLE_TEST("Adrenaline Orb raises Speed by one stage if Intimidated")
         ABILITY_POPUP(player, ABILITY_INTIMIDATE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
         MESSAGE("The opposing Wobbuffet's Attack fell!");
+        ITEM_POPUP(opponent, ITEM_ADRENALINE_ORB);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
         MESSAGE("The opposing Wobbuffet's Speed rose!");
@@ -37,6 +38,7 @@ SINGLE_BATTLE_TEST("Adrenaline Orb drops speed by one stage if user has Contrary
         ABILITY_POPUP(player, ABILITY_INTIMIDATE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
         MESSAGE("The opposing Spinda's Attack rose!");
+        ITEM_POPUP(opponent, ITEM_ADRENALINE_ORB);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
         MESSAGE("The opposing Spinda's Speed fell!");
@@ -59,6 +61,7 @@ SINGLE_BATTLE_TEST("Adrenaline Orb activates after Defiant")
         ABILITY_POPUP(opponent, ABILITY_DEFIANT);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
         MESSAGE("The opposing Mankey's Attack rose sharply!");
+        ITEM_POPUP(opponent, ITEM_ADRENALINE_ORB);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
         MESSAGE("The opposing Mankey's Speed rose!");
     } THEN {

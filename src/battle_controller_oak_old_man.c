@@ -314,7 +314,7 @@ static void WaitForMonSelection(enum BattlerId battler)
         if (gPartyMenuUseExitCallback == TRUE)
             BtlController_EmitChosenMonReturnValue(battler, 1, gSelectedMonPartyId, gBattlePartyCurrentOrder);
         else
-            BtlController_EmitChosenMonReturnValue(battler, 1, 6, NULL);
+            BtlController_EmitChosenMonReturnValue(battler, 1, PARTY_MON_NONE, NULL);
         OakOldManBufferExecCompleted(battler);
     }
 }
@@ -845,7 +845,7 @@ static void OakOldManHandleChoosePokemon(enum BattlerId battler)
     gBattleControllerData[battler] = CreateTask(TaskDummy, 0xFF);
     gTasks[gBattleControllerData[battler]].data[0] = gBattleResources->bufferA[battler][1];
     *(&gBattleStruct->battlerPreventingSwitchout) = gBattleResources->bufferA[battler][8];
-    *(&gBattleStruct->prevSelectedPartySlot) = gBattleResources->bufferA[battler][2];
+    gBattleStruct->prevSelectedPartySlot = (enum PartyMon)gBattleResources->bufferA[battler][2];
     *(&gBattleStruct->abilityPreventingSwitchout) = (gBattleResources->bufferA[battler][3] & 0xFF) | (gBattleResources->bufferA[battler][7] << 8);
     for (i = 0; i < 3; ++i)
         gBattlePartyCurrentOrder[i] = gBattleResources->bufferA[battler][4 + i];

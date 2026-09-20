@@ -1700,9 +1700,12 @@ void PrepareForFollowerNPCBattle(void)
 
 void RestorePartyAfterFollowerNPCBattle(void)
 {
-    VarSet(VAR_0x8004, FRONTIER_UTIL_FUNC_SAVE_PARTY);
-    CallFrontierUtilFunc();
-    LoadPlayerParty();
+    if (!AreMultiPartiesFullTeams())
+    {
+        VarSet(VAR_0x8004, FRONTIER_UTIL_FUNC_SAVE_PARTY);
+        CallFrontierUtilFunc();
+        LoadPlayerParty();
+    }
 }
 
 void FollowerNPC_TryRemoveFollowerOnWhiteOut(void)

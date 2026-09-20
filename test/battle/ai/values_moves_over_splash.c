@@ -567,6 +567,7 @@ AI_DOUBLE_BATTLE_TEST("AI values moves above Splash, 701-800")
         case EFFECT_LIFE_DEW:
 
         // Skipped on purpose.
+        case EFFECT_AURA_WHEEL:
         case EFFECT_PROTECT:
         case EFFECT_NON_VOLATILE_STATUS:
             break;

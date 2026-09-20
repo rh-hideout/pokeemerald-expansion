@@ -90,9 +90,9 @@ bool32 CanDynamax(enum BattlerId battler)
     }
 
     // Check if species isn't allowed to Dynamax.
-    if (GET_BASE_SPECIES_ID(species) == SPECIES_ZACIAN
-        || GET_BASE_SPECIES_ID(species) == SPECIES_ZAMAZENTA
-        || GET_BASE_SPECIES_ID(species) == SPECIES_ETERNATUS)
+    if (GetBaseSpecies(species) == SPECIES_ZACIAN
+        || GetBaseSpecies(species) == SPECIES_ZAMAZENTA
+        || GetBaseSpecies(species) == SPECIES_ETERNATUS)
         return FALSE;
 
     // Check if Trainer has already Dynamaxed.
@@ -269,14 +269,14 @@ enum MaxPowerTier
 };
 
 // Gets the base power of a Max Move.
-u32 GetMaxMovePower(enum Move move)
+u32 GetMaxMovePower(enum Move baseMove, enum Move move)
 {
     // G-Max Drum Solo, G-Max Hydrosnipe, and G-Max Fireball always have 160 base power.
     if (MoveHasAdditionalEffect(move, MOVE_EFFECT_FIXED_POWER))
         return 160;
 
     // Exceptions to all other rules below:
-    switch (move)
+    switch (baseMove)
     {
     case MOVE_TRIPLE_KICK:   return 80;
     case MOVE_GEAR_GRIND:    return 100;
@@ -285,11 +285,11 @@ u32 GetMaxMovePower(enum Move move)
     default: break;
     }
 
-    enum MaxPowerTier tier = GetMaxPowerTier(move);
-    enum Type moveType = GetMoveType(move);
+    enum MaxPowerTier tier = GetMaxPowerTier(baseMove);
+    enum Type moveType = GetMoveType(baseMove);
     if (moveType == TYPE_FIGHTING
      || moveType == TYPE_POISON
-     || move == MOVE_MULTI_ATTACK)
+     || baseMove == MOVE_MULTI_ATTACK)
     {
         switch (tier)
         {

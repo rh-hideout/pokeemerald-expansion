@@ -20,6 +20,7 @@ DOUBLE_BATTLE_TEST("Restore HP Item effects do not miss timing (Berries)")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FIRE_PLEDGE, playerRight);
         MESSAGE("A sea of fire enveloped the opposing side!");
         MESSAGE("The opposing Wynaut was hurt by the sea of fire!");
+        ITEM_POPUP(opponentLeft, item);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentLeft);
         MESSAGE("The opposing Wobbuffet was hurt by the sea of fire!");
     }
@@ -74,6 +75,7 @@ DOUBLE_BATTLE_TEST("Restore HP Item effects do not miss timing after a recoil mo
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TAKE_DOWN, opponentLeft);
         HP_BAR(playerLeft);
         HP_BAR(opponentLeft);
+        ITEM_POPUP(opponentLeft, item);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentLeft);
         HP_BAR(opponentLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentRight);
@@ -128,6 +130,7 @@ SINGLE_BATTLE_TEST("Sitrus Berry restores HP immediately after Leech Seed damage
         ANIMATION(ANIM_TYPE_MOVE, MOVE_LEECH_SEED, opponent);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_LEECH_SEED_DRAIN, player);
         HP_BAR(player);
+        ITEM_POPUP(player, ITEM_SITRUS_BERRY);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
         HP_BAR(player);
     }
@@ -141,7 +144,11 @@ SINGLE_BATTLE_TEST("Healing berry animates on the correct battler at battle star
     } WHEN {
         TURN {  }
     } SCENE {
-        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        NONE_OF {
+            ITEM_POPUP(player, ITEM_ORAN_BERRY);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        }
+        ITEM_POPUP(opponent, ITEM_ORAN_BERRY);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
     }
 }

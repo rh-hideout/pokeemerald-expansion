@@ -703,7 +703,7 @@ void RecordedBattle_CheckMovesetChanges(u8 mode)
                 if (sBattleRecords[battler][sBattlerRecordSizes[battler]] == ACTION_MOVE_CHANGE)
                 {
                     u8 ppBonuses[MAX_MON_MOVES];
-                    u8 moveSlots[MAX_MON_MOVES];
+                    enum MoveSlot moveSlots[MAX_MON_MOVES];
                     u8 mimickedMoveSlots[MAX_MON_MOVES];
                     struct ChooseMoveStruct movePP;
                     u8 ppBonusSet;
@@ -717,7 +717,7 @@ void RecordedBattle_CheckMovesetChanges(u8 mode)
 
                     for (j = 0; j < MAX_MON_MOVES; j++)
                     {
-                        moveSlots[j] = RecordedBattle_GetBattlerAction(RECORDED_BYTE, battler);
+                        moveSlots[j] = (enum MoveSlot)RecordedBattle_GetBattlerAction(RECORDED_BYTE, battler);
                         movePP.moves[j] = gBattleMons[battler].moves[moveSlots[j]];
                         movePP.currentPP[j] = gBattleMons[battler].pp[moveSlots[j]];
                         movePP.maxPP[j] = ppBonuses[moveSlots[j]];

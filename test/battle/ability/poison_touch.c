@@ -201,3 +201,23 @@ SINGLE_BATTLE_TEST("Poison Touch is blocked by Covert Cloak")
         EXPECT(opponent->status1 == 0);
     }
 }
+
+SINGLE_BATTLE_TEST("Poison Touch can poison even if contact triggers Mummy")
+{
+    GIVEN {
+        ASSUME(MoveMakesContact(MOVE_CRUNCH));
+        PLAYER(SPECIES_GRIMER) { Ability(ABILITY_POISON_TOUCH); }
+        OPPONENT(SPECIES_YAMASK) { Ability(ABILITY_MUMMY); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_CRUNCH, WITH_RNG(RNG_POISON_TOUCH, 1)); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CRUNCH, player);
+        ABILITY_POPUP(player, ABILITY_POISON_TOUCH);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
+        STATUS_ICON(opponent, poison: TRUE);
+        ABILITY_POPUP(opponent, ABILITY_MUMMY);
+    } THEN {
+        EXPECT_EQ(player->ability, ABILITY_MUMMY);
+        EXPECT(opponent->status1 & STATUS1_PSN_ANY);
+    }
+}
