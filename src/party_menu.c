@@ -1594,7 +1594,7 @@ static void HandleChooseMonSelection(u8 taskId, s8 *slotPtr)
 
             if (GetMonData(&party[partySlot], MON_DATA_HP) > 0
              || GetMonData(&party[partySlot], MON_DATA_SPECIES_OR_EGG) == SPECIES_EGG
-             || ((gBattleTypeFlags & BATTLE_TYPE_MULTI) && AreMultiPartiesHalfTeams() && partyId >= (PARTY_SIZE / 2)))
+             || ((gBattleTypeFlags & BATTLE_TYPE_MULTI) && PlayerAndPartnerSharePartyMenu() && partyId >= (PARTY_SIZE / 2)))
             {
                 // Can't select if egg, alive, or doesn't belong to you
                 PlaySE(SE_FAILURE);
@@ -1610,7 +1610,7 @@ static void HandleChooseMonSelection(u8 taskId, s8 *slotPtr)
         case PARTY_ACTION_SEND_MON_TO_BOX:
         {
             u8 slot = (u8)*slotPtr;
-            if ((gBattleTypeFlags & BATTLE_TYPE_MULTI) && AreMultiPartiesHalfTeams() && slot >= (PARTY_SIZE / 2))
+            if ((gBattleTypeFlags & BATTLE_TYPE_MULTI) && PlayerAndPartnerSharePartyMenu() && slot >= (PARTY_SIZE / 2))
             {
                 // Can't select if mon doesn't belong to you
                 PlaySE(SE_FAILURE);
@@ -3141,7 +3141,7 @@ static void CB2_ShowPokemonSummaryScreen(void)
 
         if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
         {
-            if (AreMultiPartiesHalfTeams())
+            if (PlayerAndPartnerSharePartyMenu())
                 GetMultiPartyForSummaryScreen();
         }
 
@@ -3164,7 +3164,7 @@ static void CB2_ShowPokemonSummaryScreen(void)
 
 void CB2_ReturnToPartyMenuFromSummaryScreen(void)
 {
-    if (gBattleTypeFlags & BATTLE_TYPE_MULTI && AreMultiPartiesHalfTeams() && gPartyMenu.menuType == PARTY_MENU_TYPE_IN_BATTLE)
+    if (gBattleTypeFlags & BATTLE_TYPE_MULTI && PlayerAndPartnerSharePartyMenu() && gPartyMenu.menuType == PARTY_MENU_TYPE_IN_BATTLE)
         RestoreMultiPartyFromSummaryScreen();
     gPaletteFade.bufferTransferDisabled = TRUE;
     gPartyMenu.slotId = gLastViewedMonIndex;
@@ -7477,7 +7477,7 @@ static u8 GetPartyLayoutFromBattleType(void)
 {
     if (IsMultiBattle())
     {
-        if (AreMultiPartiesHalfTeams())
+        if (PlayerAndPartnerSharePartyMenu())
             return PARTY_LAYOUT_MULTI;
         else
             return PARTY_LAYOUT_MULTI_FULL;
@@ -7538,7 +7538,7 @@ static bool8 TrySwitchInPokemon(void)
     battlePartyId = GetPartyIdFromBattleSlot(slot);
 
     // In a 6v6 multi battle, slots 1, 4, and 5 are the partner's Pokémon
-    if (IsMultiBattle() && (slot == 1 || slot == 4 || slot == 5) && AreMultiPartiesHalfTeams())
+    if (IsMultiBattle() && (slot == 1 || slot == 4 || slot == 5) && PlayerAndPartnerSharePartyMenu())
     {
         StringCopy(gStringVar1, GetTrainerPartnerName());
         StringExpandPlaceholders(gStringVar4, gText_CantSwitchWithAlly);
@@ -7607,7 +7607,7 @@ static void BufferBattlePartyOrder(u8 *partyBattleOrder, u8 flankId)
 
     if (IsMultiBattle())
     {
-        if (AreMultiPartiesHalfTeams())
+        if (PlayerAndPartnerSharePartyMenu())
         {
             // Party ids are packed in 4 bits at a time
             // i.e. the party id order below would be 0, 3, 5, 4, 2, 1, and the two parties would be 0,5,4 and 3,2,1
@@ -7682,7 +7682,8 @@ static void BufferBattlePartyOrderBySide(u8 *partyBattleOrder, u8 flankId, enum 
 
     if (IsMultiBattle())
     {
-        if (AreMultiPartiesHalfTeams())
+        if ((!IsOnPlayerSide(battler) && AreMultiPartiesHalfTeams())
+            || (IsOnPlayerSide(battler) && PlayerAndPartnerSharePartyMenu()))
         {
             if (flankId != 0)
             {
@@ -7932,7 +7933,7 @@ static void CB2_SetUpExitToBattleScreen(void)
 
 void ShowPartyMenuToShowcaseMultiBattleParty(void)
 {
-    if (AreMultiPartiesHalfTeams())
+    if (PlayerAndPartnerSharePartyMenu())
     {
         InitPartyMenu(PARTY_MENU_TYPE_MULTI_SHOWCASE, PARTY_LAYOUT_MULTI_SHOWCASE, PARTY_ACTION_CHOOSE_MON, FALSE, PARTY_MSG_NONE, Task_InitMultiPartnerPartySlideIn, gMain.savedCallback);
     }

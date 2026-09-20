@@ -10081,6 +10081,20 @@ bool32 IsSleepClauseEnabled(void)
     return FALSE;
 }
 
+bool32 PlayerAndPartnerSharePartyMenu(void)
+{
+    if (AreMultiPartiesHalfTeams())
+        return TRUE;
+
+    if (gPartiesCount[B_TRAINER_PLAYER] <= MULTI_PARTY_SIZE
+        && gPartiesCount[B_TRAINER_PARTNER] <= MULTI_PARTY_SIZE)
+    {
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
 bool32 AreMultiPartiesHalfTeams(void)
 {
 #if TESTING

@@ -256,6 +256,7 @@ void TryActivateSleepClause(enum BattlerId battler, enum PartyMon indexInParty);
 void TryDeactivateSleepClause(enum BattlerId battler, enum PartyMon indexInParty);
 bool32 IsSleepClauseActiveForSide(enum BattleSide battlerSide);
 bool32 IsSleepClauseEnabled(void);
+bool32 PlayerAndPartnerSharePartyMenu(void);
 bool32 AreMultiPartiesHalfTeams(void);
 bool32 IsPlayerMultiPartyFullTeam(void);
 void ClearDamageCalcResults(void);
