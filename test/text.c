@@ -656,7 +656,7 @@ TEST("Battle strings fit on the battle message window")
     TRAINER_BATTLE_PARAM.opponentB = 1;
 
     // Set battler to 1, so "The opposing " is prefixed when refering to battlers.
-    gBattleTypeFlags |= BATTLE_TYPE_TRAINER;
+    gBattleTypeFlags = BATTLE_TYPE_TRAINER;
     gBattlerAttacker = gBattlerTarget = gBattleScripting.battler = gEffectBattler = 1;
 
     // Set moves
