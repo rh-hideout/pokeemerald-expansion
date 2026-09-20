@@ -2231,10 +2231,13 @@ static bool32 WillPlayerWhiteOutIfPartnerWinsAlone()
         return TRUE;
     if (TESTING)
         return FALSE;
-    for (u32 i = 0; i < ARRAY_COUNT(gSelectedOrderFromParty); i++)
+    for (enum PartyMon i = PARTY_MON_0; i < PARTY_SIZE; i++)
     {
-        if (gSelectedOrderFromParty[i] <= gPartiesCount[B_TRAINER_PLAYER])
+        if ((gSelectedOrderFromParty[i] > 0)
+            && (gSelectedOrderFromParty[i] <= *GetSavedPlayerPartyCount()))
+        {
             continue;
+        }
 
         struct Pokemon *fullPartyMon = GetSavedPlayerPartyMon(i);
 
