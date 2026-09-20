@@ -235,13 +235,6 @@ void ReducePlayerPartyToSelectedMons(void)
     // No selected party order present - return early
     if (gSelectedOrderFromParty[0] == 0)
     {
-        for (int i = 0; i < PARTY_SIZE; i++)
-        {
-            if (GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES) != SPECIES_NONE)
-            {
-                gSelectedOrderFromParty[i] = i + 1;
-            }
-        }
         CalculatePlayerPartyCount();
         return;
     }

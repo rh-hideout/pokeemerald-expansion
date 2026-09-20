@@ -1700,7 +1700,7 @@ void PrepareForFollowerNPCBattle(void)
 
 void RestorePartyAfterFollowerNPCBattle(void)
 {
-    if (!AreMultiPartiesFullTeams())
+    if (!IsPlayerMultiPartyFullTeam())
     {
         VarSet(VAR_0x8004, FRONTIER_UTIL_FUNC_SAVE_PARTY);
         CallFrontierUtilFunc();

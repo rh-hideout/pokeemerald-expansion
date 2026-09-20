@@ -10137,7 +10137,21 @@ bool32 IsPlayerMultiPartyFullTeam(void)
 #if TESTING
     return (!AreMultiPartiesHalfTeams());
 #else
-    bool32 result = gSpecialVar_Result = !(gPartiesCount[B_TRAINER_PLAYER] >= *GetSavedPlayerPartyCount());
+    u32 selectedCount = 0;
+    for (enum PartyMon slot = PARTY_MON_0; slot < PARTY_MON_NONE; slot++)
+    {
+        if (gSelectedOrderFromParty[slot])
+        {
+            selectedCount++;
+        }
+    }
+
+    if (selectedCount == 0)
+    {
+        return TRUE;
+    }
+
+    bool32 result = gSpecialVar_Result = !(*GetSavedPlayerPartyCount() > selectedCount);
     return result;
 #endif
 }
