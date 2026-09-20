@@ -108,6 +108,19 @@ DOUBLE_BATTLE_TEST("Cloud Nine and Air Lock suppress hail damage without removin
         TURN { }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HAIL_CONTINUES);
+        if (ability == ABILITY_DAMP)
+        {
+            HP_BAR(playerRight);
+        }
+        else
+        {
+            NONE_OF {
+                HP_BAR(playerLeft);
+                HP_BAR(playerRight);
+                HP_BAR(opponentLeft);
+                HP_BAR(opponentRight);
+            }
+        }
     } THEN {
         if (ability == ABILITY_DAMP)
             EXPECT_LT(playerRight->hp, playerRight->maxHP);
@@ -154,6 +167,7 @@ DOUBLE_BATTLE_TEST("Cloud Nine and Air Lock suppress fog's accuracy drop without
 
     PARAMETRIZE { species = SPECIES_PSYDUCK; ability = ABILITY_CLOUD_NINE; }
     PARAMETRIZE { species = SPECIES_RAYQUAZA; ability = ABILITY_AIR_LOCK; }
+    PASSES_RANDOMLY(100, 100, RNG_ACCURACY);
     SetStartingStatus(STARTING_STATUS_WEATHER_FOG);
 
     GIVEN {

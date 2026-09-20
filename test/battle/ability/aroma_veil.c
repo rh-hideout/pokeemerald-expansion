@@ -145,6 +145,7 @@ DOUBLE_BATTLE_TEST("Aroma Veil protects the Pokémon's side from Cute Charm")
         TURN { MOVE(moveUser, MOVE_SCRATCH, target: opponentLeft, WITH_RNG(RNG_CUTE_CHARM, 1)); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, moveUser);
+        HP_BAR(opponentLeft);
         NOT ABILITY_POPUP(opponentLeft, ABILITY_CUTE_CHARM);
     } THEN {
         EXPECT(!moveUser->volatiles.infatuation);

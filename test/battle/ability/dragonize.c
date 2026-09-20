@@ -58,8 +58,8 @@ SINGLE_BATTLE_TEST("Dragonize doesn't affect Weather Ball's type", s16 damage)
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_WEATHER_BALL) == EFFECT_WEATHER_BALL);
         ASSUME(GetSpeciesType(SPECIES_PINSIR, 0) == TYPE_BUG);
-        PLAYER(SPECIES_FERALIGATR_MEGA) { Ability(ABILITY_DRAGONIZE); Speed(1); }
-        OPPONENT(SPECIES_PINSIR) { Speed(2); }
+        PLAYER(SPECIES_FERALIGATR_MEGA) { Ability(ABILITY_DRAGONIZE); SpAttack(300); Speed(1); }
+        OPPONENT(SPECIES_PINSIR) { SpDefense(100); HP(2000); MaxHP(2000); Speed(2); }
     } WHEN {
         TURN { MOVE(opponent, suppressed ? MOVE_GASTRO_ACID : MOVE_CELEBRATE); MOVE(player, move); }
         TURN { MOVE(player, MOVE_WEATHER_BALL); }
@@ -68,7 +68,8 @@ SINGLE_BATTLE_TEST("Dragonize doesn't affect Weather Ball's type", s16 damage)
         if (move == MOVE_SUNNY_DAY)
             MESSAGE("It's super effective!");
     } FINALLY {
-        EXPECT_GT(results[1].damage, results[0].damage);
+        EXPECT_MUL_EQ(results[0].damage, Q_4_12(6.0), results[1].damage);
+        EXPECT_MUL_EQ(results[2].damage, Q_4_12(6.0), results[3].damage);
         EXPECT_EQ(results[0].damage, results[2].damage);
         EXPECT_EQ(results[1].damage, results[3].damage);
     }

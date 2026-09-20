@@ -36,6 +36,16 @@ SINGLE_BATTLE_TEST("Gluttony activates confusion-healing Berries at half HP but 
         TURN { MOVE(opponent, MOVE_SEISMIC_TOSS); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SEISMIC_TOSS, opponent);
+        HP_BAR(player, damage: damage);
+        if (consumed)
+        {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
+            HP_BAR(player, damage: -33);
+        }
+        else
+        {
+            NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
+        }
     } THEN {
         EXPECT_EQ(player->hp, 100 - damage + (consumed ? 33 : 0));
         EXPECT_EQ(player->item, consumed ? ITEM_NONE : item);
@@ -60,6 +70,16 @@ SINGLE_BATTLE_TEST("Gluttony activates a Berry after Belly Drum only if the user
         TURN { MOVE(player, MOVE_BELLY_DRUM); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BELLY_DRUM, player);
+        HP_BAR(player, damage: maxHP / 2);
+        if (consumed)
+        {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
+            HP_BAR(player, damage: -33);
+        }
+        else
+        {
+            NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
+        }
     } THEN {
         EXPECT_EQ(player->statStages[STAT_ATK], MAX_STAT_STAGE);
         EXPECT_EQ(player->hp, maxHP - maxHP / 2 + (consumed ? 33 : 0));
@@ -84,6 +104,8 @@ SINGLE_BATTLE_TEST("Gluttony activates stat-raising Berries at half HP")
         TURN { MOVE(opponent, MOVE_SEISMIC_TOSS); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SEISMIC_TOSS, opponent);
+        HP_BAR(player, damage: 50);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
     } THEN {
         EXPECT_EQ(player->hp, 50);
         EXPECT_EQ(player->item, ITEM_NONE);
@@ -113,6 +135,15 @@ SINGLE_BATTLE_TEST("Gluttony changes the pinch Berry threshold from one quarter 
         TURN { MOVE(opponent, MOVE_SEISMIC_TOSS); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SEISMIC_TOSS, opponent);
+        HP_BAR(player, damage: damage);
+        if (consumed)
+        {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
+        }
+        else
+        {
+            NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
+        }
     } THEN {
         EXPECT_EQ(player->hp, 100 - damage);
         EXPECT_EQ(player->item, consumed ? ITEM_NONE : ITEM_LIECHI_BERRY);
@@ -132,6 +163,15 @@ SINGLE_BATTLE_TEST("Gluttony rounds the half-HP threshold down")
         TURN { MOVE(opponent, MOVE_SEISMIC_TOSS); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SEISMIC_TOSS, opponent);
+        HP_BAR(player, damage: damage);
+        if (damage == 51)
+        {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
+        }
+        else
+        {
+            NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
+        }
     } THEN {
         EXPECT_EQ(player->hp, 101 - damage);
         EXPECT_EQ(player->item, damage == 51 ? ITEM_NONE : ITEM_LIECHI_BERRY);
@@ -154,6 +194,16 @@ SINGLE_BATTLE_TEST("Gluttony does not raise Oran and Sitrus Berry thresholds abo
         TURN { MOVE(opponent, MOVE_SEISMIC_TOSS); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SEISMIC_TOSS, opponent);
+        HP_BAR(player, damage: damage);
+        if (healing != 0)
+        {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
+            HP_BAR(player, damage: -healing);
+        }
+        else
+        {
+            NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
+        }
     } THEN {
         EXPECT_EQ(player->hp, 100 - damage + healing);
         EXPECT_EQ(player->item, healing ? ITEM_NONE : item);
@@ -172,6 +222,15 @@ SINGLE_BATTLE_TEST("Gluttony does not bypass Unnerve")
         TURN { MOVE(opponent, MOVE_SEISMIC_TOSS); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SEISMIC_TOSS, opponent);
+        HP_BAR(player, damage: 50);
+        if (ability != ABILITY_UNNERVE)
+        {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
+        }
+        else
+        {
+            NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
+        }
     } THEN {
         EXPECT_EQ(player->hp, 50);
         EXPECT_EQ(player->item, ability == ABILITY_UNNERVE ? ITEM_LIECHI_BERRY : ITEM_NONE);
@@ -193,6 +252,15 @@ SINGLE_BATTLE_TEST("Suppressing Gluttony restores the quarter-HP Berry threshold
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_GASTRO_ACID, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SEISMIC_TOSS, opponent);
+        HP_BAR(player, damage: damage);
+        if (damage == 75)
+        {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
+        }
+        else
+        {
+            NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
+        }
     } THEN {
         EXPECT_EQ(player->hp, 100 - damage);
         EXPECT_EQ(player->item, damage == 75 ? ITEM_NONE : ITEM_LIECHI_BERRY);
