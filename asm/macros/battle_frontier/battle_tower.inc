@@ -94,8 +94,7 @@
 
 	.macro choose_mons
 	fadescreen 1
-	setvar VAR_0x8006, MULTI_PARTY_SIZE
-	special ChoosePartyForBattle @ choose 3 mons for battle
+	choosepartyforbattle, MULTI_PARTY_SIZE
 	.endm
 
 	.macro multi_do type:req
