@@ -428,13 +428,13 @@ static void CB2_ReturnToPartyOrBagMenuFromWritingMail(void);
 static bool8 ReturnGiveItemToBagOrPC(enum Item);
 static void Task_DisplayGaveMailFromBagMessage(u8);
 static void Task_HandleSwitchItemsFromBagYesNoInput(u8);
-static void Task_ValidateChosenHalfParty(u8);
+static void Task_ValidateChosenParty(u8);
 static bool8 GetBattleEntryEligibility(struct Pokemon *);
 static bool8 HasPartySlotAlreadyBeenSelected(u8);
 static u8 GetBattleEntryLevelCap(void);
 static u8 GetMaxBattleEntries(void);
 static u8 GetMinBattleEntries(void);
-static void Task_ContinueChoosingHalfParty(u8);
+static void Task_ContinueChoosingParty(u8);
 static void BufferBattlePartyOrder(u8 *, bool8);
 static void BufferBattlePartyOrderBySide(u8 *, u8, enum BattlerId);
 static void Task_InitMultiPartnerPartySlideIn(u8);
@@ -7282,7 +7282,7 @@ void InitChoosePartyForBattle(u8 unused)
 {
     ClearSelectedPartyOrder();
     InitPartyMenu(PARTY_MENU_TYPE_CHOOSE_NUMBER, PARTY_LAYOUT_SINGLE, PARTY_ACTION_CHOOSE_MON, FALSE, PARTY_MSG_CHOOSE_MON, Task_HandleChooseMonInput, gMain.savedCallback);
-    gPartyMenu.task = Task_ValidateChosenHalfParty;
+    gPartyMenu.task = Task_ValidateChosenParty;
 }
 
 void ClearSelectedPartyOrder(void)
@@ -7378,7 +7378,7 @@ static bool8 HasPartySlotAlreadyBeenSelected(u8 slot)
     return FALSE;
 }
 
-static void Task_ValidateChosenHalfParty(u8 taskId)
+static void Task_ValidateChosenParty(u8 taskId)
 {
     u8 msgId = CheckBattleEntriesAndGetMessage();
 
@@ -7386,7 +7386,7 @@ static void Task_ValidateChosenHalfParty(u8 taskId)
     {
         PlaySE(SE_FAILURE);
         DisplayPartyMenuStdMessage(msgId);
-        gTasks[taskId].func = Task_ContinueChoosingHalfParty;
+        gTasks[taskId].func = Task_ContinueChoosingParty;
     }
     else
     {
@@ -7395,7 +7395,7 @@ static void Task_ValidateChosenHalfParty(u8 taskId)
     }
 }
 
-static void Task_ContinueChoosingHalfParty(u8 taskId)
+static void Task_ContinueChoosingParty(u8 taskId)
 {
     if ((JOY_NEW(A_BUTTON)) || (JOY_NEW(B_BUTTON)))
     {
