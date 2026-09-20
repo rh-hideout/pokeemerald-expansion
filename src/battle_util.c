@@ -10149,7 +10149,7 @@ bool32 AreMultiPartiesHalfTeams(void)
 bool32 IsPlayerMultiPartyFullTeam(void)
 {
 #if TESTING
-    return (!AreMultiPartiesHalfTeams());
+    return (gBattleTestRunnerState->data.partySizes[B_TRAINER_PLAYER] == PARTY_SIZE);
 #else
     u32 selectedCount = 0;
     for (enum PartyMon slot = PARTY_MON_0; slot < PARTY_MON_NONE; slot++)
