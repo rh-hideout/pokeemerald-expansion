@@ -6396,12 +6396,13 @@ static s32 AI_HPAware(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum
     }
     else
     {
+        u32 atkHealthPercentage = GetHealthPercentage(battlerAtk);
         // Consider AI HP
-        if (IsExplosionMove(move) && GetHealthPercentage(battlerAtk) > 70)
+        if (IsExplosionMove(move) && atkHealthPercentage > 70)
         {
             ADJUST_SCORE(-2);
         }
-        else if (GetHealthPercentage(battlerAtk) > 70)
+        else if (atkHealthPercentage > 70)
         {
             // high hp
             switch (effect)
@@ -6425,7 +6426,7 @@ static s32 AI_HPAware(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum
                 break;
             }
         }
-        else if (GetHealthPercentage(battlerAtk) > 30)
+        else if (atkHealthPercentage > 30)
         {
             // med hp
             if (IsStatRaisingMove(move)
