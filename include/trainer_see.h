@@ -11,6 +11,15 @@ struct ApproachingTrainer
 
 #define NUM_APPROACHING_TRAINER 2
 
+enum NumTrainers
+{
+    NUM_TRAINER_DEFAULT,
+    NUM_TRAINER_ZERO,
+    NUM_TRAINER_ONE,
+    NUM_TRAINER_TWO,
+    NUM_TRAINER_RUN_SCRIPT, // non-trainerbattle script
+};
+
 extern u16 gWhichTrainerToFaceAfterBattle;
 extern u8 gPostBattleMovementScript[4];
 extern struct ApproachingTrainer gApproachingTrainers[2];
@@ -23,6 +32,7 @@ void SetBuriedTrainerMovement(struct ObjectEvent *objEvent);
 void DoTrainerApproach(void);
 void TryPrepareSecondApproachingTrainer(void);
 void PrepareSecondApproachingTrainer(void);
+bool32 IsNormalTypeTrainer(u32 trainerType);
 
 u8 FldEff_ExclamationMarkIcon(void);
 u8 FldEff_QuestionMarkIcon(void);
