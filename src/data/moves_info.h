@@ -3444,8 +3444,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
     [MOVE_WATERFALL] =
     {
         .name = COMPOUND_STRING("Waterfall"),
-        .description = COMPOUND_STRING(
     #if B_UPDATED_MOVE_DATA >= GEN_4
+        .description = COMPOUND_STRING(
             "Charges with speed to\n"
             "climb waterfalls. May flinch."),
         .additionalEffects = ADDITIONAL_EFFECTS({
@@ -3453,6 +3453,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             .chance = 20,
         }),
     #else
+        .description = COMPOUND_STRING(
             "Charges the foe with speed\n"
             "to climb waterfalls."),
     #endif
@@ -9446,8 +9447,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
     [MOVE_VOLT_TACKLE] =
     {
         .name = COMPOUND_STRING("Volt Tackle"),
-        .description = COMPOUND_STRING(
     #if B_UPDATED_MOVE_DATA >= GEN_4
+        .description = COMPOUND_STRING(
             "A life-risking tackle that\n"
             "hurts the user. May paralyze."),
         .additionalEffects = ADDITIONAL_EFFECTS({
@@ -9455,6 +9456,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             .chance = 10,
         }),
     #else
+        .description = COMPOUND_STRING(
             "A life-risking tackle that\n"
             "slightly hurts the user."),
     #endif
