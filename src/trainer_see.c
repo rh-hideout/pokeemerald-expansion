@@ -600,7 +600,7 @@ static enum NumTrainers CheckTrainer(u8 objectEventId)
     gNoOfApproachingTrainers++;
 
     if (gObjectEvents[objectEventId].trainerType == TRAINER_TYPE_SINGLE_TRAINER)
-        numTrainer = NUM_TRAINER_ONE;
+        numTrainers = NUM_TRAINER_ONE;
 
     return numTrainers;
 }
