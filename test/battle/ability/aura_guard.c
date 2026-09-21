@@ -4,6 +4,7 @@
 ASSUMPTIONS
 {
     ASSUME(MoveMakesContact(MOVE_SCRATCH));
+    ASSUME(GetMoveEffect(MOVE_SKILL_SWAP) == EFFECT_SKILL_SWAP);
 }
 
 SINGLE_BATTLE_TEST("Aura Guard halves damage taken from moves that make direct contact", s16 damage)
