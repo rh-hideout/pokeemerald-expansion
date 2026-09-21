@@ -16,7 +16,6 @@ enum NumTrainers
     NUM_TRAINER_ZERO,
     NUM_TRAINER_ONE,
     NUM_TRAINER_TWO,
-    NUM_TRAINER_DEFAULT,
     NUM_TRAINER_RUN_SCRIPT, // non-trainerbattle script
 };
 

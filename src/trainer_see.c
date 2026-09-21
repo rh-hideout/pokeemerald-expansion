@@ -470,7 +470,13 @@ bool8 CheckForTrainersWantingBattle(void)
 
     for (i = 0; i <= trainerObjectsCount; i++)
     {
-        enum NumTrainers numTrainers = CheckTrainer(trainerObjects[i]);
+        u32 objectEventId = trainerObjects[i];
+        bool32 isSingleTypeTrainer = gObjectEvents[objectEventId].trainerType == TRAINER_TYPE_SINGLE_TRAINER;
+
+        if (gNoOfApproachingTrainers > 0 && isSingleTypeTrainer)
+            break;
+
+        enum NumTrainers numTrainers = CheckTrainer(objectEventId);
 
         if (numTrainers == NUM_TRAINER_RUN_SCRIPT)
         {
@@ -483,10 +489,10 @@ bool8 CheckForTrainersWantingBattle(void)
             return TRUE;
         }
 
-        if (numTrainers == NUM_TRAINER_TWO)
+        if (numTrainers > 0 && isSingleTypeTrainer)
             break;
 
-        if (numTrainers == NUM_TRAINER_ONE)
+        if (numTrainers == NUM_TRAINER_TWO)
             break;
 
         if (numTrainers == NUM_TRAINER_ZERO)
@@ -519,7 +525,7 @@ bool8 CheckForTrainersWantingBattle(void)
 static enum NumTrainers CheckTrainer(u8 objectEventId)
 {
     const u8 *trainerBattlePtr;
-    u8 numTrainers = NUM_TRAINER_DEFAULT;
+    u8 numTrainers = NUM_TRAINER_ONE;
 
     u8 approachDistance = GetTrainerApproachDistance(&gObjectEvents[objectEventId]);
     if (approachDistance == 0)
@@ -598,9 +604,6 @@ static enum NumTrainers CheckTrainer(u8 objectEventId)
     gApproachingTrainers[gNoOfApproachingTrainers].radius = approachDistance;
     InitTrainerApproachTask(&gObjectEvents[objectEventId], approachDistance - 1);
     gNoOfApproachingTrainers++;
-
-    if (gObjectEvents[objectEventId].trainerType == TRAINER_TYPE_SINGLE_TRAINER)
-        numTrainers = NUM_TRAINER_ONE;
 
     return numTrainers;
 }
