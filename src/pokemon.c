@@ -6028,7 +6028,7 @@ enum Species GetFormChangeTargetSpecies_Internal(struct FormChangeContext ctx)
             targetSpecies = formChanges[i].targetSpecies;
             break;
         case FORM_CHANGE_FAINT:
-            if (GetConfig(B_FAINTING_KEEPS_FORM) < GEN_CHAMPIONS || !ShouldMaintainFormAfterFainting(ctx.currentSpecies))
+            if (formChanges[i].param1 != DONT_REVERT_FORM_AFTER_FAINTING_IN_BATTLE)
                 targetSpecies = formChanges[i].targetSpecies;
             break;
         case FORM_CHANGE_STATUS:
