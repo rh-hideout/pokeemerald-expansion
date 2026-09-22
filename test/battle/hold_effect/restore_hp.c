@@ -141,7 +141,7 @@ SINGLE_BATTLE_TEST("Healing berry animates on the correct battler at battle star
     } WHEN {
         TURN {  }
     } SCENE {
-        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
     }
 }
