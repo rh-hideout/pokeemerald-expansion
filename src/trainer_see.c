@@ -464,14 +464,11 @@ static void TrySecondTrainerApproach(u8 *activeObjects, u8 activeObjectsCount, u
         return;
     (*objectIndex)++;
     enum ScriptType scriptType = GetActiveObjectNextScript(activeObjects, activeObjectsCount, objectIndex);
-    if (scriptType == NO_EFFECT_SCRIPT)
-        return;
     if (scriptType == NON_BATTLE_SCRIPT || scriptType == DOUBLES_BATTLE_SCRIPT)
     {
         // if the next object in order is not a battle,we do not start a single battle even if there are more trainers waiting
         // if the next object is a double battle, the double trainer wait its turn
         gNoOfApproachingTrainers--;
-        return;
     }
 
 }
@@ -586,7 +583,7 @@ static enum ScriptType GetActiveObjectScriptType(struct ApproachingTrainer *appr
     }
 
     TrainerBattleParameter *temp = (TrainerBattleParameter *)(approachingObject->trainerScriptPtr + 1);
-    if (temp->params.isDoubleBattle)
+    if (GetTrainerBattleType(temp->params.opponentA) == TRAINER_BATTLE_TYPE_DOUBLES)
     {
         // player can't start double battle
         if (GetMonsStateToDoubles_2() != PLAYER_HAS_TWO_USABLE_MONS)
