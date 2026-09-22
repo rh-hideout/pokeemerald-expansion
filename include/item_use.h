@@ -60,7 +60,8 @@ enum {
 };
 
 bool32 CanThrowBall(void);
-bool32 CannotUseItemsInBattle(enum Item itemId, struct Pokemon *mon);
+bool32 CannotSelectItemsInBattle(enum Item itemId, struct Pokemon *mon);
+bool32 CannotUseItemsInBattle(enum Item itemId, struct Pokemon *mon, u32 slotId);
 
 enum ItemTMHMOrEvolutionStone
 {
