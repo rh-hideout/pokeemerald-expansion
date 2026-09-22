@@ -1356,13 +1356,11 @@ u32 GetBestNoOfHitsToKO(enum BattlerId battlerAtk, enum BattlerId battlerDef, en
     u32 result = 100;
     u32 tempResult = 0;
 
-    struct AiLogicData *aiData = gAiLogicData;
     enum Move *moves = GetMovesArray(battlerAtk);
-    u32 moveLimitations = aiData->moveLimitations[battlerAtk];
 
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
-        if (IsMoveUnusable(moveIndex, moves[moveIndex], moveLimitations))
+        if (moves[moveIndex] == MOVE_NONE)
             continue;
 
         tempResult = GetNoOfHitsToKOBattler(battlerAtk, battlerDef, moveIndex, calcContext, CONSIDER_ENDURE);
@@ -1508,11 +1506,10 @@ bool32 CanTargetFaintAi(enum BattlerId battlerDef, enum BattlerId battlerAtk)
 {
     struct AiLogicData *aiData = gAiLogicData;
     enum Move *moves = GetMovesArray(battlerDef);
-    u32 moveLimitations = aiData->moveLimitations[battlerDef];
 
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
-        if (IsMoveUnusable(moveIndex, moves[moveIndex], moveLimitations))
+        if (moves[moveIndex] == MOVE_NONE)
             continue;
 
         if (AI_GetDamage(battlerDef, battlerAtk, moveIndex, AI_DEFENDING, aiData) >= gBattleMons[battlerAtk].hp
@@ -1570,7 +1567,6 @@ void GetBestDmgMovesFromBattler(enum BattlerId battlerAtk, enum BattlerId battle
     struct AiLogicData *aiData = gAiLogicData;
     u32 bestDmg = 0;
     enum Move *moves = GetMovesArray(battlerAtk);
-    u32 moveLimitations = aiData->moveLimitations[battlerAtk];
     u32 countBestMoves = 0;
 
     if (CanAIFaintTarget(battlerAtk, battlerDef, 1))
@@ -1585,7 +1581,7 @@ void GetBestDmgMovesFromBattler(enum BattlerId battlerAtk, enum BattlerId battle
     {
         for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
         {
-            if (IsMoveUnusable(moveIndex, moves[moveIndex], moveLimitations)
+            if (moves[moveIndex] == MOVE_NONE
             || (GetMovePower(moves[moveIndex]) == 0)
             || (AI_GetDamage(battlerAtk, battlerDef, moveIndex, calcContext, aiData) == 0))
                 continue;
@@ -1607,7 +1603,7 @@ void GetBestDmgMovesFromBattler(enum BattlerId battlerAtk, enum BattlerId battle
 
 u32 GetMoveIndex(enum BattlerId battler, enum Move move)
 {
-    enum Move *moves = GetMovesArray(battler);
+    enum Move *moves = gBattleMons[battler].moves;
 
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
@@ -1660,11 +1656,10 @@ u32 GetBestDmgFromBattler(enum BattlerId battler, enum BattlerId battlerTarget, 
     struct AiLogicData *aiData = gAiLogicData;
     u32 bestDmg = 0;
     enum Move *moves = GetMovesArray(battler);
-    u32 moveLimitations = aiData->moveLimitations[battler];
 
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
-        if (IsMoveUnusable(moveIndex, moves[moveIndex], moveLimitations))
+        if (moves[moveIndex] == MOVE_NONE)
             continue;
 
         u32 damage = AI_GetDamage(battler, battlerTarget, moveIndex, calcContext, aiData);
@@ -1681,12 +1676,11 @@ bool32 CanAIFaintTarget(enum BattlerId battlerAtk, enum BattlerId battlerDef, u3
 {
     struct AiLogicData *aiData = gAiLogicData;
     s32 dmg;
-    u16 *moves = gBattleMons[battlerAtk].moves;
-    u32 moveLimitations = aiData->moveLimitations[battlerAtk];
+    enum Move *moves = GetMovesArray(battlerAtk);
 
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
-        if (IsMoveUnusable(moveIndex, moves[moveIndex], moveLimitations))
+        if (moves[moveIndex] == MOVE_NONE)
             continue;
 
         dmg = AI_GetDamage(battlerAtk, battlerDef, moveIndex, AI_ATTACKING, aiData);
@@ -1713,11 +1707,10 @@ bool32 CanBattlerKOTargetIgnoringSturdy(enum BattlerId battlerAtk, enum BattlerI
     struct AiLogicData *aiData = gAiLogicData;
     s32 dmg;
     enum Move *moves = GetMovesArray(battlerAtk);
-    u32 moveLimitations = aiData->moveLimitations[battlerAtk];
 
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
-        if (IsMoveUnusable(moveIndex, moves[moveIndex], moveLimitations))
+        if (moves[moveIndex] == MOVE_NONE)
             continue;
         dmg = AI_GetDamage(battlerAtk, battlerDef, moveIndex, AI_ATTACKING, aiData);
 
@@ -1746,14 +1739,13 @@ bool32 CanTargetFaintAiWithMod(enum BattlerId battlerDef, enum BattlerId battler
     s32 dmg;
     enum Move *moves = GetMovesArray(battlerDef);
     u32 hpCheck = gBattleMons[battlerAtk].hp + hpMod;
-    u32 moveLimitations = aiData->moveLimitations[battlerAtk];
 
     if (hpCheck > gBattleMons[battlerAtk].maxHP)
         hpCheck = gBattleMons[battlerAtk].maxHP;
 
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
-        if (IsMoveUnusable(moveIndex, moves[moveIndex], moveLimitations))
+        if (moves[moveIndex] == MOVE_NONE)
             continue;
 
         dmg = AI_GetDamage(battlerDef, battlerAtk, moveIndex, AI_DEFENDING, aiData);
@@ -2276,9 +2268,8 @@ static bool32 ShouldAvoidProtectingAgainstPartnerMove(enum BattlerId battler, en
         return FALSE;
     }
 
-    partnerMove = gBattleMons[partner].moves[gAiBattleData->chosenMoveIndex[partner]];
+    partnerMove = GetMovesArray(partner)[gAiBattleData->chosenMoveIndex[partner]];
     if (partnerMove == MOVE_NONE
-     || partnerMove == MOVE_UNAVAILABLE
      || MoveIgnoresProtect(partnerMove)
      || !AI_IsFaster(battler, partner, protectMove, partnerMove, CONSIDER_PRIORITY)
      || !IsAllyProtectingFromMove(partner, partnerMove, protectMove)
@@ -2572,7 +2563,7 @@ u32 CountNegativeStatStages(enum BattlerId battlerId)
 bool32 CanIndexMoveFaintTarget(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum MoveSlot moveIndex, enum DamageCalcContext calcContext)
 {
     s32 dmg;
-    enum Move *moves = gBattleMons[battlerAtk].moves;
+    enum Move *moves = GetMovesArray(battlerAtk);
 
     if (IsDoubleBattle() && battlerDef == GetPartnerBattler(battlerAtk))
         dmg = AI_GetDamage(battlerAtk, battlerDef, moveIndex, AI_ATTACKING_PARTNER, gAiLogicData); // Attacking partner, be careful
@@ -2586,10 +2577,7 @@ bool32 CanIndexMoveFaintTarget(enum BattlerId battlerAtk, enum BattlerId battler
 
 enum Move *GetMovesArray(enum BattlerId battler)
 {
-    if (IsAiBattlerAware(battler) || IsAiBattlerAware(GetPartnerBattler(battler)) || IsAiFlagPresent(AI_FLAG_MOVE_OMNISCIENCE))
-        return gBattleMons[battler].moves;
-    else
-        return gBattleHistory->usedMoves[battler];
+    return gAiLogicData->moves[battler];
 }
 
 u32 GetBattlerMoveIndexWithEffect(enum BattlerId battler, enum BattleMoveEffects effect)
@@ -2603,14 +2591,14 @@ u32 GetBattlerMoveIndexWithEffect(enum BattlerId battler, enum BattleMoveEffects
     return MAX_MON_MOVES;
 }
 
-static u32 GetUsableMoveIndexWithEffect(enum BattlerId battler, enum BattleMoveEffects effect, u32 moveLimitations)
+static u32 GetUsableMoveIndexWithEffect(enum BattlerId battler, enum BattleMoveEffects effect)
 {
     enum Move *moves = GetMovesArray(battler);
 
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
         enum Move battlerMove = moves[moveIndex];
-        if (!IsMoveUnusable(moveIndex, battlerMove, moveLimitations) && GetMoveEffect(battlerMove) == effect)
+        if (GetMoveEffect(battlerMove) == effect)
             return moveIndex;
     }
 
@@ -2660,7 +2648,7 @@ bool32 ShouldBeatUpForRageFist(enum BattlerId battlerAtk, enum BattlerId battler
      || GetBattlerPartyState(battlerAtkPartner)->timesGotHit >= 4) // Power is already high beyond this.
         return FALSE;
 
-    u32 rageFistMoveIndex = GetUsableMoveIndexWithEffect(battlerAtkPartner, EFFECT_RAGE_FIST, aiData->moveLimitations[battlerAtkPartner]);
+    u32 rageFistMoveIndex = GetUsableMoveIndexWithEffect(battlerAtkPartner, EFFECT_RAGE_FIST);
 
     return (rageFistMoveIndex != MAX_MON_MOVES
          && CanMoveIndexHitAnyOpponent(battlerAtkPartner, rageFistMoveIndex, aiData));
@@ -2750,7 +2738,7 @@ bool32 HasOnlyMovesWithCategory(enum BattlerId battlerId, enum DamageCategory ca
     {
         if (onlyOffensive && IsBattleMoveStatus(moves[moveIndex]))
             continue;
-        if (moves[moveIndex] != MOVE_NONE && moves[moveIndex] != MOVE_UNAVAILABLE && GetBattleMoveCategory(moves[moveIndex]) != category)
+        if (moves[moveIndex] != MOVE_NONE&& GetBattleMoveCategory(moves[moveIndex]) != category)
             return FALSE;
     }
 
@@ -2763,7 +2751,7 @@ bool32 HasMoveWithCategory(enum BattlerId battler, enum DamageCategory category)
 
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
-        if (moves[moveIndex] != MOVE_NONE && moves[moveIndex] != MOVE_UNAVAILABLE && GetBattleMoveCategory(moves[moveIndex]) == category)
+        if (moves[moveIndex] != MOVE_NONE&& GetBattleMoveCategory(moves[moveIndex]) == category)
             return TRUE;
     }
     return FALSE;
@@ -2775,7 +2763,7 @@ bool32 HasMoveWithType(enum BattlerId battler, enum Type type)
 
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
-        if (moves[moveIndex] != MOVE_NONE && moves[moveIndex] != MOVE_UNAVAILABLE && GetMoveType(moves[moveIndex]) == type)
+        if (moves[moveIndex] != MOVE_NONE&& GetMoveType(moves[moveIndex]) == type)
             return TRUE;
     }
 
@@ -2788,7 +2776,7 @@ bool32 HasMoveWithEffect(enum BattlerId battler, enum BattleMoveEffects effect)
 
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
-        if (moves[moveIndex] != MOVE_NONE && moves[moveIndex] != MOVE_UNAVAILABLE && GetMoveEffect(moves[moveIndex]) == effect)
+        if (moves[moveIndex] != MOVE_NONE&& GetMoveEffect(moves[moveIndex]) == effect)
             return TRUE;
     }
 
@@ -2801,7 +2789,7 @@ bool32 HasMoveWithAIEffect(enum BattlerId battler, u32 aiEffect)
 
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
-        if (moves[moveIndex] != MOVE_NONE && moves[moveIndex] != MOVE_UNAVAILABLE)
+        if (moves[moveIndex] != MOVE_NONE)
         {
             if (GetAIEffectGroupFromMove(battler, moves[moveIndex]) & aiEffect)
                 return TRUE;
@@ -3014,11 +3002,10 @@ bool32 HasMoveThatRaisesOwnStats(enum BattlerId battlerId)
 bool32 HasMoveWithLowAccuracy(enum BattlerId battlerAtk, enum BattlerId battlerDef, u32 accCheck, bool32 ignoreStatus)
 {
     enum Move *moves = GetMovesArray(battlerAtk);
-    u32 moveLimitations = gAiLogicData->moveLimitations[battlerAtk];
 
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
-        if (IsMoveUnusable(moveIndex, moves[moveIndex], moveLimitations))
+        if (moves[moveIndex] == MOVE_NONE)
             continue;
 
         if (ignoreStatus && IsBattleMoveStatus(moves[moveIndex]))
@@ -3041,11 +3028,10 @@ bool32 HasMoveWithLowAccuracy(enum BattlerId battlerAtk, enum BattlerId battlerD
 bool32 HasSleepMoveWithLowAccuracy(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
     enum Move *moves = GetMovesArray(battlerAtk);
-    u32 moveLimitations = gAiLogicData->moveLimitations[battlerAtk];
 
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
-        if (IsMoveUnusable(moveIndex, moves[moveIndex], moveLimitations))
+        if (moves[moveIndex] == MOVE_NONE)
             continue;
 
         if (GetMoveNonVolatileStatus(moves[moveIndex]) == MOVE_EFFECT_SLEEP
@@ -3109,10 +3095,9 @@ bool32 HasThawingMove(enum BattlerId battler)
 bool32 HasMoveUsableWhileAsleep(enum BattlerId battler)
 {
     enum Move *moves = GetMovesArray(battler);
-    u32 moveLimitations = gAiLogicData->moveLimitations[battler];
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
-        if (IsMoveUnusable(moveIndex, moves[moveIndex], moveLimitations))
+        if (moves[moveIndex] == MOVE_NONE)
             continue;
         if (IsUsableWhileAsleepEffect(GetMoveEffect(moves[moveIndex])))
             return TRUE;
@@ -3273,11 +3258,10 @@ bool32 HasDamagingMoveOfType(enum BattlerId battler, enum Type type)
 bool32 HasMoveWithFlag(enum BattlerId battler, MoveFlag getFlag)
 {
     enum Move *moves = GetMovesArray(battler);
-    u32 moveLimitations = gAiLogicData->moveLimitations[battler];
 
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
-        if (IsMoveUnusable(moveIndex, moves[moveIndex], moveLimitations))
+        if (moves[moveIndex] == MOVE_NONE)
             continue;
 
         if (getFlag(moves[moveIndex]))
@@ -5365,13 +5349,13 @@ void DecideTerastal(enum BattlerId battler)
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
         aiCalcNoTera.move = aiMoves[moveIndex];
-        if (!IsMoveUnusable(moveIndex, aiCalcNoTera.move, gAiLogicData->moveLimitations[battler]) && !IsBattleMoveStatus(aiCalcNoTera.move))
+        if (aiCalcNoTera.move != MOVE_NONE && !IsBattleMoveStatus(aiCalcNoTera.move))
             altCalcs.dealtWithoutTera[moveIndex] = AI_CalcDamage(&aiCalcNoTera, battler, opposingBattler);
         else
             altCalcs.dealtWithoutTera[moveIndex] = noDmg;
 
         aiCalcWithTera.move = oppMoves[moveIndex];
-        if (!IsMoveUnusable(moveIndex, aiCalcWithTera.move, gAiLogicData->moveLimitations[opposingBattler]) && !IsBattleMoveStatus(aiCalcWithTera.move))
+        if (aiCalcWithTera.move != MOVE_NONE && !IsBattleMoveStatus(aiCalcWithTera.move))
         {
             altCalcs.takenWithTera[moveIndex] = AI_CalcDamage(&aiCalcWithTera, opposingBattler, battler);
             effectivenessTakenWithTera[moveIndex] = aiCalcWithTera.typeEffectiveness;
