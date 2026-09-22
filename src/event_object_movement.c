@@ -3629,12 +3629,20 @@ u8 CreateCopySpriteAt(struct Sprite *sprite, s16 x, s16 y, u8 subpriority)
 
 void SetObjectEventDirection(struct ObjectEvent *objectEvent, enum Direction direction)
 {
-    s8 d2;
     objectEvent->previousMovementDirection = objectEvent->facingDirection;
     if (!objectEvent->facingDirectionLocked)
     {
-        d2 = direction;
-        objectEvent->facingDirection = d2;
+        enum Direction facingDirection = direction;
+
+        // Player interactions require cardinal facing even while moving diagonally on stairs.
+        if (objectEvent->isPlayer)
+        {
+            if (direction == DIR_SOUTHWEST || direction == DIR_NORTHWEST)
+                facingDirection = DIR_WEST;
+            else if (direction == DIR_SOUTHEAST || direction == DIR_NORTHEAST)
+                facingDirection = DIR_EAST;
+        }
+        objectEvent->facingDirection = facingDirection;
     }
     objectEvent->movementDirection = direction;
 }
@@ -6500,12 +6508,6 @@ static bool8 IsCoordOutsideObjectEventMovementRange(struct ObjectEvent *objectEv
 
 bool8 IsMetatileDirectionallyImpassable(struct ObjectEvent *objectEvent, s16 x, s16 y, enum Direction direction)
 {
-    // This can rarely happen with a sub-frame perfect a press when going down sideways stairs and trying to surf
-    assertf(direction > DIR_NONE && direction < CARDINAL_DIRECTION_COUNT, "Tried to check if metatile is directionally impassable on a diagonal movement")
-    {
-        return TRUE;
-    }
-
     if (gOppositeDirectionBlockedMetatileFuncs[direction - 1](objectEvent->currentMetatileBehavior)
         || gDirectionBlockedMetatileFuncs[direction - 1](MapGridGetMetatileBehaviorAt(x, y)))
         return TRUE;
