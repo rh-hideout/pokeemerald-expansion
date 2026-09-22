@@ -988,6 +988,7 @@ void ChangePokemonNicknameWithCallback(void (*callback)(void));
 bool32 HasShedinjaHPHandling(enum Species species);
 void ResolveEVs(const u16 *evsTemplate, u8 *evs, bool32 ignoreTotalEvCheck);
 void CreateMonFromTemplate(struct Pokemon *mon, const struct PokemonTemplate *monTemplate);
+bool8 SpeciesHasType(enum Species species, u8 type);
 
 static inline u32 OWE_GetMovementTypeFromSpecies(enum Species speciesId)
 {

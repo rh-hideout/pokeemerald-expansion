@@ -8,6 +8,7 @@
 #include "decompress.h"
 #include "event_data.h"
 #include "evolution_scene.h"
+#include "evolution_params.h"
 #include "evolution_graphics.h"
 #include "gpu_regs.h"
 #include "item.h"
@@ -71,14 +72,10 @@ static void StopBgAnimation(void);
 static void Task_AnimateBg(u8 taskId);
 static void RestoreBgAfterAnim(void);
 
-static const u16 sUnusedPal1[] = INCGFX_U16("graphics/evolution_scene/unused_1.pal", ".gbapal");
 static const u32 sBgAnim_Gfx[] = INCGFX_U32("graphics/evolution_scene/bg.png", ".4bpp.smol");
 static const u32 sBgAnim_Inner_Tilemap[] = INCGFX_U32("graphics/evolution_scene/bg_inner.bin", ".smolTM");
 static const u32 sBgAnim_Outer_Tilemap[] = INCGFX_U32("graphics/evolution_scene/bg_outer.bin", ".smolTM");
 static const u16 sBgAnim_Intro_Pal[] = INCGFX_U16("graphics/evolution_scene/bg_anim_intro.pal", ".gbapal");
-static const u16 sUnusedPal2[] = INCGFX_U16("graphics/evolution_scene/unused_2.pal", ".gbapal");
-static const u16 sUnusedPal3[]  = INCGFX_U16("graphics/evolution_scene/unused_3.pal", ".gbapal");
-static const u16 sUnusedPal4[] = INCGFX_U16("graphics/evolution_scene/unused_4.pal", ".gbapal");
 static const u16 sBgAnim_Pal[] = INCGFX_U16("graphics/evolution_scene/bg_anim.pal", ".gbapal");
 
 static const u8 sText_ShedinjaJapaneseName[] = _("ヌケニン");
@@ -151,39 +148,8 @@ static const u8 sBgAnim_PalIndexes[][16] = {
     {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }
 };
 
-#include "field_weather.h"
-#include "rtc.h"
-#include "regions.h"
-#include "event_object_movement.h"
-
-bool32 DoesBoxMonMeetConditions(struct BoxPokemon *boxmon, struct EvolutionData *evo, const struct Evolution *conditions)
+static bool32 DoesBoxMonMeetConditions(struct BoxPokemon *boxmon, struct EvolutionData *evo, const struct Evolution *conditions)
 {
-    u32 i, j;
-    enum Item heldItem = GetBoxMonData(boxmon, MON_DATA_HELD_ITEM);
-    u32 gender = GetBoxMonGender(boxmon);
-    u32 friendship = GetBoxMonData(boxmon, MON_DATA_FRIENDSHIP);
-    u32 personality = GetBoxMonData(boxmon, MON_DATA_PERSONALITY);
-    u16 upperPersonality = personality >> 16;
-    enum OverworldWeather weather;
-    u32 nature = GetNatureFromPersonality(personality);
-    u32 evolutionTracker = GetBoxMonData(boxmon, MON_DATA_EVOLUTION_TRACKER);
-    enum Species partnerSpecies;
-    enum Item partnerHeldItem;
-    enum HoldEffect partnerHoldEffect;
-
-    if (conditions->method == EVO_TRADE)
-    {
-        partnerSpecies = GetMonData(evo->tradePartner, MON_DATA_SPECIES);
-        partnerHeldItem = GetMonData(evo->tradePartner, MON_DATA_HELD_ITEM);
-        partnerHoldEffect = GetItemHoldEffect(partnerHeldItem);
-    }
-    else
-    {
-        partnerSpecies = SPECIES_NONE;
-        partnerHeldItem = ITEM_NONE;
-        partnerHoldEffect = HOLD_EFFECT_NONE;
-    }
-
     switch(conditions->method)
     {
         case EVO_LEVEL:
@@ -200,273 +166,11 @@ bool32 DoesBoxMonMeetConditions(struct BoxPokemon *boxmon, struct EvolutionData 
         default:
             break;
     }
+
     // Check for additional conditions (only if the primary method passes). Skips if there's no additional conditions.
-    for (i = 0; conditions->params != NULL && conditions->params[i].condition != CONDITIONS_END; i++)
+    for (u32 i = 0; conditions->params != NULL && conditions->params[i].condition != CONDITIONS_END; i++)
     {
-        const struct EvolutionParam param = conditions->params[i];
-        bool32 currentCondition = FALSE;
-
-        switch (param.condition)
-        {
-        // Gen 2
-        case IF_GENDER:
-            if (gender == param.arg1)
-                currentCondition = TRUE;
-            break;
-        case IF_MIN_FRIENDSHIP:
-            if (friendship >= param.arg1)
-                currentCondition = TRUE;
-            break;
-        case IF_ATK_GT_DEF:
-            if (CompareBoxmonAttackDefense(boxmon) == 1)
-                currentCondition = TRUE;
-            break;
-        case IF_ATK_EQ_DEF:
-            if (CompareBoxmonAttackDefense(boxmon) == 0)
-                currentCondition = TRUE;
-            break;
-        case IF_ATK_LT_DEF:
-            if (CompareBoxmonAttackDefense(boxmon) == -1)
-                currentCondition = TRUE;
-            break;
-        case IF_TIME:
-            if (GetTimeOfDay() == param.arg1)
-                currentCondition = TRUE;
-            break;
-        case IF_NOT_TIME:
-            if (GetTimeOfDay() != param.arg1)
-                currentCondition = TRUE;
-            break;
-        case IF_HOLD_ITEM:
-            if (heldItem == param.arg1)
-            {
-                currentCondition = TRUE;
-                evo->cannotStopEvo |= TRUE;
-            }
-            break;
-        // Gen 3
-        case IF_PID_UPPER_MODULO_10_GT:
-            if ((upperPersonality % 10) > param.arg1)
-                currentCondition = TRUE;
-            break;
-        case IF_PID_UPPER_MODULO_10_EQ:
-            if ((upperPersonality % 10) == param.arg1)
-                currentCondition = TRUE;
-            break;
-        case IF_PID_UPPER_MODULO_10_LT:
-            if ((upperPersonality % 10) < param.arg1)
-                currentCondition = TRUE;
-            break;
-        case IF_MIN_BEAUTY:
-        {
-            u32 beauty = GetBoxMonData(boxmon, MON_DATA_BEAUTY, 0);
-            if (beauty >= param.arg1)
-                currentCondition = TRUE;
-            break;
-        }
-        case IF_MIN_COOLNESS:
-        {
-            u32 coolness = GetBoxMonData(boxmon, MON_DATA_COOL, 0);
-            if (coolness >= param.arg1)
-                currentCondition = TRUE;
-            break;
-        }
-        case IF_MIN_SMARTNESS:
-        // remember that even though it's called "Smart/Smartness" here,
-        // from gen 6 and up it's known as "Clever/Cleverness."
-        {
-            u32 smartness = GetBoxMonData(boxmon, MON_DATA_SMART, 0);
-            if (smartness >= param.arg1)
-                currentCondition = TRUE;
-            break;
-        }
-        case IF_MIN_TOUGHNESS:
-        {
-            u32 toughness = GetBoxMonData(boxmon, MON_DATA_TOUGH, 0);
-            if (toughness >= param.arg1)
-                currentCondition = TRUE;
-            break;
-        }
-        case IF_MIN_CUTENESS:
-        {
-            u32 cuteness = GetBoxMonData(boxmon, MON_DATA_CUTE, 0);
-            if (cuteness >= param.arg1)
-                currentCondition = TRUE;
-            break;
-        }
-        // Gen 4
-        case IF_SPECIES_IN_PARTY:
-            for (j = 0; j < PARTY_SIZE; j++)
-            {
-                if (GetMonData(&gParties[B_TRAINER_PLAYER][j], MON_DATA_SPECIES) == param.arg1)
-                {
-                    currentCondition = TRUE;
-                    break;
-                }
-            }
-            break;
-        case IF_IN_MAP:
-            if (param.arg1 == ((gSaveBlock1Ptr->location.mapGroup) << 8 | gSaveBlock1Ptr->location.mapNum))
-                currentCondition = TRUE;
-            break;
-        case IF_IN_MAPSEC:
-            if (gMapHeader.regionMapSectionId == param.arg1)
-                currentCondition = TRUE;
-            break;
-        case IF_KNOWS_MOVE:
-            if (BoxMonKnowsMove(boxmon, param.arg1))
-                currentCondition = TRUE;
-            break;
-        // Gen 5
-        case IF_TRADE_PARTNER_SPECIES:
-            if (param.arg1 == partnerSpecies && partnerHoldEffect != HOLD_EFFECT_PREVENT_EVOLVE)
-                currentCondition = TRUE;
-            break;
-        // Gen 6
-        case IF_TYPE_IN_PARTY:
-            for (j = 0; j < PARTY_SIZE; j++)
-            {
-                enum Species currSpecies = GetMonData(&gParties[B_TRAINER_PLAYER][j], MON_DATA_SPECIES);
-                if (GetSpeciesType(currSpecies, 0) == param.arg1
-                 || GetSpeciesType(currSpecies, 1) == param.arg1)
-                {
-                    currentCondition = TRUE;
-                    break;
-                }
-            }
-            break;
-        case IF_WEATHER:
-            weather = GetCurrentWeather();
-            if (param.arg1 == WEATHER_RAIN)
-            {
-                if (weather == WEATHER_RAIN || weather == WEATHER_RAIN_THUNDERSTORM || weather == WEATHER_DOWNPOUR)
-                    currentCondition = TRUE;
-            }
-            else if (param.arg1 == WEATHER_FOG)
-            {
-                if (weather == WEATHER_FOG_DIAGONAL || weather == WEATHER_FOG_HORIZONTAL)
-                    currentCondition = TRUE;
-            }
-            else if (weather == param.arg1)
-            {
-                currentCondition = TRUE;
-            }
-            break;
-        case IF_KNOWS_MOVE_TYPE:
-            for (j = 0; j < MAX_MON_MOVES; j++)
-            {
-                if (GetMoveType(GetBoxMonData(boxmon, MON_DATA_MOVE1 + j)) == param.arg1)
-                {
-                    currentCondition = TRUE;
-                    break;
-                }
-            }
-            break;
-        // Gen 8
-        case IF_NATURE:
-            if (nature == param.arg1)
-                currentCondition = TRUE;
-            break;
-        case IF_AMPED_NATURE:
-            switch (nature)
-            {
-            case NATURE_HARDY:
-            case NATURE_BRAVE:
-            case NATURE_ADAMANT:
-            case NATURE_NAUGHTY:
-            case NATURE_DOCILE:
-            case NATURE_IMPISH:
-            case NATURE_LAX:
-            case NATURE_HASTY:
-            case NATURE_JOLLY:
-            case NATURE_NAIVE:
-            case NATURE_RASH:
-            case NATURE_SASSY:
-            case NATURE_QUIRKY:
-                currentCondition = TRUE;
-                break;
-            }
-            break;
-        case IF_LOW_KEY_NATURE:
-            switch (nature)
-            {
-            case NATURE_LONELY:
-            case NATURE_BOLD:
-            case NATURE_RELAXED:
-            case NATURE_TIMID:
-            case NATURE_SERIOUS:
-            case NATURE_MODEST:
-            case NATURE_MILD:
-            case NATURE_QUIET:
-            case NATURE_BASHFUL:
-            case NATURE_CALM:
-            case NATURE_GENTLE:
-            case NATURE_CAREFUL:
-                currentCondition = TRUE;
-                break;
-            }
-            break;
-        case IF_RECOIL_DAMAGE_GE:
-            if (evolutionTracker >= param.arg1)
-                currentCondition = TRUE;
-            break;
-        case IF_CURRENT_DAMAGE_GE:
-        {
-            if (GetBoxMonCurrentDamage(boxmon) >= param.arg1)
-                currentCondition = TRUE;
-            break;
-        }
-        case IF_CRITICAL_HITS_GE:
-            u32 partyId = GetPartyIndexFromBoxMonPointer(boxmon);
-            if (partyId != PARTY_SIZE && gPartyCriticalHits[partyId] >= param.arg1)
-                currentCondition = TRUE;
-            break;
-        case IF_USED_MOVE_X_TIMES:
-            if (evolutionTracker >= param.arg2)
-                currentCondition = TRUE;
-            break;
-        // Gen 9
-        case IF_DEFEAT_X_WITH_ITEMS:
-            if (evolutionTracker >= param.arg3)
-                currentCondition = TRUE;
-            break;
-        case IF_PID_MODULO_100_GT:
-            if ((personality % 100) > param.arg1)
-                currentCondition = TRUE;
-            break;
-        case IF_PID_MODULO_100_EQ:
-            if ((personality % 100) == param.arg1)
-                currentCondition = TRUE;
-            break;
-        case IF_PID_MODULO_100_LT:
-            if ((personality % 100) < param.arg1)
-                currentCondition = TRUE;
-            break;
-        case IF_MIN_OVERWORLD_STEPS:
-            struct Pokemon *follower = GetFirstLiveMon();
-            if (OW_FOLLOWERS_ENABLED && boxmon == &follower->box && gFollowerSteps >= param.arg1)
-                currentCondition = TRUE;
-            break;
-        case IF_BAG_ITEM_COUNT:
-            if (CheckBagHasItem(param.arg1, param.arg2))
-            {
-                currentCondition = TRUE;
-                evo->cannotStopEvo |= TRUE;
-            }
-            break;
-        case IF_REGION:
-            if (GetCurrentRegion() == param.arg1)
-                currentCondition = TRUE;
-            break;
-        case IF_NOT_REGION:
-            if (GetCurrentRegion() != param.arg1)
-                currentCondition = TRUE;
-            break;
-        case CONDITIONS_END:
-            break;
-        }
-
-        if (currentCondition == FALSE)
+        if (!CheckEvolutionCondition(boxmon, evo, &conditions->params[i]))
             return FALSE;
     }
 
@@ -557,7 +261,7 @@ bool32 TryEvolution(u32 partyIndex, struct EvolutionData *evo, u32 noFadeoutOrSp
         return FALSE;
 
     if (evo->method == EVO_ITEM || evo->method == EVO_TRADE)
-        evo->cannotStopEvo |= TRUE;
+        evo->cannotStopEvo = TRUE;
 
     sEvoStructPtr = AllocZeroed(sizeof(struct EvoScene));
     memcpy(&sEvoStructPtr->data, evo, sizeof(struct EvolutionData));
@@ -851,7 +555,7 @@ static void CB2_EvolutionSceneUpdate(void)
     RunTasks();
 }
 
-static void ConsumeEvolutionItems(u8 taskId)
+static void RunAfterEvolutionCallbacks(u8 taskId, struct BoxPokemon *boxmon)
 {
     const struct Evolution *evo = GetSpeciesEvolutions(gTasks[taskId].tPreEvoSpecies);
     evo = &evo[sEvoStructPtr->data.evoIndex];
@@ -860,24 +564,17 @@ static void ConsumeEvolutionItems(u8 taskId)
     {
         RemoveBagItem(evo->param, 1);
     }
+    else if (evo->method == EVO_SCRIPT_TRIGGER)
+    {
+        if (gTasks[taskId].tEvoWasStopped)
+            gSpecialVar_Result = EVO_EVENT_INTERRUPTED;
+        else
+            gSpecialVar_Result = EVO_EVENT_SUCCESSFUL;
+    }
 
     for (u32 i = 0; evo->params != NULL && evo->params[i].condition != CONDITIONS_END; i++)
     {
-        const struct EvolutionParam *param = &evo->params[i];
-
-        switch (param->condition)
-        {
-            case IF_HOLD_ITEM:
-                enum Item item = ITEM_NONE;
-                struct BoxPokemon *boxmon = GetBoxMonFromPartyIndex(sEvoStructPtr->partyIndex);
-                SetBoxMonData(boxmon, MON_DATA_HELD_ITEM, &item);
-                break;
-            case IF_BAG_ITEM_COUNT:
-                RemoveBagItem(param->arg1, param->arg2);
-                break;
-            default:
-                break;
-        }
+        AfterEvolutionParamCallback(boxmon, gTasks[taskId].tEvoWasStopped, &evo->params[i]);
     }
 }
 
@@ -1280,7 +977,7 @@ static void Task_EvolutionScene(u8 taskId)
             if (!gTasks[taskId].tEvoWasStopped)
                 CreateShedinja(gTasks[taskId].tPreEvoSpecies, gTasks[taskId].tPostEvoSpecies, boxmon);
 
-            ConsumeEvolutionItems(taskId);
+            RunAfterEvolutionCallbacks(taskId, boxmon);
             if (sEvoStructPtr->isTradeEvo)
             {
                 gTextFlags.useAlternateDownArrow = FALSE;
@@ -1531,16 +1228,6 @@ static void StartBgAnimation(bool8 isLink)
 
     CreateTask(Task_UpdateBgPalette, 5);
     CreateBgAnimTask(isLink);
-}
-
-static void UNUSED PauseBgPaletteAnim(void)
-{
-    u8 taskId = FindTaskIdByFunc(Task_UpdateBgPalette);
-
-    if (taskId != TASK_NONE)
-        gTasks[taskId].tPaused = TRUE;
-
-    FillPalette(RGB_BLACK, BG_PLTT_ID(10), PLTT_SIZE_4BPP);
 }
 
 #undef tPaused

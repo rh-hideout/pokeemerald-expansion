@@ -3272,7 +3272,6 @@ static bool32 EventEvolution(u32 partyIndex)
     bool32 noFadeout = (gMain.callback2 == TriggerMultipleEvolutions_Repeatable);
     if (TryEvolution(partyIndex, &evoData, noFadeout))
     {
-        gSpecialVar_Result = EVO_EVENT_SUCCESSFUL;
         ScriptContext_Stop();
         return TRUE;
     }

@@ -318,7 +318,7 @@ enum EvolutionConditions {
     IF_BAG_ITEM_COUNT,                  // The Player has the specific amount of an item in the bag. It then removes those items.
     IF_REGION,                          // The Player is in the specific region.
     IF_NOT_REGION,                      // The Player is NOT in the specific region.
-    CONDITIONS_END
+    CONDITIONS_END                      // Used to mark both the end of the enum and the end of an evolution param array
 };
 
 enum EvolutionMethods {
@@ -333,19 +333,6 @@ enum EvolutionMethods {
     EVO_BATTLE_END,             // Battle ends, doesn't need to level up
     EVO_SPIN                    // The player spins in the overworld
 };
-
-/*
-enum EvolutionMode {
-    EVO_MODE_NORMAL,
-    EVO_MODE_TRADE,
-    EVO_MODE_ITEM_USE,
-    EVO_MODE_ITEM_CHECK,         // If an Everstone is being held, still want to show that the stone *could* be used on that Pokémon to evolve
-    EVO_MODE_BATTLE_SPECIAL,
-    EVO_MODE_OVERWORLD_SPECIAL,
-    EVO_MODE_SCRIPT_TRIGGER,
-    EVO_MODE_BATTLE_ONLY,        // This mode is only used in battles to support Tandemaus' unique requirement
-};
-*/
 
 enum EvoTriggerVersion {
     EVO_TRIGGER_TABLET_CURSE,
