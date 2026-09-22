@@ -12,6 +12,71 @@ ASSUMPTIONS
     ASSUME(GetMoveEffect(MOVE_AURORA_VEIL) == EFFECT_AURORA_VEIL);
 }
 
+SINGLE_BATTLE_TEST("Screen-breaking moves do not announce expiration again on later turns")
+{
+    enum Move screen;
+    enum Move move;
+
+    PARAMETRIZE { screen = MOVE_REFLECT; move = MOVE_BRICK_BREAK; }
+    PARAMETRIZE { screen = MOVE_LIGHT_SCREEN; move = MOVE_BRICK_BREAK; }
+    PARAMETRIZE { screen = MOVE_AURORA_VEIL; move = MOVE_BRICK_BREAK; }
+    PARAMETRIZE { screen = MOVE_REFLECT; move = MOVE_PSYCHIC_FANGS; }
+    PARAMETRIZE { screen = MOVE_LIGHT_SCREEN; move = MOVE_PSYCHIC_FANGS; }
+    PARAMETRIZE { screen = MOVE_AURORA_VEIL; move = MOVE_PSYCHIC_FANGS; }
+    PARAMETRIZE { screen = MOVE_REFLECT; move = MOVE_RAGING_BULL; }
+    PARAMETRIZE { screen = MOVE_LIGHT_SCREEN; move = MOVE_RAGING_BULL; }
+    PARAMETRIZE { screen = MOVE_AURORA_VEIL; move = MOVE_RAGING_BULL; }
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SNOWSCAPE); MOVE(opponent, screen); }
+        TURN { MOVE(player, move); }
+        TURN {}
+        TURN {}
+        TURN {}
+        TURN {}
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SNOWSCAPE, player);
+        ANIMATION(ANIM_TYPE_MOVE, screen, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, move, player);
+        HP_BAR(opponent);
+        NONE_OF {
+            MESSAGE("The opposing side's Reflect wore off!");
+            MESSAGE("The opposing side's Light Screen wore off!");
+            MESSAGE("The opposing side's Aurora Veil wore off!");
+        }
+    }
+}
+
+SINGLE_BATTLE_TEST("Screen-breaking moves do not announce Reflect when breaking a subsequent Light Screen")
+{
+    enum Move move;
+
+    PARAMETRIZE { move = MOVE_BRICK_BREAK; }
+    PARAMETRIZE { move = MOVE_PSYCHIC_FANGS; }
+    PARAMETRIZE { move = MOVE_RAGING_BULL; }
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_REFLECT); MOVE(player, move); }
+        TURN { MOVE(opponent, MOVE_LIGHT_SCREEN); MOVE(player, move); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_REFLECT, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, move, player);
+        MESSAGE("The opposing side's Reflect wore off!");
+        HP_BAR(opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_LIGHT_SCREEN, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, move, player);
+        NOT MESSAGE("The opposing side's Reflect wore off!");
+        MESSAGE("The opposing side's Light Screen wore off!");
+        HP_BAR(opponent);
+    }
+}
+
 SINGLE_BATTLE_TEST("Brick Break, Psychic Fangs, and Raging Bull remove Light Screen, Reflect and Aurora Veil from the target's side of the field")
 {
     enum Move move;
