@@ -2045,7 +2045,7 @@ static void ResetForPokeStorage(void)
 static void InitStartingPosData(void)
 {
     ClearSavedCursorPos();
-    sInPartyMenu = (sStorage->boxOption == OPTION_DEPOSIT);
+    sInPartyMenu = (sStorage->boxOption == OPTION_DEPOSIT || sStorage->boxOption == OPTION_SELECT_MON);
     sDepositBoxId = 0;
 }
 
@@ -5863,10 +5863,10 @@ static struct Sprite *CreateChooseBoxArrows(u16 x, u16 y, u8 animId, u8 priority
 
 static void InitCursor(void)
 {
-    if (sStorage->boxOption != OPTION_DEPOSIT)
-        sCursorArea = CURSOR_AREA_IN_BOX;
-    else
+    if (sStorage->boxOption == OPTION_DEPOSIT || sStorage->boxOption == OPTION_SELECT_MON)
         sCursorArea = CURSOR_AREA_IN_PARTY;
+    else
+        sCursorArea = CURSOR_AREA_IN_BOX;
 
     sCursorPosition = 0;
     sIsMonBeingMoved = FALSE;
