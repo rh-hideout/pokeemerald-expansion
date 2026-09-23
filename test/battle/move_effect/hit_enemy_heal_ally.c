@@ -29,6 +29,7 @@ DOUBLE_BATTLE_TEST("Pollen Puff heals partner by 50% when selected")
 DOUBLE_BATTLE_TEST("Pollen Puff damage an enemy when selected")
 {
     GIVEN {
+        ASSUME(GetMoveTarget(MOVE_POLLEN_PUFF) == TARGET_SELECTED);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);

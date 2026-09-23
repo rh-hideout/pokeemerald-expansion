@@ -51,8 +51,8 @@ SINGLE_BATTLE_TEST("Power Swap switches only the user's Attack and Sp. Atk stat 
     } THEN {
         for (enum Stat stat = STAT_ATK; stat < NUM_STATS; stat++) {
             if (stat == STAT_ATK || stat == STAT_SPATK) {
-                EXPECT_EQ(player->statStages[stat], 7);
-                EXPECT_EQ(opponent->statStages[stat], 6);
+                EXPECT_EQ(player->statStages[stat], DEFAULT_STAT_STAGE + 1);
+                EXPECT_EQ(opponent->statStages[stat], DEFAULT_STAT_STAGE);
             } else {
                 EXPECT_EQ(player->statStages[stat], DEFAULT_STAT_STAGE);
                 EXPECT_EQ(opponent->statStages[stat], DEFAULT_STAT_STAGE + 1);
@@ -65,9 +65,9 @@ SINGLE_BATTLE_TEST("Guard Swap switches the user's Defense and Sp. Def stat stag
 {
     enum Move boostMove, attackMove;
 
-    PARAMETRIZE { attackMove = MOVE_COVET; }
-    PARAMETRIZE { attackMove =  MOVE_SWIFT; }
-    boostMove = GetMoveCategory(attackMove) == DAMAGE_CATEGORY_PHYSICAL ? MOVE_IRON_DEFENSE : MOVE_AMNESIA;
+    PARAMETRIZE { attackMove = MOVE_COVET; boostMove = MOVE_IRON_DEFENSE; }
+    PARAMETRIZE { attackMove =  MOVE_SWIFT; boostMove = MOVE_AMNESIA; }
+
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_POUND) == DAMAGE_CATEGORY_PHYSICAL);
         ASSUME(GetMoveCategory(MOVE_SWIFT) == DAMAGE_CATEGORY_SPECIAL);
@@ -121,9 +121,9 @@ SINGLE_BATTLE_TEST("Heart Swap switches the user's stat stages with the target",
 {
     enum Move boostMove, attackMove;
 
-    PARAMETRIZE { attackMove = MOVE_POUND; }
-    PARAMETRIZE { attackMove =  MOVE_SWIFT; }
-    boostMove = GetMoveCategory(attackMove) == DAMAGE_CATEGORY_PHYSICAL ? MOVE_IRON_DEFENSE : MOVE_AMNESIA;
+    PARAMETRIZE { attackMove = MOVE_POUND; boostMove = MOVE_IRON_DEFENSE; }
+    PARAMETRIZE { attackMove =  MOVE_SWIFT; boostMove = MOVE_AMNESIA; }
+
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_POUND) == DAMAGE_CATEGORY_PHYSICAL);
         ASSUME(GetMoveCategory(MOVE_SWIFT) == DAMAGE_CATEGORY_SPECIAL);
@@ -153,9 +153,9 @@ SINGLE_BATTLE_TEST("Heart Swap switches the user's Attack and Sp. Atk stat stage
 {
     enum Move boostMove, attackMove;
 
-    PARAMETRIZE { attackMove = MOVE_POUND; }
-    PARAMETRIZE { attackMove = MOVE_SWIFT; }
-    boostMove = GetMoveCategory(attackMove) == DAMAGE_CATEGORY_PHYSICAL ? MOVE_SWORDS_DANCE : MOVE_NASTY_PLOT;
+    PARAMETRIZE { attackMove = MOVE_POUND; boostMove = MOVE_SWORDS_DANCE; }
+    PARAMETRIZE { attackMove = MOVE_SWIFT; boostMove = MOVE_NASTY_PLOT; }
+
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_POUND) == DAMAGE_CATEGORY_PHYSICAL);
         ASSUME(GetMoveCategory(MOVE_SWIFT) == DAMAGE_CATEGORY_SPECIAL);
@@ -232,12 +232,20 @@ SINGLE_BATTLE_TEST("Heart Swap switches all user's stat stages with the target")
 SINGLE_BATTLE_TEST("Speed Swap swaps user and target's speed stats but not stat boosts")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(1); };
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); };
         ASSUME_STAT_CHANGE(MOVE_AGILITY, speed: +2);
     }WHEN {
         TURN { MOVE(opponent, MOVE_AGILITY); MOVE(player, MOVE_SPEED_SWAP); }
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
     } SCENE {
+        // Turn 1
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_AGILITY, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPEED_SWAP, player);
+
+        // Turn 2
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
     } THEN {
         EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE);
         EXPECT_EQ(opponent->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + 2);

@@ -1257,6 +1257,7 @@ static void SetEffectRestoreHp(struct BattleCalcValues *cv, struct SetEffect *se
 static void HandleSetEffectRoost(struct BattleCalcValues *cv, struct SetEffect *se)
 {
     SetEffectRestoreHp(cv, se);
+    if (cv->onlyChecking || se->effectFailed) return;
     gBattleMons[gBattlerAttacker].volatiles.roostActive = TRUE;
 }
 
@@ -2405,7 +2406,7 @@ static void TrySubstitute(struct BattleCalcValues *cv, struct SetEffect *se)
             PrepareStringBattleWithWait(STRINGID_PKMNHASSUBSTITUTE, se->effectBattler);
         SetEffectFail(BattleScript_MoveEffectSetStatus, cv->isStatusMove);
     }
-    if (gBattleMons[se->effectBattler].hp <= hp)
+    else if (gBattleMons[se->effectBattler].hp <= hp)
     {
         if (!cv->onlyChecking)
             PrepareStringBattleWithWait(STRINGID_TOOWEAKFORSUBSTITUTE, se->effectBattler);
@@ -3034,7 +3035,7 @@ static void HandleSetEffectTypeHalver(struct BattleCalcValues *cv, struct SetEff
 
     bool32 shouldSet = GetConfig(B_SPORT_TURNS) >= GEN_6
                        ? !(gFieldStatuses & halver.statusField)
-                       : !GetBattlerVolatile(se->effectBattler, halver.volatileStatis);
+                       : !GetBattlerVolatile(se->effectBattler, halver.volatileStatus);
 
     if (gBattleStruct->isSkyBattle || !shouldSet)
     {
@@ -3045,13 +3046,20 @@ static void HandleSetEffectTypeHalver(struct BattleCalcValues *cv, struct SetEff
         if (GetConfig(B_SPORT_TURNS) >= GEN_6)
         {
             gFieldStatuses |= halver.statusField;
-            gFieldTimers.mudSportTimer = 5;
+            if (halver.volatileStatus == VOLATILE_WATER_SPORT)
+            {
+                gFieldTimers.waterSportTimer = 5;
+            }
+            else if (halver.volatileStatus == VOLATILE_MUD_SPORT)
+            {
+                gFieldTimers.mudSportTimer = 5;
+            }
             PrepareStringBattleWithWait(halver.effectString, se->effectBattler);
             gBattlescriptCurrInstr = se->script;
         }
         else
         {
-            TryEffectVolatile(cv, se, halver.volatileStatis, TRUE, halver.effectString);
+            TryEffectVolatile(cv, se, halver.volatileStatus, TRUE, halver.effectString);
             gBattlescriptCurrInstr = se->script;
         }
     }
@@ -3065,7 +3073,7 @@ static void HandleSetEffectTailwind(struct BattleCalcValues *cv, struct SetEffec
     {
         SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
     }
-    if (!cv->onlyChecking)
+    else if (!cv->onlyChecking)
     {
         gSideStatuses[side] |= SIDE_STATUS_TAILWIND;
         gSideTimers[side].tailwindTimer = (GetConfig(B_TAILWIND_TURNS) >= GEN_5 ? 4 : 3);

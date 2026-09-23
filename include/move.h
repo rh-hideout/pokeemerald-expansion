@@ -119,7 +119,7 @@ enum TerrainGroundCheck
 
 struct TypeBasedHalverInfo {
     u32 statusField;
-    enum Volatile volatileStatis;
+    enum Volatile volatileStatus;
     enum StringID effectString;
 };
 

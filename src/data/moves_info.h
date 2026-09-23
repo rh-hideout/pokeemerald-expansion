@@ -8514,7 +8514,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .zMove = { .effect = Z_EFFECT_SPDEF_UP_1 },
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_TYPE_HALVER,
-            .argument = {.type = TYPE_ELECTRIC},
+            .argument = { .type = TYPE_ELECTRIC },
         }),
         .ignoresProtect = TRUE,
         .mirrorMoveBanned = TRUE,
@@ -9800,7 +9800,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .zMove = { .effect = Z_EFFECT_SPDEF_UP_1 },
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_TYPE_HALVER,
-            .argument = {.type = TYPE_FIRE},
+            .argument = { .type = TYPE_FIRE },
         }),
         .ignoresProtect = TRUE,
         .mirrorMoveBanned = TRUE,
