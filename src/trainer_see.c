@@ -101,6 +101,7 @@ enum ScriptType
     NO_EFFECT_SCRIPT,
     NON_BATTLE_SCRIPT,
     SINGLES_BATTLE_SCRIPT,
+    SINGLE_TRAINER_BATTLE_SCRIPT,
     DOUBLES_BATTLE_SCRIPT
 };
 
@@ -475,9 +476,8 @@ static void TrySecondTrainerApproach(u8 *activeObjects, u8 activeObjectsCount, u
 
 bool8 CheckForTrainersWantingBattle(void)
 {
-    u8 i;
     u8 activeObjects[OBJECT_EVENTS_COUNT] = {0};
-    u8 activeObjectsCount = 0;
+    u32 activeObjectsCount = 0;
 
     if (FlagGet(OW_FLAG_NO_TRAINER_SEE))
         return FALSE;
@@ -486,7 +486,7 @@ bool8 CheckForTrainersWantingBattle(void)
     gApproachingTrainerId = 0;
 
     // Adds trainers wanting to battle to array
-    for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
+    for (u32 i = 0; i < OBJECT_EVENTS_COUNT; i++)
     {
         if (!gObjectEvents[i].active)
             continue;
@@ -496,10 +496,10 @@ bool8 CheckForTrainersWantingBattle(void)
     }
 
     // Sorts array by localId
-    for (i = 1; i <= activeObjectsCount; i++)
+    for (u32 i = 1; i <= activeObjectsCount; i++)
     {
-        u8 x = activeObjects[i];
-        u8 j = i;
+        u32 x = activeObjects[i];
+        u32 j = i;
         while (j > 0 && gObjectEvents[activeObjects[j-1]].localId > gObjectEvents[x].localId)
         {
             activeObjects[j] = activeObjects[j-1];
@@ -591,6 +591,10 @@ static enum ScriptType GetActiveObjectScriptType(struct ApproachingTrainer *appr
 
         return DOUBLES_BATTLE_SCRIPT;
     }
+    else if (gObjectEvents[approachingObject->objectEventId].trainerType == TRAINER_TYPE_SINGLE_TRAINER)
+    {
+        return SINGLE_TRAINER_BATTLE_SCRIPT;
+    }
 
     return SINGLES_BATTLE_SCRIPT;
 }
@@ -602,7 +606,8 @@ static u8 GetTrainerApproachDistance(struct ObjectEvent *trainerObj)
     u8 approachDistance;
 
     PlayerGetDestCoords(&x, &y);
-    if (trainerObj->trainerType == TRAINER_TYPE_NORMAL)  // can only see in one direction
+
+    if (IsNormalTypeTrainer(trainerObj->trainerType)) // can only see in one direction
     {
         // Disable trainer approach while moving diagonally (usually moving on sideway stairs)
         if (trainerObj->facingDirection > DIR_EAST)
@@ -1001,6 +1006,19 @@ void TryPrepareSecondApproachingTrainer(void)
     else
     {
         gSpecialVar_Result = FALSE;
+    }
+}
+
+
+bool32 IsNormalTypeTrainer(u32 trainerType)
+{
+    switch (trainerType)
+    {
+    case TRAINER_TYPE_NORMAL:
+    case TRAINER_TYPE_SINGLE_TRAINER:
+        return TRUE;
+    default:
+        return FALSE;
     }
 }
 
