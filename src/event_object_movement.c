@@ -3638,9 +3638,13 @@ void SetObjectEventDirection(struct ObjectEvent *objectEvent, enum Direction dir
         if (objectEvent->isPlayer)
         {
             if (direction == DIR_SOUTHWEST || direction == DIR_NORTHWEST)
+            {
                 facingDirection = DIR_WEST;
+            }
             else if (direction == DIR_SOUTHEAST || direction == DIR_NORTHEAST)
+            {
                 facingDirection = DIR_EAST;
+            }
         }
         objectEvent->facingDirection = facingDirection;
     }
