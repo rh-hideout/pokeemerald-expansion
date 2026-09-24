@@ -1,6 +1,5 @@
 #include "global.h"
 #include "bike.h"
-#include "event_data.h"
 #include "event_object_movement.h"
 #include "fieldmap.h"
 #include "rotating_gate.h"
@@ -10,8 +9,17 @@
 #include "constants/event_objects.h"
 
 #define ROTATING_GATE_TILE_TAG 0x1300
-#define ROTATING_GATE_PUZZLE_MAX 12
+#define ROTATING_GATE_REGULAR_SHEET_SIZE (32 * 32 / 2)
+#define ROTATING_GATE_LARGE_SHEET_SIZE   (64 * 64 / 2)
 #define GATE_ARM_MAX_LENGTH 2
+
+// Runtime-only state stored in ObjectEventTemplate.trainerRange_berryTreeId.
+// Gates never enter the normal object-event pipeline, so this otherwise ignored
+// field can safely keep state in the save-block copy across temporary heap resets.
+#define GATE_STATE_ORIENTATION_MASK  0x0003
+#define GATE_STATE_SPRITE_ID_SHIFT   2
+#define GATE_STATE_SPRITE_ID_MASK    (0x00FF << GATE_STATE_SPRITE_ID_SHIFT)
+#define GATE_STATE_INITIALIZED       0x0400
 
 #define GATE_ROT(rotationDirection, arm, longArm)                                             \
     ((rotationDirection & 15) << 4) | ((arm & 7) << 1) | (longArm & 1)
@@ -20,7 +28,7 @@
 #define GATE_ROT_NONE 255
 
 static void SpriteCallback_RotatingGate(struct Sprite *sprite);
-static u8 RotatingGate_CreateGate(u8 gateId, s16 deltaX, s16 deltaY);
+static u8 RotatingGate_CreateGate(u8 objectEventIndex, s16 deltaX, s16 deltaY);
 static void RotatingGate_HideGatesOutsideViewport(struct Sprite *sprite);
 
 enum
@@ -173,67 +181,14 @@ enum
     ROTATE_CLOCKWISE,
 };
 
-enum
-{
-    PUZZLE_NONE,
-    PUZZLE_FORTREE_CITY_GYM,
-    PUZZLE_ROUTE110_TRICK_HOUSE_PUZZLE6,
-};
-
-struct RotatingGatePuzzle
-{
-    s16 x;
-    s16 y;
-    u8 shape;
-    u8 orientation;
-};
-
-// Fortree
-static const struct RotatingGatePuzzle sRotatingGate_FortreePuzzleConfig[] =
-{
-    { 6,  7, GATE_SHAPE_T2, GATE_ORIENTATION_90},
-    { 9, 15, GATE_SHAPE_T2, GATE_ORIENTATION_180},
-    { 3, 19, GATE_SHAPE_T2, GATE_ORIENTATION_90},
-    { 2,  6, GATE_SHAPE_T1, GATE_ORIENTATION_90},
-    { 9, 12, GATE_SHAPE_T1, GATE_ORIENTATION_0},
-    { 6, 23, GATE_SHAPE_T1, GATE_ORIENTATION_0},
-    {12, 22, GATE_SHAPE_T1, GATE_ORIENTATION_0},
-    { 6,  3, GATE_SHAPE_L4, GATE_ORIENTATION_180},
-};
-
-// Trickhouse
-static const struct RotatingGatePuzzle sRotatingGate_TrickHousePuzzleConfig[] =
-{
-    {14,  5, GATE_SHAPE_T1, GATE_ORIENTATION_90},
-    {10,  6, GATE_SHAPE_L2, GATE_ORIENTATION_180},
-    { 6,  6, GATE_SHAPE_L4, GATE_ORIENTATION_90},
-    {14,  8, GATE_SHAPE_T1, GATE_ORIENTATION_90},
-    { 3, 10, GATE_SHAPE_L3, GATE_ORIENTATION_270},
-    { 9, 14, GATE_SHAPE_L1, GATE_ORIENTATION_90},
-    { 3, 15, GATE_SHAPE_T3, GATE_ORIENTATION_0},
-    { 2, 17, GATE_SHAPE_L2, GATE_ORIENTATION_180},
-    {12, 18, GATE_SHAPE_T3, GATE_ORIENTATION_270},
-    { 5, 18, GATE_SHAPE_L4, GATE_ORIENTATION_90},
-    {10, 19, GATE_SHAPE_L3, GATE_ORIENTATION_180},
-};
-
-#define MAX_GATES max(ARRAY_COUNT(sRotatingGate_FortreePuzzleConfig), \
-                      ARRAY_COUNT(sRotatingGate_TrickHousePuzzleConfig))
-
-// Rotating gate puzzles use the temp vars as a byte array to track the orientation of each gate.
-// The assert below makes sure the existing puzzles don't have too many gates, and aren't quietly
-// using vars outside the temp vars. Aside from potentially reading/writing vars being used for
-// something else, using vars that persist when exiting the map could softlock the puzzle.
-STATIC_ASSERT(MAX_GATES <= (2 * NUM_TEMP_VARS), TooManyRotatingGates)
-
-static const u8 sRotatingGateTiles_1[] = INCGFX_U8("graphics/rotating_gates/l1.png", ".4bpp");
-static const u8 sRotatingGateTiles_2[] = INCGFX_U8("graphics/rotating_gates/l2.png", ".4bpp");
-static const u8 sRotatingGateTiles_3[] = INCGFX_U8("graphics/rotating_gates/l3.png", ".4bpp");
-static const u8 sRotatingGateTiles_4[] = INCGFX_U8("graphics/rotating_gates/l4.png", ".4bpp");
-static const u8 sRotatingGateTiles_5[] = INCGFX_U8("graphics/rotating_gates/t1.png", ".4bpp");
-static const u8 sRotatingGateTiles_6[] = INCGFX_U8("graphics/rotating_gates/t2.png", ".4bpp");
-static const u8 sRotatingGateTiles_7[] = INCGFX_U8("graphics/rotating_gates/t3.png", ".4bpp");
-static const u8 sRotatingGateTiles_8[] = INCGFX_U8("graphics/rotating_gates/t4.png", ".4bpp");
+extern const u32 gObjectEventPic_RotatingGateL1[];
+extern const u32 gObjectEventPic_RotatingGateL2[];
+extern const u32 gObjectEventPic_RotatingGateL3[];
+extern const u32 gObjectEventPic_RotatingGateL4[];
+extern const u32 gObjectEventPic_RotatingGateT1[];
+extern const u32 gObjectEventPic_RotatingGateT2[];
+extern const u32 gObjectEventPic_RotatingGateT3[];
+extern const u32 gObjectEventPic_RotatingGateT4[];
 
 static const struct OamData sOamData_RotatingGateLarge =
 {
@@ -271,14 +226,48 @@ static const struct OamData sOamData_RotatingGateRegular =
 
 static const struct SpriteSheet sRotatingGatesGraphicsTable[] =
 {
-    {sRotatingGateTiles_1, sizeof(sRotatingGateTiles_1), ROTATING_GATE_TILE_TAG + GATE_SHAPE_L1},
-    {sRotatingGateTiles_2, sizeof(sRotatingGateTiles_2), ROTATING_GATE_TILE_TAG + GATE_SHAPE_L2},
-    {sRotatingGateTiles_3, sizeof(sRotatingGateTiles_3), ROTATING_GATE_TILE_TAG + GATE_SHAPE_L3},
-    {sRotatingGateTiles_4, sizeof(sRotatingGateTiles_4), ROTATING_GATE_TILE_TAG + GATE_SHAPE_L4},
-    {sRotatingGateTiles_5, sizeof(sRotatingGateTiles_5), ROTATING_GATE_TILE_TAG + GATE_SHAPE_T1},
-    {sRotatingGateTiles_6, sizeof(sRotatingGateTiles_6), ROTATING_GATE_TILE_TAG + GATE_SHAPE_T2},
-    {sRotatingGateTiles_7, sizeof(sRotatingGateTiles_7), ROTATING_GATE_TILE_TAG + GATE_SHAPE_T3},
-    {sRotatingGateTiles_8, sizeof(sRotatingGateTiles_8), ROTATING_GATE_TILE_TAG + GATE_SHAPE_T4},
+    // Object graphics use the standard Down, Up, Left frame order. Facing is
+    // only an editor convention; frame 0 remains the affine runtime sprite.
+    {
+        .data = gObjectEventPic_RotatingGateL1,
+        .size = ROTATING_GATE_REGULAR_SHEET_SIZE,
+        .tag = ROTATING_GATE_TILE_TAG + GATE_SHAPE_L1,
+    },
+    {
+        .data = gObjectEventPic_RotatingGateL2,
+        .size = ROTATING_GATE_LARGE_SHEET_SIZE,
+        .tag = ROTATING_GATE_TILE_TAG + GATE_SHAPE_L2,
+    },
+    {
+        .data = gObjectEventPic_RotatingGateL3,
+        .size = ROTATING_GATE_LARGE_SHEET_SIZE,
+        .tag = ROTATING_GATE_TILE_TAG + GATE_SHAPE_L3,
+    },
+    {
+        .data = gObjectEventPic_RotatingGateL4,
+        .size = ROTATING_GATE_LARGE_SHEET_SIZE,
+        .tag = ROTATING_GATE_TILE_TAG + GATE_SHAPE_L4,
+    },
+    {
+        .data = gObjectEventPic_RotatingGateT1,
+        .size = ROTATING_GATE_REGULAR_SHEET_SIZE,
+        .tag = ROTATING_GATE_TILE_TAG + GATE_SHAPE_T1,
+    },
+    {
+        .data = gObjectEventPic_RotatingGateT2,
+        .size = ROTATING_GATE_LARGE_SHEET_SIZE,
+        .tag = ROTATING_GATE_TILE_TAG + GATE_SHAPE_T2,
+    },
+    {
+        .data = gObjectEventPic_RotatingGateT3,
+        .size = ROTATING_GATE_LARGE_SHEET_SIZE,
+        .tag = ROTATING_GATE_TILE_TAG + GATE_SHAPE_T3,
+    },
+    {
+        .data = gObjectEventPic_RotatingGateT4,
+        .size = ROTATING_GATE_LARGE_SHEET_SIZE,
+        .tag = ROTATING_GATE_TILE_TAG + GATE_SHAPE_T4,
+    },
     {NULL},
 };
 
@@ -463,25 +452,30 @@ static const union AffineAnimCmd *const sSpriteAffineAnimTable_RotatingGate[] =
     sSpriteAffineAnim_RotatingClockwise270to360Faster,
 };
 
-static const struct SpriteTemplate sSpriteTemplate_RotatingGateLarge =
+#define ROTATING_GATE_SPRITE_TEMPLATE(shape, oam_, anims_)       \
+    [shape] =                                                   \
+    {                                                           \
+        .tileTag = ROTATING_GATE_TILE_TAG + shape,              \
+        .paletteTag = OBJ_EVENT_PAL_TAG_NPC_1,                  \
+        .oam = oam_,                                            \
+        .anims = anims_,                                        \
+        .affineAnims = sSpriteAffineAnimTable_RotatingGate,     \
+        .callback = SpriteCallback_RotatingGate,                \
+    }
+
+static const struct SpriteTemplate sSpriteTemplates_RotatingGate[] =
 {
-    .tileTag = ROTATING_GATE_TILE_TAG,
-    .paletteTag = OBJ_EVENT_PAL_TAG_NPC_1,
-    .oam = &sOamData_RotatingGateLarge,
-    .anims = sSpriteAnimTable_RotatingGateLarge,
-    .affineAnims = sSpriteAffineAnimTable_RotatingGate,
-    .callback = SpriteCallback_RotatingGate,
+    ROTATING_GATE_SPRITE_TEMPLATE(GATE_SHAPE_L1, &sOamData_RotatingGateRegular, sSpriteAnimTable_RotatingGateRegular),
+    ROTATING_GATE_SPRITE_TEMPLATE(GATE_SHAPE_L2, &sOamData_RotatingGateLarge, sSpriteAnimTable_RotatingGateLarge),
+    ROTATING_GATE_SPRITE_TEMPLATE(GATE_SHAPE_L3, &sOamData_RotatingGateLarge, sSpriteAnimTable_RotatingGateLarge),
+    ROTATING_GATE_SPRITE_TEMPLATE(GATE_SHAPE_L4, &sOamData_RotatingGateLarge, sSpriteAnimTable_RotatingGateLarge),
+    ROTATING_GATE_SPRITE_TEMPLATE(GATE_SHAPE_T1, &sOamData_RotatingGateRegular, sSpriteAnimTable_RotatingGateRegular),
+    ROTATING_GATE_SPRITE_TEMPLATE(GATE_SHAPE_T2, &sOamData_RotatingGateLarge, sSpriteAnimTable_RotatingGateLarge),
+    ROTATING_GATE_SPRITE_TEMPLATE(GATE_SHAPE_T3, &sOamData_RotatingGateLarge, sSpriteAnimTable_RotatingGateLarge),
+    ROTATING_GATE_SPRITE_TEMPLATE(GATE_SHAPE_T4, &sOamData_RotatingGateLarge, sSpriteAnimTable_RotatingGateLarge),
 };
 
-static const struct SpriteTemplate sSpriteTemplate_RotatingGateRegular =
-{
-    .tileTag = ROTATING_GATE_TILE_TAG,
-    .paletteTag = OBJ_EVENT_PAL_TAG_NPC_1,
-    .oam = &sOamData_RotatingGateRegular,
-    .anims = sSpriteAnimTable_RotatingGateRegular,
-    .affineAnims = sSpriteAffineAnimTable_RotatingGate,
-    .callback = SpriteCallback_RotatingGate,
-};
+#undef ROTATING_GATE_SPRITE_TEMPLATE
 
 // These structures describe what happens to the gate if you hit it at
 // a given coordinate in a 4x4 grid when walking in the specified
@@ -616,49 +610,123 @@ static const u8 sRotatingGate_ArmLayout[][4 * 2] =
     },
 };
 
-static EWRAM_DATA u8 sRotatingGate_GateSpriteIds[ROTATING_GATE_PUZZLE_MAX] = {0};
-static EWRAM_DATA const struct RotatingGatePuzzle *sRotatingGate_PuzzleConfig = NULL;
-static EWRAM_DATA u8 sRotatingGate_PuzzleCount = 0;
-
-static s32 GetCurrentMapRotatingGatePuzzleType(void)
+bool32 IsRotatingGateObjectEventGraphicsId(u16 graphicsId)
 {
-    if (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_FORTREE_CITY_GYM) &&
-        gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_FORTREE_CITY_GYM))
+    return graphicsId >= OBJ_EVENT_GFX_ROTATING_GATE_L1
+        && graphicsId <= OBJ_EVENT_GFX_ROTATING_GATE_T4;
+}
+
+static u8 RotatingGate_GetObjectEventCount(void)
+{
+    if (gMapHeader.events == NULL)
+        return 0;
+    return min(gMapHeader.events->objectEventCount, OBJECT_EVENT_TEMPLATES_COUNT);
+}
+
+static bool32 RotatingGate_IsTemplate(const struct ObjectEventTemplate *objectEvent)
+{
+    // Gates are always-active map geometry. Apart from position and the
+    // facing movement types, standard object fields (including elevation,
+    // ranges, trainer data, script, and flag) are intentionally ignored.
+    // Clone and dynamically spawned object templates are not supported.
+    return objectEvent->kind == OBJ_KIND_NORMAL
+        && IsRotatingGateObjectEventGraphicsId(objectEvent->graphicsId);
+}
+
+static bool32 RotatingGate_IsInitialized(const struct ObjectEventTemplate *objectEvent)
+{
+    return RotatingGate_IsTemplate(objectEvent)
+        && (objectEvent->trainerRange_berryTreeId & GATE_STATE_INITIALIZED);
+}
+
+static bool32 RotatingGate_IsPuzzleActive(void)
+{
+    u32 i;
+
+    for (i = 0; i < RotatingGate_GetObjectEventCount(); i++)
     {
-        return PUZZLE_FORTREE_CITY_GYM;
+        if (RotatingGate_IsInitialized(&gSaveBlock1Ptr->objectEventTemplates[i]))
+            return TRUE;
     }
+    return FALSE;
+}
 
-    if (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_ROUTE110_TRICK_HOUSE_PUZZLE6) &&
-        gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_ROUTE110_TRICK_HOUSE_PUZZLE6))
+static u8 RotatingGate_GetInitialOrientation(const struct ObjectEventTemplate *objectEvent)
+{
+    switch (objectEvent->movementType)
     {
-        return PUZZLE_ROUTE110_TRICK_HOUSE_PUZZLE6;
+    case MOVEMENT_TYPE_NONE:
+    case MOVEMENT_TYPE_FACE_DOWN:
+        return GATE_ORIENTATION_0;
+    case MOVEMENT_TYPE_FACE_RIGHT:
+        return GATE_ORIENTATION_90;
+    case MOVEMENT_TYPE_FACE_UP:
+        return GATE_ORIENTATION_180;
+    case MOVEMENT_TYPE_FACE_LEFT:
+        return GATE_ORIENTATION_270;
+    default:
+        assertf(FALSE, "rotating gate %d has invalid movement type %d",
+                objectEvent->localId, objectEvent->movementType)
+        {
+        }
+        return GATE_ORIENTATION_0;
     }
-
-    return PUZZLE_NONE;
 }
 
-static void RotatingGate_ResetAllGateOrientations(void)
+static u8 RotatingGate_GetGateOrientation(u8 objectEventIndex)
 {
-    s32 i;
-    u8 *ptr = (u8 *)GetVarPointer(VAR_TEMP_0);
-
-    for (i = 0; i < sRotatingGate_PuzzleCount; i++)
-        ptr[i] = sRotatingGate_PuzzleConfig[i].orientation;
+    return gSaveBlock1Ptr->objectEventTemplates[objectEventIndex].trainerRange_berryTreeId & GATE_STATE_ORIENTATION_MASK;
 }
 
-static s32 RotatingGate_GetGateOrientation(u8 gateId)
+static void RotatingGate_SetGateOrientation(u8 objectEventIndex, u8 orientation)
 {
-    return ((u8 *)GetVarPointer(VAR_TEMP_0))[gateId];
+    struct ObjectEventTemplate *objectEvent = &gSaveBlock1Ptr->objectEventTemplates[objectEventIndex];
+
+    objectEvent->trainerRange_berryTreeId &= ~GATE_STATE_ORIENTATION_MASK;
+    objectEvent->trainerRange_berryTreeId |= orientation & GATE_STATE_ORIENTATION_MASK;
 }
 
-static void RotatingGate_SetGateOrientation(u8 gateId, u8 orientation)
+static u8 RotatingGate_GetGateSpriteId(u8 objectEventIndex)
 {
-    ((u8 *)GetVarPointer(VAR_TEMP_0))[gateId] = orientation;
+    return (gSaveBlock1Ptr->objectEventTemplates[objectEventIndex].trainerRange_berryTreeId & GATE_STATE_SPRITE_ID_MASK)
+         >> GATE_STATE_SPRITE_ID_SHIFT;
 }
 
-static void RotatingGate_RotateInDirection(u8 gateId, u32 rotationDirection)
+static void RotatingGate_SetGateSpriteId(u8 objectEventIndex, u8 spriteId)
 {
-    u8 orientation = RotatingGate_GetGateOrientation(gateId);
+    struct ObjectEventTemplate *objectEvent = &gSaveBlock1Ptr->objectEventTemplates[objectEventIndex];
+
+    objectEvent->trainerRange_berryTreeId &= ~GATE_STATE_SPRITE_ID_MASK;
+    objectEvent->trainerRange_berryTreeId |= spriteId << GATE_STATE_SPRITE_ID_SHIFT;
+}
+
+static bool32 RotatingGate_IsLiveSprite(u8 objectEventIndex, u8 spriteId)
+{
+    return spriteId < MAX_SPRITES
+        && gSprites[spriteId].inUse
+        && gSprites[spriteId].callback == SpriteCallback_RotatingGate
+        && gSprites[spriteId].data[0] == objectEventIndex;
+}
+
+static u8 RotatingGate_GetShape(const struct ObjectEventTemplate *objectEvent)
+{
+    return objectEvent->graphicsId - OBJ_EVENT_GFX_ROTATING_GATE_L1;
+}
+
+static void RotatingGate_GetPivot(const struct ObjectEventTemplate *objectEvent, s16 *x, s16 *y)
+{
+    const struct ObjectEventGraphicsInfo *graphicsInfo = GetObjectEventGraphicsInfo(objectEvent->graphicsId);
+
+    *x = objectEvent->x;
+    // Porymap places object events at the bottom-center of their graphics.
+    // Affine objects rotate around their center, so move the pivot up by half
+    // of the graphics height beyond the standard 16-pixel object anchor.
+    *y = objectEvent->y + (16 - graphicsInfo->height / 2) / 16;
+}
+
+static void RotatingGate_RotateInDirection(u8 objectEventIndex, u32 rotationDirection)
+{
+    u8 orientation = RotatingGate_GetGateOrientation(objectEventIndex);
 
     if (rotationDirection == ROTATE_ANTICLOCKWISE)
     {
@@ -672,36 +740,31 @@ static void RotatingGate_RotateInDirection(u8 gateId, u32 rotationDirection)
         orientation++;
         orientation = orientation % GATE_ORIENTATION_MAX;
     }
-    RotatingGate_SetGateOrientation(gateId, orientation);
+    RotatingGate_SetGateOrientation(objectEventIndex, orientation);
 }
 
-static void RotatingGate_LoadPuzzleConfig(void)
+void RotatingGate_InitMap(void)
 {
-    s32 puzzleType = GetCurrentMapRotatingGatePuzzleType();
     u32 i;
 
-    switch (puzzleType)
+    for (i = 0; i < RotatingGate_GetObjectEventCount(); i++)
     {
-    case PUZZLE_FORTREE_CITY_GYM:
-        sRotatingGate_PuzzleConfig = sRotatingGate_FortreePuzzleConfig;
-        sRotatingGate_PuzzleCount = ARRAY_COUNT(sRotatingGate_FortreePuzzleConfig);
-        break;
-    case PUZZLE_ROUTE110_TRICK_HOUSE_PUZZLE6:
-        sRotatingGate_PuzzleConfig = sRotatingGate_TrickHousePuzzleConfig;
-        sRotatingGate_PuzzleCount = ARRAY_COUNT(sRotatingGate_TrickHousePuzzleConfig);
-        break;
-    case PUZZLE_NONE:
-    default:
-        return;
-    }
+        struct ObjectEventTemplate *objectEvent = &gSaveBlock1Ptr->objectEventTemplates[i];
 
-    for (i = 0; i < ROTATING_GATE_PUZZLE_MAX - 1; i++)
-        sRotatingGate_GateSpriteIds[i] = MAX_SPRITES;
+        if (!RotatingGate_IsTemplate(objectEvent))
+            continue;
+
+        // This is the fresh-map hook: overwrite the ignored authored trainer
+        // range even if it happens to contain one of the runtime state bits.
+        objectEvent->trainerRange_berryTreeId = GATE_STATE_INITIALIZED
+                                              | (MAX_SPRITES << GATE_STATE_SPRITE_ID_SHIFT)
+                                              | RotatingGate_GetInitialOrientation(objectEvent);
+    }
 }
 
 static void RotatingGate_CreateGatesWithinViewport(s16 deltaX, s16 deltaY)
 {
-    u8 i;
+    u32 i;
 
     // Calculate the bounding box of the camera
     // Same as RotatingGate_DestroyGatesOutsideViewport
@@ -710,50 +773,78 @@ static void RotatingGate_CreateGatesWithinViewport(s16 deltaX, s16 deltaY)
     s16 y = gSaveBlock1Ptr->pos.y - 2;
     s16 y2 = gSaveBlock1Ptr->pos.y + MAP_OFFSET_H;
 
-    for (i = 0; i < sRotatingGate_PuzzleCount; i++)
+    for (i = 0; i < RotatingGate_GetObjectEventCount(); i++)
     {
-        s16 x3 = sRotatingGate_PuzzleConfig[i].x + MAP_OFFSET;
-        s16 y3 = sRotatingGate_PuzzleConfig[i].y + MAP_OFFSET;
+        struct ObjectEventTemplate *objectEvent = &gSaveBlock1Ptr->objectEventTemplates[i];
+        u8 spriteId;
+        s16 x3, y3;
+
+        if (!RotatingGate_IsInitialized(objectEvent))
+            continue;
+
+        spriteId = RotatingGate_GetGateSpriteId(i);
+        if (spriteId != MAX_SPRITES && !RotatingGate_IsLiveSprite(i, spriteId))
+        {
+            RotatingGate_SetGateSpriteId(i, MAX_SPRITES);
+            spriteId = MAX_SPRITES;
+        }
+
+        RotatingGate_GetPivot(objectEvent, &x3, &y3);
+        x3 += MAP_OFFSET;
+        y3 += MAP_OFFSET;
 
         if (y <= y3 && y2 >= y3 && x <= x3 && x2 >= x3 &&
-            sRotatingGate_GateSpriteIds[i] == MAX_SPRITES)
+            spriteId == MAX_SPRITES)
         {
-            sRotatingGate_GateSpriteIds[i] = RotatingGate_CreateGate(i, deltaX, deltaY);
+            RotatingGate_SetGateSpriteId(i, RotatingGate_CreateGate(i, deltaX, deltaY));
         }
     }
 }
 
-static u8 RotatingGate_CreateGate(u8 gateId, s16 deltaX, s16 deltaY)
+static u8 RotatingGate_CreateGate(u8 objectEventIndex, s16 deltaX, s16 deltaY)
 {
+    const struct ObjectEventTemplate *objectEvent = &gSaveBlock1Ptr->objectEventTemplates[objectEventIndex];
+    u8 shape = RotatingGate_GetShape(objectEvent);
     struct Sprite *sprite;
     struct SpriteTemplate template;
+    struct OamData oam;
     u8 spriteId;
     s16 x, y;
 
-    const struct RotatingGatePuzzle *gate = &sRotatingGate_PuzzleConfig[gateId];
+    if (GetSpriteTileStartByTag(ROTATING_GATE_TILE_TAG + shape) == TAG_NONE)
+        return MAX_SPRITES;
 
-    if (gate->shape == GATE_SHAPE_L1 || gate->shape == GATE_SHAPE_T1)
-        template = sSpriteTemplate_RotatingGateRegular;
-    else
-        template = sSpriteTemplate_RotatingGateLarge;
-
-    template.tileTag = gate->shape + ROTATING_GATE_TILE_TAG;
+    // Create non-affine first so matrix exhaustion can be handled explicitly.
+    template = sSpriteTemplates_RotatingGate[shape];
+    oam = *template.oam;
+    oam.affineMode = ST_OAM_AFFINE_OFF;
+    template.oam = &oam;
 
     spriteId = CreateSpriteUnchecked(&template, 0, 0, OW_OBJECT_SUBPRIORITY - 1); // Above shadows
     if (spriteId == MAX_SPRITES)
         return MAX_SPRITES;
 
-    x = gate->x + MAP_OFFSET;
-    y = gate->y + MAP_OFFSET;
+    RotatingGate_GetPivot(objectEvent, &x, &y);
+    x += MAP_OFFSET;
+    y += MAP_OFFSET;
 
     sprite = &gSprites[spriteId];
+    sprite->template = &sSpriteTemplates_RotatingGate[shape];
     UpdateSpritePaletteByTemplate(&template, sprite);
-    sprite->data[0] = gateId;
+    sprite->data[0] = objectEventIndex;
     sprite->coordOffsetEnabled = 1;
+    sprite->oam.affineMode = ST_OAM_AFFINE_NORMAL;
+
+    if (!TryInitSpriteAffineAnim(sprite))
+    {
+        sprite->oam.affineMode = ST_OAM_AFFINE_OFF;
+        DestroySprite(sprite);
+        return MAX_SPRITES;
+    }
 
     GetMapCoordsFromSpritePos(x + deltaX, y + deltaY, &sprite->x, &sprite->y);
     RotatingGate_HideGatesOutsideViewport(sprite);
-    StartSpriteAffineAnim(sprite, RotatingGate_GetGateOrientation(gateId));
+    StartSpriteAffineAnim(sprite, RotatingGate_GetGateOrientation(objectEventIndex));
 
     return spriteId;
 }
@@ -815,7 +906,23 @@ static void RotatingGate_HideGatesOutsideViewport(struct Sprite *sprite)
 
 static void LoadRotatingGatePics(void)
 {
-    LoadSpriteSheets(sRotatingGatesGraphicsTable);
+    u32 i;
+    u32 usedShapes = 0;
+
+    for (i = 0; i < RotatingGate_GetObjectEventCount(); i++)
+    {
+        const struct ObjectEventTemplate *objectEvent = &gSaveBlock1Ptr->objectEventTemplates[i];
+
+        if (RotatingGate_IsInitialized(objectEvent))
+            usedShapes |= 1 << RotatingGate_GetShape(objectEvent);
+    }
+
+    for (i = 0; i < ARRAY_COUNT(sRotatingGatesGraphicsTable) - 1; i++)
+    {
+        if ((usedShapes & (1 << i))
+         && GetSpriteTileStartByTag(sRotatingGatesGraphicsTable[i].tag) == TAG_NONE)
+            LoadSpriteSheet(&sRotatingGatesGraphicsTable[i]);
+    }
 }
 
 static void RotatingGate_DestroyGatesOutsideViewport(void)
@@ -828,26 +935,42 @@ static void RotatingGate_DestroyGatesOutsideViewport(void)
     s16 y = gSaveBlock1Ptr->pos.y - 2;
     s16 y2 = gSaveBlock1Ptr->pos.y + MAP_OFFSET_H;
 
-    for (i = 0; i < sRotatingGate_PuzzleCount; i++)
+    for (i = 0; i < RotatingGate_GetObjectEventCount(); i++)
     {
-        s16 xGate = sRotatingGate_PuzzleConfig[i].x + MAP_OFFSET;
-        s16 yGate = sRotatingGate_PuzzleConfig[i].y + MAP_OFFSET;
+        struct ObjectEventTemplate *objectEvent = &gSaveBlock1Ptr->objectEventTemplates[i];
+        u8 spriteId;
+        s16 xGate, yGate;
 
-        if (sRotatingGate_GateSpriteIds[i] == MAX_SPRITES)
+        if (!RotatingGate_IsInitialized(objectEvent))
             continue;
+
+        spriteId = RotatingGate_GetGateSpriteId(i);
+        if (spriteId == MAX_SPRITES)
+            continue;
+
+        if (!RotatingGate_IsLiveSprite(i, spriteId))
+        {
+            RotatingGate_SetGateSpriteId(i, MAX_SPRITES);
+            continue;
+        }
+
+        RotatingGate_GetPivot(objectEvent, &xGate, &yGate);
+        xGate += MAP_OFFSET;
+        yGate += MAP_OFFSET;
 
         if (xGate < x || xGate > x2 || yGate < y || yGate > y2)
         {
-            struct Sprite *sprite = &gSprites[sRotatingGate_GateSpriteIds[i]];
+            struct Sprite *sprite = &gSprites[spriteId];
             FreeSpriteOamMatrix(sprite);
             DestroySprite(sprite);
-            sRotatingGate_GateSpriteIds[i] = MAX_SPRITES;
+            RotatingGate_SetGateSpriteId(i, MAX_SPRITES);
         }
     }
 }
 
-static s32 RotatingGate_CanRotate(u8 gateId, s32 rotationDirection)
+static s32 RotatingGate_CanRotate(u8 objectEventIndex, s32 rotationDirection)
 {
+    const struct ObjectEventTemplate *objectEvent = &gSaveBlock1Ptr->objectEventTemplates[objectEventIndex];
     const struct Coords8 *armPos;
     u8 orientation;
     s16 x, y;
@@ -861,11 +984,12 @@ static s32 RotatingGate_CanRotate(u8 gateId, s32 rotationDirection)
     else
         return FALSE;
 
-    orientation = RotatingGate_GetGateOrientation(gateId);
+    orientation = RotatingGate_GetGateOrientation(objectEventIndex);
 
-    shape = sRotatingGate_PuzzleConfig[gateId].shape;
-    x = sRotatingGate_PuzzleConfig[gateId].x + MAP_OFFSET;
-    y = sRotatingGate_PuzzleConfig[gateId].y + MAP_OFFSET;
+    shape = RotatingGate_GetShape(objectEvent);
+    RotatingGate_GetPivot(objectEvent, &x, &y);
+    x += MAP_OFFSET;
+    y += MAP_OFFSET;
 
     // Loop through the gate's "arms" clockwise (north, south, east, west)
     for (i = GATE_ARM_NORTH; i <= GATE_ARM_WEST; i++)
@@ -891,23 +1015,26 @@ static s32 RotatingGate_CanRotate(u8 gateId, s32 rotationDirection)
     return TRUE;
 }
 
-static s32 RotatingGate_HasArm(u8 gateId, u8 armInfo)
+static s32 RotatingGate_HasArm(u8 objectEventIndex, u8 armInfo)
 {
+    const struct ObjectEventTemplate *objectEvent = &gSaveBlock1Ptr->objectEventTemplates[objectEventIndex];
     s32 arm = armInfo / 2;
     s32 isLongArm = armInfo % 2;
 
-    s8 armOrientation = (arm - RotatingGate_GetGateOrientation(gateId) + 4) % 4;
-    s32 shape = sRotatingGate_PuzzleConfig[gateId].shape;
+    s8 armOrientation = (arm - RotatingGate_GetGateOrientation(objectEventIndex) + 4) % 4;
+    s32 shape = RotatingGate_GetShape(objectEvent);
     return sRotatingGate_ArmLayout[shape][armOrientation * 2 + isLongArm];
 }
 
-static void RotatingGate_TriggerRotationAnimation(u8 gateId, s32 rotationDirection)
+static void RotatingGate_TriggerRotationAnimation(u8 objectEventIndex, s32 rotationDirection)
 {
-    if (sRotatingGate_GateSpriteIds[gateId] != MAX_SPRITES)
+    u8 spriteId = RotatingGate_GetGateSpriteId(objectEventIndex);
+
+    if (RotatingGate_IsLiveSprite(objectEventIndex, spriteId))
     {
-        struct Sprite *sprite = &gSprites[sRotatingGate_GateSpriteIds[gateId]];
+        struct Sprite *sprite = &gSprites[spriteId];
         sprite->data[1] = rotationDirection;
-        sprite->data[2] = RotatingGate_GetGateOrientation(gateId);
+        sprite->data[2] = RotatingGate_GetGateOrientation(objectEventIndex);
     }
 }
 
@@ -929,44 +1056,80 @@ static u8 RotatingGate_GetRotationInfo(enum Direction direction, s16 x, s16 y)
     return ptr[y * 4 + x];
 }
 
-void RotatingGate_InitPuzzle(void)
-{
-    if (GetCurrentMapRotatingGatePuzzleType())
-    {
-        RotatingGate_LoadPuzzleConfig();
-        RotatingGate_ResetAllGateOrientations();
-    }
-}
-
 void RotatingGatePuzzleCameraUpdate(s16 deltaX, s16 deltaY)
 {
-    if (GetCurrentMapRotatingGatePuzzleType())
+    if (RotatingGate_IsPuzzleActive())
     {
+        // A failed tile, sprite, or matrix allocation is retried as the
+        // viewport moves. Collision does not depend on graphics resources.
+        LoadRotatingGatePics();
         RotatingGate_CreateGatesWithinViewport(deltaX, deltaY);
         RotatingGate_DestroyGatesOutsideViewport();
     }
 }
 
-void RotatingGate_InitPuzzleAndGraphics(void)
+static void RotatingGate_DestroyAllSprites(void)
 {
-    if (GetCurrentMapRotatingGatePuzzleType())
+    u32 i;
+
+    for (i = 0; i < RotatingGate_GetObjectEventCount(); i++)
     {
-        LoadRotatingGatePics();
-        RotatingGate_LoadPuzzleConfig();
-        RotatingGate_CreateGatesWithinViewport(0, 0);
+        struct ObjectEventTemplate *objectEvent = &gSaveBlock1Ptr->objectEventTemplates[i];
+        u8 spriteId;
+
+        if (!RotatingGate_IsInitialized(objectEvent))
+            continue;
+
+        spriteId = RotatingGate_GetGateSpriteId(i);
+        if (RotatingGate_IsLiveSprite(i, spriteId))
+        {
+            FreeSpriteOamMatrix(&gSprites[spriteId]);
+            DestroySprite(&gSprites[spriteId]);
+        }
+        RotatingGate_SetGateSpriteId(i, MAX_SPRITES);
     }
+}
+
+void RotatingGate_InitGraphics(s16 deltaX, s16 deltaY)
+{
+    if (!RotatingGate_IsPuzzleActive())
+        return;
+
+    // A compatibility special may have created destination-map gates while a
+    // seamless transition was still updating the camera origin. Recreate them
+    // once at the final origin rather than retaining those intermediate coords.
+    if (deltaX != 0 || deltaY != 0)
+        RotatingGate_DestroyAllSprites();
+
+    LoadRotatingGatePics();
+    RotatingGate_CreateGatesWithinViewport(deltaX, deltaY);
+}
+
+void RotatingGate_DestroyGraphics(void)
+{
+    u32 i;
+
+    RotatingGate_DestroyAllSprites();
+
+    for (i = 0; i < ARRAY_COUNT(sRotatingGatesGraphicsTable) - 1; i++)
+        FreeSpriteTilesByTag(sRotatingGatesGraphicsTable[i].tag);
 }
 
 bool32 CheckForRotatingGatePuzzleCollision(enum Direction direction, s16 x, s16 y)
 {
-    s32 i;
+    u32 i;
 
-    if (!GetCurrentMapRotatingGatePuzzleType())
-        return FALSE;
-    for (i = 0; i < sRotatingGate_PuzzleCount; i++)
+    for (i = 0; i < RotatingGate_GetObjectEventCount(); i++)
     {
-        s16 gateX = sRotatingGate_PuzzleConfig[i].x + MAP_OFFSET;
-        s16 gateY = sRotatingGate_PuzzleConfig[i].y + MAP_OFFSET;
+        const struct ObjectEventTemplate *objectEvent = &gSaveBlock1Ptr->objectEventTemplates[i];
+        s16 gateX, gateY;
+
+        if (!RotatingGate_IsInitialized(objectEvent))
+            continue;
+
+        RotatingGate_GetPivot(objectEvent, &gateX, &gateY);
+        gateX += MAP_OFFSET;
+        gateY += MAP_OFFSET;
 
         if (gateX - 2 <= x && x <= gateX + 1 && gateY - 2 <= y && y <= gateY + 1)
         {
@@ -997,14 +1160,19 @@ bool32 CheckForRotatingGatePuzzleCollision(enum Direction direction, s16 x, s16 
 
 bool32 CheckForRotatingGatePuzzleCollisionWithoutAnimation(enum Direction direction, s16 x, s16 y)
 {
-    s32 i;
+    u32 i;
 
-    if (!GetCurrentMapRotatingGatePuzzleType())
-        return FALSE;
-    for (i = 0; i < sRotatingGate_PuzzleCount; i++)
+    for (i = 0; i < RotatingGate_GetObjectEventCount(); i++)
     {
-        s16 gateX = sRotatingGate_PuzzleConfig[i].x + MAP_OFFSET;
-        s16 gateY = sRotatingGate_PuzzleConfig[i].y + MAP_OFFSET;
+        const struct ObjectEventTemplate *objectEvent = &gSaveBlock1Ptr->objectEventTemplates[i];
+        s16 gateX, gateY;
+
+        if (!RotatingGate_IsInitialized(objectEvent))
+            continue;
+
+        RotatingGate_GetPivot(objectEvent, &gateX, &gateY);
+        gateX += MAP_OFFSET;
+        gateY += MAP_OFFSET;
 
         if (gateX - 2 <= x && x <= gateX + 1 && gateY - 2 <= y && y <= gateY + 1)
         {
