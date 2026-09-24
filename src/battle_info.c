@@ -223,6 +223,7 @@ static void TryAddActiveStatusInternal(enum BattleInfoLabels label, u32 timerOrF
 static enum BattleInfoLabels GetStatusEffectFromWeather(void);
 static enum BattleInfoLabels GetStatusEffectFromTerrain(void);
 static enum BattleInfoLabels GetStatusEffectFromNonVolatile(enum BattlerId battler);
+static enum BattleInfoLabels GetInfoFromSemiInvulnerableState(u32 semiInvulnerable);
 static void TryAddActiveDamageNonTypes(enum BattleSide side);
 
 struct Durations
@@ -2164,10 +2165,6 @@ static void Detail_BuildActiveEffectsForBattler(void)
 
     TryAddActiveWeather(GetStatusEffectFromWeather(), side);
     TryAddActiveTerrain(GetStatusEffectFromTerrain(), side);
-    TryAddActiveScreen(INFO_LIGHT_SCREEN, SIDE_STATUS_LIGHTSCREEN, sideStatus->lightscreenTimer, sideStatus->lightscreenTimerTotal, side);
-    TryAddActiveScreen(INFO_REFLECT, SIDE_STATUS_REFLECT, sideStatus->reflectTimer, sideStatus->reflectTimerTotal, side);
-    TryAddActiveScreen(INFO_AURORA_VEIL, SIDE_STATUS_AURORA_VEIL, sideStatus->auroraVeilTimer, sideStatus->auroraVeilTimerTotal, side);
-
     TryAddActiveFieldStatus(INFO_TRICK_ROOM, STATUS_FIELD_TRICK_ROOM, fieldStatus->trickRoomTimer, 5, side);
     TryAddActiveFieldStatus(INFO_MAGIC_ROOM, STATUS_FIELD_MAGIC_ROOM, fieldStatus->magicRoomTimer, 5, side);
     TryAddActiveFieldStatus(INFO_WONDER_ROOM, STATUS_FIELD_WONDER_ROOM, fieldStatus->wonderRoomTimer, 5, side);
@@ -2176,13 +2173,18 @@ static void Detail_BuildActiveEffectsForBattler(void)
     TryAddActiveFieldStatus(INFO_WATER_SPORT, STATUS_FIELD_WATERSPORT, fieldStatus->waterSportTimer, 5, side);
     TryAddActiveFieldStatus(INFO_FAIRY_LOCK, STATUS_FIELD_FAIRY_LOCK, fieldStatus->fairyLockTimer, 2, side);
 
-    TryAddActiveSideStatus(INFO_MIST, SIDE_STATUS_MIST, sideStatus->mistTimer, 5, side);
-    TryAddActiveSideStatus(INFO_SAFEGUARD, SIDE_STATUS_SAFEGUARD, sideStatus->safeguardTimer, 5, side);
-    TryAddActiveSideStatus(INFO_LUCKY_CHANT, SIDE_STATUS_LUCKY_CHANT, sideStatus->luckyChantTimer, 5, side);
-    TryAddActiveSideStatus(INFO_TAILWIND, SIDE_STATUS_TAILWIND, sideStatus->tailwindTimer, (GetConfig(B_TAILWIND_TURNS) >= GEN_5 ? 4 : 3), side);
-    TryAddActiveSideStatus(INFO_RAINBOW, SIDE_STATUS_RAINBOW, sideStatus->rainbowTimer, 4, side);
-    TryAddActiveSideStatus(INFO_SWAMP, SIDE_STATUS_SWAMP, sideStatus->swampTimer, 4, side);
-    TryAddActiveSideStatus(INFO_SEA_OF_FIRE, SIDE_STATUS_SEA_OF_FIRE, sideStatus->seaOfFireTimer, 4, side);
+    #define SIDE_STATUS(s) (gSideStatuses[side] & s) != 0
+    TryAddActiveScreen(INFO_LIGHT_SCREEN, SIDE_STATUS(SIDE_STATUS_LIGHTSCREEN), sideStatus->lightscreenTimer, sideStatus->lightscreenTimerTotal, side);
+    TryAddActiveScreen(INFO_REFLECT, SIDE_STATUS(SIDE_STATUS_REFLECT), sideStatus->reflectTimer, sideStatus->reflectTimerTotal, side);
+    TryAddActiveScreen(INFO_AURORA_VEIL, SIDE_STATUS(SIDE_STATUS_AURORA_VEIL), sideStatus->auroraVeilTimer, sideStatus->auroraVeilTimerTotal, side);
+    TryAddActiveSideStatus(INFO_MIST, SIDE_STATUS(SIDE_STATUS_MIST), sideStatus->mistTimer, 5, side);
+    TryAddActiveSideStatus(INFO_SAFEGUARD, SIDE_STATUS(SIDE_STATUS_SAFEGUARD), sideStatus->safeguardTimer, 5, side);
+    TryAddActiveSideStatus(INFO_LUCKY_CHANT, SIDE_STATUS(SIDE_STATUS_LUCKY_CHANT), sideStatus->luckyChantTimer, 5, side);
+    TryAddActiveSideStatus(INFO_TAILWIND, SIDE_STATUS(SIDE_STATUS_TAILWIND), sideStatus->tailwindTimer, (GetConfig(B_TAILWIND_TURNS) >= GEN_5 ? 4 : 3), side);
+    TryAddActiveSideStatus(INFO_RAINBOW, SIDE_STATUS(SIDE_STATUS_RAINBOW), sideStatus->rainbowTimer, 4, side);
+    TryAddActiveSideStatus(INFO_SWAMP, SIDE_STATUS(SIDE_STATUS_SWAMP), sideStatus->swampTimer, 4, side);
+    TryAddActiveSideStatus(INFO_SEA_OF_FIRE, SIDE_STATUS(SIDE_STATUS_SEA_OF_FIRE), sideStatus->seaOfFireTimer, 4, side);
+    #undef SIDE_STATUS
     TryAddActiveSideStatus(INFO_STEALTH_ROCK, IsHazardOnSide(side, HAZARDS_STEALTH_ROCK), 0, 0, side);
     TryAddActiveSideStatus(INFO_SPIKES, IsHazardOnSide(side, HAZARDS_SPIKES), 0, 0, side);
     TryAddActiveSideStatus(INFO_TOXIC_SPIKES, IsHazardOnSide(side, HAZARDS_TOXIC_SPIKES), 0, 0, side);
@@ -2190,8 +2192,10 @@ static void Detail_BuildActiveEffectsForBattler(void)
     TryAddActiveDamageNonTypes(side);
 
     TryAddActiveStatus(GetStatusEffectFromNonVolatile(battler), PERMANENT_STATUS, side);
+    TryAddActiveStatus(GetInfoFromSemiInvulnerableState(vol->semiInvulnerable), vol->semiInvulnerable, side);
     TryAddActiveStatus(INFO_INFATUATION, vol->infatuation, side);
     TryAddActiveStatus(INFO_NIGHTMARE, vol->nightmare, side);
+    TryAddActiveStatus(INFO_PERISHING, vol->perishSongTimer, side);
     TryAddActiveStatus(INFO_TORMENT, vol->torment, side);
     TryAddActiveStatus(INFO_GRUDGE, vol->grudge, side);
     TryAddActiveStatus(INFO_LOCK_ON, vol->lockOn, side);
@@ -2347,7 +2351,7 @@ static void SetRemainingDuration(struct DisplayTimer *timer)
 
 static void TryAddActiveFieldStatus(enum BattleInfoLabels label, u32 fieldStatus, u32 timer, u32 totalTimer, enum BattleSide side)
 {
-    if (!(gFieldStatuses & fieldStatus))
+    if ((gFieldStatuses & fieldStatus) == 0)
         return;
 
     if (timer > 0)
@@ -2358,7 +2362,7 @@ static void TryAddActiveFieldStatus(enum BattleInfoLabels label, u32 fieldStatus
 
 static void TryAddActiveSideStatus(enum BattleInfoLabels label, u32 sideStatus, u32 timer, u32 totalTimer, enum BattleSide side)
 {
-    if (!(gSideStatuses[side] & sideStatus))
+    if (!sideStatus)
         return;
 
     if (timer > 0)
@@ -2467,6 +2471,21 @@ static enum BattleInfoLabels GetStatusEffectFromNonVolatile(enum BattlerId battl
     case STATUS1_PARALYSIS:    return INFO_PARALYZED;
     case STATUS1_BURN:         return INFO_BURNED;
     case STATUS1_FROSTBITE:    return INFO_FROSTBITE;
+    }
+
+    return INFO_NONE;
+}
+
+static enum BattleInfoLabels GetInfoFromSemiInvulnerableState(u32 semiInvulnerable)
+{
+    switch (semiInvulnerable)
+    {
+    case STATE_UNDERGROUND:       return INFO_UNDERGROUND;
+    case STATE_UNDERWATER:        return INFO_SUBMERGED;
+    case STATE_ON_AIR:            return INFO_SKY_HIGH;
+    case STATE_PHANTOM_FORCE:     return INFO_CONCEALED;
+    case STATE_SKY_DROP_ATTACKER: return INFO_SKY_HIGH;
+    case STATE_SKY_DROP_TARGET:   return INFO_SKY_HIGH;
     }
 
     return INFO_NONE;
@@ -3335,10 +3354,13 @@ static void Overview_DrawNameBoxes(void)
     if (!ShouldShowTrainerNames())
         return;
 
-    if (GetOpponentTrainerCount() >= 2)
-        Overview_DrawMultiTrainerNameBoxes(B_SIDE_OPPONENT);
-    else
-        Overview_DrawTrainerNameBox(B_SIDE_OPPONENT);
+    if (GetOpponentTrainerCount() != 0) // not trainer battle
+    {
+        if (GetOpponentTrainerCount() >= 2)
+            Overview_DrawMultiTrainerNameBoxes(B_SIDE_OPPONENT);
+        else
+            Overview_DrawTrainerNameBox(B_SIDE_OPPONENT);
+    }
 
     if (HasPartnerTrainer(B_BATTLER_0))
         Overview_DrawMultiTrainerNameBoxes(B_SIDE_PLAYER);
@@ -3351,10 +3373,13 @@ static void Overview_DrawLabels(void)
     if (!ShouldShowTrainerNames())
         return;
 
-    if (GetOpponentTrainerCount() >= 2)
-        Overview_DrawMultiTrainerLabels(B_SIDE_OPPONENT);
-    else
-        Overview_DrawTrainerLabels(B_SIDE_OPPONENT);
+    if (GetOpponentTrainerCount() != 0) // not trainer battle
+    {
+        if (GetOpponentTrainerCount() >= 2)
+            Overview_DrawMultiTrainerLabels(B_SIDE_OPPONENT);
+        else
+            Overview_DrawTrainerLabels(B_SIDE_OPPONENT);
+    }
 
     if (HasPartnerTrainer(B_BATTLER_0))
         Overview_DrawMultiTrainerLabels(B_SIDE_PLAYER);
