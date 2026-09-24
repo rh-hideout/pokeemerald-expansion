@@ -18,46 +18,45 @@ Pic: Brendan
 Gender: Male
 Music: Male
 
-Gengar
+Buffie (Wobbuffet)
 Brave Nature
 Level: 100
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
-EVs: 252 Atk / 252 Def / 6 SpA
-- Toxic Spikes
-- Sticky Web
-- Stealth Rock
-- Fly
+EVs: 252 Def / 252 SpD / 6 Spe
+- Brutal Swing
+- Water Gun
+- Bubble
+- Sleep Talk
 
-Meowstic
+Wynaut
 Brave Nature
 Level: 100
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
-EVs: 252 Atk / 252 Def / 6 SpA
-- Imprison
-- Leech Seed
-- Gastro Acid
-- Dive
+EVs: 252 Def / 252 SpD / 6 Spe
+- Brutal Swing
+- Fly
+- Bubble
+- Sleep Talk
 
 === DEBUG_TRAINER_AI ===
 Name: Debugger
 AI: Smart Trainer
 Class: Rival
-Battle Type: Double
+Battle Type: Singles
 Pic: Steven
 Gender: Male
 Music: Male
 
-Wobbuffet
+Buffie (Wobbuffet)
 Brave Nature
-Level: 42
+Level: 100
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
-EVs: 252 Atk / 252 Def / 6 SpA
-- Phantom Force
+EVs: 252 Def / 252 SpD / 6 Spe
+- Sleep Talk
 
-Wobbuffet
-Impish Nature
-Level: 43
+Wynaut
+Brave Nature
+Level: 100
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
-EVs: 252 HP / 6 SpA / 252 SpD
-- Dig
-
+EVs: 252 Def / 252 SpD / 6 Spe
+- Sleep Talk

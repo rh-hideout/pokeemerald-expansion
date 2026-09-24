@@ -2909,7 +2909,7 @@ static void ClearSetDataOnLeave(enum BattlerId battler)
     gProtectStructs[battler].helpingHand = 0;
     gProtectStructs[battler].bounceMove = FALSE;
     gProtectStructs[battler].stealMove = FALSE;
-    gProtectStructs[battler].chargingTurn = FALSE;
+    gBattleMons[battler].volatiles.chargeTurn = FALSE;
     gProtectStructs[battler].fleeType = 0;
     gProtectStructs[battler].statRaised = FALSE;
     gProtectStructs[battler].pranksterElevated = FALSE;

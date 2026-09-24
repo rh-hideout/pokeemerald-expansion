@@ -107,7 +107,6 @@ struct BattleInfoMenuData
     u32 windowIds[WIN_DETAIL_COUNT];
     u16 bg0Tilemap[BG_SCREEN_SIZE];
     u16 bg1Tilemap[BG_SCREEN_SIZE];
-    u8 detailTextBuffer[B_INFO_DETAIL_TEXT_BUFFER_SIZE];
 };
 
 static EWRAM_DATA struct BattleInfoMenuData *sData = NULL;
@@ -225,6 +224,7 @@ static enum BattleInfoLabels GetStatusEffectFromTerrain(void);
 static enum BattleInfoLabels GetStatusEffectFromNonVolatile(enum BattlerId battler);
 static enum BattleInfoLabels GetInfoFromSemiInvulnerableState(u32 semiInvulnerable);
 static void TryAddActiveDamageNonTypes(enum BattleSide side);
+static void TryAddActiveThirdType(enum BattlerId battler, enum BattleSide side);
 
 struct Durations
 {
@@ -242,7 +242,6 @@ static void Detail_RefreshEffectsScrollbar(void);
 static void Detail_DestroyIconSprite(void);
 static void Detail_UpdateScrollbarLane(bool32 hasScrollbar);
 static void Detail_SetDescriptionPlaceholder(enum BattleInfoLabels  label);
-static void Detail_FormatDescriptionText(enum BattleInfoLabels  label, u8 *dst);
 static void Detail_ClampTextLines(u8 *text, u32 maxLines);
 static void Detail_ResetWithTransparentTextColor(u32 windowId);
 static const u8 *GetSideTrainerName(enum BattleSide side);
@@ -698,6 +697,11 @@ static const struct BattleInfoEffectData sBattleInfoEffects[INFO_COUNT] =
     {
         COMPOUND_STRING("Octolock"),
         COMPOUND_STRING("The Pokémon's Defense and Sp. Def are both lowered with each passing turn.")
+    },
+    [INFO_WIDE_OPEN] =
+    {
+        COMPOUND_STRING("Wide Open"),
+        COMPOUND_STRING("Opponents’ moves will not miss the Pokémon and will deal double damage.")
     },
     // G-Max effects
     [INFO_G_MAX_WILDFIRE] =
@@ -2189,6 +2193,7 @@ static void Detail_BuildActiveEffectsForBattler(void)
     TryAddActiveSideStatus(INFO_SPIKES, IsHazardOnSide(side, HAZARDS_SPIKES), 0, 0, side);
     TryAddActiveSideStatus(INFO_TOXIC_SPIKES, IsHazardOnSide(side, HAZARDS_TOXIC_SPIKES), 0, 0, side);
     TryAddActiveSideStatus(INFO_STICKY_WEB, IsHazardOnSide(side, HAZARDS_STICKY_WEB), 0, 0, side);
+    TryAddActiveSideStatus(INFO_G_MAX_STEELSURGE, IsHazardOnSide(side, HAZARDS_STEELSURGE), 0, 0, side);
     TryAddActiveDamageNonTypes(side);
 
     TryAddActiveStatus(GetStatusEffectFromNonVolatile(battler), PERMANENT_STATUS, side);
@@ -2206,8 +2211,8 @@ static void Detail_BuildActiveEffectsForBattler(void)
     TryAddActiveStatus(INFO_AUTOTOMIZE, vol->autotomizeCount, side);
     TryAddActiveStatus(INFO_TAR_SHOT, vol->tarShot, side);
     TryAddActiveStatus(INFO_OCTOLOCK, vol->octolock, side);
-    // TryAddActiveStatus(INFO_FIXATED, vol->glaiveRush, side); // Unclear if this one is listed
-    TryAddActiveStatus(INFO_STANCE_SWAP, vol->powerTrick, side);
+    TryAddActiveStatus(INFO_WIDE_OPEN, vol->glaiveRush, side);
+    TryAddActiveStatus(INFO_ATK_DEF_SWAPPED, vol->powerTrick, side);
     TryAddActiveStatus(INFO_SMACK_DOWN, vol->smackDown, side);
     TryAddActiveStatus(INFO_SALT_CURE, vol->saltCure, side);
     TryAddActiveStatus(INFO_TAUNT, vol->tauntTimer, side);
@@ -2218,6 +2223,15 @@ static void Detail_BuildActiveEffectsForBattler(void)
     TryAddActiveStatus(INFO_CANT_ESCAPE, vol->escapePrevention, side);
     TryAddActiveStatus(INFO_CRITICAL_HIT_BOOST, critBoost, side);
     TryAddActiveStatus(INFO_IDENTIFIED, foresight, side);
+    TryAddActiveStatus(INFO_NO_ABILITY, vol->gastroAcid, side);
+    TryAddActiveStatus(INFO_STOCKPILING, vol->stockpileCounter, side);
+    TryAddActiveStatus(INFO_IMPRISON, vol->imprison, side);
+    TryAddActiveStatus(INFO_LEECH_SEED, vol->leechSeed, side);
+    TryAddActiveStatus(INFO_MINIMIZED, vol->minimize, side);
+    TryAddActiveStatus(INFO_RECHARGING, vol->rechargeTimer, side);
+    TryAddActiveStatus(INFO_FLASH_FIRE, vol->flashFireBoosted, side);
+    TryAddActiveStatus(INFO_CHARGING, gBattleMons[battler].volatiles.chargeTurn, side);
+    TryAddActiveStatus(INFO_MICLE_BERRY, gBattleStruct->battlerState[battler].usedMicleBerry, side);
     TryAddActiveStatusTimer(INFO_DROWSY, vol->yawn, 2, side);
     TryAddActiveStatusTimer(INFO_HEALING_PREVENTED, vol->healBlockTimer, B_HEAL_BLOCK_TIMER, side);
     TryAddActiveStatusTimer(INFO_EMBARGO, vol->embargoTimer, B_EMBARGO_TIMER, side);
@@ -2230,6 +2244,7 @@ static void Detail_BuildActiveEffectsForBattler(void)
     TryAddActiveStatusTimer(INFO_SLOW_START, vol->slowStartTimer, B_SLOW_START_TIMER, side);
     TryAddActiveStatusTimer(INFO_SYRUPY, vol->syrupBombTimer, B_SYRUP_BOMB_TIMER, side);
     TryAddActiveStatusTimer(INFO_WISH, gBattleStruct->wish[battler].counter, 2, side);
+    TryAddActiveThirdType(battler, side);
 
     if (B_DISABLE_TURNS >= GEN_5)
         TryAddActiveStatusTimer(INFO_MOVE_DISABLED, vol->disableTimer, B_DISABLE_TIMER, side);
@@ -2470,6 +2485,7 @@ static enum BattleInfoLabels GetStatusEffectFromNonVolatile(enum BattlerId battl
     case STATUS1_POISON:       return INFO_POISONED;
     case STATUS1_PARALYSIS:    return INFO_PARALYZED;
     case STATUS1_BURN:         return INFO_BURNED;
+    case STATUS1_FREEZE:       return INFO_BURNED;
     case STATUS1_FROSTBITE:    return INFO_FROSTBITE;
     }
 
@@ -2509,6 +2525,23 @@ static void TryAddActiveDamageNonTypes(enum BattleSide side)
         break;
     case TYPE_WATER:
         TryAddActiveStatus(INFO_G_MAX_CANNONADE, PERMANENT_STATUS, side);
+        break;
+    default:
+        break;
+    }
+}
+
+static void TryAddActiveThirdType(enum BattlerId battler, enum BattleSide side)
+{
+    enum Type types[3];
+    GetBattlerTypes(battler, FALSE, types);
+    switch (types[2])
+    {
+    case TYPE_GHOST:
+        TryAddActiveStatus(INFO_TRICK_OR_TREAT, TRUE, side);
+        break;
+    case TYPE_GRASS:
+        TryAddActiveStatus(INFO_FORESTS_CURSE, TRUE, side);
         break;
     default:
         break;
@@ -2586,6 +2619,11 @@ static void DisplayRow(u32 windowId, u32 row, u32 index, u32 fractionYOffset)
     u32 top = 16 + row * 12;
     const struct BattleInfo *entry = &sData->activeEffects[index];
     const struct BattleInfoEffectData *effectData = &sBattleInfoEffects[entry->label];
+
+    assertf(effectData->name != NULL, "missing info label name/description for %d", entry->label)
+    {
+        return;
+    }
 
     struct PrintText text = {
         .windowId = windowId,
@@ -2810,12 +2848,6 @@ static void Detail_SetDescriptionPlaceholder(enum BattleInfoLabels label)
     }
 }
 
-static void Detail_FormatDescriptionText(enum BattleInfoLabels  label, u8 *dst)
-{
-    Detail_SetDescriptionPlaceholder(label);
-    StringExpandPlaceholders(dst, sBattleInfoEffects[label].description);
-}
-
 static void Detail_ClampTextLines(u8 *text, u32 maxLines)
 {
     u32 line = 1;
@@ -2840,16 +2872,20 @@ static void Detail_RefreshDescriptionWindow(void)
     u32 windowId = sData->windowIds[WIN_DETAIL_DESCRIPTION];
     u32 descFont = FONT_SMALL_NARROWER;
 
+    u8 descriptionBuffer[512] = {0};
+    enum BattleInfoLabels label = sData->activeEffects[sData->effectsCursor].label;
+    const u8 *desc = sBattleInfoEffects[label].description;
+
     Detail_ResetWithTransparentTextColor(windowId);
 
-    if (sData->activeEffectsCount == 0 || sData->effectsCursor >= sData->activeEffectsCount)
+    if (sData->activeEffectsCount == 0 || desc == NULL)
     {
-        sData->detailTextBuffer[0] = EOS;
+        descriptionBuffer[0] = EOS;
     }
     else
     {
-        enum BattleInfoLabels label = sData->activeEffects[sData->effectsCursor].label;
-        Detail_FormatDescriptionText(label, sData->detailTextBuffer);
+        Detail_SetDescriptionPlaceholder(label);
+        StringExpandPlaceholders(descriptionBuffer, desc);
     }
 
     u32 wrapWidth = WindowWidthPx(windowId) - (2 * 2) - 2;
@@ -2864,16 +2900,16 @@ static void Detail_RefreshDescriptionWindow(void)
     u32 maxLines = availableHeight / lineHeight;
     maxLines = max(maxLines, 1);
 
-    BreakStringAutomatic(sData->detailTextBuffer, wrapWidth, maxLines, descFont, HIDE_SCROLL_PROMPT);
+    BreakStringAutomatic(descriptionBuffer, wrapWidth, maxLines, descFont, HIDE_SCROLL_PROMPT);
 
-    u8 *end = sData->detailTextBuffer + StringLength(sData->detailTextBuffer);
-    WrapFontIdToFit(sData->detailTextBuffer, end, descFont, wrapWidth);
-    Detail_ClampTextLines(sData->detailTextBuffer, maxLines);
+    u8 *end = descriptionBuffer + StringLength(descriptionBuffer);
+    WrapFontIdToFit(descriptionBuffer, end, descFont, wrapWidth);
+    Detail_ClampTextLines(descriptionBuffer, maxLines);
 
-    if (sData->detailTextBuffer[0] != EOS)
+    if (descriptionBuffer[0] != EOS)
     {
         AddTextPrinterParameterized4(windowId, descFont, 2, 2, 0, 0,
-                                     sTextColor_BattleInfo_Default, TEXT_SKIP_DRAW, sData->detailTextBuffer);
+                                     sTextColor_BattleInfo_Default, TEXT_SKIP_DRAW, descriptionBuffer);
     }
 
     PutWindowTilemap(windowId);

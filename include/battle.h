@@ -70,7 +70,6 @@ struct ProtectStruct
     u32 noValidMoves:1;
     u32 bounceMove:1;
     u32 stealMove:1;
-    u32 chargingTurn:1;
     u32 fleeType:2; // 0: Normal, 1: FLEE_ITEM, 2: FLEE_ABILITY
     u32 laggingTail:1;
     u32 palaceUnableToUseMove:1;
@@ -88,7 +87,7 @@ struct ProtectStruct
     u32 forcedSwitch:1;
     u32 myceliumMight:1;
     u32 survivedOHKO:1; // Used to keep track of effects that allow focus punch when surviving moves like Fissure
-    u32 padding1:3;
+    u32 padding1:4;
     // End of 32-bit bitfield
     u16 helpingHand:3;
     u16 revengeDoubled:4;
