@@ -9506,9 +9506,9 @@ bool32 CanTargetBattler(enum BattlerId battlerAtk, enum BattlerId battlerDef, en
 
 u32 GetNextTarget(u32 moveTarget, bool32 excludeCurrent)
 {
-    for (enum BattlerId slot = B_BATTLER_0; slot < MAX_BATTLERS_COUNT; slot++)
+    enum BattlerId battler;
+    for (battler = B_BATTLER_0; battler < MAX_BATTLERS_COUNT; battler++)
     {
-        enum BattlerId battler = GetTargetBySlot(gBattlerAttacker, slot);
         if (excludeCurrent && battler == gBattlerTarget)
         {
             continue;
@@ -9521,9 +9521,9 @@ u32 GetNextTarget(u32 moveTarget, bool32 excludeCurrent)
         {
             continue;
         }
-        return battler;
+        break;
     }
-    return MAX_BATTLERS_COUNT;
+    return battler;
 }
 
 void CopyMonLevelAndBaseStatsToBattleMon(enum BattlerId battler, struct Pokemon *mon, bool32 updateSpeedStat)
