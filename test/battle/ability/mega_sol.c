@@ -346,7 +346,7 @@ SINGLE_BATTLE_TEST("Mega Sol: Growth increases Attack and Sp. Atk by 2 stages un
     }
 }
 
-SINGLE_BATTLE_TEST("Mega Sol doesn't prevent other weather based activations (Electro Shot)")
+SINGLE_BATTLE_TEST("Mega Sol prevents other weather based activations (Electro Shot)")
 {
     GIVEN {
         ASSUME(GetTwoTurnMoveWeather(MOVE_ELECTRO_SHOT) == BATTLE_WEATHER_RAIN);
@@ -357,11 +357,11 @@ SINGLE_BATTLE_TEST("Mega Sol doesn't prevent other weather based activations (El
         TURN { MOVE(opponent, MOVE_ELECTRO_SHOT, gimmick: GIMMICK_MEGA); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRO_SHOT, opponent);
-        HP_BAR(player);
+        NOT HP_BAR(player);
     }
 }
 
-SINGLE_BATTLE_TEST("Mega Sol doesn't prevent other weather based activations (Aurora Veil)")
+SINGLE_BATTLE_TEST("Mega Sol prevents other weather based activations (Aurora Veil)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_AURORA_VEIL) == EFFECT_AURORA_VEIL);
@@ -370,6 +370,6 @@ SINGLE_BATTLE_TEST("Mega Sol doesn't prevent other weather based activations (Au
     } WHEN {
         TURN { MOVE(opponent, MOVE_AURORA_VEIL, gimmick: GIMMICK_MEGA); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_AURORA_VEIL, opponent);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_AURORA_VEIL, opponent);
     }
 }
