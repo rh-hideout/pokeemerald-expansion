@@ -119,7 +119,9 @@ bool32 BattlerHasAi(enum BattlerId battlerId)
      && gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER
      && !(gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK)
      && battlerId == B_BATTLER_2)
+    {
         return TRUE;
+    }
 
     return FALSE;
 }
