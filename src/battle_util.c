@@ -1272,7 +1272,7 @@ void PrepareStringBattle(enum StringID stringId, enum BattlerId battler)
     {
     case STRINGID_ITDOESNTAFFECT:
     case STRINGID_PKMNUNAFFECTED:
-        TryInitializeTrainerSlideMonUnaffected(gBattlerTarget, gBattlerAttacker);
+        TryInitializeTrainerSlideFirstIneffectiveMove(gBattlerTarget, gBattlerAttacker);
         break;
     default:
         break;

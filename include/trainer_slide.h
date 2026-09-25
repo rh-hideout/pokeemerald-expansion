@@ -16,7 +16,7 @@ void TryInitializeFirstSTABMoveTrainerSlide(enum BattlerId battlerDef, enum Batt
 void TryInitializeTrainerSlidePlayerLandsFirstCriticalHit(enum BattlerId target);
 void TryInitializeTrainerSlideEnemyLandsFirstCriticalHit(enum BattlerId target);
 void TryInitializeTrainerSlideLandsFirstSuperEffectiveHit(enum BattlerId battlerDef, enum BattlerId battlerAtk);
-void TryInitializeTrainerSlideMonUnaffected(enum BattlerId battlerDef, enum BattlerId battlerAtk);
+void TryInitializeTrainerSlideFirstIneffectiveMove(enum BattlerId battlerDef, enum BattlerId battlerAtk);
 bool32 IsTrainerSlideInitialized(enum BattlerId battler, enum TrainerSlideType slideId);
 bool32 IsTrainerSlidePlayed(enum BattlerId battler, enum TrainerSlideType slideId);
 void InitalizeTrainerSlide(enum BattlerId battler, enum TrainerSlideType slideId);

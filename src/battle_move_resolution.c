@@ -2280,7 +2280,7 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
             }
             else if (ctx.typeEffectivenessModifier == UQ_4_12(0.0))
             {
-                TryInitializeTrainerSlideMonUnaffected(cv->battlerDef, cv->battlerAtk);
+                TryInitializeTrainerSlideFirstIneffectiveMove(cv->battlerDef, cv->battlerAtk);
                 gSpecialStatuses[cv->battlerDef].updateStallMons = TRUE;
                 gBattleStruct->moveResultFlags[cv->battlerDef] = MOVE_RESULT_FAILED;
                 BattleScriptCall(BattleScript_DoesntAffectScripting);
@@ -2288,7 +2288,7 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
             }
             else if (IsTargetUnaffectedByMoveEffect(cv))
             {
-                TryInitializeTrainerSlideMonUnaffected(cv->battlerDef, cv->battlerAtk);
+                TryInitializeTrainerSlideFirstIneffectiveMove(cv->battlerDef, cv->battlerAtk);
                 gSpecialStatuses[cv->battlerDef].updateStallMons = TRUE;
                 return TargetAvoidedAttack(cv->battlerAtk, cv->battlerDef);
             }
@@ -3493,9 +3493,9 @@ static bool32 ShouldPrintEffectivenessMessage(struct BattleCalcValues *cv)
     if (ShouldPrintEffectivenessMessageForFlag(battler1, battler2, MOVE_RESULT_DOESNT_AFFECT_FOE))
     {
         if (gSpecialStatuses[battler1].resultMessagePrinted)
-            TryInitializeTrainerSlideMonUnaffected(battler1, cv->battlerAtk);
+            TryInitializeTrainerSlideFirstIneffectiveMove(battler1, cv->battlerAtk);
         if (battler2 != battler1 && gSpecialStatuses[battler2].resultMessagePrinted)
-            TryInitializeTrainerSlideMonUnaffected(battler2, cv->battlerAtk);
+            TryInitializeTrainerSlideFirstIneffectiveMove(battler2, cv->battlerAtk);
         BattleScriptCall(BattleScript_PrintNoEffectMessage);
         return TRUE;
     }

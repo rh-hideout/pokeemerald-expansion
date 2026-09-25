@@ -1449,8 +1449,8 @@ static bool32 TryEndTurnTrainerSlide(enum BattlerId battler)
          || (ShouldDoTrainerSlide(battler, TRAINER_SLIDE_ATTACKER_LANDS_FIRST_SUPER_EFFECTIVE_HIT) != TRAINER_SLIDE_TARGET_NONE)
          || (ShouldDoTrainerSlide(battler, TRAINER_SLIDE_DEFENDER_TAKES_FIRST_STAB_MOVE) != TRAINER_SLIDE_TARGET_NONE)
          || (ShouldDoTrainerSlide(battler, TRAINER_SLIDE_ATTACKER_LANDS_FIRST_STAB_MOVE) != TRAINER_SLIDE_TARGET_NONE)
-         || (ShouldDoTrainerSlide(battler, TRAINER_SLIDE_OPPONENT_MON_UNAFFECTED) != TRAINER_SLIDE_TARGET_NONE)
-         || (ShouldDoTrainerSlide(battler, TRAINER_SLIDE_SELF_MON_UNAFFECTED) != TRAINER_SLIDE_TARGET_NONE));
+         || (ShouldDoTrainerSlide(battler, TRAINER_SLIDE_ATTACKER_LANDS_FIRST_INEFFECTIVE) != TRAINER_SLIDE_TARGET_NONE)
+         || (ShouldDoTrainerSlide(battler, TRAINER_SLIDE_DEFENDER_TAKES_FIRST_INEFFECTIVE) != TRAINER_SLIDE_TARGET_NONE));
 }
 
 static bool32 HandleEndTurnTrainerASlides(enum BattlerId battler)
