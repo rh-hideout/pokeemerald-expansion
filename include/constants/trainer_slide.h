@@ -23,7 +23,7 @@ enum TrainerSlideType
     TRAINER_SLIDE_SELF_LAST_LOW_HP, // Slide activates for the battler when its last mon is under 25% HP
     TRAINER_SLIDE_SELF_MEGA_EVOLUTION, // Slide activates for the battler when it is about to Mega
     TRAINER_SLIDE_SELF_Z_MOVE, // Slide activates for the battler when it is about to use a Z move
-    TRAINER_SLIDE_SELF_DYNAMAX, // Slide activates for the battler when it is about to Dynamaz
+    TRAINER_SLIDE_SELF_DYNAMAX, // Slide activates for the battler when it is about to Dynamax
     TRAINER_SLIDE_SELF_TERA, // Slide activates for the battler when it is about to Tera
 
     TRAINER_SLIDE_OPPONENT_LAST_SWITCHIN, // Slide activates for the battler when its opponent(s) sends out their last mon
