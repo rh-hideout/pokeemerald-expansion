@@ -303,6 +303,9 @@ BattleScript_EffectDoodle_AfterCopy:
 	recordability BS_ATTACKER
 	printstring STRINGID_PKMNCOPIEDFOE
 	waitmessage B_WAIT_TIME_LONG
+	tryendneutralizinggas BS_ATTACKER
+	trytoclearprimalweather
+	call BattleScript_TryRevertWeatherform
 	switchinabilities BS_ATTACKER
 	jumpifbyte CMP_NOT_EQUAL, gBattleCommunication, 0x0, BattleScript_EffectDoodleMoveEnd
 	addbyte gBattleCommunication, 1
@@ -1085,13 +1088,13 @@ BattleScript_EffectEntrainment::
 	tryentrainment BattleScript_ButItFailed
 	attackanimation
 	waitanimation
-	switchinabilities BS_TARGET
 	printstring STRINGID_PKMNACQUIREDABILITY
 	waitmessage B_WAIT_TIME_LONG
+	tryendneutralizinggas
 	trytoclearprimalweather
 	call BattleScript_TryRevertWeatherform
 	flushtextbox
-	tryendneutralizinggas
+	switchinabilities BS_TARGET
 	goto BattleScript_MoveEnd
 
 BattleScript_EffectLuckyChant::
@@ -1170,6 +1173,7 @@ BattleScript_EffectOverwriteAbility::
 	call BattleScript_TryRevertWeatherform
 	flushtextbox
 	tryendneutralizinggas
+	switchinabilities BS_TARGET
 	goto BattleScript_MoveEnd
 
 BattleScript_EffectPowerSplit::
@@ -2519,6 +2523,9 @@ BattleScript_EffectRolePlay::
 	recordability BS_ATTACKER
 	printstring STRINGID_PKMNCOPIEDFOE
 	waitmessage B_WAIT_TIME_LONG
+	tryendneutralizinggas BS_ATTACKER
+	trytoclearprimalweather
+	call BattleScript_TryRevertWeatherform
 	switchinabilities BS_ATTACKER
 	goto BattleScript_MoveEnd
 
@@ -5016,7 +5023,7 @@ BattleScript_MummyActivates::
 	trytoclearprimalweather
 	call BattleScript_TryRevertWeatherform
 	flushtextbox
-	tryendneutralizinggas
+	tryendneutralizinggas BS_ATTACKER
 	return
 
 BattleScript_WanderingSpiritActivates::

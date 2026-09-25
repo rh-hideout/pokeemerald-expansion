@@ -1,6 +1,84 @@
 #include "global.h"
 #include "test/battle.h"
 
+DOUBLE_BATTLE_TEST("Desolate Land ends before a replacement weather Ability activates")
+{
+    enum Move move;
+    PARAMETRIZE { move = MOVE_ENTRAINMENT; }
+    PARAMETRIZE { move = MOVE_ROLE_PLAY; }
+    PARAMETRIZE { move = MOVE_DOODLE; }
+
+    GIVEN {
+        PLAYER(SPECIES_GROUDON) { Item(ITEM_RED_ORB); }
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
+        OPPONENT(SPECIES_PELIPPER) { Ability(ABILITY_DRIZZLE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
+    } WHEN {
+        if (move == MOVE_ENTRAINMENT)
+        {
+            TURN { MOVE(opponentLeft, move, target: playerLeft); }
+        }
+        else
+        {
+            TURN { MOVE(playerLeft, move, target: opponentLeft); }
+        }
+    } SCENE {
+        if (move == MOVE_ENTRAINMENT)
+        {
+            ANIMATION(ANIM_TYPE_MOVE, move, opponentLeft);
+        }
+        else
+        {
+            ANIMATION(ANIM_TYPE_MOVE, move, playerLeft);
+        }
+        ABILITY_POPUP(playerLeft, ABILITY_DRIZZLE);
+    } THEN {
+        EXPECT_EQ(playerLeft->ability, ABILITY_DRIZZLE);
+        EXPECT_EQ(gBattleWeather, B_WEATHER_RAIN_NORMAL);
+        if (move == MOVE_DOODLE)
+        {
+            EXPECT_EQ(playerRight->ability, ABILITY_DRIZZLE);
+        }
+    }
+}
+
+DOUBLE_BATTLE_TEST("Desolate Land persists when another holder sustains it during an Ability replacement")
+{
+    enum Move move;
+    PARAMETRIZE { move = MOVE_ENTRAINMENT; }
+    PARAMETRIZE { move = MOVE_ROLE_PLAY; }
+    PARAMETRIZE { move = MOVE_DOODLE; }
+
+    GIVEN {
+        PLAYER(SPECIES_GROUDON) { Item(ITEM_RED_ORB); }
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
+        OPPONENT(SPECIES_PELIPPER) { Ability(ABILITY_DRIZZLE); }
+        OPPONENT(SPECIES_GROUDON) { Item(ITEM_RED_ORB); }
+    } WHEN {
+        if (move == MOVE_ENTRAINMENT)
+        {
+            TURN { MOVE(opponentLeft, move, target: playerLeft); }
+        }
+        else
+        {
+            TURN { MOVE(playerLeft, move, target: opponentLeft); }
+        }
+    } SCENE {
+        if (move == MOVE_ENTRAINMENT)
+        {
+            ANIMATION(ANIM_TYPE_MOVE, move, opponentLeft);
+        }
+        else
+        {
+            ANIMATION(ANIM_TYPE_MOVE, move, playerLeft);
+        }
+    } THEN {
+        EXPECT_EQ(playerLeft->ability, ABILITY_DRIZZLE);
+        EXPECT_EQ(gBattleWeather, B_WEATHER_SUN_PRIMAL);
+    }
+}
+
+
 ASSUMPTIONS
 {
     ASSUME(GetMoveCategory(MOVE_WATER_GUN) != DAMAGE_CATEGORY_STATUS);

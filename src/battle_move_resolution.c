@@ -937,10 +937,13 @@ static enum CancelerResult CancelerSetTargets(struct BattleCalcValues *cv)
         }
         else if (isDoubleBattle && moveTarget == TARGET_FOES_AND_ALLY)
         {
-            for (enum BattlerId battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
+            for (enum BattlerId slot = 0; slot < gBattlersCount; slot++)
             {
+                enum BattlerId battlerDef = GetTargetBySlot(cv->battlerAtk, slot);
                 if (battlerDef == cv->battlerAtk)
+                {
                     continue;
+                }
 
                 if (IsBattlerAlive(battlerDef))
                 {

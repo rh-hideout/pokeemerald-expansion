@@ -9506,18 +9506,24 @@ bool32 CanTargetBattler(enum BattlerId battlerAtk, enum BattlerId battlerDef, en
 
 u32 GetNextTarget(u32 moveTarget, bool32 excludeCurrent)
 {
-    enum BattlerId battler;
-    for (battler = B_BATTLER_0; battler < MAX_BATTLERS_COUNT; battler++)
+    for (enum BattlerId slot = B_BATTLER_0; slot < MAX_BATTLERS_COUNT; slot++)
     {
+        enum BattlerId battler = GetTargetBySlot(gBattlerAttacker, slot);
         if (excludeCurrent && battler == gBattlerTarget)
+        {
             continue;
+        }
         if (gBattleStruct->battlerState[gBattlerAttacker].targetsDone[battler])
+        {
             continue;
+        }
         if (gBattleStruct->moveResultFlags[battler] & MOVE_RESULT_NO_EFFECT)
+        {
             continue;
-        break;
+        }
+        return battler;
     }
-    return battler;
+    return MAX_BATTLERS_COUNT;
 }
 
 void CopyMonLevelAndBaseStatsToBattleMon(enum BattlerId battler, struct Pokemon *mon, bool32 updateSpeedStat)
@@ -10724,6 +10730,9 @@ void RemoveAbilityFlags(enum BattlerId battler)
 
     switch (GetBattlerAbility(battler))
     {
+    case ABILITY_NEUTRALIZING_GAS:
+        gSpecialStatuses[battler].neutralizingGasRemoved = TRUE;
+        break;
     case ABILITY_FLASH_FIRE:
         gBattleMons[battler].volatiles.flashFireBoosted = FALSE;
         break;

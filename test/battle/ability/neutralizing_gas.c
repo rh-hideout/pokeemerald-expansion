@@ -1,6 +1,278 @@
 #include "global.h"
 #include "test/battle.h"
 
+DOUBLE_BATTLE_TEST("Neutralizing Gas fainting as Discharge's ally restores Sheer Force before opposing secondary effects")
+{
+    PASSES_RANDOMLY(100, 100, RNG_SECONDARY_EFFECT);
+    GIVEN {
+        ASSUME(GetMoveTarget(MOVE_DISCHARGE) == TARGET_FOES_AND_ALLY);
+        ASSUME(GetMoveCategory(MOVE_DISCHARGE) == DAMAGE_CATEGORY_SPECIAL);
+        ASSUME(MoveHasAdditionalEffect(MOVE_DISCHARGE, MOVE_EFFECT_PARALYSIS));
+        ASSUME(MoveIsAffectedBySheerForce(MOVE_DISCHARGE));
+        PLAYER(SPECIES_TAUROS) { Ability(ABILITY_SHEER_FORCE); }
+        PLAYER(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_SHADOW_TAG); }
+        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_SHADOW_TAG); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_DISCHARGE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DISCHARGE, playerLeft);
+        HP_BAR(playerRight);
+        NONE_OF {
+            STATUS_ICON(opponentLeft, paralysis: TRUE);
+            STATUS_ICON(opponentRight, paralysis: TRUE);
+        }
+    } THEN {
+        EXPECT_EQ(playerRight->hp, 0);
+        EXPECT(!playerRight->volatiles.neutralizingGas);
+        EXPECT_LT(opponentLeft->hp, opponentLeft->maxHP);
+        EXPECT_LT(opponentRight->hp, opponentRight->maxHP);
+        EXPECT_EQ(opponentLeft->status1, 0);
+        EXPECT_EQ(opponentRight->status1, 0);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Neutralizing Gas fainting as Discharge's foe allows 30% paralysis on the attacker's ally")
+{
+    bool32 gasOnRight;
+    PARAMETRIZE { gasOnRight = FALSE; }
+    PARAMETRIZE { gasOnRight = TRUE; }
+    PASSES_RANDOMLY(30, 100, RNG_SECONDARY_EFFECT);
+    GIVEN {
+        ASSUME(GetMoveTarget(MOVE_DISCHARGE) == TARGET_FOES_AND_ALLY);
+        ASSUME(GetMoveCategory(MOVE_DISCHARGE) == DAMAGE_CATEGORY_SPECIAL);
+        ASSUME(MoveHasAdditionalEffect(MOVE_DISCHARGE, MOVE_EFFECT_PARALYSIS));
+        ASSUME(MoveIsAffectedBySheerForce(MOVE_DISCHARGE));
+        PLAYER(SPECIES_TAUROS) { Ability(ABILITY_SHEER_FORCE); }
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_SHADOW_TAG); }
+        if (gasOnRight)
+        {
+            OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_SHADOW_TAG); }
+            OPPONENT(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); HP(1); }
+        }
+        else
+        {
+            OPPONENT(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); HP(1); }
+            OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_SHADOW_TAG); }
+        }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_DISCHARGE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DISCHARGE, playerLeft);
+        HP_BAR(playerRight);
+        STATUS_ICON(playerRight, paralysis: TRUE);
+    } THEN {
+        EXPECT_EQ((gasOnRight ? opponentRight : opponentLeft)->hp, 0);
+        EXPECT(!(gasOnRight ? opponentRight : opponentLeft)->volatiles.neutralizingGas);
+        EXPECT_EQ(playerRight->status1, STATUS1_PARALYSIS);
+    }
+}
+
+SINGLE_BATTLE_TEST("Neutralizing Gas overwritten by Insomnia reactivates switch-in Abilities before curing sleep")
+{
+    GIVEN {
+        ASSUME(GetMoveOverwriteAbility(MOVE_WORRY_SEED) == ABILITY_INSOMNIA);
+        PLAYER(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); Status1(STATUS1_SLEEP); Speed(50); }
+        OPPONENT(SPECIES_MASQUERAIN) { Ability(ABILITY_INTIMIDATE); Speed(100); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_WORRY_SEED); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_WORRY_SEED, opponent);
+        ABILITY_POPUP(opponent, ABILITY_INTIMIDATE);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        ABILITY_POPUP(player, ABILITY_INSOMNIA);
+        STATUS_ICON(player, sleep: FALSE);
+    } THEN {
+        EXPECT_EQ(player->ability, ABILITY_INSOMNIA);
+        EXPECT_EQ(player->status1, 0);
+        EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE - 1);
+        EXPECT(!player->volatiles.neutralizingGas);
+    }
+}
+
+SINGLE_BATTLE_TEST("Neutralizing Gas reactivates other Abilities before its replacement")
+{
+    enum Move move;
+    PARAMETRIZE { move = MOVE_ENTRAINMENT; }
+    PARAMETRIZE { move = MOVE_ROLE_PLAY; }
+    PARAMETRIZE { move = MOVE_DOODLE; }
+
+    GIVEN {
+        PLAYER(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); Speed(100); }
+        OPPONENT(SPECIES_MASQUERAIN) { Ability(ABILITY_INTIMIDATE); Speed(50); }
+    } WHEN {
+        if (move == MOVE_ENTRAINMENT)
+        {
+            TURN { MOVE(opponent, move); }
+        }
+        else
+        {
+            TURN { MOVE(player, move); }
+        }
+    } SCENE {
+        if (move == MOVE_ENTRAINMENT)
+        {
+            ANIMATION(ANIM_TYPE_MOVE, move, opponent);
+        }
+        else
+        {
+            ANIMATION(ANIM_TYPE_MOVE, move, player);
+        }
+        ABILITY_POPUP(opponent, ABILITY_INTIMIDATE);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        ABILITY_POPUP(player, ABILITY_INTIMIDATE);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+    } THEN {
+        EXPECT_EQ(player->ability, ABILITY_INTIMIDATE);
+        EXPECT(!player->volatiles.neutralizingGas);
+        EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE - 1);
+        EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE - 1);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Neutralizing Gas does not grant the replacement Ability's protection during reactivation")
+{
+    GIVEN {
+        PLAYER(SPECIES_METAGROSS) { Ability(ABILITY_CLEAR_BODY); }
+        PLAYER(SPECIES_GYARADOS) { Ability(ABILITY_INTIMIDATE); }
+        OPPONENT(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); }
+        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_ENTRAINMENT, target: opponentLeft); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ENTRAINMENT, playerLeft);
+        ABILITY_POPUP(playerRight, ABILITY_INTIMIDATE);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
+    } THEN {
+        EXPECT_EQ(opponentLeft->ability, ABILITY_CLEAR_BODY);
+        EXPECT(!opponentLeft->volatiles.neutralizingGas);
+        EXPECT_EQ(opponentLeft->statStages[STAT_ATK], DEFAULT_STAT_STAGE - 1);
+        EXPECT_EQ(opponentRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE - 1);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Neutralizing Gas persists when only one of two holders has its Ability replaced")
+{
+    enum Move move;
+    PARAMETRIZE { move = MOVE_ENTRAINMENT; }
+    PARAMETRIZE { move = MOVE_ROLE_PLAY; }
+
+    GIVEN {
+        PLAYER(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); }
+        PLAYER(SPECIES_KOFFING) { Ability(ABILITY_NEUTRALIZING_GAS); }
+        OPPONENT(SPECIES_MASQUERAIN) { Ability(ABILITY_INTIMIDATE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
+    } WHEN {
+        if (move == MOVE_ENTRAINMENT)
+        {
+            TURN { MOVE(opponentLeft, move, target: playerLeft); }
+        }
+        else
+        {
+            TURN { MOVE(playerLeft, move, target: opponentLeft); }
+        }
+    } SCENE {
+        if (move == MOVE_ENTRAINMENT)
+        {
+            ANIMATION(ANIM_TYPE_MOVE, move, opponentLeft);
+        }
+        else
+        {
+            ANIMATION(ANIM_TYPE_MOVE, move, playerLeft);
+        }
+        NONE_OF {
+            ABILITY_POPUP(playerLeft, ABILITY_INTIMIDATE);
+            ABILITY_POPUP(opponentLeft, ABILITY_INTIMIDATE);
+        }
+    } THEN {
+        EXPECT_EQ(playerLeft->ability, ABILITY_INTIMIDATE);
+        EXPECT(!playerLeft->volatiles.neutralizingGas);
+        EXPECT(playerRight->volatiles.neutralizingGas);
+        EXPECT_EQ(playerLeft->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(opponentLeft->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Neutralizing Gas ends when Doodle replaces both holders' Abilities")
+{
+    GIVEN {
+        PLAYER(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); Speed(100); }
+        PLAYER(SPECIES_KOFFING) { Ability(ABILITY_NEUTRALIZING_GAS); Speed(90); }
+        OPPONENT(SPECIES_MASQUERAIN) { Ability(ABILITY_INTIMIDATE); Speed(80); }
+        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Speed(70); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_DOODLE, target: opponentLeft); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DOODLE, playerLeft);
+        ABILITY_POPUP(playerLeft, ABILITY_INTIMIDATE);
+        ABILITY_POPUP(opponentLeft, ABILITY_INTIMIDATE);
+        ABILITY_POPUP(playerRight, ABILITY_INTIMIDATE);
+    } THEN {
+        EXPECT_EQ(playerLeft->ability, ABILITY_INTIMIDATE);
+        EXPECT_EQ(playerRight->ability, ABILITY_INTIMIDATE);
+        EXPECT(!playerLeft->volatiles.neutralizingGas);
+        EXPECT(!playerRight->volatiles.neutralizingGas);
+        EXPECT_EQ(playerLeft->statStages[STAT_ATK], DEFAULT_STAT_STAGE - 1);
+        EXPECT_EQ(playerRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE - 1);
+        EXPECT_EQ(opponentLeft->statStages[STAT_ATK], DEFAULT_STAT_STAGE - 2);
+        EXPECT_EQ(opponentRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE - 2);
+    }
+}
+
+SINGLE_BATTLE_TEST("Neutralizing Gas releases suppression when overwritten or suppressed")
+{
+    enum Move move;
+    enum Ability ability;
+    PARAMETRIZE { move = MOVE_WORRY_SEED; ability = ABILITY_INSOMNIA; }
+    PARAMETRIZE { move = MOVE_SIMPLE_BEAM; ability = ABILITY_SIMPLE; }
+    PARAMETRIZE { move = MOVE_GASTRO_ACID; ability = ABILITY_NEUTRALIZING_GAS; }
+
+    GIVEN {
+        PLAYER(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); }
+        OPPONENT(SPECIES_GYARADOS) { Ability(ABILITY_INTIMIDATE); }
+    } WHEN {
+        TURN { MOVE(opponent, move); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, move, opponent);
+        ABILITY_POPUP(opponent, ABILITY_INTIMIDATE);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+    } THEN {
+        EXPECT_EQ(player->ability, ability);
+        EXPECT(!player->volatiles.neutralizingGas);
+        EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE - 1);
+        EXPECT(player->volatiles.gastroAcid == (move == MOVE_GASTRO_ACID));
+    }
+}
+
+DOUBLE_BATTLE_TEST("Neutralizing Gas ends when Mummy or Lingering Aroma overwrites the attacker's Ability")
+{
+    enum Species species;
+    enum Ability ability;
+    PARAMETRIZE { species = SPECIES_COFAGRIGUS; ability = ABILITY_MUMMY; }
+    PARAMETRIZE { species = SPECIES_OINKOLOGNE_M; ability = ABILITY_LINGERING_AROMA; }
+
+    GIVEN {
+        ASSUME(MoveMakesContact(MOVE_VINE_WHIP));
+        ASSUME(GetMoveCategory(MOVE_VINE_WHIP) == DAMAGE_CATEGORY_PHYSICAL);
+        PLAYER(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); }
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
+        OPPONENT(species) { Ability(ability); Item(ITEM_ABILITY_SHIELD); }
+        OPPONENT(SPECIES_GYARADOS) { Ability(ABILITY_INTIMIDATE); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_VINE_WHIP, target: opponentLeft); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_VINE_WHIP, playerLeft);
+        HP_BAR(opponentLeft);
+        ABILITY_POPUP(opponentLeft, ability);
+        ABILITY_POPUP(opponentRight, ABILITY_INTIMIDATE);
+    } THEN {
+        EXPECT_EQ(playerLeft->ability, ability);
+        EXPECT(!playerLeft->volatiles.neutralizingGas);
+        EXPECT_EQ(playerLeft->statStages[STAT_ATK], DEFAULT_STAT_STAGE - 1);
+        EXPECT_EQ(playerRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE - 1);
+    }
+}
+
 SINGLE_BATTLE_TEST("Neutralizing Gas activates on switch-in")
 {
     GIVEN {
