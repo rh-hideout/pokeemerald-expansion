@@ -1,17 +1,14 @@
 #ifndef GUARD_CONSTANTS_VARS_FRLG_H
 #define GUARD_CONSTANTS_VARS_FRLG_H
 
-
-
-
 // If nonzero, counts down by one every step.
 // When it hits zero, repel's effect wears off.
-#define VAR_REPEL_STEP_COUNT_FRLG                0x4020
+#define VAR_REPEL_STEP_COUNT                0x4020
 
 // Counts up every step. Wraps around at 128.
 // When wraparound occurs, the friendship of
 // every party poke gets a slight boost.
-#define VAR_HAPPINESS_STEP_COUNTER          0x4021
+#define VAR_FRIENDSHIP_STEP_COUNTER         0x4021
 
 // Counts up every step while a party Pokemon is
 // poisoned. Wraps around at 5. When wraparound
@@ -19,7 +16,7 @@
 // takes 1 point of damage.
 // This is a deviation from the typical rate in
 // the series, which is 1 damage every 4 steps.
-#define VAR_POISON_STEP_COUNTER_FRLG             0x4022
+#define VAR_POISON_STEP_COUNTER             0x4022
 
 // Step counter. Caps at 1500. If you enter a map with
 // renewable hidden items and this counter is capped,
@@ -30,7 +27,7 @@
 // Determines which wild encounter set to use in the
 // Altering Cave. Incremented by Mystery Event.
 // Wraps around at 10.
-#define VAR_ALTERING_CAVE_WILD_SET_FRLG          0x4024
+#define VAR_ALTERING_CAVE_WILD_SET          0x4024
 
 // Step counter set to 500 at game start. When you get
 // a massage from Daisy, it resets to 0. Caps at 500.
@@ -39,39 +36,39 @@
 // Step counter. Wraps around at 100. Used to
 // determine whether the player has reached the
 // triangle in time.
-#define VAR_DEOXYS_INTERACTION_STEP_COUNTER 0x4026
+#define VAR_DEOXYS_ROCK_STEP_COUNT          0x4026
 
 // Bits 0-11 are the number of mons in all boxes
 // with the species sanity bit set.
 // Bits 12-15 are the same for the player's party.
 // Used by Quest Log.
 #define VAR_QUEST_LOG_MON_COUNTS           0x4027
-#define VAR_WONDER_NEWS_STEP_COUNTER_FRLG  0x4028
+#define VAR_WONDER_NEWS_STEP_COUNTER       0x4028
 #define VAR_0x4029                         0x4029
 #define VAR_0x402A                         0x402A
 #define VAR_0x402B                         0x402B
-#define VAR_DAYS_FRLG                      0x402C // was VAR_RESET_RTC_ENABLE
+#define VAR_DAYS                           0x402C
 #define VAR_0x402D                         0x402D
 #define VAR_0x402E                         0x402E
 
 #define VAR_0x402F                         0x402F
 
-#define VAR_ICE_STEP_COUNT_FRLG            0x4030
-#define VAR_STARTER_MON_FRLG               0x4031 // 0: Bulbasaur, 1: Squirtle, 2: Charmander
-#define VAR_RESET_RTC_ENABLE_FRLG          0x4032
-#define VAR_ENIGMA_BERRY_AVAILABLE_FRLG    0x4033
+#define VAR_ICE_STEP_COUNT                 0x4030
+#define VAR_STARTER_MON                    0x4031 // 0: Bulbasaur, 1: Squirtle, 2: Charmander
+#define VAR_RESET_RTC_ENABLE               0x4032
+#define VAR_ENIGMA_BERRY_AVAILABLE         0x4033
 
 #define VAR_0x4034                         0x4034
 #define VAR_RESORT_GOREGEOUS_STEP_COUNTER  0x4035
 #define VAR_RESORT_GORGEOUS_REQUESTED_MON  0x4036
-#define VAR_PC_BOX_TO_SEND_MON_FRLG        0x4037
-#define VAR_FANCLUB_FAN_COUNTER_FRLG       0x4038
-#define VAR_FANCLUB_LOSE_FAN_TIMER_FRLG    0x4039
+#define VAR_PC_BOX_TO_SEND_MON             0x4037
+#define VAR_FANCLUB_FAN_COUNTER            0x4038
+#define VAR_FANCLUB_LOSE_FAN_TIMER         0x4039
 #define VAR_ELEVATOR_FLOOR                 0x403A
 #define VAR_RESORT_GORGEOUS_REWARD         0x403B
 #define VAR_0x403C                         0x403C // Set to 0x0302, never read
 #define VAR_HERACROSS_SIZE_RECORD          0x403D
-#define VAR_DEOXYS_INTERACTION_NUM         0x403E
+#define VAR_DEOXYS_ROCK_LEVEL              0x403E
 #define VAR_0x403F                         0x403F
 #define VAR_MAGIKARP_SIZE_RECORD           0x4040
 #define VAR_0x4041                         0x4041
@@ -87,7 +84,7 @@
 #define VAR_LINK_WIN_BRAG_STATE            0x404B
 #define VAR_POKELOT_RND2                   0x404C
 #define VAR_QL_ENTRANCE                    0x404D
-#define VAR_NATIONAL_DEX_FRLG              0x404E
+#define VAR_NATIONAL_DEX                   0x404E
 #define VAR_LOTAD_SIZE_RECORD              0x404F
 
 // Map Scene
@@ -192,15 +189,15 @@
 #define VAR_0x40B1                 0x40B1
 #define VAR_0x40B2                 0x40B2
 #define VAR_0x40B3                 0x40B3
-#define VAR_PORTHOLE               0x40B4
-#define VAR_EVENT_PICHU_SLOT       0x40B5
-#define VAR_MYSTERY_GIFT_1         0x40B6
-#define VAR_MYSTERY_GIFT_2         0x40B7
-#define VAR_MYSTERY_GIFT_3         0x40B8
-#define VAR_MYSTERY_GIFT_4         0x40B9
-#define VAR_MYSTERY_GIFT_5         0x40BA
-#define VAR_MYSTERY_GIFT_6         0x40BB
-#define VAR_MYSTERY_GIFT_7         0x40BC
+#define VAR_SS_TIDAL_STATE         0x40B4
+#define VAR_GIFT_PICHU_SLOT        0x40B5
+#define VAR_GIFT_UNUSED_1          0x40B6
+#define VAR_GIFT_UNUSED_2          0x40B7
+#define VAR_GIFT_UNUSED_3          0x40B8
+#define VAR_GIFT_UNUSED_4          0x40B9
+#define VAR_GIFT_UNUSED_5          0x40BA
+#define VAR_GIFT_UNUSED_6          0x40BB
+#define VAR_GIFT_UNUSED_7          0x40BC
 #define VAR_0x40BD                 0x40BD
 #define VAR_0x40BE                 0x40BE
 #define VAR_0x40BF                 0x40BF
@@ -269,40 +266,144 @@
 #define VAR_0x40FE                 0x40FE
 #define VAR_0x40FF                 0x40FF
 
-#define VARS_END_FRLG              0x40FF
-#define VARS_COUNT_FRLG            (VARS_END_FRLG - VARS_START_FRLG + 1)
+#define VARS_END                   0x40FF
+#define VARS_COUNT                 (VARS_END - VARS_START + 1)
 
-#define SPECIAL_VARS_START         0x8000
+// Emerald vars
+#define VAR_MIRAGE_RND_H                                 0
+#define VAR_MIRAGE_RND_L                                 0
+#define VAR_SECRET_BASE_MAP                              0
+#define VAR_CYCLING_ROAD_RECORD_COLLISIONS               0
+#define VAR_CYCLING_ROAD_RECORD_TIME_L                   0
+#define VAR_CYCLING_ROAD_RECORD_TIME_H                   0
 
-#define VAR_0x8000                 0x8000
-#define VAR_0x8001                 0x8001
-#define VAR_0x8002                 0x8002
-#define VAR_0x8003                 0x8003
-#define VAR_0x8004                 0x8004
-#define VAR_0x8005                 0x8005
-#define VAR_0x8006                 0x8006
-#define VAR_0x8007                 0x8007
-#define VAR_0x8008                 0x8008
-#define VAR_0x8009                 0x8009
-#define VAR_0x800A                 0x800A
-#define VAR_0x800B                 0x800B
-#define VAR_FACING                 0x800C
-#define VAR_RESULT                 0x800D
-#define VAR_ITEM_ID                0x800E
-#define VAR_LAST_TALKED            0x800F
-#define VAR_MON_BOX_ID_FRLG        0x8010
-#define VAR_MON_BOX_POS_FRLG       0x8011
-#define VAR_TEXT_COLOR             0x8012
-#define VAR_PREV_TEXT_COLOR        0x8013
-#define VAR_0x8014                 0x8014 // Unknown/unused
+#define VAR_FRONTIER_MANIAC_FACILITY                     0
+#define VAR_FRONTIER_GAMBLER_CHALLENGE                   0
+#define VAR_FRONTIER_GAMBLER_SET_CHALLENGE               0
+#define VAR_FRONTIER_GAMBLER_AMOUNT_BET                  0
+#define VAR_FRONTIER_GAMBLER_STATE                       0
 
-#define SPECIAL_VARS_END_FRLG      0x8014
-
-// Text color ids for VAR_TEXT_COLOR / VAR_PREV_TEXT_COLOR
-#define NPC_TEXT_COLOR_MALE      0 // Blue, for male NPCs
-#define NPC_TEXT_COLOR_FEMALE    1 // Red, for female NPCs
-#define NPC_TEXT_COLOR_MON       2 // Black, for Pokémon
-#define NPC_TEXT_COLOR_NEUTRAL   3 // Black, for inanimate objects and messages from the game
-#define NPC_TEXT_COLOR_DEFAULT 255 // If an NPC is selected, use the color specified by GetColorFromTextColorTable, otherwise use Neutral.
+#define VAR_ABNORMAL_WEATHER_LOCATION                    0
+#define VAR_ABNORMAL_WEATHER_STEP_COUNTER                0
+#define VAR_SHOULD_END_ABNORMAL_WEATHER                  0
+#define VAR_FARAWAY_ISLAND_STEP_COUNTER                  0
+#define VAR_REGICE_STEPS_1                               0
+#define VAR_REGICE_STEPS_2                               0
+#define VAR_REGICE_STEPS_3                               0
+#define VAR_DISTRIBUTE_EON_TICKET                        0 // This var is read and written, but is always zero. The only way to obtain the Eon Ticket in Emerald is via Record Mixing
+#define VAR_DEPT_STORE_FLOOR                             0
+#define VAR_TRICK_HOUSE_LEVEL                            0
+#define VAR_POKELOT_PRIZE_ITEM                           0
+#define VAR_SEEDOT_SIZE_RECORD                           0
+#define VAR_ASH_GATHER_COUNT                             0
+#define VAR_BIRCH_STATE                                  0
+#define VAR_CRUISE_STEP_COUNT                            0
+#define VAR_POKELOT_RND1                                 0
+#define VAR_POKELOT_PRIZE_PLACE                          0
+#define VAR_LITTLEROOT_TOWN_STATE                        0
+#define VAR_OLDALE_TOWN_STATE                            0
+#define VAR_LAVARIDGE_TOWN_STATE                         0
+#define VAR_CURRENT_SECRET_BASE                          0 // was probably allocated for VAR_FALLARBOR_TOWN_STATE at one point
+#define VAR_PETALBURG_CITY_STATE                         0
+#define VAR_SLATEPORT_CITY_STATE                         0
+#define VAR_RUSTBORO_CITY_STATE                          0
+#define VAR_MOSSDEEP_CITY_STATE                          0
+#define VAR_SOOTOPOLIS_CITY_STATE                        0
+#define VAR_ROUTE101_STATE                               0
+#define VAR_ROUTE104_STATE                               0
+#define VAR_ROUTE110_STATE                               0
+#define VAR_ROUTE116_STATE                               0
+#define VAR_ROUTE118_STATE                               0
+#define VAR_ROUTE119_STATE                               0
+#define VAR_ROUTE121_STATE                               0
+#define VAR_ROUTE128_STATE                               0
+#define VAR_LITTLEROOT_HOUSES_STATE_MAY                  0
+#define VAR_BIRCH_LAB_STATE                              0
+#define VAR_PETALBURG_GYM_STATE                          0 // 0-1: Wally tutorial, 2-6: 0-4 badges, 7: Defeated Norman, 8: Rematch Norman
+#define VAR_CONTEST_HALL_STATE                           0
+#define VAR_CABLE_CLUB_STATE                             0
+#define VAR_CONTEST_TYPE                                 0
+#define VAR_SECRET_BASE_INITIALIZED                      0
+#define VAR_CONTEST_PRIZE_PICKUP                         0
+#define VAR_LITTLEROOT_HOUSES_STATE_BRENDAN              0
+#define VAR_LITTLEROOT_RIVAL_STATE                       0
+#define VAR_BOARD_BRINEY_BOAT_STATE                      0
+#define VAR_DEVON_CORP_3F_STATE                          0
+#define VAR_BRINEY_HOUSE_STATE                           0
+#define VAR_LITTLEROOT_INTRO_STATE                       0
+#define VAR_MAUVILLE_GYM_STATE                           0
+#define VAR_LILYCOVE_MUSEUM_2F_STATE                     0
+#define VAR_LILYCOVE_FAN_CLUB_STATE                      0
+#define VAR_BRINEY_LOCATION                              0
+#define VAR_INIT_SECRET_BASE                             0
+#define VAR_PETALBURG_WOODS_STATE                        0
+#define VAR_LILYCOVE_CONTEST_LOBBY_STATE                 0
+#define VAR_RUSTURF_TUNNEL_STATE                         0
+#define VAR_ELITE_4_STATE                                0
+#define VAR_MOSSDEEP_SPACE_CENTER_STAIR_GUARD_STATE      0
+#define VAR_MOSSDEEP_SPACE_CENTER_STATE                  0
+#define VAR_SLATEPORT_HARBOR_STATE                       0
+#define VAR_SEAFLOOR_CAVERN_STATE                        0
+#define VAR_CABLE_CAR_STATION_STATE                      0
+#define VAR_SAFARI_ZONE_STATE                            0  // 0: In or out of SZ, 1: Player exiting SZ, 2: Player entering SZ
+#define VAR_TRICK_HOUSE_BEING_WATCHED_STATE              0
+#define VAR_TRICK_HOUSE_FOUND_TRICK_MASTER               0
+#define VAR_TRICK_HOUSE_ENTRANCE_STATE                   0
+#define VAR_CYCLING_CHALLENGE_STATE                      0
+#define VAR_SLATEPORT_MUSEUM_1F_STATE                    0
+#define VAR_TRICK_HOUSE_PUZZLE_1_STATE                   0
+#define VAR_TRICK_HOUSE_PUZZLE_2_STATE                   0
+#define VAR_TRICK_HOUSE_PUZZLE_3_STATE                   0
+#define VAR_TRICK_HOUSE_PUZZLE_4_STATE                   0
+#define VAR_TRICK_HOUSE_PUZZLE_5_STATE                   0
+#define VAR_TRICK_HOUSE_PUZZLE_6_STATE                   0
+#define VAR_TRICK_HOUSE_PUZZLE_7_STATE                   0
+#define VAR_TRICK_HOUSE_PUZZLE_8_STATE                   0
+#define VAR_WEATHER_INSTITUTE_STATE                      0
+#define VAR_TRICK_HOUSE_ENTER_FROM_CORRIDOR              0
+#define VAR_TRICK_HOUSE_PUZZLE_7_STATE_2                 0 // Leftover from RS, never set
+#define VAR_SLATEPORT_FAN_CLUB_STATE                     0
+#define VAR_MT_PYRE_STATE                                0
+#define VAR_NEW_MAUVILLE_STATE                           0
+#define VAR_BRAVO_TRAINER_BATTLE_TOWER_ON                0
+#define VAR_JAGGED_PASS_ASH_WEATHER                      0
+#define VAR_GLASS_WORKSHOP_STATE                         0
+#define VAR_METEOR_FALLS_STATE                           0
+#define VAR_SOOTOPOLIS_MYSTERY_EVENTS_STATE              0
+#define VAR_TRICK_HOUSE_PRIZE_PICKUP                     0
+#define VAR_PACIFIDLOG_TM_RECEIVED_DAY                   0
+#define VAR_VICTORY_ROAD_1F_STATE                        0
+#define VAR_FOSSIL_RESURRECTION_STATE                    0
+#define VAR_WHICH_FOSSIL_REVIVED                         0
+#define VAR_STEVENS_HOUSE_STATE                          0
+#define VAR_OLDALE_RIVAL_STATE                           0
+#define VAR_JAGGED_PASS_STATE                            0
+#define VAR_SCOTT_PETALBURG_ENCOUNTER                    0
+#define VAR_SKY_PILLAR_STATE                             0
+#define VAR_MIRAGE_TOWER_STATE                           0
+#define VAR_FOSSIL_MANIAC_STATE                          0
+#define VAR_CABLE_CLUB_TUTORIAL_STATE                    0
+#define VAR_FRONTIER_BATTLE_MODE                         0
+#define VAR_HAS_ENTERED_BATTLE_FRONTIER                  0 // Var is used like a flag.
+#define VAR_SCOTT_STATE                                  0
+#define VAR_SLATEPORT_OUTSIDE_MUSEUM_STATE               0
+#define VAR_DEX_UPGRADE_JOHTO_STARTER_STATE              0
+#define VAR_SS_TIDAL_SCOTT_STATE                         0 // Always equal to FLAG_MET_SCOTT_ON_SS_TIDAL
+#define VAR_ROAMER_POKEMON                               0 // 0 = Latias, 1 = Latios
+#define VAR_TRAINER_HILL_IS_ACTIVE                       0
+#define VAR_SKY_PILLAR_RAYQUAZA_CRY_DONE                 0
+#define VAR_SOOTOPOLIS_WALLACE_STATE                     0
+#define VAR_HAS_TALKED_TO_SEAFLOOR_CAVERN_ENTRANCE_GRUNT 0
+#define VAR_REGISTER_BIRCH_STATE                         0
+#define VAR_SECRET_BASE_STEP_COUNTER                     0 // Used by Secret Base TV programs
+#define VAR_SECRET_BASE_LAST_ITEM_USED                   0 // Used by Secret Base TV programs
+#define VAR_SECRET_BASE_LOW_TV_FLAGS                     0 // Used by Secret Base TV programs
+#define VAR_SECRET_BASE_HIGH_TV_FLAGS                    0 // Used by Secret Base TV programs
+#define VAR_SECRET_BASE_IS_NOT_LOCAL                     0 // Set to TRUE while in another player's secret base.
+#define VAR_WALLY_CALL_STEP_COUNTER                      0
+#define VAR_SCOTT_FORTREE_CALL_STEP_COUNTER              0
+#define VAR_ROXANNE_CALL_STEP_COUNTER                    0
+#define VAR_SCOTT_BF_CALL_STEP_COUNTER                   0
+#define VAR_RIVAL_RAYQUAZA_CALL_STEP_COUNTER             0
 
 #endif // GUARD_CONSTANTS_VARS_FRLG_H
