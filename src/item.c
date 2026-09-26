@@ -16,6 +16,8 @@
 #include "battle_pyramid_bag.h"
 #include "graphics.h"
 #include "shop_criteria.h"
+#include "mf_items.h"
+#include "mf_rules.h"
 #include "constants/battle.h"
 #include "constants/items.h"
 #include "constants/moves.h"
@@ -840,6 +842,8 @@ const u8 *GetItemEffect(enum Item itemId)
     #else
         return NULL;
     #endif //FREE_ENIGMA_BERRY
+    else if (itemId == ITEM_SITRUS_BERRY && !MfRules_HasModernSitrus())
+        return MfGetClassicSitrusItemEffect();
     else
         return gItemsInfo[SanitizeItemId(itemId)].effect;
 }
@@ -852,23 +856,35 @@ enum HoldEffect GetItemHoldEffect(enum Item itemId)
     #else
         return HOLD_EFFECT_NONE;
     #endif //FREE_ENIGMA_BERRY
+    else if (itemId == ITEM_SITRUS_BERRY && !MfRules_HasModernSitrus())
+        return HOLD_EFFECT_RESTORE_HP;
     else
         return gItemsInfo[SanitizeItemId(itemId)].holdEffect;
 }
 
 u32 GetItemHoldEffectParam(enum Item itemId)
 {
+    if (itemId == ITEM_SITRUS_BERRY && !MfRules_HasModernSitrus())
+        return 30;
     return gItemsInfo[SanitizeItemId(itemId)].holdEffectParam;
 }
 
 const u8 *GetItemDescription(enum Item itemId)
 {
+    if (itemId == ITEM_SITRUS_BERRY && !MfRules_HasModernSitrus())
+        return MfGetClassicSitrusDescription();
     return gItemsInfo[SanitizeItemId(itemId)].description;
 }
 
 u8 GetItemImportance(enum Item itemId)
 {
-    return gItemsInfo[SanitizeItemId(itemId)].importance;
+    enum Item sanitized = SanitizeItemId(itemId);
+    u8 importance = gItemsInfo[sanitized].importance;
+
+    // Keep I_REUSABLE_TMS data always-on; Classic/Custom can still consume TMs.
+    if (importance != 0 && MfIsTmItem(sanitized) && !MfRules_HasInfiniteTms())
+        return 0;
+    return importance;
 }
 
 u8 GetItemConsumability(enum Item itemId)
@@ -974,10 +990,15 @@ ShopCriteriaFunc GetItemShopCriteriaFunc(enum Item itemId)
 
 bool32 IsItemShopCriteriaFulfilled(enum Item itemId)
 {
-    ShopCriteriaFunc func = GetItemShopCriteriaFunc(itemId);
+    ShopCriteriaFunc func;
 
+    itemId = SanitizeItemId(itemId);
+    if (MfIsNatureMintItem(itemId))
+        return MfAreNatureMintsBuyable();
+
+    func = GetItemShopCriteriaFunc(itemId);
     if (!func)
         return TRUE;
 
-    return func(SanitizeItemId(itemId));
+    return func(itemId);
 }

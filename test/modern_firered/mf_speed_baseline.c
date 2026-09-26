@@ -26,8 +26,10 @@ TEST("MF: speed text configs — Options menu remains authoritative")
     EXPECT_EQ(TEXT_SPEED_FAST_MODIFIER, 1);
 }
 
-TEST("MF: speed overworld — indoor run Gen4+, poison Gen5+ no damage")
+TEST("MF: speed overworld — indoor run Gen4+, poison compile baseline Gen5+")
 {
+    // OW_POISON_DAMAGE stays GEN_LATEST; S31 SURVIVE POISON runtime-gates
+    // Gen3 faint vs Gen4 survive-at-1HP (see ADR 0031).
     EXPECT(OW_RUNNING_INDOORS != GEN_3);
     EXPECT(OW_POISON_DAMAGE >= GEN_5);
 }

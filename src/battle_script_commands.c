@@ -17,6 +17,7 @@
 #include "item_menu.h"
 #include "util.h"
 #include "pokemon.h"
+#include "mf_rules.h"
 #include "random.h"
 #include "battle_controllers.h"
 #include "battle_interface.h"
@@ -8829,7 +8830,7 @@ static void Cmd_trysynchronize(void)
         synchStatus = GetMoveEffectFromStatus(gBattlerAbility);
         RecordAbilityBattle(gBattlerAbility, ABILITY_SYNCHRONIZE);
 
-        if (GetConfig(B_SYNCHRONIZE_TOXIC) < GEN_5 && synchStatus == MOVE_EFFECT_TOXIC)
+        if ((!MfRules_HasSynchronize() || GetConfig(B_SYNCHRONIZE_TOXIC) < GEN_5) && synchStatus == MOVE_EFFECT_TOXIC)
             synchStatus = MOVE_EFFECT_POISON;
 
         gBattleScripting.battler = gBattlerAbility;

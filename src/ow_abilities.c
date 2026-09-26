@@ -1,5 +1,6 @@
 #include "global.h"
 #include "ow_abilities.h"
+#include "mf_rules.h"
 #include "pokemon.h"
 #include "random.h"
 #include "constants/pokemon.h"
@@ -8,48 +9,30 @@ const static enum Ability sForceNatureAbilities[] = {ABILITY_SYNCHRONIZE, ABILIT
 const static enum Ability sForceOppositeGenderAbilities[] = {ABILITY_CUTE_CHARM, ABILITY_NONE};
 const static enum Ability sIncreaseHatchingSpeedAbilities[] = {ABILITY_MAGMA_ARMOR, ABILITY_FLAME_BODY, ABILITY_STEAM_ENGINE, ABILITY_NONE};
 
-static UNUSED bool32 HasHalfChance(enum Species species);
-static UNUSED bool32 HasTwoThirdsChance(enum Species species);
-static UNUSED bool32 IsFalse(enum Species species);
-static UNUSED bool32 IsTrue(enum Species species);
-static UNUSED bool32 IsTrueIfUndiscoveredEggGroup(enum Species species);
+static bool32 HasHalfChance(enum Species species);
+static bool32 HasTwoThirdsChance(enum Species species);
+static bool32 IsFalse(enum Species species);
+static bool32 IsTrue(enum Species species);
 
-static const bool32 (*const sSynchronizeModes[])(enum Species) = 
+// Gen III Synchronize: 50% on wild encounters only.
+static const bool32 (*const sSynchronizeModesClassic[])(enum Species) =
 {
-#if OW_SYNCHRONIZE_NATURE == GEN_3
     [WILDMON_ORIGIN] = HasHalfChance,
     [STATIC_WILDMON_ORIGIN] = IsFalse,
     [ROAMER_ORIGIN] = IsFalse,
     [GIFTMON_ORIGIN] = IsFalse,
-#elif OW_SYNCHRONIZE_NATURE <= GEN_5
-    [WILDMON_ORIGIN] = HasHalfChance,
-    [STATIC_WILDMON_ORIGIN] = HasHalfChance,
-    [ROAMER_ORIGIN] = IsFalse,
-    [GIFTMON_ORIGIN] = IsFalse,
-#elif OW_SYNCHRONIZE_NATURE == GEN_6
-    [WILDMON_ORIGIN] = HasHalfChance,
-    [STATIC_WILDMON_ORIGIN] = HasHalfChance,
-    [ROAMER_ORIGIN] = IsFalse,
-    [GIFTMON_ORIGIN] = IsTrueIfUndiscoveredEggGroup,
-#elif OW_SYNCHRONIZE_NATURE == GEN_7
-    [WILDMON_ORIGIN] = HasHalfChance,
-    [STATIC_WILDMON_ORIGIN] = HasHalfChance,
-    [ROAMER_ORIGIN] = IsFalse,
-    [GIFTMON_ORIGIN] = IsTrue,
-#elif OW_SYNCHRONIZE_NATURE == GEN_8
+};
+
+// Gen VIII+ Synchronize: always on wild + roamers (compile baseline OW_SYNCHRONIZE_NATURE).
+static const bool32 (*const sSynchronizeModesModern[])(enum Species) =
+{
     [WILDMON_ORIGIN] = IsTrue,
     [STATIC_WILDMON_ORIGIN] = IsFalse,
     [ROAMER_ORIGIN] = IsTrue,
     [GIFTMON_ORIGIN] = IsFalse,
-#else
-    [WILDMON_ORIGIN] = IsFalse,
-    [STATIC_WILDMON_ORIGIN] = IsFalse,
-    [ROAMER_ORIGIN] = IsFalse,
-    [GIFTMON_ORIGIN] = IsFalse,
-#endif
 };
 
-static const bool32 (*const sCuteCharmModes[])(enum Species) = 
+static const bool32 (*const sCuteCharmModes[])(enum Species) =
 {
     [WILDMON_ORIGIN] = HasTwoThirdsChance,
     [STATIC_WILDMON_ORIGIN] = HasTwoThirdsChance,
@@ -57,29 +40,28 @@ static const bool32 (*const sCuteCharmModes[])(enum Species) =
     [GIFTMON_ORIGIN] = IsFalse,
 };
 
-static UNUSED bool32 HasHalfChance(enum Species species)
+static bool32 HasHalfChance(enum Species species)
 {
+    (void)species;
     return Random() % 2;
 }
 
-static UNUSED bool32 HasTwoThirdsChance(enum Species species)
+static bool32 HasTwoThirdsChance(enum Species species)
 {
+    (void)species;
     return Random() % 3;
 }
 
-static UNUSED bool32 IsFalse(enum Species species)
+static bool32 IsFalse(enum Species species)
 {
+    (void)species;
     return FALSE;
 }
 
-static UNUSED bool32 IsTrue(enum Species species)
+static bool32 IsTrue(enum Species species)
 {
+    (void)species;
     return TRUE;
-}
-
-static UNUSED bool32 IsTrueIfUndiscoveredEggGroup(enum Species species)
-{
-    return (gSpeciesInfo[species].eggGroups[0] == EGG_GROUP_NO_EGGS_DISCOVERED);
 }
 
 bool32 DoesLeadingMonHaveAbilityEffect(const enum Ability *abilityArray)
@@ -113,9 +95,13 @@ bool32 DoesPartyMemberHaveAbilityEffect(const enum Ability *abilityArray)
 
 u32 GetSynchronizedNature(enum GeneratedMonOrigin origin, enum Species species)
 {
+    const bool32 (*const *modes)(enum Species) = MfRules_HasSynchronize()
+        ? sSynchronizeModesModern
+        : sSynchronizeModesClassic;
+
     if (!DoesLeadingMonHaveAbilityEffect(sForceNatureAbilities))
         return NATURE_RANDOM;
-    if (!(sSynchronizeModes[origin](species)))
+    if (!(modes[origin](species)))
         return NATURE_RANDOM;
     return GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_PERSONALITY) % NUM_NATURES;
 }

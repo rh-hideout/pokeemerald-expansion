@@ -17,6 +17,7 @@
 #include "party_menu.h"
 #include "pokemon.h"
 #include "mf_types.h"
+#include "mf_rules.h"
 #include "international_string_util.h"
 #include "item.h"
 #include "util.h"
@@ -8101,7 +8102,7 @@ s32 GetAdjustedDamage(struct DamageContext *ctx, s32 damage)
     {
         enduredHit = TRUE;
     }
-    else if (GetConfig(B_STURDY) >= GEN_5 && ctx->abilities[ctx->battlerDef] == ABILITY_STURDY && IsBattlerAtMaxHp(ctx->battlerDef))
+    else if (MfRules_HasSturdy() && GetConfig(B_STURDY) >= GEN_5 && ctx->abilities[ctx->battlerDef] == ABILITY_STURDY && IsBattlerAtMaxHp(ctx->battlerDef))
     {
         enduredHit = TRUE;
         RecordAbilityBattle(ctx->battlerDef, ABILITY_STURDY);

@@ -14,13 +14,15 @@ const struct ModernRules gMfRulesPhase1Defaults = {
 
     .infiniteTms = TRUE,
     .survivePoison = TRUE,
-    .synchronize = FALSE,
+    // Match GEN_LATEST compile baselines (S07/S11) so null / engine-off keeps
+    // Gen8 Synchronize and Gen5+ Sturdy until a save picks Classic.
+    .synchronize = TRUE,
     .mints = FALSE,
     .modernSitrus = TRUE,
     .modernTypes = TRUE,
     .fairyTypes = TRUE,
     .modernStats = TRUE,
-    .sturdy = FALSE,
+    .sturdy = TRUE,
     .modernMoves = TRUE,
     .legendaryAbilities = FALSE,
     .newLegendaries = FALSE,

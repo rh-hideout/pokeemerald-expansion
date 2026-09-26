@@ -482,7 +482,7 @@ These exist to keep merging from `RHH/master` cheap. Violating them is the main 
 
 ### S31 — Runtime item & ability behavior toggles
 
-- [ ] **Status:** Not started
+- [x] **Status:** Complete
 
 - **Goal:** The small Gamemode switches all work at runtime.
 - **Depends on:** S13, S10, S11

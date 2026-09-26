@@ -8,6 +8,7 @@
 #include "field_poison.h"
 #include "fldeff_misc.h"
 #include "frontier_util.h"
+#include "mf_rules.h"
 #include "party_menu.h"
 #include "pokenav.h"
 #include "script.h"
@@ -46,7 +47,7 @@ static void FaintFromFieldPoison(u8 partyIdx)
     struct Pokemon *pokemon = &gParties[B_TRAINER_PLAYER][partyIdx];
     u32 status = STATUS1_NONE;
 
-    if (OW_POISON_DAMAGE < GEN_4)
+    if (!MfRules_HasSurvivePoison())
         AdjustFriendship(pokemon, FRIENDSHIP_EVENT_FAINT_FIELD_PSN);
 
     SetMonData(pokemon, MON_DATA_STATUS, &status);
@@ -57,7 +58,11 @@ static void FaintFromFieldPoison(u8 partyIdx)
 static bool32 MonFaintedFromPoison(u8 partyIdx)
 {
     struct Pokemon *pokemon = &gParties[B_TRAINER_PLAYER][partyIdx];
-    if (IsMonValidSpecies(pokemon) && GetMonData(pokemon, MON_DATA_HP) == ((OW_POISON_DAMAGE < GEN_4) ? 0 : 1) && GetAilmentFromStatus(GetMonData(pokemon, MON_DATA_STATUS)) == AILMENT_PSN)
+    u32 thresholdHp = MfRules_HasSurvivePoison() ? 1 : 0;
+
+    if (IsMonValidSpecies(pokemon)
+     && GetMonData(pokemon, MON_DATA_HP) == thresholdHp
+     && GetAilmentFromStatus(GetMonData(pokemon, MON_DATA_STATUS)) == AILMENT_PSN)
         return TRUE;
 
     return FALSE;
@@ -77,7 +82,9 @@ static void Task_TryFieldPoisonWhiteOut(u8 taskId)
             if (MonFaintedFromPoison(tPartyIdx))
             {
                 FaintFromFieldPoison(tPartyIdx);
-                ShowFieldMessage(gText_PkmnFainted_FldPsn);
+                ShowFieldMessage(MfRules_HasSurvivePoison()
+                    ? gText_PkmnSurvived_FldPsn
+                    : gText_PkmnFainted_FldPsn);
                 tState++;
                 return;
             }
@@ -85,7 +92,7 @@ static void Task_TryFieldPoisonWhiteOut(u8 taskId)
         tState = 2; // Finished checking party
         break;
     case 1:
-        // Wait for "{mon} fainted" message, then return to party loop
+        // Wait for "{mon} fainted/survived" message, then return to party loop
         if (IsFieldMessageBoxHidden())
             tState--;
         break;
@@ -129,6 +136,7 @@ s32 DoPoisonFieldEffect(void)
     struct Pokemon *pokemon = gParties[B_TRAINER_PLAYER];
     u32 numPoisoned = 0;
     u32 numFainted = 0;
+    bool8 survive = MfRules_HasSurvivePoison();
 
     for (i = 0; i < PARTY_SIZE; i++)
     {
@@ -136,13 +144,15 @@ s32 DoPoisonFieldEffect(void)
         {
             // Apply poison damage
             hp = GetMonData(pokemon, MON_DATA_HP);
-            if (OW_POISON_DAMAGE < GEN_4 && (hp == 0 || --hp == 0))
+            if (!survive && (hp == 0 || --hp == 0))
             {
                 TryFormChange(&gParties[B_TRAINER_PLAYER][i], FORM_CHANGE_FAINT, B_TRAINER_PLAYER);
                 numFainted++;
             }
-            else if (OW_POISON_DAMAGE >= GEN_4 && (hp == 1 || --hp == 1))
+            else if (survive && (hp == 1 || --hp == 1))
+            {
                 numFainted++;
+            }
 
             SetMonData(pokemon, MON_DATA_HP, &hp);
             numPoisoned++;

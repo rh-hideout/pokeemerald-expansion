@@ -38,8 +38,8 @@ Non-release builds can call `MfRules_DebugSetUnlockOverride(TRUE)` (debug menu *
 
 Those defaults equal **vanilla Kanto progression + Phase 1 always-on modernization**:
 
-- On: reusable TMs, survive poison, Gen4+ Sitrus, modern types / Fairy / stats / moves / type chart
-- Off: randomizer, Nuzlocke, difficulty, challenges (`monotype == 31`)
+- On: reusable TMs, survive poison, Gen4+ Sitrus, modern types / Fairy / stats / moves / type chart, Gen8 Synchronize, Gen5+ Sturdy
+- Off: mints shop (until postgame), randomizer, Nuzlocke, difficulty, challenges (`monotype == 31`)
 
 A **valid** empty save (`version == MF_RULES_VERSION`, fields zeroed by `MfRules_ResetToEmpty`) is **not** null — accessors return Classic-like zeros. New games call `MfRules_InitNewGame()` (S14 / ADR 0014), which applies `MF_TX_*` defaults then the `MF_DEFAULT_GAMEMODE_PRESET` (default Modern), then `MfRules_CommitAndLock()` (S15 skip-menu; S19+S26 will defer lock to menu SAVE).
 
@@ -83,6 +83,21 @@ When the engine is off, `MfRules_HasInfiniteTms()` is TRUE (Phase 1). When the p
 ### Worked example: modern movepools (S30)
 
 `P_LVL_UP_LEARNSETS` stays `GEN_LATEST` in `gSpeciesInfo` (plus modern teachable/egg tables). `GetSpeciesLevelUpLearnset` / `GetSpeciesTeachableLearnset` / `GetSpeciesEggMoves` call `MfGetSpecies*`, which return those pointers when `MfRules_HasModernMoves()`. When off, FRLG classic tables (from `frlg.json`, binary-searched) supply level-up, TM/HM+tutor, and egg lists. Relearner, dex+, daycare, and `CanLearnTeachableMove` all go through the getters (ADR 0030).
+
+### Worked example: item & ability toggles (S31)
+
+Keep the Phase 1 compile baselines (`I_REUSABLE_TMS`, `I_SITRUS_BERRY_HEAL`, `B_STURDY`, `OW_SYNCHRONIZE_NATURE`, `B_SYNCHRONIZE_TOXIC`, `OW_POISON_DAMAGE`) and gate **behavior** with typed helpers:
+
+| Rule | Helper | Hook |
+| ---- | ------ | ---- |
+| REUSABLE TMS | `MfRules_HasInfiniteTms()` | `GetItemImportance` clears TM importance when off (HMs stay key) |
+| SITRUS BERRY | `MfRules_HasModernSitrus()` | `GetItemHoldEffect` / Param / Effect / Description |
+| STURDY | `MfRules_HasSturdy()` | Gen5+ endure path in `battle_util` (+ AI mirrors) |
+| SYNCHRONIZE | `MfRules_HasSynchronize()` | `GetSynchronizedNature` Gen3↔Gen8 tables; toxic→poison when off |
+| SURVIVE POISON | `MfRules_HasSurvivePoison()` | `field_poison.c` Gen3 faint vs Gen4 1 HP (poison steps always compiled) |
+| NATURE MINTS | `MfRules_HasMints()` via `MfAreNatureMintsBuyable()` | Celadon 2F mart list + `IsItemShopCriteriaFulfilled` |
+
+See ADR 0031.
 
 ### Rules for gates
 

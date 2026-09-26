@@ -468,11 +468,14 @@ static void CB2_MoveRelearnerMain(void)
 
 static bool32 ShouldConsumeTmItem(enum Move move)
 {
+    enum Item item;
+
     if (gMoveRelearnerState != MOVE_RELEARNER_TM_MOVES || gRelearnMode == RELEARN_MODE_SCRIPT)
         return FALSE;
-    if (I_REUSABLE_TMS || P_ENABLE_ALL_TM_MOVES)
+    if (P_ENABLE_ALL_TM_MOVES)
         return FALSE;
-    return TRUE;
+    item = GetTMHMItemIdFromMoveId(move);
+    return GetItemImportance(item) == 0;
 }
 
 static void FreeMoveRelearnerResources(void)

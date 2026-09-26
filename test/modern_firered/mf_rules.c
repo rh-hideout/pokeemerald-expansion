@@ -145,6 +145,8 @@ TEST("MF: rules Phase 1 null defaults match vanilla-plus-Phase-1")
     EXPECT_EQ((u32)gMfRulesPhase1Defaults.gamemodePreset, (u32)MF_GAMEMODE_MODERN);
     EXPECT_EQ((u32)gMfRulesPhase1Defaults.infiniteTms, (u32)TRUE);
     EXPECT_EQ((u32)gMfRulesPhase1Defaults.survivePoison, (u32)TRUE);
+    EXPECT_EQ((u32)gMfRulesPhase1Defaults.synchronize, (u32)TRUE);
+    EXPECT_EQ((u32)gMfRulesPhase1Defaults.sturdy, (u32)TRUE);
     EXPECT_EQ((u32)gMfRulesPhase1Defaults.modernSitrus, (u32)TRUE);
     EXPECT_EQ((u32)gMfRulesPhase1Defaults.modernTypes, (u32)TRUE);
     EXPECT_EQ((u32)gMfRulesPhase1Defaults.fairyTypes, (u32)TRUE);

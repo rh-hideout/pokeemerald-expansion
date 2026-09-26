@@ -15,6 +15,7 @@
 #include "item.h"
 #include "move.h"
 #include "pokemon.h"
+#include "mf_rules.h"
 #include "random.h"
 #include "recorded_battle.h"
 #include "util.h"
@@ -1463,7 +1464,7 @@ bool32 CanEndureHit(enum BattlerId battler, enum BattlerId battlerTarget, enum M
 
     if (!DoesBattlerIgnoreAbilityChecks(battler, gAiLogicData->abilities[battler], move))
     {
-        if (GetConfig(B_STURDY) >= GEN_5 && gAiLogicData->abilities[battlerTarget] == ABILITY_STURDY)
+        if (MfRules_HasSturdy() && GetConfig(B_STURDY) >= GEN_5 && gAiLogicData->abilities[battlerTarget] == ABILITY_STURDY)
             return TRUE;
         if (IsMimikyuDisguised(battlerTarget))
             return TRUE;
@@ -3489,7 +3490,7 @@ bool32 BattlerHasMaxHPProtection(enum BattlerId battler)
         return FALSE;
     if (gAiLogicData->holdEffects[battler] == HOLD_EFFECT_FOCUS_SASH)
         return TRUE;
-    if (GetConfig(B_STURDY) >= GEN_5 && ability == ABILITY_STURDY)
+    if (MfRules_HasSturdy() && GetConfig(B_STURDY) >= GEN_5 && ability == ABILITY_STURDY)
         return TRUE;
     if (ability == ABILITY_MULTISCALE || ability == ABILITY_SHADOW_SHIELD)
         return TRUE;
