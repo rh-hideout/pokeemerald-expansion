@@ -116,15 +116,13 @@ FiveIsland_RocketWarehouse_EventScript_DefeatedAdmin1::
 	closemessage
 	call_if_le PLAYER_X_POS, 24, FiveIsland_RocketWarehouse_EventScript_AdminWalkToSwitchFar
 	call_if_eq PLAYER_X_POS, 25, FiveIsland_RocketWarehouse_EventScript_AdminWalkToSwitch
-	call_if_eq PLAYER_X_POS, 26, FiveIsland_RocketWarehouse_EventScript_AdminFaceSwitch
-	call_if_eq PLAYER_X_POS, 27, FiveIsland_RocketWarehouse_EventScript_AdminFaceSwitch
+	call_if_between PLAYER_X_POS, 26, 27, FiveIsland_RocketWarehouse_EventScript_AdminFaceSwitch
 	playse SE_PIN
 	call FiveIsland_RocketWarehouse_EventScript_SetArrowsForReEntry
 	special DrawWholeMapView
 	waitse
 	call_if_le PLAYER_X_POS, 24, FiveIsland_RocketWarehouse_EventScript_AdminFacePlayerLeft
-	call_if_eq PLAYER_X_POS, 25, FiveIsland_RocketWarehouse_EventScript_AdminFacePlayerLeft
-	call_if_eq PLAYER_X_POS, 26, FiveIsland_RocketWarehouse_EventScript_AdminFacePlayerLeft
+	call_if_between PLAYER_X_POS, 25, 26, FiveIsland_RocketWarehouse_EventScript_AdminFacePlayerLeft
 	call_if_eq PLAYER_X_POS, 27, FiveIsland_RocketWarehouse_EventScript_AdminFacePlayerDown
 	msgbox FiveIsland_RocketWarehouse_Text_MadeItSoYouCanComeBackThrough
 	release
