@@ -84,7 +84,15 @@ It only takes 3 arguments (or 6 if you want to make it a double wild battle)
 - `species2`, `level2`, and `item2` determine the `species`, `level` and `held item` respectively of the second Pokemon generated in case you want to make a double wild battle
 - The other properties like IVs and personality will be set randomly the same way as they are set in regular wild battles.
 
-Pokemon generated with `setwildbattle` will always be considered static encounters (`STATIC_WILDMON_ORIGIN`) and will thus be eligible to be affected by Synchronize and Cute Charm
+#### Encounter area and Pokemon origin
+
+`gEncounterType` stores two independent values: the encounter area and the generated Pokemon's origin. Use `SET_ENCOUNTER_AREA` and `SET_ENCOUNTER_ORIGIN` to update either value without overwriting the other, and read them with `ENCOUNTER_AREA` and `ENCOUNTER_ORIGIN`.
+
+The encounter area is a battle value associated with the wild Pokemon table used for the encounter. Regular land, water, Rock Smash, fishing, and hidden encounters have an area; static encounters, roamers, and mass outbreaks do not. The area remains available until the battle ends.
+
+The origin is a Pokemon generation value. Set it before calling `CreateMon` or `CreateBoxMon` so origin-dependent generation behavior is applied correctly. Gift and roamer origins are cleared by `CreateBoxMon` after generation. A pending static wild battle keeps its origin until battle teardown, so do not place unrelated commands between `setwildbattle` or enemy-side `createmon` and the command that starts the battle. Debug builds assert if a gift or roamer is generated while another origin is active.
+
+Pokemon generated with `setwildbattle` will always be considered static encounters (`STATIC_WILDMON_ORIGIN`) and will thus be eligible to be affected by Synchronize and Cute Charm.
 
 #### Synchronize and Cute Charm
 

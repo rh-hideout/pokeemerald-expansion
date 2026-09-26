@@ -264,6 +264,7 @@ enum RandomTag
     RNG_DAYCARE_ABILITY_INHERITANCE,
     RNG_DEXNAV_RANDOM_EGG_MOVE,
     RNG_RANDOM_BALL,
+    RNG_SHINY_REROLL,
 };
 
 #define RandomWeighted(tag, ...) \
