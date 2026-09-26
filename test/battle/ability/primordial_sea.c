@@ -1,7 +1,7 @@
 #include "global.h"
 #include "test/battle.h"
 
-DOUBLE_BATTLE_TEST("Primordial Sea ends before a replacement weather Ability activates")
+DOUBLE_BATTLE_TEST("Primordial Sea ending reverts Castform before the replacement Drizzle activates")
 {
     enum Move move;
     PARAMETRIZE { move = MOVE_ENTRAINMENT; }
@@ -9,10 +9,10 @@ DOUBLE_BATTLE_TEST("Primordial Sea ends before a replacement weather Ability act
     PARAMETRIZE { move = MOVE_DOODLE; }
 
     GIVEN {
-        PLAYER(SPECIES_KYOGRE) { Item(ITEM_BLUE_ORB); }
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
-        OPPONENT(SPECIES_PELIPPER) { Ability(ABILITY_DRIZZLE); }
-        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
+        PLAYER(SPECIES_KYOGRE) { Item(ITEM_BLUE_ORB); Speed(100); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(90); }
+        OPPONENT(SPECIES_PELIPPER) { Ability(ABILITY_DRIZZLE); Speed(80); }
+        OPPONENT(SPECIES_CASTFORM_NORMAL) { Ability(ABILITY_FORECAST); Speed(70); }
     } WHEN {
         if (move == MOVE_ENTRAINMENT)
         {
@@ -23,6 +23,7 @@ DOUBLE_BATTLE_TEST("Primordial Sea ends before a replacement weather Ability act
             TURN { MOVE(playerLeft, move, target: opponentLeft); }
         }
     } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, opponentRight);
         if (move == MOVE_ENTRAINMENT)
         {
             ANIMATION(ANIM_TYPE_MOVE, move, opponentLeft);
@@ -31,14 +32,17 @@ DOUBLE_BATTLE_TEST("Primordial Sea ends before a replacement weather Ability act
         {
             ANIMATION(ANIM_TYPE_MOVE, move, playerLeft);
         }
+        MESSAGE("The heavy rain has lifted!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, opponentRight);
         ABILITY_POPUP(playerLeft, ABILITY_DRIZZLE);
-    } THEN {
-        EXPECT_EQ(playerLeft->ability, ABILITY_DRIZZLE);
-        EXPECT_EQ(gBattleWeather, B_WEATHER_RAIN_NORMAL);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_RAIN_CONTINUES);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, opponentRight);
         if (move == MOVE_DOODLE)
         {
-            EXPECT_EQ(playerRight->ability, ABILITY_DRIZZLE);
+            ABILITY_POPUP(playerRight);
         }
+        // The second rain animation is the end-of-turn continuation.
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_RAIN_CONTINUES);
     }
 }
 
@@ -50,10 +54,12 @@ DOUBLE_BATTLE_TEST("Primordial Sea persists when another holder sustains it duri
     PARAMETRIZE { move = MOVE_DOODLE; }
 
     GIVEN {
-        PLAYER(SPECIES_KYOGRE) { Item(ITEM_BLUE_ORB); }
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
-        OPPONENT(SPECIES_PELIPPER) { Ability(ABILITY_DRIZZLE); }
-        OPPONENT(SPECIES_KYOGRE) { Item(ITEM_BLUE_ORB); }
+        ASSUME(GetMoveCategory(MOVE_EMBER) != DAMAGE_CATEGORY_STATUS);
+        ASSUME(GetMoveType(MOVE_EMBER) == TYPE_FIRE);
+        PLAYER(SPECIES_KYOGRE) { Item(ITEM_BLUE_ORB); Speed(100); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(90); }
+        OPPONENT(SPECIES_PELIPPER) { Ability(ABILITY_DRIZZLE); Speed(80); }
+        OPPONENT(SPECIES_KYOGRE) { Item(ITEM_BLUE_ORB); Speed(70); }
     } WHEN {
         if (move == MOVE_ENTRAINMENT)
         {
@@ -63,6 +69,7 @@ DOUBLE_BATTLE_TEST("Primordial Sea persists when another holder sustains it duri
         {
             TURN { MOVE(playerLeft, move, target: opponentLeft); }
         }
+        TURN { MOVE(opponentLeft, MOVE_EMBER, target: playerLeft); }
     } SCENE {
         if (move == MOVE_ENTRAINMENT)
         {
@@ -72,9 +79,20 @@ DOUBLE_BATTLE_TEST("Primordial Sea persists when another holder sustains it duri
         {
             ANIMATION(ANIM_TYPE_MOVE, move, playerLeft);
         }
-    } THEN {
-        EXPECT_EQ(playerLeft->ability, ABILITY_DRIZZLE);
-        EXPECT_EQ(gBattleWeather, B_WEATHER_RAIN_PRIMAL);
+        NOT MESSAGE("The heavy rain has lifted!");
+        ABILITY_POPUP(playerLeft, ABILITY_DRIZZLE);
+        if (move == MOVE_DOODLE)
+        {
+            NOT MESSAGE("The heavy rain has lifted!");
+            ABILITY_POPUP(playerRight, ABILITY_DRIZZLE);
+        }
+        NOT MESSAGE("The heavy rain has lifted!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_RAIN_CONTINUES);
+        NONE_OF {
+            MESSAGE("The heavy rain has lifted!");
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_EMBER, opponentLeft);
+            HP_BAR(playerLeft);
+        }
     }
 }
 
