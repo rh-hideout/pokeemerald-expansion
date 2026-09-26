@@ -39,7 +39,7 @@ These exist to keep merging from `RHH/master` cheap. Violating them is the main 
 | 1     | Baseline modernization (compile-time)| S07–S11 | Complete |
 | 2     | Rules engine core                    | S12–S17 | Complete    |
 | 3     | Rules menu UI                        | S18–S26 | Complete    |
-| 4     | Gamemode wiring                      | S27–S32 | In progress |
+| 4     | Gamemode wiring                      | S27–S32 | Complete    |
 | 5     | Features & item-friction wiring      | S33–S34, S69 | Not started |
 | 6     | Nuzlocke                             | S35–S39 | Not started |
 | 7     | Difficulty                           | S40–S45 | Not started |
@@ -492,7 +492,7 @@ These exist to keep merging from `RHH/master` cheap. Violating them is the main 
 
 ### S32 — Encounters mode (data-only)
 
-- [ ] **Status:** Not started
+- [x] **Status:** Complete
 
 - **Goal:** ME's `ENCOUNTERS` option (Vanilla / Postgame / Modern), within FR's existing map set.
 - **Depends on:** S13, S08
@@ -503,6 +503,7 @@ These exist to keep merging from `RHH/master` cheap. Violating them is the main 
   - Design the Modern tables so every enabled species is obtainable — that's the point of the mode.
 - **Acceptance:** Each mode yields visibly different encounters on the same route; Postgame flips only after the champion flag.
 - **Tests:** Unit tests on table selection; manual encounter sampling on several routes.
+- **Decisions:** [`docs-mf/decisions/0032-tech-runtime-encounters-mode.md`](docs-mf/decisions/0032-tech-runtime-encounters-mode.md) — parallel FR modern headers; Postgame uses `FLAG_SYS_GAME_CLEAR`; no day/night twin.
 
 ---
 

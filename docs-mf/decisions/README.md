@@ -66,3 +66,4 @@ Append a row to the index below when you add a record.
 | 0029 | tech | Classic Gen-3 base-stat fallback table | S29 | 2026-09-25 |
 | 0030 | tech | FRLG classic movepool dual tables | S30 | 2026-09-25 |
 | 0031 | tech | Runtime Gamemode item & ability behavior gates | S31 | 2026-09-26 |
+| 0032 | tech | Runtime ENCOUNTERS mode via FR modern wild tables | S32 | 2026-09-26 |

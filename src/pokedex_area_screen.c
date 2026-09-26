@@ -23,6 +23,7 @@
 #include "trig.h"
 #include "pokedex_area_region_map.h"
 #include "wild_encounter.h"
+#include "mf_encounters.h"
 #include "window.h"
 #include "constants/region_map_sections.h"
 #include "constants/rgb.h"
@@ -333,26 +334,26 @@ static void FindMapsWithMon(enum Species species)
 
     currentRegionMapType = GetRegionMapType(gMapHeader.regionMapSectionId);
     // Add regular species to the area map
-    for (i = 0; gWildMonHeaders[i].mapGroup != MAP_GROUP(MAP_UNDEFINED); i++)
+    for (i = 0; MfGetActiveWildMonHeaders()[i].mapGroup != MAP_GROUP(MAP_UNDEFINED); i++)
     {
-        u32 headerSectionId = Overworld_GetMapHeaderByGroupAndId(gWildMonHeaders[i].mapGroup, gWildMonHeaders[i].mapNum)->regionMapSectionId;
+        u32 headerSectionId = Overworld_GetMapHeaderByGroupAndId(MfGetActiveWildMonHeaders()[i].mapGroup, MfGetActiveWildMonHeaders()[i].mapNum)->regionMapSectionId;
 
         if (GetRegionMapType(headerSectionId) != currentRegionMapType)
             continue;
 
-        if (MapHasSpecies(&gWildMonHeaders[i].encounterTypes[gAreaTimeOfDay], headerSectionId, species))
+        if (MapHasSpecies(&MfGetActiveWildMonHeaders()[i].encounterTypes[gAreaTimeOfDay], headerSectionId, species))
         {
-            switch (gWildMonHeaders[i].mapGroup)
+            switch (MfGetActiveWildMonHeaders()[i].mapGroup)
             {
             case MAP_GROUP_TOWNS_AND_ROUTES:
             case MAP_GROUP_TOWNS_AND_ROUTES_FRLG:
-                SetAreaHasMon(gWildMonHeaders[i].mapGroup, gWildMonHeaders[i].mapNum);
+                SetAreaHasMon(MfGetActiveWildMonHeaders()[i].mapGroup, MfGetActiveWildMonHeaders()[i].mapNum);
                 break;
             case MAP_GROUP_DUNGEONS:
             case MAP_GROUP_DUNGEONS_FRLG:
             case MAP_GROUP_SPECIAL_AREA:
             case MAP_GROUP_SPECIAL_AREA_FRLG:
-                SetSpecialMapHasMon(gWildMonHeaders[i].mapGroup, gWildMonHeaders[i].mapNum);
+                SetSpecialMapHasMon(MfGetActiveWildMonHeaders()[i].mapGroup, MfGetActiveWildMonHeaders()[i].mapNum);
                 break;
             }
         }

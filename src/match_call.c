@@ -26,6 +26,7 @@
 #include "strings.h"
 #include "task.h"
 #include "wild_encounter.h"
+#include "mf_encounters.h"
 #include "window.h"
 #include "field_name_box.h"
 #include "constants/abilities.h"
@@ -1740,33 +1741,33 @@ static void PopulateSpeciesFromTrainerLocation(int matchCallId, u8 *destStr)
     int i = 0;
     enum TimeOfDay timeOfDay;
 
-    if (gWildMonHeaders[i].mapGroup != MAP_GROUP(MAP_UNDEFINED)) // ??? This check is nonsense.
+    if (MfGetActiveWildMonHeaders()[i].mapGroup != MAP_GROUP(MAP_UNDEFINED)) // ??? This check is nonsense.
     {
-        while (gWildMonHeaders[i].mapGroup != MAP_GROUP(MAP_UNDEFINED))
+        while (MfGetActiveWildMonHeaders()[i].mapGroup != MAP_GROUP(MAP_UNDEFINED))
         {
-            if (gWildMonHeaders[i].mapGroup == gRematchTable[matchCallId].mapGroup
-             && gWildMonHeaders[i].mapNum == gRematchTable[matchCallId].mapNum)
+            if (MfGetActiveWildMonHeaders()[i].mapGroup == gRematchTable[matchCallId].mapGroup
+             && MfGetActiveWildMonHeaders()[i].mapNum == gRematchTable[matchCallId].mapNum)
                 break;
 
             i++;
         }
 
-        if (gWildMonHeaders[i].mapGroup != MAP_GROUP(MAP_UNDEFINED))
+        if (MfGetActiveWildMonHeaders()[i].mapGroup != MAP_GROUP(MAP_UNDEFINED))
         {
             timeOfDay = GetTimeOfDayForEncounters(i, WILD_AREA_LAND);
             numSpecies = 0;
-            if (gWildMonHeaders[i].encounterTypes[timeOfDay].landMonsInfo)
+            if (MfGetActiveWildMonHeaders()[i].encounterTypes[timeOfDay].landMonsInfo)
             {
                 slot = GetLandEncounterSlotForMatchCall();
-                species[numSpecies] = gWildMonHeaders[i].encounterTypes[timeOfDay].landMonsInfo->wildPokemon[slot].species;
+                species[numSpecies] = MfGetActiveWildMonHeaders()[i].encounterTypes[timeOfDay].landMonsInfo->wildPokemon[slot].species;
                 numSpecies++;
             }
 
             timeOfDay = GetTimeOfDayForEncounters(i, WILD_AREA_WATER);
-            if (gWildMonHeaders[i].encounterTypes[timeOfDay].waterMonsInfo)
+            if (MfGetActiveWildMonHeaders()[i].encounterTypes[timeOfDay].waterMonsInfo)
             {
                 slot = GetWaterEncounterSlotForMatchCall();
-                species[numSpecies] = gWildMonHeaders[i].encounterTypes[timeOfDay].waterMonsInfo->wildPokemon[slot].species;
+                species[numSpecies] = MfGetActiveWildMonHeaders()[i].encounterTypes[timeOfDay].waterMonsInfo->wildPokemon[slot].species;
                 numSpecies++;
             }
 

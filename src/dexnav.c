@@ -49,6 +49,7 @@
 #include "text.h"
 #include "text_window.h"
 #include "wild_encounter.h"
+#include "mf_encounters.h"
 #include "window.h"
 #include "constants/species.h"
 #include "constants/maps.h"
@@ -1482,7 +1483,7 @@ static u8 GetEncounterLevelFromMapData(enum Species species, enum EncounterType 
     {
     case ENCOUNTER_TYPE_LAND:    // grass
         timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_LAND);
-        const struct WildPokemonInfo *landMonsInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo;
+        const struct WildPokemonInfo *landMonsInfo = MfGetActiveWildMonHeaders()[headerId].encounterTypes[timeOfDay].landMonsInfo;
 
         if (landMonsInfo == NULL)
             return MON_LEVEL_NONEXISTENT; //Hidden Pokémon should only appear on walkable tiles or surf tiles
@@ -1498,7 +1499,7 @@ static u8 GetEncounterLevelFromMapData(enum Species species, enum EncounterType 
         break;
     case ENCOUNTER_TYPE_WATER:    //water
         timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_WATER);
-        const struct WildPokemonInfo *waterMonsInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].waterMonsInfo;
+        const struct WildPokemonInfo *waterMonsInfo = MfGetActiveWildMonHeaders()[headerId].encounterTypes[timeOfDay].waterMonsInfo;
 
         if (waterMonsInfo == NULL)
             return MON_LEVEL_NONEXISTENT; //Hidden Pokémon should only appear on walkable tiles or surf tiles
@@ -1514,7 +1515,7 @@ static u8 GetEncounterLevelFromMapData(enum Species species, enum EncounterType 
         break;
     case ENCOUNTER_TYPE_HIDDEN:
         timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_HIDDEN);
-        const struct WildPokemonInfo *hiddenMonsInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].hiddenMonsInfo;
+        const struct WildPokemonInfo *hiddenMonsInfo = MfGetActiveWildMonHeaders()[headerId].encounterTypes[timeOfDay].hiddenMonsInfo;
 
         if (hiddenMonsInfo == NULL)
             return MON_LEVEL_NONEXISTENT;
@@ -1695,7 +1696,7 @@ static bool8 CapturedAllLandMons(u32 headerId)
     int count = 0;
     enum TimeOfDay timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_LAND);
 
-    const struct WildPokemonInfo *landMonsInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo;
+    const struct WildPokemonInfo *landMonsInfo = MfGetActiveWildMonHeaders()[headerId].encounterTypes[timeOfDay].landMonsInfo;
 
     if (landMonsInfo != NULL)
     {
@@ -1728,7 +1729,7 @@ static bool8 CapturedAllWaterMons(u32 headerId)
     u8 count = 0;
     enum TimeOfDay timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_WATER);
 
-    const struct WildPokemonInfo *waterMonsInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].waterMonsInfo;
+    const struct WildPokemonInfo *waterMonsInfo = MfGetActiveWildMonHeaders()[headerId].encounterTypes[timeOfDay].waterMonsInfo;
 
     if (waterMonsInfo != NULL)
     {
@@ -1759,7 +1760,7 @@ static bool8 CapturedAllHiddenMons(u32 headerId)
     u8 count = 0;
     enum TimeOfDay timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_HIDDEN);
 
-        const struct WildPokemonInfo *hiddenMonsInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].hiddenMonsInfo;
+        const struct WildPokemonInfo *hiddenMonsInfo = MfGetActiveWildMonHeaders()[headerId].encounterTypes[timeOfDay].hiddenMonsInfo;
 
     if (hiddenMonsInfo != NULL)
     {
@@ -1907,11 +1908,11 @@ static void DexNavLoadEncounterData(void)
         return;
 
     timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_LAND);
-    const struct WildPokemonInfo *landMonsInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo;
+    const struct WildPokemonInfo *landMonsInfo = MfGetActiveWildMonHeaders()[headerId].encounterTypes[timeOfDay].landMonsInfo;
     timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_WATER);
-    const struct WildPokemonInfo *waterMonsInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].waterMonsInfo;
+    const struct WildPokemonInfo *waterMonsInfo = MfGetActiveWildMonHeaders()[headerId].encounterTypes[timeOfDay].waterMonsInfo;
     timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_HIDDEN);
-    const struct WildPokemonInfo *hiddenMonsInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].hiddenMonsInfo;
+    const struct WildPokemonInfo *hiddenMonsInfo = MfGetActiveWildMonHeaders()[headerId].encounterTypes[timeOfDay].hiddenMonsInfo;
 
     // nop struct data
     memset(sDexNavUiDataPtr->landSpecies, 0, sizeof(sDexNavUiDataPtr->landSpecies));
@@ -2495,7 +2496,7 @@ bool32 TryFindHiddenPokemon(void)
             return FALSE;
 
         enum TimeOfDay timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_HIDDEN);
-        const struct WildPokemonInfo *hiddenMonsInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].hiddenMonsInfo;
+        const struct WildPokemonInfo *hiddenMonsInfo = MfGetActiveWildMonHeaders()[headerId].encounterTypes[timeOfDay].hiddenMonsInfo;
         bool8 isHiddenMon = FALSE;
 
         // while you can still technically find hidden Pokémon if there are not hidden-only Pokémon on a map,
@@ -2520,7 +2521,7 @@ bool32 TryFindHiddenPokemon(void)
             }
             else
             {
-                species = gWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo->wildPokemon[ChooseWildMonIndex_Land()].species;
+                species = MfGetActiveWildMonHeaders()[headerId].encounterTypes[timeOfDay].landMonsInfo->wildPokemon[ChooseWildMonIndex_Land()].species;
                 environment = ENCOUNTER_TYPE_LAND;
             }
             break;
@@ -2538,7 +2539,7 @@ bool32 TryFindHiddenPokemon(void)
                 }
                 else
                 {
-                    species = gWildMonHeaders[headerId].encounterTypes[timeOfDay].waterMonsInfo->wildPokemon[ChooseWildMonIndex_Water()].species;
+                    species = MfGetActiveWildMonHeaders()[headerId].encounterTypes[timeOfDay].waterMonsInfo->wildPokemon[ChooseWildMonIndex_Water()].species;
                     environment = ENCOUNTER_TYPE_WATER;
 
                 }

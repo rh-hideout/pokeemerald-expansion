@@ -99,6 +99,10 @@ Keep the Phase 1 compile baselines (`I_REUSABLE_TMS`, `I_SITRUS_BERRY_HEAL`, `B_
 
 See ADR 0031.
 
+### Worked example: ENCOUNTERS mode (S32)
+
+`alternateSpawns` is Vanilla (0) / Modern (1) / Postgame (2). Stock tables stay in `gWildMonHeaders`. FireRed builds also link `gMfModernWildMonHeaders` (generator: `tools/mf/gen_modern_encounters.py`). `MfShouldUseModernWildEncounters()` is TRUE for Modern always, and for Postgame only after `FLAG_SYS_GAME_CLEAR`. Encounter consumers index `MfGetActiveWildMonHeaders()` so wild battles, DexNav, match call, and the Pokédex area screen agree (ADR 0032).
+
 ### Rules for gates
 
 1. Prefer an existing expansion primitive (`I_*`, `B_*`, `P_*`) as the capability baseline.
