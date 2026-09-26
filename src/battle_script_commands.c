@@ -9869,7 +9869,11 @@ void BS_TryWindRiderPower(void)
         switch (ability)
         {
         case ABILITY_WIND_RIDER:
-            AbilityBattleEffects(ABILITYEFFECT_ON_SWITCHIN, battler, ABILITY_WIND_RIDER, MOVE_NONE, TRUE);
+            // Starting Status Tailwind causes the Wind Rider boost to go off twice
+            if (gBattleStruct->eventState.beforeFirstTurn != FIRST_TURN_EVENTS_STARTING_STATUS)
+            {            
+                AbilityBattleEffects(ABILITYEFFECT_ON_SWITCHIN, battler, ABILITY_WIND_RIDER, MOVE_NONE, TRUE);
+            }
             break;
         case ABILITY_WIND_POWER:
             gBattlerAbility = battler;
