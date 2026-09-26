@@ -1422,3 +1422,40 @@ AI_DOUBLE_BATTLE_TEST("AI can choose a status move that boosts the attack by two
         }
     }
 }
+
+AI_DOUBLE_BATTLE_TEST("AI will not double target with Soak")
+{
+    enum Species species = SPECIES_NONE;
+
+    PARAMETRIZE { species = SPECIES_WOBBUFFET; }
+    PARAMETRIZE { species = SPECIES_STARYU; }
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SOAK) == EFFECT_SOAK);
+        ASSUME(GetMoveEffect(MOVE_THUNDERSHOCK) == EFFECT_HIT);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(2); }
+        PLAYER(species) { Speed(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(4); Moves(MOVE_SOAK, MOVE_THUNDERSHOCK); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(3); Moves(MOVE_SOAK, MOVE_THUNDERSHOCK); }
+        TIE_BREAK_SCORE(RNG_AI_SCORE_TIE_DOUBLES_MOVE, SCORE_TIE_LO, 0);
+        TIE_BREAK_TARGET(TARGET_TIE_LO, 0);
+    } WHEN {
+        TURN {
+            if (species == SPECIES_STARYU)
+            {
+                EXPECT_MOVE(opponentLeft, MOVE_THUNDERSHOCK, target: playerLeft);
+                EXPECT_MOVE(opponentRight, MOVE_SOAK, target: playerLeft);
+            }
+            else
+            {
+                EXPECT_MOVE(opponentLeft, MOVE_SOAK, target: playerRight);
+                EXPECT_MOVE(opponentRight, MOVE_SOAK, target: playerLeft);
+            }
+        }
+        TURN {
+            EXPECT_MOVE(opponentLeft, MOVE_THUNDERSHOCK, target: playerLeft);
+            EXPECT_MOVE(opponentRight, MOVE_THUNDERSHOCK, target: playerLeft);
+        }
+    }
+}
