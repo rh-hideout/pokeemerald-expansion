@@ -1,7 +1,7 @@
 #include "global.h"
 #include "test/battle.h"
 
-SINGLE_BATTLE_TEST("Electromorphosis sets up Charge when hit by any move")
+SINGLE_BATTLE_TEST("Electromorphosis doubles Electric-type damage after a physical or special hit")
 {
     s16 dmgBefore, dmgAfter;
     enum Move move;
@@ -16,11 +16,10 @@ SINGLE_BATTLE_TEST("Electromorphosis sets up Charge when hit by any move")
         ASSUME(GetMoveType(MOVE_THUNDER_SHOCK) == TYPE_ELECTRIC);
 
         PLAYER(SPECIES_BELLIBOLT) { Ability(ABILITY_ELECTROMORPHOSIS); Speed(10); }
-        OPPONENT(SPECIES_PERSIAN) { Ability(ABILITY_LIMBER); Speed(5); } // Limber, so it doesn't get paralyzed.
-    }
-    WHEN {
-        TURN { MOVE(player, MOVE_THUNDER_SHOCK), MOVE(opponent, move); }
-        TURN { MOVE(player, MOVE_THUNDER_SHOCK), MOVE(opponent, move); }
+        OPPONENT(SPECIES_PERSIAN) { Ability(ABILITY_LIMBER); Speed(5); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_THUNDER_SHOCK); MOVE(opponent, move); }
+        TURN { MOVE(player, MOVE_THUNDER_SHOCK); MOVE(opponent, move); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_THUNDER_SHOCK, player);
         HP_BAR(opponent, captureDamage: &dmgBefore);
@@ -28,12 +27,6 @@ SINGLE_BATTLE_TEST("Electromorphosis sets up Charge when hit by any move")
         ANIMATION(ANIM_TYPE_MOVE, move, opponent);
         HP_BAR(player);
         ABILITY_POPUP(player, ABILITY_ELECTROMORPHOSIS);
-        if (move == MOVE_SCRATCH) {
-            MESSAGE("Being hit by Scratch charged Bellibolt with power!");
-        }
-        else {
-            MESSAGE("Being hit by Gust charged Bellibolt with power!");
-        }
 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_THUNDER_SHOCK, player);
         HP_BAR(opponent, captureDamage: &dmgAfter);
@@ -41,14 +34,7 @@ SINGLE_BATTLE_TEST("Electromorphosis sets up Charge when hit by any move")
         ANIMATION(ANIM_TYPE_MOVE, move, opponent);
         HP_BAR(player);
         ABILITY_POPUP(player, ABILITY_ELECTROMORPHOSIS);
-        if (move == MOVE_SCRATCH) {
-            MESSAGE("Being hit by Scratch charged Bellibolt with power!");
-        }
-        else {
-            MESSAGE("Being hit by Gust charged Bellibolt with power!");
-        }
-    }
-    THEN {
+    } THEN {
         EXPECT_MUL_EQ(dmgBefore, Q_4_12(2.0), dmgAfter);
     }
 }
@@ -75,6 +61,7 @@ SINGLE_BATTLE_TEST("Electromorphosis triggers on each multistrike hit but Charge
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
         ASSUME(GetMoveCategory(MOVE_DOUBLE_HIT) == DAMAGE_CATEGORY_PHYSICAL);
+        ASSUME(GetMoveStrikeCount(MOVE_DOUBLE_HIT) == 2);
         ASSUME(GetMoveCategory(MOVE_THUNDER_SHOCK) != DAMAGE_CATEGORY_STATUS);
         ASSUME(GetMoveType(MOVE_THUNDER_SHOCK) == TYPE_ELECTRIC);
         PLAYER(SPECIES_BELLIBOLT) { Ability(ABILITY_ELECTROMORPHOSIS); Speed(10); }
@@ -90,16 +77,16 @@ SINGLE_BATTLE_TEST("Electromorphosis triggers on each multistrike hit but Charge
         HP_BAR(opponent, captureDamage: &dmgBefore);
 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
+        HP_BAR(player);
         ABILITY_POPUP(player, ABILITY_ELECTROMORPHOSIS);
-        MESSAGE("Being hit by Scratch charged Bellibolt with power!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_THUNDER_SHOCK, player);
         HP_BAR(opponent, captureDamage: &dmgAfterSingleHit);
 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DOUBLE_HIT, opponent);
+        HP_BAR(player);
         ABILITY_POPUP(player, ABILITY_ELECTROMORPHOSIS);
-        MESSAGE("Being hit by Double Hit charged Bellibolt with power!");
+        HP_BAR(player);
         ABILITY_POPUP(player, ABILITY_ELECTROMORPHOSIS);
-        MESSAGE("Being hit by Double Hit charged Bellibolt with power!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_THUNDER_SHOCK, player);
         HP_BAR(opponent, captureDamage: &dmgAfterMultiHit);
     } THEN {

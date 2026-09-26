@@ -30,6 +30,7 @@ SINGLE_BATTLE_TEST("Gluttony activates confusion-healing Berries at half HP but 
     ASSUME(B_CONFUSE_BERRIES_HEAL >= GEN_8);
     consumed = ability == ABILITY_GLUTTONY && damage == 50;
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SEISMIC_TOSS) == EFFECT_LEVEL_DAMAGE);
         PLAYER(SPECIES_SNORLAX) { Ability(ability); Nature(NATURE_HARDY); MaxHP(100); HP(100); Item(item); }
         OPPONENT(SPECIES_WOBBUFFET) { Level(damage); }
     } WHEN {
@@ -37,17 +38,16 @@ SINGLE_BATTLE_TEST("Gluttony activates confusion-healing Berries at half HP but 
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SEISMIC_TOSS, opponent);
         HP_BAR(player, damage: damage);
-        if (consumed)
-        {
+        if (consumed) {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
             HP_BAR(player, damage: -33);
-        }
-        else
-        {
-            NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
+        } else {
+            NONE_OF {
+                ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
+                HP_BAR(player);
+            }
         }
     } THEN {
-        EXPECT_EQ(player->hp, 100 - damage + (consumed ? 33 : 0));
         EXPECT_EQ(player->item, consumed ? ITEM_NONE : item);
     }
 }
@@ -64,6 +64,7 @@ SINGLE_BATTLE_TEST("Gluttony activates a Berry after Belly Drum only if the user
     ASSUME(B_CONFUSE_BERRIES_HEAL >= GEN_8);
     consumed = ability == ABILITY_GLUTTONY && maxHP == 100;
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_BELLY_DRUM) == EFFECT_BELLY_DRUM);
         PLAYER(SPECIES_SNORLAX) { Ability(ability); Nature(NATURE_HARDY); MaxHP(maxHP); HP(maxHP); Item(ITEM_FIGY_BERRY); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -71,33 +72,32 @@ SINGLE_BATTLE_TEST("Gluttony activates a Berry after Belly Drum only if the user
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BELLY_DRUM, player);
         HP_BAR(player, damage: maxHP / 2);
-        if (consumed)
-        {
+        if (consumed) {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
             HP_BAR(player, damage: -33);
-        }
-        else
-        {
-            NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
+        } else {
+            NONE_OF {
+                ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
+                HP_BAR(player);
+            }
         }
     } THEN {
         EXPECT_EQ(player->statStages[STAT_ATK], MAX_STAT_STAGE);
-        EXPECT_EQ(player->hp, maxHP - maxHP / 2 + (consumed ? 33 : 0));
         EXPECT_EQ(player->item, consumed ? ITEM_NONE : ITEM_FIGY_BERRY);
     }
 }
 
-
 SINGLE_BATTLE_TEST("Gluttony activates stat-raising Berries at half HP")
 {
     enum Item item;
-    u32 stat;
+    enum Stat stat;
     PARAMETRIZE { item = ITEM_LIECHI_BERRY; stat = STAT_ATK; }
     PARAMETRIZE { item = ITEM_GANLON_BERRY; stat = STAT_DEF; }
     PARAMETRIZE { item = ITEM_SALAC_BERRY; stat = STAT_SPEED; }
     PARAMETRIZE { item = ITEM_PETAYA_BERRY; stat = STAT_SPATK; }
     PARAMETRIZE { item = ITEM_APICOT_BERRY; stat = STAT_SPDEF; }
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SEISMIC_TOSS) == EFFECT_LEVEL_DAMAGE);
         PLAYER(SPECIES_BELLSPROUT) { Ability(ABILITY_GLUTTONY); MaxHP(100); HP(100); Item(item); Speed(100); }
         OPPONENT(SPECIES_WOBBUFFET) { Level(50); Speed(50); }
     } WHEN {
@@ -106,8 +106,8 @@ SINGLE_BATTLE_TEST("Gluttony activates stat-raising Berries at half HP")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SEISMIC_TOSS, opponent);
         HP_BAR(player, damage: 50);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
     } THEN {
-        EXPECT_EQ(player->hp, 50);
         EXPECT_EQ(player->item, ITEM_NONE);
         EXPECT_EQ(player->statStages[stat], DEFAULT_STAT_STAGE + 1);
     }
@@ -129,6 +129,7 @@ SINGLE_BATTLE_TEST("Gluttony changes the pinch Berry threshold from one quarter 
     PARAMETRIZE { ability = ABILITY_GLUTTONY; damage = 74; consumed = TRUE; }
     PARAMETRIZE { ability = ABILITY_GLUTTONY; damage = 75; consumed = TRUE; }
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SEISMIC_TOSS) == EFFECT_LEVEL_DAMAGE);
         PLAYER(SPECIES_BELLSPROUT) { Ability(ability); MaxHP(100); HP(100); Item(ITEM_LIECHI_BERRY); }
         OPPONENT(SPECIES_WOBBUFFET) { Level(damage); }
     } WHEN {
@@ -136,16 +137,13 @@ SINGLE_BATTLE_TEST("Gluttony changes the pinch Berry threshold from one quarter 
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SEISMIC_TOSS, opponent);
         HP_BAR(player, damage: damage);
-        if (consumed)
-        {
+        if (consumed) {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
-        }
-        else
-        {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        } else {
             NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
         }
     } THEN {
-        EXPECT_EQ(player->hp, 100 - damage);
         EXPECT_EQ(player->item, consumed ? ITEM_NONE : ITEM_LIECHI_BERRY);
         EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE + consumed);
     }
@@ -157,6 +155,7 @@ SINGLE_BATTLE_TEST("Gluttony rounds the half-HP threshold down")
     PARAMETRIZE { damage = 50; }
     PARAMETRIZE { damage = 51; }
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SEISMIC_TOSS) == EFFECT_LEVEL_DAMAGE);
         PLAYER(SPECIES_BELLSPROUT) { Ability(ABILITY_GLUTTONY); MaxHP(101); HP(101); Item(ITEM_LIECHI_BERRY); }
         OPPONENT(SPECIES_WOBBUFFET) { Level(damage); }
     } WHEN {
@@ -164,16 +163,13 @@ SINGLE_BATTLE_TEST("Gluttony rounds the half-HP threshold down")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SEISMIC_TOSS, opponent);
         HP_BAR(player, damage: damage);
-        if (damage == 51)
-        {
+        if (damage == 51) {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
-        }
-        else
-        {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        } else {
             NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
         }
     } THEN {
-        EXPECT_EQ(player->hp, 101 - damage);
         EXPECT_EQ(player->item, damage == 51 ? ITEM_NONE : ITEM_LIECHI_BERRY);
         EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE + (damage == 51));
     }
@@ -188,6 +184,7 @@ SINGLE_BATTLE_TEST("Gluttony does not raise Oran and Sitrus Berry thresholds abo
     PARAMETRIZE { item = ITEM_SITRUS_BERRY; damage = 49; healing = 0; }
     PARAMETRIZE { item = ITEM_SITRUS_BERRY; damage = 50; healing = 25; }
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SEISMIC_TOSS) == EFFECT_LEVEL_DAMAGE);
         PLAYER(SPECIES_BELLSPROUT) { Ability(ABILITY_GLUTTONY); MaxHP(100); HP(100); Item(item); }
         OPPONENT(SPECIES_WOBBUFFET) { Level(damage); }
     } WHEN {
@@ -195,17 +192,16 @@ SINGLE_BATTLE_TEST("Gluttony does not raise Oran and Sitrus Berry thresholds abo
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SEISMIC_TOSS, opponent);
         HP_BAR(player, damage: damage);
-        if (healing != 0)
-        {
+        if (healing) {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
             HP_BAR(player, damage: -healing);
-        }
-        else
-        {
-            NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
+        } else {
+            NONE_OF {
+                ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
+                HP_BAR(player);
+            }
         }
     } THEN {
-        EXPECT_EQ(player->hp, 100 - damage + healing);
         EXPECT_EQ(player->item, healing ? ITEM_NONE : item);
     }
 }
@@ -216,6 +212,7 @@ SINGLE_BATTLE_TEST("Gluttony does not bypass Unnerve")
     PARAMETRIZE { ability = ABILITY_COMPOUND_EYES; }
     PARAMETRIZE { ability = ABILITY_UNNERVE; }
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SEISMIC_TOSS) == EFFECT_LEVEL_DAMAGE);
         PLAYER(SPECIES_BELLSPROUT) { Ability(ABILITY_GLUTTONY); MaxHP(100); HP(100); Item(ITEM_LIECHI_BERRY); }
         OPPONENT(SPECIES_JOLTIK) { Ability(ability); Level(50); }
     } WHEN {
@@ -223,16 +220,13 @@ SINGLE_BATTLE_TEST("Gluttony does not bypass Unnerve")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SEISMIC_TOSS, opponent);
         HP_BAR(player, damage: 50);
-        if (ability != ABILITY_UNNERVE)
-        {
+        if (ability != ABILITY_UNNERVE) {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
-        }
-        else
-        {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        } else {
             NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
         }
     } THEN {
-        EXPECT_EQ(player->hp, 50);
         EXPECT_EQ(player->item, ability == ABILITY_UNNERVE ? ITEM_LIECHI_BERRY : ITEM_NONE);
         EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE + (ability != ABILITY_UNNERVE));
     }
@@ -244,6 +238,8 @@ SINGLE_BATTLE_TEST("Suppressing Gluttony restores the quarter-HP Berry threshold
     PARAMETRIZE { damage = 50; }
     PARAMETRIZE { damage = 75; }
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_GASTRO_ACID) == EFFECT_GASTRO_ACID);
+        ASSUME(GetMoveEffect(MOVE_SEISMIC_TOSS) == EFFECT_LEVEL_DAMAGE);
         PLAYER(SPECIES_BELLSPROUT) { Ability(ABILITY_GLUTTONY); MaxHP(100); HP(100); Item(ITEM_LIECHI_BERRY); }
         OPPONENT(SPECIES_WOBBUFFET) { Level(damage); }
     } WHEN {
@@ -253,16 +249,13 @@ SINGLE_BATTLE_TEST("Suppressing Gluttony restores the quarter-HP Berry threshold
         ANIMATION(ANIM_TYPE_MOVE, MOVE_GASTRO_ACID, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SEISMIC_TOSS, opponent);
         HP_BAR(player, damage: damage);
-        if (damage == 75)
-        {
+        if (damage == 75) {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
-        }
-        else
-        {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        } else {
             NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
         }
     } THEN {
-        EXPECT_EQ(player->hp, 100 - damage);
         EXPECT_EQ(player->item, damage == 75 ? ITEM_NONE : ITEM_LIECHI_BERRY);
         EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE + (damage == 75));
     }

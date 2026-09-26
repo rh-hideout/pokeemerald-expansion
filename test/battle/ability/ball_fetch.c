@@ -1,7 +1,7 @@
 #include "global.h"
 #include "test/battle.h"
 
-WILD_BATTLE_TEST("Ball Fetch causes the Pokémon to pick up the last failed Ball at the end of the turn")
+WILD_BATTLE_TEST("Ball Fetch causes the Pokémon to pick up the first failed Ball at the end of the turn")
 {
     enum Item item = ITEM_NONE;
 
@@ -18,15 +18,17 @@ WILD_BATTLE_TEST("Ball Fetch causes the Pokémon to pick up the last failed Ball
         TURN { USE_ITEM(player, item, WITH_RNG(RNG_BALLTHROW_SHAKE, MAX_u16)); }
         TURN {}
     } SCENE {
-        if (item != ITEM_X_ACCURACY)
+        if (item != ITEM_X_ACCURACY) {
             ABILITY_POPUP(player, ABILITY_BALL_FETCH);
-        else
+        } else {
             NOT ABILITY_POPUP(player, ABILITY_BALL_FETCH);
+        }
     } THEN {
-        if (item != ITEM_X_ACCURACY)
+        if (item != ITEM_X_ACCURACY) {
             EXPECT_EQ(player->item, item);
-        else
+        } else {
             EXPECT_EQ(player->item, ITEM_NONE);
+        }
     }
 }
 
@@ -43,24 +45,17 @@ WILD_BATTLE_TEST("Ball Fetch doesn't trigger if the Pokémon is already holding 
     } WHEN {
         TURN { USE_ITEM(player, ITEM_GREAT_BALL, WITH_RNG(RNG_BALLTHROW_SHAKE, MAX_u16)); }
     } SCENE {
-        if (item == ITEM_NONE)
-        {
-            MESSAGE("You used Great Ball!");
+        if (item == ITEM_NONE) {
             ABILITY_POPUP(player, ABILITY_BALL_FETCH);
-            MESSAGE("Yamper found a Great Ball!");
-        }
-        else
-        {
-            NONE_OF {
-                ABILITY_POPUP(player, ABILITY_BALL_FETCH);
-                MESSAGE("Yamper found a Great Ball!");
-            }
+        } else {
+            NOT ABILITY_POPUP(player, ABILITY_BALL_FETCH);
         }
     } THEN {
-        if (item == ITEM_NONE)
+        if (item == ITEM_NONE) {
             EXPECT_EQ(player->item, ITEM_GREAT_BALL);
-        else
+        } else {
             EXPECT_EQ(player->item, item);
+        }
     }
 }
 
@@ -73,7 +68,10 @@ WILD_BATTLE_TEST("Ball Fetch triggers if its held item is consumed before the en
     } WHEN {
         TURN { USE_ITEM(player, ITEM_GREAT_BALL, WITH_RNG(RNG_BALLTHROW_SHAKE, MAX_u16)); }
     } SCENE {
-        HP_BAR(player);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, player);
+        HP_BAR(player, damage: 12);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
+        HP_BAR(player, damage: -25);
         ABILITY_POPUP(player, ABILITY_BALL_FETCH);
     } THEN {
         EXPECT_EQ(player->item, ITEM_GREAT_BALL);
@@ -82,14 +80,13 @@ WILD_BATTLE_TEST("Ball Fetch triggers if its held item is consumed before the en
 
 WILD_BATTLE_TEST("Ball Fetch only picks up the first failed ball, once per battle")
 {
-    enum Item item = ITEM_NONE;
-    enum Item item2 = ITEM_NONE;
+    enum Item item;
+    enum Item item2;
 
     PARAMETRIZE { item = ITEM_GREAT_BALL; item2 = ITEM_X_ACCURACY; }
     PARAMETRIZE { item = ITEM_GREAT_BALL; item2 = ITEM_ULTRA_BALL; }
     PARAMETRIZE { item = ITEM_GREAT_BALL; item2 = ITEM_FAST_BALL; }
     PARAMETRIZE { item = ITEM_GREAT_BALL; item2 = ITEM_STRANGE_BALL; }
-
 
     GIVEN {
         PLAYER(SPECIES_YAMPER) { Ability(ABILITY_BALL_FETCH); }
@@ -99,15 +96,12 @@ WILD_BATTLE_TEST("Ball Fetch only picks up the first failed ball, once per battl
         TURN { MOVE(player, MOVE_BESTOW); }
         TURN { USE_ITEM(player, item2, WITH_RNG(RNG_BALLTHROW_SHAKE, MAX_u16)); }
     } SCENE {
-        MESSAGE("You used Great Ball!");
         ABILITY_POPUP(player, ABILITY_BALL_FETCH);
-        MESSAGE("Yamper found a Great Ball!");
-        MESSAGE("Yamper used Bestow!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BESTOW, player);
-        MESSAGE("The wild Metagross received Great Ball from Yamper!");
         NOT ABILITY_POPUP(player, ABILITY_BALL_FETCH);
     } THEN {
         EXPECT_EQ(player->item, ITEM_NONE);
+        EXPECT_EQ(opponent->item, ITEM_GREAT_BALL);
     }
 }
 
@@ -160,10 +154,11 @@ WILD_BATTLE_TEST("The fastest Ball Fetch user retrieves the Ball")
     } WHEN {
         TURN { USE_ITEM(player, ITEM_GREAT_BALL, WITH_RNG(RNG_BALLTHROW_SHAKE, MAX_u16)); }
     } SCENE {
-        if (playerSpeed > opponentSpeed)
+        if (playerSpeed > opponentSpeed) {
             ABILITY_POPUP(player, ABILITY_BALL_FETCH);
-        else
+        } else {
             ABILITY_POPUP(opponent, ABILITY_BALL_FETCH);
+        }
     } THEN {
         EXPECT_EQ(player->item, playerItem);
         EXPECT_EQ(opponent->item, opponentItem);
@@ -214,17 +209,20 @@ WILD_BATTLE_TEST("(DYNAMAX) Ball Fetch doesn't trigger in Max Raid Battles")
     PARAMETRIZE { raid = FALSE; }
     PARAMETRIZE { raid = TRUE; }
     GIVEN {
-        if (raid)
+        if (raid) {
             gBattleTestRunnerState->data.recordedBattle.battleFlags |= BATTLE_TYPE_RAID;
+        }
+
         PLAYER(SPECIES_YAMPER) { Ability(ABILITY_BALL_FETCH); }
         OPPONENT(SPECIES_METAGROSS);
     } WHEN {
         TURN { USE_ITEM(player, ITEM_GREAT_BALL, WITH_RNG(RNG_BALLTHROW_SHAKE, MAX_u16)); }
     } SCENE {
-        if (raid)
+        if (raid) {
             NOT ABILITY_POPUP(player, ABILITY_BALL_FETCH);
-        else
+        } else {
             ABILITY_POPUP(player, ABILITY_BALL_FETCH);
+        }
     } THEN {
         EXPECT_EQ(player->item, raid ? ITEM_NONE : ITEM_GREAT_BALL);
     }

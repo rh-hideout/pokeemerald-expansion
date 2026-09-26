@@ -19,19 +19,27 @@ SINGLE_BATTLE_TEST("Dragon's Maw increases Dragon-type move damage", s16 damage)
         ASSUME(GetMoveType(MOVE_DRAGON_BREATH) == TYPE_DRAGON);
         ASSUME(GetMoveCategory(MOVE_DRAGON_CLAW) == DAMAGE_CATEGORY_PHYSICAL);
         ASSUME(GetMoveCategory(MOVE_DRAGON_BREATH) == DAMAGE_CATEGORY_SPECIAL);
+        ASSUME(GetMoveEffect(MOVE_GASTRO_ACID) == EFFECT_GASTRO_ACID);
         PLAYER(SPECIES_REGIDRAGO) { Ability(ABILITY_DRAGONS_MAW); Speed(1); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
     } WHEN {
         TURN {
-            if (suppressed)
+            if (suppressed) {
                 MOVE(opponent, MOVE_GASTRO_ACID);
+            }
+
             MOVE(player, move);
         }
     } SCENE {
+        if (suppressed) {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_GASTRO_ACID, opponent);
+        }
+
+        ANIMATION(ANIM_TYPE_MOVE, move, player);
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {
-        EXPECT_EQ(results[0].damage, results[1].damage); // Scratch should be unaffected
-        EXPECT_MUL_EQ(results[2].damage, Q_4_12(1.5), results[3].damage); // Dragon Claw should be affected
-        EXPECT_MUL_EQ(results[4].damage, Q_4_12(1.5), results[5].damage); // Dragon Breath should be affected
+        EXPECT_EQ(results[0].damage, results[1].damage);
+        EXPECT_MUL_EQ(results[2].damage, Q_4_12(1.5), results[3].damage);
+        EXPECT_MUL_EQ(results[4].damage, Q_4_12(1.5), results[5].damage);
     }
 }

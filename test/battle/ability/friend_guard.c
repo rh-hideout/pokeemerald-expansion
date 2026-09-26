@@ -122,8 +122,10 @@ DOUBLE_BATTLE_TEST("Friend Guard reduces damage dealt to an ally's Substitute", 
         TURN { MOVE(playerLeft, MOVE_SUBSTITUTE); MOVE(opponentLeft, MOVE_SCRATCH, target: playerLeft); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, playerLeft);
+        HP_BAR(playerLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
         SUB_HIT(playerLeft, captureDamage: &results[i].damage);
+        NOT HP_BAR(playerLeft);
     } FINALLY {
         EXPECT_MUL_EQ(results[1].damage, UQ_4_12(0.75), results[0].damage);
     }
@@ -186,6 +188,7 @@ DOUBLE_BATTLE_TEST("Friend Guard remains active while its holder is behind a Sub
         TURN { MOVE(opponentLeft, MOVE_SCRATCH, target: playerLeft); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, playerRight);
+        HP_BAR(playerRight);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
         HP_BAR(playerLeft, captureDamage: &results[i].damage);
     } FINALLY {
@@ -208,6 +211,7 @@ DOUBLE_BATTLE_TEST("Friend Guard does not reduce an ally's confusion damage", s1
         TURN { MOVE(opponentLeft, MOVE_CONFUSE_RAY, target: playerLeft); MOVE(playerLeft, MOVE_CELEBRATE, WITH_RNG(RNG_CONFUSION, TRUE)); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CONFUSE_RAY, opponentLeft);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, playerLeft);
         HP_BAR(playerLeft, captureDamage: &results[i].damage);
     } FINALLY {
         EXPECT_EQ(results[0].damage, results[1].damage);
@@ -227,6 +231,7 @@ DOUBLE_BATTLE_TEST("Friend Guard does not reduce poison damage dealt to an ally"
     } WHEN {
         TURN {}
     } SCENE {
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, playerLeft);
         HP_BAR(playerLeft, captureDamage: &results[i].damage);
     } FINALLY {
         EXPECT_EQ(results[0].damage, results[1].damage);
@@ -247,6 +252,7 @@ DOUBLE_BATTLE_TEST("Friend Guard does not reduce burn damage dealt to an ally", 
     } WHEN {
         TURN {}
     } SCENE {
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_BRN, playerLeft);
         HP_BAR(playerLeft, captureDamage: &results[i].damage);
     } FINALLY {
         EXPECT_EQ(results[0].damage, results[1].damage);

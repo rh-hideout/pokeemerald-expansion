@@ -7,29 +7,32 @@ SINGLE_BATTLE_TEST("Damp stops blocking Explosion while suppressed")
     PARAMETRIZE { suppress = FALSE; }
     PARAMETRIZE { suppress = TRUE; }
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_GASTRO_ACID) == EFFECT_GASTRO_ACID);
+        ASSUME(IsExplosionMove(MOVE_EXPLOSION));
+        ASSUME(IsMoveDampBanned(MOVE_EXPLOSION));
         PLAYER(SPECIES_PARAS) { Ability(ABILITY_DAMP); MaxHP(1000); HP(1000); }
-        OPPONENT(SPECIES_MEW) { Ability(ABILITY_SYNCHRONIZE); MaxHP(100); HP(100); Attack(100); }
+        OPPONENT(SPECIES_MEW) { MaxHP(100); HP(100); Attack(100); }
     } WHEN {
-        if (suppress)
+        if (suppress) {
             TURN { MOVE(opponent, MOVE_GASTRO_ACID); }
+        }
+
         TURN { MOVE(opponent, MOVE_EXPLOSION); }
     } SCENE {
-        if (suppress)
-        {
+        if (suppress) {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_GASTRO_ACID, opponent);
             ANIMATION(ANIM_TYPE_MOVE, MOVE_EXPLOSION, opponent);
-        }
-        else
-        {
+            HP_BAR(player);
+        } else {
             ABILITY_POPUP(player, ABILITY_DAMP);
-            NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_EXPLOSION, opponent);
+            NONE_OF {
+                ANIMATION(ANIM_TYPE_MOVE, MOVE_EXPLOSION, opponent);
+                HP_BAR(player);
+                HP_BAR(opponent);
+            }
         }
     } THEN {
         EXPECT_EQ(opponent->hp, suppress ? 0 : 100);
-        if (suppress)
-            EXPECT_LT(player->hp, 1000);
-        else
-            EXPECT_EQ(player->hp, 1000);
     }
 }
 

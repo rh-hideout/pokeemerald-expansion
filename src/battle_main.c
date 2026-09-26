@@ -5752,7 +5752,10 @@ enum Type GetDynamicMoveType(struct Pokemon *mon, enum Move move, enum BattlerId
     {
         enum Type ateType = TrySetAteType(move, battler, ability);
         if (ateType != TYPE_NONE && state == MON_IN_BATTLE && gimmick != GIMMICK_DYNAMAX)
+        {
             gBattleStruct->battlerState[battler].ateBoost = TRUE;
+        }
+
         return ateType;
     }
     else if (moveEffect != EFFECT_CHANGE_TYPE_ON_ITEM

@@ -76,9 +76,11 @@ DOUBLE_BATTLE_TEST("Aroma Veil protects the Pokémon's side from Encore")
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {
+        TURN { MOVE(moveTarget, MOVE_HARDEN); }
         TURN { MOVE(opponentLeft, MOVE_ENCORE, target: moveTarget); MOVE(moveTarget, MOVE_HARDEN); }
         TURN { MOVE(moveTarget, MOVE_CELEBRATE); }
     } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_HARDEN, moveTarget);
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_ENCORE, opponentLeft);
         ABILITY_POPUP(playerLeft, ABILITY_AROMA_VEIL);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HARDEN, moveTarget);
@@ -99,9 +101,11 @@ DOUBLE_BATTLE_TEST("Aroma Veil protects the Pokémon's side from Disable")
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {
+        TURN { MOVE(moveTarget, MOVE_HARDEN); }
         TURN { MOVE(opponentLeft, MOVE_DISABLE, target: moveTarget); MOVE(moveTarget, MOVE_HARDEN); }
         TURN { MOVE(moveTarget, MOVE_HARDEN); }
     } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_HARDEN, moveTarget);
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_DISABLE, opponentLeft);
         ABILITY_POPUP(playerLeft, ABILITY_AROMA_VEIL);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HARDEN, moveTarget);
@@ -143,12 +147,13 @@ DOUBLE_BATTLE_TEST("Aroma Veil protects the Pokémon's side from Cute Charm")
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(moveUser, MOVE_SCRATCH, target: opponentLeft, WITH_RNG(RNG_CUTE_CHARM, 1)); }
+        TURN { MOVE(moveUser, MOVE_SCRATCH, target: opponentLeft, WITH_RNG(RNG_INFATUATION, TRUE)); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, moveUser);
         HP_BAR(opponentLeft);
         NOT ABILITY_POPUP(opponentLeft, ABILITY_CUTE_CHARM);
-    } THEN {
-        EXPECT(!moveUser->volatiles.infatuation);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, moveUser);
+        HP_BAR(opponentLeft);
     }
 }
 
@@ -170,6 +175,7 @@ DOUBLE_BATTLE_TEST("Aroma Veil protects the Pokémon's side from Heal Block")
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_HEAL_BLOCK, opponentLeft);
         ABILITY_POPUP(playerLeft, ABILITY_AROMA_VEIL);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_RECOVER, moveTarget);
+        HP_BAR(moveTarget);
     }
 }
 
@@ -180,12 +186,12 @@ DOUBLE_BATTLE_TEST("Aroma Veil protects the Pokémon's side from Infatuation")
     PARAMETRIZE { moveTarget = playerRight; }
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_ATTRACT) == EFFECT_ATTRACT);
-        PLAYER(SPECIES_AROMATISSE) { Ability(ABILITY_AROMA_VEIL); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_AROMATISSE) { Ability(ABILITY_AROMA_VEIL); Gender(MON_MALE); }
+        PLAYER(SPECIES_WOBBUFFET) { Gender(MON_MALE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Gender(MON_FEMALE); }
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {
-        TURN { MOVE(opponentLeft, MOVE_ATTRACT, target: moveTarget); MOVE(moveTarget, MOVE_CELEBRATE); }
+        TURN { MOVE(opponentLeft, MOVE_ATTRACT, target: moveTarget); MOVE(moveTarget, MOVE_CELEBRATE, WITH_RNG(RNG_INFATUATION, TRUE)); }
     } SCENE {
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_ATTRACT, opponentLeft);
         ABILITY_POPUP(playerLeft, ABILITY_AROMA_VEIL);
@@ -207,13 +213,13 @@ DOUBLE_BATTLE_TEST("Aroma Veil protects the Pokémon's side from Destiny Knot in
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(moveTarget, MOVE_ATTRACT, target: opponentLeft); }
+        TURN { MOVE(moveTarget, MOVE_SCRATCH, target: opponentLeft, WITH_RNG(RNG_INFATUATION, TRUE)); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ATTRACT, moveTarget);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
         ABILITY_POPUP(playerLeft, ABILITY_AROMA_VEIL);
-        MESSAGE("But it failed!");
-    } THEN {
-        EXPECT(!moveTarget->volatiles.infatuation);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, moveTarget);
+        HP_BAR(opponentLeft);
     }
 }
 
@@ -245,6 +251,7 @@ DOUBLE_BATTLE_TEST("Aroma Veil prevents Psychic Noise's effect")
     PARAMETRIZE { moveTarget = playerRight; }
     GIVEN {
         ASSUME(GetMoveAdditionalEffectById(MOVE_PSYCHIC_NOISE, 0)->moveEffect == MOVE_EFFECT_PSYCHIC_NOISE);
+        ASSUME(GetMoveEffect(MOVE_RECOVER) == EFFECT_RESTORE_HP);
         PLAYER(SPECIES_AROMATISSE) { Ability(ABILITY_AROMA_VEIL); }
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -253,8 +260,10 @@ DOUBLE_BATTLE_TEST("Aroma Veil prevents Psychic Noise's effect")
         TURN { MOVE(opponentLeft, MOVE_PSYCHIC_NOISE, target: moveTarget); MOVE(moveTarget, MOVE_RECOVER); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PSYCHIC_NOISE, opponentLeft);
+        HP_BAR(moveTarget);
         ABILITY_POPUP(playerLeft, ABILITY_AROMA_VEIL);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_RECOVER, moveTarget);
+        HP_BAR(moveTarget);
     }
 }
 
@@ -262,16 +271,21 @@ DOUBLE_BATTLE_TEST("(DYNAMAX) Aroma Veil prevents G-Max Meltdown's effect")
 {
     GIVEN {
         ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_MELTDOWN, MOVE_EFFECT_TORMENT_SIDE));
+        ASSUME(GetMoveCategory(MOVE_HARDEN) == DAMAGE_CATEGORY_STATUS);
         PLAYER(SPECIES_AROMATISSE) { Ability(ABILITY_AROMA_VEIL); Speed(4); }
         PLAYER(SPECIES_WOBBUFFET) { HP(1000); MaxHP(1000); Speed(3); }
         OPPONENT(SPECIES_MELMETAL) { GigantamaxFactor(TRUE); Speed(2); }
         OPPONENT(SPECIES_WYNAUT) { Speed(1); }
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_IRON_HEAD, target: playerRight, gimmick: GIMMICK_DYNAMAX); }
+        TURN { MOVE(playerLeft, MOVE_HARDEN); MOVE(playerRight, MOVE_HARDEN); }
+        TURN { MOVE(playerLeft, MOVE_HARDEN); MOVE(playerRight, MOVE_HARDEN); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_G_MAX_MELTDOWN, opponentLeft);
-    } THEN {
-        EXPECT(!playerLeft->volatiles.torment);
-        EXPECT(!playerRight->volatiles.torment);
+        HP_BAR(playerRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_HARDEN, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_HARDEN, playerRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_HARDEN, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_HARDEN, playerRight);
     }
 }

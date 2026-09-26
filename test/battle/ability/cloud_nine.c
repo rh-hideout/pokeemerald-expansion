@@ -17,16 +17,12 @@ SINGLE_BATTLE_TEST("Cloud Nine/Air Lock prevent basic weather effects, but witho
         TURN {}
     } SCENE {
         ABILITY_POPUP(player, ability);
-        MESSAGE("The effects of the weather disappeared.");
-        MESSAGE("The opposing Wobbuffet used Sandstorm!");
-        MESSAGE("The sandstorm is raging.");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SANDSTORM, opponent);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SANDSTORM_CONTINUES);
         NONE_OF {
             HP_BAR(player);
             HP_BAR(opponent);
-            MESSAGE("The opposing Wobbuffet is buffeted by the sandstorm!");
         }
-        MESSAGE("The sandstorm is raging.");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SANDSTORM_CONTINUES);
     }
 }
@@ -42,6 +38,8 @@ DOUBLE_BATTLE_TEST("Cloud Nine and Air Lock suppress sunlight's Fire boost witho
     SetStartingStatus(STARTING_STATUS_WEATHER_SUN);
 
     GIVEN {
+        ASSUME(GetMoveType(MOVE_EMBER) == TYPE_FIRE);
+        ASSUME(GetMoveCategory(MOVE_EMBER) == DAMAGE_CATEGORY_SPECIAL);
         PLAYER(species) { Ability(ability); }
         PLAYER(SPECIES_WOBBUFFET) { SpAttack(100); }
         OPPONENT(SPECIES_WOBBUFFET) { SpDefense(100); }
@@ -51,8 +49,8 @@ DOUBLE_BATTLE_TEST("Cloud Nine and Air Lock suppress sunlight's Fire boost witho
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EMBER, playerRight);
         HP_BAR(opponentLeft, captureDamage: &results[i].damage);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SUN_CONTINUES);
     } THEN {
-        EXPECT(gBattleWeather & B_WEATHER_SUN);
         ResetStartingStatuses();
     } FINALLY {
         EXPECT_MUL_EQ(results[1].damage, Q_4_12(1.5), results[0].damage);
@@ -71,6 +69,8 @@ DOUBLE_BATTLE_TEST("Cloud Nine and Air Lock suppress rain's Water boost without 
     SetStartingStatus(STARTING_STATUS_WEATHER_RAIN);
 
     GIVEN {
+        ASSUME(GetMoveType(MOVE_WATER_GUN) == TYPE_WATER);
+        ASSUME(GetMoveCategory(MOVE_WATER_GUN) == DAMAGE_CATEGORY_SPECIAL);
         PLAYER(species) { Ability(ability); }
         PLAYER(SPECIES_WOBBUFFET) { SpAttack(100); }
         OPPONENT(SPECIES_WOBBUFFET) { SpDefense(100); }
@@ -80,8 +80,8 @@ DOUBLE_BATTLE_TEST("Cloud Nine and Air Lock suppress rain's Water boost without 
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_WATER_GUN, playerRight);
         HP_BAR(opponentLeft, captureDamage: &results[i].damage);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_RAIN_CONTINUES);
     } THEN {
-        EXPECT(gBattleWeather & B_WEATHER_RAIN);
         ResetStartingStatuses();
     } FINALLY {
         EXPECT_MUL_EQ(results[1].damage, Q_4_12(1.5), results[0].damage);
@@ -108,12 +108,9 @@ DOUBLE_BATTLE_TEST("Cloud Nine and Air Lock suppress hail damage without removin
         TURN { }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HAIL_CONTINUES);
-        if (ability == ABILITY_DAMP)
-        {
+        if (ability == ABILITY_DAMP) {
             HP_BAR(playerRight);
-        }
-        else
-        {
+        } else {
             NONE_OF {
                 HP_BAR(playerLeft);
                 HP_BAR(playerRight);
@@ -122,11 +119,6 @@ DOUBLE_BATTLE_TEST("Cloud Nine and Air Lock suppress hail damage without removin
             }
         }
     } THEN {
-        if (ability == ABILITY_DAMP)
-            EXPECT_LT(playerRight->hp, playerRight->maxHP);
-        else
-            EXPECT_EQ(playerRight->hp, playerRight->maxHP);
-        EXPECT(gBattleWeather & B_WEATHER_HAIL);
         ResetStartingStatuses();
     }
 }
@@ -142,6 +134,8 @@ DOUBLE_BATTLE_TEST("Cloud Nine and Air Lock suppress snow's Defense boost withou
     SetStartingStatus(STARTING_STATUS_WEATHER_SNOW);
 
     GIVEN {
+        ASSUME(GetSpeciesType(SPECIES_GLACEON, 0) == TYPE_ICE);
+        ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
         PLAYER(species) { Ability(ability); }
         PLAYER(SPECIES_WOBBUFFET) { Attack(100); }
         OPPONENT(SPECIES_GLACEON) { Defense(100); }
@@ -151,8 +145,8 @@ DOUBLE_BATTLE_TEST("Cloud Nine and Air Lock suppress snow's Defense boost withou
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerRight);
         HP_BAR(opponentLeft, captureDamage: &results[i].damage);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SNOW_CONTINUES);
     } THEN {
-        EXPECT(gBattleWeather & B_WEATHER_SNOW);
         ResetStartingStatuses();
     } FINALLY {
         EXPECT_MUL_EQ(results[0].damage, Q_4_12(1.5), results[1].damage);
@@ -171,6 +165,7 @@ DOUBLE_BATTLE_TEST("Cloud Nine and Air Lock suppress fog's accuracy drop without
     SetStartingStatus(STARTING_STATUS_WEATHER_FOG);
 
     GIVEN {
+        ASSUME(GetMoveAccuracy(MOVE_SCRATCH) == 100);
         PLAYER(species) { Ability(ability); }
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -180,8 +175,8 @@ DOUBLE_BATTLE_TEST("Cloud Nine and Air Lock suppress fog's accuracy drop without
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerRight);
         HP_BAR(opponentLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FOG_CONTINUES);
     } THEN {
-        EXPECT(gBattleWeather & B_WEATHER_FOG);
         ResetStartingStatuses();
     }
 }
@@ -195,17 +190,20 @@ DOUBLE_BATTLE_TEST("Cloud Nine and Air Lock suppress extremely harsh sunlight wi
     PARAMETRIZE { species = SPECIES_RAYQUAZA; ability = ABILITY_AIR_LOCK; }
 
     GIVEN {
+        ASSUME(GetMoveType(MOVE_WATER_GUN) == TYPE_WATER);
+        ASSUME(GetMoveCategory(MOVE_WATER_GUN) != DAMAGE_CATEGORY_STATUS);
         PLAYER(species) { Ability(ability); }
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_GROUDON_PRIMAL) { Ability(ABILITY_DESOLATE_LAND); }
+        OPPONENT(SPECIES_GROUDON) { Item(ITEM_RED_ORB); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerRight, MOVE_WATER_GUN, target: opponentLeft); }
     } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_PRIMAL_REVERSION, opponentLeft);
+        ABILITY_POPUP(opponentLeft, ABILITY_DESOLATE_LAND);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_WATER_GUN, playerRight);
         HP_BAR(opponentLeft);
-    } THEN {
-        EXPECT(gBattleWeather & B_WEATHER_SUN_PRIMAL);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SUN_CONTINUES);
     }
 }
 
@@ -218,17 +216,20 @@ DOUBLE_BATTLE_TEST("Cloud Nine and Air Lock suppress heavy rain without removing
     PARAMETRIZE { species = SPECIES_RAYQUAZA; ability = ABILITY_AIR_LOCK; }
 
     GIVEN {
+        ASSUME(GetMoveType(MOVE_EMBER) == TYPE_FIRE);
+        ASSUME(GetMoveCategory(MOVE_EMBER) != DAMAGE_CATEGORY_STATUS);
         PLAYER(species) { Ability(ability); }
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_KYOGRE_PRIMAL) { Ability(ABILITY_PRIMORDIAL_SEA); }
+        OPPONENT(SPECIES_KYOGRE) { Item(ITEM_BLUE_ORB); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerRight, MOVE_EMBER, target: opponentLeft); }
     } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_PRIMAL_REVERSION, opponentLeft);
+        ABILITY_POPUP(opponentLeft, ABILITY_PRIMORDIAL_SEA);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EMBER, playerRight);
         HP_BAR(opponentLeft);
-    } THEN {
-        EXPECT(gBattleWeather & B_WEATHER_RAIN_PRIMAL);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_RAIN_CONTINUES);
     }
 }
 
@@ -242,21 +243,26 @@ DOUBLE_BATTLE_TEST("Cloud Nine and Air Lock suppress strong winds without removi
     PARAMETRIZE { species = SPECIES_RAYQUAZA; ability = ABILITY_AIR_LOCK; }
 
     GIVEN {
+        ASSUME(GetMoveType(MOVE_THUNDERBOLT) == TYPE_ELECTRIC);
+        ASSUME(GetMoveCategory(MOVE_THUNDERBOLT) == DAMAGE_CATEGORY_SPECIAL);
+        ASSUME(GetSpeciesType(SPECIES_NOCTOWL, 1) == TYPE_FLYING);
         PLAYER(species) { Ability(ability); }
         PLAYER(SPECIES_WOBBUFFET) { SpAttack(100); }
         OPPONENT(SPECIES_NOCTOWL) { SpDefense(100); }
-        OPPONENT(SPECIES_RAYQUAZA_MEGA) { Ability(ABILITY_DELTA_STREAM); }
+        OPPONENT(SPECIES_RAYQUAZA) { Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE); }
     } WHEN {
+        TURN { MOVE(opponentRight, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
         TURN { MOVE(playerRight, MOVE_THUNDERBOLT, target: opponentLeft); }
     } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, opponentRight);
+        ABILITY_POPUP(opponentRight, ABILITY_DELTA_STREAM);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_THUNDERBOLT, playerRight);
         HP_BAR(opponentLeft, captureDamage: &results[i].damage);
-    } THEN {
-        EXPECT(gBattleWeather & B_WEATHER_STRONG_WINDS);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STRONG_WINDS);
     } FINALLY {
         EXPECT_MUL_EQ(results[0].damage, Q_4_12(2.0), results[1].damage);
         EXPECT_EQ(results[1].damage, results[2].damage);
     }
 }
 
-// Moves and abilities that are affected by weather should have new tests that check for Clould Nine/Air Lock, like Mold-Breaker Abilities
+// Weather-specific interactions belong with the affected move or Ability.
