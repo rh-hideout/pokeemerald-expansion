@@ -325,6 +325,11 @@ static inline const enum TrainerBattleType GetTrainerBattleType(u16 trainerId)
     return GetTrainerStructFromId(trainerId)->battleType;
 }
 
+static inline bool32 IsDoubleBattleTrainer(u16 trainerId)
+{
+    return (GetTrainerBattleType(trainerId) == TRAINER_BATTLE_TYPE_DOUBLES);
+}
+
 static inline const u8 GetTrainerPartySizeFromId(u16 trainerId)
 {
     return GetTrainerStructFromId(trainerId)->partySize;
