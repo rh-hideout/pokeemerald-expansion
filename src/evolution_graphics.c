@@ -26,8 +26,6 @@ static void Task_Sparkles_CircleInward_End(u8 taskId);
 
 static void Task_Sparkles_SprayAndFlash_Init(u8 taskId);
 static void Task_Sparkles_SprayAndFlash(u8 taskId);
-static void Task_Sparkles_SprayAndFlashTrade_Init(u8 taskId);
-static void Task_Sparkles_SprayAndFlashTrade(u8 taskId);
 static void Task_Sparkles_SprayAndFlash_End(u8 taskId);
 
 static void Task_CycleEvolutionMonSprite_Init(u8 taskId);
@@ -408,12 +406,12 @@ static void Task_Sparkles_CircleInward_End(u8 taskId)
     DestroyTask(taskId);
 }
 
-#define tSpecies data[2] // Never read
+#define tIsTradeEvo data[2] // Never read
 
-u8 EvolutionSparkles_SprayAndFlash(enum Species species)
+u8 EvolutionSparkles_SprayAndFlash(bool32 isTradeEvo)
 {
     u8 taskId = CreateTask(Task_Sparkles_SprayAndFlash_Init, 0);
-    gTasks[taskId].tSpecies = species;
+    gTasks[taskId].tIsTradeEvo = isTradeEvo;
     return taskId;
 }
 
@@ -422,13 +420,15 @@ static void Task_Sparkles_SprayAndFlash_Init(u8 taskId)
     SetEvoSparklesMatrices();
     gTasks[taskId].tTimer = 0;
     CpuCopy16(&gPlttBufferFaded[BG_PLTT_ID(2)], &gPlttBufferUnfaded[BG_PLTT_ID(2)], 3 * PLTT_SIZE_4BPP);
-    BeginNormalPaletteFade(0xFFF9041C, 0, 0, 0x10, RGB_WHITE); // was 0xFFF9001C in R/S
+    u32 palettesToFade = gTasks[taskId].tIsTradeEvo ? 0xFFF90400 : 0xFFF9041C;
+    BeginNormalPaletteFade(palettesToFade, 0, 0, 0x10, RGB_WHITE); // was 0xFFF9001C in R/S
     gTasks[taskId].func = Task_Sparkles_SprayAndFlash;
     PlaySE(SE_M_PETAL_DANCE);
 }
 
 static void Task_Sparkles_SprayAndFlash(u8 taskId)
 {
+    u32 palettesToFade;
     if (gTasks[taskId].tTimer < 128)
     {
         u8 i;
@@ -443,7 +443,8 @@ static void Task_Sparkles_SprayAndFlash(u8 taskId)
                 CreateSparkle_Spray(i);
             break;
         case 32:
-            BeginNormalPaletteFade(0xFFFF041C, 0x10, 0x10, 0, RGB_WHITE); // was 0xFFF9001C in R/S
+            palettesToFade = gTasks[taskId].tIsTradeEvo ? 0xFFFF0400 : 0xFFFF041C;
+            BeginNormalPaletteFade(palettesToFade, 0x10, 0x10, 0, RGB_WHITE); // was 0xFFF9001C in R/S
             break;
         }
         gTasks[taskId].tTimer++;
@@ -460,53 +461,8 @@ static void Task_Sparkles_SprayAndFlash_End(u8 taskId)
         DestroyTask(taskId);
 }
 
-// Separate from EvolutionSparkles_SprayAndFlash for difference in fade color
-u8 EvolutionSparkles_SprayAndFlash_Trade(enum Species species)
-{
-    u8 taskId = CreateTask(Task_Sparkles_SprayAndFlashTrade_Init, 0);
-    gTasks[taskId].tSpecies = species;
-    return taskId;
-}
-
-static void Task_Sparkles_SprayAndFlashTrade_Init(u8 taskId)
-{
-    SetEvoSparklesMatrices();
-    gTasks[taskId].tTimer = 0;
-    CpuCopy16(&gPlttBufferFaded[BG_PLTT_ID(2)], &gPlttBufferUnfaded[BG_PLTT_ID(2)], 3 * PLTT_SIZE_4BPP);
-    BeginNormalPaletteFade(0xFFF90400, 0, 0, 0x10, RGB_WHITE); // was 0xFFFF0001 in R/S
-    gTasks[taskId].func = Task_Sparkles_SprayAndFlashTrade;
-    PlaySE(SE_M_PETAL_DANCE);
-}
-
-static void Task_Sparkles_SprayAndFlashTrade(u8 taskId)
-{
-    if (gTasks[taskId].tTimer < 128)
-    {
-        u8 i;
-        switch (gTasks[taskId].tTimer)
-        {
-        default:
-            if (gTasks[taskId].tTimer < 50)
-                CreateSparkle_Spray(Random() & 7);
-            break;
-        case 0:
-            for (i = 0; i < 8; i++)
-                CreateSparkle_Spray(i);
-            break;
-        case 32:
-            BeginNormalPaletteFade(0xFFFF0400, 0x10, 0x10, 0, RGB_WHITE); // was 0xFFFF0001 in R/S
-            break;
-        }
-        gTasks[taskId].tTimer++;
-    }
-    else
-    {
-        gTasks[taskId].func = Task_Sparkles_SprayAndFlash_End;
-    }
-}
-
 #undef tTimer
-#undef tSpecies
+#undef tIsTradeEvo
 
 static void SpriteCB_EvolutionMonSprite(struct Sprite *sprite)
 {
