@@ -1234,7 +1234,7 @@ static void BattleSetup_ConfigureTrainerBattle(TrainerBattleParameter *battlePar
         return;
     }
 
-    if (battleParams->params.isDoubleBattle && !HasEnoughMonsForDoubleBattle2())
+    if (IsDoubleBattleTrainer(battleParams->params.opponentA) && !HasEnoughMonsForDoubleBattle2())
     {
         PUSH(EventSnippet_NotEnoughMonsForDoubleBattle)
         return;
@@ -1271,6 +1271,7 @@ void ConfigureTrainerBattle(struct ScriptContext *ctx)
     TrainerBattleParameter *battleParams = (TrainerBattleParameter*)(ctx->scriptPtr);
     TrainerBattleLoadArgs(battleParams->data);
 
+    assertf(!battleParams->params.isDoubleBattle, "isDoubleBattle script flag deprecated by expansion, double battle need to be set in trainers.party/trainers.inc");
     BattleSetup_ConfigureTrainerBattle(&gTrainerBattleParameter, &trainerBattleScriptStack);
     ScriptContext_SetupContextFromStack(&trainerBattleScriptStack, ctx);
     ScriptContext_Enable();
