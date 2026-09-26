@@ -1,6 +1,41 @@
 #include "global.h"
 #include "test/battle.h"
 
+SINGLE_BATTLE_TEST("Damp stops blocking Explosion while suppressed")
+{
+    bool32 suppress;
+    PARAMETRIZE { suppress = FALSE; }
+    PARAMETRIZE { suppress = TRUE; }
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_GASTRO_ACID) == EFFECT_GASTRO_ACID);
+        ASSUME(IsExplosionMove(MOVE_EXPLOSION));
+        ASSUME(IsMoveDampBanned(MOVE_EXPLOSION));
+        PLAYER(SPECIES_PARAS) { Ability(ABILITY_DAMP); MaxHP(1000); HP(1000); }
+        OPPONENT(SPECIES_MEW) { MaxHP(100); HP(100); Attack(100); }
+    } WHEN {
+        if (suppress) {
+            TURN { MOVE(opponent, MOVE_GASTRO_ACID); }
+        }
+
+        TURN { MOVE(opponent, MOVE_EXPLOSION); }
+    } SCENE {
+        if (suppress) {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_GASTRO_ACID, opponent);
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_EXPLOSION, opponent);
+            HP_BAR(player);
+        } else {
+            ABILITY_POPUP(player, ABILITY_DAMP);
+            NONE_OF {
+                ANIMATION(ANIM_TYPE_MOVE, MOVE_EXPLOSION, opponent);
+                HP_BAR(player);
+                HP_BAR(opponent);
+            }
+        }
+    } THEN {
+        EXPECT_EQ(opponent->hp, suppress ? 0 : 100);
+    }
+}
+
 SINGLE_BATTLE_TEST("Damp prevents Explosion-like moves from enemies")
 {
     enum Move move;
