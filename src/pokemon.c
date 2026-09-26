@@ -30,6 +30,7 @@
 #include "m4a.h"
 #include "main.h"
 #include "mail.h"
+#include "mf_moves.h"
 #include "mf_stats.h"
 #include "mf_types.h"
 #include "move_relearner.h"
@@ -3271,26 +3272,17 @@ u32 GetSpeciesBaseStatTotal(enum Species species)
 
 const struct LevelUpMove *GetSpeciesLevelUpLearnset(enum Species species)
 {
-    const struct LevelUpMove *learnset = gSpeciesInfo[SanitizeSpeciesId(species)].levelUpLearnset;
-    if (learnset == NULL)
-        return gSpeciesInfo[SPECIES_NONE].levelUpLearnset;
-    return learnset;
+    return MfGetSpeciesLevelUpLearnset(species);
 }
 
 const u16 *GetSpeciesTeachableLearnset(enum Species species)
 {
-    const u16 *learnset = gSpeciesInfo[SanitizeSpeciesId(species)].teachableLearnset;
-    if (learnset == NULL)
-        return gSpeciesInfo[SPECIES_NONE].teachableLearnset;
-    return learnset;
+    return MfGetSpeciesTeachableLearnset(species);
 }
 
 const u16 *GetSpeciesEggMoves(enum Species species)
 {
-    const u16 *learnset = gSpeciesInfo[SanitizeSpeciesId(species)].eggMoveLearnset;
-    if (learnset == NULL)
-        return gSpeciesInfo[SPECIES_NONE].eggMoveLearnset;
-    return learnset;
+    return MfGetSpeciesEggMoves(species);
 }
 
 //only used in test assumptions at the moment

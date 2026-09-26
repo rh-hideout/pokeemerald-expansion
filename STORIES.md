@@ -468,7 +468,7 @@ These exist to keep merging from `RHH/master` cheap. Violating them is the main 
 
 ### S30 — Runtime modern movepools
 
-- [ ] **Status:** Not started
+- [x] **Status:** Complete
 
 - **Goal:** `{PKMN} MOVEPOOL` toggles between vanilla FR and modern learnsets.
 - **Depends on:** S29
@@ -478,6 +478,7 @@ These exist to keep merging from `RHH/master` cheap. Violating them is the main 
   - ROM size is the real risk: two full learnset tables is a lot of data. Measure the delta and record it; if it doesn't fit, propose an alternative (e.g. a diff/patch table) in an ADR before building it.
 - **Acceptance:** Toggling changes what a Pokémon learns and can be taught; ROM still fits and boots.
 - **Tests:** Unit tests on learnset lookup in both modes; manual level-up and TM checks.
+- **Decisions:** [`docs-mf/decisions/0030-tech-runtime-modern-movepools.md`](docs-mf/decisions/0030-tech-runtime-modern-movepools.md) — FRLG classic tables from `frlg.json`; modern stays in `gSpeciesInfo`; ~55 KiB `.rodata`.
 
 ### S31 — Runtime item & ability behavior toggles
 

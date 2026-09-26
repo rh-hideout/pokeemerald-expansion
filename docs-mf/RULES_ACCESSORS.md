@@ -80,6 +80,10 @@ When the engine is off, `MfRules_HasInfiniteTms()` is TRUE (Phase 1). When the p
 
 `P_UPDATED_STATS` keeps Gen-latest values in `gSpeciesInfo`. `GetSpeciesBase*` / `GetSpeciesBaseStat` call `MfGetSpeciesBaseStat`, which returns those values when `MfRules_HasModernStats()`. When off, a compact classic table (Gen-3 / intro-gen `P_UPDATED_STATS` else-branches, binary-searched) supplies the original six. Modern-on is one rule check and no scan. Dex / summary / `CalculateMonStats` already go through the getters, so battle and UI stay consistent (ADR 0029).
 
+### Worked example: modern movepools (S30)
+
+`P_LVL_UP_LEARNSETS` stays `GEN_LATEST` in `gSpeciesInfo` (plus modern teachable/egg tables). `GetSpeciesLevelUpLearnset` / `GetSpeciesTeachableLearnset` / `GetSpeciesEggMoves` call `MfGetSpecies*`, which return those pointers when `MfRules_HasModernMoves()`. When off, FRLG classic tables (from `frlg.json`, binary-searched) supply level-up, TM/HM+tutor, and egg lists. Relearner, dex+, daycare, and `CanLearnTeachableMove` all go through the getters (ADR 0030).
+
 ### Rules for gates
 
 1. Prefer an existing expansion primitive (`I_*`, `B_*`, `P_*`) as the capability baseline.

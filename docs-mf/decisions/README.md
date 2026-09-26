@@ -64,3 +64,4 @@ Append a row to the index below when you add a record.
 | 0027 | tech | Runtime Fairy retypes via GetSpeciesType fallback table | S27 | 2026-09-13 |
 | 0028 | tech | Dual static type charts + modern-type overlay | S28 | 2026-09-14 |
 | 0029 | tech | Classic Gen-3 base-stat fallback table | S29 | 2026-09-25 |
+| 0030 | tech | FRLG classic movepool dual tables | S30 | 2026-09-25 |
