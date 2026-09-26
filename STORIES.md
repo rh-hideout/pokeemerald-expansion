@@ -18,6 +18,7 @@ Scope is defined in [`PROJECT.md`](./PROJECT.md). Build and repo rules are in [`
   - `- [x] **Status:** Complete`
 - **Milestones table:** a phase is `In progress` once any of its stories leaves Not started, and `Complete` once all its stories are Complete.
 - **Implementing stories:** use the `implement-story` skill (`.agents/skills/implement-story/`), which finds the story, builds it against `PROJECT.md` and the conventions below, verifies it in-game, updates status here, and records decisions.
+- **Playtesting stories:** use the `test-story` skill (`.agents/skills/test-story/`); it drives local mGBA against `pokefirered.gba` using `docs-mf/manual-qa/S##.md` and reports pass/fail only (no push required).
 - **Definition of Done (per story):** acceptance criteria met, `make firered -j$(sysctl -n hw.ncpu)` builds clean with no new warnings, `make check` passes, the ROM boots in mGBA, and any non-obvious decision is recorded in `docs-mf/decisions/` (created in S03).
 
 ## Project conventions (apply to every story)
@@ -453,7 +454,7 @@ These exist to keep merging from `RHH/master` cheap. Violating them is the main 
 
 ### S29 — Runtime modern base stats
 
-- [ ] **Status:** Not started
+- [x] **Status:** Complete
 
 - **Goal:** `POKéMON STATS` toggles between original and updated base stats.
 - **Depends on:** S13, S08
@@ -463,6 +464,7 @@ These exist to keep merging from `RHH/master` cheap. Violating them is the main 
   - Ensure recalculation is consistent for already-caught Pokémon and that the summary screen matches.
 - **Acceptance:** Toggling produces different stat totals in battle and in the summary; no measurable performance regression.
 - **Tests:** Unit tests on the stat-lookup helper; manual summary comparison.
+- **Decisions:** [`docs-mf/decisions/0029-tech-runtime-modern-base-stats.md`](docs-mf/decisions/0029-tech-runtime-modern-base-stats.md) — Gen-3 classic fallback table; Gen-latest stays in `gSpeciesInfo`; no ME custom buffs.
 
 ### S30 — Runtime modern movepools
 

@@ -76,6 +76,10 @@ When the engine is off, `MfRules_HasInfiniteTms()` is TRUE (Phase 1). When the p
 
 `gSpeciesInfo` stays vanilla (plus Fairy-on). When `MfRules_HasModernTypes()`, `MfGetSpeciesType` overlays ME’s balance retypes (Arbok Poison/Dark, etc.). `GetTypeModifier` indexes `MfGetTypeEffectivenessTable()` — Gen VI+ (`gTypeEffectivenessTable`) or ME Improved — so the hot path is one rule check then a 2D lookup (ADR 0028).
 
+### Worked example: modern base stats (S29)
+
+`P_UPDATED_STATS` keeps Gen-latest values in `gSpeciesInfo`. `GetSpeciesBase*` / `GetSpeciesBaseStat` call `MfGetSpeciesBaseStat`, which returns those values when `MfRules_HasModernStats()`. When off, a compact classic table (Gen-3 / intro-gen `P_UPDATED_STATS` else-branches, binary-searched) supplies the original six. Modern-on is one rule check and no scan. Dex / summary / `CalculateMonStats` already go through the getters, so battle and UI stay consistent (ADR 0029).
+
 ### Rules for gates
 
 1. Prefer an existing expansion primitive (`I_*`, `B_*`, `P_*`) as the capability baseline.

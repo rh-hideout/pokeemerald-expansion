@@ -3,6 +3,7 @@
 #include "mf_debug.h"
 #include "mf_rules.h"
 #include "mf_rules_menu.h"
+#include "mf_stats.h"
 #include "main.h"
 #include "overworld.h"
 #include "sound.h"
@@ -231,12 +232,21 @@ static void MfDebug_FormatEntryName(u8 *dest, const struct MfDebugEntry *entry)
 static void MfDebug_ApplyEntry(const struct MfDebugEntry *entry)
 {
     u8 cur;
+    bool8 prevModernStats;
 
     switch (entry->kind)
     {
     case MF_DEBUG_KIND_BOOL:
+        prevModernStats = MfRules_HasModernStats();
         if (!MfDebug_TrySetBool(entry->id, !MfRules_GetBool(entry->id)))
+        {
             PlaySE(SE_FAILURE);
+            break;
+        }
+        // Stored party stats must track the active base-stat table (S29).
+        if (entry->id == MF_RULE_BOOL_MODERN_STATS
+            && prevModernStats != MfRules_HasModernStats())
+            MfRecalculatePartyStats();
         break;
     case MF_DEBUG_KIND_VALUE:
         cur = MfRules_GetValue(entry->id);

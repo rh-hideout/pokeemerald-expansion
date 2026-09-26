@@ -30,6 +30,7 @@
 #include "m4a.h"
 #include "main.h"
 #include "mail.h"
+#include "mf_stats.h"
 #include "mf_types.h"
 #include "move_relearner.h"
 #include "naming_screen.h"
@@ -3224,52 +3225,38 @@ enum Ability GetSpeciesAbility(enum Species species, u8 slot)
 
 u32 GetSpeciesBaseHP(enum Species species)
 {
-    return gSpeciesInfo[SanitizeSpeciesId(species)].baseHP;
+    // S29: POKéMON STATS runtime gate — classic Gen-3 vs Gen-latest.
+    return MfGetSpeciesBaseStat(species, STAT_HP);
 }
 
 u32 GetSpeciesBaseAttack(enum Species species)
 {
-    return gSpeciesInfo[SanitizeSpeciesId(species)].baseAttack;
+    return MfGetSpeciesBaseStat(species, STAT_ATK);
 }
 
 u32 GetSpeciesBaseDefense(enum Species species)
 {
-    return gSpeciesInfo[SanitizeSpeciesId(species)].baseDefense;
+    return MfGetSpeciesBaseStat(species, STAT_DEF);
 }
 
 u32 GetSpeciesBaseSpAttack(enum Species species)
 {
-    return gSpeciesInfo[SanitizeSpeciesId(species)].baseSpAttack;
+    return MfGetSpeciesBaseStat(species, STAT_SPATK);
 }
 
 u32 GetSpeciesBaseSpDefense(enum Species species)
 {
-    return gSpeciesInfo[SanitizeSpeciesId(species)].baseSpDefense;
+    return MfGetSpeciesBaseStat(species, STAT_SPDEF);
 }
 
 u32 GetSpeciesBaseSpeed(enum Species species)
 {
-    return gSpeciesInfo[SanitizeSpeciesId(species)].baseSpeed;
+    return MfGetSpeciesBaseStat(species, STAT_SPEED);
 }
 
 u32 GetSpeciesBaseStat(enum Species species, u32 statIndex)
 {
-    switch (statIndex)
-    {
-    case STAT_HP:
-        return GetSpeciesBaseHP(species);
-    case STAT_ATK:
-        return GetSpeciesBaseAttack(species);
-    case STAT_DEF:
-        return GetSpeciesBaseDefense(species);
-    case STAT_SPEED:
-        return GetSpeciesBaseSpeed(species);
-    case STAT_SPATK:
-        return GetSpeciesBaseSpAttack(species);
-    case STAT_SPDEF:
-        return GetSpeciesBaseSpDefense(species);
-    }
-    return 0;
+    return MfGetSpeciesBaseStat(species, statIndex);
 }
 
 u32 GetSpeciesBaseStatTotal(enum Species species)
