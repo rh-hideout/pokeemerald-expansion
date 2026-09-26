@@ -734,7 +734,7 @@ bool8 StandardWildEncounter(u16 curMetatileBehavior, u16 prevMetatileBehavior)
             {
                 if (DoMassOutbreakEncounterTest() == TRUE && SetUpMassOutbreakEncounter(WILD_CHECK_REPEL | WILD_CHECK_KEEN_EYE) == TRUE)
                 {
-                    BattleSetup_StartWildBattle();
+                    BattleSetup_StartMassOutbreakBattle();
                     return TRUE;
                 }
 
@@ -901,11 +901,16 @@ bool8 SweetScentWildEncounter(void)
             }
 
             if (DoMassOutbreakEncounterTest() == TRUE)
+            {
                 SetUpMassOutbreakEncounter(0);
+                BattleSetup_StartMassOutbreakBattle();
+            }
             else
+            {
                 TryGenerateWildMon(gWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo, WILD_AREA_LAND, 0);
+                BattleSetup_StartWildBattle();
+            }
 
-            BattleSetup_StartWildBattle();
             return TRUE;
         }
         else if (MetatileBehavior_IsWaterWildEncounter(MapGridGetMetatileBehaviorAt(x, y)) == TRUE)
