@@ -3,6 +3,7 @@
 #include "battle_pike.h"
 #include "battle_pyramid.h"
 #include "event_data.h"
+#include "event_object_movement.h"
 #include "fieldmap.h"
 #include "fishing.h"
 #include "follower_npc.h"
@@ -26,6 +27,7 @@
 #include "battle_pike.h"
 #include "battle_pyramid.h"
 #include "constants/abilities.h"
+#include "constants/field_specials.h"
 #include "constants/game_stat.h"
 #include "constants/item.h"
 #include "constants/items.h"
@@ -602,7 +604,7 @@ static bool8 EncounterOddsCheck(u16 encounterRate)
 }
 
 // Returns true if it will try to create a wild encounter.
-static bool8 WildEncounterCheck(u32 encounterRate, bool8 ignoreAbility)
+static u32 WildEncounterOdds(u32 encounterRate, bool8 ignoreAbility)
 {
     encounterRate *= 16;
     if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_MACH_BIKE | PLAYER_AVATAR_FLAG_ACRO_BIKE))
@@ -638,7 +640,12 @@ static bool8 WildEncounterCheck(u32 encounterRate, bool8 ignoreAbility)
     }
     if (encounterRate > MAX_ENCOUNTER_RATE)
         encounterRate = MAX_ENCOUNTER_RATE;
-    return EncounterOddsCheck(encounterRate);
+    return encounterRate;
+}
+
+static bool8 WildEncounterCheck(u32 encounterRate, bool8 ignoreAbility)
+{
+    return EncounterOddsCheck(WildEncounterOdds(encounterRate, ignoreAbility));
 }
 
 // When you first step on a different type of metatile, there's a 40% chance it
@@ -808,6 +815,62 @@ bool8 StandardWildEncounter(u16 curMetatileBehavior, u16 prevMetatileBehavior)
     return FALSE;
 }
 
+void rockSmashRNG(struct ScriptContext *ctx)
+{
+    u32 headerId = GetCurrentMapWildMonHeaderId();
+    enum TimeOfDay timeOfDay;
+    enum RockSmashResult rockSmashResult;
+    u32 encounterChance = 0;
+
+    if (headerId != HEADER_NONE)
+    {
+        timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_ROCKS);
+        encounterChance = WildEncounterOdds(gWildMonHeaders[headerId].encounterTypes[timeOfDay].rockSmashMonsInfo->encounterRate, TRUE);
+    }
+    //Tip: if you want the item table to vary between different breakable rocks, use . This simply pulls data from the x view radius of var_last_talked.
+
+    if (OW_ROCK_SMASH_ITEMS == GEN_6 || OW_ROCK_SMASH_ITEMS == GEN_6_ORAS)
+    {
+        if (encounterChance != 0)
+            rockSmashResult = RandomUniform(RNG_NONE, 0, 2);// 1/3 chance to do each. 
+        else 
+            rockSmashResult = RandomWeighted(RNG_NONE, 2, 0, 1);// 2/3 chance to do nothing, 1/3 chance of item
+        //By instead using RandomWeighted(RNG_NONE, 320, encounterChance, 320), you can adjust rock smash encounter odds by map.
+    }
+    else if (OW_ROCK_SMASH_ITEMS == GEN_4)
+    {
+        if (EncounterOddsCheck(encounterChance))
+        {
+            gSpecialVar_Result = ROCK_SMASH_ENCOUNTER;
+            return;
+        }
+        u32 itemRate = gMapHeader.events->objectEvents[(gSpecialVar_LastTalked - 1)].trainerRange_berryTreeId;// this is 0 on everything by default. 
+        if (itemRate < OW_ROCK_SMASH_ITEMS_MIN_ODDS)
+            itemRate = OW_ROCK_SMASH_ITEMS_MIN_ODDS;
+
+        u32 partySlot = VarGet(VAR_0x8006);
+        if (DoesRockSmashUserHaveIncreasedItemRarity(partySlot))
+            itemRate += 5;
+
+        struct Pokemon *mon = GetFirstLiveMon();
+        if (VarGet(VAR_0x8004) == TRUE || (OW_FOLLOWERS_ENABLED && mon == &gParties[B_TRAINER_PLAYER][partySlot]))// either a rock smash anim is playing or the user would be the current follower.
+            itemRate += 5;
+
+        rockSmashResult = ROCK_SMASH_ITEM * RandomPercentage(RNG_NONE, itemRate);// returns either 0 or 2
+    }
+    else
+    {
+        rockSmashResult = EncounterOddsCheck(encounterChance);
+//EncounterOddsCheck returns either 0 or 1, meaning nothing or encounter. This violates types, but rockSmashResult is immediately put into a var.
+    }
+
+    gSpecialVar_Result = rockSmashResult;
+    return;
+}
+
+    
+
+
 void RockSmashWildEncounter(void)
 {
     u32 headerId = GetCurrentMapWildMonHeaderId();
@@ -823,8 +886,7 @@ void RockSmashWildEncounter(void)
         {
             gSpecialVar_Result = FALSE;
         }
-        else if (WildEncounterCheck(wildPokemonInfo->encounterRate, TRUE) == TRUE
-         && TryGenerateWildMon(wildPokemonInfo, WILD_AREA_ROCKS, WILD_CHECK_REPEL | WILD_CHECK_KEEN_EYE) == TRUE)
+        else if (TryGenerateWildMon(wildPokemonInfo, WILD_AREA_ROCKS, WILD_CHECK_REPEL | WILD_CHECK_KEEN_EYE) == TRUE)
         {
             if (TryDoDoubleWildBattle())
             {
