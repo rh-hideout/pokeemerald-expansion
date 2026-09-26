@@ -33,6 +33,7 @@
 #include "random.h"
 #include "region_map.h"
 #include "rtc.h"
+#include "rotating_gate.h"
 #include "script.h"
 #include "sound.h"
 #include "sprite.h"
@@ -1890,9 +1891,18 @@ u8 TrySpawnObjectEventTemplate(const struct ObjectEventTemplate *objectEventTemp
     struct SpriteFrameImage spriteFrameImage;
     const struct ObjectEventGraphicsInfo *graphicsInfo;
     const struct SubspriteTable *subspriteTables = NULL;
-    const struct ObjectEventTemplate objectEventTemplateLocal = TryGetObjectEventTemplateForOWE(objectEventTemplate);
-    u16 graphicsId = objectEventTemplateLocal.graphicsId;
+    struct ObjectEventTemplate objectEventTemplateLocal;
+    u16 graphicsId;
 
+    // Rotating gate object events are map-editor markers. Their custom affine
+    // sprites and collision are managed by rotating_gate.c. Check the authored
+    // ID before resolving dynamic OBJ_EVENT_GFX_VAR_* values: a normal object
+    // using a graphics variable must never become a gate marker accidentally.
+    if (IsRotatingGateObjectEventGraphicsId(objectEventTemplate->graphicsId))
+        return OBJECT_EVENTS_COUNT;
+
+    objectEventTemplateLocal = TryGetObjectEventTemplateForOWE(objectEventTemplate);
+    graphicsId = objectEventTemplateLocal.graphicsId;
     graphicsInfo = GetObjectEventGraphicsInfo(graphicsId);
     CopyObjectGraphicsInfoToSpriteTemplate_WithMovementType(graphicsId, objectEventTemplateLocal.movementType, &spriteTemplate, &subspriteTables);
     spriteFrameImage.size = graphicsInfo->size;

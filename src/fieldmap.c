@@ -10,6 +10,7 @@
 #include "overworld.h"
 #include "palette.h"
 #include "pokenav.h"
+#include "rotating_gate.h"
 #include "script.h"
 #include "secret_base.h"
 #include "trainer_hill.h"
@@ -766,6 +767,10 @@ bool8 CameraMove(s32 x, s32 y)
             return gCamera.active;
         }
 
+        // The destination templates replace the current gate state. Release
+        // affine matrices and tiles while the source templates still identify
+        // their sprites.
+        RotatingGate_DestroyGraphics();
         SetPositionFromConnection(connection, direction, x, y);
         LoadMapFromCameraTransition(connection->mapGroup, connection->mapNum);
         gCamera.active = TRUE;
@@ -774,6 +779,7 @@ bool8 CameraMove(s32 x, s32 y)
         gSaveBlock1Ptr->pos.x += x;
         gSaveBlock1Ptr->pos.y += y;
         MoveMapViewToBackup(direction);
+        RotatingGate_InitGraphics(x, y);
     }
 
     return gCamera.active;
