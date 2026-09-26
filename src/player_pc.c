@@ -844,6 +844,7 @@ static void Mailbox_HandleConfirmMoveToBag(u8 taskId)
         break;
     case MENU_B_PRESSED:
         PlaySE(SE_SELECT);
+        [[fallthrough]];
     case 1: // No
         Mailbox_CancelMoveToBag(taskId);
         break;

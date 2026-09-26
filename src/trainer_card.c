@@ -608,6 +608,7 @@ static void CB2_InitTrainerCard(void)
         FreeAllSpritePalettes();
         ResetPaletteFade();
         gMain.state++;
+        [[fallthrough]];
     case 4:
         InitBgsAndWindows();
         gMain.state++;
@@ -1466,6 +1467,7 @@ static u8 SetCardBgsAndPals(void)
         FillBgTilemapBufferRect_Palette0(0, 0, 0, 0, 32, 32);
         FillBgTilemapBufferRect_Palette0(2, 0, 0, 0, 32, 32);
         FillBgTilemapBufferRect_Palette0(3, 0, 0, 0, 32, 32);
+        [[fallthrough]];
     default:
         return 1;
     }

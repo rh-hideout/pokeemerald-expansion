@@ -3351,7 +3351,7 @@ static void AnimTask_ScaryFace_Step(u8 taskId)
         ClearBattleAnimBg(1);
         ClearBattleAnimBg(2);
         gTasks[taskId].data[12]++;
-        // fall through
+        [[fallthrough]];
     case 4:
         if (!IsContest())
             SetAnimBgAttribute(1, BG_ANIM_CHAR_BASE_BLOCK, 0);
