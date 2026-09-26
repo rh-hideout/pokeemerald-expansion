@@ -3265,6 +3265,17 @@ static void HandleSetEffectSkillSwap(struct BattleCalcValues *cv, struct SetEffe
      || gAbilitiesInfo[*abilityDef].cantBeSwapped)
     {
         SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
+        if (!cv->onlyChecking)
+        {
+            if (gAbilitiesInfo[*abilityAtk].cantBeSwapped)
+            {
+                RecordAbilityBattle(cv->battlerAtk, *abilityAtk);
+            }
+            if (gAbilitiesInfo[*abilityDef].cantBeSwapped)
+            {
+                RecordAbilityBattle(se->effectBattler, *abilityDef);
+            }
+        }
     }
     else if (CanAbilityShieldActivateForBattler(cv->battlerAtk) || CanAbilityShieldActivateForBattler(se->effectBattler))
     {
@@ -3303,6 +3314,17 @@ static void HandleSetEffectRolePlay(struct BattleCalcValues *cv, struct SetEffec
      || gAbilitiesInfo[sourceAbility].cantBeCopied)
     {
         SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
+        if (!cv->onlyChecking)
+        {
+            if (gAbilitiesInfo[destAbility].cantBeSuppressed)
+            {
+                RecordAbilityBattle(se->effectBattler, destAbility);
+            }
+            if (gAbilitiesInfo[sourceAbility].cantBeCopied)
+            {
+                RecordAbilityBattle(cv->battlerDef, sourceAbility);
+            }
+        }
     }
     else if (CanAbilityShieldActivateForBattler(se->effectBattler))
     {
@@ -3591,6 +3613,7 @@ static void HandleSetEffectEntrainment(struct BattleCalcValues *cv, struct SetEf
         se->effectFailed = TRUE;
         if (!cv->onlyChecking)
         {
+            RecordAbilityBattle(se->effectBattler, *destAbility);
             if (cv->isStatusMove)
                 BattleScriptPushAndSet(se->script, BattleScript_ButItFailedRet);
         }
