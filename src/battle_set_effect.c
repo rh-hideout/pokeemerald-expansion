@@ -3591,7 +3591,6 @@ static void HandleSetEffectEntrainment(struct BattleCalcValues *cv, struct SetEf
         se->effectFailed = TRUE;
         if (!cv->onlyChecking)
         {
-            RecordAbilityBattle(cv->battlerAtk, *destAbility);
             if (cv->isStatusMove)
                 BattleScriptPushAndSet(se->script, BattleScript_ButItFailedRet);
         }

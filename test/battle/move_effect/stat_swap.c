@@ -185,9 +185,9 @@ SINGLE_BATTLE_TEST("Heart Swap switches the user's Defense and Sp. Def stat stag
 {
     enum Move boostMove, attackMove;
 
-    PARAMETRIZE { attackMove = MOVE_POUND; }
-    PARAMETRIZE { attackMove = MOVE_SWIFT; }
-    boostMove = GetMoveCategory(attackMove) == DAMAGE_CATEGORY_PHYSICAL ? MOVE_SWORDS_DANCE : MOVE_NASTY_PLOT;
+    PARAMETRIZE { attackMove = MOVE_POUND; boostMove = MOVE_IRON_DEFENSE; }
+    PARAMETRIZE { attackMove = MOVE_SWIFT; boostMove = MOVE_AMNESIA; }
+
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_POUND) == DAMAGE_CATEGORY_PHYSICAL);
         ASSUME(GetMoveCategory(MOVE_SWIFT) == DAMAGE_CATEGORY_SPECIAL);
@@ -231,21 +231,36 @@ SINGLE_BATTLE_TEST("Heart Swap switches all user's stat stages with the target")
 }
 SINGLE_BATTLE_TEST("Speed Swap swaps user and target's speed stats but not stat boosts")
 {
+    u32 playerSpeed;
+    u32 opponentSpeed;
+
+    PARAMETRIZE { playerSpeed = 2; opponentSpeed = 3; }
+    PARAMETRIZE { playerSpeed = 10; opponentSpeed = 30; }
+
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(1); };
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); };
+        PLAYER(SPECIES_WOBBUFFET) { Speed(playerSpeed); };
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(opponentSpeed); };
         ASSUME_STAT_CHANGE(MOVE_AGILITY, speed: +2);
     }WHEN {
         TURN { MOVE(opponent, MOVE_AGILITY); MOVE(player, MOVE_SPEED_SWAP); }
-        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
+        if (playerSpeed == 2) {
+            TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_CELEBRATE); }
+        } else {
+            TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
+        }
     } SCENE {
         // Turn 1
         ANIMATION(ANIM_TYPE_MOVE, MOVE_AGILITY, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPEED_SWAP, player);
 
         // Turn 2
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
+        if (playerSpeed == 2) {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
+        } else {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        }
     } THEN {
         EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE);
         EXPECT_EQ(opponent->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + 2);
