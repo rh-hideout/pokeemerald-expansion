@@ -1,6 +1,84 @@
 #include "global.h"
 #include "test/battle.h"
 
+DOUBLE_BATTLE_TEST("Desolate Land ending reverts Castform before the replacement Drizzle activates")
+{
+    enum Move move;
+    PARAMETRIZE { move = MOVE_ENTRAINMENT; }
+    PARAMETRIZE { move = MOVE_ROLE_PLAY; }
+    PARAMETRIZE { move = MOVE_DOODLE; }
+
+    GIVEN {
+        PLAYER(SPECIES_GROUDON) { Item(ITEM_RED_ORB); Speed(100); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(90); }
+        OPPONENT(SPECIES_PELIPPER) { Ability(ABILITY_DRIZZLE); Speed(80); }
+        OPPONENT(SPECIES_CASTFORM_NORMAL) { Ability(ABILITY_FORECAST); Speed(70); }
+    } WHEN {
+        if (move == MOVE_ENTRAINMENT) {
+            TURN { MOVE(opponentLeft, move, target: playerLeft); }
+        } else {
+            TURN { MOVE(playerLeft, move, target: opponentLeft); }
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, opponentRight);
+        if (move == MOVE_ENTRAINMENT) {
+            ANIMATION(ANIM_TYPE_MOVE, move, opponentLeft);
+        } else {
+            ANIMATION(ANIM_TYPE_MOVE, move, playerLeft);
+        }
+
+        MESSAGE("The extremely harsh sunlight faded!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, opponentRight);
+        ABILITY_POPUP(playerLeft, ABILITY_DRIZZLE);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_RAIN_CONTINUES);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, opponentRight);
+        if (move == MOVE_DOODLE) {
+            ABILITY_POPUP(playerRight);
+        }
+
+        // The second rain animation is the end-of-turn continuation.
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_RAIN_CONTINUES);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Desolate Land persists when another holder sustains it during an Ability replacement")
+{
+    enum Move move;
+    PARAMETRIZE { move = MOVE_ENTRAINMENT; }
+    PARAMETRIZE { move = MOVE_ROLE_PLAY; }
+    PARAMETRIZE { move = MOVE_DOODLE; }
+
+    GIVEN {
+        PLAYER(SPECIES_GROUDON) { Item(ITEM_RED_ORB); Speed(100); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(90); }
+        OPPONENT(SPECIES_PELIPPER) { Ability(ABILITY_DRIZZLE); Speed(80); }
+        OPPONENT(SPECIES_GROUDON) { Item(ITEM_RED_ORB); Speed(70); }
+    } WHEN {
+        if (move == MOVE_ENTRAINMENT) {
+            TURN { MOVE(opponentLeft, move, target: playerLeft); }
+        } else {
+            TURN { MOVE(playerLeft, move, target: opponentLeft); }
+        }
+    } SCENE {
+        if (move == MOVE_ENTRAINMENT) {
+            ANIMATION(ANIM_TYPE_MOVE, move, opponentLeft);
+        } else {
+            ANIMATION(ANIM_TYPE_MOVE, move, playerLeft);
+        }
+
+        NOT MESSAGE("The extremely harsh sunlight faded!");
+        ABILITY_POPUP(playerLeft, ABILITY_DRIZZLE);
+        if (move == MOVE_DOODLE) {
+            NOT MESSAGE("The extremely harsh sunlight faded!");
+            ABILITY_POPUP(playerRight, ABILITY_DRIZZLE);
+        }
+
+        NOT MESSAGE("The extremely harsh sunlight faded!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SUN_CONTINUES);
+        NOT MESSAGE("The extremely harsh sunlight faded!");
+    }
+}
+
 ASSUMPTIONS
 {
     ASSUME(GetMoveCategory(MOVE_WATER_GUN) != DAMAGE_CATEGORY_STATUS);
