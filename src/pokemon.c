@@ -12,6 +12,7 @@
 #include "battle_tower.h"
 #include "battle_z_move.h"
 #include "caps.h"
+#include "config_changes.h"
 #include "data.h"
 #include "daycare.h"
 #include "dexnav.h"
@@ -80,6 +81,8 @@
 extern enum Item gSpecialVar_ItemId;
 
 #define FRIENDSHIP_EVO_THRESHOLD ((P_FRIENDSHIP_EVO_THRESHOLD >= GEN_8) ? 160 : 220)
+
+STATIC_ASSERT(P_SHINY_THRESHOLD >= 0 && P_SHINY_THRESHOLD <= MAX_u16 + 1, InvalidShinyThreshold);
 
 struct SpeciesItem
 {
@@ -872,13 +875,15 @@ bool32 ComputePlayerShinyOdds(u32 personality, u32 value)
     if (FlagGet(P_FLAG_FORCE_SHINY))
         return TRUE;
 
-    if (P_ONLY_OBTAINABLE_SHINIES && (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE || (FlagGet(WE_FLAG_NO_CATCHING))))
+    if (GetConfig(ONLY_OBTAINABLE_SHINIES) && (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE || (FlagGet(WE_FLAG_NO_CATCHING))))
         return FALSE;
 
-    if (P_NO_SHINIES_WITHOUT_POKEBALLS && !HasAtLeastOnePokeBall() && FlagGet(FLAG_SYS_POKEDEX_GET))
+    if (GetConfig(NO_SHINIES_WITHOUT_POKEBALLS) && !HasAtLeastOnePokeBall() && FlagGet(FLAG_SYS_POKEDEX_GET))
         return FALSE;
 
     u32 totalRerolls = 0;
+    u32 shinyThreshold = GetConfig(SHINY_THRESHOLD);
+    u32 shinyValue = GET_SHINY_VALUE(value, personality);
 
     if (CheckBagHasItem(ITEM_SHINY_CHARM, 1))
         totalRerolls += I_SHINY_CHARM_ADDITIONAL_ROLLS;
@@ -891,13 +896,13 @@ bool32 ComputePlayerShinyOdds(u32 personality, u32 value)
     if (gDexNavSpecies)
         totalRerolls += CalculateDexNavShinyRolls();
 
-    while (GET_SHINY_VALUE(value, personality) >= SHINY_ODDS && totalRerolls > 0)
+    while (shinyValue >= shinyThreshold && totalRerolls > 0)
     {
-        personality = Random32();
+        shinyValue = RandomUniform(RNG_SHINY_REROLL, 0, MAX_u16);
         totalRerolls--;
     }
 
-    return GET_SHINY_VALUE(value, personality) < SHINY_ODDS;
+    return shinyValue < shinyThreshold;
 }
 
 void SetBoxMonIVs(struct BoxPokemon *mon, u8 fixedIV)
@@ -981,7 +986,7 @@ void CreateBoxMon(struct BoxPokemon *boxMon, enum Species species, u8 level, u32
     else if (trainerId.method == OT_ID_PRESET)
     {
         value = trainerId.value;
-        isShiny = GET_SHINY_VALUE(value, personality) < SHINY_ODDS;
+        isShiny = GET_SHINY_VALUE(value, personality) < SHINY_STORAGE_THRESHOLD;
     }
     else // Player is the OT
     {
@@ -2478,7 +2483,7 @@ u32 GetBoxMonData3(struct BoxPokemon *boxMon, s32 field, u8 *data)
         case MON_DATA_IS_SHINY:
         {
             u32 shinyValue = GET_SHINY_VALUE(boxMon->otId, boxMon->personality);
-            retVal = (shinyValue < SHINY_ODDS) ^ boxMon->shinyModifier;
+            retVal = (shinyValue < SHINY_STORAGE_THRESHOLD) ^ boxMon->shinyModifier;
             break;
         }
         case MON_DATA_HIDDEN_NATURE:
@@ -2910,7 +2915,7 @@ void SetBoxMonData(struct BoxPokemon *boxMon, s32 field, const void *dataArg)
             u32 shinyValue = GET_SHINY_VALUE(boxMon->otId, boxMon->personality);
             bool32 isShiny;
             SET8(isShiny);
-            boxMon->shinyModifier = (shinyValue < SHINY_ODDS) ^ isShiny;
+            boxMon->shinyModifier = (shinyValue < SHINY_STORAGE_THRESHOLD) ^ isShiny;
             break;
         }
         case MON_DATA_HIDDEN_NATURE:
