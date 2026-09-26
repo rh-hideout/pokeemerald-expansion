@@ -208,6 +208,17 @@ struct
             sOptionsLabelGfx_SwitchOff
         }
     },
+    [POKENAV_MENU_TYPE_UNLOCK_RIBBONS] =
+    {
+        .yStart = 42,
+        .deltaY = 20,
+        .gfx = {
+            sOptionsLabelGfx_RegionMap,
+            sOptionsLabelGfx_Condition,
+            sOptionsLabelGfx_Ribbons,
+            sOptionsLabelGfx_SwitchOff
+        }
+    },
     [POKENAV_MENU_TYPE_UNLOCK_MC] =
     {
         .yStart = 42,
