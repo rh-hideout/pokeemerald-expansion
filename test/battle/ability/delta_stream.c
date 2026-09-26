@@ -17,12 +17,9 @@ DOUBLE_BATTLE_TEST("Delta Stream ends before Drizzle starts rain")
         TURN {
             MOVE(playerLeft, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA);
         }
-        if (move == MOVE_ENTRAINMENT)
-        {
+        if (move == MOVE_ENTRAINMENT) {
             TURN { MOVE(opponentLeft, move, target: playerLeft); }
-        }
-        else
-        {
+        } else {
             TURN { MOVE(playerLeft, move, target: opponentLeft); }
         }
     } SCENE {
