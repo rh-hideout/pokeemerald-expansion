@@ -23,11 +23,13 @@ DOUBLE_BATTLE_TEST("Neutralizing Gas fainting as Discharge's ally restores Sheer
             STATUS_ICON(opponentLeft, paralysis: TRUE);
             STATUS_ICON(opponentRight, paralysis: TRUE);
         }
+
         HP_BAR(opponentLeft);
         NONE_OF {
             STATUS_ICON(opponentLeft, paralysis: TRUE);
             STATUS_ICON(opponentRight, paralysis: TRUE);
         }
+
         HP_BAR(opponentRight);
         NONE_OF {
             STATUS_ICON(opponentLeft, paralysis: TRUE);
@@ -50,13 +52,10 @@ DOUBLE_BATTLE_TEST("Neutralizing Gas fainting as Discharge's foe allows 30% para
         ASSUME(MoveIsAffectedBySheerForce(MOVE_DISCHARGE));
         PLAYER(SPECIES_TAUROS) { Ability(ABILITY_SHEER_FORCE); }
         PLAYER(SPECIES_WOBBUFFET);
-        if (gasOnRight)
-        {
+        if (gasOnRight) {
             OPPONENT(SPECIES_WOBBUFFET);
             OPPONENT(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); HP(1); }
-        }
-        else
-        {
+        } else {
             OPPONENT(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); HP(1); }
             OPPONENT(SPECIES_WOBBUFFET);
         }
@@ -66,13 +65,10 @@ DOUBLE_BATTLE_TEST("Neutralizing Gas fainting as Discharge's foe allows 30% para
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DISCHARGE, playerLeft);
         HP_BAR(playerRight);
         STATUS_ICON(playerRight, paralysis: TRUE);
-        if (gasOnRight)
-        {
+        if (gasOnRight) {
             HP_BAR(opponentLeft);
             HP_BAR(opponentRight, hp: 0);
-        }
-        else
-        {
+        } else {
             HP_BAR(opponentLeft, hp: 0);
             HP_BAR(opponentRight);
         }
@@ -109,23 +105,18 @@ SINGLE_BATTLE_TEST("Neutralizing Gas reactivates other Abilities before its repl
         PLAYER(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); Speed(100); }
         OPPONENT(SPECIES_MASQUERAIN) { Ability(ABILITY_INTIMIDATE); Speed(50); }
     } WHEN {
-        if (move == MOVE_ENTRAINMENT)
-        {
+        if (move == MOVE_ENTRAINMENT) {
             TURN { MOVE(opponent, move); }
-        }
-        else
-        {
+        } else {
             TURN { MOVE(player, move); }
         }
     } SCENE {
-        if (move == MOVE_ENTRAINMENT)
-        {
+        if (move == MOVE_ENTRAINMENT) {
             ANIMATION(ANIM_TYPE_MOVE, move, opponent);
-        }
-        else
-        {
+        } else {
             ANIMATION(ANIM_TYPE_MOVE, move, player);
         }
+
         ABILITY_POPUP(opponent, ABILITY_INTIMIDATE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         ABILITY_POPUP(player, ABILITY_INTIMIDATE);
@@ -156,6 +147,7 @@ DOUBLE_BATTLE_TEST("Neutralizing Gas grants Clear Body's protection after other 
             ANIMATION(ANIM_TYPE_MOVE, MOVE_CONFIDE, playerLeft);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
         }
+
         ABILITY_POPUP(opponentLeft, ABILITY_CLEAR_BODY);
         NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
     } THEN {
@@ -177,25 +169,21 @@ DOUBLE_BATTLE_TEST("Neutralizing Gas persists when only one of two holders has i
         OPPONENT(SPECIES_MASQUERAIN) { Ability(ABILITY_INTIMIDATE); Speed(80); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(70); }
     } WHEN {
-        if (move == MOVE_ENTRAINMENT)
-        {
+        if (move == MOVE_ENTRAINMENT) {
             TURN { MOVE(opponentLeft, move, target: playerLeft); }
-        }
-        else
-        {
+        } else {
             TURN { MOVE(playerLeft, move, target: opponentLeft); }
         }
+
         TURN { MOVE(opponentLeft, MOVE_GASTRO_ACID, target: playerRight); }
     } SCENE {
-        if (move == MOVE_ENTRAINMENT)
-        {
+        if (move == MOVE_ENTRAINMENT) {
             ANIMATION(ANIM_TYPE_MOVE, move, opponentLeft);
-        }
-        else
-        {
+        } else {
             ANIMATION(ANIM_TYPE_MOVE, move, playerLeft);
             ABILITY_POPUP(playerLeft, ABILITY_NEUTRALIZING_GAS);
         }
+
         NONE_OF {
             ABILITY_POPUP(playerLeft, ABILITY_INTIMIDATE);
             ABILITY_POPUP(opponentLeft, ABILITY_INTIMIDATE);
@@ -204,6 +192,7 @@ DOUBLE_BATTLE_TEST("Neutralizing Gas persists when only one of two holders has i
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
         }
+
         ANIMATION(ANIM_TYPE_MOVE, MOVE_GASTRO_ACID, opponentLeft);
         // The copied Ability becomes active only after the remaining holder is suppressed.
         ABILITY_POPUP(playerLeft, ABILITY_INTIMIDATE);
@@ -235,6 +224,7 @@ DOUBLE_BATTLE_TEST("Neutralizing Gas ends when Doodle replaces both holders' Abi
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
         }
+
         ABILITY_POPUP(playerRight, ABILITY_NEUTRALIZING_GAS);
         ABILITY_POPUP(playerLeft, ABILITY_INTIMIDATE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
@@ -270,42 +260,34 @@ SINGLE_BATTLE_TEST("Neutralizing Gas releases suppression when overwritten or su
         OPPONENT(SPECIES_GYARADOS) { Ability(ABILITY_INTIMIDATE); }
     } WHEN {
         TURN { MOVE(opponent, move); }
-        if (move == MOVE_WORRY_SEED)
-        {
+        if (move == MOVE_WORRY_SEED) {
             TURN { MOVE(opponent, MOVE_SPORE); }
-        }
-        else
-        {
+        } else {
             TURN { MOVE(player, MOVE_HOWL); }
         }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, move, opponent);
         ABILITY_POPUP(opponent, ABILITY_INTIMIDATE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        if (move == MOVE_WORRY_SEED)
-        {
+        if (move == MOVE_WORRY_SEED) {
             NONE_OF {
                 ANIMATION(ANIM_TYPE_MOVE, MOVE_SPORE, opponent);
                 STATUS_ICON(player, sleep: TRUE);
             }
+
             ABILITY_POPUP(player, ABILITY_INSOMNIA);
             NONE_OF {
                 ANIMATION(ANIM_TYPE_MOVE, MOVE_SPORE, opponent);
                 STATUS_ICON(player, sleep: TRUE);
             }
-        }
-        else
-        {
+        } else {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_HOWL, player);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         }
     } THEN {
-        if (move == MOVE_WORRY_SEED)
-        {
+        if (move == MOVE_WORRY_SEED) {
             EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE - 1);
-        }
-        else
-        {
+        } else {
             EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE + (move == MOVE_SIMPLE_BEAM ? 1 : 0));
         }
     }

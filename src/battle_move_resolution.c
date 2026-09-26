@@ -940,9 +940,7 @@ static enum CancelerResult CancelerSetTargets(struct BattleCalcValues *cv)
             for (enum BattlerId battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
             {
                 if (battlerDef == cv->battlerAtk)
-                {
                     continue;
-                }
 
                 if (IsBattlerAlive(battlerDef))
                 {

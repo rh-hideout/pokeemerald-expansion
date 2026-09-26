@@ -11847,6 +11847,7 @@ void BS_TryEndNeutralizingGas(void)
         {
             gBattleMons[battler].ability = gBattleMons[battler].volatiles.overwrittenAbility;
         }
+
         gSpecialStatuses[battler].neutralizingGasRemoved = FALSE;
     }
 

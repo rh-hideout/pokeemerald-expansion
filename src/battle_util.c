@@ -9510,17 +9510,11 @@ u32 GetNextTarget(u32 moveTarget, bool32 excludeCurrent)
     for (battler = B_BATTLER_0; battler < MAX_BATTLERS_COUNT; battler++)
     {
         if (excludeCurrent && battler == gBattlerTarget)
-        {
             continue;
-        }
         if (gBattleStruct->battlerState[gBattlerAttacker].targetsDone[battler])
-        {
             continue;
-        }
         if (gBattleStruct->moveResultFlags[battler] & MOVE_RESULT_NO_EFFECT)
-        {
             continue;
-        }
         break;
     }
     return battler;
