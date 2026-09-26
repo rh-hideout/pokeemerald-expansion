@@ -1406,11 +1406,11 @@ bool32 CheckFollowerNPCFlag(u32 flag)
 
 bool32 FollowerNPC_IsCollisionExempt(struct ObjectEvent *obstacle, struct ObjectEvent *collider)
 {
-    struct ObjectEvent *follower = &gObjectEvents[GetFollowerNPCObjectId()];
-    struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
-
     if (!PlayerHasFollowerNPC())
         return FALSE;
+
+    struct ObjectEvent *follower = &gObjectEvents[GetFollowerNPCObjectId()];
+    struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
 
     if (obstacle == follower && collider == player)
         return TRUE;
