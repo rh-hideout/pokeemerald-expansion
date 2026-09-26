@@ -161,7 +161,7 @@ DOUBLE_BATTLE_TEST("Sleep Clause: Rest does not activate sleep clause (Doubles)"
         TURN { MOVE(opponentLeft, MOVE_REST); MOVE(playerLeft, MOVE_SPORE, target: opponentRight); }
     } SCENE {
         STATUS_ICON(opponentLeft, sleep: TRUE);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_REST, opponentLeft);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, opponentLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPORE, playerLeft);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, opponentRight);
         MESSAGE("The opposing Wobbuffet fell asleep!");
@@ -190,7 +190,7 @@ SINGLE_BATTLE_TEST("Sleep Clause: Rest can still be used when sleep clause is ac
         STATUS_ICON(opponent, sleep: TRUE);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, opponent);
         STATUS_ICON(opponent, sleep: TRUE);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_REST, opponent);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, opponent);
     }
 }
 
@@ -213,7 +213,7 @@ DOUBLE_BATTLE_TEST("Sleep Clause: Rest can still be used when sleep clause is ac
         MESSAGE("The opposing Wobbuffet fell asleep!");
         STATUS_ICON(opponentRight, sleep: TRUE);
         STATUS_ICON(opponentLeft, sleep: TRUE);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_REST, opponentLeft);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, opponentLeft);
     }
 }
 
@@ -1365,7 +1365,6 @@ SINGLE_BATTLE_TEST("Sleep Clause: Waking up after Rest doesn't deactivate sleep 
     } SCENE {
         MESSAGE("Zigzagoon slept and restored its HP!");
         STATUS_ICON(player, sleep: TRUE);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_REST, player);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, player);
         MESSAGE("Zigzagoon woke up!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPORE, opponent);
@@ -1403,7 +1402,7 @@ DOUBLE_BATTLE_TEST("Sleep Clause: Waking up after Rest doesn't deactivate sleep 
     } SCENE {
         MESSAGE("Zigzagoon slept and restored its HP!");
         STATUS_ICON(playerLeft, sleep: TRUE);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_REST, playerLeft);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, playerLeft);
         MESSAGE("The opposing Zigzagoon used Spore!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPORE, opponentRight);
         MESSAGE("Zigzagoon fell asleep!");
@@ -1909,7 +1908,7 @@ MULTI_BATTLE_TEST("Sleep Clause remains active when a partner's Chesto Berry cur
         STATUS_ICON(playerLeft, sleep: TRUE);
 
         STATUS_ICON(playerRight, sleep: TRUE);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_REST, playerRight);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, playerRight);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, playerRight);
         STATUS_ICON(playerRight, sleep: FALSE);
 

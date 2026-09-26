@@ -132,8 +132,7 @@ bool32 ShouldUseItem(enum BattlerId battler)
             break;
         case EFFECT_ITEM_SET_FOCUS_ENERGY:
             if (!IsBattlersFirstTurn(battler)
-                || gBattleMons[battler].volatiles.dragonCheer
-                || gBattleMons[battler].volatiles.focusEnergy
+                || gBattleMons[battler].volatiles.criticalHitBoost
                 || AI_OpponentCanFaintAiWithMod(battler, 0))
             {
                 break;

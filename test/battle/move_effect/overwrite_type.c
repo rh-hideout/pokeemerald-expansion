@@ -1,10 +1,11 @@
 #include "global.h"
+#include "constants/battle_move_effects.h"
 #include "test/battle.h"
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_SOAK) == EFFECT_SOAK);
-    ASSUME(GetMoveEffect(MOVE_MAGIC_POWDER) == EFFECT_SOAK);
+    ASSUME(GetMoveEffect(MOVE_SOAK) == EFFECT_OVERWRITE_TYPE);
+    ASSUME(GetMoveEffect(MOVE_MAGIC_POWDER) == EFFECT_OVERWRITE_TYPE);
 }
 
 SINGLE_BATTLE_TEST("Soak/Magic Powder changes the target's type to pure Water/Psychic")
@@ -147,7 +148,7 @@ SINGLE_BATTLE_TEST("Soak/Magic Powder fails if the target is already Water/Psych
     } WHEN {
         TURN { MOVE(player, move); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, move, player);
+        NOT ANIMATION(ANIM_TYPE_MOVE, move, player);
         MESSAGE("But it failed!");
     }
 }
