@@ -16,6 +16,7 @@
 *.smol
 *.fastSmol
 *.smolTM
+*.rlfast
 *.rl
 *.latfont
 *.hwjpnfont

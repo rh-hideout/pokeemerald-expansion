@@ -1,0 +1,210 @@
+#include <limits.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <string.h>
+
+// Max size of one frame in bytes: 256 tiles. The header stores the frame size
+// as (frame_size / 32) - 1 -- the 0-based index of the last tile -- so the 8-bit
+// field covers 1..256 tiles (RlFastUncomp adds 1 back, then multiplies by 32)
+#define MAX_FRAME_SIZE (256 * 32)
+#define MAX_FRAMES 255
+#define MAX_HEADER_SIZE (MAX_FRAMES * 2 + 2)
+#define MAX_COMP_FRAME_SIZE (MAX_FRAME_SIZE * 2) // Worst case compression ratio should be well below 2x
+
+// Longest single run of zero / non-zero bytes
+#define MAX_RUN 510
+
+static uint8_t  frame_buf[MAX_FRAME_SIZE];
+static uint8_t  comp_buf[MAX_COMP_FRAME_SIZE];
+static uint8_t  final_buf[MAX_COMP_FRAME_SIZE * (MAX_FRAMES + 1) + MAX_HEADER_SIZE];
+static uint8_t  header_buf[MAX_HEADER_SIZE];
+static uint16_t comp_frame_sizes[MAX_FRAMES + 1];
+
+// Count a run of zero bytes up to MAX_RUN
+static uint16_t find_zero_run(uint8_t const *data, uint8_t const *end) {
+    uint16_t run = 0;
+    while (run < MAX_RUN && data < end && *data == 0) {
+        data++;
+        run++;
+    }
+    if (run % 2 != 0)
+        run--;
+    return run;
+}
+
+// Count a run of non-zero bytes to copy up to MAX_RUN
+static uint16_t find_non_zero_run(uint8_t const *data, uint8_t const *end) {
+    uint16_t run = 0;
+    while (run < MAX_RUN && (size_t)(end - data) > 1) {
+        if (data[0] == 0 && data[1] == 0)
+            break;
+        data++;
+        run++;
+    }
+    if (run % 2 != 0)
+        run++;
+    return run;
+}
+
+static void rl_compress(uint8_t const *uncomp, uint8_t *out, size_t len, size_t *comp_size) {
+    uint8_t *write_ptr = out;
+    uint8_t const *read_ptr = uncomp;
+    uint8_t const *end = uncomp + len;
+
+    while (read_ptr < end) {
+        uint16_t zero_run = find_zero_run(read_ptr, end);
+        uint16_t nz_run = find_non_zero_run(read_ptr + zero_run, end);
+
+        *write_ptr++ = (uint8_t)(zero_run / 2);
+        *write_ptr++ = (uint8_t)(nz_run / 2);
+        memcpy(write_ptr, read_ptr + zero_run, nz_run);
+        write_ptr += nz_run;
+        read_ptr += zero_run + nz_run;
+    }
+
+    *comp_size = (size_t)(write_ptr - out);
+}
+
+static void usage(const char *prog) {
+    fprintf(stderr, "Usage: %s <input> <output> [-mwidth <width>] [-mheight <height>]\n", prog);
+}
+
+static void set_dimension(const char *name, const char *value, uint16_t *dim) {
+    char *endptr;
+    unsigned long parsed = strtoul(value, &endptr, 10);
+    if (endptr == value || parsed > UINT16_MAX) {
+        fprintf(stderr, "Error: invalid value '%s' for %s\n", value, name);
+        exit(1);
+    }
+    *dim = (uint16_t)parsed;
+}
+
+int main(int argc, char *argv[]) {
+    if (argc < 3) {
+        fprintf(stderr, "Error: not enough parameters\n");
+        usage(argv[0]);
+        return 1;
+    }
+
+    // Frame dimensions, may come from "mwidth_"/"mheight_" tags in the
+    // filename or from -mwidth/-mheight arguments
+    uint16_t mwidth = 4, mheight = 4;
+
+    const char *mwidth_str = strstr(argv[1], "mwidth_");
+    if (mwidth_str)
+        set_dimension("mwidth_", mwidth_str + strlen("mwidth_"), &mwidth);
+
+    const char *mheight_str = strstr(argv[1], "mheight_");
+    if (mheight_str)
+        set_dimension("mheight_", mheight_str + strlen("mheight_"), &mheight);
+
+    // Options start after input (argv[1]) and output (argv[2])
+    for (int i = 3; i < argc; i++) {
+        if (strcmp(argv[i], "-mwidth") == 0) {
+            if (i + 1 >= argc) {
+                fprintf(stderr, "Error: -mwidth requires a value\n");
+                return 1;
+            }
+            set_dimension("-mwidth", argv[++i], &mwidth);
+        }
+        else if (strcmp(argv[i], "-mheight") == 0) {
+            if (i + 1 >= argc) {
+                fprintf(stderr, "Error: -mheight requires a value\n");
+                return 1;
+            }
+            set_dimension("-mheight", argv[++i], &mheight);
+        }
+        else {
+            fprintf(stderr, "Error: unknown argument '%s'\n", argv[i]);
+            usage(argv[0]);
+            return 1;
+        }
+    }
+
+    uint32_t frame_size = mwidth * mheight * 32;
+    if (frame_size == 0 || frame_size > MAX_FRAME_SIZE) {
+        fprintf(stderr, "Error: frame size %u bytes is not between 1 and %d bytes\n", frame_size, MAX_FRAME_SIZE);
+        return 1;
+    }
+ 
+    FILE *input_file = fopen(argv[1], "rb");
+    if (!input_file) {
+        fprintf(stderr, "Error: could not open input file '%s'\n", argv[1]);
+        return 1;
+    }
+
+    size_t frame_num = 0;
+    uint8_t *frames_write_ptr = final_buf;
+    while (frame_num <= MAX_FRAMES) {
+        size_t read_size = fread(frame_buf, 1, frame_size, input_file);
+        if (read_size == 0)
+            break; // EOF: no more frames
+        if (read_size != frame_size || ferror(input_file)) {
+            fprintf(stderr, "Error: could not read frame %zu (expected %u bytes, got %zu)\n", frame_num, frame_size, read_size);
+            fclose(input_file);
+            return 1;
+        }
+
+        size_t comp_size;
+        rl_compress(frame_buf, comp_buf, frame_size, &comp_size);
+        memcpy(frames_write_ptr, comp_buf, comp_size);
+        frames_write_ptr += comp_size;
+        comp_frame_sizes[frame_num] = (uint16_t)comp_size;
+        frame_num++;
+    }
+    fclose(input_file);
+
+    if (frame_num > MAX_FRAMES) {
+        fprintf(stderr, "Error: input has %zu frames; at most %d are supported (header frame count is 8-bit)\n", frame_num, MAX_FRAMES);
+        return 1;
+    }
+    if (frame_num == 0) {
+        fprintf(stderr, "Error: no frames found in '%s'\n", argv[1]);
+        return 1;
+    }
+
+    header_buf[0] = (uint8_t)frame_num;
+    header_buf[1] = (uint8_t)(frame_size / 32 - 1); // 0-based last tile index
+    uint32_t off = 2 + frame_num * 2;
+    uint8_t *header_write_ptr = header_buf + 2;
+    for (size_t i = 0; i < frame_num; i++) {
+        if (off > UINT16_MAX) {
+            fprintf(stderr, "Error: offset for frame %zu (%u) would exceed the 16-bit frame offsets the header supports\n", i, off);
+            return 1;
+        }
+        *header_write_ptr++ = (uint8_t)(off & 0xFF);
+        *header_write_ptr++ = (uint8_t)((off >> 8) & 0xFF);
+        off += comp_frame_sizes[i];
+    }
+
+    FILE *output_file = fopen(argv[2], "wb");
+    if (!output_file) {
+        fprintf(stderr, "Error: could not open output file '%s'\n", argv[2]);
+        return 1;
+    }
+
+    size_t header_size = header_write_ptr - header_buf;
+    size_t frames_size = frames_write_ptr - final_buf;
+    size_t total_len = frames_size + header_size;
+    if (fwrite(header_buf, 1, header_size, output_file) != header_size || fwrite(final_buf, 1, frames_size, output_file) != frames_size) {
+        fprintf(stderr, "Error: could not write output file '%s'\n", argv[2]);
+        fclose(output_file);
+        return 1;
+    }
+    // Pad to a 32-bit boundary
+    uint8_t pad[3] = { 0, 0, 0 };
+    size_t pad_len = (4 - (total_len % 4)) % 4;
+    if (fwrite(pad, 1, pad_len, output_file) != pad_len) {
+        fprintf(stderr, "Error: could not write output file '%s'\n", argv[2]);
+        fclose(output_file);
+        return 1;
+    }
+
+    if (fclose(output_file) != 0) {
+        fprintf(stderr, "Error: could not close output file '%s'\n", argv[2]);
+        return 1;
+    }
+
+    return 0;
+}
