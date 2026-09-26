@@ -10093,27 +10093,41 @@ bool32 IsSleepClauseEnabled(void)
     return FALSE;
 }
 
-bool32 AreMultiPartiesFullTeams(void)
+bool32 PlayerAndPartnerSharePartyMenu(void)
+{
+    if (AreMultiPartiesHalfTeams())
+        return TRUE;
+
+    if (gPartiesCount[B_TRAINER_PLAYER] <= MULTI_PARTY_SIZE
+        && gPartiesCount[B_TRAINER_PARTNER] <= MULTI_PARTY_SIZE)
+    {
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
+bool32 AreMultiPartiesHalfTeams(void)
 {
 #if TESTING
     u8 *partySizes = gBattleTestRunnerState->data.partySizes;
-    bool32 fullTeam = FALSE;
+    bool32 halfTeam = TRUE;
 
-    if (partySizes[B_TRAINER_PLAYER] && partySizes[B_TRAINER_PARTNER]
-        && (partySizes[B_TRAINER_PLAYER] > MULTI_PARTY_SIZE || partySizes[B_TRAINER_PARTNER] > MULTI_PARTY_SIZE))
+    if ((partySizes[B_TRAINER_PLAYER] && partySizes[B_TRAINER_PARTNER]
+        && (partySizes[B_TRAINER_PLAYER] > MULTI_PARTY_SIZE || partySizes[B_TRAINER_PARTNER] > MULTI_PARTY_SIZE)))
     {
-        fullTeam = TRUE;
+        halfTeam = FALSE;
     }
     if (partySizes[B_TRAINER_OPPONENT_A] && partySizes[B_TRAINER_OPPONENT_B]
         && (partySizes[B_TRAINER_OPPONENT_A] > MULTI_PARTY_SIZE || partySizes[B_TRAINER_OPPONENT_B] > MULTI_PARTY_SIZE))
     {
-        fullTeam = TRUE;
+        halfTeam = FALSE;
     }
 
-    if (!fullTeam)
+    if (halfTeam)
     {
-        gSpecialVar_Result = FALSE;
-        return FALSE;
+        gSpecialVar_Result = TRUE;
+        return TRUE;
     }
 #else
     enum DifficultyLevel difficulty = GetCurrentDifficultyLevel();
@@ -10135,13 +10149,37 @@ bool32 AreMultiPartiesFullTeams(void)
      || (gTrainers[difficulty][TRAINER_BATTLE_PARAM.opponentA].multiTeamSize == MULTI_TEAM_SIZE_HALF)
      || (gTrainers[difficulty][TRAINER_BATTLE_PARAM.opponentB].multiTeamSize == MULTI_TEAM_SIZE_HALF))
     {
-        gSpecialVar_Result = FALSE;
-        return FALSE;
+        gSpecialVar_Result = TRUE;
+        return TRUE;
     }
 #endif
 
-    gSpecialVar_Result = TRUE;
-    return TRUE;
+    gSpecialVar_Result = FALSE;
+    return FALSE;
+}
+
+bool32 IsPlayerMultiPartyFullTeam(void)
+{
+#if TESTING
+    return (gBattleTestRunnerState->data.partySizes[B_TRAINER_PLAYER] == PARTY_SIZE);
+#else
+    u32 selectedCount = 0;
+    for (enum PartyMon slot = PARTY_MON_0; slot < PARTY_MON_NONE; slot++)
+    {
+        if (gSelectedOrderFromParty[slot])
+        {
+            selectedCount++;
+        }
+    }
+
+    if (selectedCount == 0)
+    {
+        return TRUE;
+    }
+
+    bool32 result = gSpecialVar_Result = !(*GetSavedPlayerPartyCount() > selectedCount);
+    return result;
+#endif
 }
 
 void ClearDamageCalcResults(void)

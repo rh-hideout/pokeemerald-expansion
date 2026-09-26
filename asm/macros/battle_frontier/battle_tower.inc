@@ -94,23 +94,21 @@
 
 	.macro choose_mons
 	fadescreen 1
-	special ChooseHalfPartyForBattle @ choose 3 mons for battle
+	choosepartyforbattle, MULTI_PARTY_SIZE
 	.endm
 
 	.macro multi_do type:req
-	callnative AreMultiPartiesFullTeams
-	goto_if_eq VAR_RESULT, TRUE, 1f
-	special ReducePlayerPartyToSelectedMons
-	1:
+	reduceplayerpartytoselectedmons
 	setvar VAR_0x8004, FRONTIER_UTIL_FUNC_SET_DATA
 	setvar VAR_0x8005, FRONTIER_DATA_SELECTED_MON_ORDER
 	special CallFrontierUtilFunc @ saves the mon order, so the non-selected mons get restored afterwards
-	goto_if_eq VAR_RESULT, TRUE, 2f
+	callnative IsPlayerMultiPartyFullTeam
+	goto_if_eq VAR_RESULT, TRUE, 1f
 	setvar VAR_0x8005, \type | MULTI_BATTLE_CHOOSE_MONS
-	goto 3f
-	2:
+	goto 2f
+	1:
 	setvar VAR_0x8005, \type 
-	3:
+	2:
 	callnative BattleSetup_StartMultiBattle
 	waitstate
 	setvar VAR_0x8004, FRONTIER_UTIL_FUNC_SAVE_PARTY

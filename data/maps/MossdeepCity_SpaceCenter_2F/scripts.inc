@@ -239,7 +239,7 @@ MossdeepCity_SpaceCenter_2F_EventScript_ChoosePartyForMultiBattle::
 	waitmovement 0
 	special SavePlayerParty
 	fadescreen FADE_TO_BLACK
-	special ChooseHalfPartyForBattle
+	choosepartyforbattle
 	goto_if_ne VAR_RESULT, 0, MossdeepCity_SpaceCenter_2F_EventScript_DoStevenMultiBattle
 	special LoadPlayerParty
 	goto MossdeepCity_SpaceCenter_2F_EventScript_ReadyForBattlePrompt
