@@ -100,7 +100,7 @@ SINGLE_BATTLE_TEST("Volt Absorb prevents Cell Battery from activating")
         NONE_OF {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-            MESSAGE("The Cell Battery boosted Jolteon's Attack!");
+            MESSAGE("Jolteon's Attack rose!");
         }
     }
 }

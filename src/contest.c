@@ -61,8 +61,8 @@ static void Task_DisplayAppealNumberText(u8 taskId);
 static void Task_TryShowMoveSelectScreen(u8 taskId);
 static void Task_ShowMoveSelectScreen(u8 taskId);
 static void Task_HandleMoveSelectInput(u8 taskId);
-static void DrawMoveSelectArrow(s8);
-static void EraseMoveSelectArrow(s8);
+static void DrawMoveSelectArrow(enum MoveSlot);
+static void EraseMoveSelectArrow(enum MoveSlot);
 static void Task_SelectedMove(u8 taskId);
 static void Task_EndCommunicateMoveSelections(u8 taskId);
 static void Task_HideMoveSelectScreen(u8 taskId);
@@ -1705,8 +1705,8 @@ static void Task_HandleMoveSelectInput(u8 taskId)
             break;
         case DPAD_UP:
             EraseMoveSelectArrow(eContest.playerMoveChoice);
-            if (eContest.playerMoveChoice == 0)
-                eContest.playerMoveChoice = numMoves - 1;
+            if (eContest.playerMoveChoice == MOVESLOT_0)
+                eContest.playerMoveChoice = (enum MoveSlot)(numMoves - 1);
             else
                 eContest.playerMoveChoice--;
             DrawMoveSelectArrow(eContest.playerMoveChoice);
@@ -1717,7 +1717,7 @@ static void Task_HandleMoveSelectInput(u8 taskId)
         case DPAD_DOWN:
             EraseMoveSelectArrow(eContest.playerMoveChoice);
             if (eContest.playerMoveChoice == numMoves - 1)
-                eContest.playerMoveChoice = 0;
+                eContest.playerMoveChoice = MOVESLOT_0;
             else
                 eContest.playerMoveChoice++;
             DrawMoveSelectArrow(eContest.playerMoveChoice);
@@ -1729,12 +1729,12 @@ static void Task_HandleMoveSelectInput(u8 taskId)
     }
 }
 
-static void DrawMoveSelectArrow(s8 moveIndex)
+static void DrawMoveSelectArrow(enum MoveSlot moveIndex)
 {
     ContestBG_FillBoxWithIncrementingTile(2, 55, 0, 31 + moveIndex * 2, 2, 2, 17, 1);
 }
 
-static void EraseMoveSelectArrow(s8 moveIndex)
+static void EraseMoveSelectArrow(enum MoveSlot moveIndex)
 {
     ContestBG_FillBoxWithIncrementingTile(2, 11, 0, 31 + moveIndex * 2, 2, 1, 17, 1);
     ContestBG_FillBoxWithIncrementingTile(2, 11, 0, 32 + moveIndex * 2, 2, 1, 17, 1);
@@ -3472,7 +3472,7 @@ static enum Move GetChosenMove(u8 contestant)
     }
     else
     {
-        u8 moveChoice;
+        enum MoveSlot moveChoice;
 
         ContestAI_ResetAI(contestant);
         moveChoice = ContestAI_GetActionToUse();

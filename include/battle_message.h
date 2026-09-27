@@ -75,7 +75,7 @@
 #define B_TXT_DEF_NAME 0x39
 #define B_TXT_DEF_TEAM1 0x3A // Your/The opposing
 #define B_TXT_DEF_TEAM2 0x3B // your/the opposing
-#define B_TXT_DEF_PARTNER_NAME 0x3C
+#define B_TXT_SCR_PARTNER_NAME 0x3C
 // #define B_UNUSED_0x3D 0x3D
 #define B_TXT_ATK_NAME_WITH_PREFIX2 0x3E //lowercase
 #define B_TXT_DEF_NAME_WITH_PREFIX2 0x3F //lowercase
@@ -241,7 +241,7 @@ struct BattleMsgData
     enum Item lastItem;
     enum Ability lastAbility;
     u8 scrActive;
-    u8 bakScriptPartyIdx;
+    enum PartyMon bakScriptPartyIdx;
     u8 hpScale;
     u8 itemEffectBattler;
     enum Type moveType;

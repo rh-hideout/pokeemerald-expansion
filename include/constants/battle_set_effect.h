@@ -133,6 +133,7 @@ enum SetMoveEffectFlags
     EFFECT_PRIMARY    = (1 << 0),
     EFFECT_CERTAIN    = (1 << 1),
     EFFECT_ON_SIDE    = (1 << 2),
+    EFFECT_BYPASS_SHEER_FORCE = (1 << 3),
 };
 
 #endif // GUARD_CONSTANTS_BATTLE_SET_EFFECT_H

@@ -46,7 +46,7 @@ void ActivateTera(enum BattlerId battler)
 void ApplyBattlerVisualsForTeraAnim(enum BattlerId battler)
 {
     struct Pokemon *party = GetBattlerParty(battler);
-    u32 index = gBattlerPartyIndexes[battler];
+    enum PartyMon index = gBattlerPartyIndexes[battler];
 
     // Show indicator and do palette blend.
     UpdateHealthboxAttribute(gHealthboxSpriteIds[battler], &party[index], HEALTHBOX_ALL);
@@ -70,7 +70,7 @@ bool32 CanTerastallize(enum BattlerId battler)
 {
     enum HoldEffect holdEffect = GetBattlerHoldEffectIgnoreNegation(battler);
 
-    if (gBattleMons[battler].volatiles.transformed && GET_BASE_SPECIES_ID(gBattleMons[battler].species) == SPECIES_TERAPAGOS)
+    if (gBattleMons[battler].volatiles.transformed && GetBaseSpecies(gBattleMons[battler].species) == SPECIES_TERAPAGOS)
         return FALSE;
 
     // Prevents Zigzagoon from terastalizing in vanilla.

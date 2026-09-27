@@ -269,8 +269,8 @@ enum VolatileFlags
     F(VOLATILE_STOCKPILE_BEFORE_DEF,        stockpileBeforeDef,            (u32, MAX_STAT_STAGE)) \
     F(VOLATILE_STOCKPILE_BEFORE_SP_DEF,     stockpileBeforeSpDef,          (u32, MAX_STAT_STAGE)) \
     F(VOLATILE_SUBSTITUTE_HP,               substituteHP,                  (u32, UINT8_MAX)) \
-    F(VOLATILE_ENCORED_MOVE_POS,            encoredMovePos,                (u32, MAX_BITS(MAX_MON_MOVES))) \
-    F(VOLATILE_DISABLE_TIMER,               disableTimer,                  (u32, B_DISABLE_TIMER)) \
+    F(VOLATILE_ENCORED_MOVE_POS,            encoredMovePos,                (enum MoveSlot, MAX_BITS(MAX_MON_MOVES))) \
+    F(VOLATILE_DISABLE_TIMER,               disableTimer,                  (u32, B_DISABLE_TIMER > 7 ? B_DISABLE_TIMER : 7)) \
     F(VOLATILE_ENCORE_TIMER,                encoreTimer,                   (u32, B_ENCORE_TIMER)) \
     F(VOLATILE_PERISH_SONG_TIMER,           perishSongTimer,               (u32, B_PERISH_SONG_TIMER)) \
     F(VOLATILE_ROLLOUT_TIMER,               rolloutTimer,                  (u32, UINT8_MAX)) \
@@ -293,7 +293,7 @@ enum VolatileFlags
     F(VOLATILE_WRAP_TURNS,                  wrapTurns,                     (u32, B_WRAP_TURNS)) \
     F(VOLATILE_SYRUP_BOMB_TIMER,            syrupBombTimer,                (u32, B_SYRUP_BOMB_TIMER)) \
     F(VOLATILE_USED_MOVES,                  usedMoves,                     (u32, MAX_BITS(MAX_MON_MOVES))) \
-    F(VOLATILE_TRUANT_COUNTER,              truantCounter,                 (u32, 1)) \
+    F(VOLATILE_TRUANT_TOGGLE,               truantToggle,                  (u32, 1)) \
     F(VOLATILE_TRUANT_SWITCH_IN_HACK,       truantSwitchInHack,            (u32, 1)) \
     F(VOLATILE_TAR_SHOT,                    tarShot,                       (u32, 1)) \
     F(VOLATILE_OCTOLOCK,                    octolock,                      (u32, 1)) \
@@ -436,6 +436,7 @@ enum BattleTerrain
 };
 
 // Field affecting statuses.
+#define STATUS_FIELD_NONE                           0
 #define STATUS_FIELD_MAGIC_ROOM                     (1 << 0)
 #define STATUS_FIELD_TRICK_ROOM                     (1 << 1)
 #define STATUS_FIELD_WONDER_ROOM                    (1 << 2)
@@ -626,7 +627,7 @@ enum MoveTarget
     TARGET_USER,
     TARGET_ALLY,
     TARGET_USER_AND_ALLY,
-    TARGET_USER_OR_ALLY, // Acupressure
+    TARGET_USER_OR_ALLY,
     TARGET_FOES_AND_ALLY,
     TARGET_FIELD, // Moves that target the field, e.g. Rain Dance
     TARGET_OPPONENTS_FIELD, // Targets all other battlers and self, e.g. Teatime

@@ -9,7 +9,7 @@ struct HoldEffectInfo
     u32 onStatusChange:1;
     u32 onHpThreshold:1;
     u32 keeMarangaBerry:1;
-    u32 MentalHerb:1;
+    u32 mentalHerb:1;
     u32 onTargetAfterHit:1;
     u32 onAttackerAfterHit:1;
     u32 sprayLeppaBlunder:1;
@@ -20,7 +20,8 @@ struct HoldEffectInfo
     u32 onFling:1;
     u32 boosterEnergy:1;
     u32 orbsWhiteHerbActivation:1;
-    u32 padding:15;
+    u32 jabocaRowap:1;
+    u32 padding:14;
 };
 
 extern const struct HoldEffectInfo gHoldEffectsInfo[];
@@ -30,6 +31,7 @@ enum ItemEffect ItemBattleEffects(enum BattlerId itemBattler, enum BattlerId bat
 
 bool32 IsOnSwitchInActivation(enum HoldEffect holdEffect);
 bool32 IsMirrorHerbActivation(enum HoldEffect holdEffect);
+bool32 IsMentalHerbActivation(enum HoldEffect holdEffect);
 bool32 IsWhiteHerbActivation(enum HoldEffect holdEffect);
 bool32 IsOnStatusChangeActivation(enum HoldEffect holdEffect);
 bool32 IsOnHpThresholdActivation(enum HoldEffect holdEffect);
@@ -46,5 +48,6 @@ bool32 IsOnBerryActivation(enum HoldEffect holdEffect);
 bool32 IsOnFlingActivation(enum HoldEffect holdEffect);
 bool32 IsBoosterEnergyActivation(enum HoldEffect holdEffect);
 bool32 IsOrbsWhiteHerbActivation(enum HoldEffect holdEffect);
+bool32 IsJabocaRowapActivation(enum HoldEffect holdEffect);
 
 #endif // GUARD_BATTLE_HOLD_EFFECTS

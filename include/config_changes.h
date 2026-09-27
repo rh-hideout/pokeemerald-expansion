@@ -20,7 +20,25 @@ struct ConfigChanges
     // ...
 };
 
-#define GetConfig(name) GetConfigInternal(CONFIG_##name)
+#if TESTING
+extern struct ConfigChanges *gConfigChangesTestOverride;
+#define GET_CONFIG_VALUE(_field, _default) (gConfigChangesTestOverride == NULL ? (_default) : gConfigChangesTestOverride->_field)
+#else
+#define GET_CONFIG_VALUE(_field, _default) (_default)
+#endif
+
+#define UNPACK_BATTLE_CONFIG_GETTER(_name, _field, ...) static inline u32 GetConfig_##_name(void) { return GET_CONFIG_VALUE(_field, _name); }
+#define UNPACK_POKEMON_CONFIG_GETTER(_name, _field, ...) static inline u32 GetConfig_##_name(void) { return GET_CONFIG_VALUE(_field, P_##_name); }
+
+BATTLE_CONFIG_DEFINITIONS(UNPACK_BATTLE_CONFIG_GETTER)
+POKEMON_CONFIG_DEFINITIONS(UNPACK_POKEMON_CONFIG_GETTER)
+AI_CONFIG_DEFINITIONS(UNPACK_BATTLE_CONFIG_GETTER)
+
+#undef UNPACK_BATTLE_CONFIG_GETTER
+#undef UNPACK_POKEMON_CONFIG_GETTER
+#undef GET_CONFIG_VALUE
+
+#define GetConfig(name) GetConfig_##name()
 
 ARM_FUNC u32 GetConfigInternal(enum ConfigTag configTag);
 void SetConfig(enum ConfigTag configTag, u32 value);
