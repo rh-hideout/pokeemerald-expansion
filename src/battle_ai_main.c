@@ -3206,7 +3206,7 @@ static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         {
             ADJUST_SCORE(BEST_EFFECT);
         }
-        [[fallthrough]];
+        break;
     case EFFECT_ROUND:
         if (ShouldUseRound(battlerAtk, EFFECT_ROUND))
         {
