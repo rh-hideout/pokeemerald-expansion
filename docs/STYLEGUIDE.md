@@ -168,7 +168,7 @@ int MyFunction(int bar)
 }
 ```
 
-Braces are required around any statement on a new line, with exceptions the following exceptions.
+Braces are required around any statement on a new line, with the following exceptions, listed below.
 
 ```c
 if (foo) // incorrect
