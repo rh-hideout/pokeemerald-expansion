@@ -879,7 +879,7 @@ void HandleAction_ThrowPokeblock(void)
     if (IS_FRLG)
     {
         // throw bait
-        gBattleStruct->safariBaitThrowCounter += Random() % 5 + 2;
+        gBattleStruct->safariBaitThrowCounter += RandomUniform(RNG_SAFARI_BAIT_THROW_COUNTER, 2, 6);
         if (gBattleStruct->safariBaitThrowCounter > 6)
             gBattleStruct->safariBaitThrowCounter = 6;
 
@@ -929,7 +929,7 @@ void HandleAction_GoNear(void)
     if (IS_FRLG)
     {
         // throw rock
-        gBattleStruct->safariRockThrowCounter += Random() % 5 + 2;
+        gBattleStruct->safariRockThrowCounter += RandomUniform(RNG_SAFARI_ROCK_THROW_COUNTER, 2, 6);
         if (gBattleStruct->safariRockThrowCounter > 6)
             gBattleStruct->safariRockThrowCounter = 6;
 

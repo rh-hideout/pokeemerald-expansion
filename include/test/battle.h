@@ -1029,6 +1029,7 @@ struct moveWithPP {
 #define WITH_CONFIG(configTag, value) TestSetConfig(__LINE__, CONFIG_##configTag, value)
 
 #define PLAYER(species) for (OpenPokemon(__LINE__, B_TRAINER_PLAYER, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
+#define SAFARI_PLAYER(ballCount) SafariPlayer(__LINE__, ballCount)
 #define OPPONENT_A(species) for (OpenPokemon(__LINE__, B_TRAINER_OPPONENT_A, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
 #define OPPONENT OPPONENT_A
 #define PARTNER(species) for (OpenPokemon(__LINE__, B_TRAINER_PARTNER, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
@@ -1073,6 +1074,7 @@ void ClearFlagAfterTest(void);
 void ClearVarAfterTest(void);
 void OpenPokemon(u32 sourceLine, enum BattleTrainer trainer, enum Species species);
 void ClosePokemon(u32 sourceLine);
+void SafariPlayer(u32 sourceLine, u32 ballCount);
 
 void RNGSeed_(u32 sourceLine, rng_value_t seed);
 void AIFlags_(u32 sourceLine, u64 flags);
@@ -1163,9 +1165,8 @@ enum { TURN_CLOSED, TURN_OPEN, TURN_CLOSING };
 #define SAFARI_BALL(...) SafariBall(__LINE__, (struct SafariContext) { .playerAction = B_ACTION_SAFARI_BALL, .explicitPlayerAction = TRUE, R_APPEND_TRUE(__VA_ARGS__) })
 #define POKEBLOCK(...) PokeBlock(__LINE__, (struct SafariContext) { .playerAction = B_ACTION_SAFARI_POKEBLOCK, .explicitPlayerAction = TRUE, R_APPEND_TRUE(__VA_ARGS__) })
 #define GO_NEAR(...) GoNear(__LINE__, (struct SafariContext) { .playerAction = B_ACTION_SAFARI_GO_NEAR, .explicitPlayerAction = TRUE, R_APPEND_TRUE(__VA_ARGS__) })
-#define SAFARI_CURIOUS()
-#define SAFARI_ENTHRALLED()
-#define SAFARI_IGNORE()
+#define SAFARI_WATCH(...) SafariOpponent(__LINE__, (struct SafariContext) { .opponentAction = B_ACTION_SAFARI_WATCH_CAREFULLY, .explicitOpponentAction = TRUE, R_APPEND_TRUE(__VA_ARGS__) })
+#define SAFARI_FLEE(...) SafariOpponent(__LINE__, (struct SafariContext) { .opponentAction = B_ACTION_RUN, .explicitOpponentAction = TRUE, R_APPEND_TRUE(__VA_ARGS__) })
 #define GIVE_PLAYER_ITEM(item, quantity) GivePlayerItem(__LINE__, item, quantity)
 #define WITH_RNG(tag, value) rng: ((struct RiggedRNG) { tag, value })
 #define TIE_BREAK_SCORE(rngTag, scoreTieRes, value) TieBreakScore(__LINE__, rngTag, scoreTieRes, value)
@@ -1177,8 +1178,8 @@ struct SafariContext
     u16 explicitPlayerAction:1;
     u16 opponentAction:5;
     u16 explicitOpponentAction:1;
-    u16 padding:4;
-    bool8 explicitRNG;
+    bool16 explicitRNG:1;
+    u16 padding:3;
     struct RiggedRNG rng;
 };
 
@@ -1238,6 +1239,7 @@ void GivePlayerItem(u32 sourceLine, enum Item, u32 quantity);
 void SafariBall(u32 sourceLine, struct SafariContext);
 void PokeBlock(u32 sourceLine, struct SafariContext);
 void GoNear(u32 sourceLine, struct SafariContext);
+void SafariOpponent(u32 sourceLine, struct SafariContext);
 
 /* Scene */
 

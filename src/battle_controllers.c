@@ -294,6 +294,19 @@ static void InitBtlControllersInternal(void)
                 gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_1)] = SetControllerToRecordedOpponent;
             else
                 gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_1)] = SetControllerToOpponent;
+#if TESTING
+            if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
+            {
+                if (gBattleTestRunnerState->data.expectedAiActions[B_BATTLER_1][0].actionSet)
+                {
+                    gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_1)] = SetControllerToOpponent;
+                }
+                else
+                {
+                    gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_1)] = SetControllerToRecordedOpponent;
+                }
+            }
+#endif
 
             // Player 2
             if (TESTING && isMulti && isRecordedLink)
@@ -303,7 +316,7 @@ static void InitBtlControllersInternal(void)
             else if (TESTING && isMulti && isRecorded && !isRecordedLink)
             { // Sets to PlayerPartner if EXPECT_XXXX used in test for partner trainer, else sets to RecordedPartner.
 #if TESTING
-                if (gBattleTestRunnerState->data.expectedAiActions[B_BATTLER_2][0].actionSet == TRUE)
+                if (gBattleTestRunnerState->data.expectedAiActions[B_BATTLER_2][0].actionSet)
                     gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_2)] = SetControllerToPlayerPartner;
                 else
 #endif
@@ -460,6 +473,11 @@ static inline bool32 IsControllerLinkPartner(enum BattlerId battler)
 static inline bool32 IsControllerSafari(enum BattlerId battler)
 {
     return (gBattlerControllerEndFuncs[battler] == SafariBufferExecCompleted);
+}
+
+static inline bool32 IsControllerRecordedSafari(enum BattlerId battler)
+{
+    return (gBattlerControllerEndFuncs[battler] == RecordedSafariBufferExecCompleted);
 }
 
 bool32 ShouldUpdateTvData(enum BattlerId battler)
@@ -949,6 +967,7 @@ static void UNUSED BtlController_EmitPaletteFade(enum BattlerId battler, u32 buf
 
 void BtlController_EmitBallThrowAnim(enum BattlerId battler, u32 bufferId, u8 caseId)
 {
+    DebugPrintf("%s %d", __func__, battler);
     gBattleResources->transferBuffer[0] = CONTROLLER_BALLTHROWANIM;
     gBattleResources->transferBuffer[1] = caseId;
     PrepareBufferDataTransfer(battler, bufferId, gBattleResources->transferBuffer, 2);
@@ -2613,7 +2632,8 @@ void BtlController_HandleBallThrowAnim(enum BattlerId battler)
         allowCriticalCapture = TRUE;
         target = gBattlerTarget;
     }
-    else if (IsControllerSafari(battler) || IsControllerWally(battler) || IsControllerOakOldMan(battler))
+    else if (IsControllerSafari(battler) || IsControllerRecordedSafari(battler)
+            || IsControllerWally(battler) || IsControllerOakOldMan(battler))
     {
         animId = B_ANIM_BALL_THROW_WITH_TRAINER;
     }
@@ -2734,7 +2754,7 @@ void BtlController_HandleStatusIconUpdate(enum BattlerId battler)
     {
         struct Pokemon *mon = GetBattlerMon(battler);
 
-        if (IsControllerSafari(battler))
+        if (IsControllerSafari(battler) || IsControllerRecordedSafari(battler))
         {
             UpdateHealthboxAttribute(gHealthboxSpriteIds[battler], mon, HEALTHBOX_SAFARI_BALLS_TEXT);
             BtlController_Complete(battler);

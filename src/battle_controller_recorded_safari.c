@@ -66,7 +66,7 @@ static void (*const sRecordedSafariBufferCommands[CONTROLLER_CMDS_COUNT])(enum B
     [CONTROLLER_23]                       = BtlController_Empty,
     [CONTROLLER_HEALTHBARUPDATE]          = BtlController_Empty,
     [CONTROLLER_EXPUPDATE]                = BtlController_Empty,
-    [CONTROLLER_STATUSICONUPDATE]         = BtlController_Empty,
+    [CONTROLLER_STATUSICONUPDATE]         = BtlController_HandleStatusIconUpdate,
     [CONTROLLER_STATUSANIMATION]          = BtlController_Empty,
     [CONTROLLER_STATUSXOR]                = BtlController_Empty,
     [CONTROLLER_DATATRANSFER]             = BtlController_Empty,
@@ -191,7 +191,7 @@ static void RecordedSafariHandleChooseItem(enum BattlerId battler)
 // Player is not a pokemon, so it can't really faint in the RecordedSafari anyway.
 static void RecordedSafariHandleFaintingCry(enum BattlerId battler)
 {
-    u16 species = GetMonData(GetBattlerMon(battler), MON_DATA_SPECIES);
+    enum Species species = GetMonData(GetBattlerMon(battler), MON_DATA_SPECIES);
 
     PlayCry_Normal(species, 25);
     BtlController_Complete(battler);

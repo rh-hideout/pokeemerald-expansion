@@ -270,10 +270,10 @@ u64 GetAiFlags(u16 trainerId, enum BattlerId battler)
     }
     else
     {
-        if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
-            flags = GetAiScriptsInRecordedBattle(battler);
-        else if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
+        if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
             flags = AI_FLAG_SAFARI;
+        else if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
+            flags = GetAiScriptsInRecordedBattle(battler);
         else if (gBattleTypeFlags & BATTLE_TYPE_ROAMER)
             flags = AI_FLAG_ROAMING;
         else if (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE)
@@ -6827,7 +6827,7 @@ static s32 AI_Safari(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum 
 {
     u32 safariFleeRate = gBattleStruct->safariEscapeFactor * 5; // Safari flee rate, from 0-20.
 
-    if ((Random() % 100) < safariFleeRate)
+    if ((RandomUniform(RNG_SAFARI_FLEE, 0, 99)) < safariFleeRate)
         AI_Flee();
     else
         AI_Watch();

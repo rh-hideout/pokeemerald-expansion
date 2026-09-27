@@ -56,7 +56,7 @@ char mini_pchar_decode(char encoded)
         ret = encoded-(CHAR_A-'A'); // upper-case characters
     else if (encoded >= CHAR_0 && encoded <= CHAR_9)
         ret = encoded-(CHAR_0-'0'); // numbers
-    else if (encoded == CHAR_SPACE)
+    else if (encoded == CHAR_SPACE || encoded == CHAR_NBSP)
         ret = ' '; // space
     else if (encoded == CHAR_EXCL_MARK)
         ret = '!'; // exclamation point

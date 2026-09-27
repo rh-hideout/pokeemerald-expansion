@@ -1,4 +1,7 @@
 #include "global.h"
+#include "battle.h"
+#include "battle_controllers.h"
+#include "safari_zone.h"
 #include "test/battle.h"
 #include "test/test.h"
 #include "test/battle.h"
@@ -273,5 +276,113 @@ SINGLE_BATTLE_TEST("ITEM_POPUP fails when specifying the wrong item")
         EXPECT_FAIL {
             ITEM_POPUP(player, ITEM_BLACK_SLUDGE);
         }
+    }
+}
+
+SAFARI_BATTLE_TEST("SAFARI_BATTLE_TEST: SAFARI_BALL makes the player throw a Safari Ball")
+{
+    GIVEN {
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { 
+            SAFARI_BALL();
+            SAFARI_WATCH();
+        }
+        TURN { 
+            SAFARI_BALL();
+            SAFARI_WATCH();
+        }
+    } SCENE {
+        MESSAGE("You used Safari Ball!");
+        MESSAGE("Oh no! The Pokémon broke free!");
+        MESSAGE("Wobbuffet is watching carefully!");
+        MESSAGE("You used Safari Ball!");
+        MESSAGE("Oh no! The Pokémon broke free!");
+        MESSAGE("Wobbuffet is watching carefully!");
+    } THEN {
+        EXPECT_EQ(gNumSafariBalls, 28);
+    }
+}
+
+SAFARI_BATTLE_TEST("SAFARI_BATTLE_TEST: sets opponent to the recorded controller if an explicit action is set")
+{
+    GIVEN {
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { 
+            GO_NEAR();
+            SAFARI_WATCH();
+        }
+    } SCENE {
+        MESSAGE("1 crept closer to Wobbuffet!");
+        MESSAGE("Wobbuffet is watching carefully!");
+    } THEN {
+        EXPECT_EQ(gBattlerBattleController[B_BATTLER_1], BATTLE_CONTROLLER_RECORDED_OPPONENT);
+    }
+}
+
+SAFARI_BATTLE_TEST("SAFARI_BATTLE_TEST: SAFARI_FLEE makes the opponent flee")
+{
+    GIVEN {
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { 
+            GO_NEAR();
+            SAFARI_FLEE();
+        }
+    } SCENE {
+        MESSAGE("1 crept closer to Wobbuffet!");
+        MESSAGE("{PLAY_SE SE_FLEE}The wild Wobbuffet fled!");
+    }
+}
+
+SAFARI_BATTLE_TEST("SAFARI_BATTLE_TEST: sets opponent to the AI controller if an explicit action is not set")
+{
+    GIVEN {
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { 
+            GO_NEAR();
+        }
+    } SCENE {
+        MESSAGE("1 crept closer to Wobbuffet!");
+        MESSAGE("Wobbuffet is watching carefully!");
+    } THEN {
+        EXPECT_EQ(gBattlerBattleController[B_BATTLER_1], BATTLE_CONTROLLER_OPPONENT);
+    }
+}
+
+SAFARI_BATTLE_TEST("SAFARI_BATTLE_TEST: gives 30 Safari Balls by default")
+{
+    GIVEN {
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { 
+            GO_NEAR();
+            SAFARI_WATCH();
+        }
+    } SCENE {
+        MESSAGE("1 crept closer to Wobbuffet!");
+        MESSAGE("Wobbuffet is watching carefully!");
+    } THEN {
+        EXPECT_EQ(gNumSafariBalls, 30);
+    }
+}
+
+SAFARI_BATTLE_TEST("SAFARI_BATTLE_TEST: SAFARI sets the number of Safari Balls")
+{
+    GIVEN {
+        SAFARI_PLAYER(5);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { 
+            GO_NEAR();
+            SAFARI_WATCH();
+        }
+    } SCENE {
+        MESSAGE("1 crept closer to Wobbuffet!");
+        MESSAGE("Wobbuffet is watching carefully!");
+    } THEN {
+        EXPECT_EQ(gNumSafariBalls, 5);
     }
 }
