@@ -2985,7 +2985,7 @@ void CloseTurn(u32 sourceLine)
         {
             if (IsSafariTest())
             {
-                if (i) // Opponent
+                if (i) // Opponent set to AI
                 {
                     SetAiActionToPass(sourceLine, i);
                 }
@@ -3671,6 +3671,7 @@ void SafariOpponent(u32 sourceLine, struct SafariContext ctx)
         ctx.explicitOpponentAction = TRUE;
     }
 
+    // Explicit action sets opponent to recorded controller
     if (ctx.explicitOpponentAction)
     {
         PushBattlerAction(sourceLine, B_BATTLER_1, RECORDED_ACTION_TYPE, ctx.opponentAction);
