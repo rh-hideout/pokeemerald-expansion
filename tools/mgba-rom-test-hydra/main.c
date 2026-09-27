@@ -130,8 +130,7 @@ void push_summary_result(struct SummaryResults *summaries, const struct Runner *
         memcpy(result->filename_line, runner->filename_line, sizeof(result->filename_line));
 
         result->output_line[0] = '\0';
-        if (runner->output_buffer_size == 0)
-            return;
+        if (runner->output_buffer_size == 0) return;
 
         // Extract the last line of the output buffer.
         // NOTE: '- 1' because 'output_buffer' ends with a '\n'.
