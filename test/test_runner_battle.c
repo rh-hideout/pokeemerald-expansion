@@ -3584,6 +3584,7 @@ void SafariBall(u32 sourceLine, struct SafariContext ctx)
     INVALID_IF(DATA.actionBattlers & (1 << B_BATTLER_0), "Multiple battler actions");
     INVALID_IF((ctx.playerAction && ctx.playerAction != B_ACTION_SAFARI_BALL), "Invalid player action set");
 
+    // Default player action is to throw a ball and not capture
     if (!ctx.explicitPlayerAction)
     {
         ctx.explicitRNG = TRUE;
