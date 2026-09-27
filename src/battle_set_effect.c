@@ -3393,8 +3393,8 @@ static void HandleSetEffectTrick(struct BattleCalcValues *cv, struct SetEffect *
         gBattleMons[cv->battlerAtk].item = oldItemDef;
         gBattleMons[se->effectBattler].item = oldItemAtk;
 
-        RecordItemEffectBattle(cv->battlerAtk, cv->holdEffects[oldItemDef]);
-        RecordItemEffectBattle(se->effectBattler, cv->holdEffects[oldItemAtk]);
+        RecordItemEffectBattle(cv->battlerAtk, GetItemHoldEffect(oldItemDef));
+        RecordItemEffectBattle(se->effectBattler, GetItemHoldEffect(oldItemAtk));
 
         BtlController_EmitSetMonData(cv->battlerAtk, B_COMM_TO_CONTROLLER, REQUEST_HELDITEM_BATTLE, 0, sizeof(gBattleMons[cv->battlerAtk].item), &gBattleMons[cv->battlerAtk].item);
         MarkBattlerForControllerExec(cv->battlerAtk);
