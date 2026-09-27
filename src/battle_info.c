@@ -221,7 +221,6 @@ static void TryAddActiveStatusTimer(enum BattleInfoLabels label, u32 remaining, 
 static void TryAddActiveStatusInternal(enum BattleInfoLabels label, u32 timerOrFlag, u32 baseTotal, enum BattleSide side, bool32 isTimer);
 static enum BattleInfoLabels GetStatusEffectFromWeather(void);
 static enum BattleInfoLabels GetStatusEffectFromTerrain(void);
-static enum BattleInfoLabels GetStatusEffectFromNonVolatile(enum BattlerId battler);
 static enum BattleInfoLabels GetInfoFromSemiInvulnerableState(u32 semiInvulnerable);
 static void TryAddActiveDamageNonTypes(enum BattleSide side);
 static void TryAddActiveThirdType(enum BattlerId battler, enum BattleSide side);
