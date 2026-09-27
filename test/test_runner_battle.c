@@ -6,14 +6,17 @@
 #include "battle_setup.h"
 #include "battle_gimmick.h"
 #include "battle_z_move.h"
+#include "berry.h"
 #include "event_data.h"
 #include "fieldmap.h"
 #include "item_menu.h"
 #include "main.h"
 #include "malloc.h"
 #include "party_menu.h"
+#include "pokeblock.h"
 #include "random.h"
 #include "safari_zone.h"
+#include "string_util.h"
 #include "test/battle.h"
 #include "trainer_pools.h"
 #include "window.h"
@@ -2860,7 +2863,6 @@ void TestRunner_Battle_CheckBattleRecordActionType(enum BattlerId battlerId, u32
 {
     // An illegal move choice will cause the battle to request a new
     // move slot and target. This detects the move slot.
-    DebugPrintf("actionType %d DATA.battleRecordTypes[%d][%d] %d", actionType, battlerId, recordIndex, DATA.battleRecordTypes[battlerId][recordIndex]);
     if (actionType == RECORDED_MOVE_SLOT
      && recordIndex > 0
      && DATA.battleRecordTypes[battlerId][recordIndex-1] != RECORDED_ACTION_TYPE)
@@ -3581,7 +3583,6 @@ void SafariBall(u32 sourceLine, struct SafariContext ctx)
     INVALID_IF(DATA.turnState == TURN_CLOSED, "SAFARI_BALL outside TURN");
     INVALID_IF(DATA.actionBattlers & (1 << B_BATTLER_0), "Multiple battler actions");
     INVALID_IF((ctx.playerAction && ctx.playerAction != B_ACTION_SAFARI_BALL), "Invalid player action set");
-    INVALID_IF(gNumSafariBalls == 0, "Safari Ball count cannot be zero. Did you forget SAFARI_PLAYER?");
 
     if (!ctx.explicitPlayerAction)
     {
@@ -3590,24 +3591,51 @@ void SafariBall(u32 sourceLine, struct SafariContext ctx)
     }
 
     if (ctx.explicitRNG)
+    {
         DATA.battleRecordTurns[DATA.turns][B_BATTLER_0].rng = ctx.rng;
+    }
+
     PushBattlerAction(sourceLine, B_BATTLER_0, RECORDED_ACTION_TYPE, B_ACTION_SAFARI_BALL);
     DATA.actionBattlers |= 1 << B_BATTLER_0;
 }
 
-void PokeBlock(u32 sourceLine, struct SafariContext ctx)
+#define POKEBLOCK_MAX_FEEL 99
+
+static void PokeblockFillDefaultValues(struct Pokeblock *pokeblock)
+{
+    const struct BerryInfo *defaultBerry = &gBerries[ITEM_CHERI_BERRY].info;
+
+    if (pokeblock->color == 0)
+        pokeblock->color = PBLOCK_CLR_RED;
+    if (pokeblock->spicy == 0)
+        pokeblock->spicy = defaultBerry->spicy;
+    if (pokeblock->dry == 0)
+        pokeblock->dry = defaultBerry->dry;
+    if (pokeblock->sweet == 0)
+        pokeblock->sweet = defaultBerry->sweet;
+    if (pokeblock->bitter == 0)
+        pokeblock->bitter = defaultBerry->bitter;
+    if (pokeblock->feel == 0)
+        pokeblock->feel = POKEBLOCK_MAX_FEEL;
+}
+
+void Pokeblock(u32 sourceLine, struct SafariContext ctx)
 {
     INVALID_IF(!IsSafariTest(), "POKEBLOCK only allowed in SAFARI_BATTLE_TEST");
     INVALID_IF(DATA.turnState == TURN_CLOSED, "POKEBLOCK outside TURN");
     INVALID_IF(DATA.actionBattlers & (1 << B_BATTLER_0), "Multiple battler actions");
     INVALID_IF((ctx.playerAction && ctx.playerAction != B_ACTION_SAFARI_POKEBLOCK), "Invalid player action set");
 
+    PokeblockFillDefaultValues(&ctx.pokeblock);
+
     if (ctx.explicitRNG)
+    {
         DATA.battleRecordTurns[DATA.turns][B_BATTLER_0].rng = ctx.rng;
+    }
+
+    DATA.recordedBattle.pokeblock = ctx.pokeblock;
+
     PushBattlerAction(sourceLine, B_BATTLER_0, RECORDED_ACTION_TYPE, B_ACTION_SAFARI_POKEBLOCK);
-    PushBattlerAction(sourceLine, B_BATTLER_0, RECORDED_ITEM_ID, (ITEM_SAFARI_BALL >> 8) & 0xFF);
-    PushBattlerAction(sourceLine, B_BATTLER_0, RECORDED_ITEM_ID, ITEM_SAFARI_BALL & 0xFF);
-    PushBattlerAction(sourceLine, B_BATTLER_0, RECORDED_ITEM_MOVE, 0);
     DATA.actionBattlers |= 1 << B_BATTLER_0;
 }
 
@@ -3619,7 +3647,10 @@ void GoNear(u32 sourceLine, struct SafariContext ctx)
     INVALID_IF((ctx.playerAction && ctx.playerAction != B_ACTION_SAFARI_GO_NEAR), "Invalid player action set");
 
     if (ctx.explicitRNG)
+    {
         DATA.battleRecordTurns[DATA.turns][B_BATTLER_0].rng = ctx.rng;
+    }
+
     PushBattlerAction(sourceLine, B_BATTLER_0, RECORDED_ACTION_TYPE, B_ACTION_SAFARI_GO_NEAR);
     DATA.actionBattlers |= 1 << B_BATTLER_0;
 }
@@ -4250,4 +4281,27 @@ void AssumeMoveEffectStatChange_(u32 sourceLine, u32 moveId, struct StatChangeAs
     }
 
     ASSUME(hasEffect == TRUE);
+}
+
+static void Test_ClearPokeblock(void)
+{
+    memset(&DATA.recordedBattle.pokeblock, 0, sizeof(DATA.recordedBattle.pokeblock));
+}
+
+void TestRunner_Battle_SelectPokeblock(void)
+{
+    struct Pokeblock pokeblock = DATA.recordedBattle.pokeblock;
+    s16 gain = PokeblockGetGain(GetNature(&gParties[B_TRAINER_OPPONENT_A][0]), &pokeblock);
+
+    StringCopy(gBattleTextBuff1, gPokeblockNames[pokeblock.color]);
+    gSpecialVar_ItemId = (pokeblock.color << 8);
+
+    if (gain == 0)
+        gSpecialVar_ItemId += 1;
+    else if (gain > 0)
+        gSpecialVar_ItemId += 2;
+    else
+        gSpecialVar_ItemId += 3;
+
+    Test_ClearPokeblock();
 }

@@ -45,8 +45,8 @@ enum BattleAction
     B_ACTION_RUN,
     B_ACTION_SAFARI_WATCH_CAREFULLY,
     B_ACTION_SAFARI_BALL,
-    B_ACTION_SAFARI_POKEBLOCK,
-    B_ACTION_SAFARI_GO_NEAR,
+    //B_ACTION_SAFARI_POKEBLOCK, // 6 clashes with ACTION_MOVE_CHANGE in recorded battles
+    B_ACTION_SAFARI_GO_NEAR = 7,
     B_ACTION_SAFARI_RUN,
     B_ACTION_WALLY_THROW,
     B_ACTION_EXEC_SCRIPT,
@@ -56,6 +56,7 @@ enum BattleAction
     B_ACTION_NOTHING_FAINTED, // when choosing an action
     B_ACTION_UNK_14,
     B_ACTION_UNK_15,
+    B_ACTION_SAFARI_POKEBLOCK,
     B_ACTION_DEBUG = 20,
     B_ACTION_THROW_BALL, // R to throw last used ball
     B_ACTION_NONE = 0xFF

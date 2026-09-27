@@ -967,7 +967,6 @@ static void UNUSED BtlController_EmitPaletteFade(enum BattlerId battler, u32 buf
 
 void BtlController_EmitBallThrowAnim(enum BattlerId battler, u32 bufferId, u8 caseId)
 {
-    DebugPrintf("%s %d", __func__, battler);
     gBattleResources->transferBuffer[0] = CONTROLLER_BALLTHROWANIM;
     gBattleResources->transferBuffer[1] = caseId;
     PrepareBufferDataTransfer(battler, bufferId, gBattleResources->transferBuffer, 2);

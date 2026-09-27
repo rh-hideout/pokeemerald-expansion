@@ -1,6 +1,7 @@
 #include "global.h"
 #include "battle.h"
 #include "battle_controllers.h"
+#include "pokeblock.h"
 #include "safari_zone.h"
 #include "test/battle.h"
 #include "test/test.h"
@@ -301,6 +302,32 @@ SAFARI_BATTLE_TEST("SAFARI_BATTLE_TEST: SAFARI_BALL makes the player throw a Saf
         MESSAGE("Wobbuffet is watching carefully!");
     } THEN {
         EXPECT_EQ(gNumSafariBalls, 28);
+    }
+}
+
+SAFARI_BATTLE_TEST("SAFARI_BATTLE_TEST: POKEBLOCK makes the player throw a Pokeblock")
+{
+    GIVEN {
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { POKEBLOCK(color: PBLOCK_CLR_BLUE, spicy: 5, dry: 5, sweet: 5, bitter: 5, sour: 5, feel: 5); }
+    } SCENE {
+        MESSAGE("1 threw a {POKEBLOCK} at the Wobbuffet!");
+        MESSAGE("Wobbuffet is curious about the BLUE {POKEBLOCK}!");
+        MESSAGE("Wobbuffet is watching carefully!");
+    }
+}
+
+SAFARI_BATTLE_TEST("SAFARI_BATTLE_TEST: POKEBLOCK makes the player throw a default Pokeblock if no Pokeblock is input")
+{
+    GIVEN {
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { POKEBLOCK(); }
+    } SCENE {
+        MESSAGE("1 threw a {POKEBLOCK} at the Wobbuffet!");
+        MESSAGE("Wobbuffet is curious about the RED {POKEBLOCK}!");
+        MESSAGE("Wobbuffet is watching carefully!");
     }
 }
 

@@ -36,6 +36,7 @@ u32 TestRunner_Battle_GetForcedAbility(enum BattleTrainer trainer, enum PartyMon
 u32 TestRunner_Battle_GetChosenGimmick(enum BattleTrainer trainer, enum PartyMon partyIndex);
 u32 TestRunner_Battle_GetForcedEnvironment(void);
 void TestRunner_Battle_RecordEffectivenessSound(enum BattlerId battlerId, u32 soundId);
+void TestRunner_Battle_SelectPokeblock(void);
 
 #else
 
@@ -60,6 +61,7 @@ void TestRunner_Battle_RecordEffectivenessSound(enum BattlerId battlerId, u32 so
 #define TestRunner_Battle_RecordEffectivenessSound(...) (u32)0
 
 #define TestRunner_Battle_GetForcedEnvironment(...) (u8)0
+#define TestRunner_Battle_SelectPokeblock(...) (void)0
 
 #endif
 

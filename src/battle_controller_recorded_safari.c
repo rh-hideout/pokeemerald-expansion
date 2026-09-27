@@ -19,6 +19,7 @@
 #include "reshow_battle_screen.h"
 #include "sound.h"
 #include "task.h"
+#include "test_runner.h"
 #include "text.h"
 #include "util.h"
 #include "window.h"
@@ -132,21 +133,14 @@ static void RecordedSafariSetBattleEndCallbacks(enum BattlerId battler)
 
 static void RecordedSafariOpenPokeblockCase(enum BattlerId battler)
 {
-    if (!gPaletteFade.active)
-    {
+        TestRunner_Battle_SelectPokeblock();
         gBattlerControllerFuncs[battler] = CompleteWhenChosePokeblock;
-        FreeAllWindowBuffers();
-        OpenPokeblockCaseInBattle();
-    }
 }
 
 static void CompleteWhenChosePokeblock(enum BattlerId battler)
 {
-    if (gMain.callback2 == BattleMainCB2 && !gPaletteFade.active)
-    {
         BtlController_EmitOneReturnValue(battler, B_COMM_TO_ENGINE, gSpecialVar_ItemId);
         BtlController_Complete(battler);
-    }
 }
 
 void RecordedSafariBufferExecCompleted(enum BattlerId battler)
@@ -182,7 +176,6 @@ static void RecordedSafariHandleChooseAction(enum BattlerId battler)
 
 static void RecordedSafariHandleChooseItem(enum BattlerId battler)
 {
-    BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 0x10, RGB_BLACK);
     gBattlerControllerFuncs[battler] = RecordedSafariOpenPokeblockCase;
     gBattlerInMenuId = battler;
 }

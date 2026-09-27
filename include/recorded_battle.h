@@ -5,7 +5,7 @@
 #include "link.h"
 #include "random.h"
 
-#define BATTLER_RECORD_SIZE 388
+#define BATTLER_RECORD_SIZE 384
 
 struct RecordedBattleSave
 {
@@ -35,6 +35,7 @@ struct RecordedBattleSave
     u8 playersBattlers; // Setup so player 2/3 battler and player 0/1 second battler occupy same bits
     u16 easyChatSpeech[EASY_CHAT_BATTLE_WORDS_COUNT];
     u8 battleRecord[MAX_BATTLERS_COUNT][BATTLER_RECORD_SIZE];
+    struct Pokeblock pokeblock;
     u32 checksum;
 };
 

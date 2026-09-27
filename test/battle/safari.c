@@ -7,7 +7,8 @@ SAFARI_BATTLE_TEST("Baby's first Safari test")
         OPPONENT(SPECIES_ZAPDOS);
     } WHEN {
         TURN { 
-            SAFARI_BALL();
+            GO_NEAR();
+            SAFARI_WATCH();
         }
     } SCENE {
         //MESSAGE("You used Safari Ball!");

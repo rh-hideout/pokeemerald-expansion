@@ -1163,7 +1163,7 @@ enum { TURN_CLOSED, TURN_OPEN, TURN_CLOSING };
 #define SEND_OUT(battler, partyIndex) SendOut(__LINE__, battler, partyIndex)
 #define USE_ITEM(battler, ...) UseItem(__LINE__, battler, (struct ItemContext) { R_APPEND_TRUE(__VA_ARGS__) })
 #define SAFARI_BALL(...) SafariBall(__LINE__, (struct SafariContext) { .playerAction = B_ACTION_SAFARI_BALL, .explicitPlayerAction = TRUE, R_APPEND_TRUE(__VA_ARGS__) })
-#define POKEBLOCK(...) PokeBlock(__LINE__, (struct SafariContext) { .playerAction = B_ACTION_SAFARI_POKEBLOCK, .explicitPlayerAction = TRUE, R_APPEND_TRUE(__VA_ARGS__) })
+#define POKEBLOCK(...) Pokeblock(__LINE__, (struct SafariContext) { .playerAction = B_ACTION_SAFARI_POKEBLOCK, .explicitPlayerAction = TRUE, .pokeblock = (struct Pokeblock) {__VA_ARGS__ } })
 #define GO_NEAR(...) GoNear(__LINE__, (struct SafariContext) { .playerAction = B_ACTION_SAFARI_GO_NEAR, .explicitPlayerAction = TRUE, R_APPEND_TRUE(__VA_ARGS__) })
 #define SAFARI_WATCH(...) SafariOpponent(__LINE__, (struct SafariContext) { .opponentAction = B_ACTION_SAFARI_WATCH_CAREFULLY, .explicitOpponentAction = TRUE, R_APPEND_TRUE(__VA_ARGS__) })
 #define SAFARI_FLEE(...) SafariOpponent(__LINE__, (struct SafariContext) { .opponentAction = B_ACTION_RUN, .explicitOpponentAction = TRUE, R_APPEND_TRUE(__VA_ARGS__) })
@@ -1181,6 +1181,7 @@ struct SafariContext
     bool16 explicitRNG:1;
     u16 padding:3;
     struct RiggedRNG rng;
+    struct Pokeblock pokeblock;
 };
 
 struct MoveContext
@@ -1237,7 +1238,7 @@ void UseItem(u32 sourceLine, struct BattlePokemon *, struct ItemContext);
 void SendOut(u32 sourceLine, struct BattlePokemon *, enum PartyMon partyIndex);
 void GivePlayerItem(u32 sourceLine, enum Item, u32 quantity);
 void SafariBall(u32 sourceLine, struct SafariContext);
-void PokeBlock(u32 sourceLine, struct SafariContext);
+void Pokeblock(u32 sourceLine, struct SafariContext);
 void GoNear(u32 sourceLine, struct SafariContext);
 void SafariOpponent(u32 sourceLine, struct SafariContext);
 
