@@ -453,7 +453,7 @@ static void BattleTest_Run(void *data)
         {
             gNumSafariBalls = 30;
         }
-        //gAiThinkingStruct->aiFlags[B_BATTLER_1] = AI_FLAG_SAFARI;
+
         for (i = 0; i < STATE->battlersCount; i++)
         {
             DATA.currentMonIndexes[i] = i / 2;
