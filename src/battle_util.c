@@ -1277,7 +1277,7 @@ void PrepareStringBattle(enum StringID stringId, enum BattlerId battler)
     {
     case STRINGID_ITDOESNTAFFECT:
     case STRINGID_PKMNUNAFFECTED:
-        TryInitializeTrainerSlideMonUnaffected(gBattlerTarget, gBattlerAttacker);
+        TryInitializeTrainerSlideFirstIneffectiveMove(gBattlerTarget, gBattlerAttacker);
         break;
     default:
         break;
@@ -10554,7 +10554,7 @@ enum TwoTurnMoveActivation GetTwoTurnMoveActivation(struct BattleCalcValues *cv,
         enum BattleWeather weatherType = gBattleWeatherInfo[GetBattleWeather(weather)].type;
         enum BattleWeather attackerWeatherType = gBattleWeatherInfo[GetBattleWeather(attackerWeather)].type;
 
-        if (weatherType == moveAffectedByWeather && IsBattlerWeatherAffectedTemp(cv->holdEffects[cv->battlerAtk], weather, moveAffectedByWeather))
+        if (attackerWeatherType == weatherType && weatherType == moveAffectedByWeather && IsBattlerWeatherAffectedTemp(cv->holdEffects[cv->battlerAtk], weather, moveAffectedByWeather))
             return ACTIVATION_WEATHER;
 
         if (attackerWeatherType == moveAffectedByWeather)
