@@ -29,6 +29,18 @@ Under `make release` (`NDEBUG`) the inspector pages compile out — the MF subme
 5. Open **Modern FireRed…** → **Rules inspector…**. Browse a page (e.g. Gamemode), confirm values, toggle one with **A**, and optionally **Dump (mGBA)** (Tools → View Logs). **B** backs up a level; Cancel closes.
 6. Optional: **Rules menu…** — open Gamemode, cycle Classic/Modern/Custom, confirm dependent rows grey until Custom, press **NEXT** into Features, cycle SHINY CHANCE / ITEM DROP / SHINY COLORS, then **NEXT** → **EXIT**. Re-open **Rules inspector…** → Features to confirm writes.
 
+## Checklist — SHINY CHANCE (S33)
+
+Prefer the **instant roll test** over grinding wild encounters.
+
+1. Quickstart into the overworld. Open mGBA **Tools → View Logs** and set the level to **Warn** (Info floods the console on this ROM).
+2. **R+Start → Modern FireRed… → Rules inspector… → Features → ShinyCh** — set to **4** (1/512). Unlock if locked.
+3. **B** back to **Modern FireRed…** → **Shiny roll test**. Look for `=== MF shiny roll test ===` (~20 hits / 10000 at 1/512).
+4. Set **ShinyCh** to **0** (1/8192), run **Shiny roll test** again — expect ~1 hit / 10000.
+5. Optional smoke: one wild battle at tier 4 just to see the sparkle intro once.
+
+Do **not** try to validate vanilla vs boosted by eye in grass — sample noise at 1/8192 needs tens of thousands of encounters.
+
 Optional: Utilities → Cheat Start (or FRLG equivalent) if you need badges / party for a later story’s scenario.
 
 ## Checklist — save state just before Oak’s speech

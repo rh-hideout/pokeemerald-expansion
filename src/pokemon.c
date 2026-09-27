@@ -31,6 +31,7 @@
 #include "main.h"
 #include "mail.h"
 #include "mf_moves.h"
+#include "mf_shiny.h"
 #include "mf_stats.h"
 #include "mf_types.h"
 #include "move_relearner.h"
@@ -896,13 +897,19 @@ bool32 ComputePlayerShinyOdds(u32 personality, u32 value)
     if (gDexNavSpecies)
         totalRerolls += CalculateDexNavShinyRolls();
 
-    while (GET_SHINY_VALUE(value, personality) >= SHINY_ODDS && totalRerolls > 0)
+    // Features SHINY CHANCE sets the base threshold; charm / lure / chain /
+    // DexNav still add rerolls on top (see docs-mf/decisions/0033).
     {
-        personality = Random32();
-        totalRerolls--;
-    }
+        u32 shinyOdds = MfGetShinyOddsThreshold();
 
-    return GET_SHINY_VALUE(value, personality) < SHINY_ODDS;
+        while (GET_SHINY_VALUE(value, personality) >= shinyOdds && totalRerolls > 0)
+        {
+            personality = Random32();
+            totalRerolls--;
+        }
+
+        return GET_SHINY_VALUE(value, personality) < shinyOdds;
+    }
 }
 
 void SetBoxMonIVs(struct BoxPokemon *mon, u8 fixedIV)
@@ -986,7 +993,7 @@ void CreateBoxMon(struct BoxPokemon *boxMon, enum Species species, u8 level, u32
     else if (trainerId.method == OT_ID_PRESET)
     {
         value = trainerId.value;
-        isShiny = GET_SHINY_VALUE(value, personality) < SHINY_ODDS;
+        isShiny = MfIsShinyOtIdPersonality(value, personality);
     }
     else // Player is the OT
     {

@@ -40,7 +40,7 @@ These exist to keep merging from `RHH/master` cheap. Violating them is the main 
 | 2     | Rules engine core                    | S12–S17 | Complete    |
 | 3     | Rules menu UI                        | S18–S26 | Complete    |
 | 4     | Gamemode wiring                      | S27–S32 | Complete    |
-| 5     | Features & item-friction wiring      | S33–S34, S69 | Not started |
+| 5     | Features & item-friction wiring      | S33–S34, S69 | In progress |
 | 6     | Nuzlocke                             | S35–S39 | Not started |
 | 7     | Difficulty                           | S40–S45 | Not started |
 | 8     | Challenges                           | S46–S50 | Not started |
@@ -513,7 +513,7 @@ These exist to keep merging from `RHH/master` cheap. Violating them is the main 
 
 ### S33 — Shiny chance & shiny clause plumbing
 
-- [ ] **Status:** Not started
+- [x] **Status:** Complete
 
 - **Goal:** `SHINY CHANCE` is a player-selectable multiplier.
 - **Depends on:** S13

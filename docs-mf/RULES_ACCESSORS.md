@@ -103,6 +103,10 @@ See ADR 0031.
 
 `alternateSpawns` is Vanilla (0) / Modern (1) / Postgame (2). Stock tables stay in `gWildMonHeaders`. FireRed builds also link `gMfModernWildMonHeaders` (generator: `tools/mf/gen_modern_encounters.py`). `MfShouldUseModernWildEncounters()` is TRUE for Modern always, and for Postgame only after `FLAG_SYS_GAME_CLEAR`. Encounter consumers index `MfGetActiveWildMonHeaders()` so wild battles, DexNav, match call, and the Pokédex area screen agree (ADR 0032).
 
+### Worked example: SHINY CHANCE (S33)
+
+`SHINY_ODDS` stays the Gen III compile baseline (8 → 1/8192) for `MON_DATA_IS_SHINY` get/set XOR math. New rolls go through `MfGetShinyOddsThreshold()` (`SHINY_ODDS << shinyChance` → 8/16/32/64/128). `ComputePlayerShinyOdds` and the `OT_ID_PRESET` create path use that threshold; Shiny Charm / lure / chain / DexNav rerolls still stack on top. S37 can call `MfIsShinyOtIdPersonality` / `MfIsShinyValue`; after `CreateMon`, `MON_DATA_IS_SHINY` is authoritative (ADR 0033).
+
 ### Rules for gates
 
 1. Prefer an existing expansion primitive (`I_*`, `B_*`, `P_*`) as the capability baseline.

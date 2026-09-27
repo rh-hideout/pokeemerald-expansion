@@ -3,12 +3,15 @@
 #include "mf_debug.h"
 #include "mf_rules.h"
 #include "mf_rules_menu.h"
+#include "mf_shiny.h"
 #include "mf_stats.h"
 #include "main.h"
 #include "overworld.h"
+#include "random.h"
 #include "sound.h"
 #include "string_util.h"
 #include "constants/songs.h"
+#include "gba/isagbprint.h"
 
 // S17 — paged rules inspector under overworld debug → Modern FireRed…
 // Live labels rebuild into EWRAM (DEBUG_MAX_MENU_ITEMS = 20; name width 26).
@@ -316,6 +319,40 @@ static void MfDebug_Action_Dump(u8 taskId)
     MfRules_DebugDump();
 }
 
+// Instant statistical check — no wild encounters. Open mGBA Tools → View Logs.
+#define MF_DEBUG_SHINY_ROLLS 10000
+
+static void MfDebug_Action_ShinyRollTest(u8 taskId)
+{
+    u32 i;
+    u32 hits = 0;
+    u32 tier = MfRules_GetShinyChance();
+    u32 threshold = MfGetShinyOddsThreshold();
+    u32 expected; // approximate: threshold * N / 65536
+    static const u16 sDenoms[MF_SHINY_CHANCE_COUNT] = { 8192, 4096, 2048, 1024, 512 };
+    u16 denom = (tier < MF_SHINY_CHANCE_COUNT) ? sDenoms[tier] : 8192;
+
+    (void)taskId;
+    PlaySE(SE_SELECT);
+
+    for (i = 0; i < MF_DEBUG_SHINY_ROLLS; i++)
+    {
+        // Same 16-bit shinyValue space as GET_SHINY_VALUE (0..65535).
+        if (MfIsShinyValue(Random()))
+            hits++;
+    }
+
+    expected = (threshold * MF_DEBUG_SHINY_ROLLS) / 65536u;
+
+    DebugPrintfLevel(MGBA_LOG_WARN, "=== MF shiny roll test ===");
+    DebugPrintfLevel(MGBA_LOG_WARN, "tier=%u (1/%u) threshold=%u rolls=%u",
+        tier, denom, threshold, MF_DEBUG_SHINY_ROLLS);
+    DebugPrintfLevel(MGBA_LOG_WARN, "hits=%u expected~%u (rate 1/%u vs target 1/%u)",
+        hits, expected,
+        hits ? (MF_DEBUG_SHINY_ROLLS / hits) : 0,
+        denom);
+}
+
 static void MfDebug_Action_OpenRulesMenu(u8 taskId)
 {
     PlaySE(SE_SELECT);
@@ -362,6 +399,7 @@ const struct DebugMenuOption gMfDebugMenuOptions[] =
     { COMPOUND_STRING("Rules inspector…"), MfDebug_Action_OpenInspector },
     { COMPOUND_STRING("Rules menu…"), MfDebug_Action_OpenRulesMenu },
     { COMPOUND_STRING("Rules viewer…"), MfDebug_Action_OpenRulesViewer },
+    { COMPOUND_STRING("Shiny roll test"), MfDebug_Action_ShinyRollTest },
     { COMPOUND_STRING("Cancel"),           DebugAction_Cancel },
     { NULL }
 };
