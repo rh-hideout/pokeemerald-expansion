@@ -2449,7 +2449,7 @@ void OpenPokemon(u32 sourceLine, enum BattleTrainer trainer, enum Species specie
     partySize = &DATA.partySizes[trainer];
     party = DATA.recordedBattle.parties[trainer];
 
-    INVALID_IF(*partySize >= PARTY_SIZE, "Too many Pokemon in party");
+    INVALID_IF(*partySize >= (IsSafariTest() ? 1 : PARTY_SIZE), "Too many Pokemon in party");
     DATA.battlerParty = trainer;
     DATA.currentPartyIndex = (enum PartyMon)*partySize;
     DATA.currentMon = &party[DATA.currentPartyIndex];
