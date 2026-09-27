@@ -130,7 +130,7 @@ void push_summary_result(struct SummaryResults *summaries, const struct Runner *
         memcpy(result->filename_line, runner->filename_line, sizeof(result->filename_line));
 
         result->output_line[0] = '\0';
-        if (!runner->output_buffer_size)
+        if (runner->output_buffer_size == 0)
             return;
 
         // Extract the last line of the output buffer.
@@ -336,9 +336,7 @@ add_to_results:
                     fwrite(soc, 1, eol - soc, stdout);
                     fprint_buffer(stdout, runner->output_buffer, runner->output_buffer_size);
                     if (runner->output_truncated)
-                    {
                         fprintf(stdout, "[Further test output was truncated.]\n");
-                    }
 
                     strcpy(runner->test_name, "WAITING...");
                     runner->output_buffer_size = 0;
