@@ -463,7 +463,7 @@ static void HandleSetEffectRemoveStatus(struct BattleCalcValues *cv, struct SetE
     if (cv->onlyChecking) return;
 
     bool32 canCureNonVolatile = (NumAffectedSpreadMoveTargets() > 1 || !IsMoveEffectBlockedByTarget(cv->abilities[se->effectBattler]));
-    u32 argStatus = GetMoveEffectArg_Status(gCurrentMove);
+    u32 argStatus = GetMoveEffectArg_Status(cv->move);
     CureNonVolatile(cv, se, argStatus, canCureNonVolatile);
 }
 
@@ -1257,7 +1257,7 @@ static void HandleSetEffectRoost(struct BattleCalcValues *cv, struct SetEffect *
 {
     SetEffectRestoreHp(cv, se);
     if (cv->onlyChecking || se->effectFailed) return;
-    gBattleMons[gBattlerAttacker].volatiles.roostActive = TRUE;
+    gBattleMons[se->effectBattler].volatiles.roostActive = TRUE;
 }
 
 static void HandleSetEffectRestoreHp(struct BattleCalcValues *cv, struct SetEffect *se)
@@ -1513,7 +1513,7 @@ static void HandleSetEffectGmaxNonTypeDamage(struct BattleCalcValues *cv, struct
     enum BattleSide side = GetBattlerSide(se->effectBattler);
     if (!(gSideStatuses[side] & SIDE_STATUS_DAMAGE_NON_TYPES))
     {
-        u32 moveType = GetMoveType(gCurrentMove);
+        u32 moveType = GetMoveType(cv->move);
         gSideStatuses[side] |= SIDE_STATUS_DAMAGE_NON_TYPES;
         gSideTimers[side].damageNonTypesTimer = 5;
         gSideTimers[side].damageNonTypesType = moveType;
@@ -1746,7 +1746,7 @@ static bool32 ShouldGroundAirborneBattler(enum BattlerId battler)
      || state == STATE_SKY_DROP_ATTACKER
      || state == STATE_SKY_DROP_TARGET
      || gBattleMons[battler].volatiles.magnetRiseTimer
-     || gBattleMons[gBattlerTarget].volatiles.telekinesis)
+     || gBattleMons[battler].volatiles.telekinesis)
     {
         gBattleMons[battler].volatiles.semiInvulnerable = STATE_NONE;
         gBattleMons[battler].volatiles.magnetRiseTimer = 0;
@@ -1766,7 +1766,7 @@ static void HandleSetEffectGravity(struct BattleCalcValues *cv, struct SetEffect
     {
         for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
         {
-            // Workarounf for TARGET_FIELD to still try to ground all battlers
+            // Workaround for TARGET_FIELD to still try to ground all battlers
             gBattleStruct->moveResultFlags[battler] |= MOVE_RESULT_VALID_STATUS_TARGET;
         }
     }
@@ -1981,7 +1981,7 @@ static void HandleSetEffectSpeedSwap(struct BattleCalcValues *cv, struct SetEffe
     if (cv->onlyChecking) return;
 
     u32 temp;
-    SWAP(gBattleMons[cv->battlerAtk].speed, gBattleMons[gBattlerTarget].speed, temp);
+    SWAP(gBattleMons[cv->battlerAtk].speed, gBattleMons[se->effectBattler].speed, temp);
     gBattleMons[cv->battlerAtk].volatiles.speedSwapped = TRUE;
     gBattleMons[se->effectBattler].volatiles.speedSwapped = TRUE;
     PrepareStringBattleWithWait(STRINGID_ATTACKERSWITCHEDSTATWITHTARGET, se->effectBattler);
@@ -2046,7 +2046,7 @@ static void HandleSetEffectMiracleEye(struct BattleCalcValues *cv, struct SetEff
     {
         SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
     }
-    else
+    else if (!cv->onlyChecking)
     {
         gBattleMons[se->effectBattler].volatiles.miracleEye = TRUE;
         PrepareStringBattleWithWait(STRINGID_PKMNIDENTIFIED, se->effectBattler);
@@ -3031,7 +3031,7 @@ static void HandleSetEffectRefresh(struct BattleCalcValues *cv, struct SetEffect
 
         gBattleScripting.battler = se->effectBattler;
         gBattleMons[se->effectBattler].status1 = 0;
-        BtlController_EmitSetMonData(se->effectBattler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, sizeof(gBattleMons[cv->battlerAtk].status1), &gBattleMons[cv->battlerAtk].status1);
+        BtlController_EmitSetMonData(se->effectBattler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, sizeof(gBattleMons[se->effectBattler].status1), &gBattleMons[se->effectBattler].status1);
         MarkBattlerForControllerExec(se->effectBattler);
         gBattleScripting.savedStringId = cureString;
         BattleScriptPushAndSet(se->script, BattleScript_MoveEffectRefresh);
@@ -3168,7 +3168,7 @@ static void HandleSetEffectGastroAcid(struct BattleCalcValues *cv, struct SetEff
     else if (GetBattlerHoldEffectIgnoreAbility(se->effectBattler) == HOLD_EFFECT_ABILITY_SHIELD)
     {
         SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
-        if (cv->onlyChecking)
+        if (!cv->onlyChecking)
             RecordItemEffectBattle(se->effectBattler, HOLD_EFFECT_ABILITY_SHIELD);
     }
     else if (!cv->onlyChecking)
@@ -3871,7 +3871,7 @@ static void HandleSetEffectTopsyTurvy(struct BattleCalcValues *cv, struct SetEff
 
 static void HandleSetEffectElectrify(struct BattleCalcValues *cv, struct SetEffect *se)
 {
-    if (HasBattlerActedThisTurn(gBattlerTarget))
+    if (HasBattlerActedThisTurn(se->effectBattler))
     {
         SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
     }
