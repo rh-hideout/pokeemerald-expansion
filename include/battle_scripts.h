@@ -606,6 +606,7 @@ extern const u8 BattleScript_ShedTailSwitch[];
 extern const u8 BattleScript_EffectPlaceholder[];
 extern const u8 BattleScript_PledgeWaitingForPartner[];
 extern const u8 BattleScript_EffectTailwind[];
+extern const u8 BattleScript_TailwindMessageWait[];
 extern const u8 BattleScript_TryTailwindAbilitiesLoop[];
 extern const u8 BattleScript_MoveEffectGastroAcid[];
 extern const u8 BattleScript_EffectPowerSplit[];

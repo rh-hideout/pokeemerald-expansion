@@ -3352,9 +3352,6 @@ static enum MoveEndResult MoveEndSetValues(struct BattleCalcValues *cv)
 
 static bool32 ShouldSkipBattlerForMoveEnd(enum BattlerId battler, struct BattleCalcValues *cv)
 {
-    if (IsBattleMoveStatus(cv->move))
-        return battler != cv->battlerDef;
-
     return !IsBattlerAlly(battler, cv->battlerDef)
         || gBattleStruct->battlerState[cv->battlerAtk].notTargeted[battler];
 }
@@ -4552,15 +4549,8 @@ static enum MoveEndResult MoveEndUpdateLastMoves(struct BattleCalcValues *cv)
             gLastUsedMoveType[cv->battlerAtk] = 0;
         }
 
-        while (gBattleStruct->eventState.moveEndBattler < gBattlersCount)
+        for (enum BattlerId battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
         {
-            enum BattlerId battlerDef = GetTargetBySlot(cv->battlerAtk, gBattleStruct->eventState.moveEndBattler);
-
-            gBattleStruct->eventState.moveEndBattler++;
-
-            if (ShouldSkipBattlerForMoveEnd(battlerDef, cv))
-                continue;
-
             if (!gBattleStruct->unableToUseMove
              && !IsBattlerUnaffectedByMove(battlerDef)
              && gChosenMove != MOVE_UNAVAILABLE
@@ -4571,7 +4561,9 @@ static enum MoveEndResult MoveEndUpdateLastMoves(struct BattleCalcValues *cv)
                     gBattleStruct->dynamax.lastUsedBaseMove = gBattleStruct->dynamax.baseMoves[cv->battlerAtk];
             }
 
-            if (!IsBattlerAlive(cv->battlerDef))
+            if (cv->battlerAtk == battlerDef
+             || !IsBattlerAlive(cv->battlerDef)
+             || gBattleStruct->battlerState[cv->battlerAtk].notTargeted[battlerDef])
                 continue;
 
             gLastHitBy[cv->battlerDef] = cv->battlerAtk; // Used by switch AI only
@@ -4597,7 +4589,6 @@ static enum MoveEndResult MoveEndUpdateLastMoves(struct BattleCalcValues *cv)
         }
     }
 
-    gBattleStruct->eventState.moveEndBattler = 0;
     gBattleScripting.moveendState++;
     return MOVEEND_RESULT_CONTINUE;
 }
@@ -5472,7 +5463,7 @@ static enum MoveEndResult MoveEndLifeOrbShellBell(struct BattleCalcValues *cv)
         gBattleScripting.moveendState++;
         return result;
     }
-    
+
     if (ItemBattleEffects(cv->battlerAtk, 0, cv->holdEffects[cv->battlerAtk], IsLifeOrbShellBellActivation))
         result = MOVEEND_RESULT_RUN_SCRIPT;
 
@@ -5560,12 +5551,18 @@ static enum MoveEndResult MoveEndMoveSwitchUser(struct BattleCalcValues *cv)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
+    if (gBattleStruct->unableToUseMove)
+    {
+        gBattleStruct->allowPartingShot = FALSE;
+        gBattleScripting.moveendState++;
+        return result;
+    }
+
     switch (GetMoveEffect(cv->move))
     {
     case EFFECT_HIT_ESCAPE:
         if (!(HasAnyBattlerQueuedSwitch() && GetConfig(B_QUEUED_SWITCH_TIMINGS) < GEN_CHAMPIONS)
          && gBattleStruct->battlerState[cv->battlerAtk].originalBattlerPartyId == PARTY_SIZE
-         && !gBattleStruct->unableToUseMove
          && IsAnyTargetTurnDamaged(cv->battlerAtk, INCLUDING_SUBSTITUTES)
          && IsBattlerAlive(cv->battlerAtk)
          && CanBattlerSwitch(cv->battlerAtk)
@@ -5594,11 +5591,7 @@ static enum MoveEndResult MoveEndMoveSwitchUser(struct BattleCalcValues *cv)
         }
         break;
     case EFFECT_TELEPORT:
-        if (gBattleStruct->unableToUseMove)
-        {
-            break;
-        }
-        else if (!(gBattleTypeFlags & BATTLE_TYPE_TRAINER) && !IsOnPlayerSide(cv->battlerAtk))
+        if (!(gBattleTypeFlags & BATTLE_TYPE_TRAINER) && !IsOnPlayerSide(cv->battlerAtk))
         {
             result = MOVEEND_RESULT_RUN_SCRIPT;
             BattleScriptCall(BattleScript_Teleport);
@@ -5611,21 +5604,15 @@ static enum MoveEndResult MoveEndMoveSwitchUser(struct BattleCalcValues *cv)
         }
         break;
     case EFFECT_BATON_PASS:
-        if (!gBattleStruct->unableToUseMove)
-        {
-            gBattleScripting.battler = cv->battlerAtk;
-            result = MOVEEND_RESULT_RUN_SCRIPT;
-            BattleScriptCall(BattleScript_BatonPass);
-        }
+        gBattleScripting.battler = cv->battlerAtk;
+        result = MOVEEND_RESULT_RUN_SCRIPT;
+        BattleScriptCall(BattleScript_BatonPass);
         break;
     case EFFECT_HEALING_WISH:
     case EFFECT_LUNAR_DANCE:
-        if (!gBattleStruct->unableToUseMove)
-        {
-            gBattleScripting.battler = cv->battlerAtk;
-            result = MOVEEND_RESULT_RUN_SCRIPT;
-            BattleScriptCall(BattleScript_EffectHealingWish);
-        }
+        gBattleScripting.battler = cv->battlerAtk;
+        result = MOVEEND_RESULT_RUN_SCRIPT;
+        BattleScriptCall(BattleScript_EffectHealingWish);
         break;
     case EFFECT_WEATHER_AND_SWITCH:
         if (CanBattlerSwitch(cv->battlerAtk))

@@ -834,6 +834,8 @@ BattleScript_RoomServiceLoop_NextBattler:
 	restoretarget
 	return
 
+BattleScript_TailwindMessageWait::
+	waitmessage B_WAIT_TIME_LONG
 BattleScript_TryTailwindAbilitiesLoop::
 	savetarget
 	setbyte gBattlerTarget, 0
