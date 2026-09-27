@@ -19,7 +19,12 @@ DOUBLE_BATTLE_TEST("Starting Status Tailwind names Tailwind as the trigger in th
         OPPONENT(SPECIES_WATTREL) { Ability(ABILITY_WIND_POWER); }
         OPPONENT(SPECIES_KILOWATTREL) { Ability(ABILITY_WIND_POWER); }
     } WHEN {
-        TURN {}
+        TURN {
+            MOVE(playerLeft, MOVE_COPYCAT);
+            MOVE(opponentLeft, MOVE_COPYCAT);
+            MOVE(playerRight, MOVE_COPYCAT);
+            MOVE(opponentRight, MOVE_COPYCAT);
+        }
     } SCENE {
         switch (status)
         {
@@ -47,6 +52,10 @@ DOUBLE_BATTLE_TEST("Starting Status Tailwind names Tailwind as the trigger in th
                 MESSAGE("Being hit by Tailwind charged Wattrel with power!");
                 ABILITY_POPUP(playerRight, ABILITY_WIND_POWER);
                 MESSAGE("Being hit by Tailwind charged Kilowattrel with power!");
+                ANIMATION(ANIM_TYPE_MOVE, MOVE_TAILWIND, playerLeft);
+                ANIMATION(ANIM_TYPE_MOVE, MOVE_TAILWIND, opponentLeft);
+                ANIMATION(ANIM_TYPE_MOVE, MOVE_TAILWIND, playerRight);
+                ANIMATION(ANIM_TYPE_MOVE, MOVE_TAILWIND, opponentRight);
             }
             break;
         case STARTING_STATUS_TAILWIND_PLAYER:
@@ -73,6 +82,10 @@ DOUBLE_BATTLE_TEST("Starting Status Tailwind names Tailwind as the trigger in th
                 MESSAGE("Being hit by Tailwind charged the opposing Wattrel with power!");
                 ABILITY_POPUP(opponentRight, ABILITY_WIND_POWER);
                 MESSAGE("Being hit by Tailwind charged the opposing Kilowattrel with power!");
+                ANIMATION(ANIM_TYPE_MOVE, MOVE_TAILWIND, playerLeft);
+                ANIMATION(ANIM_TYPE_MOVE, MOVE_TAILWIND, opponentLeft);
+                ANIMATION(ANIM_TYPE_MOVE, MOVE_TAILWIND, playerRight);
+                ANIMATION(ANIM_TYPE_MOVE, MOVE_TAILWIND, opponentRight);
             }
             break;
         default:
@@ -100,7 +113,12 @@ DOUBLE_BATTLE_TEST("Starting Status Tailwind only triggers Wind Rider once per b
         OPPONENT(SPECIES_BRAMBLIN) { Ability(ABILITY_WIND_RIDER); }
         OPPONENT(SPECIES_BRAMBLEGHAST) { Ability(ABILITY_WIND_RIDER); }
     } WHEN {
-        TURN {}
+        TURN {
+            MOVE(playerLeft, MOVE_COPYCAT);
+            MOVE(opponentLeft, MOVE_COPYCAT);
+            MOVE(playerRight, MOVE_COPYCAT);
+            MOVE(opponentRight, MOVE_COPYCAT);
+        }
     } SCENE {
         switch (status)
         {
@@ -134,6 +152,10 @@ DOUBLE_BATTLE_TEST("Starting Status Tailwind only triggers Wind Rider once per b
                 MESSAGE("The opposing Bramblin's Attack rose!");
                 ABILITY_POPUP(opponentRight, ABILITY_WIND_RIDER);
                 MESSAGE("The opposing Brambleghast's Attack rose!");
+                ANIMATION(ANIM_TYPE_MOVE, MOVE_TAILWIND, playerLeft);
+                ANIMATION(ANIM_TYPE_MOVE, MOVE_TAILWIND, opponentLeft);
+                ANIMATION(ANIM_TYPE_MOVE, MOVE_TAILWIND, playerRight);
+                ANIMATION(ANIM_TYPE_MOVE, MOVE_TAILWIND, opponentRight);
             }
             break;
         case STARTING_STATUS_TAILWIND_PLAYER:
@@ -166,6 +188,10 @@ DOUBLE_BATTLE_TEST("Starting Status Tailwind only triggers Wind Rider once per b
                 MESSAGE("Bramblin's Attack rose!");
                 ABILITY_POPUP(playerRight, ABILITY_WIND_RIDER);
                 MESSAGE("Brambleghast's Attack rose!");
+                ANIMATION(ANIM_TYPE_MOVE, MOVE_TAILWIND, playerLeft);
+                ANIMATION(ANIM_TYPE_MOVE, MOVE_TAILWIND, opponentLeft);
+                ANIMATION(ANIM_TYPE_MOVE, MOVE_TAILWIND, playerRight);
+                ANIMATION(ANIM_TYPE_MOVE, MOVE_TAILWIND, opponentRight);
             }
             break;
         default:
