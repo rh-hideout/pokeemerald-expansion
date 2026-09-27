@@ -230,7 +230,7 @@ struct Durations
     u16 total;
     u16 remaining;
 };
-static bool32 Detail_GetDisplayedDuration(const struct BattleInfo *entry, enum BattleSide viewerSide, struct Durations *duration);
+static bool32 Detail_SetDisplayedDuration(const struct BattleInfo *entry, enum BattleSide viewerSide, struct Durations *duration);
 
 static void Detail_BuildTurnFractionText(u8 *dst, u32 remaining, u32 total);
 static bool32 Detail_TryMoveEffectCursor(s32 direction);
@@ -2189,8 +2189,8 @@ static void Detail_BuildActiveEffectsForBattler(void)
     TryAddActiveSideStatus(INFO_SEA_OF_FIRE, SIDE_STATUS(SIDE_STATUS_SEA_OF_FIRE), sideStatus->seaOfFireTimer, 4, side);
     #undef SIDE_STATUS
     TryAddActiveSideStatus(INFO_STEALTH_ROCK, IsHazardOnSide(side, HAZARDS_STEALTH_ROCK), 0, 0, side);
-    TryAddActiveSideStatus(INFO_SPIKES, IsHazardOnSide(side, HAZARDS_SPIKES), 0, 0, side);
-    TryAddActiveSideStatus(INFO_TOXIC_SPIKES, IsHazardOnSide(side, HAZARDS_TOXIC_SPIKES), 0, 0, side);
+    TryAddActiveSideStatus(INFO_SPIKES, IsHazardOnSide(side, HAZARDS_SPIKES), sideStatus->spikesAmount, 0, side);
+    TryAddActiveSideStatus(INFO_TOXIC_SPIKES, IsHazardOnSide(side, HAZARDS_TOXIC_SPIKES), sideStatus->toxicSpikesAmount, 0, side);
     TryAddActiveSideStatus(INFO_STICKY_WEB, IsHazardOnSide(side, HAZARDS_STICKY_WEB), 0, 0, side);
     TryAddActiveSideStatus(INFO_G_MAX_STEELSURGE, IsHazardOnSide(side, HAZARDS_STEELSURGE), 0, 0, side);
     TryAddActiveDamageNonTypes(side);
@@ -2198,7 +2198,6 @@ static void Detail_BuildActiveEffectsForBattler(void)
     TryAddActiveStatus(GetInfoFromSemiInvulnerableState(vol->semiInvulnerable), vol->semiInvulnerable, side);
     TryAddActiveStatus(INFO_INFATUATION, vol->infatuation, side);
     TryAddActiveStatus(INFO_NIGHTMARE, vol->nightmare, side);
-    TryAddActiveStatus(INFO_PERISHING, vol->perishSongTimer, side);
     TryAddActiveStatus(INFO_TORMENT, vol->torment, side);
     TryAddActiveStatus(INFO_GRUDGE, vol->grudge, side);
     TryAddActiveStatus(INFO_LOCK_ON, vol->lockOn, side);
@@ -2222,7 +2221,6 @@ static void Detail_BuildActiveEffectsForBattler(void)
     TryAddActiveStatus(INFO_CRITICAL_HIT_BOOST, critBoost, side);
     TryAddActiveStatus(INFO_IDENTIFIED, foresight, side);
     TryAddActiveStatus(INFO_NO_ABILITY, vol->gastroAcid, side);
-    TryAddActiveStatus(INFO_STOCKPILING, vol->stockpileCounter, side);
     TryAddActiveStatus(INFO_IMPRISON, vol->imprison, side);
     TryAddActiveStatus(INFO_LEECH_SEED, vol->leechSeed, side);
     TryAddActiveStatus(INFO_MINIMIZED, vol->minimize, side);
@@ -2242,6 +2240,9 @@ static void Detail_BuildActiveEffectsForBattler(void)
     TryAddActiveStatusTimer(INFO_SLOW_START, vol->slowStartTimer, B_SLOW_START_TIMER, side);
     TryAddActiveStatusTimer(INFO_SYRUPY, vol->syrupBombTimer, B_SYRUP_BOMB_TIMER, side);
     TryAddActiveStatusTimer(INFO_WISH, gBattleStruct->wish[battler].counter, 2, side);
+    TryAddActiveStatusTimer(INFO_PERISHING, vol->perishSongTimer, 3, side);
+    TryAddActiveStatusTimer(INFO_STOCKPILING, vol->stockpileCounter, 3, side);
+
     TryAddActiveThirdType(battler, side);
 
     if (B_DISABLE_TURNS >= GEN_5)
@@ -2422,7 +2423,7 @@ static void TryAddActiveStatusInternal(enum BattleInfoLabels label, u32 timerOrF
     sData->activeEffects[sData->activeEffectsCount++] = entry;
 }
 
-static bool32 Detail_GetDisplayedDuration(const struct BattleInfo *entry, enum BattleSide viewerSide, struct Durations *duration)
+static bool32 Detail_SetDisplayedDuration(const struct BattleInfo *entry, enum BattleSide viewerSide, struct Durations *duration)
 {
     if (!entry->durationKnown)
         return FALSE;
@@ -2597,7 +2598,7 @@ static void Detail_CopyTextToFit(u8 *dst, const u8 *src, u32 fontId, u32 maxWidt
     *out = EOS;
 }
 
-static void DisplayRow(u32 windowId, u32 row, u32 index, u32 fractionYOffset)
+static void Detail_DisplayRow(u32 windowId, u32 row, u32 index, u32 fractionYOffset)
 {
     u32 top = 16 + row * 12;
     const struct BattleInfo *entry = &sData->activeEffects[index];
@@ -2624,34 +2625,49 @@ static void DisplayRow(u32 windowId, u32 row, u32 index, u32 fractionYOffset)
     }
 
     struct Durations duration = {0};
-    bool32 hasFraction = Detail_GetDisplayedDuration(entry, B_SIDE_PLAYER, &duration);
+    bool32 isDuration = Detail_SetDisplayedDuration(entry, B_SIDE_PLAYER, &duration);
 
-    if (hasFraction || entry->stackCount > 0)
+    if (isDuration || entry->stackCount > 0)
     {
-        u32 textLength = hasFraction ? 24 : 8;
-        u8 fractionText[textLength];
+        u8 durationString[24];
         u8 nameBuffer[64];
 
-        u8 *stackPtr = fractionText;
+        u8 *str = durationString;
 
-        if (hasFraction)
+        switch (entry->label)
         {
-            Detail_BuildTurnFractionText(fractionText, duration.remaining, duration.total);
-        }
-        else if (entry->stackCount > 0)
-        {
-            *(stackPtr++) = CHAR_PLUS;
-            stackPtr = ConvertIntToDecimalStringN(stackPtr, entry->stackCount, STR_CONV_MODE_LEFT_ALIGN, 1);
-            *stackPtr = EOS;
+        case INFO_PERISHING:
+            str = ConvertIntToDecimalStringN(str, duration.remaining, STR_CONV_MODE_LEFT_ALIGN, 1);
+            StringCopy(str, COMPOUND_STRING(" turns"));
+            break;
+        case INFO_STOCKPILING:
+        case INFO_TOXIC_SPIKES:
+        case INFO_SPIKES:
+            *(str++) = CHAR_PLUS;
+            str = ConvertIntToDecimalStringN(str, duration.remaining, STR_CONV_MODE_LEFT_ALIGN, 1);
+            *str = EOS;
+            break;
+        default:
+            if (isDuration)
+            {
+                Detail_BuildTurnFractionText(durationString, duration.remaining, duration.total);
+            }
+            else if (entry->stackCount > 0)
+            {
+                *(str++) = CHAR_PLUS;
+                str = ConvertIntToDecimalStringN(str, entry->stackCount, STR_CONV_MODE_LEFT_ALIGN, 1);
+                *str = EOS;
+            }
+            break;
         }
 
         s32 windowWidth = WindowWidthPx(windowId);
-        s32 fractionWidth = GetStringWidth(FONT_SMALL_NARROWER, fractionText, 0);
+        s32 durationWidth = GetStringWidth(FONT_SMALL_NARROWER, durationString, 0);
 
-        s32 fractionX = windowWidth - 6 - 2 - fractionWidth;
-        fractionX = max(fractionX, 10);
+        s32 durationX = windowWidth - 6 - 2 - durationWidth;
+        durationX = max(durationX, 10);
 
-        s32 maxNameWidth = fractionX - 10 - 2;
+        s32 maxNameWidth = durationX - 10 - 2;
         maxNameWidth = max(maxNameWidth, 0);
 
         Detail_CopyTextToFit(nameBuffer, effectData->name, FONT_SHORT_NARROWER, maxNameWidth);
@@ -2663,9 +2679,9 @@ static void DisplayRow(u32 windowId, u32 row, u32 index, u32 fractionYOffset)
         PrintTextOnWindow(&text);
 
         text.font = FONT_SMALL_NARROWER;
-        text.left = fractionX;
+        text.left = durationX;
         text.top = top + fractionYOffset;
-        text.string = fractionText;
+        text.string = durationString;
         PrintTextOnWindow(&text);
     }
     else
@@ -2705,7 +2721,7 @@ static void Detail_RefreshEffectsWindow(void)
             if (rowIndex >= sData->activeEffectsCount)
                 break;
 
-            DisplayRow(windowId, row, rowIndex, fractionYOffset);
+            Detail_DisplayRow(windowId, row, rowIndex, fractionYOffset);
         }
     }
 
