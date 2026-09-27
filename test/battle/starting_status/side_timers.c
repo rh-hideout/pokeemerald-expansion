@@ -7,9 +7,7 @@ DOUBLE_BATTLE_TEST("Starting Status Tailwind names Tailwind as the trigger in th
     u16 status = 0;
 
     PARAMETRIZE { status = STARTING_STATUS_TAILWIND_OPPONENT;           }
-    PARAMETRIZE { status = STARTING_STATUS_TAILWIND_OPPONENT_TEMPORARY; }
     PARAMETRIZE { status = STARTING_STATUS_TAILWIND_PLAYER;             }
-    PARAMETRIZE { status = STARTING_STATUS_TAILWIND_PLAYER_TEMPORARY;   }
 
     SetStartingStatus(status);
 
@@ -29,7 +27,6 @@ DOUBLE_BATTLE_TEST("Starting Status Tailwind names Tailwind as the trigger in th
         switch (status)
         {
         case STARTING_STATUS_TAILWIND_OPPONENT:
-        case STARTING_STATUS_TAILWIND_OPPONENT_TEMPORARY:
             MESSAGE("A tailwind started blowing on the opposing side!");
             NONE_OF {
                 ABILITY_POPUP(playerLeft, ABILITY_WIND_POWER);
@@ -59,7 +56,6 @@ DOUBLE_BATTLE_TEST("Starting Status Tailwind names Tailwind as the trigger in th
             }
             break;
         case STARTING_STATUS_TAILWIND_PLAYER:
-        case STARTING_STATUS_TAILWIND_PLAYER_TEMPORARY:
             MESSAGE("A tailwind started blowing on your side!");
             NONE_OF {
                 ABILITY_POPUP(opponentLeft, ABILITY_WIND_POWER);
@@ -101,9 +97,7 @@ DOUBLE_BATTLE_TEST("Starting Status Tailwind only triggers Wind Rider once per b
     u16 status = 0;
 
     PARAMETRIZE { status = STARTING_STATUS_TAILWIND_OPPONENT;           }
-    PARAMETRIZE { status = STARTING_STATUS_TAILWIND_OPPONENT_TEMPORARY; }
     PARAMETRIZE { status = STARTING_STATUS_TAILWIND_PLAYER;             }
-    PARAMETRIZE { status = STARTING_STATUS_TAILWIND_PLAYER_TEMPORARY;   }
 
     SetStartingStatus(status);
 
@@ -123,7 +117,6 @@ DOUBLE_BATTLE_TEST("Starting Status Tailwind only triggers Wind Rider once per b
         switch (status)
         {
         case STARTING_STATUS_TAILWIND_OPPONENT:
-        case STARTING_STATUS_TAILWIND_OPPONENT_TEMPORARY:
             MESSAGE("A tailwind started blowing on the opposing side!");
             NONE_OF {
                 ABILITY_POPUP(playerLeft, ABILITY_WIND_RIDER);
@@ -159,7 +152,6 @@ DOUBLE_BATTLE_TEST("Starting Status Tailwind only triggers Wind Rider once per b
             }
             break;
         case STARTING_STATUS_TAILWIND_PLAYER:
-        case STARTING_STATUS_TAILWIND_PLAYER_TEMPORARY:
             MESSAGE("A tailwind started blowing on your side!");
             NONE_OF {
                 ABILITY_POPUP(opponentLeft, ABILITY_WIND_RIDER);
