@@ -1047,10 +1047,6 @@
 	.byte \battler
 	.endm
 
-	.macro trytrainerslidezmovemsg
-	callnative BS_TryTrainerSlideZMoveMsg
-	.endm
-
 	.macro trytrainerslidemegaevolutionmsg
 	callnative BS_TryTrainerSlideMegaEvolutionMsg
 	.endm
