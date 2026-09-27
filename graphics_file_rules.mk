@@ -103,6 +103,9 @@ $(TYPESGFXDIR)/move_types.gbapal: $(TYPESGFXDIR)/move_types_1.gbapal \
                                   $(TYPESGFXDIR)/move_types_3.gbapal
 	@cat $^ >$@
 
+$(TYPESGFXDIR)/tera/move_types.4bpp: $(types:%=$(TYPESGFXDIR)/tera/%.4bpp)
+	@cat $^ >$@
+
 $(ROULETTEGFXDIR)/roulette_tilt.4bpp: $(ROULETTEGFXDIR)/shroomish.4bpp \
                                       $(ROULETTEGFXDIR)/tailow.4bpp
 	@cat $^ >$@

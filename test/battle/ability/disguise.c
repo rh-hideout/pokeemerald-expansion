@@ -130,8 +130,8 @@ SINGLE_BATTLE_TEST("Disguised Mimikyu takes damage from Rocky Helmet without bre
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_AERIAL_ACE, player);
         HP_BAR(opponent);
+        ITEM_POPUP(opponent, ITEM_ROCKY_HELMET);
         HP_BAR(player);
-        MESSAGE("Mimikyu was hurt by the opposing Wobbuffet's Rocky Helmet!");
     } THEN {
         EXPECT_EQ(player->species, species);
     }

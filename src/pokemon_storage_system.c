@@ -2045,7 +2045,7 @@ static void ResetForPokeStorage(void)
 static void InitStartingPosData(void)
 {
     ClearSavedCursorPos();
-    sInPartyMenu = (sStorage->boxOption == OPTION_DEPOSIT);
+    sInPartyMenu = (sStorage->boxOption == OPTION_DEPOSIT || sStorage->boxOption == OPTION_SELECT_MON);
     sDepositBoxId = 0;
 }
 
@@ -3660,7 +3660,7 @@ static void Task_OnCloseBoxPressed(u8 taskId)
             gPartiesCount[B_TRAINER_PLAYER] = CalculatePlayerPartyCount();
             if (sStorage->boxOption == OPTION_SELECT_MON)
             {
-                gSpecialVar_0x8004 = PARTY_NOTHING_CHOSEN;
+                gSpecialVar_0x8004 = PARTY_MON_CANCEL;
                 gSpecialVar_Result = FALSE;
             }
             sStorage->screenChangeType = SCREEN_CHANGE_EXIT_BOX;
@@ -3738,7 +3738,7 @@ static void Task_OnBPressed(u8 taskId)
             gPartiesCount[B_TRAINER_PLAYER] = CalculatePlayerPartyCount();
             if (sStorage->boxOption == OPTION_SELECT_MON)
             {
-                gSpecialVar_0x8004  = PARTY_NOTHING_CHOSEN;
+                gSpecialVar_0x8004  = PARTY_MON_CANCEL;
                 gSpecialVar_Result  = FALSE;
             }
             sStorage->screenChangeType = SCREEN_CHANGE_EXIT_BOX;
@@ -5863,10 +5863,10 @@ static struct Sprite *CreateChooseBoxArrows(u16 x, u16 y, u8 animId, u8 priority
 
 static void InitCursor(void)
 {
-    if (sStorage->boxOption != OPTION_DEPOSIT)
-        sCursorArea = CURSOR_AREA_IN_BOX;
-    else
+    if (sStorage->boxOption == OPTION_DEPOSIT || sStorage->boxOption == OPTION_SELECT_MON)
         sCursorArea = CURSOR_AREA_IN_PARTY;
+    else
+        sCursorArea = CURSOR_AREA_IN_BOX;
 
     sCursorPosition = 0;
     sIsMonBeingMoved = FALSE;

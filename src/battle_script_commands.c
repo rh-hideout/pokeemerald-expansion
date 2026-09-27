@@ -5167,7 +5167,11 @@ static void Cmd_normalisebuffs(void)
     CMD_ARGS();
 
     for (enum BattlerId i = 0; i < gBattlersCount; i++)
+    {
         TryResetBattlerStatChanges(i);
+        if (GetConfig(B_HAZE_FOCUS_ENERGY) == GEN_1 || GetConfig(B_HAZE_FOCUS_ENERGY) == GEN_4)
+            gBattleMons[i].volatiles.focusEnergy = FALSE;
+    }
 
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
@@ -9345,7 +9349,7 @@ void BS_JumpIfTerrainAffected(void)
 void BS_TryReflectType(void)
 {
     NATIVE_ARGS(const u8 *failInstr);
-    enum Species targetBaseSpecies = GET_BASE_SPECIES_ID(gBattleMons[gBattlerTarget].species);
+    enum Species targetBaseSpecies = GetBaseSpecies(gBattleMons[gBattlerTarget].species);
     enum Type targetTypes[3];
     GetBattlerTypes(gBattlerTarget, FALSE, targetTypes);
 
@@ -11170,7 +11174,7 @@ void BS_TryTrainerSlideMsgFirstOff(void)
     switch (gBattlerFainted)
     {
     case B_BATTLER_0:
-        if ((ShouldDoTrainerSlide(B_BATTLER_1, TRAINER_SLIDE_ATTACKER_LANDS_FIRST_DOWN)))
+        if ((ShouldDoTrainerSlide(B_BATTLER_1, TRAINER_SLIDE_ATTACKER_FAINTS_FIRST_MON)))
         {
             gBattleScripting.battler = battler;
             BattleScriptPush(cmd->nextInstr);
@@ -11180,7 +11184,7 @@ void BS_TryTrainerSlideMsgFirstOff(void)
         else
         {
             gBattleScripting.battler = tempBattler;
-            if ((ShouldDoTrainerSlide(B_BATTLER_3, TRAINER_SLIDE_ATTACKER_LANDS_FIRST_DOWN)))
+            if ((ShouldDoTrainerSlide(B_BATTLER_3, TRAINER_SLIDE_ATTACKER_FAINTS_FIRST_MON)))
             {
                 gBattleScripting.battler = battler;
                 BattleScriptPush(cmd->nextInstr);
@@ -11195,7 +11199,7 @@ void BS_TryTrainerSlideMsgFirstOff(void)
         }
         break;
     case B_BATTLER_2:
-        if (ShouldDoTrainerSlide(B_BATTLER_2, TRAINER_SLIDE_DEFENDER_TAKES_FIRST_DOWN))
+        if (ShouldDoTrainerSlide(B_BATTLER_2, TRAINER_SLIDE_DEFENDER_LOSES_FIRST_MON))
         {
                 gBattleScripting.battler = battler;
                 BattleScriptPush(cmd->nextInstr);
@@ -11205,7 +11209,7 @@ void BS_TryTrainerSlideMsgFirstOff(void)
         else
         {
             gBattleScripting.battler = tempBattler;
-            if ((ShouldDoTrainerSlide(B_BATTLER_1, TRAINER_SLIDE_ATTACKER_LANDS_FIRST_DOWN)))
+            if ((ShouldDoTrainerSlide(B_BATTLER_1, TRAINER_SLIDE_ATTACKER_FAINTS_FIRST_MON)))
             {
                 gBattleScripting.battler = battler;
                 BattleScriptPush(cmd->nextInstr);
@@ -11215,7 +11219,7 @@ void BS_TryTrainerSlideMsgFirstOff(void)
             else
             {
                 gBattleScripting.battler = tempBattler;
-                if ((ShouldDoTrainerSlide(B_BATTLER_3, TRAINER_SLIDE_ATTACKER_LANDS_FIRST_DOWN)))
+                if ((ShouldDoTrainerSlide(B_BATTLER_3, TRAINER_SLIDE_ATTACKER_FAINTS_FIRST_MON)))
                 {
                     gBattleScripting.battler = battler;
                     BattleScriptPush(cmd->nextInstr);
@@ -11231,7 +11235,7 @@ void BS_TryTrainerSlideMsgFirstOff(void)
         }
         break;
     case B_BATTLER_1:
-        if ((ShouldDoTrainerSlide(B_BATTLER_1, TRAINER_SLIDE_DEFENDER_TAKES_FIRST_DOWN)))
+        if ((ShouldDoTrainerSlide(B_BATTLER_1, TRAINER_SLIDE_DEFENDER_LOSES_FIRST_MON)))
         {
             gBattleScripting.battler = battler;
             BattleScriptPush(cmd->nextInstr);
@@ -11241,7 +11245,7 @@ void BS_TryTrainerSlideMsgFirstOff(void)
         else
         {
             gBattleScripting.battler = tempBattler;
-            if ((ShouldDoTrainerSlide(B_BATTLER_2, TRAINER_SLIDE_ATTACKER_LANDS_FIRST_DOWN)))
+            if ((ShouldDoTrainerSlide(B_BATTLER_2, TRAINER_SLIDE_ATTACKER_FAINTS_FIRST_MON)))
             {
                 gBattleScripting.battler = battler;
                 BattleScriptPush(cmd->nextInstr);
@@ -11256,7 +11260,7 @@ void BS_TryTrainerSlideMsgFirstOff(void)
         }
         break;
     case B_BATTLER_3:
-        if ((ShouldDoTrainerSlide(B_BATTLER_3, TRAINER_SLIDE_DEFENDER_TAKES_FIRST_DOWN)))
+        if ((ShouldDoTrainerSlide(B_BATTLER_3, TRAINER_SLIDE_DEFENDER_LOSES_FIRST_MON)))
         {
             gBattleScripting.battler = battler;
             BattleScriptPush(cmd->nextInstr);
@@ -11266,7 +11270,7 @@ void BS_TryTrainerSlideMsgFirstOff(void)
         else
         {
             gBattleScripting.battler = tempBattler;
-            if ((ShouldDoTrainerSlide(B_BATTLER_2, TRAINER_SLIDE_ATTACKER_LANDS_FIRST_DOWN)))
+            if ((ShouldDoTrainerSlide(B_BATTLER_2, TRAINER_SLIDE_ATTACKER_FAINTS_FIRST_MON)))
             {
                 gBattleScripting.battler = battler;
                 BattleScriptPush(cmd->nextInstr);
@@ -11916,6 +11920,7 @@ void BS_TryAdrenalineOrb(void)
      && holdEffect == HOLD_EFFECT_ADRENALINE_ORB)
     {
         gBattleStruct->adrenalineOrbActivated = TRUE;
+        gLastUsedItem = gBattleMons[battler].item;
         SetStatChange2(battler, STAT_SPEED, 1);
         BattleScriptPush(cmd->nextInstr);
         gBattlescriptCurrInstr = BattleScript_AdrenalineOrbActivates;
@@ -12082,13 +12087,6 @@ void BS_ShowItemPopup(void)
     enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
 
     CreateItemPopUp(battler);
-    gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
-void BS_ShowItemPopupScripting(void)
-{
-    NATIVE_ARGS();
-    CreateItemPopUp(gBattleScripting.battler);
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 

@@ -279,6 +279,7 @@ bool32 IsHazardOnSide(enum BattleSide side, enum Hazards hazardType);
 bool32 AreAnyHazardsOnSide(enum BattleSide side);
 bool32 IsHazardOnSideAndClear(enum BattleSide side, enum Hazards hazardType);
 void RemoveHazardFromField(enum BattleSide side, enum Hazards hazardType);
+enum TwoTurnMoveActivation GetTwoTurnMoveActivation(struct BattleCalcValues *cv, u32 weather);
 bool32 CanMoveSkipAccuracyCalc(struct BattleCalcValues *cv, u32 weather, enum ResultOption option);
 u32 GetTotalAccuracy(struct BattleCalcValues *cv, u32 weather);
 bool32 DoesOHKOMoveMissTarget(struct BattleCalcValues *cv);
@@ -325,5 +326,11 @@ u32 GetWeatherFromOverworldWeather(u32 owWeather);
 enum BattleTerrain GetBattleTerrainFromOverworldWeather(u32 owWeather);
 bool32 IsCommanderActive(enum BattlerId battler);
 bool32 IsWholeSideAlive(enum BattlerId sideBattler);
+
+// Damage calc modifiers
+uq4_12_t GetBurnOrFrostBiteModifier(struct DamageContext *ctx);
+uq4_12_t GetSameTypeAttackBonusModifier(struct DamageContext *ctx);
+uq4_12_t GetMoveAgainstProtectionModifier(struct DamageContext *ctx);
+uq4_12_t GetOtherModifiers(struct DamageContext *ctx);
 
 #endif // GUARD_BATTLE_UTIL_H

@@ -2699,7 +2699,7 @@
 	goto_if_eq VAR_RESULT, NO, \declineTradeJump
 	chooseboxmon SELECT_PC_MON_TRADE
 	waitstate
-	goto_if_eq VAR_0x8004, PARTY_NOTHING_CHOSEN, \declineTradeJump
+	goto_if_eq VAR_0x8004, PARTY_MON_CANCEL, \declineTradeJump
 	specialvar VAR_0x800B, GetTradeSpecies
 	goto_if_ne VAR_0x800B, VAR_0x8009, \wrongMonJump
 	special CreateInGameTradePokemon

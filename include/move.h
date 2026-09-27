@@ -211,6 +211,7 @@ struct MoveInfo
         u32 fixedDamage;
         u32 damagePercentage;
         u32 recoilPercentage;
+        u32 secondaryEffectChance;
         u32 nonVolatileStatus;
         u32 overwriteAbility;
         u32 weatherType;
@@ -768,6 +769,13 @@ static inline u32 GetMoveRecoil(enum Move moveId)
     moveId = SanitizeMoveId(moveId);
     assertf(gMovesInfo[moveId].effect == EFFECT_RECOIL, "not a recoil move: %S", gMovesInfo[moveId].name);
     return gMovesInfo[moveId].argument.recoilPercentage;
+}
+
+static inline u32 GetMoveSecondaryEffectChance(enum Move moveId)
+{
+    moveId = SanitizeMoveId(moveId);
+    assertf(gMovesInfo[moveId].effect == EFFECT_SECRET_POWER, "not a move with a secondary effect chance argument: %S", GetMoveName(moveId));
+    return gMovesInfo[moveId].argument.secondaryEffectChance;
 }
 
 static inline enum MoveEffect GetMoveNonVolatileStatus(enum Move move)
