@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_SCARY_FACE) == EFFECT_SPEED_DOWN_2);
+    ASSUME_STAT_CHANGE(MOVE_SCARY_FACE, speed: -2);
 }
 
 SINGLE_BATTLE_TEST("Scary Face reduces the target's Speed by 2 stages")

@@ -14,10 +14,10 @@ SINGLE_BATTLE_TEST("Cud Chew will activate Kee Berry effect again on the next tu
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         HP_BAR(opponent);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
         ABILITY_POPUP(opponent, ABILITY_CUD_CHEW);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_DEF], DEFAULT_STAT_STAGE + 2);
     }
@@ -39,10 +39,10 @@ SINGLE_BATTLE_TEST("Cud Chew will activate Oran Berry effect again on the next t
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_RAGE, player);
         HP_BAR(opponent);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
         ABILITY_POPUP(opponent, ABILITY_CUD_CHEW);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
     } THEN {
         EXPECT_EQ(opponent->hp, 40);
     }
@@ -63,13 +63,13 @@ SINGLE_BATTLE_TEST("Cud Chew will activate Lum Berry effect again on the next tu
         ANIMATION(ANIM_TYPE_MOVE, MOVE_THUNDER_WAVE, player);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PRZ, opponent);
         STATUS_ICON(opponent, paralysis: TRUE);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
         STATUS_ICON(opponent, paralysis: FALSE);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_THUNDER_WAVE, player);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PRZ, opponent);
         STATUS_ICON(opponent, paralysis: TRUE);
         ABILITY_POPUP(opponent, ABILITY_CUD_CHEW);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
         STATUS_ICON(opponent, paralysis: FALSE);
     }
 }

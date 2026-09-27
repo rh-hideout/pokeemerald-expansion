@@ -12,7 +12,7 @@ SINGLE_BATTLE_TEST("Cursed Body triggers 30% of the time")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_AQUA_JET, player);
         ABILITY_POPUP(opponent, ABILITY_CURSED_BODY);
-        MESSAGE("Wobbuffet's Aqua Jet was disabled by the opposing Frillish's Cursed Body!");
+        MESSAGE("Wobbuffet's Aqua Jet was disabled!");
     }
 }
 
@@ -31,7 +31,7 @@ SINGLE_BATTLE_TEST("Cursed Body cannot disable Struggle")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STRUGGLE, player);
         NONE_OF {
             ABILITY_POPUP(opponent, ABILITY_CURSED_BODY);
-            MESSAGE("Wobbuffet's Struggle was disabled by the opposing Frillish's Cursed Body!");
+            MESSAGE("Wobbuffet's Struggle was disabled!");
         }
     }
 }
@@ -48,7 +48,7 @@ SINGLE_BATTLE_TEST("Cursed Body can trigger if the attacker is behind a Substitu
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_AQUA_JET, player);
         ABILITY_POPUP(opponent, ABILITY_CURSED_BODY);
-        MESSAGE("Wobbuffet's Aqua Jet was disabled by the opposing Frillish's Cursed Body!");
+        MESSAGE("Wobbuffet's Aqua Jet was disabled!");
     }
 }
 
@@ -65,7 +65,7 @@ SINGLE_BATTLE_TEST("Cursed Body cannot trigger if the target is behind a Substit
         ANIMATION(ANIM_TYPE_MOVE, MOVE_AQUA_JET, player);
         NONE_OF {
             ABILITY_POPUP(opponent, ABILITY_CURSED_BODY);
-            MESSAGE("Wobbuffet's Aqua Jet was disabled by the opposing Frillish's Cursed Body!");
+            MESSAGE("Wobbuffet's Aqua Jet was disabled!");
         }
     }
 }
@@ -82,7 +82,7 @@ SINGLE_BATTLE_TEST("Cursed Body does not stop a multistrike move mid-execution")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROCK_BLAST, player);
         HP_BAR(opponent);
         ABILITY_POPUP(opponent, ABILITY_CURSED_BODY);
-        MESSAGE("Wobbuffet's Rock Blast was disabled by the opposing Frillish's Cursed Body!");
+        MESSAGE("Wobbuffet's Rock Blast was disabled!");
         HP_BAR(opponent);
     }
 }
@@ -102,7 +102,7 @@ SINGLE_BATTLE_TEST("Cursed Body disables the move that called another move inste
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SLEEP_TALK, player);
         ABILITY_POPUP(opponent, ABILITY_CURSED_BODY);
-        MESSAGE("Wobbuffet's Sleep Talk was disabled by the opposing Frillish's Cursed Body!");
+        MESSAGE("Wobbuffet's Sleep Talk was disabled!");
     } THEN {
         u32 disabledMove = player->volatiles.disabledMove;
         EXPECT_EQ(disabledMove, MOVE_SLEEP_TALK);
@@ -113,7 +113,8 @@ SINGLE_BATTLE_TEST("Cursed Body disables the base move of a status Z-Move")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_NATURE_POWER) == EFFECT_NATURE_POWER);
-        ASSUME(GetMoveEffect(MOVE_ELECTRIC_TERRAIN) == EFFECT_ELECTRIC_TERRAIN);
+        ASSUME(GetMoveEffect(MOVE_ELECTRIC_TERRAIN) == EFFECT_TERRAIN);
+        ASSUME(GetMoveTerrainType(MOVE_ELECTRIC_TERRAIN) == B_TERRAIN_ELECTRIC);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
         OPPONENT(SPECIES_FRILLISH) { Ability(ABILITY_CURSED_BODY); }
     } WHEN {
@@ -124,11 +125,55 @@ SINGLE_BATTLE_TEST("Cursed Body disables the base move of a status Z-Move")
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ZMOVE_ACTIVATE, player);
         HP_BAR(opponent);
         ABILITY_POPUP(opponent, ABILITY_CURSED_BODY);
-        MESSAGE("Wobbuffet's Nature Power was disabled by the opposing Frillish's Cursed Body!");
+        MESSAGE("Wobbuffet's Nature Power was disabled!");
     } THEN {
         u32 disabledMove = player->volatiles.disabledMove;
         EXPECT_EQ(disabledMove, MOVE_NATURE_POWER);
     }
 }
 
-TO_DO_BATTLE_TEST("Cursed Body disables damaging Z-Moves, but not the base move")
+SINGLE_BATTLE_TEST("Cursed Body does not trigger on Max Moves")
+{
+    enum Gimmick dyna;
+    enum Move move;
+    PARAMETRIZE { dyna = GIMMICK_NONE; move = MOVE_WATER_GUN; }
+    PARAMETRIZE { dyna = GIMMICK_DYNAMAX; move = MOVE_MAX_GEYSER; }
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_JELLICENT) { Ability(ABILITY_CURSED_BODY); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_WATER_GUN, gimmick: dyna, WITH_RNG(RNG_CURSED_BODY, 1)); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, move, player);
+        HP_BAR(opponent);
+        if (dyna == GIMMICK_NONE) {
+            ABILITY_POPUP(opponent, ABILITY_CURSED_BODY);
+        } else {
+            NOT ABILITY_POPUP(opponent, ABILITY_CURSED_BODY);
+        }
+    } THEN {
+        u32 disabledMove = player->volatiles.disabledMove;
+        if (dyna == GIMMICK_NONE)
+            EXPECT_EQ(disabledMove, MOVE_WATER_GUN);
+        else
+            EXPECT_EQ(disabledMove, MOVE_NONE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Cursed Body disables damaging Z-Moves, but not the base move")
+{
+    GIVEN {
+        ASSUME(GetMoveType(MOVE_WATER_GUN) == gItemsInfo[ITEM_WATERIUM_Z].secondaryId);
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_WATERIUM_Z); }
+        OPPONENT(SPECIES_JELLICENT) { Ability(ABILITY_CURSED_BODY); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_WATER_GUN, gimmick: GIMMICK_Z_MOVE, WITH_RNG(RNG_CURSED_BODY, 1)); }
+        TURN { MOVE(player, MOVE_WATER_GUN); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_HYDRO_VORTEX, player);
+        HP_BAR(opponent);
+        ABILITY_POPUP(opponent, ABILITY_CURSED_BODY);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_WATER_GUN, player);
+        HP_BAR(opponent);
+    }
+}

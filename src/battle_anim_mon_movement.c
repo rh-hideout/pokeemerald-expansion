@@ -88,7 +88,7 @@ const struct SpriteTemplate gSlideMonToOffsetAndBackSpriteTemplate =
     .callback = SlideMonToOffsetAndBack,
 };
 
-// Task to facilitate simple shaking of a pokemon's picture in battle.
+// Task to facilitate simple shaking of a Pokémon's picture in battle.
 // The shaking alternates between the original position and the target position.
 // arg 0: anim battler
 // arg 1: x pixel offset
@@ -151,7 +151,7 @@ static void AnimTask_ShakeMon_Step(u8 taskId)
     }
 }
 
-// Task to facilitate simple shaking of a pokemon's picture in battle.
+// Task to facilitate simple shaking of a Pokémon's picture in battle.
 // The shaking alternates between the positive and negative versions of the specified pixel offsets.
 // arg 0: anim battler
 // arg 1: x pixel offset
@@ -247,7 +247,7 @@ static void AnimTask_ShakeMon2_Step(u8 taskId)
     }
 }
 
-// Task to facilitate simple shaking of a pokemon's picture in battle.
+// Task to facilitate simple shaking of a Pokémon's picture in battle.
 // The shaking alternates between the positive and negative versions of the specified pixel offsets
 // with respect to the current location of the mon's picture.
 // arg 0: battler
@@ -527,9 +527,9 @@ static void SlideMonToOriginalPosPartner(struct Sprite *sprite)
 {
     u32 monSpriteId;
     if (!gBattleAnimArgs[0])
-        monSpriteId = gBattlerSpriteIds[BATTLE_PARTNER(gBattleAnimAttacker)];
+        monSpriteId = gBattlerSpriteIds[GetPartnerBattler(gBattleAnimAttacker)];
     else
-        monSpriteId = gBattlerSpriteIds[BATTLE_PARTNER(gBattleAnimTarget)];
+        monSpriteId = gBattlerSpriteIds[GetPartnerBattler(gBattleAnimTarget)];
 
     sprite->data[0] = gBattleAnimArgs[2];
     sprite->data[1] = gSprites[monSpriteId].x + gSprites[monSpriteId].x2;
@@ -628,9 +628,9 @@ static void SlideMonToOffsetPartner(struct Sprite *sprite)
     enum BattlerId battler;
     u8 monSpriteId;
     if (!gBattleAnimArgs[0])
-        battler = BATTLE_PARTNER(gBattleAnimAttacker);
+        battler = GetPartnerBattler(gBattleAnimAttacker);
     else
-        battler = BATTLE_PARTNER(gBattleAnimTarget);
+        battler = GetPartnerBattler(gBattleAnimTarget);
 
     monSpriteId = gBattlerSpriteIds[battler];
     if (!IsOnPlayerSide(battler))
@@ -846,20 +846,20 @@ void AnimTask_SlideOffScreen(u8 taskId)
         spriteId = GetAnimBattlerSpriteId(animBattler);
         break;
     case ANIM_ATK_PARTNER:
-        if (!IsBattlerSpriteVisible(BATTLE_PARTNER(gBattleAnimAttacker)))
+        if (!IsBattlerSpriteVisible(GetPartnerBattler(gBattleAnimAttacker)))
         {
             DestroyAnimVisualTask(taskId);
             return;
         }
-        spriteId = gBattlerSpriteIds[BATTLE_PARTNER(gBattleAnimAttacker)];
+        spriteId = gBattlerSpriteIds[GetPartnerBattler(gBattleAnimAttacker)];
         break;
     case ANIM_DEF_PARTNER:
-        if (!IsBattlerSpriteVisible(BATTLE_PARTNER(gBattleAnimTarget)))
+        if (!IsBattlerSpriteVisible(GetPartnerBattler(gBattleAnimTarget)))
         {
             DestroyAnimVisualTask(taskId);
             return;
         }
-        spriteId = gBattlerSpriteIds[BATTLE_PARTNER(gBattleAnimTarget)];
+        spriteId = gBattlerSpriteIds[GetPartnerBattler(gBattleAnimTarget)];
         break;
     default:
         DestroyAnimVisualTask(taskId);

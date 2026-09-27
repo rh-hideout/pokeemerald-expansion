@@ -294,15 +294,15 @@ static void ShowJudgmentSprite(u8 x, u8 y, u8 category, enum BattlerId battler)
     {
     case ARENA_CATEGORY_MIND:
         pointsPlayer = mindPoints[battler];
-        pointsOpponent = mindPoints[BATTLE_OPPOSITE(battler)];
+        pointsOpponent = mindPoints[GetOppositeBattler(battler)];
         break;
     case ARENA_CATEGORY_SKILL:
         pointsPlayer = skillPoints[battler];
-        pointsOpponent = skillPoints[BATTLE_OPPOSITE(battler)];
+        pointsOpponent = skillPoints[GetOppositeBattler(battler)];
         break;
     case ARENA_CATEGORY_BODY:
         pointsPlayer = (gBattleMons[battler].hp * 100) / hpAtStart[battler];
-        pointsOpponent = (gBattleMons[BATTLE_OPPOSITE(battler)].hp * 100) / hpAtStart[BATTLE_OPPOSITE(battler)];
+        pointsOpponent = (gBattleMons[GetOppositeBattler(battler)].hp * 100) / hpAtStart[GetOppositeBattler(battler)];
         break;
     }
 
@@ -376,37 +376,42 @@ void BattleArena_AddMindPoints(enum BattlerId battler)
     }
 }
 
-void BattleArena_AddSkillPoints(enum BattlerId battler)
+void BattleArena_AddSkillPoints(enum BattlerId battlerAtk)
 {
     s8 *skillPoints = gBattleStruct->arenaSkillPoints;
 
-    if (!gBattleStruct->unableToUseMove)
+    if (gBattleStruct->unableToUseMove)
+        return;
+
+    if (gBattleStruct->battlerState[battlerAtk].alreadyStatusedMoveAttempt)
     {
-        if (gBattleStruct->battlerState[battler].alreadyStatusedMoveAttempt)
+        gBattleStruct->battlerState[battlerAtk].alreadyStatusedMoveAttempt = FALSE;
+        skillPoints[battlerAtk] -= 2;
+        return;
+    }
+
+    for (enum BattlerId battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
+    {
+        if (IsBattlerUnaffectedByMove(battlerDef))
         {
-            gBattleStruct->battlerState[battler].alreadyStatusedMoveAttempt = FALSE;
-            skillPoints[battler] -= 2;
+            if (!(gBattleStruct->moveResultFlags[battlerDef] & MOVE_RESULT_MISSED))
+                skillPoints[battlerAtk] -= 2;
         }
-        else if (IsBattlerUnaffectedByMove(gBattlerTarget))
+        else if ((gBattleStruct->moveResultFlags[battlerDef] & MOVE_RESULT_HIGH_EFFECTIVENESS) && (gBattleStruct->moveResultFlags[battlerDef] & MOVE_RESULT_LOW_EFFECTIVENESS))
         {
-            if (!(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_MISSED) || gBattleCommunication[MISS_TYPE] != B_MSG_PROTECTED)
-                skillPoints[battler] -= 2;
+            skillPoints[battlerAtk] += 1;
         }
-        else if ((gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_SUPER_EFFECTIVE) && (gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NOT_VERY_EFFECTIVE))
+        else if (gBattleStruct->moveResultFlags[battlerDef] & MOVE_RESULT_HIGH_EFFECTIVENESS)
         {
-            skillPoints[battler] += 1;
+            skillPoints[battlerAtk] += 2;
         }
-        else if (gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_SUPER_EFFECTIVE)
+        else if (gBattleStruct->moveResultFlags[battlerDef] & MOVE_RESULT_LOW_EFFECTIVENESS)
         {
-            skillPoints[battler] += 2;
+            skillPoints[battlerAtk] -= 1;
         }
-        else if (gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NOT_VERY_EFFECTIVE)
+        else if (!gProtectStructs[battlerDef].protected)
         {
-            skillPoints[battler] -= 1;
-        }
-        else if (!gProtectStructs[battler].protected)
-        {
-            skillPoints[battler] += 1;
+            skillPoints[battlerAtk] += 1;
         }
     }
 }
@@ -421,7 +426,6 @@ void BattleArena_DeductSkillPoints(enum BattlerId battler, enum StringID stringI
     case STRINGID_PKMNSXMADEITINEFFECTIVE:
     case STRINGID_PKMNSXPREVENTSFLINCHING:
     case STRINGID_PKMNSXBLOCKSY:
-    case STRINGID_PKMNSXPREVENTSYLOSS:
     case STRINGID_PKMNSXMADEYINEFFECTIVE:
     case STRINGID_PKMNPROTECTEDBY:
     case STRINGID_PKMNPREVENTSUSAGE:
@@ -430,7 +434,6 @@ void BattleArena_DeductSkillPoints(enum BattlerId battler, enum StringID stringI
     case STRINGID_PKMNPREVENTSCONFUSIONWITH:
     case STRINGID_PKMNRAISEDFIREPOWERWITH:
     case STRINGID_PKMNANCHORSITSELFWITH:
-    case STRINGID_PKMNPREVENTSSTATLOSSWITH:
     case STRINGID_PKMNSTAYEDAWAKEUSING:
         skillPoints[battler] -= 3;
         break;
@@ -444,8 +447,8 @@ static void UNUSED UpdateHPAtStart(enum BattlerId battler)
     u16 *hpAtStart = gBattleStruct->arenaStartHp;
 
     hpAtStart[battler] = gBattleMons[battler].hp;
-    if (hpAtStart[BATTLE_OPPOSITE(battler)] > gBattleMons[BATTLE_OPPOSITE(battler)].hp)
-        hpAtStart[BATTLE_OPPOSITE(battler)] = gBattleMons[BATTLE_OPPOSITE(battler)].hp;
+    if (hpAtStart[GetOppositeBattler(battler)] > gBattleMons[GetOppositeBattler(battler)].hp)
+        hpAtStart[GetOppositeBattler(battler)] = gBattleMons[GetOppositeBattler(battler)].hp;
 }
 
 static void InitArenaChallenge(void)

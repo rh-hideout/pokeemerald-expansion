@@ -281,10 +281,10 @@ static const struct SpriteTemplate sSpriteTemplate_RedArrowCursor =
     .callback = SpriteCallback_RedArrowCursor,
 };
 
-static const u16 sRedInterface_Pal[]    = INCBIN_U16("graphics/interface/red.gbapal"); // Shared by all of the below gfx
-static const u32 sScrollIndicator_Gfx[] = INCBIN_U32("graphics/interface/scroll_indicator.4bpp.smol");
-static const u32 sOutlineCursor_Gfx[]   = INCBIN_U32("graphics/interface/outline_cursor.4bpp.smol");
-static const u32 sArrowCursor_Gfx[]     = INCBIN_U32("graphics/interface/arrow_cursor.4bpp.smol");
+static const u16 sRedInterface_Pal[]    = INCGFX_U16("graphics/interface/red.pal", ".gbapal"); // Shared by all of the below gfx
+static const u32 sScrollIndicator_Gfx[] = INCGFX_U32("graphics/interface/scroll_indicator.png", ".4bpp.smol");
+static const u32 sOutlineCursor_Gfx[]   = INCGFX_U32("graphics/interface/outline_cursor.png", ".4bpp.smol", "-num_tiles 8 -Wnum_tiles");
+static const u32 sArrowCursor_Gfx[]     = INCGFX_U32("graphics/interface/arrow_cursor.png", ".4bpp.smol");
 
 // code
 static void ListMenuDummyTask(u8 taskId)
@@ -361,26 +361,6 @@ u8 ListMenuInit(struct ListMenuTemplate *listMenuTemplate, u16 scrollOffset, u16
 {
     u8 taskId = ListMenuInitInternal(listMenuTemplate, scrollOffset, selectedRow);
     PutWindowTilemap(listMenuTemplate->windowId);
-    CopyWindowToVram(listMenuTemplate->windowId, COPYWIN_GFX);
-
-    return taskId;
-}
-
-// unused
-u8 ListMenuInitInRect(struct ListMenuTemplate *listMenuTemplate, struct ListMenuWindowRect *rect, u16 scrollOffset, u16 selectedRow)
-{
-    s32 i;
-
-    u8 taskId = ListMenuInitInternal(listMenuTemplate, scrollOffset, selectedRow);
-    for (i = 0; rect[i].palNum != 0xFF; i++)
-    {
-        PutWindowRectTilemapOverridePalette(listMenuTemplate->windowId,
-                                            rect[i].x,
-                                            rect[i].y,
-                                            rect[i].width,
-                                            rect[i].height,
-                                            rect[i].palNum);
-    }
     CopyWindowToVram(listMenuTemplate->windowId, COPYWIN_GFX);
 
     return taskId;
@@ -472,50 +452,8 @@ void RedrawListMenu(u8 listTaskId)
     FillWindowPixelBuffer(list->template.windowId, PIXEL_FILL(list->template.fillValue));
     ListMenuPrintEntries(list, list->scrollOffset, 0, list->template.maxShowed);
     ListMenuDrawCursor(list);
+    ListMenuCallSelectionChangedCallback(list, TRUE);
     CopyWindowToVram(list->template.windowId, COPYWIN_GFX);
-}
-
-// unused
-void ChangeListMenuPals(u8 listTaskId, u8 cursorPal, u8 fillValue, u8 cursorShadowPal)
-{
-    struct ListMenu *list = (void *) gTasks[listTaskId].data;
-
-    list->template.cursorPal = cursorPal;
-    list->template.fillValue = fillValue;
-    list->template.cursorShadowPal = cursorShadowPal;
-}
-
-// unused
-void ChangeListMenuCoords(u8 listTaskId, u8 x, u8 y)
-{
-    struct ListMenu *list = (void *) gTasks[listTaskId].data;
-
-    SetWindowAttribute(list->template.windowId, WINDOW_TILEMAP_LEFT, x);
-    SetWindowAttribute(list->template.windowId, WINDOW_TILEMAP_TOP, y);
-}
-
-// unused
-s32 ListMenuTestInput(struct ListMenuTemplate *template, u32 scrollOffset, u32 selectedRow, u16 keys, u16 *newScrollOffset, u16 *newSelectedRow)
-{
-    struct ListMenu list;
-
-    list.template = *template;
-    list.scrollOffset = scrollOffset;
-    list.selectedRow = selectedRow;
-    list.unk_1C = 0;
-    list.unk_1D = 0;
-
-    if (keys == DPAD_UP)
-        ListMenuChangeSelection(&list, FALSE, 1, FALSE);
-    if (keys == DPAD_DOWN)
-        ListMenuChangeSelection(&list, FALSE, 1, TRUE);
-
-    if (newScrollOffset != NULL)
-        *newScrollOffset = list.scrollOffset;
-    if (newSelectedRow != NULL)
-        *newSelectedRow = list.selectedRow;
-
-    return LIST_NOTHING_CHOSEN;
 }
 
 void ListMenuGetCurrentItemArrayId(u8 listTaskId, u16 *arrayId)
@@ -895,64 +833,10 @@ static void ListMenuCallSelectionChangedCallback(struct ListMenu *list, u8 onIni
         list->template.moveCursorFunc(list->template.items[list->scrollOffset + list->selectedRow].id, onInit, list);
 }
 
-// unused
-void ListMenuOverrideSetColors(u8 cursorPal, u8 fillValue, u8 cursorShadowPal)
-{
-    gListMenuOverride.cursorPal = cursorPal;
-    gListMenuOverride.fillValue = fillValue;
-    gListMenuOverride.cursorShadowPal = cursorShadowPal;
-    gListMenuOverride.enabled = TRUE;
-}
-
 void ListMenuDefaultCursorMoveFunc(s32 itemIndex, bool8 onInit, struct ListMenu *list)
 {
     if (!onInit)
         PlaySE(SE_SELECT);
-}
-
-// unused
-s32 ListMenuGetTemplateField(u8 taskId, u8 field)
-{
-    struct ListMenu *data = (void *) gTasks[taskId].data;
-
-    switch (field)
-    {
-    case LISTFIELD_MOVECURSORFUNC:
-    case LISTFIELD_MOVECURSORFUNC2:
-        return (s32)(data->template.moveCursorFunc);
-    case LISTFIELD_TOTALITEMS:
-        return data->template.totalItems;
-    case LISTFIELD_MAXSHOWED:
-        return data->template.maxShowed;
-    case LISTFIELD_WINDOWID:
-        return data->template.windowId;
-    case LISTFIELD_HEADERX:
-        return data->template.header_X;
-    case LISTFIELD_ITEMX:
-        return data->template.item_X;
-    case LISTFIELD_CURSORX:
-        return data->template.cursor_X;
-    case LISTFIELD_UPTEXTY:
-        return data->template.upText_Y;
-    case LISTFIELD_CURSORPAL:
-        return data->template.cursorPal;
-    case LISTFIELD_FILLVALUE:
-        return data->template.fillValue;
-    case LISTFIELD_CURSORSHADOWPAL:
-        return data->template.cursorShadowPal;
-    case LISTFIELD_LETTERSPACING:
-        return data->template.lettersSpacing;
-    case LISTFIELD_ITEMVERTICALPADDING:
-        return data->template.itemVerticalPadding;
-    case LISTFIELD_SCROLLMULTIPLE:
-        return data->template.scrollMultiple;
-    case LISTFIELD_FONTID:
-        return data->template.fontId;
-    case LISTFIELD_CURSORKIND:
-        return data->template.cursorKind;
-    default:
-        return -1;
-    }
 }
 
 void ListMenuSetTemplateField(u8 taskId, u8 field, s32 value)

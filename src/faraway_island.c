@@ -67,7 +67,7 @@ enum Direction GetMewMoveDirection(void)
     else
         mew->invisible = TRUE;
 
-    // Mew will stay in place for 1 step after its visible
+    // Mew will stay in place for 1 step after it's visible
     if (VarGet(VAR_FARAWAY_ISLAND_STEP_COUNTER) % 9 == 0)
         return DIR_NONE;
 
@@ -398,7 +398,7 @@ void SetMewAboveGrass(void)
         x = mew->currentCoords.x;
         y = mew->currentCoords.y;
         SetSpritePosToOffsetMapCoords(&x, &y, 8, 8);
-        sGrassSpriteId = CreateSpriteAtEnd(gFieldEffectObjectTemplatePointers[FLDEFFOBJ_LONG_GRASS], x, y, gSprites[mew->spriteId].subpriority - 1);
+        sGrassSpriteId = CreateSpriteAtEndUnchecked(gFieldEffectObjectTemplatePointers[FLDEFFOBJ_LONG_GRASS], x, y, gSprites[mew->spriteId].subpriority - 1);
         if (sGrassSpriteId != MAX_SPRITES)
         {
             struct Sprite *sprite = &gSprites[sGrassSpriteId];

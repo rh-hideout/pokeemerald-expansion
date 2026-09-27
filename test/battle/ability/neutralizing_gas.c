@@ -220,6 +220,27 @@ DOUBLE_BATTLE_TEST("Neutralizing Gas leaving the field allows abilities to activ
     }
 }
 
+DOUBLE_BATTLE_TEST("Neutralizing Gas continues reactivating abilities after one starts weather")
+{
+    GIVEN {
+        ASSUME(GetMoveCategory(MOVE_SCRATCH) != DAMAGE_CATEGORY_STATUS);
+        PLAYER(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); HP(1); Speed(4); }
+        PLAYER(SPECIES_POLITOED) { Ability(ABILITY_DRIZZLE); Speed(3); }
+        OPPONENT(SPECIES_EKANS) { Ability(ABILITY_INTIMIDATE); Speed(2); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
+    } WHEN {
+        TURN { MOVE(opponentRight, MOVE_SCRATCH, target: playerLeft); }
+    } SCENE {
+        ABILITY_POPUP(playerLeft, ABILITY_NEUTRALIZING_GAS);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentRight);
+        HP_BAR(playerLeft);
+        MESSAGE("The effects of the neutralizing gas wore off!");
+        ABILITY_POPUP(playerRight, ABILITY_DRIZZLE);
+        ABILITY_POPUP(opponentLeft, ABILITY_INTIMIDATE);
+        MESSAGE("Weezing fainted!");
+    }
+}
+
 SINGLE_BATTLE_TEST("Neutralizing Gas prevents Insomnia from blocking Rest")
 {
     GIVEN {
@@ -256,8 +277,8 @@ SINGLE_BATTLE_TEST("Neutralizing Gas prevents Trace from copying it")
 SINGLE_BATTLE_TEST("Neutralizing Gas prevents Contrary inverting stat boosts")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_SWORDS_DANCE) == EFFECT_ATTACK_UP_2);
-        ASSUME(GetMoveEffect(MOVE_LEER) == EFFECT_DEFENSE_DOWN);
+        ASSUME_STAT_CHANGE(MOVE_SWORDS_DANCE, attack: +2);
+        ASSUME_STAT_CHANGE(MOVE_LEER, defense: -1);
         PLAYER(SPECIES_INKAY) { Ability(ABILITY_CONTRARY); }
         OPPONENT(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); }
     } WHEN {
@@ -275,7 +296,8 @@ SINGLE_BATTLE_TEST("Neutralizing Gas prevents Contrary inverting stat boosts")
 
 SINGLE_BATTLE_TEST("Neutralizing Gas exiting the field does not activate abilities that were not suppressed by it again")
 {
-    u32 species, ability;
+    enum Species species;
+    enum Ability ability;
     // These are the only abilities that could immediately activate again
     PARAMETRIZE { species = SPECIES_KOMALA; ability = ABILITY_COMATOSE; }
     PARAMETRIZE { species = SPECIES_CALYREX_SHADOW; ability = ABILITY_AS_ONE_SHADOW_RIDER; }
@@ -313,7 +335,8 @@ SINGLE_BATTLE_TEST("Neutralizing Gas exiting the field does not activate Imposte
 
 SINGLE_BATTLE_TEST("Neutralizing Gas exiting the field does not activate Air Lock/Cloud Nine but their effects are kept")
 {
-    u32 species, ability;
+    enum Species species;
+    enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_GOLDUCK; ability = ABILITY_CLOUD_NINE; }
     PARAMETRIZE { species = SPECIES_RAYQUAZA; ability = ABILITY_AIR_LOCK; }
@@ -394,5 +417,31 @@ DOUBLE_BATTLE_TEST("Neutralizing Gas is active until the last Dragon Darts hit e
         HP_BAR(playerRight);
         NOT MESSAGE("Golem fainted!");
         ABILITY_POPUP(playerRight, ABILITY_STURDY);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Neutralizing Gas doesn't reactivate Beads of Ruin after Chi-Yu faints")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(3); }
+        OPPONENT(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); HP(1); Speed(2); }
+        OPPONENT(SPECIES_CHI_YU) { Ability(ABILITY_BEADS_OF_RUIN); HP(1); Speed(1); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_SCRATCH, target: opponentRight); MOVE(playerRight, MOVE_SCRATCH, target: opponentLeft); }
+    } SCENE {
+        ABILITY_POPUP(opponentLeft, ABILITY_NEUTRALIZING_GAS);
+        MESSAGE("Neutralizing gas filled the area!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerLeft);
+        HP_BAR(opponentRight);
+        MESSAGE("The opposing Chi-Yu fainted!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerRight);
+        HP_BAR(opponentLeft);
+        MESSAGE("The effects of the neutralizing gas wore off!");
+        NONE_OF {
+            ABILITY_POPUP(opponentRight, ABILITY_BEADS_OF_RUIN);
+            MESSAGE("The opposing Chi-Yu's Beads of Ruin weakened the Sp. Def of all surrounding Pokémon!");
+        }
+        MESSAGE("The opposing Weezing fainted!");
     }
 }

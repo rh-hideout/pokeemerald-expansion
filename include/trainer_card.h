@@ -2,6 +2,7 @@
 #define GUARD_TRAINER_CARD_H
 
 #include "constants/trainer_card.h"
+#include "constants/species.h"
 
 struct TrainerCard
 {
@@ -39,7 +40,7 @@ struct TrainerCard
     /*0x4E*/ u8 monIconTint; // FRLG only
     /*0x4F*/ u8 unionRoomClass;
     /*0x50*/ u8 stickers[TRAINER_CARD_STICKER_TYPES]; // FRLG only
-    /*0x54*/ u16 monSpecies[PARTY_SIZE]; // FRLG only
+    /*0x54*/ enum Species monSpecies[PARTY_SIZE]; // FRLG only
              // Note: Link players use linkHasAllFrontierSymbols, not the field below,
              // which they use for a Wonder Card flag id instead (see CreateTrainerCardInBuffer)
     /*0x60*/ bool16 hasAllFrontierSymbols;

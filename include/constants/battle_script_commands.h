@@ -1,31 +1,25 @@
 #ifndef GUARD_CONSTANTS_BATTLE_SCRIPT_COMMANDS_H
 #define GUARD_CONSTANTS_BATTLE_SCRIPT_COMMANDS_H
 
+#include "constants/battle_set_effect.h"
+
 enum BattleScriptOpcode
 {
     B_SCR_OP_ATTACKCANCELER,
-    B_SCR_OP_ACCURACYCHECK,
     B_SCR_OP_PRINTATTACKSTRING,
     B_SCR_OP_PRINTSELECTIONSTRINGFROMTABLE,
-    B_SCR_OP_CRITCALC,
-    B_SCR_OP_DAMAGECALC,
     B_SCR_OP_TYPECALC,
-    B_SCR_OP_MULTIHITRESULTMESSAGE,
     B_SCR_OP_ATTACKANIMATION,
     B_SCR_OP_WAITANIMATION,
     B_SCR_OP_HEALTHBARUPDATE,
     B_SCR_OP_DATAHPUPDATE,
-    B_SCR_OP_CRITMESSAGE,
     B_SCR_OP_EFFECTIVENESSSOUND,
-    B_SCR_OP_RESULTMESSAGE,
     B_SCR_OP_PRINTSTRING,
     B_SCR_OP_PRINTSELECTIONSTRING,
     B_SCR_OP_WAITMESSAGE,
     B_SCR_OP_PRINTFROMTABLE,
-    B_SCR_OP_SETPREATTACKADDITIONALEFFECT,
     B_SCR_OP_SETADDITIONALEFFECTS,
     B_SCR_OP_SETEFFECTPRIMARY,
-    B_SCR_OP_SETEFFECTSECONDARY,
     B_SCR_OP_CLEARVOLATILE,
     B_SCR_OP_TRYFAINTMON,
     B_SCR_OP_DOFAINTANIMATION,
@@ -61,7 +55,6 @@ enum BattleScriptOpcode
     B_SCR_OP_TRYSELFCONFUSIONDMGFORMCHANGE,
     B_SCR_OP_RETURN,
     B_SCR_OP_END,
-    B_SCR_OP_END2,
     B_SCR_OP_END3,
     B_SCR_OP_SETCHARGINGTURN,
     B_SCR_OP_CALL,
@@ -73,7 +66,6 @@ enum BattleScriptOpcode
     B_SCR_OP_JUMPFIFSEMIINVULNERABLE,
     B_SCR_OP_TRAINERSLIDEIN,
     B_SCR_OP_MOVEEND,
-    B_SCR_OP_SETHEALBLOCK,
     B_SCR_OP_RETURNATKTOBALL,
     B_SCR_OP_GETSWITCHEDMONDATA,
     B_SCR_OP_SWITCHINDATAUPDATE,
@@ -128,12 +120,8 @@ enum BattleScriptOpcode
     B_SCR_OP_MANIPULATEDAMAGE,
     B_SCR_OP_TRYSETREST,
     B_SCR_OP_JUMPIFUPROARWAKES,
-    B_SCR_OP_STOCKPILE,
-    B_SCR_OP_STOCKPILETOBASEDAMAGE,
     B_SCR_OP_STOCKPILETOHPHEAL,
-    B_SCR_OP_STATBUFFCHANGE,
     B_SCR_OP_NORMALISEBUFFS,
-    B_SCR_OP_SETBIDE,
     B_SCR_OP_TWOTURNMOVESCHARGESTRINGANDANIMATION,
     B_SCR_OP_TRYNONVOLATILESTATUS,
     B_SCR_OP_INITMULTIHITSTRING,
@@ -143,7 +131,6 @@ enum BattleScriptOpcode
     B_SCR_OP_SETLIGHTSCREEN,
     B_SCR_OP_TRYKO,
     B_SCR_OP_CHECKNONVOLATILETRIGGER,
-    B_SCR_OP_COPYBIDEDMG,
     B_SCR_OP_ANIMATEWILDPOKEMONAFTERFAILEDPOKEBALL,
     B_SCR_OP_TRYINFATUATING,
     B_SCR_OP_UPDATESTATUSICON,
@@ -168,20 +155,15 @@ enum BattleScriptOpcode
     B_SCR_OP_TRYSETPERISHSONG,
     B_SCR_OP_JUMPIFCONFUSEDANDSTATMAXED,
     B_SCR_OP_SETEMBARGO,
-    B_SCR_OP_PRESENTDAMAGECALCULATION,
     B_SCR_OP_SETSAFEGUARD,
     B_SCR_OP_JUMPIFNOPURSUITSWITCHDMG,
     B_SCR_OP_TRYACTIVATEITEM,
-    B_SCR_OP_HALVEHP,
     B_SCR_OP_COPYFOESTATS,
     B_SCR_OP_RAPIDSPINFREE,
     B_SCR_OP_RECOVERBASEDONSUNLIGHT,
     B_SCR_OP_SETSTICKYWEB,
     B_SCR_OP_SELECTFIRSTVALIDTARGET,
-    B_SCR_OP_SETFUTUREATTACK,
-    B_SCR_OP_TRYDOBEATUP,
     B_SCR_OP_SETSEMIINVULNERABLEBIT,
-    B_SCR_OP_TRYMEMENTO,
     B_SCR_OP_SETFORCEDTARGET,
     B_SCR_OP_CURESTATUSWITHMOVE,
     B_SCR_OP_SETTORMENT,
@@ -204,10 +186,8 @@ enum BattleScriptOpcode
     B_SCR_OP_JUMPIFHASNOHP,
     B_SCR_OP_PICKUP,
     B_SCR_OP_SETTYPEBASEDHALVERS,
-    B_SCR_OP_JUMPIFSUBSTITUTEBLOCKS,
     B_SCR_OP_TRYRECYCLEITEM,
     B_SCR_OP_SETTYPETOENVIRONMENT,
-    B_SCR_OP_PURSUITDOUBLES,
     B_SCR_OP_SNATCHSETBATTLERS,
     B_SCR_OP_HANDLEBALLTHROW,
     B_SCR_OP_GIVECAUGHTMON,
@@ -222,11 +202,14 @@ enum BattleScriptOpcode
     B_SCR_OP_SETTELEKINESIS,
     B_SCR_OP_SWAPSTATSTAGES,
     B_SCR_OP_AVERAGESTATS,
-    B_SCR_OP_JUMPIFCAPTIVATEAFFECTED,
     B_SCR_OP_SETNONVOLATILESTATUS,
     B_SCR_OP_TRYOVERWRITEABILITY,
-    B_SCR_OP_TRY_SYNCHRONIZE,
+    B_SCR_OP_TRYABILITYONSTATUSCHANGE,
     B_SCR_OP_TRY_CONFUSION_AFTER_SKY_DROP,
+    B_SCR_OP_TRYMOVESTATCHANGES,
+    B_SCR_OP_TRYSTATCHANGES,
+    B_SCR_OP_TRYBATTLERSTATCHANGE,
+    B_SCR_OP_JUMPIFTERRAIN,
 
     // Expansion users, please don't use any of the unused commands.
     // They are reserved for expansion usage.
@@ -262,6 +245,18 @@ enum BattleScriptOpcode
     B_SCR_OP_UNUSED_29,
     B_SCR_OP_UNUSED_30,
     B_SCR_OP_UNUSED_31,
+    B_SCR_OP_UNUSED_32,
+    B_SCR_OP_UNUSED_33,
+    B_SCR_OP_UNUSED_34,
+    B_SCR_OP_UNUSED_35,
+    B_SCR_OP_UNUSED_36,
+    B_SCR_OP_UNUSED_37,
+    B_SCR_OP_UNUSED_38,
+    B_SCR_OP_UNUSED_39,
+    B_SCR_OP_UNUSED_40,
+    B_SCR_OP_UNUSED_41,
+    B_SCR_OP_UNUSED_42,
+    B_SCR_OP_UNUSED_43,
     B_SCR_OP_CALLNATIVE,
 };
 
@@ -275,13 +270,13 @@ enum BattleScriptOpcode
 #define sB_ANIM_ARG2                 (gBattleScripting + 0x11) // animArg2
 #define sSAVED_STRINID               (gBattleScripting + 0x12) // savedStringId
 #define sMOVEEND_STATE               (gBattleScripting + 0x14) // moveendState
-#define sSAVED_STAT_CHANGER          (gBattleScripting + 0x15) // savedStatChanger
+#define sUNUSED_0x15                 (gBattleScripting + 0x15) // unused_0x15
 #define sSHIFT_SWITCHED              (gBattleScripting + 0x16) // shiftSwitched
 #define sBATTLER                     (gBattleScripting + 0x17) // battler
 #define sB_ANIM_TURN                 (gBattleScripting + 0x18) // animTurn
 #define sB_ANIM_TARGETS_HIT          (gBattleScripting + 0x19) // animTargetsHit
-#define sSTATCHANGER                 (gBattleScripting + 0x1A) // statChanger
-#define sSTAT_ANIM_PLAYED            (gBattleScripting + 0x1B) // statAnimPlayed
+#define sUNUSED_0x1A                 (gBattleScripting + 0x1A) // unused_0x1a
+#define sUNUSED_0x1B                 (gBattleScripting + 0x1B) // unused_0x1b
 #define sGIVEEXP_STATE               (gBattleScripting + 0x1C) // getexpState
 #define sBATTLE_STYLE                (gBattleScripting + 0x1D) // battleStyle
 #define sLVLBOX_STATE                (gBattleScripting + 0x1E) // drawlvlupboxState
@@ -294,7 +289,7 @@ enum BattleScriptOpcode
 #define sMULTIPLAYER_ID              (gBattleScripting + 0x25) // multiplayerId
 #define sSPECIAL_TRAINER_BATTLE_TYPE (gBattleScripting + 0x26) // specialTrainerBattleType
 #define sMON_CAUGHT                  (gBattleScripting + 0x27) // monCaught
-#define sSAVED_DMG                   (gBattleScripting + 0x28) // savedDmg
+#define sUNUSED_0x28                 (gBattleScripting + 0x28) // unused_0x28
 #define sUNUSED_0x2C                 (gBattleScripting + 0x2C) // unused_0x2c
 #define sMOVE_EFFECT                 (gBattleScripting + 0x2E) // moveEffect
 #define sUNUSED_0x30                 (gBattleScripting + 0x30) // unused_0x30
@@ -319,7 +314,10 @@ enum BattleScriptOpcode
 #define BATTLE_COMMUNICATION_ENTRIES_COUNT  8
 
 #define cMULTISTRING_CHOOSER (gBattleCommunication + MULTISTRING_CHOOSER)
-#define cMISS_TYPE           (gBattleCommunication + MISS_TYPE)
+
+// Used for MSG_DISPLAY
+#define MSG_DISPLAY_CONTINUE 0
+#define MSG_DISPLAY_WAIT     1
 
 // Battle Script defines for getting the wanted battler
 #define BS_TARGET                   0
@@ -347,6 +345,7 @@ enum BattleScriptOpcode
 #define CMP_LESS_THAN           3
 #define CMP_COMMON_BITS         4
 #define CMP_NO_COMMON_BITS      5
+#define CMP_BITMASK             6
 
 // Cmd_manipulatedamage
 #define DMG_1_8_TARGET_HP       0 // Used by bad dreams
@@ -354,47 +353,7 @@ enum BattleScriptOpcode
 // Cmd_jumpifcantswitch
 #define SWITCH_IGNORE_ESCAPE_PREVENTION   (1 << 7)
 
-// Cmd_statbuffchange
-#define STAT_CHANGE_ALLOW_PTR               (1 << 0)   // If set, allow use of jumpptr. If not set and unable to raise/lower stats, jump to failInstr.
-#define STAT_CHANGE_MIRROR_ARMOR            (1 << 1)   // Stat change redirection caused by Mirror Armor ability.
-#define STAT_CHANGE_ONLY_CHECKING           (1 << 2)   // Checks if the stat change can occur. Does not change stats or play stat change animation.
-#define STAT_CHANGE_NOT_PROTECT_AFFECTED    (1 << 3)
-#define STAT_CHANGE_UPDATE_MOVE_EFFECT      (1 << 4)
-#define STAT_CHANGE_CHECK_PREVENTION        (1 << 5)
-#define STAT_CHANGE_CERTAIN                 (1 << 6)
-
-// stat flags for TryPlayStatChangeAnimation
-#define BIT_HP                      (1 << 0)
-#define BIT_ATK                     (1 << 1)
-#define BIT_DEF                     (1 << 2)
-#define BIT_SPEED                   (1 << 3)
-#define BIT_SPATK                   (1 << 4)
-#define BIT_SPDEF                   (1 << 5)
-#define BIT_ACC                     (1 << 6)
-#define BIT_EVASION                 (1 << 7)
-
 #define PARTY_SCREEN_OPTIONAL (1 << 7) // Flag for first argument to openpartyscreen
-
-enum SetMoveEffectFlags
-{
-    NO_FLAGS          = 0,
-    EFFECT_PRIMARY    = (1 << 0),
-    EFFECT_CERTAIN    = (1 << 1),
-};
-
-enum FaintBlockStates
-{
-    FAINT_BLOCK_FINAL_GAMBIT,
-    FAINT_BLOCK_CHECK_TARGET_FAINTED, // Exits if target is not fainted
-    FAINT_BLOCK_END_NEUTRALIZING_GAS,
-    // Destiny Bond and Grudge are tested first, but Faint Target's script plays first
-    FAINT_BLOCK_TRY_DESTINY_BOND,
-    FAINT_BLOCK_TRY_GRUDGE,
-    FAINT_BLOCK_FAINT_TARGET,
-    FAINT_BLOCK_DO_DESTINY_BOND,
-    FAINT_BLOCK_DO_GRUDGE,
-    FAINT_BLOCK_COUNT,
-};
 
 enum SwitchInCases
 {
@@ -417,12 +376,6 @@ enum TriggerOnFieldStatus
     ON_WEATHER,
 };
 
-enum HealthUpdate
-{
-    PASSIVE_HP_UPDATE,
-    MOVE_DAMAGE_HP_UPDATE,
-};
-
 enum FlungItem
 {
     FLUNG_ITEM_NONE,
@@ -430,13 +383,17 @@ enum FlungItem
     FLUNG_ITEM_REMOVED,
 };
 
-enum SynchronizeState
+enum PledgeCombo
 {
-    SYNCH_STATE_NONE,
-    SYNCH_STATE_START,
-    SYNCH_STATE_SET_STATUS,
-    SYNCH_STATE_SHOW_ABILITY_POPUP,
-    SYNCH_STATE_END,
+    PLEDGE_COMBO_NONE,
+    PLEDGE_COMBO_WAITING,
+    PLEDGE_COMBO_ATTACK,
+};
+
+enum AssuranceDoubleDamage
+{
+    ASSURANCE_DOUBLE,
+    ASSURANCE_IGNORE,
 };
 
 #endif // GUARD_CONSTANTS_BATTLE_SCRIPT_COMMANDS_H

@@ -21,8 +21,8 @@ SINGLE_BATTLE_TEST("ignoresTargetAbility moves do not ignore the attacker's own 
     PARAMETRIZE { move = MOVE_PHOTON_GEYSER; ability = ABILITY_UNAWARE; }
 
     ASSUME(gAbilitiesInfo[ABILITY_UNAWARE].breakable);
-    ASSUME(GetMoveEffect(MOVE_IRON_DEFENSE) == EFFECT_DEFENSE_UP_2);
-    ASSUME(GetMoveEffect(MOVE_AMNESIA) == EFFECT_SPECIAL_DEFENSE_UP_2);
+    ASSUME_STAT_CHANGE(MOVE_IRON_DEFENSE, defense: +2);
+    ASSUME_STAT_CHANGE(MOVE_AMNESIA, spDef: +2);
 
     GIVEN {
         PLAYER(SPECIES_CLEFABLE) { Speed(1); Ability(ability); }
@@ -77,7 +77,7 @@ SINGLE_BATTLE_TEST("ignoresTargetAbility moves do ignore target's abilities", s1
 
 SINGLE_BATTLE_TEST("ignoresTargetAbility allows Pokémon with Battle Armor and Shell Armor to receive critical hits")
 {
-    u32 species;
+    enum Species species;
     enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_KINGLER; ability = ABILITY_SHELL_ARMOR; }

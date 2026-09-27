@@ -30,7 +30,7 @@ SINGLE_BATTLE_TEST("Hurricane bypasses accuracy checks in Rain")
     } WHEN {
         TURN { MOVE(opponent, MOVE_RAIN_DANCE); MOVE(player, MOVE_HURRICANE); }
     } SCENE {
-        NONE_OF { MESSAGE("Wobbuffet's attack missed!"); }
+        NONE_OF { MESSAGE("The opposing Wobbuffet avoided the attack!"); }
     }
 }
 
@@ -41,9 +41,9 @@ SINGLE_BATTLE_TEST("Hurricane can hit airborne targets (Fly, Bounce)")
     PARAMETRIZE { move = MOVE_BOUNCE; }
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_FLY) == EFFECT_SEMI_INVULNERABLE);
-        ASSUME(GetMoveTwoTurnAttackStatus(MOVE_FLY) == STATE_ON_AIR);
+        ASSUME(GetTwoTurnMoveSemiInvulnerability(MOVE_FLY) == STATE_ON_AIR);
         ASSUME(GetMoveEffect(MOVE_BOUNCE) == EFFECT_SEMI_INVULNERABLE);
-        ASSUME(GetMoveTwoTurnAttackStatus(MOVE_BOUNCE) == STATE_ON_AIR);
+        ASSUME(GetTwoTurnMoveSemiInvulnerability(MOVE_BOUNCE) == STATE_ON_AIR);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Moves(move); }
     } WHEN {
@@ -51,7 +51,7 @@ SINGLE_BATTLE_TEST("Hurricane can hit airborne targets (Fly, Bounce)")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, move, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HURRICANE, player);
-        NONE_OF { MESSAGE("Wobbuffet's attack missed!"); }
+        NONE_OF { MESSAGE("The opposing Wobbuffet avoided the attack!"); }
     }
 }
 
@@ -59,7 +59,7 @@ DOUBLE_BATTLE_TEST("Hurricane can hit airborne targets (Sky Drop)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SKY_DROP) == EFFECT_SKY_DROP);
-        ASSUME(GetMoveTwoTurnAttackStatus(MOVE_SKY_DROP) == STATE_ON_AIR);
+        ASSUME(GetTwoTurnMoveSemiInvulnerability(MOVE_SKY_DROP) == STATE_ON_AIR);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -69,6 +69,6 @@ DOUBLE_BATTLE_TEST("Hurricane can hit airborne targets (Sky Drop)")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, playerLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HURRICANE, playerRight);
-        NONE_OF { MESSAGE("Wobbuffet's attack missed!"); }
+        NONE_OF { MESSAGE("The opposing Wobbuffet avoided the attack!"); }
     }
 }

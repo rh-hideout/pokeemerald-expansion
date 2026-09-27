@@ -77,7 +77,8 @@ struct PaletteFadeControl
     bool32 softwareFadeFinishing:1;
     bool32 objPaletteToggle:1;
     u32 deltaY:4; // rate of change of blend coefficient
-    u32 padding:15;
+    u32 simultaneousFade:1; // instead of alternating between fading sptite and bg, fade both simultaneously (to avoid visual inconsistencies in rare scenarios)
+    u32 padding:14;
 };
 
 extern const struct BlendSettings gTimeOfDayBlend[];
@@ -105,8 +106,6 @@ void BlendPalettes(u32 selectedPalettes, u8 coeff, u32 color);
 void BlendPalettesFine(u32 palettes, u16 *src, u16 *dst, u32 coeff, u32 color);
 void BlendPalettesUnfaded(u32 selectedPalettes, u8 coeff, u32 color);
 void BlendPalettesGradually(u32 selectedPalettes, s8 delay, u8 coeff, u8 coeffTarget, u16 color, u8 priority, u8 id);
-void TimeBlendPalette(u16 palOffset, u32 coeff, u32 blendColor);
-void TintPalette_RGB_Copy(u16 palOffset, u32 blendColor);
 void TimeMixPalettes(u32 palettes, u16 *src, u16 *dst, struct BlendSettings *blend0, struct BlendSettings *blend1, u16 weight0);
 void AvgPaletteWeighted(u16 *src0, u16 *src1, u16 *dst, u16 weight0);
 void TintPalette_GrayScale(u16 *palette, u32 count);

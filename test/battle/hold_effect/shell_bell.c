@@ -289,5 +289,51 @@ SINGLE_BATTLE_TEST("Shell Bell recovers only 1 damage if the move only did 1 dam
     }
 }
 
-TO_DO_BATTLE_TEST("If a Pokémon steals a Shell Bell with Thief or Covet, it will recover HP for the use of that move that stole the Shell Bell")
-TO_DO_BATTLE_TEST("If a Pokémon steals a Shell Bell with Magician, it will recover HP for the use of that move that stole the Shell Bell")
+SINGLE_BATTLE_TEST("A Pokémon that steals a Shell Bell with Thief or Covet recovers HP for that move", s16 damage, s16 recovery)
+{
+    enum Move move;
+    PARAMETRIZE { move = MOVE_THIEF; }
+    PARAMETRIZE { move = MOVE_COVET; }
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_THIEF) == EFFECT_STEAL_ITEM);
+        ASSUME(GetMoveEffect(MOVE_COVET) == EFFECT_STEAL_ITEM);
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_SHELL_BELL); }
+    } WHEN {
+        TURN { MOVE(player, move); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, move, player);
+        HP_BAR(opponent, captureDamage: &results[i].damage);
+        MESSAGE("Wobbuffet stole the opposing Wobbuffet's Shell Bell!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        HP_BAR(player, captureDamage: &results[i].recovery);
+    } THEN {
+        EXPECT_EQ(player->item, ITEM_SHELL_BELL);
+        EXPECT_EQ(opponent->item, ITEM_NONE);
+        EXPECT_EQ(results[i].damage / 8, -results[i].recovery);
+    }
+}
+
+SINGLE_BATTLE_TEST("A Pokémon that steals a Shell Bell with Magician recovers HP for that move")
+{
+    s16 damage;
+    s16 recovery;
+
+    GIVEN {
+        PLAYER(SPECIES_DELPHOX) { HP(1); Ability(ABILITY_MAGICIAN); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_SHELL_BELL); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        HP_BAR(opponent, captureDamage: &damage);
+        ABILITY_POPUP(player, ABILITY_MAGICIAN);
+        MESSAGE("Delphox stole the opposing Wobbuffet's Shell Bell!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        HP_BAR(player, captureDamage: &recovery);
+    } THEN {
+        EXPECT_EQ(player->item, ITEM_SHELL_BELL);
+        EXPECT_EQ(opponent->item, ITEM_NONE);
+        EXPECT_EQ(damage / 8, -recovery);
+    }
+}

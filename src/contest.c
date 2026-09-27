@@ -9,6 +9,7 @@
 #include "data.h"
 #include "decompress.h"
 #include "graphics.h"
+#include "image_processing_effects.h"
 #include "link.h"
 #include "m4a.h"
 #include "main.h"
@@ -41,6 +42,7 @@
 #include "constants/items.h"
 #include "constants/moves.h"
 #include "constants/rgb.h"
+#include "constants/script_menu.h"
 #include "constants/songs.h"
 
 // This file's functions.
@@ -59,8 +61,8 @@ static void Task_DisplayAppealNumberText(u8 taskId);
 static void Task_TryShowMoveSelectScreen(u8 taskId);
 static void Task_ShowMoveSelectScreen(u8 taskId);
 static void Task_HandleMoveSelectInput(u8 taskId);
-static void DrawMoveSelectArrow(s8);
-static void EraseMoveSelectArrow(s8);
+static void DrawMoveSelectArrow(enum MoveSlot);
+static void EraseMoveSelectArrow(enum MoveSlot);
 static void Task_SelectedMove(u8 taskId);
 static void Task_EndCommunicateMoveSelections(u8 taskId);
 static void Task_HideMoveSelectScreen(u8 taskId);
@@ -98,9 +100,9 @@ static void PrintContestantMonName(u8);
 static void PrintContestantMonNameWithColor(u8, u8);
 static u8 CreateJudgeSprite(void);
 static u8 CreateJudgeSpeechBubbleSprite(void);
-static u8 CreateContestantSprite(u16, bool8, u32, u32);
+static u8 CreateContestantSprite(enum Species, bool8, u32, u32);
 static void PrintContestMoveDescription(enum Move move);
-static u16 SanitizeSpecies(u16);
+static enum Species SanitizeSpecies(enum Species);
 static void ContestClearGeneralTextWindow(void);
 static enum Move GetChosenMove(u8);
 static void GetAllChosenMoves(void);
@@ -384,6 +386,17 @@ const u8 gText_MonCantAppealNextTurn[] = _("{STR_VAR_1} can't appeal\nnext turnâ
 const u8 gText_AttractedCrowdsAttention[] = _("It attracted the crowd's\nattention.{PAUSE 0x0F}{PAUSE 0x0F}{PAUSE 0x0F}{PAUSE 0x0F}");
 const u8 gText_CrowdContinuesToWatchMon[] = _("The crowd continues to\nwatch {STR_VAR_3}.{PAUSE 0x0F}{PAUSE 0x0F}{PAUSE 0x0F}{PAUSE 0x0F}");
 const u8 gText_MonsMoveIsIgnored[] = _("{STR_VAR_1}'s\n{STR_VAR_2} is ignored.{PAUSE 0x0F}{PAUSE 0x0F}{PAUSE 0x0F}{PAUSE 0x0F}");
+
+static const u32 sPictureFrameTiles_Cool[]     = INCGFX_U32("graphics/picture_frame/cool.png", ".4bpp.smol");
+static const u32 sPictureFrameTiles_Beauty[]   = INCGFX_U32("graphics/picture_frame/beauty.png", ".4bpp.smol");
+static const u32 sPictureFrameTiles_Cute[]     = INCGFX_U32("graphics/picture_frame/cute.png", ".4bpp.smol");
+static const u32 sPictureFrameTiles_Smart[]    = INCGFX_U32("graphics/picture_frame/smart.png", ".4bpp.smol");
+static const u32 sPictureFrameTiles_Tough[]    = INCGFX_U32("graphics/picture_frame/tough.png", ".4bpp.smol");
+static const u32 sPictureFrameTilemap_Cool[]   = INCGFX_U32("graphics/picture_frame/cool_map.bin", ".smolTM");
+static const u32 sPictureFrameTilemap_Beauty[] = INCGFX_U32("graphics/picture_frame/beauty_map.bin", ".smolTM");
+static const u32 sPictureFrameTilemap_Cute[]   = INCGFX_U32("graphics/picture_frame/cute_map.bin", ".smolTM");
+static const u32 sPictureFrameTilemap_Smart[]  = INCGFX_U32("graphics/picture_frame/smart_map.bin", ".smolTM");
+static const u32 sPictureFrameTilemap_Tough[]  = INCGFX_U32("graphics/picture_frame/tough_map.bin", ".smolTM");
 
 static const u8 sSliderHeartYPositions[CONTESTANT_COUNT] =
 {
@@ -669,7 +682,7 @@ static const struct SpriteTemplate sSpriteTemplate_JudgeSpeechBubble =
     .oam = &gOamData_AffineOff_ObjNormal_16x16,
 };
 
-static const u16 sText_Pal[] = INCBIN_U16("graphics/contest/text.gbapal");
+static const u16 sText_Pal[] = INCGFX_U16("graphics/contest/text.pal", ".gbapal");
 
 #include "data/contest_text_tables.h"
 
@@ -681,8 +694,17 @@ const struct ContestCategory gContestCategoryInfo[CONTEST_CATEGORIES_COUNT + 1] 
         .condition = COMPOUND_STRING("coolness"),
         .generic = COMPOUND_STRING("COOL Move"),
         .negativeTrait = COMPOUND_STRING("shyness"),
+        .ribbon = MON_DATA_COOL_RIBBON,
+        .imageEffect = IMAGE_EFFECT_OUTLINE_COLORED,
+        .paintingTiles = sPictureFrameTiles_Cool,
+        .paintingTilemap = sPictureFrameTilemap_Cool,
         .palette = 13,
         .tile = 0x4040,
+        .resultsTilemap = gContestResultsTitle_Cool_Tilemap,
+        .stdString = STDSTRING_COOL,
+        .text = gText_Cool,
+        .tvShowState = CONTESTLIVE_STATE_COOL,
+        .tvShowStateExciting = CONTESTLIVE_STATE_VERY_COOL,
     },
 
     [CONTEST_CATEGORY_BEAUTY] =
@@ -691,8 +713,17 @@ const struct ContestCategory gContestCategoryInfo[CONTEST_CATEGORIES_COUNT + 1] 
         .condition = COMPOUND_STRING("beauty"),
         .generic = COMPOUND_STRING("BEAUTY Move"),
         .negativeTrait = COMPOUND_STRING("anxiety"),
+        .ribbon = MON_DATA_BEAUTY_RIBBON,
+        .imageEffect = IMAGE_EFFECT_SHIMMER,
+        .paintingTiles = sPictureFrameTiles_Beauty,
+        .paintingTilemap = sPictureFrameTilemap_Beauty,
         .palette = 14,
         .tile = 0x4045,
+        .resultsTilemap = gContestResultsTitle_Beauty_Tilemap,
+        .stdString = STDSTRING_BEAUTY,
+        .text = gText_Beauty,
+        .tvShowState = CONTESTLIVE_STATE_BEAUTIFUL,
+        .tvShowStateExciting = CONTESTLIVE_STATE_VERY_BEAUTIFUL,
     },
 
     [CONTEST_CATEGORY_CUTE] =
@@ -701,8 +732,17 @@ const struct ContestCategory gContestCategoryInfo[CONTEST_CATEGORIES_COUNT + 1] 
         .condition = COMPOUND_STRING("cuteness"),
         .generic = COMPOUND_STRING("CUTE Move"),
         .negativeTrait = COMPOUND_STRING("laziness"),
+        .ribbon = MON_DATA_CUTE_RIBBON,
+        .imageEffect = IMAGE_EFFECT_POINTILLISM,
+        .paintingTiles = sPictureFrameTiles_Cute,
+        .paintingTilemap = sPictureFrameTilemap_Cute,
         .palette = 14,
         .tile = 0x404A,
+        .resultsTilemap = gContestResultsTitle_Cute_Tilemap,
+        .stdString = STDSTRING_CUTE,
+        .text = gText_Cute,
+        .tvShowState = CONTESTLIVE_STATE_CUTE,
+        .tvShowStateExciting = CONTESTLIVE_STATE_VERY_CUTE,
     },
 
     [CONTEST_CATEGORY_SMART] =
@@ -711,8 +751,17 @@ const struct ContestCategory gContestCategoryInfo[CONTEST_CATEGORIES_COUNT + 1] 
         .condition = COMPOUND_STRING("smartness"),
         .generic = COMPOUND_STRING("SMART Move"),
         .negativeTrait = COMPOUND_STRING("hesitancy"),
+        .ribbon = MON_DATA_SMART_RIBBON,
+        .imageEffect = IMAGE_EFFECT_CHARCOAL,
+        .paintingTiles = sPictureFrameTiles_Smart,
+        .paintingTilemap = sPictureFrameTilemap_Smart,
         .palette = 15,
         .tile = 0x406A,
+        .resultsTilemap = gContestResultsTitle_Smart_Tilemap,
+        .stdString = STDSTRING_SMART,
+        .text = gText_Smart,
+        .tvShowState = CONTESTLIVE_STATE_SMART,
+        .tvShowStateExciting = CONTESTLIVE_STATE_VERY_SMART,
     },
 
     [CONTEST_CATEGORY_TOUGH] =
@@ -721,8 +770,17 @@ const struct ContestCategory gContestCategoryInfo[CONTEST_CATEGORIES_COUNT + 1] 
         .condition = COMPOUND_STRING("toughness"),
         .generic = COMPOUND_STRING("TOUGH Move"),
         .negativeTrait = COMPOUND_STRING("fear"),
+        .ribbon = MON_DATA_TOUGH_RIBBON,
+        .imageEffect = IMAGE_EFFECT_GRAYSCALE_LIGHT,
+        .paintingTiles = sPictureFrameTiles_Tough,
+        .paintingTilemap = sPictureFrameTilemap_Tough,
         .palette = 13,
         .tile = 0x408A,
+        .resultsTilemap = gContestResultsTitle_Tough_Tilemap,
+        .stdString = STDSTRING_TOUGH,
+        .text = gText_Tough,
+        .tvShowState = CONTESTLIVE_STATE_TOUGH,
+        .tvShowStateExciting = CONTESTLIVE_STATE_VERY_TOUGH,
     },
 
     [CONTEST_CATEGORIES_COUNT] =
@@ -1647,8 +1705,8 @@ static void Task_HandleMoveSelectInput(u8 taskId)
             break;
         case DPAD_UP:
             EraseMoveSelectArrow(eContest.playerMoveChoice);
-            if (eContest.playerMoveChoice == 0)
-                eContest.playerMoveChoice = numMoves - 1;
+            if (eContest.playerMoveChoice == MOVESLOT_0)
+                eContest.playerMoveChoice = (enum MoveSlot)(numMoves - 1);
             else
                 eContest.playerMoveChoice--;
             DrawMoveSelectArrow(eContest.playerMoveChoice);
@@ -1659,7 +1717,7 @@ static void Task_HandleMoveSelectInput(u8 taskId)
         case DPAD_DOWN:
             EraseMoveSelectArrow(eContest.playerMoveChoice);
             if (eContest.playerMoveChoice == numMoves - 1)
-                eContest.playerMoveChoice = 0;
+                eContest.playerMoveChoice = MOVESLOT_0;
             else
                 eContest.playerMoveChoice++;
             DrawMoveSelectArrow(eContest.playerMoveChoice);
@@ -1671,12 +1729,12 @@ static void Task_HandleMoveSelectInput(u8 taskId)
     }
 }
 
-static void DrawMoveSelectArrow(s8 moveIndex)
+static void DrawMoveSelectArrow(enum MoveSlot moveIndex)
 {
     ContestBG_FillBoxWithIncrementingTile(2, 55, 0, 31 + moveIndex * 2, 2, 2, 17, 1);
 }
 
-static void EraseMoveSelectArrow(s8 moveIndex)
+static void EraseMoveSelectArrow(enum MoveSlot moveIndex)
 {
     ContestBG_FillBoxWithIncrementingTile(2, 11, 0, 31 + moveIndex * 2, 2, 1, 17, 1);
     ContestBG_FillBoxWithIncrementingTile(2, 11, 0, 32 + moveIndex * 2, 2, 1, 17, 1);
@@ -2845,30 +2903,30 @@ void CreateContestMonFromParty(u8 partyIndex)
         gContestMons[gContestPlayerMonIndex].trainerGfxId = OBJ_EVENT_GFX_LINK_MAY;
     gContestMons[gContestPlayerMonIndex].aiFlags = 0;
     gContestMons[gContestPlayerMonIndex].highestRank = 0;
-    gContestMons[gContestPlayerMonIndex].species = GetMonData(&gPlayerParty[partyIndex], MON_DATA_SPECIES);
-    GetMonData(&gPlayerParty[partyIndex], MON_DATA_NICKNAME, name);
+    gContestMons[gContestPlayerMonIndex].species = GetMonData(&gParties[B_TRAINER_PLAYER][partyIndex], MON_DATA_SPECIES);
+    GetMonData(&gParties[B_TRAINER_PLAYER][partyIndex], MON_DATA_NICKNAME, name);
     StringGet_Nickname(name);
     if (gLinkContestFlags & LINK_CONTEST_FLAG_IS_LINK)
     {
-        StripMonNameForLinkContest(name, GetMonData(&gPlayerParty[partyIndex], MON_DATA_LANGUAGE));
+        StripMonNameForLinkContest(name, GetMonData(&gParties[B_TRAINER_PLAYER][partyIndex], MON_DATA_LANGUAGE));
     }
     memcpy(gContestMons[gContestPlayerMonIndex].nickname, name, POKEMON_NAME_LENGTH + 1);
     StringCopy(gContestMons[gContestPlayerMonIndex].nickname, name);
-    gContestMons[gContestPlayerMonIndex].cool = GetMonData(&gPlayerParty[partyIndex], MON_DATA_COOL);
-    gContestMons[gContestPlayerMonIndex].beauty = GetMonData(&gPlayerParty[partyIndex], MON_DATA_BEAUTY);
-    gContestMons[gContestPlayerMonIndex].cute = GetMonData(&gPlayerParty[partyIndex], MON_DATA_CUTE);
-    gContestMons[gContestPlayerMonIndex].smart = GetMonData(&gPlayerParty[partyIndex], MON_DATA_SMART);
-    gContestMons[gContestPlayerMonIndex].tough = GetMonData(&gPlayerParty[partyIndex], MON_DATA_TOUGH);
-    gContestMons[gContestPlayerMonIndex].sheen = GetMonData(&gPlayerParty[partyIndex], MON_DATA_SHEEN);
-    gContestMons[gContestPlayerMonIndex].moves[0] = GetMonData(&gPlayerParty[partyIndex], MON_DATA_MOVE1);
-    gContestMons[gContestPlayerMonIndex].moves[1] = GetMonData(&gPlayerParty[partyIndex], MON_DATA_MOVE2);
-    gContestMons[gContestPlayerMonIndex].moves[2] = GetMonData(&gPlayerParty[partyIndex], MON_DATA_MOVE3);
-    gContestMons[gContestPlayerMonIndex].moves[3] = GetMonData(&gPlayerParty[partyIndex], MON_DATA_MOVE4);
-    gContestMons[gContestPlayerMonIndex].personality = GetMonData(&gPlayerParty[partyIndex], MON_DATA_PERSONALITY);
-    gContestMons[gContestPlayerMonIndex].otId = GetMonData(&gPlayerParty[partyIndex], MON_DATA_OT_ID);
-    gContestMons[gContestPlayerMonIndex].isShiny = GetMonData(&gPlayerParty[partyIndex], MON_DATA_IS_SHINY);
+    gContestMons[gContestPlayerMonIndex].cool = GetMonData(&gParties[B_TRAINER_PLAYER][partyIndex], MON_DATA_COOL);
+    gContestMons[gContestPlayerMonIndex].beauty = GetMonData(&gParties[B_TRAINER_PLAYER][partyIndex], MON_DATA_BEAUTY);
+    gContestMons[gContestPlayerMonIndex].cute = GetMonData(&gParties[B_TRAINER_PLAYER][partyIndex], MON_DATA_CUTE);
+    gContestMons[gContestPlayerMonIndex].smart = GetMonData(&gParties[B_TRAINER_PLAYER][partyIndex], MON_DATA_SMART);
+    gContestMons[gContestPlayerMonIndex].tough = GetMonData(&gParties[B_TRAINER_PLAYER][partyIndex], MON_DATA_TOUGH);
+    gContestMons[gContestPlayerMonIndex].sheen = GetMonData(&gParties[B_TRAINER_PLAYER][partyIndex], MON_DATA_SHEEN);
+    gContestMons[gContestPlayerMonIndex].moves[0] = GetMonData(&gParties[B_TRAINER_PLAYER][partyIndex], MON_DATA_MOVE1);
+    gContestMons[gContestPlayerMonIndex].moves[1] = GetMonData(&gParties[B_TRAINER_PLAYER][partyIndex], MON_DATA_MOVE2);
+    gContestMons[gContestPlayerMonIndex].moves[2] = GetMonData(&gParties[B_TRAINER_PLAYER][partyIndex], MON_DATA_MOVE3);
+    gContestMons[gContestPlayerMonIndex].moves[3] = GetMonData(&gParties[B_TRAINER_PLAYER][partyIndex], MON_DATA_MOVE4);
+    gContestMons[gContestPlayerMonIndex].personality = GetMonData(&gParties[B_TRAINER_PLAYER][partyIndex], MON_DATA_PERSONALITY);
+    gContestMons[gContestPlayerMonIndex].otId = GetMonData(&gParties[B_TRAINER_PLAYER][partyIndex], MON_DATA_OT_ID);
+    gContestMons[gContestPlayerMonIndex].isShiny = GetMonData(&gParties[B_TRAINER_PLAYER][partyIndex], MON_DATA_IS_SHINY);
 
-    heldItem = GetMonData(&gPlayerParty[partyIndex], MON_DATA_HELD_ITEM);
+    heldItem = GetMonData(&gParties[B_TRAINER_PLAYER][partyIndex], MON_DATA_HELD_ITEM);
     cool   = gContestMons[gContestPlayerMonIndex].cool;
     beauty = gContestMons[gContestPlayerMonIndex].beauty;
     cute   = gContestMons[gContestPlayerMonIndex].cute;
@@ -3150,7 +3208,7 @@ static u8 CreateJudgeSpeechBubbleSprite(void)
     return spriteId;
 }
 
-static u8 CreateContestantSprite(u16 species, bool8 isShiny, u32 personality, u32 index)
+static u8 CreateContestantSprite(enum Species species, bool8 isShiny, u32 personality, u32 index)
 {
     u8 spriteId;
     species = SanitizeSpecies(species);
@@ -3176,7 +3234,7 @@ static u8 CreateContestantSprite(u16 species, bool8 isShiny, u32 personality, u3
     return spriteId;
 }
 
-bool8 IsSpeciesNotUnown(u16 species)
+bool8 IsSpeciesNotUnown(enum Species species)
 {
     if (species == SPECIES_UNOWN)
         return FALSE;
@@ -3414,7 +3472,7 @@ static enum Move GetChosenMove(u8 contestant)
     }
     else
     {
-        u8 moveChoice;
+        enum MoveSlot moveChoice;
 
         ContestAI_ResetAI(contestant);
         moveChoice = ContestAI_GetActionToUse();
@@ -5310,7 +5368,7 @@ static u16 SanitizeMove(enum Move move)
     return move;
 }
 
-static u16 SanitizeSpecies(u16 species)
+static enum Species SanitizeSpecies(enum Species species)
 {
     assertf(species < NUM_SPECIES, "invalid species: %d", species)
     {
@@ -5323,7 +5381,7 @@ static u16 SanitizeSpecies(u16 species)
 static void SetMoveSpecificAnimData(u8 contestant)
 {
     enum Move move = SanitizeMove(eContestantStatus[contestant].currMove);
-    u16 species = SanitizeSpecies(gContestMons[contestant].species);
+    enum Species species = SanitizeSpecies(gContestMons[contestant].species);
     u8 targetContestant;
 
     memset(&gContestResources->moveAnim->species, 0, 20);
@@ -5912,32 +5970,6 @@ static void SetConestLiveUpdateTVData(void)
     ContestLiveUpdates_SetWinnerAppealFlag(winnerFlag);
     ContestLiveUpdates_SetWinnerMoveUsed(gContestResources->tv[winner].move);
     ContestLiveUpdates_SetLoserData(loserFlag, loser);
-}
-
-// Unused
-void ContestDebugToggleBitfields(bool8 loserFlags)
-{
-    if (eContestDebugMode == CONTEST_DEBUG_MODE_OFF)
-    {
-        if (!loserFlags)
-            eContestDebugMode = CONTEST_DEBUG_MODE_PRINT_WINNER_FLAGS;
-        else
-            eContestDebugMode = CONTEST_DEBUG_MODE_PRINT_LOSER_FLAGS;
-    }
-    else
-    {
-        eContestDebugMode = CONTEST_DEBUG_MODE_OFF;
-    }
-
-    if (eContestDebugMode == CONTEST_DEBUG_MODE_OFF)
-    {
-        DrawContestantWindowText();
-        SwapMoveDescAndContestTilemaps();
-    }
-    else
-    {
-        ContestDebugPrintBitStrings();
-    }
 }
 
 static void ContestDebugPrintBitStrings(void)

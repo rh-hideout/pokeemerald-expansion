@@ -22,6 +22,7 @@ SINGLE_BATTLE_TEST("Clear Amulet prevents Intimidate")
         HP_BAR(player, captureDamage: &turnOneHit);
         ABILITY_POPUP(player, ABILITY_INTIMIDATE);
         NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        ITEM_POPUP(opponent, ITEM_CLEAR_AMULET);
         MESSAGE("The effects of the Clear Amulet held by the opposing Wobbuffet prevents its stats from being lowered!");
         HP_BAR(player, captureDamage: &turnTwoHit);
     } THEN {
@@ -42,19 +43,20 @@ SINGLE_BATTLE_TEST("Clear Amulet prevents stat reducing effects")
     PARAMETRIZE { move = MOVE_SAND_ATTACK; }
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_GROWL) == EFFECT_ATTACK_DOWN);
-        ASSUME(GetMoveEffect(MOVE_LEER) == EFFECT_DEFENSE_DOWN);
-        ASSUME(GetMoveEffect(MOVE_CONFIDE) == EFFECT_SPECIAL_ATTACK_DOWN);
-        ASSUME(GetMoveEffect(MOVE_FAKE_TEARS) == EFFECT_SPECIAL_DEFENSE_DOWN_2);
-        ASSUME(GetMoveEffect(MOVE_SCARY_FACE) == EFFECT_SPEED_DOWN_2);
-        ASSUME(GetMoveEffect(MOVE_SWEET_SCENT) == (B_UPDATED_MOVE_DATA >= GEN_6 ? EFFECT_EVASION_DOWN_2 : EFFECT_EVASION_DOWN));
-        ASSUME(GetMoveEffect(MOVE_SAND_ATTACK) == EFFECT_ACCURACY_DOWN);
+        ASSUME_STAT_CHANGE(MOVE_GROWL, attack: -1);
+        ASSUME_STAT_CHANGE(MOVE_LEER, defense: -1);
+        ASSUME_STAT_CHANGE(MOVE_CONFIDE, spAtk: -1);
+        ASSUME_STAT_CHANGE(MOVE_FAKE_TEARS, spDef: -2);
+        ASSUME_STAT_CHANGE(MOVE_SCARY_FACE, speed: -2);
+        ASSUME_STAT_CHANGE(MOVE_SWEET_SCENT, evasion: B_UPDATED_MOVE_DATA >= GEN_6 ? -2 : -1);
+        ASSUME_STAT_CHANGE(MOVE_SAND_ATTACK, accuracy: -1);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_CLEAR_AMULET); }
     } WHEN {
         TURN { MOVE(player, move); }
     } SCENE {
         NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+        ITEM_POPUP(opponent, ITEM_CLEAR_AMULET);
         MESSAGE("The effects of the Clear Amulet held by the opposing Wobbuffet prevents its stats from being lowered!");
     }
 }
@@ -71,12 +73,12 @@ SINGLE_BATTLE_TEST("Clear Amulet prevents secondary effects that reduce stats")
     PARAMETRIZE { move = MOVE_MUD_SLAP; }
 
     GIVEN {
-        ASSUME(MoveHasAdditionalEffect(MOVE_AURORA_BEAM, MOVE_EFFECT_ATK_MINUS_1) == TRUE);
-        ASSUME(MoveHasAdditionalEffect(MOVE_ROCK_SMASH, MOVE_EFFECT_DEF_MINUS_1) == TRUE);
-        ASSUME(MoveHasAdditionalEffect(MOVE_BUBBLE_BEAM, MOVE_EFFECT_SPD_MINUS_1) == TRUE);
-        ASSUME(MoveHasAdditionalEffect(MOVE_SNARL, MOVE_EFFECT_SP_ATK_MINUS_1) == TRUE);
-        ASSUME(MoveHasAdditionalEffect(MOVE_PSYCHIC, MOVE_EFFECT_SP_DEF_MINUS_1) == TRUE);
-        ASSUME(MoveHasAdditionalEffect(MOVE_MUD_SLAP, MOVE_EFFECT_ACC_MINUS_1) == TRUE);
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_AURORA_BEAM, attack: -1);
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_ROCK_SMASH, defense: -1);
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_BUBBLE_BEAM, speed: -1);
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_SNARL, spAtk: -1);
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_PSYCHIC, spDef: -1);
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MUD_SLAP, accuracy: -1);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_CLEAR_AMULET); }
     } WHEN {
@@ -84,6 +86,7 @@ SINGLE_BATTLE_TEST("Clear Amulet prevents secondary effects that reduce stats")
     } SCENE {
         NONE_OF {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+            ITEM_POPUP(opponent, ITEM_CLEAR_AMULET);
             MESSAGE("The effects of the Clear Amulet held by the opposing Wobbuffet prevents its stats from being lowered!");
         }
     }

@@ -19,7 +19,7 @@ You will also want to add the lighting object events from that commit.
 
 If you are not using Hoenn maps, the primary concern is that you do not use the exact same palette indices for colors you want to be darkened during night time and colors you want to light up. Err towards not light blending a color if you aren't sure how to avoid conflicts.
 
-When writing map scripts, `fadescreenswapbuffers` should be preferred over `fadescreen`. This is to avoid odd behavior from the GBA's limitations in alpha blending.
+When writing scripts, it is important to use the correct fade macro to avoid odd behavior from the GBA with alpha blending. If the current area is outside (and/or impacted by DNS), use `fadescreenswapbuffers` to fade in and out. Otherwise, it is safe to use `fadescreen`.
 
 ### Q: How do I make lightbulbs glow?
 

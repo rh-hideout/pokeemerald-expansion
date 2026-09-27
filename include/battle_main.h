@@ -9,8 +9,8 @@
 // For displaying a multi battle partner's Pokémon in the party menu
 struct MultiPartnerMenuPokemon
 {
-    /*0x00*/ u16 species;
-    /*0x02*/ u16 heldItem;
+    /*0x00*/ enum Species species;
+    /*0x02*/ enum Item heldItem;
     /*0x04*/ u8 nickname[POKEMON_NAME_LENGTH + 1];
     /*0x0F*/ u8 level;
     /*0x10*/ u16 hp;
@@ -78,6 +78,7 @@ void SpriteCallbackDummy_2(struct Sprite *sprite);
 void SpriteCB_FaintOpponentMon(struct Sprite *sprite);
 void SpriteCB_ShowAsMoveTarget(struct Sprite *sprite);
 void SpriteCB_HideAsMoveTarget(struct Sprite *sprite);
+bool32 ShouldHideBattler(enum BattlerId battler);
 void SpriteCB_OpponentMonFromBall(struct Sprite *sprite);
 void SpriteCB_BattleSpriteStartSlideLeft(struct Sprite *sprite);
 void SpriteCB_FaintSlideAnim(struct Sprite *sprite);
@@ -92,6 +93,7 @@ void BeginBattleIntro(void);
 void SwitchInClearSetData(enum BattlerId battler, struct Volatiles *volatilesCopy);
 void FaintClearSetData(enum BattlerId battler);
 void BattleTurnPassed(void);
+bool32 EndTurnEvents(void);
 u8 IsRunningFromBattleImpossible(enum BattlerId battler);
 void SwitchTwoBattlersInParty(enum BattlerId battler, enum BattlerId battler2);
 void SwitchPartyOrder(enum BattlerId battler);
@@ -102,21 +104,21 @@ s32 GetBattleMovePriority(enum BattlerId battler, enum Ability ability, enum Mov
 s32 GetWhichBattlerFasterArgs(struct BattleCalcValues *calcValues, bool32 ignoreChosenMoves, u32 speedBattler1, u32 speedBattler2, s32 priority1, s32 priority2);
 s32 GetWhichBattlerFasterOrTies(struct BattleCalcValues *calcValues, bool32 ignoreChosenMoves);
 s32 GetWhichBattlerFaster(struct BattleCalcValues *calcValues, bool32 ignoreChosenMoves);
+const u8 *GetChargingSetUpScript(enum BattleMoveEffects moveEffect, bool32 inMiddleOfTurn);
 void RunBattleScriptCommands_PopCallbacksStack(void);
 void RunBattleScriptCommands(void);
-enum Type GetDynamicMoveType(struct Pokemon *mon, enum Move move, enum BattlerId battler, enum MonState monInBattle);
-void SetTypeBeforeUsingMove(enum Move move, enum BattlerId battler);
+enum Type GetDynamicMoveType(struct Pokemon *mon, enum Move move, enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect, enum MonState state);
+void SetTypeBeforeUsingMove(enum Move move, enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect);
 bool32 IsWildMonSmart(void);
-u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer *trainer, bool32 firstTrainer, u32 battleTypeFlags);
 void ModifyPersonalityForNature(u32 *personality, u32 newNature);
-u32 GeneratePersonalityForGender(u32 gender, u32 species);
 void CustomTrainerPartyAssignMoves(struct Pokemon *mon, const struct TrainerMon *partyEntry);
 bool32 CanPlayerForfeitNormalTrainerBattle(void);
 bool32 DidPlayerForfeitNormalTrainerBattle(void);
 void BattleDebug_WonBattle(void);
 s32 Factorial(s32 n);
+void InitializeStartingStatus(void);
 
-extern struct MultiPartnerMenuPokemon gMultiPartnerParty[MULTI_PARTY_SIZE];
+extern struct MultiPartnerMenuPokemon *gMultiPartnerParty;
 
 extern const struct SpriteTemplate gUnusedBattleInitSprite;
 extern const struct OamData gOamData_BattleSpriteOpponentSide;

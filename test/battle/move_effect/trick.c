@@ -101,7 +101,7 @@ SINGLE_BATTLE_TEST("Trick fails if either item is a Z-Crystal")
 SINGLE_BATTLE_TEST("Trick fails if either battler holds a Mega Stone")
 {
     enum Item atkItem = ITEM_NONE, defItem = ITEM_NONE;
-    u16 atkSpecies = SPECIES_WOBBUFFET, defSpecies = SPECIES_WOBBUFFET;
+    enum Species atkSpecies = SPECIES_WOBBUFFET, defSpecies = SPECIES_WOBBUFFET;
 
     PARAMETRIZE { atkSpecies = SPECIES_BLAZIKEN; atkItem = ITEM_BLAZIKENITE; defSpecies = SPECIES_WOBBUFFET; defItem = ITEM_SITRUS_BERRY; }
     PARAMETRIZE { atkSpecies = SPECIES_WOBBUFFET; atkItem = ITEM_SITRUS_BERRY; defSpecies = SPECIES_BLAZIKEN; defItem = ITEM_BLAZIKENITE; }
@@ -162,7 +162,7 @@ SINGLE_BATTLE_TEST("Trick fails against Sticky Hold")
     } WHEN {
         TURN { MOVE(player, MOVE_TRICK); }
     } SCENE {
-        MESSAGE("The opposing Wobbuffet's Sticky Hold made Trick ineffective!");
+        MESSAGE("The opposing Wobbuffet's item cannot be removed!");
     } THEN {
         EXPECT(player->item == ITEM_SITRUS_BERRY);
         EXPECT(opponent->item == ITEM_LUM_BERRY);

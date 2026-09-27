@@ -330,7 +330,7 @@ bool8 IsBetweenHours(s32 hours, s32 begin, s32 end)
 
 enum TimeOfDay GetTimeOfDay(void)
 {
-    UpdateTimeOfDay();
+    UpdateTimeOfDay(FALSE);
     return gTimeOfDay;
 }
 
@@ -351,7 +351,7 @@ void RtcCalcLocalTimeOffset(s32 days, s32 hours, s32 minutes, s32 seconds)
     gLocalTime.hours = hours;
     gLocalTime.minutes = minutes;
     gLocalTime.seconds = seconds;
-    if (!OW_USE_FAKE_RTC)
+    if (OW_USE_FAKE_RTC)
         FakeRtc_ManuallySetTime(gLocalTime.days, gLocalTime.hours, gLocalTime.minutes, seconds);
     RtcGetInfo(&sRtc);
     RtcCalcTimeDifference(&sRtc, &gSaveBlock2Ptr->localTimeOffset, &gLocalTime);
@@ -381,12 +381,6 @@ void CalcTimeDifference(struct Time *result, struct Time *t1, struct Time *t2)
         result->hours += HOURS_PER_DAY;
         --result->days;
     }
-}
-
-u32 RtcGetMinuteCount(void)
-{
-    RtcGetInfo(&sRtc);
-    return (HOURS_PER_DAY * MINUTES_PER_HOUR) * RtcGetDayCount(&sRtc) + MINUTES_PER_HOUR * sRtc.hour + sRtc.minute;
 }
 
 u32 RtcGetLocalDayCount(void)

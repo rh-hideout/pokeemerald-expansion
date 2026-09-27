@@ -6,6 +6,7 @@
 ASSUMPTIONS
 {
     ASSUME(gSpeciesInfo[SPECIES_CLEFFA].catchRate == 150);
+    ASSUME(gSpeciesInfo[SPECIES_DITTO].catchRate == 35);
 }
 
 WILD_BATTLE_TEST("Capture: Incapacitated catch bonus apply correcly with all gen configs")
@@ -138,6 +139,40 @@ WILD_BATTLE_TEST("Capture: Missing badge malus apply correcly in gen 9")
     }
 }
 
+WILD_BATTLE_TEST("Capture: Tranformed Pokemon get the catch rate of the copied species in gen 3/4")
+{
+    u32 recordedOdds;
+    u32 expectedOdds = 0;
+    u32 gen = 0;
+
+    const u32 DittoOdds = 11;
+    const u32 CleffaOdds = 50;
+    for (u32 j = GEN_1; j <= GEN_LATEST; j++)
+    {
+        if (j == GEN_3 || j == GEN_4)
+        {
+            PARAMETRIZE(expectedOdds = CleffaOdds, gen = j);
+        }
+        else
+        {
+            PARAMETRIZE(expectedOdds = DittoOdds, gen = j);
+        }
+    }
+
+    GIVEN {
+        WITH_CONFIG(B_TRANSFORM_CATCH_RATE, gen);
+        WITH_CONFIG(B_MISSING_BADGE_CATCH_MALUS, GEN_7);
+        PLAYER(SPECIES_CLEFFA);
+        OPPONENT(SPECIES_DITTO) {Ability(ABILITY_IMPOSTER);}
+    } WHEN {
+        TURN { USE_ITEM(player, ITEM_POKE_BALL); }
+    } SCENE {
+        CATCHING_CHANCE(&recordedOdds);
+    } THEN {
+        EXPECT_EQ(expectedOdds, recordedOdds);
+    }
+}
+
 WILD_BATTLE_TEST("Capture: when CRITICAL_CAPTURE_IF_OWNED is enabled, capture of owned pokemon always appear critical")
 {
     enum Item item;
@@ -154,7 +189,7 @@ WILD_BATTLE_TEST("Capture: when CRITICAL_CAPTURE_IF_OWNED is enabled, capture of
     GIVEN {
         ASSUME(gSpeciesInfo[SPECIES_CATERPIE].catchRate > 155);
         if (alreadyOwned)
-            GetSetPokedexFlag(SPECIES_CATERPIE, FLAG_SET_CAUGHT);
+            GetSetPokedexFlag(NATIONAL_DEX_CATERPIE, FLAG_SET_CAUGHT);
         WITH_CONFIG(B_MISSING_BADGE_CATCH_MALUS, GEN_7);
         WITH_CONFIG(B_CRITICAL_CAPTURE_IF_OWNED, GEN_9);
         PLAYER(SPECIES_WOBBUFFET);
@@ -188,7 +223,7 @@ WILD_BATTLE_TEST("Capture: when CRITICAL_CAPTURE_IF_OWNED is enabled, failed cap
     PARAMETRIZE(success = FALSE);
 
     GIVEN {
-        GetSetPokedexFlag(SPECIES_CATERPIE, FLAG_SET_CAUGHT);
+        GetSetPokedexFlag(NATIONAL_DEX_CATERPIE, FLAG_SET_CAUGHT);
         WITH_CONFIG(B_MISSING_BADGE_CATCH_MALUS, GEN_7);
         WITH_CONFIG(B_CRITICAL_CAPTURE_IF_OWNED, GEN_9);
         PLAYER(SPECIES_WOBBUFFET);
@@ -229,6 +264,6 @@ WILD_BATTLE_TEST("Capture: ball data is properly set in captured pokemon")
             ANIMATION(ANIM_TYPE_SPECIAL, B_ANIM_BALL_THROW);
         }
     } THEN {
-        EXPECT_EQ(GetMonData(&gPlayerParty[1], MON_DATA_POKEBALL), GetItemSecondaryId(item));
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][1], MON_DATA_POKEBALL), GetItemSecondaryId(item));
     }
 }

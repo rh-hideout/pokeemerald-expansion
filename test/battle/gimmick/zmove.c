@@ -183,7 +183,7 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Z_EFFECT_RESTORE_REPLACEMENT_HP fully heals the rep
 // This tests the functionality of Z_EFFECT_RECOVER_HP and Z_EFFECT_ATK_UP_1 (and thus by extension all stat-up Z-effects)
 SINGLE_BATTLE_TEST("(Z-MOVE) Z_EFFECT_CURSE activates Z_EFFECT_RECOVER_HP or Z_EFFECT_ATK_UP_1 depending on the type of the battler")
 {
-    u32 species;
+    enum Species species;
     PARAMETRIZE { species = SPECIES_WOBBUFFET; }
     PARAMETRIZE { species = SPECIES_DUSCLOPS; }
     GIVEN {
@@ -504,7 +504,7 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Light That Burns the Sky uses the battler's highest
     PARAMETRIZE { useSwordsDance = FALSE; }
     PARAMETRIZE { useSwordsDance = TRUE; }
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_SWORDS_DANCE) == EFFECT_ATTACK_UP_2);
+        ASSUME_STAT_CHANGE(MOVE_SWORDS_DANCE, attack: +2);
         PLAYER(SPECIES_NECROZMA_DUSK_MANE) { Item(ITEM_ULTRANECROZIUM_Z); }
         OPPONENT(SPECIES_WOBBUFFET) { HP(1000); MaxHP(1000); }; // hits hard lol
     } WHEN {
@@ -564,8 +564,9 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Stoked Sparksurfer paralyzes the target")
 SINGLE_BATTLE_TEST("(Z-MOVE) Extreme Evoboost boosts all the user's stats by two stages")
 {
     GIVEN {
+        WITH_CONFIG(B_LAST_RESORT_SELECTABLE, GEN_9); // The test will fail without this on GEN_CHAMPIONS
         ASSUME(GetMoveEffect(MOVE_EXTREME_EVOBOOST) == EFFECT_EXTREME_EVOBOOST);
-        PLAYER(SPECIES_EEVEE) { Item(ITEM_EEVIUM_Z); }
+        PLAYER(SPECIES_EEVEE) { Item(ITEM_EEVIUM_Z); Moves(MOVE_POUND, MOVE_LAST_RESORT); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_LAST_RESORT, gimmick: GIMMICK_Z_MOVE); }
@@ -656,7 +657,11 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Splintered Stormshards removes terrain when the tar
 SINGLE_BATTLE_TEST("(Z-MOVE) Clangorous Soulblaze boosts all the user's stats by one stage")
 {
     GIVEN {
-        ASSUME(GetMoveAdditionalEffectById(MOVE_CLANGOROUS_SOULBLAZE, 0)->moveEffect == MOVE_EFFECT_ALL_STATS_UP);
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(
+            MOVE_CLANGOROUS_SOULBLAZE, self: TRUE,
+            attack: 1, defense: 1,
+            spAtk: 1, spDef: 1, speed: 1
+        );
         PLAYER(SPECIES_KOMMO_O) { Item(ITEM_KOMMONIUM_Z); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -706,7 +711,7 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Searing Sunraze Smash ignores the target's abilitie
 
 SINGLE_BATTLE_TEST("(Z-MOVE) Z-Revelation Dance always transforms into Breakneck Blitz")
 {
-    u16 species;
+    enum Species species;
     PARAMETRIZE { species = SPECIES_ORICORIO_BAILE; }
     PARAMETRIZE { species = SPECIES_ORICORIO_PAU; }
     PARAMETRIZE { species = SPECIES_ORICORIO_POM_POM; }
@@ -767,10 +772,10 @@ MULTI_BATTLE_TEST("(Z-MOVE) Every battler can use Z-Moves - Multi")
     PARAMETRIZE { battler = opponentLeft; }
     PARAMETRIZE { battler = opponentRight; }
     GIVEN {
-        MULTI_PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
-        MULTI_PARTNER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
-        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
-        MULTI_OPPONENT_B(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
+        PARTNER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
+        OPPONENT_A(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
+        OPPONENT_B(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
     } WHEN {
         TURN { MOVE(battler, MOVE_CELEBRATE, gimmick: GIMMICK_Z_MOVE); }
     } SCENE {
@@ -786,10 +791,10 @@ TWO_VS_ONE_BATTLE_TEST("(Z-MOVE) Every battler can use Z-Moves - 2v1")
     PARAMETRIZE { battler = opponentLeft; }
     PARAMETRIZE { battler = opponentRight; }
     GIVEN {
-        MULTI_PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
-        MULTI_PARTNER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
-        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
-        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
+        PARTNER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
+        OPPONENT_A(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
+        OPPONENT_A(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
     } WHEN {
         TURN { MOVE(battler, MOVE_CELEBRATE, gimmick: GIMMICK_Z_MOVE); }
     } SCENE {
@@ -805,14 +810,185 @@ ONE_VS_TWO_BATTLE_TEST("(Z-MOVE) Every battler can use Z-Moves - 1v2")
     PARAMETRIZE { battler = opponentLeft; }
     PARAMETRIZE { battler = opponentRight; }
     GIVEN {
-        MULTI_PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
-        MULTI_PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
-        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
-        MULTI_OPPONENT_B(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
+        OPPONENT_A(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
+        OPPONENT_B(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
     } WHEN {
         TURN { MOVE(battler, MOVE_CELEBRATE, gimmick: GIMMICK_Z_MOVE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ZMOVE_ACTIVATE, battler);
+    }
+}
+
+SINGLE_BATTLE_TEST("(Z-MOVE) Z-Move power is based on the base move", s16 damage)
+{
+    enum Move move;
+
+    PARAMETRIZE { move = MOVE_SCRATCH; }
+    PARAMETRIZE { move = MOVE_MEGA_KICK; }
+
+    GIVEN {
+        ASSUME(GetMovePower(MOVE_SCRATCH) == 40);
+        ASSUME(GetMovePower(MOVE_MEGA_KICK) == 120);
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, move, gimmick: GIMMICK_Z_MOVE); }
+    } SCENE {
+        HP_BAR(opponent, captureDamage: &results[i].damage);
+    } FINALLY {
+        EXPECT_GT(results[1].damage, results[0].damage);
+    }
+}
+
+SINGLE_BATTLE_TEST("Z-Move: Z-Moves can be selected under Taunt")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_TAUNT) == EFFECT_TAUNT);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(1); Item(ITEM_NORMALIUM_Z); Moves(MOVE_CELEBRATE, MOVE_SCRATCH); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_TAUNT); MOVE(player, MOVE_SCRATCH); }
+        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_Z_MOVE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TAUNT, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ZMOVE_ACTIVATE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Z-Move: Z-Moves can be selected while Tormented")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_TORMENT) == EFFECT_TORMENT);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(1); Item(ITEM_NORMALIUM_Z); Moves(MOVE_CELEBRATE, MOVE_SCRATCH); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_TORMENT); MOVE(player, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_Z_MOVE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TORMENT, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ZMOVE_ACTIVATE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Z-Move: Z-Moves can be selected while Disabled")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_DISABLE) == EFFECT_DISABLE);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(2); Item(ITEM_NORMALIUM_Z); Moves(MOVE_CELEBRATE, MOVE_SCRATCH); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_DISABLE); }
+        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_Z_MOVE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DISABLE, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ZMOVE_ACTIVATE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Z-Move: Z-Moves can be selected while Encored")
+{
+    GIVEN {
+        WITH_CONFIG(B_ENCORE_TARGET, GEN_5);
+        ASSUME(GetMoveEffect(MOVE_ENCORE) == EFFECT_ENCORE);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(2); Item(ITEM_NORMALIUM_Z); Moves(MOVE_CELEBRATE, MOVE_SCRATCH); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_ENCORE); }
+        TURN { MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_Z_MOVE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ENCORE, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ZMOVE_ACTIVATE, player);
+        HP_BAR(opponent);
+    }
+}
+
+SINGLE_BATTLE_TEST("Z-Move: Z-Moves can be selected while Imprisoned")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_IMPRISON) == EFFECT_IMPRISON);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(1); Item(ITEM_NORMALIUM_Z); Moves(MOVE_CELEBRATE, MOVE_SCRATCH); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); Moves(MOVE_IMPRISON, MOVE_CELEBRATE); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_IMPRISON); MOVE(player, MOVE_SCRATCH); }
+        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_Z_MOVE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_IMPRISON, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ZMOVE_ACTIVATE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Z-Move: Z-Moves can be selected under Heal Block")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_HEAL_BLOCK) == EFFECT_HEAL_BLOCK);
+        ASSUME(GetMoveEffect(MOVE_RECOVER) == EFFECT_RESTORE_HP);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(1); HP(1); Item(ITEM_NORMALIUM_Z); Moves(MOVE_RECOVER, MOVE_SCRATCH); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_HEAL_BLOCK); MOVE(player, MOVE_SCRATCH); }
+        TURN { MOVE(player, MOVE_RECOVER, gimmick: GIMMICK_Z_MOVE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_HEAL_BLOCK, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ZMOVE_ACTIVATE, player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Z-Move: Z-Moves can be selected and executed under Throat Chop")
+{
+    GIVEN {
+        ASSUME(IsSoundMove(MOVE_GROWL));
+        PLAYER(SPECIES_WOBBUFFET) { Speed(1); Item(ITEM_NORMALIUM_Z); Moves(MOVE_GROWL, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_THROAT_CHOP); MOVE(player, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_GROWL, gimmick: GIMMICK_Z_MOVE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_THROAT_CHOP, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ZMOVE_ACTIVATE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_GROWL, player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Z-Move: Z-Moves can be selected under Gravity but Gravity still prevents execution")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_GRAVITY) == EFFECT_GRAVITY);
+        ASSUME(IsMoveGravityBanned(MOVE_FLY));
+        PLAYER(SPECIES_WOBBUFFET) { Speed(1); Item(ITEM_FLYINIUM_Z); Moves(MOVE_FLY, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_GRAVITY); MOVE(player, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_FLY, gimmick: GIMMICK_Z_MOVE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_GRAVITY, opponent);
+        MESSAGE("Wobbuffet can't use Supersonic Skystrike because of gravity!");
+        NOT HP_BAR(opponent);
+    }
+}
+
+SINGLE_BATTLE_TEST("Z-Move: Z-Belch can be selected without eating a Berry")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_BELCH) == EFFECT_BELCH);
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_POISONIUM_Z); Moves(MOVE_BELCH, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_BELCH, gimmick: GIMMICK_Z_MOVE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ZMOVE_ACTIVATE, player);
+        HP_BAR(opponent);
     }
 }
 

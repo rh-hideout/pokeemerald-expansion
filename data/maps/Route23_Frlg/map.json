@@ -2,7 +2,7 @@
   "id": "MAP_ROUTE23",
   "name": "Route23_Frlg",
   "layout": "LAYOUT_ROUTE23",
-  "music": "MUS_VICTORY_ROAD",
+  "music": "MUS_RG_VICTORY_ROAD",
   "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_ROUTE_23",
   "requires_flash": false,

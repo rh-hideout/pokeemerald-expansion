@@ -167,10 +167,10 @@ void RecordedSafariBufferExecCompleted(enum BattlerId battler)
 
 static void RecordedSafariHandleDrawTrainerPic(enum BattlerId battler)
 {
-    enum TrainerPicID trainerPicId = TRAINER_PIC_BACK_BRENDAN;
+    enum TrainerPicID trainerPicId = TRAINER_PIC_BRENDAN;
 
     BtlController_HandleDrawTrainerPic(battler, trainerPicId, FALSE,
-                                       80, 80 + 4 * (8 - gTrainerBacksprites[trainerPicId].coordinates.size),
+                                       80, (8 - GetTrainerBackPicCoords(trainerPicId)->size) * 4 + 80,
                                        30);
 }
 

@@ -18,21 +18,35 @@ SINGLE_BATTLE_TEST("Refresh cures the user of burn, frostbite, poison, and paral
         PLAYER(SPECIES_WOBBUFFET) { Status1(status1); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(player, MOVE_REFRESH); }
+        TURN { MOVE(player, MOVE_REFRESH, WITH_RNG(RNG_PARALYSIS, FALSE)); }
     } SCENE {
-        MESSAGE("Wobbuffet's status returned to normal!");
+        switch (status1)
+        {
+            case STATUS1_POISON:
+            case STATUS1_TOXIC_POISON:
+                MESSAGE("Wobbuffet was cured of its poisoning!");
+                break;
+            case STATUS1_BURN:
+                MESSAGE("Wobbuffet's burn was cured!");
+                break;
+            case STATUS1_PARALYSIS:
+                MESSAGE("Wobbuffet was cured of paralysis!");
+                break;
+            case STATUS1_FROSTBITE:
+                MESSAGE("Wobbuffet's frostbite was cured!");
+                break;
+        }
         STATUS_ICON(player, none: TRUE);
     }
 }
 
 SINGLE_BATTLE_TEST("Refresh does not cure the user of Freeze")
 {
-    PASSES_RANDOMLY(20, 100, RNG_FROZEN);
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_FREEZE); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(player, MOVE_REFRESH); }
+        TURN { MOVE(player, MOVE_REFRESH, WITH_RNG(RNG_FROZEN, TRUE)); }
     } SCENE {
         MESSAGE("Wobbuffet used Refresh!");
         NONE_OF {

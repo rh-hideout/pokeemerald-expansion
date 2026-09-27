@@ -1057,7 +1057,7 @@ static bool32 UpdateMatchCallMinutesCounter(void)
 static bool32 CheckMatchCallChance(void)
 {
     int callChance = 1;
-    if (!GetMonData(&gPlayerParty[0], MON_DATA_SANITY_IS_EGG) && GetMonAbility(&gPlayerParty[0]) == ABILITY_LIGHTNING_ROD)
+    if (!GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_SANITY_IS_EGG) && GetMonAbility(&gParties[B_TRAINER_PLAYER][0]) == ABILITY_LIGHTNING_ROD)
         callChance = 2;
 
     if (Random() % 10 < callChance * 3)
@@ -1196,10 +1196,10 @@ static void StartMatchCall(void)
     CreateTask(ExecuteMatchCall, 1);
 }
 
-static const u16 sMatchCallWindow_Pal[] = INCBIN_U16("graphics/pokenav/match_call/window.gbapal");
-static const u8 sMatchCallWindow_Gfx[] = INCBIN_U8("graphics/pokenav/match_call/window.4bpp");
-static const u16 sPokenavIcon_Pal[] = INCBIN_U16("graphics/pokenav/match_call/nav_icon.gbapal");
-static const u32 sPokenavIcon_Gfx[] = INCBIN_U32("graphics/pokenav/match_call/nav_icon.4bpp.smol");
+static const u16 sMatchCallWindow_Pal[] = INCGFX_U16("graphics/pokenav/match_call/window.png", ".gbapal");
+static const u8 sMatchCallWindow_Gfx[] = INCGFX_U8("graphics/pokenav/match_call/window.png", ".4bpp");
+static const u16 sPokenavIcon_Pal[] = INCGFX_U16("graphics/pokenav/match_call/nav_icon.png", ".gbapal");
+static const u32 sPokenavIcon_Gfx[] = INCGFX_U32("graphics/pokenav/match_call/nav_icon.png", ".4bpp.smol");
 
 static const u8 sText_PokenavCallEllipsis[] = _("………………\p");
 
@@ -1326,7 +1326,9 @@ static bool32 MatchCall_PrintIntro(u8 taskId)
         if (!sMatchCallState.triggeredFromScript)
             SelectMatchCallMessage(sMatchCallState.trainerId, gStringVar4);
 
-        TrySpawnAndShowNamebox(gSpeakerName, NAME_BOX_BASE_TILE_NUM);
+        if (IsSpeakerBuffered(gStringVar4))
+            TrySpawnAndShowNamebox(gSpeakerName, NAME_BOX_BASE_TILE_NUM);
+
         InitMatchCallTextPrinter(tWindowId, gStringVar4);
         return TRUE;
     }
@@ -1368,6 +1370,7 @@ static bool32 MatchCall_EndCall(u8 taskId)
     u8 playerObjectId;
     if (!IsDma3ManagerBusyWithBgCopy() && !IsSEPlaying())
     {
+        DestroyNamebox();
         ChangeBgY(0, 0, BG_COORD_SET);
         if (!sMatchCallState.triggeredFromScript)
         {
@@ -1673,15 +1676,13 @@ static void BuildMatchCallString(int matchCallId, const struct MatchCallText *ma
     StringExpandPlaceholders(str, matchCallText->text);
 }
 
-static u8 *const sMatchCallTextStringVars[] = { gStringVar1, gStringVar2, gStringVar3 };
-
 static void PopulateMatchCallStringVars(int matchCallId, const s8 *stringVarFuncIds)
 {
     int i;
     for (i = 0; i < NUM_STRVARS_IN_MSG; i++)
     {
         if (stringVarFuncIds[i] >= 0)
-            PopulateMatchCallStringVar(matchCallId, stringVarFuncIds[i], sMatchCallTextStringVars[i]);
+            PopulateMatchCallStringVar(matchCallId, stringVarFuncIds[i], GetStringVar(i));
     }
 }
 
@@ -1731,53 +1732,9 @@ static void PopulateMapName(int matchCallId, u8 *destStr)
     GetMapName(destStr, GetRematchTrainerLocation(matchCallId), 0);
 }
 
-static u8 GetLandEncounterSlot(void)
-{
-    int rand = Random() % 100;
-    if (rand < 20)
-        return 0;
-    else if (rand >= 20 && rand < 40)
-        return 1;
-    else if (rand >= 40 && rand < 50)
-        return 2;
-    else if (rand >= 50 && rand < 60)
-        return 3;
-    else if (rand >= 60 && rand < 70)
-        return 4;
-    else if (rand >= 70 && rand < 80)
-        return 5;
-    else if (rand >= 80 && rand < 85)
-        return 6;
-    else if (rand >= 85 && rand < 90)
-        return 7;
-    else if (rand >= 90 && rand < 94)
-        return 8;
-    else if (rand >= 94 && rand < 98)
-        return 9;
-    else if (rand >= 98 && rand < 99)
-        return 10;
-    else
-        return 11;
-}
-
-static u8 GetWaterEncounterSlot(void)
-{
-    int rand = Random() % 100;
-    if (rand < 60)
-        return 0;
-    else if (rand >= 60 && rand < 90)
-        return 1;
-    else if (rand >= 90 && rand < 95)
-        return 2;
-    else if (rand >= 95 && rand < 99)
-        return 3;
-    else
-        return 4;
-}
-
 static void PopulateSpeciesFromTrainerLocation(int matchCallId, u8 *destStr)
 {
-    u16 species[2];
+    enum Species species[2];
     int numSpecies;
     u8 slot;
     int i = 0;
@@ -1800,7 +1757,7 @@ static void PopulateSpeciesFromTrainerLocation(int matchCallId, u8 *destStr)
             numSpecies = 0;
             if (gWildMonHeaders[i].encounterTypes[timeOfDay].landMonsInfo)
             {
-                slot = GetLandEncounterSlot();
+                slot = GetLandEncounterSlotForMatchCall();
                 species[numSpecies] = gWildMonHeaders[i].encounterTypes[timeOfDay].landMonsInfo->wildPokemon[slot].species;
                 numSpecies++;
             }
@@ -1808,7 +1765,7 @@ static void PopulateSpeciesFromTrainerLocation(int matchCallId, u8 *destStr)
             timeOfDay = GetTimeOfDayForEncounters(i, WILD_AREA_WATER);
             if (gWildMonHeaders[i].encounterTypes[timeOfDay].waterMonsInfo)
             {
-                slot = GetWaterEncounterSlot();
+                slot = GetWaterEncounterSlotForMatchCall();
                 species[numSpecies] = gWildMonHeaders[i].encounterTypes[timeOfDay].waterMonsInfo->wildPokemon[slot].species;
                 numSpecies++;
             }
@@ -2040,15 +1997,6 @@ void LoadMatchCallWindowGfx(u32 windowId, u32 destOffset, u32 paletteId)
 void DrawMatchCallTextBoxBorder(u32 windowId, u32 tileOffset, u32 paletteId)
 {
     DrawMatchCallTextBoxBorder_Internal(windowId, tileOffset, paletteId);
-}
-
-u32 GetTrainerRematchStepCounter(void)
-{
-#if FREE_MATCH_CALL == FALSE
-    return gSaveBlock1Ptr->trainerRematchStepCounter;
-#else
-    return 0;
-#endif
 }
 
 void SetTrainerRematchStepCounter(u32 value)

@@ -45,7 +45,6 @@ PalletTown_RivalsHouse_EventScript_GroomMon::
 	goto_if_eq VAR_RESULT, NO, PalletTown_RivalsHouse_EventScript_DeclineGrooming
 	msgbox PalletTown_RivalsHouse_Text_GroomWhichOne
 	special ChoosePartyMon
-	waitstate
 	lock
 	faceplayer
 	goto_if_ge VAR_0x8004, PARTY_SIZE, PalletTown_RivalsHouse_EventScript_DeclineGrooming

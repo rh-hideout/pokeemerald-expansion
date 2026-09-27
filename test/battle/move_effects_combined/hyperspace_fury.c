@@ -5,13 +5,13 @@ ASSUMPTIONS
 {
     ASSUME(GetMoveEffect(MOVE_HYPERSPACE_FURY) == EFFECT_HYPERSPACE_FURY);
     ASSUME(MoveHasAdditionalEffect(MOVE_HYPERSPACE_FURY, MOVE_EFFECT_FEINT));
-    ASSUME(MoveHasAdditionalEffectSelf(MOVE_HYPERSPACE_FURY, MOVE_EFFECT_DEF_MINUS_1));
+    ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_HYPERSPACE_FURY, self: TRUE, defense: -1);
     ASSUME(GetMoveEffect(MOVE_PROTECT) == EFFECT_PROTECT);
 }
 
 SINGLE_BATTLE_TEST("Hyperspace Fury fails if used by a Pokémon other than Hoopa Unbound")
 {
-    u32 species;
+    enum Species species;
     PARAMETRIZE { species = SPECIES_WOBBUFFET; }
     PARAMETRIZE { species = SPECIES_HOOPA_CONFINED; }
     PARAMETRIZE { species = SPECIES_HOOPA_UNBOUND; }

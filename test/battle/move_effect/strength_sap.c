@@ -69,8 +69,8 @@ SINGLE_BATTLE_TEST("Strength Sap lowers Attack by 1 and restores HP based on tar
     }
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_WORK_UP) == EFFECT_ATTACK_SPATK_UP);
-        ASSUME(GetMoveEffect(MOVE_GROWL) == EFFECT_ATTACK_DOWN);
+        ASSUME_STAT_CHANGE(MOVE_WORK_UP, attack: +1, spAtk: +1);
+        ASSUME_STAT_CHANGE(MOVE_GROWL, attack: -1);
         PLAYER(SPECIES_WOBBUFFET) { HP(50); }
         OPPONENT(SPECIES_WOBBUFFET) { Attack(60); }
     } WHEN {
@@ -117,7 +117,7 @@ SINGLE_BATTLE_TEST("Strength Sap lowers Attack by 1 and restores HP based on tar
 SINGLE_BATTLE_TEST("Strength Sap fails if target is at -6 Atk")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_CHARM) == EFFECT_ATTACK_DOWN_2);
+        ASSUME_STAT_CHANGE(MOVE_CHARM, attack: -2);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -141,7 +141,26 @@ SINGLE_BATTLE_TEST("Strength Sap fails if target is at -6 Atk")
     }
 }
 
-TO_DO_BATTLE_TEST("Strength Sap will restore hp if target has Contrary and is at +6 Atk")
+SINGLE_BATTLE_TEST("Strength Sap will restore HP if target has Contrary and is at +6 Attack")
+{
+    GIVEN {
+        ASSUME_STAT_CHANGE(MOVE_CHARM, attack: -2);
+        PLAYER(SPECIES_WOBBUFFET) { MaxHP(300); HP(1); }
+        OPPONENT(SPECIES_SNIVY) { Ability(ABILITY_CONTRARY); Attack(50); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_CHARM); }
+        TURN { MOVE(player, MOVE_CHARM); }
+        TURN { MOVE(player, MOVE_CHARM); }
+        TURN { MOVE(player, MOVE_STRENGTH_SAP); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STRENGTH_SAP, player);
+        HP_BAR(player, hp: 201);
+        MESSAGE("The opposing Snivy had its energy drained!");
+    } THEN {
+        EXPECT_EQ(opponent->statStages[STAT_ATK], MAX_STAT_STAGE);
+        EXPECT_EQ(player->hp, 201);
+    }
+}
 
 SINGLE_BATTLE_TEST("Strength Sap restores more HP if Big Root is held", s16 hp)
 {
@@ -254,5 +273,20 @@ SINGLE_BATTLE_TEST("Strength Sap will drain users HP if target has Liquid Ooze")
         }
     } THEN {
         EXPECT_EQ(lostHp, atkStat);
+    }
+}
+
+SINGLE_BATTLE_TEST("Strength Sap fails if move missed")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_BRIGHT_POWDER); };
+    } WHEN {
+        TURN {  MOVE(player, MOVE_STRENGTH_SAP, hit: FALSE); }
+    } SCENE {
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_STRENGTH_SAP, player);
+            HP_BAR(player);
+        }
     }
 }

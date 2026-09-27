@@ -2068,7 +2068,7 @@ void SetHostRfuWonderFlags(bool32 hasNews, bool32 hasCard)
     gHostRfuGameData.compatibility.hasCard = hasCard;
 }
 
-void SetTradeBoardRegisteredMonInfo(u32 type, u32 species, u32 level)
+void SetTradeBoardRegisteredMonInfo(u32 type, enum Species species, u32 level)
 {
     gHostRfuGameData.tradeType = type;
     gHostRfuGameData.tradeSpecies = species;

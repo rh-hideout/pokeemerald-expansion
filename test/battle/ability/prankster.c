@@ -231,7 +231,7 @@ SINGLE_BATTLE_TEST("Prankster-affected moves can still be bounced back by a Dark
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); MOVE(opponent, MOVE_CONFUSE_RAY); }
     } SCENE {
-        MESSAGE("The opposing Volbeat's Confuse Ray was bounced back by Absol's Magic Bounce!");
+        MESSAGE("The opposing Volbeat's Confuse Ray was bounced back!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CONFUSE_RAY, player);
     }
 }
@@ -244,7 +244,7 @@ SINGLE_BATTLE_TEST("Prankster-affected moves that are bounced back by Magic Boun
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); MOVE(opponent, MOVE_CONFUSE_RAY); }
     } SCENE {
-        MESSAGE("The opposing Murkrow's Confuse Ray was bounced back by Absol's Magic Bounce!");
+        MESSAGE("The opposing Murkrow's Confuse Ray was bounced back!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CONFUSE_RAY, player);
         MESSAGE("The opposing Murkrow became confused!");
     }

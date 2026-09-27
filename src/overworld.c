@@ -32,6 +32,7 @@
 #include "io_reg.h"
 #include "item.h"
 #include "item_icon.h"
+#include "line_break.h"
 #include "link.h"
 #include "link_rfu.h"
 #include "load_save.h"
@@ -39,6 +40,7 @@
 #include "malloc.h"
 #include "m4a.h"
 #include "map_name_popup.h"
+#include "map_preview_screen.h"
 #include "match_call.h"
 #include "menu.h"
 #include "metatile_behavior.h"
@@ -59,6 +61,7 @@
 #include "script_pokemon_util.h"
 #include "secret_base.h"
 #include "sound.h"
+#include "sprite.h"
 #include "start_menu.h"
 #include "string_util.h"
 #include "task.h"
@@ -69,6 +72,7 @@
 #include "tv.h"
 #include "scanline_effect.h"
 #include "wild_encounter.h"
+#include "wild_encounter_ow.h"
 #include "vs_seeker.h"
 #include "frontier_util.h"
 #include "constants/abilities.h"
@@ -192,7 +196,6 @@ static void CameraCB_CreditsPan(struct CameraObject *camera);
 static void Task_OvwldCredits_FadeOut(u8 taskId);
 static void Task_OvwldCredits_WaitFade(u8 taskId);
 
-static void *sUnusedOverworldCallback;
 static u8 sPlayerLinkStates[MAX_LINK_PLAYERS];
 // This callback is called with a player's key code. It then returns an
 // adjusted key code, effectively intercepting the input before anything
@@ -222,7 +225,7 @@ EWRAM_DATA static struct WarpData sFixedDiveWarp = {0};
 EWRAM_DATA static struct WarpData sFixedHoleWarp = {0};
 EWRAM_DATA static mapsec_u16_t sLastMapSectionId = 0;
 EWRAM_DATA static struct InitialPlayerAvatarState sInitialPlayerAvatarState = {0};
-EWRAM_DATA static u16 sAmbientCrySpecies = 0;
+EWRAM_DATA static enum Species sAmbientCrySpecies = SPECIES_NONE;
 EWRAM_DATA static bool8 sIsAmbientCryWaterMon = FALSE;
 EWRAM_DATA static u8 sHoursOverride = 0; // used to override apparent time of day hours
 EWRAM_DATA struct LinkPlayerObjectEvent gLinkPlayerObjectEvents[4] = {0};
@@ -444,10 +447,10 @@ void Overworld_ResetBattleFlagsAndVars(void)
     #endif
 
     FlagClear(B_FLAG_INVERSE_BATTLE);
-    FlagClear(B_FLAG_FORCE_DOUBLE_WILD);
-    FlagClear(B_SMART_WILD_AI_FLAG);
-    FlagClear(B_FLAG_NO_CATCHING);
-    FlagClear(B_FLAG_NO_RUNNING);
+    FlagClear(WE_FLAG_FORCE_DOUBLE_WILD);
+    FlagClear(WE_SMART_WILD_AI_FLAG);
+    FlagClear(WE_FLAG_NO_CATCHING);
+    FlagClear(WE_FLAG_NO_RUNNING);
     FlagClear(B_FLAG_DYNAMAX_BATTLE);
     FlagClear(B_FLAG_SKY_BATTLE);
     FlagClear(B_FLAG_NO_WHITEOUT);
@@ -811,11 +814,6 @@ static void SetWarpDestinationToContinueGameWarp(void)
     sWarpDestination = gSaveBlock1Ptr->continueGameWarp;
 }
 
-void SetContinueGameWarp(s8 mapGroup, s8 mapNum, s8 warpId, s8 x, s8 y)
-{
-    SetWarpData(&gSaveBlock1Ptr->continueGameWarp, mapGroup, mapNum, warpId, x, y);
-}
-
 void SetContinueGameWarpToHealLocation(u8 healLocationId)
 {
     const struct HealLocation *healLocation = GetHealLocation(healLocationId);
@@ -925,6 +923,7 @@ void LoadMapFromCameraTransition(u8 mapGroup, u8 mapNum)
          || gMapHeader.regionMapSectionId != sLastMapSectionId)
             ShowMapNamePopup();
     }
+    SetMinimumOWESpawnTimer();
 }
 
 static void LoadMapFromWarp(bool32 a1)
@@ -985,6 +984,7 @@ static void LoadMapFromWarp(bool32 a1)
         UpdateTVScreensOnMap(gBackupMapLayout.width, gBackupMapLayout.height);
         InitSecretBaseAppearance(TRUE);
     }
+    SetMinimumOWESpawnTimer();
 }
 
 void ResetInitialPlayerAvatarState(void)
@@ -1135,12 +1135,6 @@ void SetObjectEventLoadFlag(u8 flag)
     sObjectEventLoadFlag = flag;
 }
 
-// sObjectEventLoadFlag is read directly
-static u8 UNUSED GetObjectEventLoadFlag(void)
-{
-    return sObjectEventLoadFlag;
-}
-
 static bool16 ShouldLegendaryMusicPlayAtLocation(struct WarpData *warp)
 {
     if (!FlagGet(FLAG_SYS_WEATHER_CTRL))
@@ -1213,6 +1207,20 @@ static bool16 IsInfiltratedSpaceCenter(struct WarpData *warp)
     return FALSE;
 }
 
+static const u16 sNightMusicTable[END_MUS - START_MUS] =
+{
+    // example usage: [MUS_SOOTOPOLIS - START_MUS] = MUS_LITTLEROOT,
+};
+
+static u16 GetNightMusicFromTrack(u16 track)
+{
+    if (GetTimeOfDay() != TIME_NIGHT)
+        return track;
+    if (sNightMusicTable[track - START_MUS] >= START_MUS && sNightMusicTable[track - START_MUS] <= END_MUS)
+        return sNightMusicTable[track - START_MUS];
+    return track;
+}
+
 u16 GetLocationMusic(struct WarpData *warp)
 {
     if (NoMusicInSootopolisWithLegendaries(warp) == TRUE)
@@ -1223,8 +1231,12 @@ u16 GetLocationMusic(struct WarpData *warp)
         return MUS_ENCOUNTER_MAGMA;
     else if (IsInfiltratedWeatherInstitute(warp) == TRUE)
         return MUS_MT_CHIMNEY;
-    else
-        return Overworld_GetMapHeaderByGroupAndId(warp->mapGroup, warp->mapNum)->music;
+
+    const struct MapHeader *mapHeader = Overworld_GetMapHeaderByGroupAndId(warp->mapGroup, warp->mapNum);
+    if (mapHeader->nightMusic != MUS_NONE && GetTimeOfDay() == TIME_NIGHT)
+        return mapHeader->nightMusic;
+    
+    return mapHeader->music;
 }
 
 u16 GetCurrLocationDefaultMusic(void)
@@ -1292,8 +1304,10 @@ void Overworld_PlaySpecialMapMusic(void)
         else if (GetCurrentMapType() == MAP_TYPE_UNDERWATER)
             music = MUS_UNDERWATER;
         else if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING))
-            music = MUS_SURF;
+            music = (IS_FRLG ? MUS_RG_SURF : MUS_SURF);
     }
+
+    music = GetNightMusicFromTrack(music);
 
     if (music != GetCurrentMapMusic())
         PlayNewMapMusic(music);
@@ -1325,11 +1339,12 @@ static void TransitionMapMusic(void)
         u16 currentMusic = GetCurrentMapMusic();
         if (newMusic != MUS_ABNORMAL_WEATHER && newMusic != MUS_NONE)
         {
-            if (currentMusic == MUS_UNDERWATER || currentMusic == MUS_SURF)
+            if (currentMusic == MUS_UNDERWATER || currentMusic == (IS_FRLG ? MUS_RG_SURF : MUS_SURF))
                 return;
             if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING))
-                newMusic = MUS_SURF;
+                newMusic = (IS_FRLG ? MUS_RG_SURF : MUS_SURF);
         }
+        newMusic = GetNightMusicFromTrack(newMusic);
         if (newMusic != currentMusic)
         {
             if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_MACH_BIKE | PLAYER_AVATAR_FLAG_ACRO_BIKE))
@@ -1366,7 +1381,7 @@ u8 GetMapMusicFadeoutSpeed(void)
 void TryFadeOutOldMapMusic(void)
 {
     u16 currentMusic = GetCurrentMapMusic();
-    u16 warpMusic = GetWarpDestinationMusic();
+    u16 warpMusic = GetNightMusicFromTrack(GetWarpDestinationMusic());
     if (FlagGet(FLAG_DONT_TRANSITION_MUSIC) != TRUE && warpMusic != GetCurrentMapMusic())
     {
         if (currentMusic == MUS_SURF
@@ -1392,8 +1407,28 @@ void Overworld_FadeOutMapMusic(void)
     FadeOutMapMusic(4);
 }
 
+static bool32 ShouldPlayVanillaAmbientCry(void)
+{
+    switch (OW_AMBIENT_CRIES)
+    {
+    case OW_AMBIENT_CRIES_VANILLA:
+        return TRUE;
+    case OW_AMBIENT_CRIES_OWE_PRIORITY:
+        return !TryPlayAmbientCryOWE();
+    case OW_AMBIENT_CRIES_OWE_ONLY:
+        TryPlayAmbientCryOWE();
+        return FALSE;
+    case OW_AMBIENT_CRIES_NONE:
+    default:
+        return FALSE;
+    }
+}
+
 static void PlayAmbientCry(void)
 {
+    if (!ShouldPlayVanillaAmbientCry())
+        return;
+    
     s16 x, y;
     s8 pan;
     s8 volume;
@@ -1448,8 +1483,8 @@ void UpdateAmbientCry(s16 *state, u16 *delayCounter)
         monsCount = CalculatePlayerPartyCount();
         for (i = 0; i < monsCount; i++)
         {
-            if (!GetMonData(&gPlayerParty[i], MON_DATA_SANITY_IS_EGG)
-                && GetMonAbility(&gPlayerParty[0]) == ABILITY_SWARM)
+            if (!GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SANITY_IS_EGG)
+                && GetMonAbility(&gParties[B_TRAINER_PLAYER][0]) == ABILITY_SWARM)
             {
                 divBy = 2;
                 break;
@@ -1508,6 +1543,11 @@ enum MapType GetCurrentMapType(void)
 enum MapType GetLastUsedWarpMapType(void)
 {
     return GetMapTypeByWarpData(&gLastUsedWarp);
+}
+
+mapsec_u8_t GetLastUsedWarpMapSectionId(void)
+{
+    return Overworld_GetMapHeaderByGroupAndId(gLastUsedWarp.mapGroup, gLastUsedWarp.mapNum)->regionMapSectionId;
 }
 
 bool8 IsMapTypeOutdoors(enum MapType mapType)
@@ -1658,7 +1698,7 @@ const struct BlendSettings gTimeOfDayBlend[] =
 
 #define MORNING_HOUR_MIDDLE (MORNING_HOUR_BEGIN + ((MORNING_HOUR_END - MORNING_HOUR_BEGIN) / 2))
 
-void UpdateTimeOfDay(void)
+void UpdateTimeOfDay(bool32 updateBlend)
 {
     s32 hours, minutes;
     RtcCalcLocalTime();
@@ -1667,47 +1707,65 @@ void UpdateTimeOfDay(void)
 
     if (IsBetweenHours(hours, MORNING_HOUR_BEGIN, MORNING_HOUR_MIDDLE)) // night->morning
     {
-        gTimeBlend.startBlend = gTimeOfDayBlend[TIME_NIGHT];
-        gTimeBlend.endBlend = gTimeOfDayBlend[TIME_MORNING];
-        gTimeBlend.weight = TIME_BLEND_WEIGHT(MORNING_HOUR_BEGIN, MORNING_HOUR_MIDDLE);
-        gTimeBlend.altWeight = (DEFAULT_WEIGHT - gTimeBlend.weight) / 2;
+        if (updateBlend)
+        {
+            gTimeBlend.startBlend = gTimeOfDayBlend[TIME_NIGHT];
+            gTimeBlend.endBlend = gTimeOfDayBlend[TIME_MORNING];
+            gTimeBlend.weight = TIME_BLEND_WEIGHT(MORNING_HOUR_BEGIN, MORNING_HOUR_MIDDLE);
+            gTimeBlend.altWeight = (DEFAULT_WEIGHT - gTimeBlend.weight) / 2;
+        }
         gTimeOfDay = TIME_MORNING;
     }
     else if (IsBetweenHours(hours, MORNING_HOUR_MIDDLE, MORNING_HOUR_END)) // morning->day
     {
-        gTimeBlend.startBlend = gTimeOfDayBlend[TIME_MORNING];
-        gTimeBlend.endBlend = gTimeOfDayBlend[TIME_DAY];
-        gTimeBlend.weight = TIME_BLEND_WEIGHT(MORNING_HOUR_MIDDLE, MORNING_HOUR_END);
-        gTimeBlend.altWeight = (DEFAULT_WEIGHT - gTimeBlend.weight) / 2 + (DEFAULT_WEIGHT / 2);
+        if (updateBlend)
+        {
+            gTimeBlend.startBlend = gTimeOfDayBlend[TIME_MORNING];
+            gTimeBlend.endBlend = gTimeOfDayBlend[TIME_DAY];
+            gTimeBlend.weight = TIME_BLEND_WEIGHT(MORNING_HOUR_MIDDLE, MORNING_HOUR_END);
+            gTimeBlend.altWeight = (DEFAULT_WEIGHT - gTimeBlend.weight) / 2 + (DEFAULT_WEIGHT / 2);
+        }
         gTimeOfDay = TIME_MORNING;
     }
     else if (IsBetweenHours(hours, EVENING_HOUR_BEGIN, EVENING_HOUR_END)) // evening
     {
-        gTimeBlend.startBlend = gTimeOfDayBlend[TIME_DAY];
-        gTimeBlend.endBlend = gTimeOfDayBlend[TIME_EVENING];
-        gTimeBlend.weight = TIME_BLEND_WEIGHT(EVENING_HOUR_BEGIN, EVENING_HOUR_END);
-        gTimeBlend.altWeight = gTimeBlend.weight / 2 + (DEFAULT_WEIGHT / 2);
+        if (updateBlend)
+        {
+            gTimeBlend.startBlend = gTimeOfDayBlend[TIME_DAY];
+            gTimeBlend.endBlend = gTimeOfDayBlend[TIME_EVENING];
+            gTimeBlend.weight = TIME_BLEND_WEIGHT(EVENING_HOUR_BEGIN, EVENING_HOUR_END);
+            gTimeBlend.altWeight = gTimeBlend.weight / 2 + (DEFAULT_WEIGHT / 2);
+        }
         gTimeOfDay = TIME_EVENING;
     }
     else if (IsBetweenHours(hours, NIGHT_HOUR_BEGIN, NIGHT_HOUR_BEGIN + 1)) // evening->night
     {
-        gTimeBlend.startBlend = gTimeOfDayBlend[TIME_EVENING];
-        gTimeBlend.endBlend = gTimeOfDayBlend[TIME_NIGHT];
-        gTimeBlend.weight = TIME_BLEND_WEIGHT(NIGHT_HOUR_BEGIN, NIGHT_HOUR_BEGIN + 1);
-        gTimeBlend.altWeight = gTimeBlend.weight / 2;
+        if (updateBlend)
+        {
+            gTimeBlend.startBlend = gTimeOfDayBlend[TIME_EVENING];
+            gTimeBlend.endBlend = gTimeOfDayBlend[TIME_NIGHT];
+            gTimeBlend.weight = TIME_BLEND_WEIGHT(NIGHT_HOUR_BEGIN, NIGHT_HOUR_BEGIN + 1);
+            gTimeBlend.altWeight = gTimeBlend.weight / 2;
+        }
         gTimeOfDay = TIME_NIGHT;
     }
     else if (IsBetweenHours(hours, NIGHT_HOUR_BEGIN, NIGHT_HOUR_END)) // night
     {
-        gTimeBlend.weight = DEFAULT_WEIGHT;
-        gTimeBlend.altWeight = 0;
-        gTimeBlend.startBlend = gTimeBlend.endBlend = gTimeOfDayBlend[TIME_NIGHT];
+        if (updateBlend)
+        {
+            gTimeBlend.weight = DEFAULT_WEIGHT;
+            gTimeBlend.altWeight = 0;
+            gTimeBlend.startBlend = gTimeBlend.endBlend = gTimeOfDayBlend[TIME_NIGHT];
+        }
         gTimeOfDay = TIME_NIGHT;
     }
     else // day
     {
-        gTimeBlend.weight = gTimeBlend.altWeight = DEFAULT_WEIGHT;
-        gTimeBlend.startBlend = gTimeBlend.endBlend = gTimeOfDayBlend[TIME_DAY];
+        if (updateBlend)
+        {
+            gTimeBlend.weight = gTimeBlend.altWeight = DEFAULT_WEIGHT;
+            gTimeBlend.startBlend = gTimeBlend.endBlend = gTimeOfDayBlend[TIME_DAY];
+        }
         gTimeOfDay = TIME_DAY;
     }
 }
@@ -1806,7 +1864,7 @@ static void OverworldBasic(void)
         u32 *bld0 = (u32*)&cachedBlend;
         u32 *bld1 = (u32*)&gTimeBlend;
         gTimeUpdateCounter = (SECONDS_PER_MINUTE * 60 / FakeRtc_GetSecondsRatio());
-        UpdateTimeOfDay();
+        UpdateTimeOfDay(TRUE);
         FormChangeTimeUpdate();
         if (MapHasNaturalLight(gMapHeader.mapType) &&
            (bld0[0] != bld1[0]
@@ -1816,6 +1874,7 @@ static void OverworldBasic(void)
             ApplyWeatherColorMapIfIdle(gWeatherPtr->colorMapIndex);
         }
     }
+    UpdateOverworldWildEncounter();
 }
 
 // This CB2 is used when starting
@@ -1840,12 +1899,6 @@ void CB2_Overworld(void)
 void SetMainCallback1(MainCallback cb)
 {
     gMain.callback1 = cb;
-}
-
-// This function is never called.
-void SetUnusedCallback(void *func)
-{
-    sUnusedOverworldCallback = func;
 }
 
 static bool8 RunFieldCallback(void)
@@ -2153,7 +2206,7 @@ static void InitCurrentFlashLevelScanlineEffect(void)
 {
     u8 flashLevel;
 
-    if (InBattlePyramid_())
+    if (InBattlePyramid())
     {
         WriteBattlePyramidViewScanlineEffectBuffer();
         ScanlineEffect_SetParams(sFlashEffectParams);
@@ -2302,7 +2355,12 @@ static bool32 LoadMapInStepsLocal(u8 *state, bool32 a2)
         (*state)++;
         break;
     case 11:
-        if (gMapHeader.showMapName == TRUE && SecretBaseMapPopupEnabled() == TRUE)
+        if (ShouldRunMapPreview() && CurrentMapHasPreviewScreen(MPS_TYPE_FADE_IN) == TRUE)
+        {
+            MapPreview_LoadGfx(gMapHeader.regionMapSectionId);
+            RunMapPreviewScreenFadeIn(gMapHeader.regionMapSectionId);
+        }
+        else if (gMapHeader.showMapName == TRUE && SecretBaseMapPopupEnabled() == TRUE)
             ShowMapNamePopup();
         (*state)++;
         break;
@@ -2445,7 +2503,7 @@ static void ResetScreenForMapLoad(void)
     ScanlineEffect_Stop();
 
     DmaClear16(3, PLTT + 2, PLTT_SIZE - 2);
-    DmaFillLarge16(3, 0, (void *)VRAM, VRAM_SIZE, 0x1000);
+    DmaClearLarge16(3, (void *)VRAM, VRAM_SIZE, 0x1000);
     ResetOamRange(0, 128);
     LoadOam();
 }
@@ -3413,7 +3471,7 @@ static u8 GetLinkPlayerElevation(u8 linkPlayerId)
     return objEvent->currentElevation;
 }
 
-static s32 UNUSED GetLinkPlayerObjectStepTimer(u8 linkPlayerId)
+static s16 UNUSED GetLinkPlayerObjectStepTimer(u8 linkPlayerId)
 {
     u8 objEventId = gLinkPlayerObjectEvents[linkPlayerId].objEventId;
     struct ObjectEvent *objEvent = &gObjectEvents[objEventId];
@@ -3442,26 +3500,18 @@ static void SetPlayerFacingDirection(u8 linkPlayerId, u8 facing)
     u8 objEventId = linkPlayerObjEvent->objEventId;
     struct ObjectEvent *objEvent = &gObjectEvents[objEventId];
 
-    if (linkPlayerObjEvent->active)
+    if (!linkPlayerObjEvent->active)
+        return;
+
+    if (facing > FACING_FORCED_RIGHT)
     {
-        if (facing > FACING_FORCED_RIGHT)
-        {
-            objEvent->triggerGroundEffectsOnMove = TRUE;
-        }
-        else
-        {
-            // This is a hack to split this code onto two separate lines, without declaring a local variable.
-            // C++ style inline variables would be nice here.
-            #define TEMP sLinkPlayerMovementModes[linkPlayerObjEvent->movementMode](linkPlayerObjEvent, objEvent, facing)
-
-            sMovementStatusHandler[TEMP](linkPlayerObjEvent, objEvent);
-
-            // Clean up the hack.
-            #undef TEMP
-        }
+        objEvent->triggerGroundEffectsOnMove = TRUE;
+        return;
     }
-}
 
+    sMovementStatusHandler[sLinkPlayerMovementModes[linkPlayerObjEvent->movementMode](
+        linkPlayerObjEvent, objEvent, facing)](linkPlayerObjEvent, objEvent);
+}
 
 static u8 MovementEventModeCB_Normal(struct LinkPlayerObjectEvent *linkPlayerObjEvent, struct ObjectEvent *objEvent, enum Direction dir)
 {
@@ -3631,7 +3681,7 @@ static void SpriteCB_LinkPlayer(struct Sprite *sprite)
 
 #define ITEM_ICON_X     26
 #define ITEM_ICON_Y     24
-#define ITEM_TAG        0x2722 //same as money label
+#define ITEM_TAG        0x2722 | BLEND_IMMUNE_FLAG //same as money label
 
 bool8 GetSetItemObtained(enum Item item, enum ItemObtainFlags caseId)
 {
@@ -3653,51 +3703,16 @@ bool8 GetSetItemObtained(enum Item item, enum ItemObtainFlags caseId)
 
 EWRAM_DATA static u8 sHeaderBoxWindowId = 0;
 EWRAM_DATA u8 sItemIconSpriteId = 0;
-EWRAM_DATA u8 sItemIconSpriteId2 = 0;
 
 static void ShowItemIconSprite(enum Item item, bool8 firstTime, bool8 flash);
 static void DestroyItemIconSprite(void);
 
 static u8 ReformatItemDescription(enum Item item, u8 *dest)
 {
-    u8 count = 0;
-    u8 numLines = 1;
-    u8 maxChars = 32;
-    u8 *desc = (u8 *)GetItemDescription(item);
-
-    while (*desc != EOS)
-    {
-        if (count >= maxChars)
-        {
-            while (*desc != CHAR_SPACE && *desc != CHAR_NEWLINE)
-            {
-                *dest = *desc;  //finish word
-                dest++;
-                desc++;
-            }
-
-            *dest = CHAR_NEWLINE;
-            count = 0;
-            numLines++;
-            dest++;
-            desc++;
-            continue;
-        }
-
-        *dest = *desc;
-        if (*desc == CHAR_NEWLINE)
-        {
-            *dest = CHAR_SPACE;
-        }
-
-        dest++;
-        desc++;
-        count++;
-    }
-
-    // finish string
-    *dest = EOS;
-    return numLines;
+    StringCopy(dest, GetItemDescription(item));
+    StripLineBreaks(dest);
+    BreakStringAutomatic(dest, 196, 2, FONT_SMALL, HIDE_SCROLL_PROMPT);
+    return CountLineBreaks(dest) + 1;
 }
 
 void ScriptShowItemDescription(struct ScriptContext *ctx)
@@ -3718,7 +3733,7 @@ void ScriptShowItemDescription(struct ScriptContext *ctx)
     u8 *dst;
     bool8 handleFlash = FALSE;
 
-    if (GetFlashLevel() > 0 || InBattlePyramid_())
+    if (GetFlashLevel() > 0 || InBattlePyramid())
         handleFlash = TRUE;
 
     if (headerType == 1) // berry
@@ -3772,7 +3787,6 @@ static void ShowItemIconSprite(enum Item item, bool8 firstTime, bool8 flash)
 {
     s16 x = 0, y = 0;
     u8 iconSpriteId;
-    u8 spriteId2 = MAX_SPRITES;
 
     if (flash)
     {
@@ -3781,8 +3795,10 @@ static void ShowItemIconSprite(enum Item item, bool8 firstTime, bool8 flash)
     }
 
     iconSpriteId = AddItemIconSprite(ITEM_TAG, ITEM_TAG, item);
+
     if (flash)
-        spriteId2 = AddItemIconSprite(ITEM_TAG, ITEM_TAG, item);
+        gSprites[iconSpriteId].copyToObjWin = TRUE;
+
     if (iconSpriteId != MAX_SPRITES)
     {
         if (!firstTime)
@@ -3803,15 +3819,6 @@ static void ShowItemIconSprite(enum Item item, bool8 firstTime, bool8 flash)
         gSprites[iconSpriteId].oam.priority = 0;
     }
 
-    if (spriteId2 != MAX_SPRITES)
-    {
-        gSprites[spriteId2].x2 = x;
-        gSprites[spriteId2].y2 = y;
-        gSprites[spriteId2].oam.priority = 0;
-        gSprites[spriteId2].oam.objMode = ST_OAM_OBJ_WINDOW;
-        sItemIconSpriteId2 = spriteId2;
-    }
-
     sItemIconSpriteId = iconSpriteId;
 }
 
@@ -3821,12 +3828,6 @@ static void DestroyItemIconSprite(void)
     FreeSpritePaletteByTag(ITEM_TAG);
     FreeSpriteOamMatrix(&gSprites[sItemIconSpriteId]);
     DestroySprite(&gSprites[sItemIconSpriteId]);
-
-    if ((GetFlashLevel() > 0 || InBattlePyramid_()) && sItemIconSpriteId2 != MAX_SPRITES)
-    {
-        FreeSpriteOamMatrix(&gSprites[sItemIconSpriteId2]);
-        DestroySprite(&gSprites[sItemIconSpriteId2]);
-    }
 }
 
 // returns old sHoursOverride
@@ -3836,12 +3837,6 @@ u16 SetTimeOfDay(u16 hours)
     sHoursOverride = hours;
     gTimeUpdateCounter = 0;
     return oldHours;
-}
-
-bool8 ScrFunc_settimeofday(struct ScriptContext *ctx)
-{
-    SetTimeOfDay(ScriptReadByte(ctx));
-    return FALSE;
 }
 
 // Credits

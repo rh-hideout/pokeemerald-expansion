@@ -21,34 +21,9 @@ SINGLE_BATTLE_TEST("Mirror Armor lowers a stat of the attacking Pokémon")
     } SCENE {
         ABILITY_POPUP(player, ABILITY_MIRROR_ARMOR);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        switch (statId)
-        {
-        case STAT_DEF:
-            MESSAGE("The opposing Wynaut's Defense fell!");
-            break;
-        case STAT_ATK:
-            MESSAGE("The opposing Wynaut's Attack fell!");
-            break;
-        case STAT_EVASION:
-            if (GetMoveEffect(move) == EFFECT_EVASION_DOWN_2) {
-                MESSAGE("The opposing Wynaut's evasiveness harshly fell!");
-            } else {
-                MESSAGE("The opposing Wynaut's evasiveness fell!");
-            }
-            break;
-        case STAT_ACC:
-            MESSAGE("The opposing Wynaut's accuracy fell!");
-            break;
-        case STAT_SPATK:
-            MESSAGE("The opposing Wynaut's Sp. Atk fell!");
-            break;
-        case STAT_SPDEF:
-            MESSAGE("The opposing Wynaut's Sp. Def harshly fell!");
-            break;
-        }
     } THEN {
         EXPECT_EQ(player->statStages[statId], DEFAULT_STAT_STAGE);
-        EXPECT_EQ(opponent->statStages[statId], (statId == STAT_SPDEF || (statId == STAT_EVASION && GetMoveEffect(move) == EFFECT_EVASION_DOWN_2)) ? DEFAULT_STAT_STAGE - 2 : DEFAULT_STAT_STAGE - 1);
+        EXPECT(opponent->statStages[statId] < DEFAULT_STAT_STAGE);
     }
 }
 
@@ -82,7 +57,7 @@ SINGLE_BATTLE_TEST("Mirror Armor doesn't lower the stats of an attacking Pokemon
         MESSAGE("The opposing Wynaut used Leer!");
         ABILITY_POPUP(player, ABILITY_MIRROR_ARMOR);
         ABILITY_POPUP(opponent, ABILITY_CLEAR_BODY);
-        MESSAGE("The opposing Wynaut's Clear Body prevents stat loss!");
+        MESSAGE("The opposing Wynaut's stats were not lowered!");
     } THEN {
         EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE);
         EXPECT_EQ(opponent->statStages[STAT_DEF], DEFAULT_STAT_STAGE);
@@ -230,6 +205,7 @@ SINGLE_BATTLE_TEST("Mirror Armor reflects Obstruct defense drop")
     }
 }
 
+// Is there really an ability pop up?
 SINGLE_BATTLE_TEST("Mirror Armor does not trigger if the user is behind a Substitute")
 {
     GIVEN {
@@ -247,6 +223,76 @@ SINGLE_BATTLE_TEST("Mirror Armor does not trigger if the user is behind a Substi
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
             ABILITY_POPUP(opponent, ABILITY_MIRROR_ARMOR);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        }
+    }
+}
+
+SINGLE_BATTLE_TEST("Mirror Armor reflects stat drops triggered by a damaging move")
+{
+    GIVEN {
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_ICY_WIND, speed: -1);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_CORVIKNIGHT) { Ability(ABILITY_MIRROR_ARMOR); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_ICY_WIND); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ICY_WIND, player);
+        HP_BAR(opponent);
+        ABILITY_POPUP(opponent, ABILITY_MIRROR_ARMOR);
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+    } THEN {
+        EXPECT_EQ(opponent->statStages[STAT_SPEED], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE - 1);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Mirror Armor does not trigger ally's Defiant")
+{
+    GIVEN {
+        PLAYER(SPECIES_CORVIKNIGHT) { Ability(ABILITY_MIRROR_ARMOR); }
+        PLAYER(SPECIES_PRIMEAPE) { Ability(ABILITY_DEFIANT); }
+        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(playerRight, MOVE_FAKE_TEARS, target: playerLeft); }
+    } SCENE {
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_FAKE_TEARS, playerRight);
+        ABILITY_POPUP(playerLeft, ABILITY_MIRROR_ARMOR);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
+        NOT ABILITY_POPUP(playerRight, ABILITY_DEFIANT);
+    }
+}
+
+SINGLE_BATTLE_TEST("Mirror Armor does not reflect Sticky Web stat drops (Gen9+) / reflects onto Sticky Web setter (Gen 8)")
+{
+    u32 config;
+
+    PARAMETRIZE { config = GEN_8; }
+    PARAMETRIZE { config = GEN_9; }
+
+    GIVEN {
+        WITH_CONFIG(B_MIRROR_ARMOR_STICKY_WEB, config);
+        ASSUME(gItemsInfo[ITEM_IRON_BALL].holdEffect == HOLD_EFFECT_IRON_BALL);
+        ASSUME(GetMoveEffect(MOVE_STICKY_WEB) == EFFECT_STICKY_WEB);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_CORVIKNIGHT) { Ability(ABILITY_MIRROR_ARMOR); Item(ITEM_IRON_BALL); }
+        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_STICKY_WEB); }
+        TURN { SWITCH(player, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STICKY_WEB, opponent);
+        ABILITY_POPUP(player, ABILITY_MIRROR_ARMOR);
+        if (config == GEN_8) {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+            NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        } else {
+            NONE_OF {
+                ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+                ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+            }
         }
     }
 }

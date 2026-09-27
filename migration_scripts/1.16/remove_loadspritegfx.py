@@ -14,15 +14,19 @@ def remove_loadspritegfx(fileInput):
     allLines = list()
     with open(fileInput, 'r', encoding='UTF-8') as file:
         while line:=file.readline():
-            if line.startswith("\tloadspritegfx"):
-                line = ""
-                allLines.append(line)
-            elif line.startswith("\tunloadspritegfx"):
-                allLines.append(line)
-                tag = line.lstrip().replace("unloadspritegfx", "")
-                line = "\tunloadspritepal" + tag
-                allLines.append(line)
-            else:
+            if "unloadspritegfx" in line:
+                line2 = file.readline()
+                if ("unloadspritepal" in line2):
+                    allLines.append(line)
+                else:
+                    allLines.append(line)
+                    tag = line.lstrip().replace("unloadspritegfx", "")
+                    line = "\tunloadspritepal" + tag
+                    allLines.append(line)
+
+                if not "loadspritegfx" in line2:
+                    allLines.append(line2)
+            elif not "loadspritegfx" in line:
                 allLines.append(line)
 
     with open(fileInput, 'w', encoding='UTF-8') as file:

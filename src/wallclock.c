@@ -71,8 +71,8 @@ enum {
     WIN_BUTTON_LABEL,
 };
 
-static const u32 sHand_Gfx[] = INCBIN_U32("graphics/wallclock/hand.4bpp.smol");
-static const u16 sTextPrompt_Pal[] = INCBIN_U16("graphics/wallclock/text_prompt.gbapal"); // for "Cancel" or "Confirm"
+static const u32 sHand_Gfx[] = INCGFX_U32("graphics/wallclock/hand.png", ".4bpp.smol");
+static const u16 sTextPrompt_Pal[] = INCGFX_U16("graphics/wallclock/text_prompt.pal", ".gbapal"); // for "Cancel" or "Confirm"
 
 static const struct WindowTemplate sWindowTemplates[] =
 {
@@ -633,7 +633,7 @@ static void LoadWallClockGraphics(void)
     ChangeBgY(2, 0, BG_COORD_SET);
     ChangeBgX(3, 0, BG_COORD_SET);
     ChangeBgY(3, 0, BG_COORD_SET);
-    DmaFillLarge16(3, 0, (void *)VRAM, VRAM_SIZE, 0x1000);
+    DmaClearLarge16(3, (void *)VRAM, VRAM_SIZE, 0x1000);
     DmaClear32(3, (void *)OAM, OAM_SIZE);
     DmaClear16(3, (void *)PLTT, PLTT_SIZE);
     DecompressDataWithHeaderVram(gWallClock_Gfx, (void *)VRAM);

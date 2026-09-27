@@ -116,7 +116,7 @@ SINGLE_BATTLE_TEST("Pursuit ignores accuracy checks when attacking a switching t
 {
     PASSES_RANDOMLY(100, 100, RNG_ACCURACY);
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_SAND_ATTACK) == EFFECT_ACCURACY_DOWN);
+        ASSUME_STAT_CHANGE(MOVE_SAND_ATTACK, accuracy: -1);
         ASSUME(GetMoveEffect(MOVE_HAIL) == EFFECT_WEATHER);
         ASSUME(GetMoveWeatherType(MOVE_HAIL) == BATTLE_WEATHER_HAIL);
         PLAYER(SPECIES_GLACEON) { Ability(ABILITY_SNOW_CLOAK); }
@@ -535,18 +535,18 @@ DOUBLE_BATTLE_TEST("Pursuited mon correctly switches out after it got hit and ac
         SWITCH_OUT_MESSAGE("Eldegoss");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PURSUIT, opponentLeft);
         ABILITY_POPUP(playerLeft, ABILITY_COTTON_DOWN);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
-        MESSAGE("The opposing Wynaut's Speed fell!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
         MESSAGE("Wobbuffet's Speed fell!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
+        MESSAGE("The opposing Wynaut's Speed fell!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
         MESSAGE("The opposing Wobbuffet's Speed fell!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PURSUIT, opponentRight);
         ABILITY_POPUP(playerLeft, ABILITY_COTTON_DOWN);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
-        MESSAGE("The opposing Wynaut's Speed fell!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
         MESSAGE("Wobbuffet's Speed fell!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
+        MESSAGE("The opposing Wynaut's Speed fell!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
         MESSAGE("The opposing Wobbuffet's Speed fell!");
         SEND_IN_MESSAGE("Wobbuffet");
@@ -609,25 +609,6 @@ SINGLE_BATTLE_TEST("Pursuit attacks a switching foe and switchin is correctly st
                 SEND_IN_MESSAGE("Venipede");
                 break;
         }
-    }
-}
-
-SINGLE_BATTLE_TEST("Pursuit doesn't cause mon with Emergency Exit to switch twice")
-{
-    GIVEN {
-        PLAYER(SPECIES_GOLISOPOD) { HP(101); MaxHP(200); Ability(ABILITY_EMERGENCY_EXIT); }
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_VOLTORB);
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { SWITCH(player, 1); MOVE(opponent, MOVE_PURSUIT); SEND_OUT(player, 2); }
-    } SCENE {
-        SWITCH_OUT_MESSAGE("Golisopod");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_PURSUIT, opponent);
-        ABILITY_POPUP(player, ABILITY_EMERGENCY_EXIT);
-        SEND_IN_MESSAGE("Voltorb");
-    } THEN {
-        EXPECT_EQ(player->species, SPECIES_VOLTORB);
     }
 }
 
@@ -695,4 +676,82 @@ DOUBLE_BATTLE_TEST("Pursuit user switches out due to Red Card and partner's swit
     }
 }
 
-TO_DO_BATTLE_TEST("Baton Pass doesn't cause Pursuit to increase its power or priority");
+SINGLE_BATTLE_TEST("Pursuit doesn't trigger a switching mon's Eject Button")
+{
+    GIVEN {
+        ASSUME(GetItemHoldEffect(ITEM_EJECT_BUTTON) == HOLD_EFFECT_EJECT_BUTTON);
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_BUTTON); }
+        PLAYER(SPECIES_ZIGZAGOON);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { SWITCH(player, 1); MOVE(opponent, MOVE_PURSUIT); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PURSUIT, opponent);
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+    }
+}
+
+// Extrapolated from the previous test's mechanic
+SINGLE_BATTLE_TEST("Pursuit doesn't trigger a switching mon's Eject Pack")
+{
+    GIVEN {
+        ASSUME(GetItemHoldEffect(ITEM_EJECT_PACK) == HOLD_EFFECT_EJECT_PACK);
+        PLAYER(SPECIES_GOOMY) { Item(ITEM_EJECT_PACK); Ability(ABILITY_GOOEY); }
+        PLAYER(SPECIES_ZIGZAGOON);
+        OPPONENT(SPECIES_CORVIKNIGHT) { Ability(ABILITY_MIRROR_ARMOR); }
+    } WHEN {
+        TURN { SWITCH(player, 1); MOVE(opponent, MOVE_PURSUIT); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PURSUIT, opponent);
+        ABILITY_POPUP(player, ABILITY_GOOEY);
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+        ABILITY_POPUP(opponent, ABILITY_MIRROR_ARMOR);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Pursuit doesn't trigger a switching mon's Emergency Exit")
+{
+    GIVEN {
+        PLAYER(SPECIES_GOLISOPOD) { Ability(ABILITY_EMERGENCY_EXIT); HP(251); MaxHP(500); }
+        PLAYER(SPECIES_ZIGZAGOON);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { SWITCH(player, 1); MOVE(opponent, MOVE_PURSUIT); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PURSUIT, opponent);
+        NOT ABILITY_POPUP(player, ABILITY_EMERGENCY_EXIT);
+    }
+}
+
+SINGLE_BATTLE_TEST("Baton Pass doesn't cause Pursuit to increase its power or priority", s16 damage)
+{
+    bool32 batonPass;
+
+    PARAMETRIZE { batonPass = FALSE; }
+    PARAMETRIZE { batonPass = TRUE; }
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_BATON_PASS) == EFFECT_BATON_PASS);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(2); Defense(100); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(2); Defense(100); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(1); Attack(100); }
+    } WHEN {
+        if (batonPass)
+            TURN { MOVE(player, MOVE_BATON_PASS); MOVE(opponent, MOVE_PURSUIT); SEND_OUT(player, 1); }
+        else
+            TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_PURSUIT); }
+    } SCENE {
+        if (batonPass) {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_BATON_PASS, player);
+            SEND_IN_MESSAGE("Wobbuffet");
+        } else {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
+        }
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PURSUIT, opponent);
+        HP_BAR(player, captureDamage: &results[i].damage);
+    } FINALLY {
+        EXPECT_EQ(results[0].damage, results[1].damage);
+    }
+}

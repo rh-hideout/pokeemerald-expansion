@@ -60,7 +60,6 @@ Route4_PokemonCenter_1F_EventScript_BuyMagikarpParty::
 	fadescreen FADE_TO_BLACK
 	hidemoneybox
 	special ChangePokemonNickname
-	waitstate
 	goto Route4_PokemonCenter_1F_EventScript_BoughtMagikarp
 	end
 
@@ -71,7 +70,6 @@ Route4_PokemonCenter_1F_EventScript_BuyMagikarpPC::
 	fadescreen FADE_TO_BLACK
 	hidemoneybox
 	special ChangePokemonNickname
-	waitstate
 	lock
 	faceplayer
 	goto Route4_PokemonCenter_1F_EventScript_TransferMagikarp

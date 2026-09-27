@@ -225,27 +225,10 @@ u8 RandomWeightedIndex(u8 *weights, u8 length)
     for (i = 0; i < length; i++)
     {
         weightSum += weights[i];
-        if (randomValue <= weightSum)
+        if (randomValue < weightSum)
             return i;
     }
     return 0;
-}
-
-// Returns whole word with just the random bit set; don't call with no set bits
-u32 RandomBit(enum RandomTag tag, u32 bits)
-{
-  u32 setBits[32];
-  u32 n = 0;
-  for (u32 mask = 1; mask != 0; mask <<= 1)
-  {
-    if (bits & mask)
-        setBits[n++] = mask;
-  }
-
-  if (n == 0)
-    return 0; // This is a little awkward, there are no set bits!
-  else
-    return setBits[RandomUniform(tag, 0, n-1)];
 }
 
 // Returns the index instead; don't call with no set bits
@@ -263,4 +246,24 @@ u32 RandomBitIndex(enum RandomTag tag, u32 bits)
     return 0; // This is a little awkward, there are no set bits!
   else
     return setIndexes[RandomUniform(tag, 0, n-1)];
+}
+
+u32 Crc32B (const u8 *data, u32 size)
+{
+   s32 i, j;
+   u32 byte, crc, mask;
+
+   i = 0;
+   crc = 0xFFFFFFFF;
+   for (i = 0; i < size; ++i)
+   {
+        byte = data[i];
+        crc = crc ^ byte;
+        for (j = 7; j >= 0; --j)
+        {
+            mask = -(crc & 1);
+            crc = (crc >> 1) ^ (0xEDB88320 & mask);
+        }
+   }
+   return ~crc;
 }

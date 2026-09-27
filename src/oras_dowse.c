@@ -23,9 +23,9 @@ static void ChangeDowsingColor(enum Direction direction, struct Sprite *sprite);
 static void ClearDowsingColor(struct Sprite *sprite);
 static void PlayDowseSound(u32 dowseState);
 
-const u32 gFieldEffectObjectPic_ORASDowsingBrendan[] = INCBIN_U32("graphics/field_effects/pics/oras_dowsing_brendan.4bpp");
-const u32 gFieldEffectObjectPic_ORASDowsingMay[] = INCBIN_U32("graphics/field_effects/pics/oras_dowsing_may.4bpp");
-const u16 gFieldEffectPal_ORASDowsing[] = INCBIN_U16("graphics/field_effects/palettes/oras_dowsing.gbapal");
+const u32 gFieldEffectObjectPic_ORASDowsingBrendan[] = INCGFX_U32("graphics/field_effects/pics/oras_dowsing_brendan.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u32 gFieldEffectObjectPic_ORASDowsingMay[] = INCGFX_U32("graphics/field_effects/pics/oras_dowsing_may.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u16 gFieldEffectPal_ORASDowsing[] = INCGFX_U16("graphics/field_effects/palettes/oras_dowsing.pal", ".gbapal");
 
 static const struct SpriteFrameImage sPicTable_ORASDowsingBrendan[] = {
     overworld_ascending_frames(gFieldEffectObjectPic_ORASDowsingBrendan, 2, 4),
@@ -309,9 +309,9 @@ u32 FldEff_ORASDowsing(void)
     FlagSet(I_ORAS_DOWSING_FLAG);
     SetSpritePosToOffsetMapCoords((s16 *)&fPlayerX, (s16 *)&fPlayerY, 8, 0);
     if (gPlayerAvatar.gender == MALE)
-        spriteId = CreateSpriteAtEnd(gFieldEffectObjectTemplatePointers[FLDEFFOBJ_ORAS_DOWSE_BRENDAN], fPlayerX, fPlayerY, 1);
+        spriteId = CreateSpriteAtEndUnchecked(gFieldEffectObjectTemplatePointers[FLDEFFOBJ_ORAS_DOWSE_BRENDAN], fPlayerX, fPlayerY, 1);
     else
-        spriteId = CreateSpriteAtEnd(gFieldEffectObjectTemplatePointers[FLDEFFOBJ_ORAS_DOWSE_MAY], fPlayerX, fPlayerY, 1);
+        spriteId = CreateSpriteAtEndUnchecked(gFieldEffectObjectTemplatePointers[FLDEFFOBJ_ORAS_DOWSE_MAY], fPlayerX, fPlayerY, 1);
 
     if (spriteId != MAX_SPRITES)
     {

@@ -291,3 +291,88 @@ SINGLE_BATTLE_TEST("Sky Drop: Flying types will still get confused if they rampa
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, opponent);
     }
 }
+
+DOUBLE_BATTLE_TEST("Sky Drop user and target can't activate Eject items while the move is being used")
+{
+    enum Item item;
+
+    PARAMETRIZE { item = ITEM_EJECT_BUTTON; }
+    PARAMETRIZE { item = ITEM_EJECT_PACK; }
+
+    GIVEN {
+        ASSUME(GetItemHoldEffect(ITEM_EJECT_BUTTON) == HOLD_EFFECT_EJECT_BUTTON);
+        ASSUME(GetItemHoldEffect(ITEM_EJECT_PACK) == HOLD_EFFECT_EJECT_PACK);
+        ASSUME(gSpeciesInfo[SPECIES_VULLABY].weight < 2000);
+        ASSUME(GetSpeciesType(SPECIES_VULLABY, 0) == TYPE_FLYING || GetSpeciesType(SPECIES_VULLABY, 1) == TYPE_FLYING);
+        ASSUME(MoveHasAdditionalEffectWithChance(MOVE_BREAKING_SWIPE, MOVE_EFFECT_STAT_MINUS, 100));
+        PLAYER(SPECIES_WOBBUFFET) { Item(item); }
+        PLAYER(SPECIES_MACHAMP) { Ability(ABILITY_NO_GUARD); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_VULLABY) { Item(item); } // Flying type used here so Sky Drop doesn't damage
+        OPPONENT(SPECIES_MACHAMP) { Ability(ABILITY_NO_GUARD); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_SKY_DROP, target: opponentLeft);
+               MOVE(opponentRight, MOVE_BREAKING_SWIPE);
+               MOVE(playerRight, MOVE_BREAKING_SWIPE); }
+        TURN { SKIP_TURN(playerLeft);
+               MOVE(opponentRight, MOVE_BREAKING_SWIPE);
+               MOVE(playerRight, MOVE_BREAKING_SWIPE);
+               SEND_OUT(playerLeft, 2);
+               SEND_OUT(opponentLeft, 2); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BREAKING_SWIPE, opponentRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BREAKING_SWIPE, playerRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BREAKING_SWIPE, opponentRight);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BREAKING_SWIPE, playerRight);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
+    }
+}
+
+SINGLE_BATTLE_TEST("Sky Drop does not mistake a replacement using Fly for its original target")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_FLY) == EFFECT_SEMI_INVULNERABLE);
+        ASSUME(GetTwoTurnMoveSemiInvulnerability(MOVE_FLY) == STATE_ON_AIR);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); HP(1); Status1(STATUS1_BURN); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(3); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SKY_DROP); SEND_OUT(opponent, 1); }
+        TURN { MOVE(opponent, MOVE_FLY); SKIP_TURN(player); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLY, opponent);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, player);
+            HP_BAR(opponent);
+        }
+    } THEN {
+        EXPECT_EQ(opponent->hp, opponent->maxHP);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Sky Drop does not mistake a replacement being held by another battler's Sky Drop for its original target")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
+        PLAYER(SPECIES_WYNAUT) { Speed(4); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); HP(1); Status1(STATUS1_BURN); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(3); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(3); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_SKY_DROP, target: opponentLeft); SEND_OUT(opponentLeft, 2); }
+        TURN { MOVE(playerRight, MOVE_SKY_DROP, target: opponentLeft); SKIP_TURN(playerLeft); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, playerRight);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, playerLeft);
+            HP_BAR(opponentLeft);
+        }
+    } THEN {
+        EXPECT_EQ(opponentLeft->hp, opponentLeft->maxHP);
+    }
+}

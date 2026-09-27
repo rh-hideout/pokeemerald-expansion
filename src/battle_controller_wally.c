@@ -191,7 +191,7 @@ static void OpenBagAfterPaletteFade(enum BattlerId battler)
     {
         gBattlerControllerFuncs[battler] = CompleteOnChosenItem;
         ReshowBattleScreenDummy();
-        FreeAllWindowBuffers();
+        CloseMainBattleScreen();
         DoWallyTutorialBagMenu();
     }
 }
@@ -211,21 +211,21 @@ static void Intro_TryShinyAnimShowHealthbox(enum BattlerId battler)
      && !gBattleSpritesDataPtr->healthBoxesData[battler].ballAnimActive)
         TryShinyAnimation(battler, GetBattlerMon(battler));
 
-    if (!gBattleSpritesDataPtr->healthBoxesData[BATTLE_PARTNER(battler)].triedShinyMonAnim
-     && !gBattleSpritesDataPtr->healthBoxesData[BATTLE_PARTNER(battler)].ballAnimActive)
-        TryShinyAnimation(BATTLE_PARTNER(battler), GetBattlerMon(BATTLE_PARTNER(battler)));
+    if (!gBattleSpritesDataPtr->healthBoxesData[GetPartnerBattler(battler)].triedShinyMonAnim
+     && !gBattleSpritesDataPtr->healthBoxesData[GetPartnerBattler(battler)].ballAnimActive)
+        TryShinyAnimation(GetPartnerBattler(battler), GetBattlerMon(GetPartnerBattler(battler)));
 
     if (!gBattleSpritesDataPtr->healthBoxesData[battler].ballAnimActive
-        && !gBattleSpritesDataPtr->healthBoxesData[BATTLE_PARTNER(battler)].ballAnimActive
+        && !gBattleSpritesDataPtr->healthBoxesData[GetPartnerBattler(battler)].ballAnimActive
         && gSprites[gBattleControllerData[battler]].callback == SpriteCallbackDummy
         && gSprites[gBattlerSpriteIds[battler]].callback == SpriteCallbackDummy)
     {
         if (IsDoubleBattle() && !(gBattleTypeFlags & BATTLE_TYPE_MULTI))
         {
-            DestroySprite(&gSprites[gBattleControllerData[BATTLE_PARTNER(battler)]]);
-            UpdateHealthboxAttribute(gHealthboxSpriteIds[BATTLE_PARTNER(battler)], GetBattlerMon(BATTLE_PARTNER(battler)), HEALTHBOX_ALL);
-            StartHealthboxSlideIn(BATTLE_PARTNER(battler));
-            SetHealthboxSpriteVisible(gHealthboxSpriteIds[BATTLE_PARTNER(battler)]);
+            DestroySprite(&gSprites[gBattleControllerData[GetPartnerBattler(battler)]]);
+            UpdateHealthboxAttribute(gHealthboxSpriteIds[GetPartnerBattler(battler)], GetBattlerMon(GetPartnerBattler(battler)), HEALTHBOX_ALL);
+            StartHealthboxSlideIn(GetPartnerBattler(battler));
+            SetHealthboxSpriteVisible(gHealthboxSpriteIds[GetPartnerBattler(battler)]);
         }
         DestroySprite(&gSprites[gBattleControllerData[battler]]);
         UpdateHealthboxAttribute(gHealthboxSpriteIds[battler], GetBattlerMon(battler), HEALTHBOX_ALL);
@@ -245,13 +245,13 @@ static void Intro_WaitForShinyAnimAndHealthbox(enum BattlerId battler)
         healthboxAnimDone = TRUE;
 
     if (healthboxAnimDone && gBattleSpritesDataPtr->healthBoxesData[battler].finishedShinyMonAnim
-        && gBattleSpritesDataPtr->healthBoxesData[BATTLE_PARTNER(battler)].finishedShinyMonAnim)
+        && gBattleSpritesDataPtr->healthBoxesData[GetPartnerBattler(battler)].finishedShinyMonAnim)
     {
         gBattleSpritesDataPtr->healthBoxesData[battler].triedShinyMonAnim = FALSE;
         gBattleSpritesDataPtr->healthBoxesData[battler].finishedShinyMonAnim = FALSE;
 
-        gBattleSpritesDataPtr->healthBoxesData[BATTLE_PARTNER(battler)].triedShinyMonAnim = FALSE;
-        gBattleSpritesDataPtr->healthBoxesData[BATTLE_PARTNER(battler)].finishedShinyMonAnim = FALSE;
+        gBattleSpritesDataPtr->healthBoxesData[GetPartnerBattler(battler)].triedShinyMonAnim = FALSE;
+        gBattleSpritesDataPtr->healthBoxesData[GetPartnerBattler(battler)].finishedShinyMonAnim = FALSE;
 
         FreeShinyStars();
 
@@ -282,14 +282,14 @@ void WallyBufferExecCompleted(enum BattlerId battler)
 
 static void WallyHandleDrawTrainerPic(enum BattlerId battler)
 {
-    BtlController_HandleDrawTrainerPic(battler, TRAINER_PIC_BACK_WALLY, FALSE,
-                                       80, 80 + 4 * (8 - gTrainerBacksprites[TRAINER_PIC_BACK_WALLY].coordinates.size),
+    BtlController_HandleDrawTrainerPic(battler, TRAINER_PIC_WALLY, FALSE,
+                                       80, 80 + 4 * (8 - GetTrainerBackPicCoords(TRAINER_PIC_WALLY)->size),
                                        30);
 }
 
 static void WallyHandleTrainerSlide(enum BattlerId battler)
 {
-    BtlController_HandleTrainerSlide(battler, TRAINER_PIC_BACK_WALLY);
+    BtlController_HandleTrainerSlide(battler, TRAINER_PIC_WALLY);
 }
 
 #undef sSpeedX
@@ -358,7 +358,7 @@ static void WallyHandleChooseItem(enum BattlerId battler)
 // Wally's Pokémon during the tutorial is never intended to faint, so that's probably why it's different here.
 static void WallyHandleFaintingCry(enum BattlerId battler)
 {
-    u16 species = GetMonData(GetBattlerMon(battler), MON_DATA_SPECIES);
+    enum Species species = GetMonData(GetBattlerMon(battler), MON_DATA_SPECIES);
 
     PlayCry_Normal(species, 25);
     BtlController_Complete(battler);
@@ -366,7 +366,7 @@ static void WallyHandleFaintingCry(enum BattlerId battler)
 
 static void WallyHandleIntroTrainerBallThrow(enum BattlerId battler)
 {
-    const u16 *trainerPal = gTrainerBacksprites[TRAINER_PIC_BACK_WALLY].palette.data;
+    const u16 *trainerPal = GetTrainerBackPicPalette(TRAINER_PIC_WALLY);
     BtlController_HandleIntroTrainerBallThrow(battler, 0xD6F8, trainerPal, 31, Intro_TryShinyAnimShowHealthbox);
 }
 

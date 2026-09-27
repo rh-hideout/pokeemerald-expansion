@@ -48,7 +48,10 @@ struct Window
     ALIGNED(4) u8 *tileData;
 };
 
-bool32 InitWindows(const struct WindowTemplate *templates);
+bool32 InitWindowsUnchecked(const struct WindowTemplate *templates);
+bool32 InitWindowsChecked(const struct WindowTemplate *templates, s32 staticSize);
+#define InitWindows(templates) InitWindowsChecked(templates, (__builtin_types_compatible_p(typeof(templates), const struct WindowTemplate *)) ? -1 : (s32)sizeof(templates))
+
 u32 AddWindow(const struct WindowTemplate *template);
 int AddWindowWithoutTileMap(const struct WindowTemplate *template);
 void RemoveWindow(u32 windowId);

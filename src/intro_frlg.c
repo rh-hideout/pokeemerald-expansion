@@ -249,61 +249,61 @@ static void SpriteCB_NidorinoAttack(struct Sprite *sprite);
 extern const u32 gMultiBootProgram_PokemonColosseum_Start[];
 extern const u32 gMultiBootProgram_PokemonColosseum_End[];
 
-static const u16 sCopyright_Pal[] = INCBIN_U16("graphics/intro_frlg/copyright.gbapal");
-static const u32 sCopyright_Gfx[]  = INCBIN_U32( "graphics/intro_frlg/copyright.4bpp.smol");
+static const u16 sCopyright_Pal[] = INCGFX_U16("graphics/intro_frlg/copyright.pal", ".gbapal");
+static const u32 sCopyright_Gfx[]  = INCGFX_U32("graphics/intro_frlg/copyright.png", ".4bpp.smol");
 static const u32 sCopyright_Map[]  = INCBIN_U32( "graphics/intro_frlg/copyright.bin.smolTM");
 
 // Game Freak
-static const u16 sGameFreakBg_Pal[]   = INCBIN_U16("graphics/intro_frlg/game_freak/bg.gbapal");
-static const u8 sGameFreakBg_Gfx[]    = INCBIN_U8( "graphics/intro_frlg/game_freak/bg.4bpp.smol");
+static const u16 sGameFreakBg_Pal[]   = INCGFX_U16("graphics/intro_frlg/game_freak/bg.pal", ".gbapal");
+static const u8 sGameFreakBg_Gfx[]    = INCGFX_U8("graphics/intro_frlg/game_freak/bg.png", ".4bpp.smol");
 static const u8 sGameFreakBg_Map[]    = INCBIN_U8( "graphics/intro_frlg/game_freak/bg.bin.smolTM");
-static const u16 sGameFreakLogo_Pal[] = INCBIN_U16("graphics/intro_frlg/game_freak/logo.gbapal");
-static const u32 sGameFreakText_Gfx[] = INCBIN_U32( "graphics/intro_frlg/game_freak/game_freak.4bpp.smol");
-static const u32 sGameFreakLogo_Gfx[] = INCBIN_U32("graphics/intro_frlg/game_freak/logo.4bpp.smol");
-static const u16 sStar_Pal[]          = INCBIN_U16("graphics/intro_frlg/game_freak/star.gbapal");
-static const u32 sStar_Gfx[]          = INCBIN_U32("graphics/intro_frlg/game_freak/star.4bpp.smol");
-static const u16 sSparkles_Pal[]      = INCBIN_U16("graphics/intro_frlg/game_freak/sparkles.gbapal");
-static const u32 sSparklesSmall_Gfx[] = INCBIN_U32("graphics/intro_frlg/game_freak/sparkles_small.4bpp.smol");
-static const u32 sSparklesBig_Gfx[]   = INCBIN_U32("graphics/intro_frlg/game_freak/sparkles_big.4bpp.smol");
-static const u32 sPresents_Gfx[]      = INCBIN_U32("graphics/intro_frlg/game_freak/presents.4bpp.smol");
+static const u16 sGameFreakLogo_Pal[] = INCGFX_U16("graphics/intro_frlg/game_freak/logo.png", ".gbapal");
+static const u32 sGameFreakText_Gfx[] = INCGFX_U32("graphics/intro_frlg/game_freak/game_freak.png", ".4bpp.smol");
+static const u32 sGameFreakLogo_Gfx[] = INCGFX_U32("graphics/intro_frlg/game_freak/logo.png", ".4bpp.smol");
+static const u16 sStar_Pal[]          = INCGFX_U16("graphics/intro_frlg/game_freak/star.png", ".gbapal");
+static const u32 sStar_Gfx[]          = INCGFX_U32("graphics/intro_frlg/game_freak/star.png", ".4bpp.smol");
+static const u16 sSparkles_Pal[]      = INCGFX_U16("graphics/intro_frlg/game_freak/sparkles.pal", ".gbapal");
+static const u32 sSparklesSmall_Gfx[] = INCGFX_U32("graphics/intro_frlg/game_freak/sparkles_small.png", ".4bpp.smol");
+static const u32 sSparklesBig_Gfx[]   = INCGFX_U32("graphics/intro_frlg/game_freak/sparkles_big.png", ".4bpp.smol");
+static const u32 sPresents_Gfx[]      = INCGFX_U32("graphics/intro_frlg/game_freak/presents.png", ".4bpp.smol");
 
 // Scene 1 (Grass close up)
-static const u16 sScene1_Grass_Pal[] = INCBIN_U16("graphics/intro_frlg/scene_1/grass.gbapal");
-static const u8 sScene1_Grass_Gfx[]  = INCBIN_U8( "graphics/intro_frlg/scene_1/grass.4bpp.smol");
+static const u16 sScene1_Grass_Pal[] = INCGFX_U16("graphics/intro_frlg/scene_1/grass.png", ".gbapal");
+static const u8 sScene1_Grass_Gfx[]  = INCGFX_U8("graphics/intro_frlg/scene_1/grass.png", ".4bpp.smol");
 static const u8 sScene1_Grass_Map[]  = INCBIN_U8( "graphics/intro_frlg/scene_1/grass.bin.smolTM");
-static const u16 sScene1_Bg_Pal[]    = INCBIN_U16("graphics/intro_frlg/scene_1/bg.gbapal");
-static const u8 sScene1_Bg_Gfx[]     = INCBIN_U8( "graphics/intro_frlg/scene_1/bg.4bpp.smol");
+static const u16 sScene1_Bg_Pal[]    = INCGFX_U16("graphics/intro_frlg/scene_1/bg.png", ".gbapal");
+static const u8 sScene1_Bg_Gfx[]     = INCGFX_U8("graphics/intro_frlg/scene_1/bg.png", ".4bpp.smol");
 static const u8 sScene1_Bg_Map[]     = INCBIN_U8( "graphics/intro_frlg/scene_1/bg.bin.smolTM");
 
 // Scenes 2 and 3 (Gengar and Nidorino)
-static const u16 sScene2_Bg_Pal[]            = INCBIN_U16("graphics/intro_frlg/scene_2/bg.gbapal");
-static const u8 sScene2_Bg_Gfx[]             = INCBIN_U8( "graphics/intro_frlg/scene_2/bg.4bpp.smol");
+static const u16 sScene2_Bg_Pal[]            = INCGFX_U16("graphics/intro_frlg/scene_2/bg.pal", ".gbapal");
+static const u8 sScene2_Bg_Gfx[]             = INCGFX_U8("graphics/intro_frlg/scene_2/bg.png", ".4bpp.smol");
 static const u8 sScene2_Bg_Map[]             = INCBIN_U8( "graphics/intro_frlg/scene_2/bg.bin.smolTM");
-static const u16 sScene2_Plants_Pal[]        = INCBIN_U16("graphics/intro_frlg/scene_2/plants.gbapal"); // Unused
-static const u8 sScene2_Plants_Gfx[]         = INCBIN_U8( "graphics/intro_frlg/scene_2/plants.4bpp.smol");
+static const u16 sScene2_Plants_Pal[]        = INCGFX_U16("graphics/intro_frlg/scene_2/plants.png", ".gbapal"); // Unused
+static const u8 sScene2_Plants_Gfx[]         = INCGFX_U8("graphics/intro_frlg/scene_2/plants.png", ".4bpp.smol");
 static const u8 sScene2_Plants_Map[]         = INCBIN_U8( "graphics/intro_frlg/scene_2/plants.bin.smolTM");
-static const u16 sGengar_Pal[]               = INCBIN_U16("graphics/intro_frlg/gengar.gbapal"); // Used by multiple scenes
-static const u8 sScene2_GengarClose_Gfx[]    = INCBIN_U8( "graphics/intro_frlg/scene_2/gengar_close.4bpp.smol");
+static const u16 sGengar_Pal[]               = INCGFX_U16("graphics/intro_frlg/gengar.pal", ".gbapal"); // Used by multiple scenes
+static const u8 sScene2_GengarClose_Gfx[]    = INCGFX_U8("graphics/intro_frlg/scene_2/gengar_close.png", ".4bpp.smol");
 static const u8 sScene2_GengarClose_Map[]    = INCBIN_U8( "graphics/intro_frlg/scene_2/gengar_close.bin.smolTM");
-static const u16 sScene2_NidorinoClose_Pal[] = INCBIN_U16("graphics/intro_frlg/scene_2/nidorino_close.gbapal");
-static const u8 sScene2_NidorinoClose_Gfx[]  = INCBIN_U8( "graphics/intro_frlg/scene_2/nidorino_close.4bpp.smol");
+static const u16 sScene2_NidorinoClose_Pal[] = INCGFX_U16("graphics/intro_frlg/scene_2/nidorino_close.pal", ".gbapal");
+static const u8 sScene2_NidorinoClose_Gfx[]  = INCGFX_U8("graphics/intro_frlg/scene_2/nidorino_close.png", ".4bpp.smol");
 static const u8 sScene2_NidorinoClose_Map[]  = INCBIN_U8( "graphics/intro_frlg/scene_2/nidorino_close.bin.smolTM");
-static const u16 sScene3_Bg_Pal[]            = INCBIN_U16("graphics/intro_frlg/scene_3/bg.gbapal");
-static const u8 sScene3_Bg_Gfx[]             = INCBIN_U8( "graphics/intro_frlg/scene_3/bg.4bpp.smol");
+static const u16 sScene3_Bg_Pal[]            = INCGFX_U16("graphics/intro_frlg/scene_3/bg.pal", ".gbapal");
+static const u8 sScene3_Bg_Gfx[]             = INCGFX_U8("graphics/intro_frlg/scene_3/bg.png", ".4bpp.smol");
 static const u8 sScene3_Bg_Map[]             = INCBIN_U8( "graphics/intro_frlg/scene_3/bg.bin.smolTM");
-static const u8 sScene3_GengarAnim_Gfx[]     = INCBIN_U8( "graphics/intro_frlg/scene_3/gengar_anim.4bpp.smol");
+static const u8 sScene3_GengarAnim_Gfx[]     = INCGFX_U8("graphics/intro_frlg/scene_3/gengar_anim.png", ".4bpp.smol");
 static const u8 sScene3_GengarAnim_Map[]     = INCBIN_U8( "graphics/intro_frlg/scene_3/gengar_anim.bin.smolTM");
-static const u32 sScene2_Gengar_Gfx[]        = INCBIN_U32("graphics/intro_frlg/scene_2/gengar.4bpp.smol");
-static const u16 sNidorino_Pal[]             = INCBIN_U16("graphics/intro_frlg/nidorino.gbapal"); // Used by multiple scenes
-static const u32 sScene2_Nidorino_Gfx[]      = INCBIN_U32("graphics/intro_frlg/scene_2/nidorino.4bpp.smol");
-static const u16 sScene3_Grass_Pal[]         = INCBIN_U16("graphics/intro_frlg/scene_3/grass.gbapal");
-static const u32 sScene3_Grass_Gfx[]         = INCBIN_U32("graphics/intro_frlg/scene_3/grass.4bpp.smol");
-static const u32 sScene3_GengarStatic_Gfx[]  = INCBIN_U32("graphics/intro_frlg/scene_3/gengar_static.4bpp.smol");
-static const u32 sScene3_Nidorino_Gfx[]      = INCBIN_U32("graphics/intro_frlg/scene_3/nidorino.4bpp.smol");
-static const u16 sScene3_Swipe_Pal[]         = INCBIN_U16("graphics/intro_frlg/scene_3/swipe.gbapal");
-static const u16 sScene3_RecoilDust_Pal[]    = INCBIN_U16("graphics/intro_frlg/scene_3/recoil_dust.gbapal");
-static const u32 sScene3_Swipe_Gfx[]         = INCBIN_U32("graphics/intro_frlg/scene_3/swipe.4bpp.smol");
-static const u32 sScene3_RecoilDust_Gfx[]    = INCBIN_U32("graphics/intro_frlg/scene_3/recoil_dust.4bpp.smol");
+static const u32 sScene2_Gengar_Gfx[]        = INCGFX_U32("graphics/intro_frlg/scene_2/gengar.png", ".4bpp.smol");
+static const u16 sNidorino_Pal[]             = INCGFX_U16("graphics/intro_frlg/nidorino.pal", ".gbapal"); // Used by multiple scenes
+static const u32 sScene2_Nidorino_Gfx[]      = INCGFX_U32("graphics/intro_frlg/scene_2/nidorino.png", ".4bpp.smol");
+static const u16 sScene3_Grass_Pal[]         = INCGFX_U16("graphics/intro_frlg/scene_3/grass.png", ".gbapal");
+static const u32 sScene3_Grass_Gfx[]         = INCGFX_U32("graphics/intro_frlg/scene_3/grass.png", ".4bpp.smol");
+static const u32 sScene3_GengarStatic_Gfx[]  = INCGFX_U32("graphics/intro_frlg/scene_3/gengar_static.png", ".4bpp.smol");
+static const u32 sScene3_Nidorino_Gfx[]      = INCGFX_U32("graphics/intro_frlg/scene_3/nidorino.png", ".4bpp.smol");
+static const u16 sScene3_Swipe_Pal[]         = INCGFX_U16("graphics/intro_frlg/scene_3/swipe.png", ".gbapal");
+static const u16 sScene3_RecoilDust_Pal[]    = INCGFX_U16("graphics/intro_frlg/scene_3/recoil_dust.png", ".gbapal");
+static const u32 sScene3_Swipe_Gfx[]         = INCGFX_U32("graphics/intro_frlg/scene_3/swipe.png", ".4bpp.smol");
+static const u32 sScene3_RecoilDust_Gfx[]    = INCGFX_U32("graphics/intro_frlg/scene_3/recoil_dust.png", ".4bpp.smol");
 
 static const struct BgTemplate sBgTemplates_GameFreakScene[] = {
     {
@@ -1520,11 +1520,11 @@ static void Scene2_CreateMonSprites(struct IntroSequenceData * this)
     this->scene2GengarSprite = NULL;
     this->scene2NidorinoSprite = NULL;
 
-    spriteId = CreateSprite(&sSpriteTemplate_Scene2_Nidorino, 168, 80, 11);
+    spriteId = CreateSpriteUnchecked(&sSpriteTemplate_Scene2_Nidorino, 168, 80, 11);
     if (spriteId != MAX_SPRITES)
         this->scene2NidorinoSprite = &gSprites[spriteId];
 
-    spriteId = CreateSprite(&sSpriteTemplate_Scene2_Gengar, 72, 80, 12);
+    spriteId = CreateSpriteUnchecked(&sSpriteTemplate_Scene2_Gengar, 72, 80, 12);
     if (spriteId != MAX_SPRITES)
         this->scene2GengarSprite = &gSprites[spriteId];
 }
@@ -1664,7 +1664,7 @@ static bool8 Scene3_IsGengarMidBounce(void)
 // The small clump of grass that passes by in the foreground during the fight
 static void Scene3_CreateGrassSprite(struct IntroSequenceData * this)
 {
-    u8 spriteId = CreateSprite(&sSpriteTemplate_Grass, 296, 112, 7);
+    u8 spriteId = CreateSpriteUnchecked(&sSpriteTemplate_Grass, 296, 112, 7);
     if (spriteId != MAX_SPRITES)
     {
         this->scene3GrassSprite = &gSprites[spriteId];
@@ -1862,7 +1862,7 @@ static void Scene3_CreateGengarSprite(struct IntroSequenceData * this)
     {
         int x = (i & 1) * 48 + 49;
         int y = (i / 2) * 64 + 72;
-        u8 spriteId = CreateSprite(&sSpriteTemplate_Scene3_Gengar, x, y, 8);
+        u8 spriteId = CreateSpriteUnchecked(&sSpriteTemplate_Scene3_Gengar, x, y, 8);
         if (spriteId != MAX_SPRITES)
         {
             StartSpriteAnim(&gSprites[spriteId], i);
@@ -1950,7 +1950,7 @@ static void GFScene_LoadGfxCreateStar(void)
     sStarSparklesYprecision = 5;
     if (sStarSparklesRngSeed == 0)
         sStarSparklesRngSeed = 354128453;
-    spriteId = CreateSprite(&sSpriteTemplate_Star, 248, 55, 0);
+    spriteId = CreateSpriteUnchecked(&sSpriteTemplate_Star, 248, 55, 0);
     if (spriteId != MAX_SPRITES)
     {
         gSprites[spriteId].sStar_BaseX = 248 << 4;
@@ -1983,7 +1983,7 @@ static void GFScene_CreateStarSparkle(s16 x, s16 y, u16 random)
     y += yMod;
     if (x > 0 && x < DISPLAY_WIDTH)
     {
-        spriteId = CreateSprite(&sSpriteTemplate_SparklesSmall, x, y, 1);
+        spriteId = CreateSpriteUnchecked(&sSpriteTemplate_SparklesSmall, x, y, 1);
         if (spriteId != MAX_SPRITES)
         {
             gSprites[spriteId].sSmSparkleStar_BaseX = x << sStarSparklesXprecision;
@@ -2200,7 +2200,7 @@ static void Scene3_Task_GengarAttack(u8 taskId)
 static void Scene3_CreateGengarSwipeSprites(void)
 {
     u8 spriteId = CreateSprite(&sSpriteTemplate_GengarSwipe, 132, 78, 6); // Implicitly ANIM_SWIPE_TOP
-    spriteId = CreateSprite(&sSpriteTemplate_GengarSwipe, 132, 118, 6);
+    spriteId = CreateSpriteUnchecked(&sSpriteTemplate_GengarSwipe, 132, 118, 6);
     if (spriteId != MAX_SPRITES)
     {
         gSprites[spriteId].oam.shape = SPRITE_SHAPE(32x16);
@@ -2588,7 +2588,7 @@ static void CreateNidorinoRecoilDustSprites(s16 x, s16 y, s16 seed)
     // Only one of each pair will be visible at a time.
     for (i = 0; i < 2; i++)
     {
-        spriteId = CreateSprite(&sSpriteTemplate_NidorinoRecoilDust, x - 22, y + 24, 10);
+        spriteId = CreateSpriteUnchecked(&sSpriteTemplate_NidorinoRecoilDust, x - 22, y + 24, 10);
         if (spriteId != MAX_SPRITES)
         {
             gSprites[spriteId].sSpeedX = (seed % 13) + 8;

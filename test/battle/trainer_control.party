@@ -57,10 +57,12 @@ Dynamax Level: 5
 Wobbuffet
 Level: 5
 Ability: Shadow Tag
+Dynamax Level: 10
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
 Wynaut
 Level: 5
+Tera Type: Water
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
 === 4 ===
@@ -293,3 +295,15 @@ Mew
 Oddish
 
 Aron
+
+=== 15 ===
+Name: TestTera
+Class: Black Belt
+Pic: Red
+Gender: Male
+Music: Male
+AI: Smart Tera
+Battle Type: Singles
+Party Size: 1
+
+Wynaut

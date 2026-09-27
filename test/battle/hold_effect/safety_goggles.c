@@ -46,31 +46,29 @@ SINGLE_BATTLE_TEST("Safety Goggles blocks damage from Sandstorm")
 
 SINGLE_BATTLE_TEST("Safety Goggles blocks Effect Spore's effect")
 {
-    KNOWN_FAILING;
     PASSES_RANDOMLY(100, 100, RNG_EFFECT_SPORE);
     GIVEN {
-        WITH_CONFIG(B_POWDER_GRASS, GEN_5); // Setting it to Gen 6 causes it to pass
+        WITH_CONFIG(B_POWDER_GRASS, GEN_5);
         ASSUME(MoveMakesContact(MOVE_SCRATCH));
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_SAFETY_GOGGLES); }
         OPPONENT(SPECIES_BRELOOM) { Ability(ABILITY_EFFECT_SPORE); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
-        TURN {}
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         NONE_OF {
             ABILITY_POPUP(opponent, ABILITY_EFFECT_SPORE);
 
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, player);
-            MESSAGE("Wobbuffet was poisoned by the opposing Breloom's Effect Spore!");
+            MESSAGE("Wobbuffet was poisoned!");
             STATUS_ICON(player, poison: TRUE);
 
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PRZ, player);
-            MESSAGE("The opposing Breloom's Effect Spore paralyzed Wobbuffet, so it may be unable to move!");
+            MESSAGE("Wobbuffet is paralyzed, so it may be unable to move!");
             STATUS_ICON(player, paralysis: TRUE);
 
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, player);
-            MESSAGE("The opposing Breloom's Effect Spore made Wobbuffet sleep!");
+            MESSAGE("Wobbuffet fell asleep!");
             STATUS_ICON(player, sleep: TRUE);
         }
     }
