@@ -335,7 +335,9 @@ add_to_results:
                     fwrite(soc, 1, eol - soc, stdout);
                     fprint_buffer(stdout, runner->output_buffer, runner->output_buffer_size);
                     if (runner->output_truncated)
+                    {
                         fprintf(stdout, "[Further test output was truncated.]\n");
+                    }
 
                     strcpy(runner->test_name, "WAITING...");
                     runner->output_buffer_size = 0;
