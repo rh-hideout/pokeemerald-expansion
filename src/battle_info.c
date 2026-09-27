@@ -2196,7 +2196,6 @@ static void Detail_BuildActiveEffectsForBattler(void)
     TryAddActiveSideStatus(INFO_G_MAX_STEELSURGE, IsHazardOnSide(side, HAZARDS_STEELSURGE), 0, 0, side);
     TryAddActiveDamageNonTypes(side);
 
-    TryAddActiveStatus(GetStatusEffectFromNonVolatile(battler), PERMANENT_STATUS, side);
     TryAddActiveStatus(GetInfoFromSemiInvulnerableState(vol->semiInvulnerable), vol->semiInvulnerable, side);
     TryAddActiveStatus(INFO_INFATUATION, vol->infatuation, side);
     TryAddActiveStatus(INFO_NIGHTMARE, vol->nightmare, side);
@@ -2472,21 +2471,6 @@ static enum BattleInfoLabels GetStatusEffectFromTerrain(void)
     case B_TERRAIN_PSYCHIC:  return INFO_PSYCHIC_TERRAIN;
     case B_TERRAIN_NONE:     return INFO_NONE;
     case B_TERRAIN_COUNT:    return INFO_NONE;
-    }
-
-    return INFO_NONE;
-}
-
-static enum BattleInfoLabels GetStatusEffectFromNonVolatile(enum BattlerId battler)
-{
-    switch (gBattleMons[battler].status1)
-    {
-    case STATUS1_TOXIC_POISON: return INFO_BADLY_POISONED;
-    case STATUS1_POISON:       return INFO_POISONED;
-    case STATUS1_PARALYSIS:    return INFO_PARALYZED;
-    case STATUS1_BURN:         return INFO_BURNED;
-    case STATUS1_FREEZE:       return INFO_BURNED;
-    case STATUS1_FROSTBITE:    return INFO_FROSTBITE;
     }
 
     return INFO_NONE;
