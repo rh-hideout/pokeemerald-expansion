@@ -350,6 +350,12 @@ Debug_Follower_NPC_Event_Script::
 Debug_Follower_NPC_Test_Message:
 	.string "This is a Follower NPC test.$"
 
+Debug_EventScript_Mining_Minigame::
+	fadescreen FADE_TO_BLACK
+	special StartMining
+	release
+	end
+
 Debug_EventScript_Steven_Multi::
 	call MossdeepCity_SpaceCenter_2F_EventScript_ChoosePartyForMultiBattle
 	release
