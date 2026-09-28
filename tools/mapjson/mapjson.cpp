@@ -790,9 +790,13 @@ string generate_layout_headers_text(Json layouts_data) {
             else if (version == "firered")
                 layout_version = "frlg";
         }
-        if ((version == "emerald" && layout_version != "emerald")
-         || (version == "firered" && layout_version != "frlg"))
+        // Pentara: "pentara_frlg" layouts use FRLG-format tilesets but are built into every ROM.
+        bool pentara_layout = layout_version == "pentara_frlg";
+        if (!pentara_layout && ((version == "emerald" && layout_version != "emerald")
+         || (version == "firered" && layout_version != "frlg")))
             continue;
+        if (pentara_layout)
+            layout_version = "frlg";
         string layoutName = json_to_string(layout, "name");
         string border_label = layoutName + "_Border";
         string blockdata_label = layoutName + "_Blockdata";
@@ -848,7 +852,7 @@ string generate_layouts_table_text(Json layouts_data) {
             else if (version == "firered")
                 layout_version = "frlg";
         }
-        if ((version == "emerald" && layout_version != "emerald") || (version == "firered" && layout_version != "frlg")) {
+        if (layout_version != "pentara_frlg" && ((version == "emerald" && layout_version != "emerald") || (version == "firered" && layout_version != "frlg"))) {
             text << "\t.4byte NULL\n";
         } else {
             string layout_name = json_to_string(layout, "name", true);

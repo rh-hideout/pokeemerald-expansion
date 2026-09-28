@@ -349,6 +349,32 @@
       "y": 12,
       "respawn_map": "MAP_SIX_ISLAND_POKEMON_CENTER_1F",
       "respawn_npc": "LOCALID_SIX_ISLAND_NURSE"
+    },
+    {
+      "id": "HEAL_LOCATION_SPROUT_HOLLOW",
+      "map": "MAP_SPROUT_HOLLOW",
+      "x": 6,
+      "y": 8,
+      "respawn_map": "MAP_SPROUT_HOLLOW_PLAYERS_HOUSE_1F",
+      "respawn_npc": "LOCALID_SPROUT_MOM",
+      "respawn_x": 7,
+      "respawn_y": 5
+    },
+    {
+      "id": "HEAL_LOCATION_BRAMBLETON",
+      "map": "MAP_BRAMBLETON",
+      "x": 10,
+      "y": 20,
+      "respawn_map": "MAP_BRAMBLETON_POKEMON_CENTER_1F",
+      "respawn_npc": "LOCALID_BRAMBLETON_NURSE"
+    },
+    {
+      "id": "HEAL_LOCATION_COBBLECROSS",
+      "map": "MAP_COBBLECROSS",
+      "x": 8,
+      "y": 26,
+      "respawn_map": "MAP_COBBLECROSS_POKEMON_CENTER_1F",
+      "respawn_npc": "LOCALID_COBBLECROSS_NURSE"
     }
   ]
 }

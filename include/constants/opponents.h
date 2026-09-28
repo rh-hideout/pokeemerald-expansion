@@ -876,4 +876,6 @@
 #endif
 #define TRAINER_PARTNER(partner)           (MAX_TRAINERS_COUNT + partner)
 
+#include "constants/pentara_trainers.h"
+
 #endif  // GUARD_CONSTANTS_OPPONENTS_H

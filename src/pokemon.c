@@ -4402,6 +4402,18 @@ bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct Evoluti
     return TRUE;
 }
 
+#include "data/pentara_species_regions.h"
+
+// Pentara: a species from a later region can't be obtained by evolution until the
+// player has travelled there (e.g. Magneton -> Magnezone waits for Coralis).
+static bool32 PentaraCanEvolveInto(enum Species species)
+{
+    u32 region = VarGet(VAR_P_REGION);
+    if (species >= NUM_SPECIES || region == 0)
+        return TRUE;
+    return sPentaraSpeciesRegion[species] <= region;
+}
+
 enum Species GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode mode, enum Item evolutionItem, struct Pokemon *tradePartner, bool32 *canStopEvo, enum EvoState evoState)
 {
     int i;
@@ -4430,7 +4442,7 @@ enum Species GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode m
         for (i = 0; evolutions[i].method != EVOLUTIONS_END; i++)
         {
             bool32 conditionsMet = FALSE;
-            if (SanitizeSpeciesId(evolutions[i].targetSpecies) == SPECIES_NONE)
+            if (SanitizeSpeciesId(evolutions[i].targetSpecies) == SPECIES_NONE || !PentaraCanEvolveInto(evolutions[i].targetSpecies))
                 continue;
 
             // Check main primary evolution method
@@ -4460,7 +4472,7 @@ enum Species GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode m
         for (i = 0; evolutions[i].method != EVOLUTIONS_END; i++)
         {
             bool32 conditionsMet = FALSE;
-            if (SanitizeSpeciesId(evolutions[i].targetSpecies) == SPECIES_NONE)
+            if (SanitizeSpeciesId(evolutions[i].targetSpecies) == SPECIES_NONE || !PentaraCanEvolveInto(evolutions[i].targetSpecies))
                 continue;
 
             switch (evolutions[i].method)
@@ -4485,7 +4497,7 @@ enum Species GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode m
         for (i = 0; evolutions[i].method != EVOLUTIONS_END; i++)
         {
             bool32 conditionsMet = FALSE;
-            if (SanitizeSpeciesId(evolutions[i].targetSpecies) == SPECIES_NONE)
+            if (SanitizeSpeciesId(evolutions[i].targetSpecies) == SPECIES_NONE || !PentaraCanEvolveInto(evolutions[i].targetSpecies))
                 continue;
 
             switch (evolutions[i].method)
@@ -4513,7 +4525,7 @@ enum Species GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode m
         for (i = 0; evolutions[i].method != EVOLUTIONS_END; i++)
         {
             bool32 conditionsMet = FALSE;
-            if (SanitizeSpeciesId(evolutions[i].targetSpecies) == SPECIES_NONE)
+            if (SanitizeSpeciesId(evolutions[i].targetSpecies) == SPECIES_NONE || !PentaraCanEvolveInto(evolutions[i].targetSpecies))
                 continue;
 
             switch (evolutions[i].method)
@@ -4538,7 +4550,7 @@ enum Species GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode m
         for (i = 0; evolutions[i].method != EVOLUTIONS_END; i++)
         {
             bool32 conditionsMet = FALSE;
-            if (SanitizeSpeciesId(evolutions[i].targetSpecies) == SPECIES_NONE)
+            if (SanitizeSpeciesId(evolutions[i].targetSpecies) == SPECIES_NONE || !PentaraCanEvolveInto(evolutions[i].targetSpecies))
                 continue;
 
             switch (evolutions[i].method)
@@ -4562,7 +4574,7 @@ enum Species GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode m
     case EVO_MODE_SCRIPT_TRIGGER:
         for (i = 0; evolutions[i].method != EVOLUTIONS_END; i++)
         {
-            if (SanitizeSpeciesId(evolutions[i].targetSpecies) == SPECIES_NONE)
+            if (SanitizeSpeciesId(evolutions[i].targetSpecies) == SPECIES_NONE || !PentaraCanEvolveInto(evolutions[i].targetSpecies))
                 continue;
             if (evolutions[i].method != EVO_SCRIPT_TRIGGER)
                 continue;
@@ -4605,7 +4617,7 @@ bool8 IsMonPastEvolutionLevel(struct Pokemon *mon)
 
     for (i = 0; evolutions[i].method != EVOLUTIONS_END; i++)
     {
-        if (SanitizeSpeciesId(evolutions[i].targetSpecies) == SPECIES_NONE)
+        if (SanitizeSpeciesId(evolutions[i].targetSpecies) == SPECIES_NONE || !PentaraCanEvolveInto(evolutions[i].targetSpecies))
             continue;
 
         switch (evolutions[i].method)

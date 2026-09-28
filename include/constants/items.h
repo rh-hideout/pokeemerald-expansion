@@ -1140,4 +1140,10 @@ enum EffectItem
     EFFECT_ITEM_USE_POKE_FLUTE,
 };
 
+#include "constants/pentara_tm_compat.h"
+
+// Pentara key items (repurposed FRLG slots)
+#define ITEM_FLIGHT_WHISTLE ITEM_POKE_FLUTE
+#define ITEM_SURF_BOARD     ITEM_FAME_CHECKER
+
 #endif  // GUARD_CONSTANTS_ITEMS_H

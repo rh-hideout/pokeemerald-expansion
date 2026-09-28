@@ -4863,7 +4863,7 @@
       "secondary_tileset": "gTileset_GenericBuilding1",
       "border_filepath": "data/layouts/PalletTown_PlayersHouse_1F_Frlg/border.bin",
       "blockdata_filepath": "data/layouts/PalletTown_PlayersHouse_1F_Frlg/map.bin",
-      "layout_version": "frlg"
+      "layout_version": "pentara_frlg"
     },
     {
       "id": "LAYOUT_PALLET_TOWN_PLAYERS_HOUSE_2F_FRLG",
@@ -4876,7 +4876,7 @@
       "secondary_tileset": "gTileset_GenericBuilding1",
       "border_filepath": "data/layouts/PalletTown_PlayersHouse_2F_Frlg/border.bin",
       "blockdata_filepath": "data/layouts/PalletTown_PlayersHouse_2F_Frlg/map.bin",
-      "layout_version": "frlg"
+      "layout_version": "pentara_frlg"
     },
     {
       "id": "LAYOUT_PALLET_TOWN_RIVALS_HOUSE",
@@ -4889,7 +4889,7 @@
       "secondary_tileset": "gTileset_GenericBuilding2",
       "border_filepath": "data/layouts/PalletTown_RivalsHouse_Frlg/border.bin",
       "blockdata_filepath": "data/layouts/PalletTown_RivalsHouse_Frlg/map.bin",
-      "layout_version": "frlg"
+      "layout_version": "pentara_frlg"
     },
     {
       "id": "LAYOUT_PALLET_TOWN_PROFESSOR_OAKS_LAB",
@@ -4902,7 +4902,7 @@
       "secondary_tileset": "gTileset_Lab_Frlg",
       "border_filepath": "data/layouts/PalletTown_ProfessorOaksLab_Frlg/border.bin",
       "blockdata_filepath": "data/layouts/PalletTown_ProfessorOaksLab_Frlg/map.bin",
-      "layout_version": "frlg"
+      "layout_version": "pentara_frlg"
     },
     {
       "id": "LAYOUT_HOUSE1_FRLG",
@@ -4941,7 +4941,7 @@
       "secondary_tileset": "gTileset_PokemonCenterFrlg",
       "border_filepath": "data/layouts/PokemonCenter_1F_Frlg/border.bin",
       "blockdata_filepath": "data/layouts/PokemonCenter_1F_Frlg/map.bin",
-      "layout_version": "frlg"
+      "layout_version": "pentara_frlg"
     },
     {
       "id": "LAYOUT_POKEMON_CENTER_2F_FRLG",
@@ -4967,7 +4967,7 @@
       "secondary_tileset": "gTileset_Mart",
       "border_filepath": "data/layouts/Mart_Frlg/border.bin",
       "blockdata_filepath": "data/layouts/Mart_Frlg/map.bin",
-      "layout_version": "frlg"
+      "layout_version": "pentara_frlg"
     },
     {
       "id": "LAYOUT_HOUSE3_FRLG",
@@ -5019,7 +5019,7 @@
       "secondary_tileset": "gTileset_CeladonGym",
       "border_filepath": "data/layouts/CeladonCity_Gym_Frlg/border.bin",
       "blockdata_filepath": "data/layouts/CeladonCity_Gym_Frlg/map.bin",
-      "layout_version": "frlg"
+      "layout_version": "pentara_frlg"
     },
     {
       "id": "LAYOUT_RS_POKEMON_CENTER_1F",
@@ -5123,7 +5123,7 @@
       "secondary_tileset": "gTileset_PewterGym",
       "border_filepath": "data/layouts/PewterCity_Gym_Frlg/border.bin",
       "blockdata_filepath": "data/layouts/PewterCity_Gym_Frlg/map.bin",
-      "layout_version": "frlg"
+      "layout_version": "pentara_frlg"
     },
     {
       "id": "LAYOUT_FOUR_ISLAND_LORELEIS_HOUSE",
@@ -6683,7 +6683,7 @@
       "secondary_tileset": "gTileset_Museum",
       "border_filepath": "data/layouts/PewterCity_Museum_1F_Frlg/border.bin",
       "blockdata_filepath": "data/layouts/PewterCity_Museum_1F_Frlg/map.bin",
-      "layout_version": "frlg"
+      "layout_version": "pentara_frlg"
     },
     {
       "id": "LAYOUT_PEWTER_CITY_MUSEUM_2F",
@@ -7931,7 +7931,7 @@
       "secondary_tileset": "gTileset_GenericBuilding2",
       "border_filepath": "data/layouts/ViridianCity_House_Frlg/border.bin",
       "blockdata_filepath": "data/layouts/ViridianCity_House_Frlg/map.bin",
-      "layout_version": "frlg"
+      "layout_version": "pentara_frlg"
     },
     {
       "id": "LAYOUT_FOUR_ISLAND_POKEMON_DAY_CARE",
@@ -9323,6 +9323,84 @@
       "border_filepath": "data/layouts/OneIsland_KindleRoad_EmberSpa_Frlg/border.bin",
       "blockdata_filepath": "data/layouts/OneIsland_KindleRoad_EmberSpa_Frlg/map.bin",
       "layout_version": "frlg"
+    },
+    {
+      "id": "LAYOUT_SPROUT_HOLLOW",
+      "name": "SproutHollow_Layout",
+      "width": 28,
+      "height": 22,
+      "primary_tileset": "gTileset_General_Frlg",
+      "secondary_tileset": "gTileset_PalletTown",
+      "border_filepath": "data/layouts/SproutHollow/border.bin",
+      "blockdata_filepath": "data/layouts/SproutHollow/map.bin",
+      "border_width": 2,
+      "border_height": 2,
+      "layout_version": "pentara_frlg"
+    },
+    {
+      "id": "LAYOUT_MEADOW_LANE",
+      "name": "MeadowLane_Layout",
+      "width": 28,
+      "height": 46,
+      "primary_tileset": "gTileset_General_Frlg",
+      "secondary_tileset": "gTileset_PalletTown",
+      "border_filepath": "data/layouts/MeadowLane/border.bin",
+      "blockdata_filepath": "data/layouts/MeadowLane/map.bin",
+      "border_width": 2,
+      "border_height": 2,
+      "layout_version": "pentara_frlg"
+    },
+    {
+      "id": "LAYOUT_BRAMBLETON",
+      "name": "Brambleton_Layout",
+      "width": 36,
+      "height": 30,
+      "primary_tileset": "gTileset_General_Frlg",
+      "secondary_tileset": "gTileset_ViridianCity",
+      "border_filepath": "data/layouts/Brambleton/border.bin",
+      "blockdata_filepath": "data/layouts/Brambleton/map.bin",
+      "border_width": 2,
+      "border_height": 2,
+      "layout_version": "pentara_frlg"
+    },
+    {
+      "id": "LAYOUT_WHISPERWOOD",
+      "name": "Whisperwood_Layout",
+      "width": 44,
+      "height": 32,
+      "primary_tileset": "gTileset_General_Frlg",
+      "secondary_tileset": "gTileset_PalletTown",
+      "border_filepath": "data/layouts/Whisperwood/border.bin",
+      "blockdata_filepath": "data/layouts/Whisperwood/map.bin",
+      "border_width": 2,
+      "border_height": 2,
+      "layout_version": "pentara_frlg"
+    },
+    {
+      "id": "LAYOUT_OLD_MILL_ROAD",
+      "name": "OldMillRoad_Layout",
+      "width": 40,
+      "height": 20,
+      "primary_tileset": "gTileset_General_Frlg",
+      "secondary_tileset": "gTileset_PewterCity",
+      "border_filepath": "data/layouts/OldMillRoad/border.bin",
+      "blockdata_filepath": "data/layouts/OldMillRoad/map.bin",
+      "border_width": 2,
+      "border_height": 2,
+      "layout_version": "pentara_frlg"
+    },
+    {
+      "id": "LAYOUT_COBBLECROSS",
+      "name": "Cobblecross_Layout",
+      "width": 40,
+      "height": 32,
+      "primary_tileset": "gTileset_General_Frlg",
+      "secondary_tileset": "gTileset_PewterCity",
+      "border_filepath": "data/layouts/Cobblecross/border.bin",
+      "blockdata_filepath": "data/layouts/Cobblecross/map.bin",
+      "border_width": 2,
+      "border_height": 2,
+      "layout_version": "pentara_frlg"
     }
   ]
 }

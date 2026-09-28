@@ -693,49 +693,49 @@
     },
     {
       "id": "MAPSEC_PALLET_TOWN",
-      "name": "PALLET TOWN",
-      "x": 4,
-      "y": 11,
+      "name": "SPROUT HOLLOW",
+      "x": 3,
+      "y": 12,
       "width": 1,
       "height": 1
     },
     {
       "id": "MAPSEC_VIRIDIAN_CITY",
-      "name": "VIRIDIAN CITY",
-      "x": 4,
+      "name": "MEADOW LANE",
+      "x": 3,
+      "y": 10,
+      "width": 1,
+      "height": 2
+    },
+    {
+      "id": "MAPSEC_PEWTER_CITY",
+      "name": "BRAMBLETON",
+      "x": 3,
       "y": 8,
       "width": 1,
       "height": 1
     },
     {
-      "id": "MAPSEC_PEWTER_CITY",
-      "name": "PEWTER CITY",
-      "x": 4,
-      "y": 4,
-      "width": 1,
-      "height": 1
-    },
-    {
       "id": "MAPSEC_CERULEAN_CITY",
-      "name": "CERULEAN CITY",
-      "x": 14,
-      "y": 3,
+      "name": "WHISPERWOOD",
+      "x": 2,
+      "y": 8,
       "width": 1,
       "height": 1
     },
     {
       "id": "MAPSEC_LAVENDER_TOWN",
-      "name": "LAVENDER TOWN",
-      "x": 18,
-      "y": 6,
+      "name": "OLD MILL ROAD",
+      "x": 1,
+      "y": 8,
       "width": 1,
       "height": 1
     },
     {
       "id": "MAPSEC_VERMILION_CITY",
-      "name": "VERMILION CITY",
-      "x": 14,
-      "y": 9,
+      "name": "COBBLECROSS",
+      "x": 0,
+      "y": 8,
       "width": 1,
       "height": 1
     },
@@ -1072,7 +1072,7 @@
     },
     {
       "id": "MAPSEC_POKEMON_MANSION",
-      "name": "POKéMON MANSION",
+      "name": "POK\u00e9MON MANSION",
       "x": 4,
       "y": 14,
       "width": 1,
@@ -1088,7 +1088,7 @@
     },
     {
       "id": "MAPSEC_POKEMON_LEAGUE",
-      "name": "POKéMON LEAGUE",
+      "name": "POK\u00e9MON LEAGUE",
       "x": 2,
       "y": 3,
       "width": 1,
@@ -1112,7 +1112,7 @@
     },
     {
       "id": "MAPSEC_POKEMON_TOWER",
-      "name": "POKéMON TOWER",
+      "name": "POK\u00e9MON TOWER",
       "x": 18,
       "y": 6,
       "width": 1,

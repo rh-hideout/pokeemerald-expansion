@@ -1,0 +1,90 @@
+{
+  "id": "MAP_OLD_MILL_ROAD",
+  "name": "OldMillRoad",
+  "layout": "LAYOUT_OLD_MILL_ROAD",
+  "music": "MUS_RG_ROUTE3",
+  "region": "REGION_HOENN",
+  "region_map_section": "MAPSEC_OLD_MILL_ROAD",
+  "requires_flash": false,
+  "weather": "WEATHER_SUNNY",
+  "map_type": "MAP_TYPE_ROUTE",
+  "allow_cycling": true,
+  "allow_escaping": false,
+  "allow_running": true,
+  "show_map_name": true,
+  "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
+  "connections": [
+    {
+      "map": "MAP_WHISPERWOOD",
+      "offset": -16,
+      "direction": "right"
+    },
+    {
+      "map": "MAP_COBBLECROSS",
+      "offset": -4,
+      "direction": "left"
+    }
+  ],
+  "object_events": [
+    {
+      "graphics_id": "OBJ_EVENT_GFX_SPECIES(MAREEP)",
+      "x": 31,
+      "y": 14,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_WANDER_AROUND",
+      "movement_range_x": 2,
+      "movement_range_y": 1,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "OldMillRoad_EventScript_Mareep",
+      "flag": "0"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_SPECIES(MAREEP)",
+      "x": 34,
+      "y": 15,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_WANDER_AROUND",
+      "movement_range_x": 2,
+      "movement_range_y": 1,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "OldMillRoad_EventScript_Mareep",
+      "flag": "0"
+    },
+    {
+      "local_id": "LOCALID_OMR_JUNO",
+      "graphics_id": "OBJ_EVENT_GFX_PICNICKER",
+      "x": 16,
+      "y": 11,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "OldMillRoad_EventScript_Juno",
+      "flag": "FLAG_P_HIDE_OMR_JUNO"
+    }
+  ],
+  "warp_events": [
+    {
+      "x": 9,
+      "y": 6,
+      "elevation": 0,
+      "dest_map": "MAP_OLD_MILL_ROAD_MILL",
+      "dest_warp_id": "0"
+    }
+  ],
+  "coord_events": [],
+  "bg_events": [
+    {
+      "type": "sign",
+      "x": 36,
+      "y": 7,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "OldMillRoad_EventScript_Sign"
+    }
+  ]
+}

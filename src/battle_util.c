@@ -10803,6 +10803,9 @@ bool32 IsBattlerInvalidForSpreadMove(enum BattlerId battlerAtk, enum BattlerId b
 
 bool32 IsAllowedToUseBag(void)
 {
+    // Pentara: no items in trainer battles (neither side heals from the Bag).
+    if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
+        return FALSE;
     switch (VarGet(B_VAR_NO_BAG_USE))
     {
     case NO_BAG_RESTRICTION:

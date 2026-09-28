@@ -74,7 +74,9 @@
     "gMapGroup_IndoorFiveIslandRoute_Frlg",
     "gMapGroup_IndoorTwoIslandRoute_Frlg",
     "gMapGroup_IndoorSixIslandRoute_Frlg",
-    "gMapGroup_IndoorSevenIslandRoute_Frlg"
+    "gMapGroup_IndoorSevenIslandRoute_Frlg",
+    "gMapGroup_ALDERMOOR",
+    "gMapGroup_ALDERMOOR_Indoor"
   ],
   "gMapGroup_TownsAndRoutes": [
     "PetalburgCity",
@@ -1160,5 +1162,31 @@
   ],
   "gMapGroup_IndoorSevenIslandRoute_Frlg": [
     "SevenIsland_SevaultCanyon_House_Frlg"
+  ],
+  "gMapGroup_ALDERMOOR": [
+    "SproutHollow",
+    "MeadowLane",
+    "Brambleton",
+    "Whisperwood",
+    "OldMillRoad",
+    "Cobblecross"
+  ],
+  "gMapGroup_ALDERMOOR_Indoor": [
+    "SproutHollow_PlayersHouse_1F",
+    "SproutHollow_PlayersHouse_2F",
+    "SproutHollow_KaisHouse",
+    "SproutHollow_Lab",
+    "Brambleton_PokemonCenter_1F",
+    "Brambleton_Mart",
+    "Brambleton_Gym",
+    "Brambleton_House",
+    "Brambleton_BeekeepersHouse",
+    "OldMillRoad_Mill",
+    "Cobblecross_PokemonCenter_1F",
+    "Cobblecross_Mart",
+    "Cobblecross_Gym",
+    "Cobblecross_Museum",
+    "Cobblecross_House1",
+    "Cobblecross_House2"
   ]
 }

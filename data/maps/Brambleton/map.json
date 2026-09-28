@@ -1,0 +1,158 @@
+{
+  "id": "MAP_BRAMBLETON",
+  "name": "Brambleton",
+  "layout": "LAYOUT_BRAMBLETON",
+  "music": "MUS_RG_PEWTER",
+  "region": "REGION_HOENN",
+  "region_map_section": "MAPSEC_BRAMBLETON",
+  "requires_flash": false,
+  "weather": "WEATHER_SUNNY",
+  "map_type": "MAP_TYPE_TOWN",
+  "allow_cycling": true,
+  "allow_escaping": false,
+  "allow_running": true,
+  "show_map_name": true,
+  "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
+  "connections": [
+    {
+      "map": "MAP_MEADOW_LANE",
+      "offset": 4,
+      "direction": "down"
+    },
+    {
+      "map": "MAP_WHISPERWOOD",
+      "offset": 0,
+      "direction": "left"
+    }
+  ],
+  "object_events": [
+    {
+      "graphics_id": "OBJ_EVENT_GFX_MAN_3",
+      "x": 2,
+      "y": 11,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "Brambleton_EventScript_Ranger",
+      "flag": "0"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_BUG_CATCHER",
+      "x": 14,
+      "y": 21,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_WANDER_AROUND",
+      "movement_range_x": 3,
+      "movement_range_y": 1,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "Brambleton_EventScript_BugCatcher",
+      "flag": "0"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_WOMAN_5",
+      "x": 30,
+      "y": 22,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_FACE_LEFT",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "Brambleton_EventScript_Woman",
+      "flag": "0"
+    },
+    {
+      "local_id": "LOCALID_BRAMBLETON_KAI",
+      "graphics_id": "OBJ_EVENT_GFX_WALLY",
+      "x": 19,
+      "y": 12,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_FACE_UP",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "Brambleton_EventScript_Kai",
+      "flag": "FLAG_P_HIDE_BRAMBLETON_KAI"
+    }
+  ],
+  "warp_events": [
+    {
+      "x": 10,
+      "y": 19,
+      "elevation": 0,
+      "dest_map": "MAP_BRAMBLETON_POKEMON_CENTER_1F",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 26,
+      "y": 19,
+      "elevation": 0,
+      "dest_map": "MAP_BRAMBLETON_MART",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 23,
+      "y": 9,
+      "elevation": 0,
+      "dest_map": "MAP_BRAMBLETON_GYM",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 6,
+      "y": 8,
+      "elevation": 0,
+      "dest_map": "MAP_BRAMBLETON_HOUSE",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 29,
+      "y": 14,
+      "elevation": 0,
+      "dest_map": "MAP_BRAMBLETON_BEEKEEPERS_HOUSE",
+      "dest_warp_id": "0"
+    }
+  ],
+  "coord_events": [
+    {
+      "type": "trigger",
+      "x": 3,
+      "y": 12,
+      "elevation": 3,
+      "var": "VAR_P_ALD_WEST_GATE",
+      "var_value": "0",
+      "script": "Brambleton_EventScript_WestGate"
+    },
+    {
+      "type": "trigger",
+      "x": 3,
+      "y": 13,
+      "elevation": 3,
+      "var": "VAR_P_ALD_WEST_GATE",
+      "var_value": "0",
+      "script": "Brambleton_EventScript_WestGate"
+    }
+  ],
+  "bg_events": [
+    {
+      "type": "sign",
+      "x": 16,
+      "y": 27,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "Brambleton_EventScript_TownSign"
+    },
+    {
+      "type": "sign",
+      "x": 26,
+      "y": 10,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "Brambleton_EventScript_GymSign"
+    }
+  ]
+}

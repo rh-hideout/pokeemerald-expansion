@@ -54,6 +54,7 @@
 #include "follower_npc.h"
 
 extern const u8 EventScript_ResetAllMapFlags[];
+extern const u8 Pentara_EventScript_NewGame[];
 extern const u8 EventScript_ResetAllMapFlagsFrlg[];
 
 static void ClearFrontierRecord(void);
@@ -100,9 +101,9 @@ static void InitPlayerTrainerId(void)
 // L=A isnt set here for some reason.
 static void SetDefaultOptions(void)
 {
-    gSaveBlock2Ptr->optionsTextSpeed = OPTIONS_TEXT_SPEED_MID;
+    gSaveBlock2Ptr->optionsTextSpeed = OPTIONS_TEXT_SPEED_FAST; // Pentara: brisk dialogue by default
     gSaveBlock2Ptr->optionsWindowFrameType = 0;
-    gSaveBlock2Ptr->optionsSound = OPTIONS_SOUND_MONO;
+    gSaveBlock2Ptr->optionsSound = OPTIONS_SOUND_STEREO;
     gSaveBlock2Ptr->optionsBattleStyle = OPTIONS_BATTLE_STYLE_SHIFT;
     gSaveBlock2Ptr->optionsBattleSceneOff = FALSE;
     gSaveBlock2Ptr->regionMapZoom = FALSE;
@@ -135,11 +136,33 @@ static void ClearFrontierRecord(void)
 
 static void WarpToTruck(void)
 {
-    if (IS_FRLG)
-        SetWarpDestination(MAP_GROUP(MAP_PALLET_TOWN_PLAYERS_HOUSE_2F), MAP_NUM(MAP_PALLET_TOWN_PLAYERS_HOUSE_2F), WARP_ID_NONE, 6, 6);
-    else
-        SetWarpDestination(MAP_GROUP(MAP_INSIDE_OF_TRUCK), MAP_NUM(MAP_INSIDE_OF_TRUCK), WARP_ID_NONE, -1, -1);
+    // Pentara: every adventure begins in the player's bedroom in Sprout Hollow.
+    SetWarpDestination(MAP_GROUP(MAP_SPROUT_HOLLOW_PLAYERS_HOUSE_2F), MAP_NUM(MAP_SPROUT_HOLLOW_PLAYERS_HOUSE_2F), WARP_ID_NONE, 6, 6);
     WarpIntoMap();
+}
+
+// Pentara: starting state for a new adventure.
+static void PentaraNewGameInit(void)
+{
+    FlagSet(FLAG_SYS_B_DASH);
+    FlagSet(FLAG_P_EXP_SHARE);
+    VarSet(VAR_P_LEVEL_CAP, PENTARA_START_LEVEL_CAP);
+    VarSet(VAR_P_REGION, 1);
+    AddBagItem(ITEM_FLIGHT_WHISTLE, 1);
+    SetMoney(&gSaveBlock1Ptr->money, PENTARA_START_MONEY);
+    RunScriptImmediately(Pentara_EventScript_NewGame);
+#ifdef PENTARA_TEST_MAP
+    // Test builds start directly on a chosen map with a ready party.
+    {
+        CreateMon(&gParties[B_TRAINER_PLAYER][0], PENTARA_TEST_SPECIES, PENTARA_TEST_LEVEL, Random32(), OTID_STRUCT_PLAYER_ID);
+        CalculatePlayerPartyCount();
+        FlagSet(FLAG_SYS_POKEMON_GET);
+        FlagSet(FLAG_SYS_POKEDEX_GET);
+        VarSet(VAR_P_LEVEL_CAP, PENTARA_TEST_CAP);
+        SetWarpDestination(MAP_GROUP(PENTARA_TEST_MAP), MAP_NUM(PENTARA_TEST_MAP), WARP_ID_NONE, PENTARA_TEST_X, PENTARA_TEST_Y);
+        WarpIntoMap();
+    }
+#endif
 }
 
 void Sav2_ClearSetDefault(void)
@@ -216,6 +239,7 @@ void NewGameInitData(void)
         RunScriptImmediately(EventScript_ResetAllMapFlagsFrlg);
     else
         RunScriptImmediately(EventScript_ResetAllMapFlags);
+    PentaraNewGameInit();
 #if IS_FRLG
         StringCopy(gSaveBlock1Ptr->rivalName, rivalName);
 #endif

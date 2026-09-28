@@ -1,4 +1,5 @@
 #include "global.h"
+#include "item.h"
 #include "battle_setup.h"
 #include "bike.h"
 #include "coord_event_weather.h"
@@ -57,6 +58,8 @@ static const u8 *GetInteractionScript(struct MapPosition *, u8, enum Direction);
 static const u8 *GetInteractedObjectEventScript(struct MapPosition *, u8, enum Direction);
 static const u8 *GetInteractedBackgroundEventScript(struct MapPosition *, u8, enum Direction);
 static const u8 *GetInteractedMetatileScript(struct MapPosition *, u8, enum Direction);
+extern const u8 Pentara_EventScript_SurfBoard[];
+
 static const u8 *GetInteractedWaterScript(struct MapPosition *, u8, enum Direction);
 static bool32 TrySetupDiveDownScript(void);
 static bool32 TrySetupDiveEmergeScript(void);
@@ -641,6 +644,10 @@ static const u8 *GetInteractedWaterScript(struct MapPosition *unused1, u8 metati
 {
     if (MetatileBehavior_IsFastWater(metatileBehavior) == TRUE && !TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING))
         return EventScript_CurrentTooFast;
+    // Pentara: the Surf Board key item replaces HM Surf (no move or badge needed).
+    if (CheckBagHasItem(ITEM_SURF_BOARD, 1) && !TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING)
+     && IsPlayerFacingSurfableFishableWater() == TRUE && CheckFollowerNPCFlag(FOLLOWER_NPC_FLAG_CAN_SURF))
+        return Pentara_EventScript_SurfBoard;
     if (IsFieldMoveUnlocked(FIELD_MOVE_SURF) && PartyHasMonWithSurf() == TRUE && IsPlayerFacingSurfableFishableWater() == TRUE
      && CheckFollowerNPCFlag(FOLLOWER_NPC_FLAG_CAN_SURF)
      )

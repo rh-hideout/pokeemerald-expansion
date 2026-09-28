@@ -97,99 +97,90 @@ Level: 21
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
 === TRAINER_GRUNT_AQUA_HIDEOUT_1 ===
-Name: GRUNT
-Class: Team Aqua
-Pic: Aqua Grunt M
+Name: KAI
+Class: Rival
+Pic: Wally
 Gender: Male
-Music: Aqua
-Double Battle: No
-AI: Check Bad Move
+Music: Male
+AI: Basic Trainer
 
-Poochyena
-Level: 32
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Charmander
+Level: 5
+IVs: 10 HP / 10 Atk / 10 Def / 10 SpA / 10 SpD / 10 Spe
 
 === TRAINER_GRUNT_AQUA_HIDEOUT_2 ===
-Name: GRUNT
-Class: Team Aqua
-Pic: Aqua Grunt M
+Name: KAI
+Class: Rival
+Pic: Wally
 Gender: Male
-Music: Aqua
-Double Battle: No
-AI: Check Bad Move
+Music: Male
+AI: Basic Trainer
 
-Zubat
-Level: 31
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
-
-Carvanha
-Level: 31
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Squirtle
+Level: 5
+IVs: 10 HP / 10 Atk / 10 Def / 10 SpA / 10 SpD / 10 Spe
 
 === TRAINER_GRUNT_AQUA_HIDEOUT_3 ===
-Name: GRUNT
-Class: Team Aqua
-Pic: Aqua Grunt M
+Name: KAI
+Class: Rival
+Pic: Wally
 Gender: Male
-Music: Aqua
-Double Battle: No
-AI: Check Bad Move
+Music: Male
+AI: Basic Trainer
 
-Zubat
-Level: 32
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Bulbasaur
+Level: 5
+IVs: 10 HP / 10 Atk / 10 Def / 10 SpA / 10 SpD / 10 Spe
 
 === TRAINER_GRUNT_AQUA_HIDEOUT_4 ===
-Name: GRUNT
-Class: Team Aqua
-Pic: Aqua Grunt M
+Name: KAI
+Class: Rival
+Pic: Wally
 Gender: Male
-Music: Aqua
-Double Battle: No
-AI: Check Bad Move
+Music: Male
+AI: Basic Trainer
 
-Carvanha
-Level: 32
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Cyndaquil
+Level: 5
+IVs: 10 HP / 10 Atk / 10 Def / 10 SpA / 10 SpD / 10 Spe
 
 === TRAINER_GRUNT_SEAFLOOR_CAVERN_1 ===
-Name: GRUNT
-Class: Team Aqua
-Pic: Aqua Grunt M
+Name: KAI
+Class: Rival
+Pic: Wally
 Gender: Male
-Music: Aqua
-Double Battle: No
-AI: Check Bad Move
+Music: Male
+AI: Basic Trainer
 
-Poochyena
-Level: 36
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Totodile
+Level: 5
+IVs: 10 HP / 10 Atk / 10 Def / 10 SpA / 10 SpD / 10 Spe
 
 === TRAINER_GRUNT_SEAFLOOR_CAVERN_2 ===
-Name: GRUNT
-Class: Team Aqua
-Pic: Aqua Grunt M
+Name: KAI
+Class: Rival
+Pic: Wally
 Gender: Male
-Music: Aqua
-Double Battle: No
-AI: Check Bad Move
+Music: Male
+AI: Basic Trainer
 
-Carvanha
-Level: 36
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Chikorita
+Level: 5
+IVs: 10 HP / 10 Atk / 10 Def / 10 SpA / 10 SpD / 10 Spe
 
 === TRAINER_GRUNT_SEAFLOOR_CAVERN_3 ===
 Name: GRUNT
-Class: Team Aqua
-Pic: Aqua Grunt M
+Class: Team Magma
+Pic: Magma Grunt M
 Gender: Male
-Music: Aqua
-Double Battle: No
-AI: Check Bad Move
+Music: Magma
+AI: Basic Trainer
+
+Rattata
+Level: 4
 
 Zubat
-Level: 36
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Level: 5
 
 === TRAINER_GABRIELLE_1 ===
 Name: GABRIELLE
@@ -225,82 +216,97 @@ Level: 26
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
 === TRAINER_GRUNT_PETALBURG_WOODS ===
-Name: GRUNT
-Class: Team Aqua
-Pic: Aqua Grunt M
-Gender: Male
-Music: Aqua
-Double Battle: No
-AI: Check Bad Move
+Name: NETTLE
+Class: Leader
+Pic: Parasol Lady
+Gender: Female
+Music: Female
+AI: Basic Trainer / Check Bad Move / Try To Faint
+Starting Status: Sticky Web Player
 
-Poochyena
-Level: 9
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Spinarak
+Level: 6
+IVs: 20 HP / 20 Atk / 20 Def / 20 SpA / 20 SpD / 20 Spe
+
+Ledyba
+Level: 7
+IVs: 20 HP / 20 Atk / 20 Def / 20 SpA / 20 SpD / 20 Spe
+
+Beedrill @ Oran Berry
+Level: 8
+IVs: 25 HP / 25 Atk / 25 Def / 25 SpA / 25 SpD / 25 Spe
 
 === TRAINER_MARCEL ===
-Name: MARCEL
-Class: Cooltrainer
-Pic: Cooltrainer M
-Gender: Male
-Music: Cool
-Items: Hyper Potion
-Double Battle: No
-AI: Basic Trainer
+Name: VEX
+Class: Magma Admin
+Pic: Magma Admin
+Gender: Female
+Music: Magma
+AI: Basic Trainer / Check Bad Move
 
-Manectric
-Level: 29
-IVs: 12 HP / 12 Atk / 12 Def / 12 SpA / 12 SpD / 12 Spe
+Koffing
+Level: 9
+IVs: 20 HP / 20 Atk / 20 Def / 20 SpA / 20 SpD / 20 Spe
 
-Shiftry
-Level: 29
-IVs: 12 HP / 12 Atk / 12 Def / 12 SpA / 12 SpD / 12 Spe
+Zubat
+Level: 9
+IVs: 20 HP / 20 Atk / 20 Def / 20 SpA / 20 SpD / 20 Spe
+
+Ekans @ Oran Berry
+Level: 10
+IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
 
 === TRAINER_ALBERTO ===
-Name: ALBERTO
-Class: Bird Keeper
-Pic: Bird Keeper
-Gender: Male
-Music: Cool
-Double Battle: No
-AI: Check Bad Move
+Name: JUNO
+Class: Pkmn Ranger
+Pic: Pokemon Ranger F
+Gender: Female
+Music: Female
+AI: Basic Trainer / Check Bad Move / Smart Switching
 
-Pelipper
-Level: 30
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Natu
+Level: 9
 
-Xatu
-Level: 30
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Bellsprout
+Level: 9
+
+Pichu @ Oran Berry
+Level: 10
 
 === TRAINER_ED ===
-Name: ED
-Class: Collector
-Pic: Collector
+Name: DORIAN
+Class: Rich Boy
+Pic: Rich Boy
 Gender: Male
-Music: Suspicious
-Double Battle: No
-AI: Check Bad Move
+Music: Rich
+AI: Basic Trainer
 
-Zangoose
-Level: 30
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Growlithe
+Level: 10
 
-Seviper
-Level: 30
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Magnemite @ Oran Berry
+Level: 10
 
 === TRAINER_GRUNT_SEAFLOOR_CAVERN_4 ===
-Name: GRUNT
-Class: Team Aqua
-Pic: Aqua Grunt F
+Name: GARNET
+Class: Leader
+Pic: Battle Girl
 Gender: Female
-Music: Aqua
-Double Battle: No
-AI: Check Bad Move
+Music: Female
+AI: Basic Trainer / Check Bad Move / Try To Faint
+Starting Status: Weather Sandstorm Temporary
 
-Carvanha
-Level: 36
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Geodude
+Level: 9
+IVs: 22 HP / 22 Atk / 22 Def / 22 SpA / 22 SpD / 22 Spe
+
+Sudowoodo
+Level: 10
+IVs: 22 HP / 22 Atk / 22 Def / 22 SpA / 22 SpD / 22 Spe
+
+Onix @ Oran Berry
+Level: 10
+IVs: 26 HP / 26 Atk / 26 Def / 26 SpA / 26 SpD / 26 Spe
 
 === TRAINER_DECLAN ===
 Name: DECLAN

@@ -4033,7 +4033,7 @@ static u32 GetTrainerMoneyToGive(u16 trainerId)
             moneyReward = 4 * lastMonLevel * gBattleStruct->moneyMultiplier * trainerMoney;
     }
 
-    return moneyReward;
+    return moneyReward * PENTARA_PRIZE_MULTIPLIER;
 }
 
 static void Cmd_getmoneyreward(void)
@@ -4075,9 +4075,8 @@ static void Cmd_getmoneyreward(void)
             }
             money = sWhiteOutBadgeMoney[count] * sPartyLevel;
         }
-        if (!IsEnoughMoney(&gSaveBlock1Ptr->money, money))
-            money = GetMoney(&gSaveBlock1Ptr->money);
-        RemoveMoney(&gSaveBlock1Ptr->money, money);
+        // Pentara: losing a battle never costs money.
+        money = 0;
     }
 
     PREPARE_WORD_NUMBER_BUFFER(gBattleTextBuff1, 5, money);
@@ -10315,7 +10314,8 @@ void BS_JumpIfNoWhiteOut(void)
 {
     NATIVE_ARGS(const u8 *jumpInstr);
 
-    if (FlagGet(B_FLAG_NO_WHITEOUT))
+    // Pentara: trainer battles never white out (the player gets a rematch instead).
+    if (FlagGet(B_FLAG_NO_WHITEOUT) || (gBattleTypeFlags & BATTLE_TYPE_TRAINER))
         gBattlescriptCurrInstr = cmd->jumpInstr;
     else
         gBattlescriptCurrInstr = cmd->nextInstr;

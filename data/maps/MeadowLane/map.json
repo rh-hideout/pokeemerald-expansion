@@ -1,0 +1,115 @@
+{
+  "id": "MAP_MEADOW_LANE",
+  "name": "MeadowLane",
+  "layout": "LAYOUT_MEADOW_LANE",
+  "music": "MUS_RG_ROUTE1",
+  "region": "REGION_HOENN",
+  "region_map_section": "MAPSEC_MEADOW_LANE",
+  "requires_flash": false,
+  "weather": "WEATHER_SUNNY",
+  "map_type": "MAP_TYPE_ROUTE",
+  "allow_cycling": true,
+  "allow_escaping": false,
+  "allow_running": true,
+  "show_map_name": true,
+  "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
+  "connections": [
+    {
+      "map": "MAP_SPROUT_HOLLOW",
+      "offset": 0,
+      "direction": "down"
+    },
+    {
+      "map": "MAP_BRAMBLETON",
+      "offset": -4,
+      "direction": "up"
+    }
+  ],
+  "object_events": [
+    {
+      "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
+      "x": 4,
+      "y": 5,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "ITEM_POTION",
+      "script": "Common_EventScript_FindItem",
+      "flag": "FLAG_P_ITEM_R1_POTION"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
+      "x": 24,
+      "y": 17,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "ITEM_POKE_BALL",
+      "script": "Common_EventScript_FindItem",
+      "flag": "FLAG_P_ITEM_R1_POKEBALLS"
+    },
+    {
+      "local_id": "LOCALID_R1_GRUNT",
+      "graphics_id": "OBJ_EVENT_GFX_MAGMA_MEMBER_M",
+      "x": 10,
+      "y": 25,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "MeadowLane_EventScript_Grunt",
+      "flag": "FLAG_P_HIDE_R1_GRUNT"
+    },
+    {
+      "local_id": "LOCALID_R1_PIDGEY",
+      "graphics_id": "OBJ_EVENT_GFX_SPECIES(PIDGEY)",
+      "x": 11,
+      "y": 25,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_FACE_LEFT",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "MeadowLane_EventScript_Pidgey",
+      "flag": "FLAG_P_HIDE_R1_GRUNT"
+    }
+  ],
+  "warp_events": [],
+  "coord_events": [
+    {
+      "type": "trigger",
+      "x": 16,
+      "y": 24,
+      "elevation": 3,
+      "var": "VAR_P_ALD_STORY",
+      "var_value": "2",
+      "script": "MeadowLane_EventScript_GruntEvent"
+    },
+    {
+      "type": "trigger",
+      "x": 16,
+      "y": 25,
+      "elevation": 3,
+      "var": "VAR_P_ALD_STORY",
+      "var_value": "2",
+      "script": "MeadowLane_EventScript_GruntEvent"
+    }
+  ],
+  "bg_events": [
+    {
+      "type": "sign",
+      "x": 13,
+      "y": 42,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "MeadowLane_EventScript_Sign"
+    }
+  ]
+}

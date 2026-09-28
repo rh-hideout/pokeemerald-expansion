@@ -53,11 +53,11 @@ u32 GetSoftLevelCapExpValue(u32 level, u32 expValue)
     {
         if (B_LEVEL_CAP_EXP_UP)
         {
-            levelDifference = currentLevelCap - level;
-            if (levelDifference > ARRAY_COUNT(sExpScalingUp) - 1)
-                return expValue + (expValue / sExpScalingUp[ARRAY_COUNT(sExpScalingUp) - 1]);
-            else
-                return expValue + (expValue / sExpScalingUp[levelDifference]);
+            // Pentara catch-up: +PENTARA_CATCHUP_EXP_PERCENT% per level below the cap, so new
+            // catches reach the team's level quickly without grinding or Rare Candy.
+            levelDifference = min(currentLevelCap - level, PENTARA_CATCHUP_EXP_MAX_LEVELS);
+            (void)sExpScalingUp;
+            return expValue + (expValue * PENTARA_CATCHUP_EXP_PERCENT * levelDifference) / 100;
         }
         else
         {

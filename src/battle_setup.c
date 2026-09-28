@@ -6,6 +6,7 @@
 #include "battle_pike.h"
 #include "battle_pyramid.h"
 #include "battle_setup.h"
+#include "money.h"
 #include "battle_partner.h"
 #include "battle_tower.h"
 #include "battle_transition.h"
@@ -705,6 +706,9 @@ static void CB2_EndWildBattle(void)
     }
     else
     {
+        // Pentara: defeating wild Pokemon pays a little money too.
+        if (gBattleOutcome == B_OUTCOME_WON)
+            AddMoney(&gSaveBlock1Ptr->money, GetMonData(&gEnemyParty[0], MON_DATA_LEVEL) * PENTARA_WILD_PRIZE_PER_LEVEL);
         SetMainCallback2(CB2_ReturnToField);
         DowngradeBadPoison();
         gFieldCallback = FieldCB_ReturnToFieldNoScriptCheckMusic;
@@ -1570,6 +1574,7 @@ static void CB2_EndTrainerBattle(void)
     HandleBattleVariantEndParty();
 
     gIsDebugBattle = FALSE;
+    FlagClear(FLAG_P_BATTLE_LOST);
     if (FollowerNPCIsBattlePartner())
     {
         RestorePartyAfterFollowerNPCBattle();
@@ -1609,10 +1614,11 @@ static void CB2_EndTrainerBattle(void)
     }
     else if (IsPlayerDefeated(gBattleOutcome))
     {
-        if (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE || InTrainerHillChallenge() || FlagGet(B_FLAG_NO_WHITEOUT))
-            SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
-        else
-            SetMainCallback2(CB2_WhiteOut);
+        // Pentara: losing to a trainer never whites out. The party is healed and the
+        // event script checks FLAG_P_BATTLE_LOST to offer an immediate rematch.
+        HealPlayerParty();
+        FlagSet(FLAG_P_BATTLE_LOST);
+        SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
     }
     else
     {

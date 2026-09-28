@@ -2449,4 +2449,6 @@
 #endif // TESTING
 
 
+#include "constants/pentara_flags.h"
+
 #endif // GUARD_CONSTANTS_FLAGS_H

@@ -27,6 +27,8 @@
 #include "config/item.h"
 #include "config/map_preview_screen.h"
 #include "config/overworld.h"
+#include "config/pentara.h"
+#include "constants/pentara_mapsecs.h"
 #include "config/pokemon.h"
 #include "config/summary_screen.h"
 #include "config/wild_encounter.h"

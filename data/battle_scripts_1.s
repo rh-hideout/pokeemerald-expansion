@@ -2902,8 +2902,7 @@ BattleScript_LocalBattleLostPrintWhiteOut::
 	waitmessage B_WAIT_TIME_LONG
 .if B_WHITEOUT_MONEY >= GEN_4
 	jumpifbattletype BATTLE_TYPE_TRAINER, BattleScript_LocalBattleLostEnd
-	printstring STRINGID_PLAYERWHITEOUT2_WILD
-	waitmessage B_WAIT_TIME_LONG
+	@ Pentara: no money is lost, so skip the "dropped money" line.
 	printstring STRINGID_PLAYERWHITEOUT3
 	waitmessage B_WAIT_TIME_LONG
 	end

@@ -1139,6 +1139,7 @@ bool32 CanThrowBall(void)
     return (GetBallThrowableState() == BALL_THROW_ABLE);
 }
 
+static const u8 sText_PentaraNoItemsInBattle[] = _("Only Poké Balls can be used\nduring a battle!{PAUSE_UNTIL_PRESS}");
 static const u8 sText_CantThrowPokeBall_TwoMons[] = _("Cannot throw a ball!\nThere are two Pokémon out there!\p");
 static const u8 sText_CantThrowPokeBall_SemiInvulnerable[] = _("Cannot throw a ball!\nThere's no Pokémon in sight!\p");
 static const u8 sText_CantThrowPokeBall_Disabled[] = _("POKé BALLS cannot be used\nright now!\p");
@@ -1206,6 +1207,13 @@ bool32 CannotUseItemsInBattle(enum Item itemId, struct Pokemon *mon)
         battlerTarget = B_POSITION_PLAYER_RIGHT;
     else
         battlerTarget = MAX_POSITION_COUNT;
+
+    // Pentara: in battle only Poke Balls may be used; healing and battle items are banned.
+    if (GetItemPocket(itemId) != POCKET_POKE_BALLS)
+    {
+        StringExpandPlaceholders(gStringVar4, sText_PentaraNoItemsInBattle);
+        return TRUE;
+    }
 
     // Embargo Check
     if (battlerTarget < MAX_POSITION_COUNT && GetItemType(itemId) != ITEM_USE_BAG_MENU)
@@ -1558,10 +1566,13 @@ void ItemUseOutOfBattle_PokeFlute(u8 taskId)
     }
 }
 
+extern const u8 Pentara_EventScript_OpenGuide[];
+
 static void ItemUseOnFieldCB_TownMap(u8 taskId)
 {
+    // Pentara: the Town Map slot is the Pentara Guide.
     LockPlayerFieldControls();
-    ScriptContext_SetupScript(EventScript_RegionMap);
+    ScriptContext_SetupScript(Pentara_EventScript_OpenGuide);
     DestroyTask(taskId);
 }
 
@@ -1577,6 +1588,30 @@ void ItemUseOutOfBattle_TownMap(u8 taskId)
     else
     {
         gTasks[taskId].func = ItemUseOnFieldCB_TownMap;
+    }
+}
+
+extern const u8 Pentara_EventScript_FlightWhistle[];
+
+static void ItemUseOnFieldCB_FlightWhistle(u8 taskId)
+{
+    LockPlayerFieldControls();
+    ScriptContext_SetupScript(Pentara_EventScript_FlightWhistle);
+    DestroyTask(taskId);
+}
+
+void ItemUseOutOfBattle_FlightWhistle(u8 taskId)
+{
+    if (!gTasks[taskId].tUsingRegisteredKeyItem)
+    {
+        sItemUseOnFieldCB = ItemUseOnFieldCB_FlightWhistle;
+        gFieldCallback = FieldCB_UseItemOnField;
+        gBagMenu->newScreenCallback = CB2_ReturnToField;
+        Task_FadeAndCloseBagMenu(taskId);
+    }
+    else
+    {
+        gTasks[taskId].func = ItemUseOnFieldCB_FlightWhistle;
     }
 }
 
