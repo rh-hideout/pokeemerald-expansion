@@ -3060,6 +3060,10 @@ BattleScript_PrintFullBox::
 	printselectionstring STRINGID_BOXISFULL
 	endselectionscript
 
+BattleScript_MfNuzlockeCaptureBlocked::
+	printselectionstring STRINGID_MFNUZLOCKECAPTUREBLOCKED
+	endselectionscript
+
 BattleScript_ActionSwitch::
 	hpthresholds2 BS_ATTACKER
 	printstring STRINGID_RETURNMON

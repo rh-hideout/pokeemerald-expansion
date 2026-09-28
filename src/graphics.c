@@ -726,6 +726,9 @@ const u8 gHealthboxElementsGfxTable[][32] = INCBIN_U8("graphics/battle_interface
                                                   "graphics/battle_interface/healthbox_doubles_player_frameend_bar.4bpp",
                                                   "graphics/battle_interface/healthbox_doubles_opponent_frameend.4bpp",
                                                   "graphics/battle_interface/healthbox_doubles_opponent_frameend_bar.4bpp");
+
+// MF S35 — red "1" for a catchable first Nuzlocke encounter (ME nuzlocke_indicator).
+const u8 ALIGNED(4) gMfNuzlockeFirstEncounterIndicatorGfx[] = INCGFX_U8("graphics/battle_interface/nuzlocke_indicator.png", ".4bpp");
 const u32 gBattleInterfaceGfx_UnusedWindow3[] = INCGFX_U32("graphics/battle_interface/unused_window3.png", ".4bpp.smol");
 const u32 gBattleInterfaceGfx_UnusedWindow4[] = INCGFX_U32("graphics/battle_interface/unused_window4.png", ".4bpp.smol");
 

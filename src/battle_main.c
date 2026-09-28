@@ -38,6 +38,7 @@
 #include "main.h"
 #include "malloc.h"
 #include "m4a.h"
+#include "mf_nuzlocke.h"
 #include "palette.h"
 #include "party_menu.h"
 #include "pokeball.h"
@@ -3992,6 +3993,14 @@ static void HandleTurnActionSelectionState(void)
                         gBattleStruct->stateIdAfterSelScript[battler] = STATE_BEFORE_ACTION_CHOSEN;
                         return;
                     }
+                    else if (MfNuzlocke_IsAreaCaptureBlocked())
+                    {
+                        gSelectionBattleScripts[battler] = BattleScript_MfNuzlockeCaptureBlocked;
+                        gBattleCommunication[battler] = STATE_SELECTION_SCRIPT;
+                        gBattleStruct->battlerState[battler].selectionScriptFinished = FALSE;
+                        gBattleStruct->stateIdAfterSelScript[battler] = STATE_BEFORE_ACTION_CHOSEN;
+                        return;
+                    }
                     break;
                 case B_ACTION_SAFARI_POKEBLOCK:
                     if (!IS_FRLG)
@@ -5312,6 +5321,9 @@ static void HandleEndTurn_FinishBattle(void)
         RecordedBattle_SetPlaybackFinished();
         if (gTestRunnerEnabled)
             TestRunner_Battle_AfterLastTurn();
+
+        // S35 — first wild encounter in a mapsec consumes the area (ME parity).
+        MfNuzlocke_OnWildBattleEnd(gBattleTypeFlags);
 
         // Set Battle Controllers to BATTLE_CONTROLLER_NONE
         for (enum BattlerId i = 0; i < MAX_BATTLERS_COUNT; i++)

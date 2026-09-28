@@ -41,7 +41,7 @@ These exist to keep merging from `RHH/master` cheap. Violating them is the main 
 | 3     | Rules menu UI                        | S18–S26 | Complete    |
 | 4     | Gamemode wiring                      | S27–S32 | Complete    |
 | 5     | Features & item-friction wiring      | S33–S34, S69 | Complete |
-| 6     | Nuzlocke                             | S35–S39 | Not started |
+| 6     | Nuzlocke                             | S35–S39 | In progress |
 | 7     | Difficulty                           | S40–S45 | Not started |
 | 8     | Challenges                           | S46–S50 | Not started |
 | 9     | Randomizer                           | S51–S57 | Not started |
@@ -564,7 +564,7 @@ These exist to keep merging from `RHH/master` cheap. Violating them is the main 
 
 ### S35 — Per-area encounter locking
 
-- [ ] **Status:** Not started
+- [x] **Status:** Complete
 
 - **Goal:** Only the first wild encounter in each area is catchable.
 - **Depends on:** S13
@@ -575,6 +575,7 @@ These exist to keep merging from `RHH/master` cheap. Violating them is the main 
   - Surface which areas are used, ideally in the town map or the S26 viewer.
 - **Acceptance:** Second encounters in an already-used area cannot be caught; flags persist across save/load.
 - **Tests:** Unit tests on flag get/set/clear per mapsec; manual multi-route run.
+- **Decisions:** [`docs-mf/decisions/0036-product-nuzlocke-area-locking.md`](docs-mf/decisions/0036-product-nuzlocke-area-locking.md) — raw mapsec bits; consume on wild battle end; gifts/starter/legendary excluded; viewer + debug dump for used areas.
 
 ### S36 — Faint handling & deletion
 

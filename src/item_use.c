@@ -28,6 +28,7 @@
 #include "mail.h"
 #include "main.h"
 #include "menu.h"
+#include "mf_nuzlocke.h"
 #include "menu_helpers.h"
 #include "metatile_behavior.h"
 #include "oras_dowse.h"
@@ -1130,6 +1131,8 @@ static u32 GetBallThrowableState(void)
         return BALL_THROW_UNABLE_SEMI_INVULNERABLE;
     else if (FlagGet(WE_FLAG_NO_CATCHING) || !IsAllowedToUseBag())
         return BALL_THROW_UNABLE_DISABLED_FLAG;
+    else if (MfNuzlocke_IsAreaCaptureBlocked())
+        return BALL_THROW_UNABLE_NUZLOCKE_AREA;
 
     return BALL_THROW_ABLE;
 }
@@ -1142,6 +1145,7 @@ bool32 CanThrowBall(void)
 static const u8 sText_CantThrowPokeBall_TwoMons[] = _("Cannot throw a ball!\nThere are two Pokémon out there!\p");
 static const u8 sText_CantThrowPokeBall_SemiInvulnerable[] = _("Cannot throw a ball!\nThere's no Pokémon in sight!\p");
 static const u8 sText_CantThrowPokeBall_Disabled[] = _("POKé BALLS cannot be used\nright now!\p");
+static const u8 sText_CantThrowPokeBall_NuzlockeArea[] = _("You have already used your encounter\nfor this area!{PAUSE_UNTIL_PRESS}");
 
 static void ItemUseInBattle_ShowPartyMenu(u8 taskId)
 {
@@ -1254,6 +1258,10 @@ bool32 CannotUseItemsInBattle(enum Item itemId, struct Pokemon *mon)
             break;
         case BALL_THROW_UNABLE_DISABLED_FLAG:
             failStr = sText_CantThrowPokeBall_Disabled;
+            cannotUse = TRUE;
+            break;
+        case BALL_THROW_UNABLE_NUZLOCKE_AREA:
+            failStr = sText_CantThrowPokeBall_NuzlockeArea;
             cannotUse = TRUE;
             break;
         }

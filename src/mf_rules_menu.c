@@ -1,6 +1,7 @@
 #include "global.h"
 #include "mf_rules_menu.h"
 #include "mf_rules.h"
+#include "mf_nuzlocke.h"
 #include "bg.h"
 #include "gpu_regs.h"
 #include "international_string_util.h"
@@ -12,6 +13,7 @@
 #include "scanline_effect.h"
 #include "sound.h"
 #include "sprite.h"
+#include "string_util.h"
 #include "task.h"
 #include "text.h"
 #include "text_window.h"
@@ -270,6 +272,7 @@ static const u8 sDesc_Save[] = _("Save choices and continue…\nAll selections a
 static const u8 sDesc_SaveConfirm[] = _("All selections are permanent.\nA: Save    B: Cancel");
 static const u8 sDesc_ViewerExit[] = _("Return to the game.\nL/R change page; B also exits.");
 static const u8 sDesc_ViewerHelp[] = _("A/B: Exit  Up/Down: Scroll\nL/R: Change page");
+static const u8 sDesc_ViewerNuzlockeUsed[] = _("Areas used for Nuzlocke catches:\n{STR_VAR_1}");
 static const u8 sText_ExitViewer[] = _("EXIT");
 static const u8 sDesc_LockedCustom[] = _("Select GAMEMODE Custom to edit\nthis option.");
 static const u8 sDesc_LockedNuzlocke[] = _("Only usable with Nuzlocke!");
@@ -1300,7 +1303,16 @@ static void DrawDescription(void)
 
     if (sReadOnlyViewer)
     {
-        if (item->kind == MF_RULES_MENU_ITEM_EXIT)
+        // S35 — surface used encounter areas on the Nuzlocke page.
+        if (CurrentPage()->items == sNuzlockePageItems
+         && item->kind == MF_RULES_MENU_ITEM_VALUE
+         && item->ruleId == MF_RULE_VAL_NUZLOCKE_MODE)
+        {
+            ConvertIntToDecimalStringN(gStringVar1, MfNuzlockeCountUsedAreas(), STR_CONV_MODE_LEFT_ALIGN, 3);
+            StringExpandPlaceholders(gStringVar4, sDesc_ViewerNuzlockeUsed);
+            desc = gStringVar4;
+        }
+        else if (item->kind == MF_RULES_MENU_ITEM_EXIT)
             desc = sDesc_ViewerExit;
         else if (item->kind == MF_RULES_MENU_ITEM_NEXT)
             desc = sDesc_ViewerHelp;

@@ -34,6 +34,7 @@
 #include "constants/songs.h"
 #include "constants/items.h"
 #include "caps.h"
+#include "mf_nuzlocke.h"
 
 #define HEALTHBOX_BG_INDEX 2
 
@@ -1850,8 +1851,20 @@ void TryAddPokeballIconToHealthbox(u8 healthboxSpriteId, bool8 noStatus)
         return;
     if (GetBattlerSide(battler) == B_SIDE_OPPONENT && IsGhostBattleWithoutScope())
         return;
+
+    // Uncaught: ME red "1" when this is still the area's catchable encounter.
     if (!GetSetPokedexFlag(SpeciesToNationalPokedexNum(GetMonData(GetBattlerMon(battler), MON_DATA_SPECIES)), FLAG_GET_CAUGHT))
+    {
+        if (!MfNuzlocke_ShouldShowFirstEncounterIcon())
+            return;
+
+        healthBarSpriteId = gSprites[healthboxSpriteId].hMain_HealthBarSpriteId;
+        if (noStatus)
+            CpuCopy32(gMfNuzlockeFirstEncounterIndicatorGfx, (void *)(OBJ_VRAM0 + (gSprites[healthBarSpriteId].oam.tileNum + 8) * TILE_SIZE_4BPP), 32);
+        else
+            CpuFill32(0, (void *)(OBJ_VRAM0 + (gSprites[healthBarSpriteId].oam.tileNum + 8) * TILE_SIZE_4BPP), 32);
         return;
+    }
 
     healthBarSpriteId = gSprites[healthboxSpriteId].hMain_HealthBarSpriteId;
 

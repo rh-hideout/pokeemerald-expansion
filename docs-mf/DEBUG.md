@@ -14,8 +14,11 @@ Modern FireRed’s own submenu lives under overworld debug → **Modern FireRed�
 
 | Entry | What it does |
 | ----- | ------------ |
-| **Rules inspector…** | Paged view of every `ModernRules` field (Meta / Gamemode / Features / Randomizer / Nuzlocke / Difficulty / Challenges). **A** toggles bools or cycles multi-value fields; locked rules auto-enable the S15 session unlock override. **Dump (mGBA)** prints the full struct to the mGBA console (ME `PrintTXSaveData` spirit). |
+| **Rules inspector…** | Paged view of every `ModernRules` field (Meta / Gamemode / Features / Randomizer / Nuzlocke / Difficulty / Challenges). **A** toggles bools or cycles multi-value fields; locked rules auto-enable the S15 session unlock override. **Dump (mGBA)** prints the full struct to the mGBA console (ME `PrintTXSaveData` spirit). **Used areas…** lists mapsecs consumed by Nuzlocke (S35). |
 | **Rules menu…** | Opens the FR-styled rules menu (`CB2_InitMfRulesMenu`). Pages: Gamemode (S20), Features (S21); later pages stub until S22–S25. **←/→** cycle values; Classic/Modern bulk-set and grey dependent Gamemode options until Custom; Features options are always editable. **A** on **NEXT** advances; **EXIT** returns. Writes go through `MfRules_TrySet*` (auto-unlock when locked). |
+| **Rules viewer…** | Read-only mid-run view. On the Nuzlocke page, the NUZLOCKE row shows how many areas are already used. |
+| **Shiny roll test** | Instant SHINY CHANCE statistical check (S33). |
+| **Used areas…** | Dump Nuzlocke-used mapsec names to mGBA logs (S35). |
 | **Cancel** | Close |
 
 Under `make release` (`NDEBUG`) the inspector pages compile out — the MF submenu is Cancel-only, and the overworld debug menu itself is off via `DISABLED_ON_RELEASE`.
@@ -56,6 +59,15 @@ Do **not** try to validate vanilla vs boosted by eye in grass — sample noise a
 3. Fast path: debug **Give Pokémon** Haunter + **Give item** Linking Cord → Bag → use on Haunter → evolves to Gengar.
 4. Same for Scyther + Metal Coat → Scizor.
 5. Optional: buy from 4F instead of Give item to confirm shop prices / obtainability.
+
+## Checklist — Nuzlocke area lock (S35)
+
+1. New Game → set **NUZLOCKE** to **Normal** (or Hard) → SAVE. Finish Oak far enough to have a starter **and** the Pokédex (`FLAG_SYS_POKEDEX_GET`). Quickstart alone is not enough unless you also **Cheat start** or receive the dex.
+2. Confirm lock is live: **R+Start → Modern FireRed… → Used areas…** — mGBA log should show `lockActive=1` (and `nuzlocke=1`). If `lockActive=0`, check Rules inspector Nuzlocke + pokedex flag.
+3. On **Route 1**, trigger a wild battle — catch or flee. That consumes the area.
+4. Start a second wild battle on Route 1 → open Bag → choose a Poké Ball. Expect: “You have already used your encounter for this area!”
+5. Move to **Route 2** — first encounter there should still be catchable.
+6. Optional: **Rules viewer… → NUZLOCKE** shows used count. Save/load and confirm the Route 1 block still holds.
 
 Optional: Utilities → Cheat Start (or FRLG equivalent) if you need badges / party for a later story’s scenario.
 

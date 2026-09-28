@@ -115,6 +115,10 @@ See ADR 0031.
 
 Not a runtime rule. `I_USE_EVO_HELD_ITEMS_FROM_BAG` is `TRUE` so Metal Coat / Electirizer / etc. use `ItemUseOutOfBattle_EvolutionStone` like stones. Linking Cord was already bag-usable. Celadon Dept Store 4F stocks Linking Cord + the S08 trade-held set (ADR 0035). S47 evo limit will refuse through the shared evolution path when that story lands.
 
+### Worked example: Nuzlocke area lock (S35)
+
+`ModernRules.nuzlockeEncounterFlags` is one bit per `MAPSEC_COUNT` id (ADR 0012 / 0036). Normal/Hardcore only (`MfRules_IsNuzlocke()`), after starter + Pokédex (`FLAG_SYS_POKEMON_GET` + `FLAG_SYS_POKEDEX_GET` on FR; Emerald uses `FLAG_ADVENTURE_STARTED`), off after game clear. First qualifying wild battle end sets the current mapsec bit; later balls fail with “already used your encounter for this area” via `MfNuzlocke_IsAreaCaptureBlocked()` in `GetBallThrowableState` (and Safari selection). Gifts / fossils / starter / `BATTLE_TYPE_LEGENDARY` do not consume. Dupes / shiny bypasses are S37.
+
 ### Rules for gates
 
 1. Prefer an existing expansion primitive (`I_*`, `B_*`, `P_*`) as the capability baseline.

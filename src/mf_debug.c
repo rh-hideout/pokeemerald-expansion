@@ -1,6 +1,7 @@
 #include "global.h"
 #include "debug.h"
 #include "mf_debug.h"
+#include "mf_nuzlocke.h"
 #include "mf_rules.h"
 #include "mf_rules_menu.h"
 #include "mf_shiny.h"
@@ -319,6 +320,13 @@ static void MfDebug_Action_Dump(u8 taskId)
     MfRules_DebugDump();
 }
 
+static void MfDebug_Action_DumpUsedAreas(u8 taskId)
+{
+    (void)taskId;
+    PlaySE(SE_SELECT);
+    MfNuzlocke_DebugDumpUsedAreas();
+}
+
 // Instant statistical check — no wild encounters. Open mGBA Tools → View Logs.
 #define MF_DEBUG_SHINY_ROLLS 10000
 
@@ -384,6 +392,7 @@ static const struct DebugMenuOption sMfDebugInspectorOptions[] =
     { COMPOUND_STRING("Difficulty…"),  MfDebug_Action_OpenPage, (void *)(uintptr_t)MF_DEBUG_PAGE_DIFFICULTY },
     { COMPOUND_STRING("Challenges…"),  MfDebug_Action_OpenPage, (void *)(uintptr_t)MF_DEBUG_PAGE_CHALLENGES },
     { COMPOUND_STRING("Dump (mGBA)"),  MfDebug_Action_Dump },
+    { COMPOUND_STRING("Used areas…"), MfDebug_Action_DumpUsedAreas },
     { COMPOUND_STRING("Cancel"),       DebugAction_Cancel },
     { NULL }
 };
@@ -400,6 +409,7 @@ const struct DebugMenuOption gMfDebugMenuOptions[] =
     { COMPOUND_STRING("Rules menu…"), MfDebug_Action_OpenRulesMenu },
     { COMPOUND_STRING("Rules viewer…"), MfDebug_Action_OpenRulesViewer },
     { COMPOUND_STRING("Shiny roll test"), MfDebug_Action_ShinyRollTest },
+    { COMPOUND_STRING("Used areas…"), MfDebug_Action_DumpUsedAreas },
     { COMPOUND_STRING("Cancel"),           DebugAction_Cancel },
     { NULL }
 };

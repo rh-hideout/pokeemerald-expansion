@@ -44,6 +44,7 @@ extern const u8 BattleScript_PrintCantRunFromTrainer[];
 extern const u8 BattleScript_PrintFailedToRunString[];
 extern const u8 BattleScript_PrintCantEscapeFromBattle[];
 extern const u8 BattleScript_PrintFullBox[];
+extern const u8 BattleScript_MfNuzlockeCaptureBlocked[];
 extern const u8 BattleScript_ActionSwitch[];
 extern const u8 BattleScript_DoSwitchOut[];
 extern const u8 BattleScript_MoveSwitchOpenPartyScreen[];

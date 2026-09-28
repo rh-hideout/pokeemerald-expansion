@@ -1,5 +1,6 @@
 #include "global.h"
 #include "mf_rules.h"
+#include "mf_nuzlocke.h"
 #include "mf_random.h"
 #include "gba/isagbprint.h"
 
@@ -481,9 +482,10 @@ void MfRules_DebugDump(void)
         r->randomMoves, r->randomAbilities, r->randomEvolution, r->randomEvolutionMethods,
         r->randomTypeEffectiveness, r->randomItems, r->randomChaos);
 
-    DebugPrintfLevel(MGBA_LOG_DEBUG, "nuzlocke: on=%u hard=%u easy=%u species=%u shiny=%u nick=%u del=%u",
+    DebugPrintfLevel(MGBA_LOG_DEBUG, "nuzlocke: on=%u hard=%u easy=%u species=%u shiny=%u nick=%u del=%u usedAreas=%u",
         r->nuzlocke, r->nuzlockeHardcore, r->nuzlockeEasy, r->nuzlockeSpeciesClause,
-        r->nuzlockeShinyClause, r->nuzlockeNicknaming, r->nuzlockeDeletion);
+        r->nuzlockeShinyClause, r->nuzlockeNicknaming, r->nuzlockeDeletion,
+        MfNuzlockeCountUsedFrom(r->nuzlockeEncounterFlags));
 
     DebugPrintfLevel(MGBA_LOG_DEBUG, "diff: party=%u lvlCap=%u exp=%u noItemP=%u noItemT=%u noEv=%u",
         r->partyLimit, r->levelCap, r->expMultiplier, r->noItemPlayer, r->noItemTrainer, r->noEvs);
