@@ -496,7 +496,7 @@ static void ReverseVerticalDipDirection(struct Sprite *sprite)
 static void SlideMonToOriginalPos(struct Sprite *sprite)
 {
     u32 monSpriteId;
-    if (!gBattleAnimArgs[0])
+    if (gBattleAnimArgs[0] == ANIM_ATTACKER)
         monSpriteId = gBattlerSpriteIds[gBattleAnimAttacker];
     else
         monSpriteId = gBattlerSpriteIds[gBattleAnimTarget];
