@@ -962,8 +962,8 @@ static enum Species DetermineEggSpeciesAndParentSlots(struct DayCare *daycare, u
 
     for (u32 i = 0; i < ARRAY_COUNT(sGenderDivergentSpecies); i++)
     {
-        if (eggSpecies == sGenderDivergentSpecies[i][0] ||
-            (eggSpecies == sGenderDivergentSpecies[i][1] && GetConfig(NIDORAN_M_DITTO_BREED) >= GEN_5))
+        if (eggSpecies == sGenderDivergentSpecies[i][0]
+         || (eggSpecies == sGenderDivergentSpecies[i][1] && GetConfig(NIDORAN_M_DITTO_BREED) >= GEN_5))
         {
             bool32 randomGender = RandomPercentage(RNG_DAYCARE_MALE_CHILD, 50);
             eggSpecies = sGenderDivergentSpecies[i][randomGender];
