@@ -8,6 +8,7 @@
 #include "random.h"
 #include "task.h"
 #include "union_room_chat.h"
+#include "wild_encounter.h"
 #include "constants/characters.h"
 #include "test_runner.h"
 #include "test/test.h"
@@ -569,6 +570,7 @@ static void ResetGlobalVariables(void)
 {
     ReinitCallbacks();
     gBattleTypeFlags = 0;
+    gEncounterType = ENCOUNTER_TYPE_NONE;
 }
 
 static void FunctionTest_SetUp(void *data)
@@ -585,6 +587,7 @@ static void FunctionTest_Run(void *data)
     void (*function)(void) = data;
     do
     {
+        gEncounterType = ENCOUNTER_TYPE_NONE;
         if (gFunctionTestRunnerState->parameters)
             Test_MgbaPrintf(":N%s %d/%d", gTestRunnerState.test->name, gFunctionTestRunnerState->runParameter + 1, gFunctionTestRunnerState->parameters);
         gFunctionTestRunnerState->parameters = 0;

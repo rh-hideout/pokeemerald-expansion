@@ -242,7 +242,7 @@ u8 *CopyItemNameHandlePlural(enum Item itemId, u8 *dst, u32 quantity);
 bool32 IsBagPocketNonEmpty(enum Pocket pocketId);
 bool32 CheckBagHasItem(enum Item itemId, u16 count);
 bool32 HasAtLeastOneBerry(void);
-bool32 HasAtLeastOnePokeBall(void);
+bool32 HasNoPokeball(void);
 bool32 CheckBagHasSpace(enum Item itemId, u16 count);
 u32 GetFreeSpaceForItemInBag(enum Item itemId);
 bool32 AddBagItem(enum Item itemId, u16 count);

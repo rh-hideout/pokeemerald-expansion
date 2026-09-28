@@ -4,6 +4,7 @@
 #include "pokemon.h"
 #include "random.h"
 #include "roamer.h"
+#include "wild_encounter.h"
 
 // Despite having a variable to track it, the roamer is
 // hard-coded to only ever be in map group 0
@@ -100,11 +101,13 @@ void MoveAllRoamers(void)
 
 static void CreateInitialRoamerMon(u8 index, enum Species species, u8 level)
 {
+    assertf(ENCOUNTER_ORIGIN(gEncounterType) == UNDEFINED_MON_ORIGIN, "trying to generate a roamer while encounter origin is set\nDo not run unrelated commands between setting up a static wild battle and starting it.");
     ClearRoamerLocationHistory(index);
     u32 personality = GetMonPersonality(species,
         GetSynchronizedGender(ROAMER_ORIGIN, species),
         GetSynchronizedNature(ROAMER_ORIGIN, species),
         RANDOM_UNOWN_LETTER);
+    SET_ENCOUNTER_ORIGIN(gEncounterType, ROAMER_ORIGIN);
     CreateMonWithIVs(&gParties[B_TRAINER_OPPONENT_A][0], species, level, personality, OTID_STRUCT_PLAYER_ID, USE_RANDOM_IVS);
     GiveMonInitialMoveset(&gParties[B_TRAINER_OPPONENT_A][0]);
     ROAMER(index)->ivs = GetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_IVS);
