@@ -4,6 +4,8 @@
 #include "global.h"
 #include "constants/mass_outbreak.h"
 
+struct Pokemon;
+
 struct MassOutbreak
 {
     enum Species species;
@@ -23,7 +25,11 @@ void StartStaticMassOutbreak(enum MassOutbreakIndex outbreakIdx);
 enum Species GetStaticOutbreakSpecies(enum MassOutbreakIndex outbreakIdx);
 u8 *GetStaticOutbreakMapName(u8 *dest, enum MassOutbreakIndex outbreakIdx);
 void ZeroMassOutbreak(void);
+void ResetMassOutbreakProgress(void);
+void UpdateMassOutbreakProgress(void);
+u32 GetMassOutbreakClearedCount(void);
+u32 CalculateMassOutbreakShinyRolls(void);
+void SetMassOutbreakMonMoves(struct Pokemon *mon);
 struct MassOutbreak GetStaticOutbreak(enum MassOutbreakIndex outbreakIdx);
 
 #endif // GUARD_MASS_OUTBREAK_H
-
