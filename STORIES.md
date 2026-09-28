@@ -527,7 +527,7 @@ These exist to keep merging from `RHH/master` cheap. Violating them is the main 
 
 ### S34 — Wild item drops
 
-- [ ] **Status:** Not started
+- [x] **Status:** Complete
 
 - **Goal:** ME's `ITEM DROP` — defeated wild Pokémon can drop items.
 - **Depends on:** S13
@@ -537,6 +537,7 @@ These exist to keep merging from `RHH/master` cheap. Violating them is the main 
   - Keep the battle-end hook small and namespaced.
 - **Acceptance:** With the rule on, wild victories yield items at a sane rate; off, behavior is vanilla.
 - **Tests:** Unit test on the drop-selection helper; manual battles.
+- **Decisions:** [`docs-mf/decisions/0034-tech-runtime-wild-item-drops.md`](docs-mf/decisions/0034-tech-runtime-wild-item-drops.md) — remaining held item → bag with battle prompt; bag-full loses the item; no extra RNG (uses `SetWildMonHeldItem` rates).
 
 ### S69 — Solo trade evolutions (Linking Cord & bag evo items)
 

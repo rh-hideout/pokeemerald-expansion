@@ -904,6 +904,9 @@ const u8 *const gBattleStringsTable[STRINGID_COUNT] =
     [STRINGID_S]                                    = COMPOUND_STRING("s"),
     [STRINGID_LOSTSOMEOFITSHP]                      = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} lost some of its HP!"),
     [STRINGID_BELCHCANTUSE]                         = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} hasn't eaten any held Berries, so it can't possibly belch!\p"),
+    // MF S34 — Features ITEM DROP (ME wild hold-item drop messages)
+    [STRINGID_PKMNDROPPEDITEM]                      = COMPOUND_STRING("{B_OPPONENT_MON1_NAME} dropped its {B_LAST_ITEM}!{WAIT_SE}\p"),
+    [STRINGID_PKMNDROPPEDITEMBAGFULL]               = COMPOUND_STRING("{B_OPPONENT_MON1_NAME} dropped {B_LAST_ITEM}!{WAIT_SE}\pBut your Bag is full!\p"),
 };
 
 const u16 gTrainerUsedItemStringIds[] =

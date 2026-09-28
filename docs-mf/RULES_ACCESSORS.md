@@ -107,6 +107,10 @@ See ADR 0031.
 
 `SHINY_ODDS` stays the Gen III compile baseline (8 → 1/8192) for `MON_DATA_IS_SHINY` get/set XOR math. New rolls go through `MfGetShinyOddsThreshold()` (`SHINY_ODDS << shinyChance` → 8/16/32/64/128). `ComputePlayerShinyOdds` and the `OT_ID_PRESET` create path use that threshold; Shiny Charm / lure / chain / DexNav rerolls still stack on top. S37 can call `MfIsShinyOtIdPersonality` / `MfIsShinyValue`; after `CreateMon`, `MON_DATA_IS_SHINY` is authoritative (ADR 0033).
 
+### Worked example: ITEM DROP (S34)
+
+`MfRules_HasWildItemDrops()` gates a small battle-end native (`BS_TryGiveWildItemDrops`) hooked from `BattleScript_PayDayMoneyAndPickUpItems`. On a wild win, each foe’s remaining held item (already rolled by `SetWildMonHeldItem`) is `AddBagItem`’d with a drop/bag-full message. Consumed or stolen items are `ITEM_NONE` and do not drop. No extra RNG — drop rate equals the species held-item rates (ADR 0034).
+
 ### Rules for gates
 
 1. Prefer an existing expansion primitive (`I_*`, `B_*`, `P_*`) as the capability baseline.

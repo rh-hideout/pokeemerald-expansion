@@ -41,6 +41,14 @@ Prefer the **instant roll test** over grinding wild encounters.
 
 Do **not** try to validate vanilla vs boosted by eye in grass — sample noise at 1/8192 needs tens of thousands of encounters.
 
+## Checklist — ITEM DROP (S34)
+
+1. Quickstart. **R+Start → Modern FireRed… → Rules inspector… → Features → Drops** → **On** (unlock if needed).
+2. Optional: fill the bag almost full if testing the bag-full line.
+3. Battle wild Pokémon that commonly hold items (e.g. **Paras** / **Parasect** in Mt. Moon for Tiny/Big Mushroom — both common and rare slots are set). Defeat them (do not catch).
+4. On victory, expect “{species} dropped its {item}!” and the item in the Bag. With Drops **Off**, no drop message (vanilla).
+5. If the Bag cannot take the item: “dropped … But your Bag is full!” and the item is not added.
+
 Optional: Utilities → Cheat Start (or FRLG equivalent) if you need badges / party for a later story’s scenario.
 
 ## Checklist — save state just before Oak’s speech

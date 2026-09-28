@@ -2871,8 +2871,17 @@ BattleScript_LocalBattleWonReward::
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_PayDayMoneyAndPickUpItems::
 	givepaydaymoney
+BattleScript_TryMfWildItemDrops::
+	callnative BS_TryGiveWildItemDrops
 	pickup
 	end
+
+@ MF S34: wild ITEM DROP — native jumps here, then retries for doubles
+BattleScript_MfItemDropped::
+	playse SE_BALL_BOUNCE_1
+	printfromtable gMfItemDroppedStringIds
+	waitmessage B_WAIT_TIME_LONG
+	goto BattleScript_TryMfWildItemDrops
 
 BattleScript_RivalBattleLost::
 	jumpifhasnohp BS_ATTACKER, BattleScript_RivalBattleLostSkipMonRecall
