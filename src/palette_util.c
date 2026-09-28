@@ -506,3 +506,28 @@ static void UNUSED SetTilemapRect_Unused(void *dest, const u16 *src, u8 left, u8
         y = (y + 1) % 32;
     }
 }
+
+void ReplacePalIndexInTile(Tile4BPP *tile, u32 old, u32 new)
+{
+    u32 oldAsWord = 0x11111111u * old;
+    u32 newAsWord = 0x11111111u * new;
+
+    for (u32 i = 0; i < 8; i++)
+    {
+        u32 pixelRow = tile->data[i];
+        u32 x = pixelRow ^ oldAsWord;
+        x |= x >> 1;
+        x |= x >> 2;
+        x = ~x & 0x11111111u;
+
+        u32 mask = x | x << 1 | x << 2 | x << 3;
+
+        tile->data[i] = (pixelRow & ~mask) | (newAsWord & mask);
+    }
+}
+
+void ReplacePalIndexInTiles(Tile4BPP *tiles, u32 count, u32 old, u32 new)
+{
+    for (u32 i = 0; i < count; i++)
+        ReplacePalIndexInTile(&tiles[i], old, new);
+}
