@@ -74,9 +74,6 @@ TEST("(Daycare) Pokémon can breed with Ditto if they don't belong to the Ditto 
 TEST("(Daycare) Shellos' form is always based on the mother's form")
 {
     u32 offspring = 0;
-    ASSUME(P_FAMILY_MEOWTH == TRUE);
-    ASSUME(P_ALOLAN_FORMS == TRUE);
-    ASSUME(P_GALARIAN_FORMS == TRUE);
 
     ZeroPlayerPartyMons();
     PARAMETRIZE { offspring = SPECIES_SHELLOS_WEST; RUN_OVERWORLD_SCRIPT(givemon SPECIES_SHELLOS_EAST, 1, gender=MON_MALE; givemon SPECIES_SHELLOS_WEST, 1, gender=MON_FEMALE, item=ITEM_NONE;     ); }
@@ -126,9 +123,10 @@ TEST("(Daycare) Pokémon with regional forms give the correct offspring")
         PARAMETRIZE { offspring=SPECIES_MEOWTH_GALAR;  species1=SPECIES_MEOWTH;        item1=ITEM_NONE;      species2=SPECIES_MEOWTH_GALAR,  item2=ITEM_EVERSTONE; }
         PARAMETRIZE { offspring=SPECIES_MEOWTH;        species1=SPECIES_DIGLETT;       item1=ITEM_NONE;      species2=SPECIES_MEOWTH_GALAR,  item2=ITEM_NONE;      }
         PARAMETRIZE { offspring=SPECIES_MEOWTH_GALAR;  species1=SPECIES_DIGLETT;       item1=ITEM_NONE;      species2=SPECIES_MEOWTH_GALAR,  item2=ITEM_EVERSTONE; }
-        PARAMETRIZE { offspring=SPECIES_MEOWTH_GALAR;  species1=SPECIES_PERRSERKER;    item1=ITEM_EVERSTONE; species2=SPECIES_PERSIAN,       item2=ITEM_NONE;      }
+        PARAMETRIZE { offspring=SPECIES_MEOWTH;        species1=SPECIES_PERRSERKER;    item1=ITEM_EVERSTONE; species2=SPECIES_PERSIAN,       item2=ITEM_NONE;      }
         PARAMETRIZE { offspring=SPECIES_MEOWTH;        species1=SPECIES_PERRSERKER;    item1=ITEM_EVERSTONE; species2=SPECIES_PERSIAN,       item2=ITEM_EVERSTONE; }
         PARAMETRIZE { offspring=SPECIES_MEOWTH;        species1=SPECIES_PERSIAN_ALOLA; item1=ITEM_EVERSTONE; species2=SPECIES_PERSIAN,       item2=ITEM_EVERSTONE; }
+        PARAMETRIZE { offspring=SPECIES_MEOWTH_GALAR;  species1=SPECIES_MEOWTH;        item1=ITEM_EVERSTONE; species2=SPECIES_PERRSERKER,    item2=ITEM_EVERSTONE; }
     }
 
     if (region == REGION_HISUI) {
@@ -169,6 +167,72 @@ TEST("(Daycare) Pokémon with regional forms give the correct offspring")
     STORE_IN_DAYCARE_AND_GET_EGG();
 
     EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_SPECIES), offspring);
+}
+
+TEST("(Daycare) Female Pokemon from gender divergent species can make eggs of the male or female version")
+{
+    enum Species randomChild[2] = {SPECIES_ILLUMISE, SPECIES_VOLBEAT};
+    bool32 maleChild = FALSE;
+    enum Species dadSpecies = SPECIES_NONE;
+    ZeroPlayerPartyMons();
+
+    RUN_OVERWORLD_SCRIPT(givemon SPECIES_ILLUMISE, 1);
+
+    PARAMETRIZE { dadSpecies = SPECIES_VOLBEAT; maleChild = FALSE;}
+    PARAMETRIZE { dadSpecies = SPECIES_VOLBEAT; maleChild = TRUE;}
+    PARAMETRIZE { dadSpecies = SPECIES_DITTO; maleChild = FALSE;}
+    PARAMETRIZE { dadSpecies = SPECIES_DITTO; maleChild = TRUE;}
+    PARAMETRIZE { dadSpecies = SPECIES_BUTTERFREE; maleChild = FALSE;}
+    PARAMETRIZE { dadSpecies = SPECIES_BUTTERFREE; maleChild = TRUE;}
+
+
+    SET_RNG(RNG_DAYCARE_MALE_CHILD, maleChild);
+    VarSet(VAR_0x8000, dadSpecies);
+    RUN_OVERWORLD_SCRIPT(givemon VAR_0x8000, 1);
+
+    STORE_IN_DAYCARE_AND_GET_EGG();
+
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_SPECIES), randomChild[maleChild]);
+}
+
+TEST("(Daycare) Male Pokemon from gender divergent species can make eggs of the male or female version when breeding with Ditto (gen 5+)")
+{
+    enum Species randomChild[2] = {SPECIES_ILLUMISE, SPECIES_VOLBEAT};
+    bool32 maleChild = FALSE;
+    ZeroPlayerPartyMons();
+
+    SetConfig(CONFIG_NIDORAN_M_DITTO_BREED, GEN_5);
+    RUN_OVERWORLD_SCRIPT(givemon SPECIES_VOLBEAT, 1);
+    RUN_OVERWORLD_SCRIPT(givemon SPECIES_DITTO, 1);
+
+    PARAMETRIZE { maleChild = FALSE;}
+    PARAMETRIZE { maleChild = TRUE;}
+
+    SET_RNG(RNG_DAYCARE_MALE_CHILD, maleChild);
+
+    STORE_IN_DAYCARE_AND_GET_EGG();
+
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_SPECIES), randomChild[maleChild]);
+}
+
+
+TEST("(Daycare) Male Pokemon from gender divergent species can only make eggs of the male version (before gen 5)")
+{
+    bool32 maleChild = FALSE;
+    ZeroPlayerPartyMons();
+
+    SetConfig(CONFIG_NIDORAN_M_DITTO_BREED, GEN_4);
+    RUN_OVERWORLD_SCRIPT(givemon SPECIES_VOLBEAT, 1);
+    RUN_OVERWORLD_SCRIPT(givemon SPECIES_DITTO, 1);
+
+    PARAMETRIZE { maleChild = FALSE;}
+    PARAMETRIZE { maleChild = TRUE;}
+
+    SET_RNG(RNG_DAYCARE_MALE_CHILD, maleChild);
+
+    STORE_IN_DAYCARE_AND_GET_EGG();
+
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_SPECIES), SPECIES_VOLBEAT);
 }
 
 TEST("(Daycare) Pokémon can teach egg moves to their daycare partner (Gen 8)")

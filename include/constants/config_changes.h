@@ -265,6 +265,7 @@
     F(NATURE_INHERITANCE,        natureInheritance,       (u32, GEN_COUNT - 1)) \
     F(ABILITY_INHERITANCE,       abilityInheritance,      (u32, GEN_COUNT - 1)) \
     F(EGG_MOVE_TRANSFER,         eggMoveTransfer,         (u32, GEN_COUNT - 1)) \
+    F(NIDORAN_M_DITTO_BREED,     MaleNidoranDittoBreed,   (u32, GEN_COUNT - 1)) \
 
 #define AI_CONFIG_DEFINITIONS(F) \
     F(AI_REVERSE_BATTLER_LOGIC_ORDER_CHANCE,    reverseBattlerLogicChance,  (u32, 100)) \
