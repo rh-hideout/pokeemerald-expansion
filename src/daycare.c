@@ -925,8 +925,8 @@ static enum Species DetermineEggSpeciesAndParentSlots(struct DayCare *daycare, u
 {
     u32 i;
     enum Species species[DAYCARE_MON_COUNT];
-    enum Species eggSpecies;
-    bool32 hasEverstone;
+    bool32 hasMotherEverstone, hasFatherEverstone, motherIsForeign, fatherIsForeign;
+    enum Species motherEggSpecies, fatherEggSpecies, eggSpecies;
     enum Region currentRegion = GetCurrentRegion();
 
     for (i = 0; i < DAYCARE_MON_COUNT; i++)
@@ -944,10 +944,21 @@ static enum Species DetermineEggSpeciesAndParentSlots(struct DayCare *daycare, u
         }
     }
 
-    eggSpecies = GetEggSpecies(species[parentSlots[0]]);
-    hasEverstone = GetItemHoldEffect(GetBoxMonData(&daycare->mons[parentSlots[0]].mon, MON_DATA_HELD_ITEM)) == HOLD_EFFECT_PREVENT_EVOLVE;
-    if (!hasEverstone && IsSpeciesForeignRegionalForm(eggSpecies, currentRegion))
-        eggSpecies = GetRegionalFormByRegion(eggSpecies, currentRegion);
+    motherEggSpecies = GetEggSpecies(species[parentSlots[0]]);
+    fatherEggSpecies = GetEggSpecies(species[parentSlots[1]]);
+    hasMotherEverstone = GetItemHoldEffect(GetBoxMonData(&daycare->mons[parentSlots[0]].mon, MON_DATA_HELD_ITEM)) == HOLD_EFFECT_PREVENT_EVOLVE;
+    hasFatherEverstone = GetItemHoldEffect(GetBoxMonData(&daycare->mons[parentSlots[1]].mon, MON_DATA_HELD_ITEM)) == HOLD_EFFECT_PREVENT_EVOLVE;
+    motherIsForeign = IsSpeciesForeignRegionalForm(motherEggSpecies, currentRegion);
+    fatherIsForeign = IsSpeciesForeignRegionalForm(fatherEggSpecies, currentRegion);
+
+    if (hasMotherEverstone)
+        eggSpecies = motherEggSpecies;
+    else if (fatherIsForeign && hasFatherEverstone && GET_BASE_SPECIES_ID(motherEggSpecies) == GET_BASE_SPECIES_ID(fatherEggSpecies))
+        eggSpecies = fatherEggSpecies;
+    else if (motherIsForeign)
+        eggSpecies = GetRegionalFormByRegion(motherEggSpecies, currentRegion);
+    else
+        eggSpecies = motherEggSpecies;
 
     for (u32 i = 0; i < ARRAY_COUNT(sGenderDivergentSpecies); i++)
     {
