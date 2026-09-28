@@ -19,7 +19,6 @@ def merge_commits_if_no_conflict(commit, message):
         exit()
     commit_message = f"Merge commit automated by auto_migration.py: {message}"
     result = subprocess.run(["git", "commit", "-m", commit_message])
-    print(f"Merge succesful")
 
 def run_migration(commit, message):
     result = subprocess.run(["git", "show", "--pretty=format:%b", "-s", commit], capture_output=True, text=True)
@@ -34,7 +33,7 @@ def run_migration(commit, message):
     subprocess.run(["git", "commit", "--allow-empty", "-m", commit_message])
     print(f"Cleaning up remote data")
     commit_message = f"Merge commit automated by auto_migration.py: ignore remote data for {message}"
-    result = subprocess.run(["git", "merge", "-s", "ours", commit], text=True)
+    result = subprocess.run(["git", "merge", "-s", "ours", commit])
 
 check_repo_status()
 to_fetch = get_branch_to_fetch()
