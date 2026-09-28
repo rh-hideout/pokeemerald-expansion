@@ -40,7 +40,7 @@ These exist to keep merging from `RHH/master` cheap. Violating them is the main 
 | 2     | Rules engine core                    | S12–S17 | Complete    |
 | 3     | Rules menu UI                        | S18–S26 | Complete    |
 | 4     | Gamemode wiring                      | S27–S32 | Complete    |
-| 5     | Features & item-friction wiring      | S33–S34, S69 | In progress |
+| 5     | Features & item-friction wiring      | S33–S34, S69 | Complete |
 | 6     | Nuzlocke                             | S35–S39 | Not started |
 | 7     | Difficulty                           | S40–S45 | Not started |
 | 8     | Challenges                           | S46–S50 | Not started |
@@ -541,7 +541,7 @@ These exist to keep merging from `RHH/master` cheap. Violating them is the main 
 
 ### S69 — Solo trade evolutions (Linking Cord & bag evo items)
 
-- [ ] **Status:** Not started
+- [x] **Status:** Complete
 
 - **Goal:** Evolve trade-only and trade+held-item Pokémon without link trading (e.g. Haunter → Gengar, Scyther → Scizor).
 - **Depends on:** S10, S13
@@ -554,6 +554,7 @@ These exist to keep merging from `RHH/master` cheap. Violating them is the main 
   - Out of scope: Karrablast/Shelmet partner-species trades; Wonder Trade (still deferred).
 - **Acceptance:** Without trading, a player can evolve Haunter → Gengar via Linking Cord and Scyther → Scizor via Metal Coat from the bag; required items are obtainable in-game on a normal playthrough (not debug-only).
 - **Tests:** Manual checklist for each Kanto trade line under the enabled species set; config/unit lock that bag-use is enabled when the rule is on; spot-check that S47 evo limit still blocks.
+- **Decisions:** [`docs-mf/decisions/0035-product-solo-trade-evolutions.md`](docs-mf/decisions/0035-product-solo-trade-evolutions.md) — always-on bag use (no Gamemode toggle); Celadon 4F stocks Linking Cord + S08 trade-held set.
 
 ---
 

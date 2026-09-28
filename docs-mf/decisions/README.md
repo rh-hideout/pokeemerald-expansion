@@ -69,3 +69,4 @@ Append a row to the index below when you add a record.
 | 0032 | tech | Runtime ENCOUNTERS mode via FR modern wild tables | S32 | 2026-09-26 |
 | 0033 | tech | Runtime SHINY CHANCE tiers over SHINY_ODDS | S33 | 2026-09-27 |
 | 0034 | tech | Wild ITEM DROP via battle-end held-item grant | S34 | 2026-09-27 |
+| 0035 | product | Solo trade evolutions always-on (bag use + Celadon stock) | S69 | 2026-09-27 |

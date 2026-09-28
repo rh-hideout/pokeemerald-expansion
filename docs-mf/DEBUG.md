@@ -49,6 +49,14 @@ Do **not** try to validate vanilla vs boosted by eye in grass — sample noise a
 4. On victory, expect “{species} dropped its {item}!” and the item in the Bag. With Drops **Off**, no drop message (vanilla).
 5. If the Bag cannot take the item: “dropped … But your Bag is full!” and the item is not added.
 
+## Checklist — solo trade evolutions (S69)
+
+1. Quickstart. Cheat money if needed (debug Utilities / Give money).
+2. Warp to **Celadon Dept Store 4F** (or walk). Talk to the Wise Man Gifts clerk — confirm **Linking Cord**, **Metal Coat**, and other trade-held items are listed with the stones.
+3. Fast path: debug **Give Pokémon** Haunter + **Give item** Linking Cord → Bag → use on Haunter → evolves to Gengar.
+4. Same for Scyther + Metal Coat → Scizor.
+5. Optional: buy from 4F instead of Give item to confirm shop prices / obtainability.
+
 Optional: Utilities → Cheat Start (or FRLG equivalent) if you need badges / party for a later story’s scenario.
 
 ## Checklist — save state just before Oak’s speech

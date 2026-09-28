@@ -11,7 +11,7 @@
 #define I_BERRY_EV_JUMP                 GEN_LATEST  // In Gen4 only, EV-lowering Berries lower a stat's EVs to 100 if they are above 100.
 #define I_GRISEOUS_ORB_FORM_CHANGE      GEN_LATEST  // In Gen9+, the Griseous Orb no longer changes Giratina's form when held.
 #define I_GEM_BOOST_POWER               GEN_LATEST  // In Gen6+, the power multiplier of Gems is 1.3x instead of 1.5x.
-#define I_USE_EVO_HELD_ITEMS_FROM_BAG   FALSE       // If set to TRUE, items such as the Electirizer can be used from the bag to evolve a Pokémon like in PLA.
+#define I_USE_EVO_HELD_ITEMS_FROM_BAG   TRUE        // If set to TRUE, items such as the Electirizer can be used from the bag to evolve a Pokémon like in PLA. (MF S69: always-on; see docs-mf/decisions/0035-*)
 #define I_TYPE_BOOST_POWER              GEN_LATEST  // In Gen4+, type-enhancing held items increase the power of moves by 1.2x instead of 1.1x (1.05x in the case of Sea Incense).
 #define I_SELL_VALUE_FRACTION           GEN_LATEST  // In Gen9+, items sell for 1/4 of their value instead of 1/2.
 #define I_PRICE                         GEN_LATEST  // Some items have varied in value across generations. See src/data/items.h for values.

@@ -111,6 +111,10 @@ See ADR 0031.
 
 `MfRules_HasWildItemDrops()` gates a small battle-end native (`BS_TryGiveWildItemDrops`) hooked from `BattleScript_PayDayMoneyAndPickUpItems`. On a wild win, each foe’s remaining held item (already rolled by `SetWildMonHeldItem`) is `AddBagItem`’d with a drop/bag-full message. Consumed or stolen items are `ITEM_NONE` and do not drop. No extra RNG — drop rate equals the species held-item rates (ADR 0034).
 
+### Worked example: solo trade evolutions (S69)
+
+Not a runtime rule. `I_USE_EVO_HELD_ITEMS_FROM_BAG` is `TRUE` so Metal Coat / Electirizer / etc. use `ItemUseOutOfBattle_EvolutionStone` like stones. Linking Cord was already bag-usable. Celadon Dept Store 4F stocks Linking Cord + the S08 trade-held set (ADR 0035). S47 evo limit will refuse through the shared evolution path when that story lands.
+
 ### Rules for gates
 
 1. Prefer an existing expansion primitive (`I_*`, `B_*`, `P_*`) as the capability baseline.
