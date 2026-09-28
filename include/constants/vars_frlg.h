@@ -121,7 +121,10 @@
 #define VAR_MAP_SCENE_ROUTE24                                                  0x406B
 #define VAR_MAP_SCENE_PEWTER_CITY                                              0x406C
 #define VAR_0x406D                                                             0x406D
-#define VAR_MAP_SCENE_FUCHSIA_CITY_SAFARI_ZONE_ENTRANCE                        0x406E
+#if IS_FRLG
+#undef VAR_SAFARI_ZONE_STATE
+#define VAR_SAFARI_ZONE_STATE                                                  0x406E
+#endif
 #define VAR_CABLE_CLUB_STATE_FRLG                                              0x406F
 #define VAR_MAP_SCENE_PALLET_TOWN_SIGN_LADY                                    0x4070
 #define VAR_MAP_SCENE_CINNABAR_ISLAND                                          0x4071
