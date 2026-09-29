@@ -810,24 +810,32 @@ bool32 CanTriggerSpinEvolution()
     {
         u32 seconds = gPlayerSpinData.VBlanksSpinning / 60;
         u32 direction = gPlayerSpinData.spinDirection;
+        gSpecialVar_0x8000 = EVO_SPIN;
         if (seconds >= 10)
         {
-            gSpecialVar_0x8000 = SPIN_EITHER;
+            gSpecialVar_0x8001 = SPIN_EITHER;
         }
-
         else if (seconds >= 5 && seconds < 10)
         {
             if (direction == SPIN_DIRECTION_CLOCKWISE)
-                gSpecialVar_0x8000 = SPIN_CW_LONG;
+                gSpecialVar_0x8001 = SPIN_CW_LONG;
             else if (direction == SPIN_DIRECTION_COUNTER_CLOCKWISE)
-                gSpecialVar_0x8000 = SPIN_CCW_LONG;
+                gSpecialVar_0x8001 = SPIN_CCW_LONG;
+            else
+                gSpecialVar_0x8000 = EVO_NONE;
         }
         else if (seconds < 5)
         {
             if (direction == SPIN_DIRECTION_CLOCKWISE)
-                gSpecialVar_0x8000 = SPIN_CW_SHORT;
+                gSpecialVar_0x8001 = SPIN_CW_SHORT;
             else if (direction == SPIN_DIRECTION_COUNTER_CLOCKWISE)
-                gSpecialVar_0x8000 = SPIN_CCW_SHORT;
+                gSpecialVar_0x8001 = SPIN_CCW_SHORT;
+            else
+                gSpecialVar_0x8000 = EVO_NONE;
+        }
+        else
+        {
+            gSpecialVar_0x8000 = EVO_NONE;
         }
         gPlayerSpinData.triggerEvo = FALSE;
     }

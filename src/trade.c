@@ -2968,16 +2968,7 @@ static void CB2_InitInGameTrade(void)
     switch (gMain.state)
     {
     case 0:
-        //If ChooseBoxMon points to a pc mon, we store it into gPartiesCount[B_TRAINER_OPPONENT_A]
-        if (gSpecialVar_0x8004 == PC_MON_CHOSEN)
-        {
-            gSelectedTradeMonPositions[TRADE_PLAYER] = TRADEMON_FROM_PC;
-            RemoveSelectedPcMon(&gParties[B_TRAINER_OPPONENT_A][TRADEMON_FROM_PC]);
-        }
-        else
-        {
-            gSelectedTradeMonPositions[TRADE_PLAYER] = gSpecialVar_0x8004;
-        }
+        gSelectedTradeMonPositions[TRADE_PLAYER] = PARTY_SIZE;
         gSelectedTradeMonPositions[TRADE_PARTNER] = PARTY_SIZE;
         StringCopy(gLinkPlayers[0].name, gSaveBlock2Ptr->playerName);
         GetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_OT_NAME, otName);
@@ -3343,10 +3334,8 @@ static void BufferTradeSceneStrings(void)
         ingameTrade = &sIngameTrades[gSpecialVar_0x8005];
         StringCopy(gStringVar1, ingameTrade->otName);
         StringCopy_Nickname(gStringVar3, ingameTrade->nickname);
-        if (gSpecialVar_0x8004 == PC_MON_CHOSEN)
-            GetMonData(&gParties[B_TRAINER_OPPONENT_A][TRADEMON_FROM_PC], MON_DATA_NICKNAME, name);
-        else
-            GetMonData(&gParties[B_TRAINER_PLAYER][gSpecialVar_0x8004], MON_DATA_NICKNAME, name);
+        struct BoxPokemon *boxmon = GetSelectedBoxMonFromPcOrParty();
+        GetBoxMonData(boxmon, MON_DATA_NICKNAME, name);
         StringCopy_Nickname(gStringVar2, name);
     }
 }
@@ -3436,8 +3425,6 @@ enum {
 
 static bool8 DoTradeAnim_Cable(void)
 {
-    u32 evoTarget;
-
     switch (sTradeAnim->state)
     {
     case STATE_START:
@@ -3870,14 +3857,10 @@ static bool8 DoTradeAnim_Cable(void)
             sTradeAnim->state++;
         break;
     case STATE_TRY_EVOLUTION: // Only if in-game trade, link trades use CB2_TryLinkTradeEvolution
-        TradeMons(gSpecialVar_0x8005, 0);
+        TradeMons(gSpecialVar_0x8004, 0);
         gCB2_AfterEvolution = CB2_InGameTrade;
-        evoTarget = GetEvolutionTargetSpecies(&gParties[B_TRAINER_PLAYER][gSelectedTradeMonPositions[TRADE_PLAYER]], EVO_MODE_TRADE, ITEM_NONE, &gParties[B_TRAINER_OPPONENT_A][0], NULL, CHECK_EVO);
-        if (evoTarget != SPECIES_NONE)
-        {
-            GetEvolutionTargetSpecies(&gParties[B_TRAINER_PLAYER][gSelectedTradeMonPositions[TRADE_PLAYER]], EVO_MODE_TRADE, ITEM_NONE, &gParties[B_TRAINER_OPPONENT_A][0], NULL, DO_EVO);
-            TradeEvolutionScene(&gParties[B_TRAINER_PLAYER][gSelectedTradeMonPositions[TRADE_PLAYER]], evoTarget, sTradeAnim->monSpriteIds[TRADE_PARTNER], gSelectedTradeMonPositions[TRADE_PLAYER]);
-        }
+        struct EvolutionData evoData = InitTradeEvolutionData(&gParties[B_TRAINER_OPPONENT_A][0]);
+        TryEvolution(gSpecialVar_0x8004, &evoData, sTradeAnim->monSpriteIds[TRADE_PARTNER]);
         sTradeAnim->state++;
         break;
     case STATE_FADE_OUT_END:
@@ -3912,8 +3895,6 @@ static bool8 DoTradeAnim_Cable(void)
 
 static bool8 DoTradeAnim_Wireless(void)
 {
-    u32 evoTarget;
-
     switch (sTradeAnim->state)
     {
     case STATE_START:
@@ -4372,17 +4353,8 @@ static bool8 DoTradeAnim_Wireless(void)
     case STATE_TRY_EVOLUTION: // Only if in-game trade, link trades use CB2_TryLinkTradeEvolution
         TradeMons(gSpecialVar_0x8004, 0);
         gCB2_AfterEvolution = CB2_InGameTrade;
-        struct Pokemon *canEvolveMon;
-        if (gSpecialVar_0x8004 == PC_MON_CHOSEN)
-            canEvolveMon = &gParties[B_TRAINER_OPPONENT_A][TRADEMON_FROM_PC];
-        else
-            canEvolveMon = &gParties[B_TRAINER_PLAYER][gSpecialVar_0x8004];
-        evoTarget = GetEvolutionTargetSpecies(canEvolveMon, EVO_MODE_TRADE, ITEM_NONE, &gParties[B_TRAINER_OPPONENT_A][0], NULL, CHECK_EVO);
-        if (evoTarget != SPECIES_NONE)
-        {
-            GetEvolutionTargetSpecies(canEvolveMon, EVO_MODE_TRADE, ITEM_NONE, &gParties[B_TRAINER_OPPONENT_A][0], NULL, DO_EVO);
-            TradeEvolutionScene(canEvolveMon, evoTarget, sTradeAnim->monSpriteIds[TRADE_PARTNER], gSpecialVar_0x8004);
-        }
+        struct EvolutionData evoData = InitTradeEvolutionData(&gParties[B_TRAINER_OPPONENT_A][0]);
+        TryEvolution(gSpecialVar_0x8004, &evoData, sTradeAnim->monSpriteIds[TRADE_PARTNER]);
         sTradeAnim->state++;
         break;
     case STATE_FADE_OUT_END:
@@ -4414,7 +4386,6 @@ static bool8 DoTradeAnim_Wireless(void)
 // In-game trades resolve evolution during the trade sequence, in STATE_TRY_EVOLUTION
 static void CB2_TryLinkTradeEvolution(void)
 {
-    u32 evoTarget;
     switch (gMain.state)
     {
     case 0:
@@ -4423,13 +4394,9 @@ static void CB2_TryLinkTradeEvolution(void)
         break;
     case 4:
         gCB2_AfterEvolution = CB2_SaveAndEndTrade;
-        evoTarget = GetEvolutionTargetSpecies(&gParties[B_TRAINER_PLAYER][gSelectedTradeMonPositions[TRADE_PLAYER]], EVO_MODE_TRADE, ITEM_NONE, &gParties[B_TRAINER_OPPONENT_A][gSelectedTradeMonPositions[TRADE_PARTNER] % PARTY_SIZE], NULL, CHECK_EVO);
-        if (evoTarget != SPECIES_NONE)
-        {
-            GetEvolutionTargetSpecies(&gParties[B_TRAINER_PLAYER][gSelectedTradeMonPositions[TRADE_PLAYER]], EVO_MODE_TRADE, ITEM_NONE, &gParties[B_TRAINER_OPPONENT_A][gSelectedTradeMonPositions[TRADE_PARTNER]  % PARTY_SIZE], NULL, DO_EVO);
-            TradeEvolutionScene(&gParties[B_TRAINER_PLAYER][gSelectedTradeMonPositions[TRADE_PLAYER]], evoTarget, sTradeAnim->monSpriteIds[TRADE_PARTNER], gSelectedTradeMonPositions[TRADE_PLAYER]);
-        }
-        else if (IsWirelessTrade())
+        struct EvolutionData evoData = InitTradeEvolutionData(&gParties[B_TRAINER_OPPONENT_A][gSelectedTradeMonPositions[TRADE_PARTNER] % PARTY_SIZE]);
+        TryEvolution(gSelectedTradeMonPositions[TRADE_PLAYER], &evoData, sTradeAnim->monSpriteIds[TRADE_PARTNER]);
+        if (IsWirelessTrade())
             SetMainCallback2(CB2_SaveAndEndWirelessTrade);
         else
             SetMainCallback2(CB2_SaveAndEndTrade);
