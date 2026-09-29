@@ -78,7 +78,7 @@ AI_SINGLE_BATTLE_TEST("AI sees increased base power of Wake Up Slap")
 AI_SINGLE_BATTLE_TEST("AI sees increased base power of Grav Apple")
 {
     enum Move movePlayer;
-    u16 comparedMove, expectedMove;
+    u16 expectedMove;
 
     PARAMETRIZE { movePlayer = MOVE_CELEBRATE; expectedMove = MOVE_IVY_CUDGEL; }
     PARAMETRIZE { movePlayer = MOVE_GRAVITY; expectedMove = MOVE_GRAV_APPLE; }
