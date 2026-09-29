@@ -169,7 +169,7 @@ TEST("(Daycare) Pokémon with regional forms give the correct offspring")
     EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_SPECIES), offspring);
 }
 
-TEST("(Daycare) Female Pokemon from gender divergent species can make eggs of the male or female version")
+TEST("(Daycare) Illumise can make Vobeat or Illumise eggs")
 {
     enum Species randomChild[2] = {SPECIES_ILLUMISE, SPECIES_VOLBEAT};
     bool32 maleChild = FALSE;
@@ -195,21 +195,58 @@ TEST("(Daycare) Female Pokemon from gender divergent species can make eggs of th
     EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_SPECIES), randomChild[maleChild]);
 }
 
+TEST("(Daycare) Female Nidoran can make eggs of the male or female version")
+{
+    enum Species randomChild[2] = {SPECIES_NIDORAN_F, SPECIES_NIDORAN_M};
+    bool32 maleChild = FALSE;
+    enum Species dadSpecies = SPECIES_NONE;
+    ZeroPlayerPartyMons();
+
+    RUN_OVERWORLD_SCRIPT(givemon SPECIES_NIDORAN_F, 1);
+
+    PARAMETRIZE { dadSpecies = SPECIES_NIDORAN_M; maleChild = FALSE;}
+    PARAMETRIZE { dadSpecies = SPECIES_NIDORAN_M; maleChild = TRUE;}
+    PARAMETRIZE { dadSpecies = SPECIES_DITTO; maleChild = FALSE;}
+    PARAMETRIZE { dadSpecies = SPECIES_DITTO; maleChild = TRUE;}
+    PARAMETRIZE { dadSpecies = SPECIES_RATTATA; maleChild = FALSE;}
+    PARAMETRIZE { dadSpecies = SPECIES_RATTATA; maleChild = TRUE;}
+
+
+    SET_RNG(RNG_DAYCARE_MALE_CHILD, maleChild);
+    VarSet(VAR_0x8000, dadSpecies);
+    RUN_OVERWORLD_SCRIPT(givemon VAR_0x8000, 1, gender=MON_MALE);
+
+    STORE_IN_DAYCARE_AND_GET_EGG();
+
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_SPECIES), randomChild[maleChild]);
+}
+
 TEST("(Daycare) Male Pokemon from gender divergent species can make eggs of the male or female version when breeding with Ditto (gen 5+)")
 {
-    enum Species randomChild[2] = {SPECIES_ILLUMISE, SPECIES_VOLBEAT};
+    enum Species *randomChild = NULL;
     bool32 maleChild = FALSE;
+    enum Species dadOptions[] = {SPECIES_NIDORAN_M, SPECIES_NIDORINO, SPECIES_NIDOKING, SPECIES_VOLBEAT};
+    enum Species randomChildOptions[][2] = {
+        {SPECIES_NIDORAN_F, SPECIES_NIDORAN_M},
+        {SPECIES_NIDORAN_F, SPECIES_NIDORAN_M},
+        {SPECIES_NIDORAN_F, SPECIES_NIDORAN_M},
+        {SPECIES_ILLUMISE, SPECIES_VOLBEAT}
+    };
+    enum Species fatherSpecies = SPECIES_NONE;
     ZeroPlayerPartyMons();
 
     SetConfig(CONFIG_NIDORAN_M_DITTO_BREED, GEN_5);
-    RUN_OVERWORLD_SCRIPT(givemon SPECIES_VOLBEAT, 1);
     RUN_OVERWORLD_SCRIPT(givemon SPECIES_DITTO, 1);
 
-    PARAMETRIZE { maleChild = FALSE;}
-    PARAMETRIZE { maleChild = TRUE;}
+    for (u32 i = 0; i < 4; i++)
+    {
+        PARAMETRIZE { maleChild = FALSE; fatherSpecies = dadOptions[i]; randomChild = randomChildOptions[i];}
+        PARAMETRIZE { maleChild = TRUE; fatherSpecies = dadOptions[i]; randomChild = randomChildOptions[i];}
+    }
+    VarSet(VAR_0x8000, fatherSpecies);
+    RUN_OVERWORLD_SCRIPT(givemon VAR_0x8000, 1);
 
     SET_RNG(RNG_DAYCARE_MALE_CHILD, maleChild);
-
     STORE_IN_DAYCARE_AND_GET_EGG();
 
     EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_SPECIES), randomChild[maleChild]);
@@ -219,20 +256,27 @@ TEST("(Daycare) Male Pokemon from gender divergent species can make eggs of the 
 TEST("(Daycare) Male Pokemon from gender divergent species can only make eggs of the male version (before gen 5)")
 {
     bool32 maleChild = FALSE;
+    enum Species dadOptions[] = {SPECIES_NIDORAN_M, SPECIES_NIDORINO, SPECIES_NIDOKING, SPECIES_VOLBEAT};
+    enum Species childOptions[] = {SPECIES_NIDORAN_M, SPECIES_NIDORAN_M, SPECIES_NIDORAN_M, SPECIES_VOLBEAT};
+    enum Species fatherSpecies = SPECIES_NONE;
+    enum Species eggSpecies = SPECIES_NONE;
     ZeroPlayerPartyMons();
 
     SetConfig(CONFIG_NIDORAN_M_DITTO_BREED, GEN_4);
-    RUN_OVERWORLD_SCRIPT(givemon SPECIES_VOLBEAT, 1);
     RUN_OVERWORLD_SCRIPT(givemon SPECIES_DITTO, 1);
 
-    PARAMETRIZE { maleChild = FALSE;}
-    PARAMETRIZE { maleChild = TRUE;}
+    for (u32 i = 0; i < 4; i++)
+    {
+        PARAMETRIZE { maleChild = FALSE; fatherSpecies = dadOptions[i]; eggSpecies = childOptions[i];}
+        PARAMETRIZE { maleChild = TRUE; fatherSpecies = dadOptions[i]; eggSpecies = childOptions[i];}
+    }
+    VarSet(VAR_0x8000, fatherSpecies);
+    RUN_OVERWORLD_SCRIPT(givemon VAR_0x8000, 1);
 
     SET_RNG(RNG_DAYCARE_MALE_CHILD, maleChild);
-
     STORE_IN_DAYCARE_AND_GET_EGG();
 
-    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_SPECIES), SPECIES_VOLBEAT);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_SPECIES), eggSpecies);
 }
 
 TEST("(Daycare) Pokémon can teach egg moves to their daycare partner (Gen 8)")
