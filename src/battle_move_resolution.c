@@ -1792,6 +1792,7 @@ static enum CancelerResult HandleSkyDropResult(struct BattleCalcValues *cv)
         gBattleScripting.animTurn = 1;
         gBattleScripting.animTargetsHit = 0;
         gBattleMons[cv->battlerAtk].volatiles.multipleTurns = FALSE;
+        gBattleMons[cv->battlerAtk].volatiles.chargeTurn = FALSE;
         gBattleMons[cv->battlerAtk].volatiles.semiInvulnerable = STATE_NONE;
 
         // Sky Drop fails if target already left the field
@@ -1807,17 +1808,11 @@ static enum CancelerResult HandleSkyDropResult(struct BattleCalcValues *cv)
         return CANCELER_RESULT_SUCCESS;
     }
 
-    if (IsBattlerAlly(cv->battlerAtk, cv->battlerDef))
-    {
-        gBattlescriptCurrInstr = BattleScript_ButItFailed;
-        return CANCELER_RESULT_FAILURE;
-    }
-    else if (gBattleMons[cv->battlerDef].volatiles.semiInvulnerable != STATE_NONE)
-    {
-        gBattlescriptCurrInstr = BattleScript_ButItFailed;
-        return CANCELER_RESULT_FAILURE;
-    }
-    else if (DoesSubstituteBlockMove(cv->battlerAtk, cv->battlerDef, cv->move))
+    bool32 isAlly = IsBattlerAlly(cv->battlerAtk, cv->battlerDef);
+    bool32 IsSemiInvulnerable = gBattleMons[cv->battlerDef].volatiles.semiInvulnerable != STATE_NONE;
+    bool32 isSubBlocked = DoesSubstituteBlockMove(cv->battlerAtk, cv->battlerDef, cv->move);
+
+    if (isAlly || IsSemiInvulnerable || isSubBlocked)
     {
         gBattlescriptCurrInstr = BattleScript_ButItFailed;
         return CANCELER_RESULT_FAILURE;
@@ -1860,6 +1855,7 @@ static enum CancelerResult CancelerCharging(struct BattleCalcValues *cv)
         gBattleScripting.animTurn = 1;
         gBattleScripting.animTargetsHit = 0;
         gBattleMons[cv->battlerAtk].volatiles.multipleTurns = FALSE;
+        gBattleMons[cv->battlerAtk].volatiles.chargeTurn = FALSE;
         if (gBattleMoveEffects[cv->moveEffect].semiInvulnerableEffect)
             gBattleMons[cv->battlerAtk].volatiles.semiInvulnerable = STATE_NONE;
         return CANCELER_RESULT_SUCCESS;
@@ -5401,7 +5397,7 @@ static enum MoveEndResult MoveEndLifeOrbShellBell(struct BattleCalcValues *cv)
         gBattleScripting.moveendState++;
         return result;
     }
-    
+
     if (ItemBattleEffects(cv->battlerAtk, 0, cv->holdEffects[cv->battlerAtk], IsLifeOrbShellBellActivation))
         result = MOVEEND_RESULT_RUN_SCRIPT;
 
@@ -6644,7 +6640,9 @@ static void TryClearChargeVolatile(enum Type moveType)
         return;
 
     if (moveType == TYPE_ELECTRIC && gBattleMons[gBattlerAttacker].volatiles.chargeTimer == 1)
+    {
         gBattleMons[gBattlerAttacker].volatiles.chargeTimer = 0;
+    }
 
     for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
     {
