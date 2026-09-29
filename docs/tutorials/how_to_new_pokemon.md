@@ -751,10 +751,18 @@ Each species flag provides properties to the species:
     - **1.10.2 and earlier:** Does nothing.
 - `cannotBeTraded`:
     - This species cannot be traded away (like Black/White Kyurem).
-- `tmIlliterate`:
-    - This species will be unable to learn the universal TM or Tutor moves.
+- `teachingType`:
+    - **1.15.0 onwards:** Check [include/constants/teaching_types.h](/include/constants/teaching_types.h) for more details.
+        - `TM_ILLITERATE`: Cannot learn teachable moves, unless they're specifically defined (like Magikarp)
+        - `ALL_TEACHABLES`: Can learn every teachable move, except those defined in `signatureTeachables` (like Mew)
+    - **1.14.4 and earlier:** Was known as `tmIlliterate`, could only support `TRUE`/`FALSE` and worked like the current `TM_ILLITERATE` setting.
 - `isFrontierBanned` ***(1.9 onwards)***:
-    - This species will be unable to enter Battle Frontier facilities. Replaces `gFrontierBannedSpecies`.
+    - This species will be unable to enter Battle Frontier facilities.
+    - Replaces `gFrontierBannedSpecies` from vanilla.
+- `isSkyBattleBanned` ***(1.15 onwards)***:
+    - This species will be unable to enter Sky Battles, even if they are Flying-type or have the Levitate ability (like Dodrio).
+- `isTelekinesisBanned` ***(1.16 onwards)***:
+    - This species is immune to Telekinesis' effect (like Diglett).
 
 ## 2. Delimit the moveset
 
