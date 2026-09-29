@@ -5379,10 +5379,15 @@ static enum MoveEndResult MoveEndCardButton(struct BattleCalcValues *cv)
 static enum MoveEndResult MoveEndFormChange(struct BattleCalcValues *cv)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
+    
+    if (IsSheerForceAffected(cv->move, cv->abilities[cv->battlerAtk]))
+    {
+        gBattleScripting.moveendState++;
+        return result;
+    }
 
     if (gBattleStruct->battlerState[cv->battlerAtk].originalBattlerPartyId == PARTY_SIZE
-     && TryBattleFormChange(cv->battlerAtk, FORM_CHANGE_BATTLE_AFTER_MOVE, cv->abilities[cv->battlerAtk])
-     && !IsSheerForceAffected(cv->move, cv->abilities[cv->battlerAtk]))
+     && TryBattleFormChange(cv->battlerAtk, FORM_CHANGE_BATTLE_AFTER_MOVE, cv->abilities[cv->battlerAtk]))
     {
         result = MOVEEND_RESULT_RUN_SCRIPT;
         BattleScriptCall(BattleScript_AttackerFormChangeMoveEffect);

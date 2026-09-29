@@ -408,19 +408,19 @@ SINGLE_BATTLE_TEST("Defiant activates for each stat that is lowered")
     }
 }
 
-SINGLE_BATTLE_TEST("Defiant doesn't activate if the Pokémon lowers it's own stats")
+SINGLE_BATTLE_TEST("Defiant doesn't activate if the Pokémon lowers its own stats")
 {
     enum Move move;
 
     PARAMETRIZE { move = MOVE_SUPERPOWER; }
     PARAMETRIZE { move = MOVE_CLOSE_COMBAT; }
-    PARAMETRIZE { move = MOVE_MAKE_IT_RAIN; }
+    PARAMETRIZE { move = MOVE_OVERHEAT; }
     PARAMETRIZE { move = MOVE_SPIN_OUT; }
 
     GIVEN {
         ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_SUPERPOWER, self: TRUE, attack: -1, defense: -1);
         ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_CLOSE_COMBAT, self: TRUE, defense: -1, spDef: -1);
-        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAKE_IT_RAIN, self: TRUE, spAtk: -1);
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_OVERHEAT, self: TRUE, spAtk: -2);
         ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_SPIN_OUT, self: TRUE, speed: -2);
         PLAYER(SPECIES_MANKEY) { Ability(ABILITY_DEFIANT); }
         OPPONENT(SPECIES_WOBBUFFET);

@@ -123,6 +123,7 @@ SINGLE_BATTLE_TEST("Sheer Force boosted Rapid Spin doesn't trigger Eject Button 
 {
     GIVEN {
         WITH_CONFIG(B_SPEED_BUFFING_RAPID_SPIN, GEN_8);
+        WITH_CONFIG(B_SHEER_FORCE_TIMING, GEN_8);
         ASSUME(GetMoveEffect(MOVE_RAPID_SPIN) == EFFECT_RAPID_SPIN);
         ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_RAPID_SPIN, self: TRUE, speed: 1);
         ASSUME(GetItemHoldEffect(ITEM_EJECT_BUTTON) == HOLD_EFFECT_EJECT_BUTTON);

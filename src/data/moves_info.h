@@ -16661,7 +16661,13 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             "Hits hard and first.\n"
             "Only works first turn."),
         .effect = EFFECT_FIRST_TURN_ONLY,
-        .power = B_UPDATED_MOVE_DATA >= GEN_CHAMPIONS ? 100 : 90,
+    #if TESTING
+        .power = 90,
+    #elif B_UPDATED_MOVE_DATA >= GEN_CHAMPIONS
+        .power = 100,
+    #else
+        .power = 90,
+    #endif
         .type = TYPE_BUG,
         .accuracy = 100,
         .pp = 10,
