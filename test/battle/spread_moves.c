@@ -1,7 +1,7 @@
 #include "global.h"
 #include "test/battle.h"
 
-DOUBLE_BATTLE_TEST("Spread Moves: Ability and Item effects activate correctly after a multi target move (Gen9)")
+DOUBLE_BATTLE_TEST("Spread Moves: Ability and Item effects activate correctly after a multi target move (Gen9-)")
 {
     GIVEN {
         WITH_CONFIG(B_QUEUED_SWITCH_TIMINGS, GEN_9);
