@@ -8216,8 +8216,10 @@ static void SetBallThrowShakes(void)
         return;
     }
 
-    if (!gHasFetchedBall)
+    if (gLastUsedBall == ITEM_NONE)
+    {
         gLastUsedBall = gLastUsedItem;
+    }
 
     if (IsCriticalCapture())
         gBattleCommunication[MULTISTRING_CHOOSER] = BALL_3_SHAKES_FAIL;
