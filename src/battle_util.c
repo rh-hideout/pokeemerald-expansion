@@ -10122,14 +10122,14 @@ bool32 AreMultiPartiesHalfTeams(void)
 
     if (B_MULTI_HALF_TEAMS)
     {
-        gSpecialVar_Result = FALSE;
-        return FALSE;
+        gSpecialVar_Result = TRUE;
+        return TRUE;
     }
 
     if (!(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
     {
-        gSpecialVar_Result = TRUE;
-        return TRUE;
+        gSpecialVar_Result = FALSE;
+        return FALSE;
     }
 
     if (TRAINER_BATTLE_PARAM.opponentA == TRAINER_LINK_OPPONENT
@@ -10162,6 +10162,7 @@ bool32 IsPlayerMultiPartyFullTeam(void)
 
     if (selectedCount == 0)
     {
+        gSpecialVar_Result = TRUE;
         return TRUE;
     }
 
