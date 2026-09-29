@@ -16661,13 +16661,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             "Hits hard and first.\n"
             "Only works first turn."),
         .effect = EFFECT_FIRST_TURN_ONLY,
-    #if TESTING
-        .power = 90,
-    #elif B_UPDATED_MOVE_DATA >= GEN_CHAMPIONS
-        .power = 100,
-    #else
-        .power = 90,
-    #endif
+        .power = B_UPDATED_MOVE_DATA >= GEN_CHAMPIONS ? 100 : 90,
         .type = TYPE_BUG,
         .accuracy = 100,
         .pp = 10,
@@ -19032,13 +19026,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             "Drops an apple from above.\n"
             "Lowers the foe's Defense."),
         .effect = EFFECT_GRAV_APPLE,
-    #if TESTING
-        .power = 80,
-    #elif B_UPDATED_MOVE_DATA >= GEN_CHAMPIONS
-        .power = 90,
-    #else
-        .power = 80,
-    #endif
+        .power = B_UPDATED_MOVE_DATA >= GEN_CHAMPIONS ? 90 : 80,
         .type = TYPE_GRASS,
         .accuracy = 100,
         .pp = 10,
