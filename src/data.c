@@ -8,6 +8,7 @@
 #include "constants/abilities.h"
 #include "constants/items.h"
 #include "constants/moves.h"
+#include "constants/songs.h"
 #include "constants/trainers.h"
 #include "constants/battle_ai.h"
 
@@ -236,5 +237,7 @@ const struct Trainer gTrainers[DIFFICULTY_COUNT][TRAINERS_COUNT] =
 #endif
 };
 #endif
+
+#include "data/trainer_approach_music.h"
 
 #include "data/text/follower_messages.h"
