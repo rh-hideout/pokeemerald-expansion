@@ -72,3 +72,4 @@ Append a row to the index below when you add a record.
 | 0035 | product | Solo trade evolutions always-on (bag use + Celadon stock) | S69 | 2026-09-27 |
 | 0036 | product | Per-mapsec Nuzlocke encounter locking | S35 | 2026-09-27 |
 | 0037 | product | Nuzlocke faint handling: Cemetery / Release after battle | S36 | 2026-09-29 |
+| 0038 | product | Nuzlocke DUPES & SHINY clauses (ME parity, no re-roll) | S37 | 2026-09-29 |

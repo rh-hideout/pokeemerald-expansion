@@ -594,7 +594,7 @@ These exist to keep merging from `RHH/master` cheap. Violating them is the main 
 
 ### S37 — Dupes & shiny clauses
 
-- [ ] **Status:** Not started
+- [x] **Status:** Complete
 
 - **Goal:** Standard Nuzlocke clauses.
 - **Depends on:** S35, S33
@@ -603,6 +603,7 @@ These exist to keep merging from `RHH/master` cheap. Violating them is the main 
   - Shiny clause: shinies are always catchable regardless of area lock.
 - **Acceptance:** Duplicate lines don't consume an area's encounter; shinies bypass the lock.
 - **Tests:** Unit tests on the clause predicates (including the all-owned case); manual verification.
+- **Decisions:** [`docs-mf/decisions/0038-product-nuzlocke-dupes-shiny-clauses.md`](docs-mf/decisions/0038-product-nuzlocke-dupes-shiny-clauses.md) — ME no-re-roll dupes (skip consume); shiny bypasses area+species; all-owned stays soft-blocked.
 
 ### S38 — Forced nicknaming
 

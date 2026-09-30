@@ -12,6 +12,7 @@
 
 // Active shiny threshold for new rolls (SHINY_ODDS << tier). Charm / lure /
 // chain / DexNav rerolls in ComputePlayerShinyOdds still apply on top.
+// When debug force-shiny is on, returns 65536 (always shiny).
 u32 MfGetShinyOddsThreshold(void);
 
 // Threshold for a stored tier id (clamped); used by tests and S37 clause helpers.
@@ -24,5 +25,9 @@ bool32 MfIsShinyValue(u32 shinyValue);
 // S37 shiny clause can reuse this for pre-catch checks; after CreateMon,
 // GetMonData(..., MON_DATA_IS_SHINY) is authoritative.
 bool32 MfIsShinyOtIdPersonality(u32 otId, u32 personality);
+
+// Debug-only session toggle: next wild/gift rolls are always shiny.
+bool32 MfDebug_GetForceShiny(void);
+void MfDebug_SetForceShiny(bool32 enabled);
 
 #endif // GUARD_MF_SHINY_H

@@ -1,4 +1,5 @@
 #include "global.h"
+#include "daycare.h"
 #include "event_data.h"
 #include "item.h"
 #include "main.h"
@@ -6,6 +7,7 @@
 #include "mf_rules.h"
 #include "overworld.h"
 #include "party_menu.h"
+#include "pokedex.h"
 #include "pokemon.h"
 #include "pokemon_storage_system.h"
 #include "region_map.h"
@@ -19,6 +21,10 @@
 
 #if MF_NUZLOCKE && MF_RULES_ENGINE
 static bool8 sMfNuzlockeFaintDryRun;
+// S37: set in OnWildMonCreated; if TRUE, battle-end must not consume the area
+// (dupe under DUPES CLAUSE). Cached so a successful catch can't flip the check
+// after the species is written to the Pokédex.
+static bool8 sMfNuzlockeDupesPreventConsume;
 #endif
 
 // ---------------------------------------------------------------------------
@@ -149,16 +155,21 @@ bool32 MfNuzlocke_IsAreaCaptureBlocked(void)
 {
     if (!MfNuzlocke_IsEncounterLockActive())
         return FALSE;
+    // S37 shiny clause: shinies stay catchable even in a used area.
+    if (MfNuzlocke_WildMonBypassesClauses(&gParties[B_TRAINER_OPPONENT_A][0]))
+        return FALSE;
     return MfNuzlockeFlagGet(MfNuzlocke_GetCurrentMapsec());
 }
 
 bool32 MfNuzlocke_ShouldShowFirstEncounterIcon(void)
 {
-    // ME: show red "1" when Nuzlocke is on and this wild mon is still catchable
-    // for the area (not yet used). Species-clause / monotype hide it in S37/S48.
+    // ME: show red "1" when Nuzlocke is on, the area is still unused, and this
+    // wild mon is not blocked by DUPES. Species-clause / monotype hide it.
     if (!MfNuzlocke_IsEncounterLockActive())
         return FALSE;
     if (MfNuzlocke_IsAreaCaptureBlocked())
+        return FALSE;
+    if (MfNuzlocke_GetActiveSpeciesClauseBlock() != MF_NUZLOCKE_SPECIES_OK)
         return FALSE;
     return TRUE;
 }
@@ -166,9 +177,31 @@ bool32 MfNuzlocke_ShouldShowFirstEncounterIcon(void)
 void MfNuzlocke_OnWildBattleEnd(u32 battleTypeFlags)
 {
     if (!MfNuzlocke_IsEncounterLockActive())
+    {
+#if MF_NUZLOCKE && MF_RULES_ENGINE
+        sMfNuzlockeDupesPreventConsume = FALSE;
+#endif
         return;
+    }
     if (!MfNuzlocke_WildBattleConsumesEncounter(battleTypeFlags))
+    {
+#if MF_NUZLOCKE && MF_RULES_ENGINE
+        sMfNuzlockeDupesPreventConsume = FALSE;
+#endif
         return;
+    }
+
+#if MF_NUZLOCKE && MF_RULES_ENGINE
+    // ME: if (!NuzlockeIsSpeciesClauseActive) NuzlockeFlagSet(...).
+    // Dupes do not consume the area (cached at CreateWildMon so a catch cannot
+    // flip the check after the species is written to the Pokédex).
+    if (sMfNuzlockeDupesPreventConsume)
+    {
+        sMfNuzlockeDupesPreventConsume = FALSE;
+        return;
+    }
+#endif
+
     MfNuzlockeFlagSet(MfNuzlocke_GetCurrentMapsec());
 }
 
@@ -194,6 +227,15 @@ void MfNuzlocke_DebugDumpUsedAreas(void)
         FlagGet(FLAG_SYS_GAME_CLEAR),
         MfNuzlocke_GetCurrentMapsec(),
         MfNuzlocke_IsAreaCaptureBlocked());
+    DebugPrintfLevel(MGBA_LOG_WARN, "clauses: species=%u shinyBypass=%u dupesSkipConsume=%u",
+        MfNuzlocke_GetActiveSpeciesClauseBlock(),
+        MfNuzlocke_WildMonBypassesClauses(&gParties[B_TRAINER_OPPONENT_A][0]),
+#if MF_NUZLOCKE && MF_RULES_ENGINE
+        sMfNuzlockeDupesPreventConsume
+#else
+        0
+#endif
+    );
 
     for (mapsec = 0; mapsec < MAPSEC_COUNT; mapsec++)
     {
@@ -207,6 +249,139 @@ void MfNuzlocke_DebugDumpUsedAreas(void)
         DebugPrintfLevel(MGBA_LOG_WARN, "  (none)");
 #else
     (void)0;
+#endif
+}
+
+// ---------------------------------------------------------------------------
+// S37 — DUPES (species) + SHINY clauses
+// ---------------------------------------------------------------------------
+
+enum MfNuzlockeSpeciesClauseResult MfNuzlocke_ClassifySpeciesClause(bool8 clauseEnabled, bool32 exactCaught, bool32 lineCaught)
+{
+    if (!clauseEnabled)
+        return MF_NUZLOCKE_SPECIES_OK;
+    if (exactCaught)
+        return MF_NUZLOCKE_SPECIES_SAME;
+    if (lineCaught)
+        return MF_NUZLOCKE_SPECIES_LINE;
+    return MF_NUZLOCKE_SPECIES_OK;
+}
+
+bool32 MfNuzlocke_ShouldConsumeEncounterAfterClause(bool32 speciesClauseBlocks)
+{
+    // ME: set area flag only when species clause is inactive for this encounter.
+    return !speciesClauseBlocks;
+}
+
+bool32 MfNuzlocke_IsSpeciesCaught(enum Species species)
+{
+    species = SanitizeSpeciesId(species);
+    if (species == SPECIES_NONE)
+        return FALSE;
+    return GetSetPokedexFlag(SpeciesToNationalPokedexNum(species), FLAG_GET_CAUGHT);
+}
+
+static bool32 MfNuzlocke_EvoTreeHasCaught(enum Species species, u8 depth)
+{
+    const struct Evolution *evolutions;
+    u32 i;
+
+    if (depth > 6)
+        return FALSE;
+
+    species = SanitizeSpeciesId(species);
+    if (species == SPECIES_NONE)
+        return FALSE;
+
+    if (MfNuzlocke_IsSpeciesCaught(species))
+        return TRUE;
+
+    evolutions = GetSpeciesEvolutions(species);
+    if (evolutions == NULL)
+        return FALSE;
+
+    for (i = 0; evolutions[i].method != EVOLUTIONS_END; i++)
+    {
+        enum Species target = SanitizeSpeciesId(evolutions[i].targetSpecies);
+        if (target == SPECIES_NONE || target == species)
+            continue;
+        if (MfNuzlocke_EvoTreeHasCaught(target, depth + 1))
+            return TRUE;
+    }
+    return FALSE;
+}
+
+bool32 MfNuzlocke_IsEvoLineCaught(enum Species species)
+{
+    species = GET_BASE_SPECIES_ID(SanitizeSpeciesId(species));
+    if (species == SPECIES_NONE)
+        return FALSE;
+    return MfNuzlocke_EvoTreeHasCaught(GetEggSpecies(species), 0);
+}
+
+enum MfNuzlockeSpeciesClauseResult MfNuzlocke_GetSpeciesClauseResult(enum Species species)
+{
+#if !MF_NUZLOCKE || !MF_RULES_ENGINE
+    (void)species;
+    return MF_NUZLOCKE_SPECIES_OK;
+#else
+    bool32 exact;
+    bool32 line;
+
+    if (!MfRules_HasNuzlockeSpeciesClause())
+        return MF_NUZLOCKE_SPECIES_OK;
+    if (!MfNuzlocke_IsEncounterLockActive())
+        return MF_NUZLOCKE_SPECIES_OK;
+
+    exact = MfNuzlocke_IsSpeciesCaught(species);
+    // Exact catch implies line catch; skip the tree walk when exact is set.
+    line = exact ? TRUE : MfNuzlocke_IsEvoLineCaught(species);
+    return MfNuzlocke_ClassifySpeciesClause(TRUE, exact, line);
+#endif
+}
+
+bool32 MfNuzlocke_WildMonBypassesClauses(struct Pokemon *mon)
+{
+#if !MF_NUZLOCKE || !MF_RULES_ENGINE
+    (void)mon;
+    return FALSE;
+#else
+    if (mon == NULL)
+        return FALSE;
+    if (!MfRules_HasNuzlockeShinyClause())
+        return FALSE;
+    if (!MfNuzlocke_IsEncounterLockActive())
+        return FALSE;
+    if (!GetMonData(mon, MON_DATA_SANITY_HAS_SPECIES))
+        return FALSE;
+    return IsMonShiny(mon);
+#endif
+}
+
+enum MfNuzlockeSpeciesClauseResult MfNuzlocke_GetActiveSpeciesClauseBlock(void)
+{
+#if !MF_NUZLOCKE || !MF_RULES_ENGINE
+    return MF_NUZLOCKE_SPECIES_OK;
+#else
+    struct Pokemon *wild = &gParties[B_TRAINER_OPPONENT_A][0];
+
+    if (MfNuzlocke_WildMonBypassesClauses(wild))
+        return MF_NUZLOCKE_SPECIES_OK;
+    if (!GetMonData(wild, MON_DATA_SANITY_HAS_SPECIES))
+        return MF_NUZLOCKE_SPECIES_OK;
+    return MfNuzlocke_GetSpeciesClauseResult(GetMonData(wild, MON_DATA_SPECIES));
+#endif
+}
+
+void MfNuzlocke_OnWildMonCreated(void)
+{
+#if MF_NUZLOCKE && MF_RULES_ENGINE
+    sMfNuzlockeDupesPreventConsume = FALSE;
+    if (!MfNuzlocke_IsEncounterLockActive())
+        return;
+    // Shiny clause clears the species block inside GetActiveSpeciesClauseBlock.
+    if (MfNuzlocke_GetActiveSpeciesClauseBlock() != MF_NUZLOCKE_SPECIES_OK)
+        sMfNuzlockeDupesPreventConsume = TRUE;
 #endif
 }
 

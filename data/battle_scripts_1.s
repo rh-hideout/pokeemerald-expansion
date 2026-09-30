@@ -3064,6 +3064,14 @@ BattleScript_MfNuzlockeCaptureBlocked::
 	printselectionstring STRINGID_MFNUZLOCKECAPTUREBLOCKED
 	endselectionscript
 
+BattleScript_MfNuzlockeSpeciesClauseBlocked::
+	printselectionstring STRINGID_MFNUZLOCKESPECIESCLAUSEBLOCKED
+	endselectionscript
+
+BattleScript_MfNuzlockeSameSpeciesBlocked::
+	printselectionstring STRINGID_MFNUZLOCKESAMESPECIESBLOCKED
+	endselectionscript
+
 BattleScript_ActionSwitch::
 	hpthresholds2 BS_ATTACKER
 	printstring STRINGID_RETURNMON

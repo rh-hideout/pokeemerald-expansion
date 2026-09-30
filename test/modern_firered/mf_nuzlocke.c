@@ -1,8 +1,10 @@
 #include "global.h"
 #include "mf_nuzlocke.h"
+#include "pokedex.h"
 #include "pokemon.h"
 #include "pokemon_storage_system.h"
 #include "constants/battle.h"
+#include "constants/pokedex.h"
 #include "constants/region_map_sections.h"
 #include "constants/species.h"
 #include "test/test.h"
@@ -306,4 +308,47 @@ TEST("MF: nuzlocke multi-slot release leaves surviving mon compacted")
     EXPECT_EQ(CalculatePlayerPartyCount(), 1);
     EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_SPECIES), SPECIES_BELLSPROUT);
     EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_HP), 20);
+}
+
+// --- S37 dupes / shiny clauses ---------------------------------------------
+
+TEST("MF: nuzlocke species-clause classifier")
+{
+    EXPECT_EQ(MfNuzlocke_ClassifySpeciesClause(FALSE, TRUE, TRUE), MF_NUZLOCKE_SPECIES_OK);
+    EXPECT_EQ(MfNuzlocke_ClassifySpeciesClause(TRUE, FALSE, FALSE), MF_NUZLOCKE_SPECIES_OK);
+    EXPECT_EQ(MfNuzlocke_ClassifySpeciesClause(TRUE, TRUE, TRUE), MF_NUZLOCKE_SPECIES_SAME);
+    EXPECT_EQ(MfNuzlocke_ClassifySpeciesClause(TRUE, TRUE, FALSE), MF_NUZLOCKE_SPECIES_SAME);
+    EXPECT_EQ(MfNuzlocke_ClassifySpeciesClause(TRUE, FALSE, TRUE), MF_NUZLOCKE_SPECIES_LINE);
+}
+
+TEST("MF: nuzlocke dupes prevent area consume")
+{
+    EXPECT(MfNuzlocke_ShouldConsumeEncounterAfterClause(FALSE));
+    EXPECT(!MfNuzlocke_ShouldConsumeEncounterAfterClause(TRUE));
+}
+
+TEST("MF: nuzlocke evo-line caught walks family")
+{
+    // Mark Ivysaur owned → Bulbasaur / Venusaur report as line-caught.
+    GetSetPokedexFlag(NATIONAL_DEX_IVYSAUR, FLAG_SET_CAUGHT);
+    EXPECT(MfNuzlocke_IsSpeciesCaught(SPECIES_IVYSAUR));
+    EXPECT(MfNuzlocke_IsEvoLineCaught(SPECIES_BULBASAUR));
+    EXPECT(MfNuzlocke_IsEvoLineCaught(SPECIES_VENUSAUR));
+    EXPECT(MfNuzlocke_IsEvoLineCaught(SPECIES_IVYSAUR));
+
+    EXPECT_EQ(MfNuzlocke_ClassifySpeciesClause(TRUE, TRUE, TRUE), MF_NUZLOCKE_SPECIES_SAME);
+    EXPECT_EQ(MfNuzlocke_ClassifySpeciesClause(TRUE,
+            MfNuzlocke_IsSpeciesCaught(SPECIES_BULBASAUR),
+            MfNuzlocke_IsEvoLineCaught(SPECIES_BULBASAUR)),
+        MfNuzlocke_IsSpeciesCaught(SPECIES_BULBASAUR)
+            ? MF_NUZLOCKE_SPECIES_SAME
+            : MF_NUZLOCKE_SPECIES_LINE);
+}
+
+TEST("MF: nuzlocke all-owned still classifies as blocked")
+{
+    // "Every species owned" → every encounter is SAME or LINE; no special escape hatch.
+    EXPECT_EQ(MfNuzlocke_ClassifySpeciesClause(TRUE, TRUE, TRUE), MF_NUZLOCKE_SPECIES_SAME);
+    EXPECT_EQ(MfNuzlocke_ClassifySpeciesClause(TRUE, FALSE, TRUE), MF_NUZLOCKE_SPECIES_LINE);
+    EXPECT(!MfNuzlocke_ShouldConsumeEncounterAfterClause(TRUE));
 }

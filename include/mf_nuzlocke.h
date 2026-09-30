@@ -3,10 +3,12 @@
 
 // S35 — per-mapsec Nuzlocke encounter locking.
 // S36 — faint handling (cemetery / release) + whiteout rescue.
+// S37 — DUPES (species) + SHINY clauses.
 // Flags live in ModernRules.nuzlockeEncounterFlags (ADR 0012 / 0036).
 // Death mark is MON_DATA_MF_NUZLOCKE_DEAD on the Pokémon (ADR 0037).
 
 #include "gba/types.h"
+#include "constants/species.h"
 
 struct Pokemon;
 struct BoxPokemon;
@@ -19,6 +21,14 @@ enum MfNuzlockeFaintFate
     MF_NUZLOCKE_FAINT_SKIP = 0,     // rule off / battle excluded
     MF_NUZLOCKE_FAINT_CEMETERY,     // mark dead + send to PC, then purge party
     MF_NUZLOCKE_FAINT_RELEASE,      // purge party permanently
+};
+
+// ME NuzlockeIsCaptureBlockedBySpeciesClause return codes.
+enum MfNuzlockeSpeciesClauseResult
+{
+    MF_NUZLOCKE_SPECIES_OK = 0,     // not a dupe / clause off
+    MF_NUZLOCKE_SPECIES_LINE = 1,   // another member of the evo line is owned
+    MF_NUZLOCKE_SPECIES_SAME = 2,   // this exact species is already owned
 };
 
 struct MfNuzlockeFaintPlan
@@ -47,6 +57,22 @@ bool32 MfNuzlocke_IsAreaCaptureBlocked(void);
 bool32 MfNuzlocke_ShouldShowFirstEncounterIcon(void);
 void MfNuzlocke_OnWildBattleEnd(u32 battleTypeFlags);
 void MfNuzlocke_DebugDumpUsedAreas(void);
+
+// --- S37 dupes / shiny clauses ---------------------------------------------
+
+// Pure classifier (unit-testable without dex / party).
+enum MfNuzlockeSpeciesClauseResult MfNuzlocke_ClassifySpeciesClause(bool8 clauseEnabled, bool32 exactCaught, bool32 lineCaught);
+bool32 MfNuzlocke_ShouldConsumeEncounterAfterClause(bool32 speciesClauseBlocks);
+
+// Live dex / wild-mon helpers.
+bool32 MfNuzlocke_IsSpeciesCaught(enum Species species);
+bool32 MfNuzlocke_IsEvoLineCaught(enum Species species);
+enum MfNuzlockeSpeciesClauseResult MfNuzlocke_GetSpeciesClauseResult(enum Species species);
+bool32 MfNuzlocke_WildMonBypassesClauses(struct Pokemon *mon);
+enum MfNuzlockeSpeciesClauseResult MfNuzlocke_GetActiveSpeciesClauseBlock(void);
+
+// Cache dupe-consume skip when the wild mon is created (must precede battle-end).
+void MfNuzlocke_OnWildMonCreated(void);
 
 // --- S36 faint handling ----------------------------------------------------
 

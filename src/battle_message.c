@@ -908,6 +908,8 @@ const u8 *const gBattleStringsTable[STRINGID_COUNT] =
     [STRINGID_PKMNDROPPEDITEM]                      = COMPOUND_STRING("{B_OPPONENT_MON1_NAME} dropped its {B_LAST_ITEM}!{WAIT_SE}\p"),
     [STRINGID_PKMNDROPPEDITEMBAGFULL]               = COMPOUND_STRING("{B_OPPONENT_MON1_NAME} dropped {B_LAST_ITEM}!{WAIT_SE}\pBut your Bag is full!\p"),
     [STRINGID_MFNUZLOCKECAPTUREBLOCKED]             = COMPOUND_STRING("You have already used your encounter\nfor this area!{PAUSE_UNTIL_PRESS}"),
+    [STRINGID_MFNUZLOCKESPECIESCLAUSEBLOCKED]       = COMPOUND_STRING("You have already caught a Pokémon\nin this evolution line!{PAUSE_UNTIL_PRESS}"),
+    [STRINGID_MFNUZLOCKESAMESPECIESBLOCKED]         = COMPOUND_STRING("You have already caught this Pokémon!{PAUSE_UNTIL_PRESS}"),
 };
 
 const u16 gTrainerUsedItemStringIds[] =

@@ -4001,6 +4001,26 @@ static void HandleTurnActionSelectionState(void)
                         gBattleStruct->stateIdAfterSelScript[battler] = STATE_BEFORE_ACTION_CHOSEN;
                         return;
                     }
+                    else
+                    {
+                        enum MfNuzlockeSpeciesClauseResult speciesBlock = MfNuzlocke_GetActiveSpeciesClauseBlock();
+                        if (speciesBlock == MF_NUZLOCKE_SPECIES_SAME)
+                        {
+                            gSelectionBattleScripts[battler] = BattleScript_MfNuzlockeSameSpeciesBlocked;
+                            gBattleCommunication[battler] = STATE_SELECTION_SCRIPT;
+                            gBattleStruct->battlerState[battler].selectionScriptFinished = FALSE;
+                            gBattleStruct->stateIdAfterSelScript[battler] = STATE_BEFORE_ACTION_CHOSEN;
+                            return;
+                        }
+                        if (speciesBlock == MF_NUZLOCKE_SPECIES_LINE)
+                        {
+                            gSelectionBattleScripts[battler] = BattleScript_MfNuzlockeSpeciesClauseBlocked;
+                            gBattleCommunication[battler] = STATE_SELECTION_SCRIPT;
+                            gBattleStruct->battlerState[battler].selectionScriptFinished = FALSE;
+                            gBattleStruct->stateIdAfterSelScript[battler] = STATE_BEFORE_ACTION_CHOSEN;
+                            return;
+                        }
+                    }
                     break;
                 case B_ACTION_SAFARI_POKEBLOCK:
                     if (!IS_FRLG)

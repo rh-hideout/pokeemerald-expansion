@@ -18,6 +18,7 @@ Modern FireRed’s own submenu lives under overworld debug → **Modern FireRed�
 | **Rules menu…** | Opens the FR-styled rules menu (`CB2_InitMfRulesMenu`). Pages: Gamemode (S20), Features (S21); later pages stub until S22–S25. **←/→** cycle values; Classic/Modern bulk-set and grey dependent Gamemode options until Custom; Features options are always editable. **A** on **NEXT** advances; **EXIT** returns. Writes go through `MfRules_TrySet*` (auto-unlock when locked). |
 | **Rules viewer…** | Read-only mid-run view. On the Nuzlocke page, the NUZLOCKE row shows how many areas are already used. |
 | **Shiny roll test** | Instant SHINY CHANCE statistical check (S33). |
+| **Force shiny** | Session toggle: next wild/gift rolls are always shiny (S37 testing). Toggle again to restore odds. mGBA log: `MF Force shiny=1`. |
 | **Used areas…** | Dump Nuzlocke-used mapsec names to mGBA logs (S35). |
 | **Cancel** | Close |
 

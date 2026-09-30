@@ -341,6 +341,13 @@ static void MfDebug_Action_ToggleFaintDryRun(u8 taskId)
     MfNuzlocke_SetFaintDryRun(!MfNuzlocke_GetFaintDryRun());
 }
 
+static void MfDebug_Action_ToggleForceShiny(u8 taskId)
+{
+    (void)taskId;
+    PlaySE(SE_SELECT);
+    MfDebug_SetForceShiny(!MfDebug_GetForceShiny());
+}
+
 // Instant statistical check — no wild encounters. Open mGBA Tools → View Logs.
 #define MF_DEBUG_SHINY_ROLLS 10000
 
@@ -425,6 +432,7 @@ const struct DebugMenuOption gMfDebugMenuOptions[] =
     { COMPOUND_STRING("Rules menu…"), MfDebug_Action_OpenRulesMenu },
     { COMPOUND_STRING("Rules viewer…"), MfDebug_Action_OpenRulesViewer },
     { COMPOUND_STRING("Shiny roll test"), MfDebug_Action_ShinyRollTest },
+    { COMPOUND_STRING("Force shiny"), MfDebug_Action_ToggleForceShiny },
     { COMPOUND_STRING("Used areas…"), MfDebug_Action_DumpUsedAreas },
     { COMPOUND_STRING("Faint plan…"), MfDebug_Action_DumpFaintPlan },
     { COMPOUND_STRING("Faint dry-run"), MfDebug_Action_ToggleFaintDryRun },

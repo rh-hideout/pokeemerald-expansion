@@ -1133,6 +1133,14 @@ static u32 GetBallThrowableState(void)
         return BALL_THROW_UNABLE_DISABLED_FLAG;
     else if (MfNuzlocke_IsAreaCaptureBlocked())
         return BALL_THROW_UNABLE_NUZLOCKE_AREA;
+    else
+    {
+        enum MfNuzlockeSpeciesClauseResult speciesBlock = MfNuzlocke_GetActiveSpeciesClauseBlock();
+        if (speciesBlock == MF_NUZLOCKE_SPECIES_SAME)
+            return BALL_THROW_UNABLE_NUZLOCKE_SPECIES_SAME;
+        if (speciesBlock == MF_NUZLOCKE_SPECIES_LINE)
+            return BALL_THROW_UNABLE_NUZLOCKE_SPECIES_LINE;
+    }
 
     return BALL_THROW_ABLE;
 }
@@ -1146,6 +1154,8 @@ static const u8 sText_CantThrowPokeBall_TwoMons[] = _("Cannot throw a ball!\nThe
 static const u8 sText_CantThrowPokeBall_SemiInvulnerable[] = _("Cannot throw a ball!\nThere's no Pokémon in sight!\p");
 static const u8 sText_CantThrowPokeBall_Disabled[] = _("POKé BALLS cannot be used\nright now!\p");
 static const u8 sText_CantThrowPokeBall_NuzlockeArea[] = _("You have already used your encounter\nfor this area!{PAUSE_UNTIL_PRESS}");
+static const u8 sText_CantThrowPokeBall_NuzlockeSpeciesLine[] = _("You have already caught a Pokémon\nin this evolution line!{PAUSE_UNTIL_PRESS}");
+static const u8 sText_CantThrowPokeBall_NuzlockeSpeciesSame[] = _("You have already caught this Pokémon!{PAUSE_UNTIL_PRESS}");
 
 static void ItemUseInBattle_ShowPartyMenu(u8 taskId)
 {
@@ -1262,6 +1272,14 @@ bool32 CannotUseItemsInBattle(enum Item itemId, struct Pokemon *mon)
             break;
         case BALL_THROW_UNABLE_NUZLOCKE_AREA:
             failStr = sText_CantThrowPokeBall_NuzlockeArea;
+            cannotUse = TRUE;
+            break;
+        case BALL_THROW_UNABLE_NUZLOCKE_SPECIES_LINE:
+            failStr = sText_CantThrowPokeBall_NuzlockeSpeciesLine;
+            cannotUse = TRUE;
+            break;
+        case BALL_THROW_UNABLE_NUZLOCKE_SPECIES_SAME:
+            failStr = sText_CantThrowPokeBall_NuzlockeSpeciesSame;
             cannotUse = TRUE;
             break;
         }
