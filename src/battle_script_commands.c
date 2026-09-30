@@ -18,6 +18,7 @@
 #include "util.h"
 #include "pokemon.h"
 #include "mf_rules.h"
+#include "mf_nuzlocke.h"
 #include "random.h"
 #include "battle_controllers.h"
 #include "battle_interface.h"
@@ -8569,6 +8570,13 @@ static void Cmd_trygivecaughtmonnick(void)
     switch (gBattleCommunication[MULTIUSE_STATE])
     {
     case 0:
+        // S38 / ME IsNuzlockeNicknamingActive: skip Yes/No and open naming.
+        if (MfNuzlocke_IsNicknamingActive())
+        {
+            gBattleCommunication[MULTIUSE_STATE] = 2;
+            BeginFastPaletteFade(3);
+            break;
+        }
         HandleBattleWindow(YESNOBOX_X_Y, 0);
         BattlePutTextOnWindow(gText_BattleYesNoChoice, B_WIN_YESNO);
         gBattleCommunication[MULTIUSE_STATE]++;

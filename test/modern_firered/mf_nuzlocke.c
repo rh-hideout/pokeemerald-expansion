@@ -327,6 +327,16 @@ TEST("MF: nuzlocke dupes prevent area consume")
     EXPECT(!MfNuzlocke_ShouldConsumeEncounterAfterClause(TRUE));
 }
 
+// --- S38 forced nicknaming -------------------------------------------------
+
+TEST("MF: nuzlocke nicknaming gate")
+{
+    EXPECT(!MfNuzlocke_ResolveNicknamingActive(FALSE, TRUE, FALSE));
+    EXPECT(!MfNuzlocke_ResolveNicknamingActive(TRUE, FALSE, FALSE));
+    EXPECT(!MfNuzlocke_ResolveNicknamingActive(TRUE, TRUE, TRUE));
+    EXPECT(MfNuzlocke_ResolveNicknamingActive(TRUE, TRUE, FALSE));
+}
+
 TEST("MF: nuzlocke evo-line caught walks family")
 {
     // Mark Ivysaur owned → Bulbasaur / Venusaur report as line-caught.

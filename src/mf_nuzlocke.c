@@ -253,6 +253,33 @@ void MfNuzlocke_DebugDumpUsedAreas(void)
 }
 
 // ---------------------------------------------------------------------------
+// S38 — forced nicknaming
+// ---------------------------------------------------------------------------
+
+bool32 MfNuzlocke_ResolveNicknamingActive(bool8 nuzlocke, bool8 nicknaming, bool32 gameClear)
+{
+    // ME IsNuzlockeNicknamingActive: master Nuzlocke on, nicknaming on, not post-champion.
+    // Easy mini-mode keeps nuzlocke=FALSE (and clears the nicknaming bit via the menu).
+    if (!nuzlocke)
+        return FALSE;
+    if (gameClear)
+        return FALSE;
+    return nicknaming;
+}
+
+bool32 MfNuzlocke_IsNicknamingActive(void)
+{
+#if !MF_NUZLOCKE || !MF_RULES_ENGINE
+    return FALSE;
+#else
+    return MfNuzlocke_ResolveNicknamingActive(
+        MfRules_IsNuzlocke(),
+        MfRules_HasNuzlockeNicknaming(),
+        FlagGet(FLAG_SYS_GAME_CLEAR));
+#endif
+}
+
+// ---------------------------------------------------------------------------
 // S37 — DUPES (species) + SHINY clauses
 // ---------------------------------------------------------------------------
 

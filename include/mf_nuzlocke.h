@@ -4,6 +4,7 @@
 // S35 — per-mapsec Nuzlocke encounter locking.
 // S36 — faint handling (cemetery / release) + whiteout rescue.
 // S37 — DUPES (species) + SHINY clauses.
+// S38 — forced nicknaming on catch / hatch.
 // Flags live in ModernRules.nuzlockeEncounterFlags (ADR 0012 / 0036).
 // Death mark is MON_DATA_MF_NUZLOCKE_DEAD on the Pokémon (ADR 0037).
 
@@ -57,6 +58,12 @@ bool32 MfNuzlocke_IsAreaCaptureBlocked(void);
 bool32 MfNuzlocke_ShouldShowFirstEncounterIcon(void);
 void MfNuzlocke_OnWildBattleEnd(u32 battleTypeFlags);
 void MfNuzlocke_DebugDumpUsedAreas(void);
+
+// --- S38 forced nicknaming -------------------------------------------------
+
+// Pure gate (unit-testable). ME: IsNuzlockeNicknamingActive.
+bool32 MfNuzlocke_ResolveNicknamingActive(bool8 nuzlocke, bool8 nicknaming, bool32 gameClear);
+bool32 MfNuzlocke_IsNicknamingActive(void);
 
 // --- S37 dupes / shiny clauses ---------------------------------------------
 

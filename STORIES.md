@@ -607,13 +607,14 @@ These exist to keep merging from `RHH/master` cheap. Violating them is the main 
 
 ### S38 — Forced nicknaming
 
-- [ ] **Status:** Not started
+- [x] **Status:** Complete
 
 - **Goal:** ME's `NICKNAMES` — every caught Pokémon must be nicknamed.
 - **Depends on:** S13
 - **Scope:** Force the naming screen on catch when the rule is on; handle the "no name entered" case; mirror ME's `IsNuzlockeNicknamingActive()`.
 - **Acceptance:** Catching always prompts for a nickname with the rule on, never with it off.
 - **Tests:** Manual catch flow.
+- **Decisions:** [`docs-mf/decisions/0039-product-nuzlocke-forced-nicknaming.md`](docs-mf/decisions/0039-product-nuzlocke-forced-nicknaming.md) — force catch + hatch; empty OK blocked; game-clear disables.
 
 ### S39 — Nuzlocke difficulty tiers
 

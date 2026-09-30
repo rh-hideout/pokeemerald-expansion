@@ -30,6 +30,7 @@
 #include "decompress.h"
 #include "constants/event_objects.h"
 #include "constants/rgb.h"
+#include "mf_nuzlocke.h"
 
 enum {
     INPUT_NONE,
@@ -1577,6 +1578,9 @@ static bool8 KeyboardKeyHandler_Backspace(u8 input)
 static bool8 KeyboardKeyHandler_OK(u8 input)
 {
     TryStartButtonFlash(BUTTON_OK, TRUE, FALSE);
+    // S38 / ME: refuse empty nickname while forced nicknaming is active.
+    if (MfNuzlocke_IsNicknamingActive() && GetTextEntryPosition() == 0)
+        return FALSE;
     if (input == INPUT_A_BUTTON)
     {
         PlaySE(SE_SELECT);
