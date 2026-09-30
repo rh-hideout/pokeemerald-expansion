@@ -19,12 +19,7 @@
 #include "constants/battle_special.h"
 
 static void Task_StartBattleAfterTransition(u8 taskId);
-static void UNUSED FillEReaderTrainerWithPlayerData(void);
 static void CopyEReaderTrainerFarewellMessage(void);
-
-#if FREE_BATTLE_TOWER_E_READER == FALSE
-static void SetEReaderTrainerChecksum(struct BattleTowerEReaderTrainer *ereaderTrainer);
-#endif //FREE_BATTLE_TOWER_E_READER
 
 void CB2_EndSpecialTrainerBattle(void)
 {
@@ -108,50 +103,10 @@ void SetEReaderTrainerGfxId(void)
     SetBattleFacilityTrainerGfxId(TRAINER_EREADER, 0);
 }
 
-// This is a leftover debugging function that is used to populate the E-Reader
-// trainer with the player's current data.
-static void UNUSED FillEReaderTrainerWithPlayerData(void)
-{
-#if FREE_BATTLE_TOWER_E_READER == FALSE
-    struct BattleTowerEReaderTrainer *ereaderTrainer = &gSaveBlock2Ptr->frontier.ereaderTrainer;
-    s32 i, j;
-
-    if (gSaveBlock2Ptr->playerGender != MALE)
-    {
-        ereaderTrainer->facilityClass = gTowerFemaleFacilityClasses[(gSaveBlock2Ptr->playerTrainerId[0] + gSaveBlock2Ptr->playerTrainerId[1]
-                                                        + gSaveBlock2Ptr->playerTrainerId[2] + gSaveBlock2Ptr->playerTrainerId[3]) % ARRAY_COUNT(gTowerFemaleFacilityClasses)].class;
-    }
-    else
-    {
-        ereaderTrainer->facilityClass = gTowerMaleFacilityClasses[(gSaveBlock2Ptr->playerTrainerId[0] + gSaveBlock2Ptr->playerTrainerId[1]
-                                                        + gSaveBlock2Ptr->playerTrainerId[2] + gSaveBlock2Ptr->playerTrainerId[3]) % ARRAY_COUNT(gTowerMaleFacilityClasses)].class;
-    }
-
-    CopyTrainerId(ereaderTrainer->trainerId, gSaveBlock2Ptr->playerTrainerId);
-    StringCopy_PlayerName(ereaderTrainer->name, gSaveBlock2Ptr->playerName);
-
-    ereaderTrainer->winStreak = 1;
-
-    j = 7;
-    for (i = 0; i < EASY_CHAT_BATTLE_WORDS_COUNT; i++)
-    {
-        ereaderTrainer->greeting[i] = gSaveBlock1Ptr->easyChatBattleStart[i];
-        ereaderTrainer->farewellPlayerLost[i] = j;
-        ereaderTrainer->farewellPlayerWon[i] = j + 6;
-        j++;
-    }
-
-    for (i = 0; i < (int)ARRAY_COUNT(ereaderTrainer->party); i++)
-        ConvertPokemonToBattleTowerPokemon(&gParties[B_TRAINER_PLAYER][i], &ereaderTrainer->party[i]);
-
-    SetEReaderTrainerChecksum(ereaderTrainer);
-#endif //FREE_BATTLE_TOWER_E_READER
-}
-
 u8 GetEreaderTrainerFrontSpriteId(void)
 {
 #if FREE_BATTLE_TOWER_E_READER == FALSE
-    return gFacilityClassToPicIndex[gSaveBlock2Ptr->frontier.ereaderTrainer.facilityClass];
+    return gFacilitySingleClassList[gSaveBlock2Ptr->frontier.ereaderTrainer.facilityClass].trainerPic;
 #else
     return 0;
 #endif //FREE_BATTLE_TOWER_E_READER
@@ -160,7 +115,7 @@ u8 GetEreaderTrainerFrontSpriteId(void)
 enum TrainerClassID GetEreaderTrainerClassId(void)
 {
 #if FREE_BATTLE_TOWER_E_READER == FALSE
-    return gFacilityClassToTrainerClass[gSaveBlock2Ptr->frontier.ereaderTrainer.facilityClass];
+    return gFacilitySingleClassList[gSaveBlock2Ptr->frontier.ereaderTrainer.facilityClass].trainerClass;
 #else
     return 0;
 #endif //FREE_BATTLE_TOWER_E_READER
@@ -214,17 +169,6 @@ void ValidateEReaderTrainer(void)
     gSpecialVar_Result = FALSE;
 #endif //FREE_BATTLE_TOWER_E_READER
 }
-
-#if FREE_BATTLE_TOWER_E_READER == FALSE
-static void SetEReaderTrainerChecksum(struct BattleTowerEReaderTrainer *ereaderTrainer)
-{
-    s32 i;
-
-    ereaderTrainer->checksum = 0;
-    for (i = 0; i < (sizeof(struct BattleTowerEReaderTrainer) - 4) / 4; i++) // - 4, because of the last field being the checksum itself.
-        ereaderTrainer->checksum += ((u32 *)ereaderTrainer)[i];
-}
-#endif //FREE_BATTLE_TOWER_E_READER
 
 void ClearEReaderTrainer(struct BattleTowerEReaderTrainer *ereaderTrainer)
 {

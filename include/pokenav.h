@@ -352,7 +352,7 @@ bool32 MatchCall_HasRematchId(u32 idx);
 bool32 MatchCall_GetEnabled(u32 idx);
 u32 MatchCall_GetRematchTableIdx(u32 idx);
 u32 GetTrainerIdxByRematchIdx(u32 rematchIdx);
-int MatchCall_GetOverrideFacilityClass(u32 idx);
+enum TrainerPicID MatchCall_GetOverrideTrainerPic(u32 idx);
 void MatchCall_GetMessage(u32 idx, u8 *dest);
 const u8 *MatchCall_GetOverrideFlavorText(u32 idx, u32 offset);
 void MatchCall_GetNameAndDesc(u32 idx, const u8 **desc, const u8 **name);

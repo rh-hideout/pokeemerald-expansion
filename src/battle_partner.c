@@ -72,7 +72,7 @@ static void FillFrontierPartnerParty(u16 trainerId)
         u32 monId = gSaveBlock2Ptr->frontier.trainerIds[i + 18];
         CreateFacilityMon(&gFacilityTrainerMons[monId], level, ivs, otID, 0, &gParties[B_TRAINER_PARTNER][i]);
         SetMonData(&gParties[B_TRAINER_PARTNER][i], MON_DATA_OT_NAME, gFacilityTrainers[trainerId].trainerName);
-        enum Gender gender = IsFrontierTrainerFemale(trainerId);
+        enum Gender gender = GetFrontierTrainerGender(trainerId);
         SetMonData(&gParties[B_TRAINER_PARTNER][i], MON_DATA_OT_GENDER, &gender);
     }
 }
@@ -100,7 +100,7 @@ static void FillFriendRecordPartnerParty(u16 friendRecordId)
         }
         CreateBattleTowerMon_HandleLevel(&gParties[B_TRAINER_PARTNER][i], &monData, TRUE);
         SetMonData(&gParties[B_TRAINER_PARTNER][i], MON_DATA_OT_NAME, trainerName);
-        enum Gender gender = IsFrontierTrainerFemale(friendRecordId + TRAINER_RECORD_MIXING_FRIEND);
+        enum Gender gender = GetFrontierTrainerGender(friendRecordId + TRAINER_RECORD_MIXING_FRIEND);
         SetMonData(&gParties[B_TRAINER_PARTNER][i], MON_DATA_OT_GENDER, &gender);
     }
 }
@@ -110,7 +110,7 @@ static void FillApprenticePartnerParty(u16 apprenticeId)
     for (u32 i = 0; i < FRONTIER_MULTI_PARTY_SIZE; i++)
     {
         CreateApprenticeMon(&gParties[B_TRAINER_PARTNER][i], &gSaveBlock2Ptr->apprentices[apprenticeId], gSaveBlock2Ptr->frontier.trainerIds[18 + i]);
-        enum Gender gender = IsFrontierTrainerFemale(apprenticeId + TRAINER_RECORD_MIXING_APPRENTICE);
+        enum Gender gender = GetFrontierTrainerGender(apprenticeId + TRAINER_RECORD_MIXING_APPRENTICE);
         SetMonData(&gParties[B_TRAINER_PARTNER][i], MON_DATA_OT_GENDER, &gender);
     }
 }

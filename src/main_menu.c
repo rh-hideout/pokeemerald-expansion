@@ -1926,12 +1926,12 @@ static void AddBirchSpeechObjects(u8 taskId)
     gSprites[lotadSpriteId].oam.priority = 0;
     gSprites[lotadSpriteId].invisible = TRUE;
     gTasks[taskId].tLotadSpriteId = lotadSpriteId;
-    brendanSpriteId = CreateTrainerSprite(FacilityClassToPicIndex(FACILITY_CLASS_BRENDAN), 120, 60, 0, NULL);
+    brendanSpriteId = CreateTrainerSprite(TRAINER_PIC_BRENDAN, 120, 60, 0, NULL);
     gSprites[brendanSpriteId].callback = SpriteCB_Null;
     gSprites[brendanSpriteId].invisible = TRUE;
     gSprites[brendanSpriteId].oam.priority = 0;
     gTasks[taskId].tBrendanSpriteId = brendanSpriteId;
-    maySpriteId = CreateTrainerSprite(FacilityClassToPicIndex(FACILITY_CLASS_MAY), 120, 60, 0, NULL);
+    maySpriteId = CreateTrainerSprite(TRAINER_PIC_MAY, 120, 60, 0, NULL);
     gSprites[maySpriteId].callback = SpriteCB_Null;
     gSprites[maySpriteId].invisible = TRUE;
     gSprites[maySpriteId].oam.priority = 0;

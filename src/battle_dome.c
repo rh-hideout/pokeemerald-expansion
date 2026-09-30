@@ -4193,7 +4193,7 @@ static void DisplayTrainerInfoOnCard(u8 flags, u8 trainerTourneyId)
     // Get class and trainer name
     i = 0;
     if (trainerId == TRAINER_PLAYER)
-        j = gFacilityClassToTrainerClass[FACILITY_CLASS_BRENDAN];
+        j = TRAINER_CLASS_RIVAL;
     else
         j = GetFrontierOpponentClass(trainerId);
 

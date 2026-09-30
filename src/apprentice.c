@@ -1179,50 +1179,14 @@ static void SaveApprentice(void)
 // Never called, APPRENTICE_FUNC_SET_GFX_SAVED is unused
 static void SetSavedApprenticeTrainerGfxId(void)
 {
-    u8 i;
-    u8 objectEventGfxId;
-    u8 class = gApprentices[gSaveBlock2Ptr->apprentices[0].id].facilityClass;
-
-    for (i = 0; i < ARRAY_COUNT(gTowerMaleFacilityClasses) && gTowerMaleFacilityClasses[i].class != class; i++)
-        ;
-    if (i != ARRAY_COUNT(gTowerMaleFacilityClasses))
-    {
-        objectEventGfxId = gTowerMaleFacilityClasses[i].gfxId;
-        VarSet(VAR_OBJ_GFX_ID_0, objectEventGfxId);
-        return;
-    }
-
-    for (i = 0; i < ARRAY_COUNT(gTowerFemaleFacilityClasses) && gTowerFemaleFacilityClasses[i].class != class; i++)
-        ;
-    if (i != ARRAY_COUNT(gTowerFemaleFacilityClasses))
-    {
-        objectEventGfxId = gTowerFemaleFacilityClasses[i].gfxId;
-        VarSet(VAR_OBJ_GFX_ID_0, objectEventGfxId);
-    }
+    enum FacilitySingleClass facilityClass = gApprentices[gSaveBlock2Ptr->apprentices[0].id].facilityClass;
+    VarSet(VAR_OBJ_GFX_ID_0, gFacilitySingleClassList[facilityClass].gfxId);
 }
 
 static void SetPlayerApprenticeTrainerGfxId(void)
 {
-    u8 i;
-    u8 objectEventGfxId;
-    u8 class = gApprentices[PLAYER_APPRENTICE.id].facilityClass;
-
-    for (i = 0; i < ARRAY_COUNT(gTowerMaleFacilityClasses) && gTowerMaleFacilityClasses[i].class != class; i++)
-        ;
-    if (i != ARRAY_COUNT(gTowerMaleFacilityClasses))
-    {
-        objectEventGfxId = gTowerMaleFacilityClasses[i].gfxId;
-        VarSet(VAR_OBJ_GFX_ID_0, objectEventGfxId);
-        return;
-    }
-
-    for (i = 0; i < ARRAY_COUNT(gTowerFemaleFacilityClasses) && gTowerFemaleFacilityClasses[i].class != class; i++)
-        ;
-    if (i != ARRAY_COUNT(gTowerFemaleFacilityClasses))
-    {
-        objectEventGfxId = gTowerFemaleFacilityClasses[i].gfxId;
-        VarSet(VAR_OBJ_GFX_ID_0, objectEventGfxId);
-    }
+    enum FacilitySingleClass facilityClass = gApprentices[PLAYER_APPRENTICE.id].facilityClass;
+    VarSet(VAR_OBJ_GFX_ID_0, gFacilitySingleClassList[facilityClass].gfxId);
 }
 
 // Both of the below functions may have been dummied / used for debug
