@@ -2466,7 +2466,7 @@ static enum PartyMon GetBestMonIntegrated(struct Pokemon *party, int lastId, enu
     // Different switching priorities depending on switching mid battle vs switching after a KO or slow switch
     if (isFreeSwitch)
     {
-        // Return Trapper > Revenge Killer > Type Matchup > Healing Candidate > Baton Pass > Best Damage
+        // Return Dynamic > Trapper > Revenge Killer > Type Matchup > Healing Candidate > Baton Pass > Best Damage
         if (switchContext.dynamicMultipleIds != 0) return getRandom ? GetSwitchinCandidate(switchContext.dynamicMultipleIds, battler, lastId, switchType) : switchContext.dynamicSingleId;
         else if (trapperIds != 0)               return GetSwitchinCandidate(trapperIds, battler, lastId, switchType);
         else if (revengeKillerIds != 0)         return GetSwitchinCandidate(revengeKillerIds, battler, lastId, switchType);
@@ -2482,7 +2482,7 @@ static enum PartyMon GetBestMonIntegrated(struct Pokemon *party, int lastId, enu
     }
     else
     {
-        // Return Trapper > Type Matchup > Best Defensive > Healing Candidate > Baton Pass
+        // Return Dynamic > Trapper > Type Matchup > Best Defensive > Healing Candidate > Baton Pass
         if (switchContext.dynamicSingleId != 0) return getRandom ? GetSwitchinCandidate(switchContext.dynamicMultipleIds, battler, lastId, switchType) : switchContext.dynamicSingleId;
         else if (trapperIds != 0)               return GetSwitchinCandidate(trapperIds, battler, lastId, switchType);
         else if (typeMatchupEffectiveIds != 0)  return getRandom ? GetSwitchinCandidate(typeMatchupEffectiveIds, battler, lastId, switchType) : bestTypeMatchupEffectiveId;
@@ -2608,7 +2608,7 @@ static enum PartyMon GetBestMonVanilla(struct Pokemon *party, int lastId, enum B
 
     bool32 getRandom = (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_RANDOMIZE_SWITCHIN) ? TRUE : FALSE;
 
-    // Baton Pass > Type Matchup > Best Damage
+    // Dynamic > Baton Pass > Type Matchup > Best Damage
     if (switchContext.dynamicMultipleIds != 0) return getRandom ? GetSwitchinCandidate(switchContext.dynamicMultipleIds, battler, lastId, switchType) : switchContext.dynamicSingleId;
     else if (batonPassIds != 0)                  return GetSwitchinCandidate(batonPassIds, battler, lastId, switchType);
     else if (typeMatchupIds != 0)           return GetSwitchinCandidate(typeMatchupIds, battler, lastId, switchType);
