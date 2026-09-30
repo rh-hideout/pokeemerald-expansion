@@ -327,6 +327,20 @@ static void MfDebug_Action_DumpUsedAreas(u8 taskId)
     MfNuzlocke_DebugDumpUsedAreas();
 }
 
+static void MfDebug_Action_DumpFaintPlan(u8 taskId)
+{
+    (void)taskId;
+    PlaySE(SE_SELECT);
+    MfNuzlocke_DebugDumpFaintPlan();
+}
+
+static void MfDebug_Action_ToggleFaintDryRun(u8 taskId)
+{
+    (void)taskId;
+    PlaySE(SE_SELECT);
+    MfNuzlocke_SetFaintDryRun(!MfNuzlocke_GetFaintDryRun());
+}
+
 // Instant statistical check — no wild encounters. Open mGBA Tools → View Logs.
 #define MF_DEBUG_SHINY_ROLLS 10000
 
@@ -393,6 +407,8 @@ static const struct DebugMenuOption sMfDebugInspectorOptions[] =
     { COMPOUND_STRING("Challenges…"),  MfDebug_Action_OpenPage, (void *)(uintptr_t)MF_DEBUG_PAGE_CHALLENGES },
     { COMPOUND_STRING("Dump (mGBA)"),  MfDebug_Action_Dump },
     { COMPOUND_STRING("Used areas…"), MfDebug_Action_DumpUsedAreas },
+    { COMPOUND_STRING("Faint plan…"), MfDebug_Action_DumpFaintPlan },
+    { COMPOUND_STRING("Faint dry-run"), MfDebug_Action_ToggleFaintDryRun },
     { COMPOUND_STRING("Cancel"),       DebugAction_Cancel },
     { NULL }
 };
@@ -410,6 +426,8 @@ const struct DebugMenuOption gMfDebugMenuOptions[] =
     { COMPOUND_STRING("Rules viewer…"), MfDebug_Action_OpenRulesViewer },
     { COMPOUND_STRING("Shiny roll test"), MfDebug_Action_ShinyRollTest },
     { COMPOUND_STRING("Used areas…"), MfDebug_Action_DumpUsedAreas },
+    { COMPOUND_STRING("Faint plan…"), MfDebug_Action_DumpFaintPlan },
+    { COMPOUND_STRING("Faint dry-run"), MfDebug_Action_ToggleFaintDryRun },
     { COMPOUND_STRING("Cancel"),           DebugAction_Cancel },
     { NULL }
 };

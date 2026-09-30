@@ -1,13 +1,29 @@
 #include "global.h"
 #include "event_data.h"
+#include "item.h"
+#include "main.h"
 #include "mf_nuzlocke.h"
 #include "mf_rules.h"
 #include "overworld.h"
+#include "party_menu.h"
+#include "pokemon.h"
+#include "pokemon_storage_system.h"
 #include "region_map.h"
+#include "string_util.h"
 #include "constants/battle.h"
 #include "constants/flags.h"
+#include "constants/items.h"
+#include "constants/party_menu.h"
 #include "constants/region_map_sections.h"
 #include "gba/isagbprint.h"
+
+#if MF_NUZLOCKE && MF_RULES_ENGINE
+static bool8 sMfNuzlockeFaintDryRun;
+#endif
+
+// ---------------------------------------------------------------------------
+// S35 — encounter flags
+// ---------------------------------------------------------------------------
 
 bool8 MfNuzlockeFlagGetFrom(const u8 *flags, u16 mapsec)
 {
@@ -189,6 +205,348 @@ void MfNuzlocke_DebugDumpUsedAreas(void)
     }
     if (count == 0)
         DebugPrintfLevel(MGBA_LOG_WARN, "  (none)");
+#else
+    (void)0;
+#endif
+}
+
+// ---------------------------------------------------------------------------
+// S36 — faint handling (pure helpers)
+// ---------------------------------------------------------------------------
+
+enum MfNuzlockeFaintFate MfNuzlocke_ResolveFaintFate(bool8 nuzlocke, bool8 easy, bool8 deletion, bool8 nuzlockeRuntimeActive)
+{
+    // Easy mini-mode: always Cemetery, even without full Nuzlocke gates (ME).
+    if (easy && !nuzlocke)
+        return MF_NUZLOCKE_FAINT_CEMETERY;
+
+    // Full Nuzlocke only while runtime-active (starter+Pokédex, pre-clear).
+    if (!nuzlocke || !nuzlockeRuntimeActive)
+        return MF_NUZLOCKE_FAINT_SKIP;
+
+    // FAINTING: Cemetery (false) / Release (true). Easy under full Nuzlocke
+    // still honors the FAINTING toggle (ME: Easy path only when !IsNuzlockeActive).
+    if (deletion)
+        return MF_NUZLOCKE_FAINT_RELEASE;
+    return MF_NUZLOCKE_FAINT_CEMETERY;
+}
+
+bool32 MfNuzlocke_BattleAllowsFaintHandling(u32 battleTypeFlags)
+{
+    // ME excludes link / tutorial / frontier / partner — not trainers/wilds.
+    if (battleTypeFlags & (BATTLE_TYPE_LINK
+                         | BATTLE_TYPE_RECORDED_LINK
+                         | BATTLE_TYPE_FIRST_BATTLE
+                         | BATTLE_TYPE_CATCH_TUTORIAL
+                         | BATTLE_TYPE_INGAME_PARTNER
+                         | BATTLE_TYPE_FRONTIER
+                         | BATTLE_TYPE_RECORDED))
+        return FALSE;
+    return TRUE;
+}
+
+bool32 MfNuzlocke_PartySlotIsFaintedVictim(bool32 hasSpecies, bool32 isEgg, u32 hp)
+{
+    if (!hasSpecies || isEgg)
+        return FALSE;
+    return hp == 0;
+}
+
+bool32 MfNuzlocke_BoxSlotIsUsableReplacement(bool32 hasSpecies, bool32 isEgg, bool32 isDead)
+{
+    return hasSpecies && !isEgg && !isDead;
+}
+
+void MfNuzlocke_PlanFaintedPartyFrom(struct Pokemon *party, enum MfNuzlockeFaintFate fate, struct MfNuzlockeFaintPlan *out)
+{
+    u8 i;
+
+    out->slotMask = 0;
+    out->count = 0;
+    out->fate = (u8)fate;
+
+    if (party == NULL || fate == MF_NUZLOCKE_FAINT_SKIP)
+        return;
+
+    for (i = 0; i < PARTY_SIZE; i++)
+    {
+        struct Pokemon *mon = &party[i];
+        if (!MfNuzlocke_PartySlotIsFaintedVictim(
+                GetMonData(mon, MON_DATA_SANITY_HAS_SPECIES),
+                GetMonData(mon, MON_DATA_IS_EGG),
+                GetMonData(mon, MON_DATA_HP)))
+            continue;
+        out->slotMask |= (u8)(1 << i);
+        out->count++;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// S36 — live wrappers
+// ---------------------------------------------------------------------------
+
+bool32 MfNuzlocke_IsFaintHandlingActive(void)
+{
+#if !MF_NUZLOCKE || !MF_RULES_ENGINE
+    return FALSE;
+#else
+    if (MfRules_IsNuzlockeEasy() && !MfRules_IsNuzlocke())
+        return TRUE;
+    return MfNuzlocke_IsEncounterLockActive(); // same gates as full Nuzlocke
+#endif
+}
+
+enum MfNuzlockeFaintFate MfNuzlocke_GetActiveFaintFate(void)
+{
+#if !MF_NUZLOCKE || !MF_RULES_ENGINE
+    return MF_NUZLOCKE_FAINT_SKIP;
+#else
+    const struct ModernRules *r = MfRules_GetActiveRules();
+    return MfNuzlocke_ResolveFaintFate(
+        r->nuzlocke,
+        r->nuzlockeEasy,
+        r->nuzlockeDeletion,
+        MfNuzlocke_IsEncounterLockActive());
+#endif
+}
+
+bool32 MfNuzlocke_IsMonDead(struct Pokemon *mon)
+{
+    if (mon == NULL)
+        return FALSE;
+    return GetMonData(mon, MON_DATA_MF_NUZLOCKE_DEAD);
+}
+
+bool32 MfNuzlocke_IsBoxMonDead(struct BoxPokemon *boxMon)
+{
+    if (boxMon == NULL)
+        return FALSE;
+    return GetBoxMonData(boxMon, MON_DATA_MF_NUZLOCKE_DEAD);
+}
+
+bool32 MfNuzlocke_IsCemeteryLocked(bool32 isDead)
+{
+    if (!isDead)
+        return FALSE;
+    // ME unlocks cemetery mons after champion; FR uses game-clear.
+    if (FlagGet(FLAG_SYS_GAME_CLEAR))
+        return FALSE;
+    return TRUE;
+}
+
+bool32 MfNuzlocke_GetFaintDryRun(void)
+{
+#if MF_NUZLOCKE && MF_RULES_ENGINE
+    return sMfNuzlockeFaintDryRun;
+#else
+    return FALSE;
+#endif
+}
+
+void MfNuzlocke_SetFaintDryRun(bool32 enabled)
+{
+#if MF_NUZLOCKE && MF_RULES_ENGINE
+    sMfNuzlockeFaintDryRun = enabled ? TRUE : FALSE;
+#ifndef NDEBUG
+    DebugPrintfLevel(MGBA_LOG_WARN, "MF Nuzlocke faint dry-run=%u", sMfNuzlockeFaintDryRun);
+#endif
+#else
+    (void)enabled;
+#endif
+}
+
+static void MfNuzlocke_ReturnHeldItemToBag(struct Pokemon *mon)
+{
+    u32 monItem = GetMonData(mon, MON_DATA_HELD_ITEM);
+    u16 none = ITEM_NONE;
+
+    if (monItem != ITEM_NONE)
+    {
+        AddBagItem(monItem, 1);
+        SetMonData(mon, MON_DATA_HELD_ITEM, &none);
+    }
+}
+
+void MfNuzlocke_DeletePartyMon(u8 position, enum MfNuzlockeFaintFate fate)
+{
+    struct Pokemon *pokemon;
+    u8 dead = TRUE;
+
+    if (position >= PARTY_SIZE || fate == MF_NUZLOCKE_FAINT_SKIP)
+        return;
+
+    pokemon = &gParties[B_TRAINER_PLAYER][position];
+    if (!GetMonData(pokemon, MON_DATA_SANITY_HAS_SPECIES))
+        return;
+
+    if (MfNuzlocke_GetFaintDryRun())
+    {
+#ifndef NDEBUG
+        u8 nick[POKEMON_NAME_LENGTH + 1];
+        GetMonData(pokemon, MON_DATA_NICKNAME, nick);
+        StringGet_Nickname(nick);
+        DebugPrintfLevel(MGBA_LOG_WARN,
+            "MF Nuzlocke DRY-RUN: would %s party[%u] species=%u nick=%s",
+            fate == MF_NUZLOCKE_FAINT_RELEASE ? "RELEASE" : "CEMETERY",
+            position,
+            GetMonData(pokemon, MON_DATA_SPECIES),
+            nick);
+#endif
+        return;
+    }
+
+    if (fate == MF_NUZLOCKE_FAINT_CEMETERY)
+    {
+        SetMonData(pokemon, MON_DATA_MF_NUZLOCKE_DEAD, &dead);
+        // ME still purges the party slot even if PC is full — mon is lost.
+        CopyMonToPC(pokemon);
+    }
+
+    ZeroMonData(pokemon);
+}
+
+void MfNuzlocke_DeleteFaintedPartyPokemon(void)
+{
+    u8 i;
+    enum MfNuzlockeFaintFate fate = MfNuzlocke_GetActiveFaintFate();
+    struct MfNuzlockeFaintPlan plan;
+
+    if (fate == MF_NUZLOCKE_FAINT_SKIP)
+        return;
+
+    MfNuzlocke_PlanFaintedPartyFrom(gParties[B_TRAINER_PLAYER], fate, &plan);
+    if (plan.count == 0)
+        return;
+
+#ifndef NDEBUG
+    if (MfNuzlocke_GetFaintDryRun())
+    {
+        DebugPrintfLevel(MGBA_LOG_WARN,
+            "MF Nuzlocke DRY-RUN: %u fainted slot(s) fate=%u mask=0x%02X",
+            plan.count, plan.fate, plan.slotMask);
+    }
+#endif
+
+    for (i = 0; i < PARTY_SIZE; i++)
+    {
+        struct Pokemon *pokemon;
+        if (!(plan.slotMask & (1 << i)))
+            continue;
+
+        pokemon = &gParties[B_TRAINER_PLAYER][i];
+        MfNuzlocke_ReturnHeldItemToBag(pokemon);
+        MfNuzlocke_DeletePartyMon(i, fate);
+    }
+
+    if (!MfNuzlocke_GetFaintDryRun())
+    {
+        CompactPartySlots();
+        CalculatePlayerPartyCount();
+    }
+}
+
+void MfNuzlocke_OnBattleEnd(u32 battleTypeFlags)
+{
+    if (!MfNuzlocke_IsFaintHandlingActive())
+        return;
+    if (!MfNuzlocke_BattleAllowsFaintHandling(battleTypeFlags))
+        return;
+    MfNuzlocke_DeleteFaintedPartyPokemon();
+}
+
+u16 MfNuzlocke_FindFirstLivingBoxIndex(void)
+{
+    u16 boxId;
+    u16 boxPos;
+
+    for (boxId = 0; boxId < TOTAL_BOXES_COUNT; boxId++)
+    {
+        for (boxPos = 0; boxPos < IN_BOX_COUNT; boxPos++)
+        {
+            struct BoxPokemon *boxMon = GetBoxedMonPtr(boxId, boxPos);
+            if (MfNuzlocke_BoxSlotIsUsableReplacement(
+                    GetBoxMonData(boxMon, MON_DATA_SPECIES) != SPECIES_NONE,
+                    GetBoxMonData(boxMon, MON_DATA_IS_EGG),
+                    GetBoxMonData(boxMon, MON_DATA_MF_NUZLOCKE_DEAD)))
+            {
+                return (u16)(boxId * IN_BOX_COUNT + boxPos);
+            }
+        }
+    }
+    return MF_NUZLOCKE_NO_BOX_MON;
+}
+
+void MfNuzlocke_MoveFirstLivingBoxPokemon(void)
+{
+    u16 position = MfNuzlocke_FindFirstLivingBoxIndex();
+    u16 boxNum;
+    u16 boxIndex;
+
+    if (position == MF_NUZLOCKE_NO_BOX_MON)
+        return;
+
+    boxNum = position / IN_BOX_COUNT;
+    boxIndex = position - (boxNum * IN_BOX_COUNT);
+    BoxMonAtToMon(boxNum, boxIndex, &gParties[B_TRAINER_PLAYER][0]);
+    ZeroBoxMonAt(boxNum, boxIndex);
+    CalculatePlayerPartyCount();
+}
+
+void MfNuzlocke_OnWhiteOut(void)
+{
+#if !MF_NUZLOCKE || !MF_RULES_ENGINE
+    return;
+#else
+    if (!MfNuzlocke_IsFaintHandlingActive())
+        return;
+
+    // Soft-reset when no living non-dead replacement exists (ME parity),
+    // covering the empty-party whiteout after last-mon deletion.
+    if (MfNuzlocke_FindFirstLivingBoxIndex() == MF_NUZLOCKE_NO_BOX_MON)
+    {
+#ifndef NDEBUG
+        DebugPrintfLevel(MGBA_LOG_WARN, "MF Nuzlocke: no box replacement — soft reset");
+#endif
+        DoSoftReset();
+        return;
+    }
+
+    // ME only auto-fills on full Nuzlocke; Easy would softlock with an empty
+    // party. Always pull a living box mon when faint handling is active (ADR 0037).
+    MfNuzlocke_MoveFirstLivingBoxPokemon();
+#endif
+}
+
+void MfNuzlocke_DebugDumpFaintPlan(void)
+{
+#ifndef NDEBUG
+    enum MfNuzlockeFaintFate fate = MfNuzlocke_GetActiveFaintFate();
+    struct MfNuzlockeFaintPlan plan;
+    u8 i;
+
+    MfNuzlocke_PlanFaintedPartyFrom(gParties[B_TRAINER_PLAYER], fate, &plan);
+    DebugPrintfLevel(MGBA_LOG_WARN, "=== MF Nuzlocke faint plan ===");
+    DebugPrintfLevel(MGBA_LOG_WARN, "active=%u fate=%u dryRun=%u count=%u mask=0x%02X",
+        MfNuzlocke_IsFaintHandlingActive(),
+        fate,
+        MfNuzlocke_GetFaintDryRun(),
+        plan.count,
+        plan.slotMask);
+    for (i = 0; i < PARTY_SIZE; i++)
+    {
+        struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][i];
+        if (!GetMonData(mon, MON_DATA_SANITY_HAS_SPECIES))
+            continue;
+        DebugPrintfLevel(MGBA_LOG_WARN,
+            "  party[%u] species=%u hp=%u/%u egg=%u dead=%u victim=%u",
+            i,
+            GetMonData(mon, MON_DATA_SPECIES),
+            GetMonData(mon, MON_DATA_HP),
+            GetMonData(mon, MON_DATA_MAX_HP),
+            GetMonData(mon, MON_DATA_IS_EGG),
+            GetMonData(mon, MON_DATA_MF_NUZLOCKE_DEAD),
+            (plan.slotMask >> i) & 1);
+    }
 #else
     (void)0;
 #endif

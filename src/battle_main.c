@@ -5324,6 +5324,8 @@ static void HandleEndTurn_FinishBattle(void)
 
         // S35 — first wild encounter in a mapsec consumes the area (ME parity).
         MfNuzlocke_OnWildBattleEnd(gBattleTypeFlags);
+        // S36 — cemetery / release fainted party mons after battle (not mid-battle).
+        MfNuzlocke_OnBattleEnd(gBattleTypeFlags);
 
         // Set Battle Controllers to BATTLE_CONTROLLER_NONE
         for (enum BattlerId i = 0; i < MAX_BATTLERS_COUNT; i++)

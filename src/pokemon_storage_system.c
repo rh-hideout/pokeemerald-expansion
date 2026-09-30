@@ -19,6 +19,7 @@
 #include "mail.h"
 #include "main.h"
 #include "menu.h"
+#include "mf_nuzlocke.h"
 #include "mon_markings.h"
 #include "naming_screen.h"
 #include "overworld.h"
@@ -109,6 +110,7 @@ enum {
     MSG_ITEM_IS_HELD,
     MSG_CHANGED_TO_ITEM,
     MSG_CANT_STORE_MAIL,
+    MSG_NUZLOCKE, // S36 — cemetery mon locked until game clear
 };
 
 // IDs for how to resolve variables in the above messages
@@ -487,6 +489,7 @@ struct PokemonStorageSystemData
     u8 displayMonMarkings;
     u8 displayMonLevel;
     bool8 displayMonIsEgg;
+    bool8 displayMonMfNuzlockeDead; // S36 cemetery mark
     u8 displayMonName[POKEMON_NAME_LENGTH + 1];
     u8 displayMonNameText[36];
     u8 displayMonSpeciesName[36];
@@ -1079,6 +1082,7 @@ static const struct StorageMessage sMessages[] =
     [MSG_ITEM_IS_HELD]         = {COMPOUND_STRING("{DYNAMIC 0} is now held."),   MSG_VAR_ITEM_NAME},
     [MSG_CHANGED_TO_ITEM]      = {COMPOUND_STRING("Changed to {DYNAMIC 0}."),    MSG_VAR_ITEM_NAME},
     [MSG_CANT_STORE_MAIL]      = {COMPOUND_STRING("MAIL can't be stored!"),      MSG_VAR_NONE},
+    [MSG_NUZLOCKE]             = {COMPOUND_STRING("{PKMN} fainted in Nuzlocke!"), MSG_VAR_NONE},
 };
 
 static const struct WindowTemplate sYesNoWindowTemplate =
@@ -2597,6 +2601,13 @@ static void Task_OnSelectedMon(u8 taskId)
             }
             break;
         case MENU_PLACE:
+            // S36 — block placing a cemetery mon into the party until game clear.
+            if (sIsMonBeingMoved && sCursorArea == CURSOR_AREA_IN_PARTY
+             && MfNuzlocke_IsCemeteryLocked(MfNuzlocke_IsMonDead(&sStorage->movingMon)))
+            {
+                sStorage->state = 7;
+                break;
+            }
             PlaySE(SE_SELECT);
             ClearBottomWindow();
             SetPokeStorageTask(Task_PlaceMon);
@@ -2605,6 +2616,11 @@ static void Task_OnSelectedMon(u8 taskId)
             if (!CanShiftMon())
             {
                 sStorage->state = 3;
+            }
+            else if (sIsMonBeingMoved && sCursorArea == CURSOR_AREA_IN_PARTY
+                  && MfNuzlocke_IsCemeteryLocked(MfNuzlocke_IsMonDead(&sStorage->movingMon)))
+            {
+                sStorage->state = 7;
             }
             else
             {
@@ -2666,6 +2682,11 @@ static void Task_OnSelectedMon(u8 taskId)
             SetPokeStorageTask(Task_TakeItemForMoving);
             break;
         case MENU_GIVE:
+            if (MfNuzlocke_IsCemeteryLocked(GetCurrentBoxMonData(sCursorPosition, MON_DATA_MF_NUZLOCKE_DEAD)))
+            {
+                sStorage->state = 7;
+                break;
+            }
             PlaySE(SE_SELECT);
             SetPokeStorageTask(Task_GiveMovingItemToMon);
             break;
@@ -2677,6 +2698,11 @@ static void Task_OnSelectedMon(u8 taskId)
             SetPokeStorageTask(Task_SwitchSelectedItem);
             break;
         case MENU_GIVE_2:
+            if (MfNuzlocke_IsCemeteryLocked(GetCurrentBoxMonData(sCursorPosition, MON_DATA_MF_NUZLOCKE_DEAD)))
+            {
+                sStorage->state = 7;
+                break;
+            }
             PlaySE(SE_SELECT);
             SetPokeStorageTask(Task_GiveItemFromBag);
             break;
@@ -2726,6 +2752,11 @@ static void Task_OnSelectedMon(u8 taskId)
             ClearBottomWindow();
             SetPokeStorageTask(Task_PokeStorageMain);
         }
+        break;
+    case 7: // S36 — cemetery mon locked
+        PlaySE(SE_FAILURE);
+        PrintMessage(MSG_NUZLOCKE);
+        sStorage->state = 6;
         break;
     }
 }
@@ -2796,6 +2827,12 @@ static void Task_WithdrawMon(u8 taskId)
         if (CalculatePlayerPartyCount() == PARTY_SIZE)
         {
             PrintMessage(MSG_PARTY_FULL);
+            sStorage->state = 1;
+        }
+        else if (MfNuzlocke_IsCemeteryLocked(GetCurrentBoxMonData(sCursorPosition, MON_DATA_MF_NUZLOCKE_DEAD))
+              || (sIsMonBeingMoved && MfNuzlocke_IsCemeteryLocked(MfNuzlocke_IsMonDead(&sStorage->movingMon))))
+        {
+            PrintMessage(MSG_NUZLOCKE);
             sStorage->state = 1;
         }
         else
@@ -4002,6 +4039,19 @@ static void LoadDisplayMonGfx(enum Species species, u32 pid, bool32 isEgg)
         LoadSpecialPokePicIsEgg(sStorage->tileBuffer, species, pid, TRUE, isEgg);
         CpuCopy32(sStorage->tileBuffer, sStorage->displayMonTilePtr, MON_PIC_SIZE);
         LoadPalette(sStorage->displayMonPalette, sStorage->displayMonPalOffset, PLTT_SIZE_4BPP);
+        if (MfNuzlocke_IsCemeteryLocked(sStorage->displayMonMfNuzlockeDead))
+        {
+#if MF_NUZLOCKE_CEMETERY_ICON_GRAY
+            TintPalette_GrayScale2(&gPlttBufferUnfaded[sStorage->displayMonPalOffset], 0x20);
+            TintPalette_GrayScale2(&gPlttBufferFaded[sStorage->displayMonPalOffset], 0x20);
+#else
+            sStorage->displayMonSprite->oam.objMode = ST_OAM_OBJ_BLEND;
+#endif
+        }
+        else
+        {
+            sStorage->displayMonSprite->oam.objMode = ST_OAM_OBJ_NORMAL;
+        }
         sStorage->displayMonSprite->invisible = FALSE;
     }
     else
@@ -4464,6 +4514,9 @@ static bool32 ShouldBoxmonSpriteBeTransparent(u32 boxId, u32 boxPosition)
         return TRUE;
     if (sStorage->boxOption == OPTION_SELECT_MON
      && IsBoxMonExcluded(GetBoxedMonPtr(boxId, boxPosition)))
+        return TRUE;
+    // S36 — cemetery icons blend until game clear (ME uses blend / greyscale).
+    if (MfNuzlocke_IsCemeteryLocked(GetBoxMonDataAt(boxId, boxPosition, MON_DATA_MF_NUZLOCKE_DEAD)))
         return TRUE;
     return FALSE;
 }
@@ -7011,6 +7064,7 @@ static void SetDisplayMonData(void *pokemon, u8 mode)
             sStorage->displayMonPalette = GetMonFrontSpritePal(mon);
             gender = GetMonGender(mon);
             sStorage->displayMonItemId = GetMonData(mon, MON_DATA_HELD_ITEM);
+            sStorage->displayMonMfNuzlockeDead = GetMonData(mon, MON_DATA_MF_NUZLOCKE_DEAD);
         }
     }
     else if (mode == MODE_BOX)
@@ -7036,16 +7090,19 @@ static void SetDisplayMonData(void *pokemon, u8 mode)
             sStorage->displayMonPalette = GetMonSpritePalFromSpeciesAndPersonalityIsEgg(sStorage->displayMonSpecies, isShiny, sStorage->displayMonPersonality, sStorage->displayMonIsEgg);
             gender = GetGenderFromSpeciesAndPersonality(sStorage->displayMonSpecies, sStorage->displayMonPersonality);
             sStorage->displayMonItemId = GetBoxMonData(boxMon, MON_DATA_HELD_ITEM);
+            sStorage->displayMonMfNuzlockeDead = GetBoxMonData(boxMon, MON_DATA_MF_NUZLOCKE_DEAD);
         }
     }
     else
     {
         sStorage->displayMonSpecies = SPECIES_NONE;
         sStorage->displayMonItemId = ITEM_NONE;
+        sStorage->displayMonMfNuzlockeDead = FALSE;
     }
 
     if (sStorage->displayMonSpecies == SPECIES_NONE)
     {
+        sStorage->displayMonMfNuzlockeDead = FALSE;
         StringFill(sStorage->displayMonName, CHAR_SPACE, 5);
         StringFill(sStorage->displayMonNameText, CHAR_SPACE, 8);
         StringFill(sStorage->displayMonSpeciesName, CHAR_SPACE, 8);

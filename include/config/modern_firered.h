@@ -29,6 +29,11 @@
 #define MF_NUZLOCKE                  TRUE    // Nuzlocke encounter / faint handling
 #endif
 
+// ME TX_NUZLOCKE_CEMETERY_ICON_GRAY — greyscale fainted cemetery mons in the PC.
+#ifndef MF_NUZLOCKE_CEMETERY_ICON_GRAY
+#define MF_NUZLOCKE_CEMETERY_ICON_GRAY TRUE
+#endif
+
 #ifndef MF_OPTIONS_PLUS
 #define MF_OPTIONS_PLUS              TRUE    // Options+ QoL menu and settings
 #endif

@@ -44,6 +44,7 @@
 #include "match_call.h"
 #include "menu.h"
 #include "metatile_behavior.h"
+#include "mf_nuzlocke.h"
 #include "mirage_tower.h"
 #include "money.h"
 #include "new_game.h"
@@ -392,6 +393,9 @@ static void (*const sMovementStatusHandler[])(struct LinkPlayerObjectEvent *, st
 // code
 void DoWhiteOut(void)
 {
+    // S36 — before heal/warp: soft-reset if no living box mon, else pull one
+    // into the party so Cemetery/Release whiteouts cannot softlock.
+    MfNuzlocke_OnWhiteOut();
     RunScriptImmediately(EventScript_WhiteOut);
     HealPlayerParty();
     Overworld_ResetStateAfterWhiteOut();

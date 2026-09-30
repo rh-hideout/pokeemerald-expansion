@@ -579,7 +579,7 @@ These exist to keep merging from `RHH/master` cheap. Violating them is the main 
 
 ### S36 — Faint handling & deletion
 
-- [ ] **Status:** Not started
+- [x] **Status:** Complete
 
 - **Goal:** Fainted Pokémon are permanently lost, safely.
 - **Depends on:** S35
@@ -590,6 +590,7 @@ These exist to keep merging from `RHH/master` cheap. Violating them is the main 
   - Add a debug dry-run that logs what *would* be deleted without deleting.
 - **Acceptance:** Fainted Pokémon are handled per the selected rule with no corruption, no softlock on whiteout, and no way to recover them normally.
 - **Tests:** Unit tests for every deletion path including the last-Pokémon case; manual faint scenarios. **Do not ship this story without them.**
+- **Decisions:** [`docs-mf/decisions/0037-product-nuzlocke-faint-handling.md`](docs-mf/decisions/0037-product-nuzlocke-faint-handling.md) — Cemetery/Release after battle; death bit on Pokémon; Easy always Cemetery; whiteout auto-fill on Easy too (ME softlock fix).
 
 ### S37 — Dupes & shiny clauses
 
