@@ -5,17 +5,23 @@
 // S36 — faint handling (cemetery / release) + whiteout rescue.
 // S37 — DUPES (species) + SHINY clauses.
 // S38 — forced nicknaming on catch / hatch.
+// S39 — Off/Easy/Normal/Hardcore tier bundles + IsNuzlockeActive.
 // Flags live in ModernRules.nuzlockeEncounterFlags (ADR 0012 / 0036).
 // Death mark is MON_DATA_MF_NUZLOCKE_DEAD on the Pokémon (ADR 0037).
+// Tier semantics: ADR 0040.
 
 #include "gba/types.h"
 #include "constants/species.h"
 
 struct Pokemon;
 struct BoxPokemon;
+struct ModernRules;
 
 // Sentinel: no living non-dead box mon available for whiteout rescue.
 #define MF_NUZLOCKE_NO_BOX_MON 0xFFFF
+
+// Hardcore seeds LEVEL CAP Normal (1) when currently Off — enforced in S41.
+#define MF_NUZLOCKE_HARDCORE_SEED_LEVEL_CAP 1
 
 enum MfNuzlockeFaintFate
 {
@@ -38,6 +44,36 @@ struct MfNuzlockeFaintPlan
     u8 count;
     u8 fate;     // MfNuzlockeFaintFate (cemetery or release when count > 0)
 };
+
+// S39 — expected rule vector for a packed Off/Easy/Normal/Hardcore mode.
+// mode uses MfNuzlockeMode values (mf_rules.h) without including that header.
+struct MfNuzlockeTierBundle
+{
+    bool8 nuzlocke;
+    bool8 easy;
+    bool8 hardcore;
+    bool8 areaLock;            // full Nuzlocke gates when progression allows
+    bool8 faintHandling;       // Easy always; Normal/Hardcore when active
+    bool8 clausesEditable;     // DUPES / SHINY / NICKNAMES / FAINTING
+    bool8 endRunOnWhiteOut;    // ClearSaveData + soft reset (Hardcore)
+    bool8 forceBattleStyleSet; // Options SET while Hardcore
+    bool8 seedNoItemPlayer;    // ban player battle items (S43 enforces)
+    u8 seedLevelCapIfOff;      // 0 = no seed; else LEVEL CAP when currently Off
+};
+
+// --- S39 tier bundles / IsNuzlockeActive -----------------------------------
+
+void MfNuzlocke_FillTierBundle(u8 mode, struct MfNuzlockeTierBundle *out);
+// Seed Difficulty extras when entering Hardcore (idempotent for levelCap>0).
+void MfNuzlocke_ApplyHardcoreDifficultySeeds(struct ModernRules *r);
+
+// Pure gate (unit-testable). ME: IsNuzlockeActive.
+bool32 MfNuzlocke_ResolveIsActive(bool8 nuzlocke, bool32 hasStarter, bool32 hasPokedex, bool32 gameClear);
+bool32 MfNuzlocke_IsActive(void); // ME IsNuzlockeActive equivalent
+
+bool32 MfNuzlocke_ResolveEndRunOnWhiteOut(bool8 hardcore, bool32 nuzlockeActive, bool32 gameClear);
+bool32 MfNuzlocke_ShouldEndRunOnWhiteOut(void);
+bool32 MfNuzlocke_ForcesSetBattleStyle(void);
 
 // --- S35 encounter flags ---------------------------------------------------
 

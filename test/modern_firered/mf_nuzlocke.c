@@ -1,5 +1,6 @@
 #include "global.h"
 #include "mf_nuzlocke.h"
+#include "mf_rules.h"
 #include "pokedex.h"
 #include "pokemon.h"
 #include "pokemon_storage_system.h"
@@ -361,4 +362,110 @@ TEST("MF: nuzlocke all-owned still classifies as blocked")
     EXPECT_EQ(MfNuzlocke_ClassifySpeciesClause(TRUE, TRUE, TRUE), MF_NUZLOCKE_SPECIES_SAME);
     EXPECT_EQ(MfNuzlocke_ClassifySpeciesClause(TRUE, FALSE, TRUE), MF_NUZLOCKE_SPECIES_LINE);
     EXPECT(!MfNuzlocke_ShouldConsumeEncounterAfterClause(TRUE));
+}
+
+// --- S39 difficulty tiers --------------------------------------------------
+
+TEST("MF: nuzlocke Off tier bundle is empty")
+{
+    struct MfNuzlockeTierBundle b;
+
+    MfNuzlocke_FillTierBundle(MF_NUZLOCKE_OFF, &b);
+    EXPECT(!b.nuzlocke);
+    EXPECT(!b.easy);
+    EXPECT(!b.hardcore);
+    EXPECT(!b.areaLock);
+    EXPECT(!b.faintHandling);
+    EXPECT(!b.clausesEditable);
+    EXPECT(!b.endRunOnWhiteOut);
+    EXPECT(!b.forceBattleStyleSet);
+    EXPECT(!b.seedNoItemPlayer);
+    EXPECT_EQ(b.seedLevelCapIfOff, 0);
+}
+
+TEST("MF: nuzlocke Easy mini-mode bundle is faint-only")
+{
+    struct MfNuzlockeTierBundle b;
+
+    MfNuzlocke_FillTierBundle(MF_NUZLOCKE_EASY, &b);
+    EXPECT(!b.nuzlocke);
+    EXPECT(b.easy);
+    EXPECT(!b.hardcore);
+    EXPECT(!b.areaLock);
+    EXPECT(b.faintHandling);
+    EXPECT(!b.clausesEditable);
+    EXPECT(!b.endRunOnWhiteOut);
+    EXPECT(!b.forceBattleStyleSet);
+    EXPECT(!b.seedNoItemPlayer);
+    EXPECT_EQ(b.seedLevelCapIfOff, 0);
+}
+
+TEST("MF: nuzlocke Normal tier bundle")
+{
+    struct MfNuzlockeTierBundle b;
+
+    MfNuzlocke_FillTierBundle(MF_NUZLOCKE_NORMAL, &b);
+    EXPECT(b.nuzlocke);
+    EXPECT(!b.easy);
+    EXPECT(!b.hardcore);
+    EXPECT(b.areaLock);
+    EXPECT(b.faintHandling);
+    EXPECT(b.clausesEditable);
+    EXPECT(!b.endRunOnWhiteOut);
+    EXPECT(!b.forceBattleStyleSet);
+    EXPECT(!b.seedNoItemPlayer);
+    EXPECT_EQ(b.seedLevelCapIfOff, 0);
+}
+
+TEST("MF: nuzlocke Hardcore tier bundle is Normal plus extras")
+{
+    struct MfNuzlockeTierBundle b;
+
+    MfNuzlocke_FillTierBundle(MF_NUZLOCKE_HARDCORE, &b);
+    EXPECT(b.nuzlocke);
+    EXPECT(!b.easy);
+    EXPECT(b.hardcore);
+    EXPECT(b.areaLock);
+    EXPECT(b.faintHandling);
+    EXPECT(b.clausesEditable);
+    EXPECT(b.endRunOnWhiteOut);
+    EXPECT(b.forceBattleStyleSet);
+    EXPECT(b.seedNoItemPlayer);
+    EXPECT_EQ(b.seedLevelCapIfOff, MF_NUZLOCKE_HARDCORE_SEED_LEVEL_CAP);
+}
+
+TEST("MF: nuzlocke IsActive gate matches ME")
+{
+    EXPECT(!MfNuzlocke_ResolveIsActive(FALSE, TRUE, TRUE, FALSE));
+    EXPECT(!MfNuzlocke_ResolveIsActive(TRUE, FALSE, TRUE, FALSE));
+    EXPECT(!MfNuzlocke_ResolveIsActive(TRUE, TRUE, FALSE, FALSE));
+    EXPECT(!MfNuzlocke_ResolveIsActive(TRUE, TRUE, TRUE, TRUE));
+    EXPECT(MfNuzlocke_ResolveIsActive(TRUE, TRUE, TRUE, FALSE));
+}
+
+TEST("MF: nuzlocke Hardcore end-run whiteout gate")
+{
+    EXPECT(!MfNuzlocke_ResolveEndRunOnWhiteOut(FALSE, TRUE, FALSE));
+    EXPECT(!MfNuzlocke_ResolveEndRunOnWhiteOut(TRUE, FALSE, FALSE));
+    EXPECT(!MfNuzlocke_ResolveEndRunOnWhiteOut(TRUE, TRUE, TRUE));
+    EXPECT(MfNuzlocke_ResolveEndRunOnWhiteOut(TRUE, TRUE, FALSE));
+}
+
+TEST("MF: nuzlocke Hardcore difficulty seeds")
+{
+    struct ModernRules rules;
+
+    MfRules_ResetToEmpty(&rules);
+    EXPECT_EQ((u32)rules.levelCap, (u32)0);
+    EXPECT_EQ((u32)rules.noItemPlayer, (u32)FALSE);
+
+    MfNuzlocke_ApplyHardcoreDifficultySeeds(&rules);
+    EXPECT_EQ((u32)rules.levelCap, (u32)MF_NUZLOCKE_HARDCORE_SEED_LEVEL_CAP);
+    EXPECT_EQ((u32)rules.noItemPlayer, (u32)TRUE);
+
+    rules.levelCap = 2;
+    rules.noItemPlayer = FALSE;
+    MfNuzlocke_ApplyHardcoreDifficultySeeds(&rules);
+    EXPECT_EQ((u32)rules.levelCap, (u32)2);
+    EXPECT_EQ((u32)rules.noItemPlayer, (u32)TRUE);
 }

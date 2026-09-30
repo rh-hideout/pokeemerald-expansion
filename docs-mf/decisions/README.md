@@ -74,3 +74,4 @@ Append a row to the index below when you add a record.
 | 0037 | product | Nuzlocke faint handling: Cemetery / Release after battle | S36 | 2026-09-29 |
 | 0038 | product | Nuzlocke DUPES & SHINY clauses (ME parity, no re-roll) | S37 | 2026-09-29 |
 | 0039 | product | Nuzlocke forced nicknaming (ME NICKNAMES) | S38 | 2026-09-29 |
+| 0040 | product | Nuzlocke difficulty tier bundles (Off/Easy/Normal/Hardcore) | S39 | 2026-09-30 |

@@ -11,6 +11,7 @@
 #include "pokemon.h"
 #include "pokemon_storage_system.h"
 #include "region_map.h"
+#include "save.h"
 #include "string_util.h"
 #include "constants/battle.h"
 #include "constants/flags.h"
@@ -103,29 +104,140 @@ u16 MfNuzlocke_GetCurrentMapsec(void)
     return GetCurrentRegionMapSectionId();
 }
 
+// ---------------------------------------------------------------------------
+// S39 — tier bundles / IsNuzlockeActive
+// ---------------------------------------------------------------------------
+
+void MfNuzlocke_FillTierBundle(u8 mode, struct MfNuzlockeTierBundle *out)
+{
+    if (out == NULL)
+        return;
+
+    out->nuzlocke = FALSE;
+    out->easy = FALSE;
+    out->hardcore = FALSE;
+    out->areaLock = FALSE;
+    out->faintHandling = FALSE;
+    out->clausesEditable = FALSE;
+    out->endRunOnWhiteOut = FALSE;
+    out->forceBattleStyleSet = FALSE;
+    out->seedNoItemPlayer = FALSE;
+    out->seedLevelCapIfOff = 0;
+
+    switch (mode)
+    {
+    case MF_NUZLOCKE_EASY:
+        // ME mini mode: cemetery faint retirement only.
+        out->easy = TRUE;
+        out->faintHandling = TRUE;
+        break;
+    case MF_NUZLOCKE_NORMAL:
+        out->nuzlocke = TRUE;
+        out->areaLock = TRUE;
+        out->faintHandling = TRUE;
+        out->clausesEditable = TRUE;
+        break;
+    case MF_NUZLOCKE_HARDCORE:
+        out->nuzlocke = TRUE;
+        out->hardcore = TRUE;
+        out->areaLock = TRUE;
+        out->faintHandling = TRUE;
+        out->clausesEditable = TRUE;
+        out->endRunOnWhiteOut = TRUE;
+        out->forceBattleStyleSet = TRUE;
+        out->seedNoItemPlayer = TRUE;
+        out->seedLevelCapIfOff = MF_NUZLOCKE_HARDCORE_SEED_LEVEL_CAP;
+        break;
+    case MF_NUZLOCKE_OFF:
+    default:
+        break;
+    }
+}
+
+void MfNuzlocke_ApplyHardcoreDifficultySeeds(struct ModernRules *r)
+{
+    if (r == NULL)
+        return;
+
+    // Only raise Off → Normal; leave existing Normal/Hard alone.
+    if (r->levelCap == 0)
+        r->levelCap = MF_NUZLOCKE_HARDCORE_SEED_LEVEL_CAP;
+    r->noItemPlayer = TRUE;
+
+    // Persist Set style in Options so the menu matches battle forcing.
+    if (gSaveBlock2Ptr != NULL)
+        gSaveBlock2Ptr->optionsBattleStyle = OPTIONS_BATTLE_STYLE_SET;
+}
+
+bool32 MfNuzlocke_ResolveIsActive(bool8 nuzlocke, bool32 hasStarter, bool32 hasPokedex, bool32 gameClear)
+{
+    // ME IsNuzlockeActive: full Nuzlocke bit + starter + Pokédex, off after champ.
+    if (!nuzlocke)
+        return FALSE;
+    if (!hasStarter)
+        return FALSE;
+    if (!hasPokedex)
+        return FALSE;
+    if (gameClear)
+        return FALSE;
+    return TRUE;
+}
+
+bool32 MfNuzlocke_IsActive(void)
+{
+#if !MF_NUZLOCKE || !MF_RULES_ENGINE
+    return FALSE;
+#else
+    return MfNuzlocke_ResolveIsActive(
+        MfRules_IsNuzlocke(),
+        FlagGet(FLAG_SYS_POKEMON_GET),
+#if IS_FRLG
+        FlagGet(FLAG_SYS_POKEDEX_GET),
+#else
+        FlagGet(FLAG_ADVENTURE_STARTED),
+#endif
+        FlagGet(FLAG_SYS_GAME_CLEAR));
+#endif
+}
+
+bool32 MfNuzlocke_ResolveEndRunOnWhiteOut(bool8 hardcore, bool32 nuzlockeActive, bool32 gameClear)
+{
+    // ME: Hardcore whiteout clears the save and soft-resets until champion.
+    if (!hardcore || !nuzlockeActive || gameClear)
+        return FALSE;
+    return TRUE;
+}
+
+bool32 MfNuzlocke_ShouldEndRunOnWhiteOut(void)
+{
+#if !MF_NUZLOCKE || !MF_RULES_ENGINE
+    return FALSE;
+#else
+    return MfNuzlocke_ResolveEndRunOnWhiteOut(
+        MfRules_IsNuzlockeHardcore(),
+        MfNuzlocke_IsActive(),
+        FlagGet(FLAG_SYS_GAME_CLEAR));
+#endif
+}
+
+bool32 MfNuzlocke_ForcesSetBattleStyle(void)
+{
+#if !MF_NUZLOCKE || !MF_RULES_ENGINE
+    return FALSE;
+#else
+    // Hardcore forces Set for the whole run (Options can show Set; battle
+    // init still overrides if the player flips Shift mid-run).
+    return MfRules_IsNuzlockeHardcore() && MfNuzlocke_IsActive();
+#endif
+}
+
 bool32 MfNuzlocke_IsEncounterLockActive(void)
 {
 #if !MF_NUZLOCKE || !MF_RULES_ENGINE
     return FALSE;
 #else
-    // Easy mini-mode sets nuzlockeEasy only — no area lock (ADR 0022 / 0036).
-    if (!MfRules_IsNuzlocke())
-        return FALSE;
-    if (!FlagGet(FLAG_SYS_POKEMON_GET))
-        return FALSE;
-    // ME gates on FLAG_ADVENTURE_STARTED (Pokédex). On FRLG that symbol is a
-    // stub (= 0); FlagGet(0) is always FALSE — use FLAG_SYS_POKEDEX_GET.
-#if IS_FRLG
-    if (!FlagGet(FLAG_SYS_POKEDEX_GET))
-        return FALSE;
-#else
-    if (!FlagGet(FLAG_ADVENTURE_STARTED))
-        return FALSE;
-#endif
-    // ME stops after champion; FR uses game-clear (beat Elite Four).
-    if (FlagGet(FLAG_SYS_GAME_CLEAR))
-        return FALSE;
-    return TRUE;
+    // Easy mini-mode sets nuzlockeEasy only — no area lock (ADR 0022 / 0036 / 0040).
+    return MfNuzlocke_IsActive();
 #endif
 }
 
@@ -699,6 +811,17 @@ void MfNuzlocke_OnWhiteOut(void)
 #if !MF_NUZLOCKE || !MF_RULES_ENGINE
     return;
 #else
+    // S39 Hardcore: any whiteout ends the run (ME ClearSaveData + soft reset).
+    if (MfNuzlocke_ShouldEndRunOnWhiteOut())
+    {
+#ifndef NDEBUG
+        DebugPrintfLevel(MGBA_LOG_WARN, "MF Nuzlocke Hardcore: whiteout ends run");
+#endif
+        ClearSaveData();
+        DoSoftReset();
+        return;
+    }
+
     if (!MfNuzlocke_IsFaintHandlingActive())
         return;
 

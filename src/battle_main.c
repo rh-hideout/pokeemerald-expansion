@@ -2759,6 +2759,9 @@ static void ClearSetBScriptingStruct(void)
 
     gBattleScripting.windowsType = temp;
     gBattleScripting.battleStyle = gSaveBlock2Ptr->optionsBattleStyle;
+    // S39 Hardcore: force Set even if Options was flipped mid-run.
+    if (MfNuzlocke_ForcesSetBattleStyle())
+        gBattleScripting.battleStyle = OPTIONS_BATTLE_STYLE_SET;
     #if TESTING
     gBattleScripting.battleStyle = OPTIONS_BATTLE_STYLE_SET;
     #endif

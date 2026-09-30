@@ -654,7 +654,8 @@ static bool8 MfRules_WriteValueField(struct ModernRules *r, enum MfRuleValue id,
 
 // S22 — pack Off/Easy/Normal/Hardcore into nuzlocke / easy / hardcore bits.
 // Leaving full Nuzlocke clears clauses (ME save path). Entering Normal/Hard
-// from Off/Easy seeds ME recommended defaults.
+// from Off/Easy seeds ME recommended defaults. Entering Hardcore also seeds
+// Difficulty extras (ADR 0040) for Phase 7 enforcement.
 static void MfRules_ApplyNuzlockeMode(struct ModernRules *r, u8 mode)
 {
     u8 prev = MfRules_PackNuzlockeMode(r);
@@ -704,6 +705,11 @@ static void MfRules_ApplyNuzlockeMode(struct ModernRules *r, u8 mode)
         r->nuzlockeNicknaming = MF_TX_NUZLOCKE_NICKNAMING;
         r->nuzlockeDeletion = MF_TX_NUZLOCKE_DELETION;
     }
+
+    // Hardcore community extras: Set style + level cap + no player items.
+    // Leaving Hardcore does not clear Difficulty fields (player may keep them).
+    if (mode == MF_NUZLOCKE_HARDCORE && prev != MF_NUZLOCKE_HARDCORE)
+        MfNuzlocke_ApplyHardcoreDifficultySeeds(r);
 }
 
 // S25 — master Off clears all remaps (ME SAVE path); On seeds Similar/MapBased.

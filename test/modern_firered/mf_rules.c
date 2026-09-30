@@ -1,4 +1,5 @@
 #include "global.h"
+#include "mf_nuzlocke.h"
 #include "mf_rules.h"
 #include "save.h"
 #include "test/test.h"
@@ -692,6 +693,9 @@ TEST("MF: rules TrySetValue NUZLOCKE_MODE packs bits and clause defaults")
     EXPECT_EQ((u32)save->nuzlockeHardcore, (u32)TRUE);
     EXPECT_EQ((u32)save->nuzlockeSpeciesClause, (u32)FALSE); // keep when already full
     EXPECT_EQ((u32)MfRules_GetValue(MF_RULE_VAL_NUZLOCKE_MODE), (u32)MF_NUZLOCKE_HARDCORE);
+    // S39: entering Hardcore seeds Difficulty extras (ADR 0040).
+    EXPECT_EQ((u32)save->levelCap, (u32)MF_NUZLOCKE_HARDCORE_SEED_LEVEL_CAP);
+    EXPECT_EQ((u32)save->noItemPlayer, (u32)TRUE);
 
     EXPECT_EQ((u32)MfRules_TrySetValue(MF_RULE_VAL_NUZLOCKE_MODE, MF_NUZLOCKE_OFF), (u32)TRUE);
     EXPECT_EQ((u32)save->nuzlocke, (u32)FALSE);
@@ -699,6 +703,23 @@ TEST("MF: rules TrySetValue NUZLOCKE_MODE packs bits and clause defaults")
     EXPECT_EQ((u32)save->nuzlockeEasy, (u32)FALSE);
     EXPECT_EQ((u32)save->nuzlockeSpeciesClause, (u32)FALSE);
     EXPECT_EQ((u32)save->nuzlockeDeletion, (u32)FALSE);
+    // Leaving Hardcore keeps seeded Difficulty fields.
+    EXPECT_EQ((u32)save->levelCap, (u32)MF_NUZLOCKE_HARDCORE_SEED_LEVEL_CAP);
+    EXPECT_EQ((u32)save->noItemPlayer, (u32)TRUE);
+}
+
+TEST("MF: rules Hardcore seeds only raise Off level cap")
+{
+    struct ModernRules *save = MfRules_GetSaveRules();
+
+    MfRules_DebugSetUnlockOverride(FALSE);
+    MfRules_ApplyDevDefaults(save);
+    save->levelCap = 2; // Hard already chosen on Difficulty
+    save->noItemPlayer = FALSE;
+
+    EXPECT_EQ((u32)MfRules_TrySetValue(MF_RULE_VAL_NUZLOCKE_MODE, MF_NUZLOCKE_HARDCORE), (u32)TRUE);
+    EXPECT_EQ((u32)save->levelCap, (u32)2); // leave Hard alone
+    EXPECT_EQ((u32)save->noItemPlayer, (u32)TRUE);
 }
 
 TEST("MF: rules TrySetBool RANDOMIZER_ENABLED seeds and clears remaps")

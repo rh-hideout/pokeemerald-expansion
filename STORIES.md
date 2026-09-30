@@ -41,7 +41,7 @@ These exist to keep merging from `RHH/master` cheap. Violating them is the main 
 | 3     | Rules menu UI                        | S18–S26 | Complete    |
 | 4     | Gamemode wiring                      | S27–S32 | Complete    |
 | 5     | Features & item-friction wiring      | S33–S34, S69 | Complete |
-| 6     | Nuzlocke                             | S35–S39 | In progress |
+| 6     | Nuzlocke                             | S35–S39 | Complete    |
 | 7     | Difficulty                           | S40–S45 | Not started |
 | 8     | Challenges                           | S46–S50 | Not started |
 | 9     | Randomizer                           | S51–S57 | Not started |
@@ -618,7 +618,7 @@ These exist to keep merging from `RHH/master` cheap. Violating them is the main 
 
 ### S39 — Nuzlocke difficulty tiers
 
-- [ ] **Status:** Not started
+- [x] **Status:** Complete
 
 - **Goal:** Off / Easy / Normal / Hardcore as coherent bundles.
 - **Depends on:** S36, S37, S38
@@ -628,6 +628,7 @@ These exist to keep merging from `RHH/master` cheap. Violating them is the main 
   - Provide the `IsNuzlockeActive()` equivalent for other systems to query.
 - **Acceptance:** Selecting a tier applies its full bundle; Hardcore is meaningfully harder than Normal.
 - **Tests:** Unit tests asserting each tier's rule vector; manual play.
+- **Decisions:** [`docs-mf/decisions/0040-product-nuzlocke-difficulty-tiers.md`](docs-mf/decisions/0040-product-nuzlocke-difficulty-tiers.md) — Easy=mini (faint only); Hardcore=Normal + wipe on whiteout + Set style + seed level cap / no player items for S41/S43.
 
 ---
 
