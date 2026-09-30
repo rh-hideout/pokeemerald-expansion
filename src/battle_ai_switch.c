@@ -2483,7 +2483,7 @@ static enum PartyMon GetBestMonIntegrated(struct Pokemon *party, int lastId, enu
     else
     {
         // Return Dynamic > Trapper > Type Matchup > Best Defensive > Healing Candidate > Baton Pass
-        if (switchContext.dynamicSingleId != 0) return getRandom ? GetSwitchinCandidate(switchContext.dynamicMultipleIds, battler, lastId, switchType) : switchContext.dynamicSingleId;
+        if (switchContext.dynamicMultipleIds != 0) return getRandom ? GetSwitchinCandidate(switchContext.dynamicMultipleIds, battler, lastId, switchType) : switchContext.dynamicSingleId;
         else if (trapperIds != 0)               return GetSwitchinCandidate(trapperIds, battler, lastId, switchType);
         else if (typeMatchupEffectiveIds != 0)  return getRandom ? GetSwitchinCandidate(typeMatchupEffectiveIds, battler, lastId, switchType) : bestTypeMatchupEffectiveId;
         else if (typeMatchupIds != 0)           return getRandom ? GetSwitchinCandidate(typeMatchupIds, battler, lastId, switchType) : bestTypeMatchupId;
