@@ -2477,7 +2477,7 @@ static void Task_RunUnionRoom(u8 taskId)
 {
     u32 id = 0;
     s32 input = 0;
-    enum Gender playerGender = MALE;
+    enum TrainerGender playerGender = TRAINER_GENDER_MALE;
     struct WirelessLink_URoom *uroom = sWirelessLinkMain.uRoom;
     s16 *taskData = gTasks[taskId].data;
 

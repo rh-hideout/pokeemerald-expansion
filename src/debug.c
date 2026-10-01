@@ -1993,10 +1993,10 @@ static void DebugAction_Player_Name(u8 taskId)
 
 static void DebugAction_Player_Gender(u8 taskId)
 {
-    if (gSaveBlock2Ptr->playerGender == MALE)
-        gSaveBlock2Ptr->playerGender = FEMALE;
+    if (gSaveBlock2Ptr->playerGender == TRAINER_GENDER_MALE)
+        gSaveBlock2Ptr->playerGender = TRAINER_GENDER_FEMALE;
     else
-        gSaveBlock2Ptr->playerGender = MALE;
+        gSaveBlock2Ptr->playerGender = TRAINER_GENDER_MALE;
     Debug_DestroyMenu_Full(taskId);
     ScriptContext_Enable();
 }
