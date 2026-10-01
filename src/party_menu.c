@@ -999,37 +999,37 @@ static void LoadPartyMenuBoxes(enum PartyMenuLayout layout)
 
 static void RenderPartyMenuBox(u8 slot)
 {
-    struct PartyMenuBox menuBox = sPartyMenuBoxes[slot];
+    struct PartyMenuBox *menuBox = &sPartyMenuBoxes[slot];
 
     if (gPartyMenu.menuType == PARTY_MENU_TYPE_MULTI_FULL_SHOWCASE && gPartyMenu.layout == PARTY_LAYOUT_MULTI_FULL_SHOWCASE_PARTNER)
     {
         DisplayPartyPokemonDataForMultiBattle(slot);
         if (gMultiPartnerParty[slot].species == SPECIES_NONE)
-            LoadPartyBoxPalette(&menuBox, PARTY_PAL_NO_MON);
+            LoadPartyBoxPalette(menuBox, PARTY_PAL_NO_MON);
         else
-            LoadPartyBoxPalette(&menuBox, PARTY_PAL_MULTI_ALT);
-        CopyWindowToVram(menuBox.windowId, COPYWIN_GFX);
-        PutWindowTilemap(menuBox.windowId);
+            LoadPartyBoxPalette(menuBox, PARTY_PAL_MULTI_ALT);
+        CopyWindowToVram(menuBox->windowId, COPYWIN_GFX);
+        PutWindowTilemap(menuBox->windowId);
         ScheduleBgCopyTilemapToVram(2);
     }
     else if (gPartyMenu.menuType == PARTY_MENU_TYPE_MULTI_SHOWCASE && slot >= MULTI_PARTY_SIZE)
     {
         DisplayPartyPokemonDataForMultiBattle(slot);
         if (gMultiPartnerParty[slot - MULTI_PARTY_SIZE].species == SPECIES_NONE)
-            LoadPartyBoxPalette(&menuBox, PARTY_PAL_NO_MON);
+            LoadPartyBoxPalette(menuBox, PARTY_PAL_NO_MON);
         else
-            LoadPartyBoxPalette(&menuBox, PARTY_PAL_MULTI_ALT);
-        CopyWindowToVram(menuBox.windowId, COPYWIN_GFX);
-        PutWindowTilemap(menuBox.windowId);
+            LoadPartyBoxPalette(menuBox, PARTY_PAL_MULTI_ALT);
+        CopyWindowToVram(menuBox->windowId, COPYWIN_GFX);
+        PutWindowTilemap(menuBox->windowId);
         ScheduleBgCopyTilemapToVram(2);
     }
     else if (gPartiesCount[B_TRAINER_PLAYER] != 0)
     {
         if (GetMonData(GetPartyMonFromPartyMenuId(slot), MON_DATA_SPECIES) == SPECIES_NONE)
         {
-            DrawEmptySlot(menuBox.windowId);
-            LoadPartyBoxPalette(&menuBox, PARTY_PAL_NO_MON);
-            CopyWindowToVram(menuBox.windowId, COPYWIN_GFX);
+            DrawEmptySlot(menuBox->windowId);
+            LoadPartyBoxPalette(menuBox, PARTY_PAL_NO_MON);
+            CopyWindowToVram(menuBox->windowId, COPYWIN_GFX);
         }
         else
         {
@@ -1053,7 +1053,7 @@ static void RenderPartyMenuBox(u8 slot)
             else
                 AnimatePartySlot(slot, 0);
         }
-        PutWindowTilemap(menuBox.windowId);
+        PutWindowTilemap(menuBox->windowId);
         ScheduleBgCopyTilemapToVram(0);
     }
 }
@@ -1061,38 +1061,38 @@ static void RenderPartyMenuBox(u8 slot)
 static void DisplayPartyPokemonData(u8 slot)
 {
     struct Pokemon *mon = GetPartyMonFromPartyMenuId(slot);
-    struct PartyMenuBox menuBox = sPartyMenuBoxes[slot];
+    struct PartyMenuBox *menuBox = &sPartyMenuBoxes[slot];
 
     if (GetMonData(mon, MON_DATA_IS_EGG))
     {
-        menuBox.infoRects->blitFunc(menuBox.windowId, 0, 0, 0, 0, TRUE);
-        DisplayPartyPokemonNickname(mon, &menuBox, 0);
+        menuBox->infoRects->blitFunc(menuBox->windowId, 0, 0, 0, 0, TRUE);
+        DisplayPartyPokemonNickname(mon, menuBox, 0);
     }
     else
     {
-        menuBox.infoRects->blitFunc(menuBox.windowId, 0, 0, 0, 0, FALSE);
-        DisplayPartyPokemonNickname(mon, &menuBox, 0);
-        DisplayPartyPokemonLevelCheck(mon, &menuBox, 0);
-        DisplayPartyPokemonGenderNidoranCheck(mon, &menuBox, 0);
-        DisplayPartyPokemonHPCheck(mon, &menuBox, 0);
-        DisplayPartyPokemonMaxHPCheck(mon, &menuBox, 0);
-        DisplayPartyPokemonHPBarCheck(mon, &menuBox);
+        menuBox->infoRects->blitFunc(menuBox->windowId, 0, 0, 0, 0, FALSE);
+        DisplayPartyPokemonNickname(mon, menuBox, 0);
+        DisplayPartyPokemonLevelCheck(mon, menuBox, 0);
+        DisplayPartyPokemonGenderNidoranCheck(mon, menuBox, 0);
+        DisplayPartyPokemonHPCheck(mon, menuBox, 0);
+        DisplayPartyPokemonMaxHPCheck(mon, menuBox, 0);
+        DisplayPartyPokemonHPBarCheck(mon, menuBox);
     }
 }
 
 static void DisplayPartyPokemonDescriptionData(u8 slot, u8 stringID)
 {
     struct Pokemon *mon = GetPartyMonFromPartyMenuId(slot);
-    struct PartyMenuBox menuBox = sPartyMenuBoxes[slot];
+    struct PartyMenuBox *menuBox = &sPartyMenuBoxes[slot];
 
-    menuBox.infoRects->blitFunc(menuBox.windowId, 0, 0, 0, 0, TRUE);
-    DisplayPartyPokemonNickname(mon, &menuBox, 0);
+    menuBox->infoRects->blitFunc(menuBox->windowId, 0, 0, 0, 0, TRUE);
+    DisplayPartyPokemonNickname(mon, menuBox, 0);
     if (!GetMonData(mon, MON_DATA_IS_EGG))
     {
-        DisplayPartyPokemonLevelCheck(mon, &menuBox, 0);
-        DisplayPartyPokemonGenderNidoranCheck(mon, &menuBox, 0);
+        DisplayPartyPokemonLevelCheck(mon, menuBox, 0);
+        DisplayPartyPokemonGenderNidoranCheck(mon, menuBox, 0);
     }
-    DisplayPartyPokemonDescriptionText(stringID, &menuBox, 0);
+    DisplayPartyPokemonDescriptionText(stringID, menuBox, 0);
 }
 
 static void DisplayPartyPokemonDataForChooseHalf(u8 slot)
@@ -1258,7 +1258,7 @@ static u8 *GetPartyMenuBgTile(u16 tileId)
 static void CreatePartyMonSprites(u8 slot)
 {
     struct MultiPartnerMenuPokemon partnerMon = {0};
-    struct PartyMenuBox menuBox = sPartyMenuBoxes[slot];
+    struct PartyMenuBox *menuBox = &sPartyMenuBoxes[slot];
     struct Pokemon *party = NULL, *mon = NULL;
     s8 partySlot = 0;
 
@@ -1272,14 +1272,14 @@ static void CreatePartyMonSprites(u8 slot)
 
         if (partnerMon.species != SPECIES_NONE)
         {
-            CreatePartyMonIconSpriteParameterized(partnerMon.species, partnerMon.personality, FALSE, &menuBox, 0);
-            CreatePartyMonHeldItemSpriteParameterized(partnerMon.species, partnerMon.heldItem, &menuBox);
-            CreatePartyMonPokeballSpriteParameterized(partnerMon.species, &menuBox);
+            CreatePartyMonIconSpriteParameterized(partnerMon.species, partnerMon.personality, FALSE, menuBox, 0);
+            CreatePartyMonHeldItemSpriteParameterized(partnerMon.species, partnerMon.heldItem, menuBox);
+            CreatePartyMonPokeballSpriteParameterized(partnerMon.species, menuBox);
             if (partnerMon.hp == 0)
                 status = AILMENT_FNT;
             else
                 status = GetAilmentFromStatus(partnerMon.status);
-            CreatePartyMonStatusSpriteParameterized(partnerMon.species, status, &menuBox);
+            CreatePartyMonStatusSpriteParameterized(partnerMon.species, status, menuBox);
         }
     }
     else if (gPartyMenu.menuType == PARTY_MENU_TYPE_MULTI_SHOWCASE && slot >= MULTI_PARTY_SIZE)
@@ -1288,22 +1288,22 @@ static void CreatePartyMonSprites(u8 slot)
 
         if (partnerMon.species != SPECIES_NONE)
         {
-            CreatePartyMonIconSpriteParameterized(partnerMon.species, partnerMon.personality, FALSE, &menuBox, 0);
-            CreatePartyMonHeldItemSpriteParameterized(partnerMon.species, partnerMon.heldItem, &menuBox);
-            CreatePartyMonPokeballSpriteParameterized(partnerMon.species, &menuBox);
+            CreatePartyMonIconSpriteParameterized(partnerMon.species, partnerMon.personality, FALSE, menuBox, 0);
+            CreatePartyMonHeldItemSpriteParameterized(partnerMon.species, partnerMon.heldItem, menuBox);
+            CreatePartyMonPokeballSpriteParameterized(partnerMon.species, menuBox);
             if (partnerMon.hp == 0)
                 status = AILMENT_FNT;
             else
                 status = GetAilmentFromStatus(partnerMon.status);
-            CreatePartyMonStatusSpriteParameterized(partnerMon.species, status, &menuBox);
+            CreatePartyMonStatusSpriteParameterized(partnerMon.species, status, menuBox);
         }
     }
     else if (GetMonData(mon, MON_DATA_SPECIES) != SPECIES_NONE)
     {
-        CreatePartyMonIconSprite(mon, &menuBox);
-        CreatePartyMonHeldItemSprite(mon, &menuBox);
-        CreatePartyMonPokeballSprite(mon, &menuBox);
-        CreatePartyMonStatusSprite(mon, &menuBox);
+        CreatePartyMonIconSprite(mon, menuBox);
+        CreatePartyMonHeldItemSprite(mon, menuBox);
+        CreatePartyMonPokeballSprite(mon, menuBox);
+        CreatePartyMonStatusSprite(mon, menuBox);
     }
 }
 
@@ -1343,16 +1343,16 @@ static void CreateCancelConfirmPokeballSprites(void)
 void AnimatePartySlot(u8 slot, u8 animNum)
 {
     u8 spriteId;
-    struct PartyMenuBox menuBox = sPartyMenuBoxes[slot];
+    struct PartyMenuBox *menuBox = &sPartyMenuBoxes[slot];
 
     switch (slot)
     {
     default:
         if (GetMonData(GetPartyMonFromPartyMenuId(slot), MON_DATA_SPECIES) != SPECIES_NONE)
         {
-            LoadPartyBoxPalette(&menuBox, GetPartyBoxPaletteFlags(slot, animNum));
-            AnimateSelectedPartyIcon(menuBox.monSpriteId, animNum);
-            PartyMenuStartSpriteAnim(menuBox.pokeballSpriteId, animNum);
+            LoadPartyBoxPalette(menuBox, GetPartyBoxPaletteFlags(slot, animNum));
+            AnimateSelectedPartyIcon(menuBox->monSpriteId, animNum);
+            PartyMenuStartSpriteAnim(menuBox->pokeballSpriteId, animNum);
         }
         return;
     case PARTY_SIZE: // Confirm
@@ -5926,15 +5926,15 @@ void ItemUseCB_RareCandy(u8 taskId, TaskFunc task)
 
 static void UpdateMonDisplayInfoAfterRareCandy(u8 slot, struct Pokemon *mon)
 {
-    struct PartyMenuBox menuBox = sPartyMenuBoxes[slot];
+    struct PartyMenuBox *menuBox = &sPartyMenuBoxes[slot];
 
-    SetPartyMonAilmentGfx(mon, &menuBox);
-    if (gSprites[menuBox.statusSpriteId].invisible)
-        DisplayPartyPokemonLevelCheck(mon, &menuBox, 1);
-    DisplayPartyPokemonHPCheck(mon, &menuBox, 1);
-    DisplayPartyPokemonMaxHPCheck(mon, &menuBox, 1);
-    DisplayPartyPokemonHPBarCheck(mon, &menuBox);
-    UpdatePartyMonHPBar(menuBox.monSpriteId, mon);
+    SetPartyMonAilmentGfx(mon, menuBox);
+    if (gSprites[menuBox->statusSpriteId].invisible)
+        DisplayPartyPokemonLevelCheck(mon, menuBox, 1);
+    DisplayPartyPokemonHPCheck(mon, menuBox, 1);
+    DisplayPartyPokemonMaxHPCheck(mon, menuBox, 1);
+    DisplayPartyPokemonHPBarCheck(mon, menuBox);
+    UpdatePartyMonHPBar(menuBox->monSpriteId, mon);
     AnimatePartySlot(slot, 1);
     ScheduleBgCopyTilemapToVram(0);
 }
