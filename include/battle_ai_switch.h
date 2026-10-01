@@ -81,7 +81,7 @@ struct SwitchAiContext
 // Dynamic switch functions
 typedef bool32 (*AiSwitchFunc)(struct SwitchAiContext*);
 extern AiSwitchFunc gDynamicAiSwitchFunc;
-typedef bool32 (*AiMonChoiceFunc)(struct SwitchAiContext*);
+typedef void (*AiMonChoiceFunc)(struct SwitchAiContext*);
 extern AiMonChoiceFunc gDynamicAiMonChoiceFunc;
 
 enum PartyMon GetMostSuitableMonToSwitchInto(enum BattlerId battler, enum SwitchType switchType);
