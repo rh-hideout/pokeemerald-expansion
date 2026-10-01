@@ -130,6 +130,8 @@ void SwitchPartyOrderInGameMulti(enum BattlerId battler, enum PartyMon partyId)
         enum PartyMon battlerPartyId = gBattlerPartyIndexes[battler];
         enum PartyMon switchInPartyId = partyId;
         enum BattleTrainer trainer = GetBattlerTrainer(battler);
+        enum PartyBattleSlot battlerBattleSlot = PARTY_BATTLE_SLOT_0;
+        enum PartyBattleSlot switchinBattleSlot = PARTY_BATTLE_SLOT_0;
 
         // In 6v6 multis, the partner party is stored in gParties[B_TRAINER_PARTNER]
         // and uses indexes 0-2, but we still use the combined party order.
@@ -138,9 +140,6 @@ void SwitchPartyOrderInGameMulti(enum BattlerId battler, enum PartyMon partyId)
             battlerPartyId = (enum PartyMon)(battlerPartyId + MULTI_PARTY_SIZE);
             switchInPartyId = (enum PartyMon)(switchInPartyId + MULTI_PARTY_SIZE);
         }
-
-        enum PartyBattleSlot battlerBattleSlot = GetBattleSlotFromBattlePartyId(battlerPartyId);
-        enum PartyBattleSlot switchinBattleSlot = GetBattleSlotFromBattlePartyId(switchInPartyId);
 
         for (enum BattlerId battlerId = 0; battlerId < gBattlersCount; battlerId++)
         {
@@ -157,6 +156,8 @@ void SwitchPartyOrderInGameMulti(enum BattlerId battler, enum PartyMon partyId)
             for (s32 i = 0; i < battlePartyCurrentOrderCount; i++)
                 gBattlePartyCurrentOrder[i] = gBattleStruct->battlerPartyOrders[battlerId][i];
 
+            battlerBattleSlot = GetBattleSlotFromBattlePartyId(battlerPartyId);
+            switchinBattleSlot = GetBattleSlotFromBattlePartyId(switchInPartyId);
             SwitchPartyMonSlots(battlerBattleSlot, switchinBattleSlot);
 
             for (s32 i = 0; i < battlePartyCurrentOrderCount; i++)
