@@ -1220,24 +1220,24 @@ static void DisplayPartyPokemonDataForMultiBattle(u8 slot)
         slot -= MULTI_PARTY_SIZE;
     }
 
-    struct MultiPartnerMenuPokemon partnerMon = gMultiPartnerParty[slot];
+    struct MultiPartnerMenuPokemon *partnerMon = &gMultiPartnerParty[slot];
 
-    if (partnerMon.species == SPECIES_NONE)
+    if (partnerMon->species == SPECIES_NONE)
     {
         DrawEmptySlot(menuBox->windowId);
     }
     else
     {
         menuBox->infoRects->blitFunc(menuBox->windowId, 0, 0, 0, 0, FALSE);
-        StringCopy(gStringVar1, partnerMon.nickname);
+        StringCopy(gStringVar1, partnerMon->nickname);
         StringGet_Nickname(gStringVar1);
         ConvertInternationalPlayerName(gStringVar1);
         DisplayPartyPokemonBarDetailToFit(menuBox->windowId, gStringVar1, 0, menuBox->infoRects->dimensions, 50);
-        DisplayPartyPokemonLevel(partnerMon.level, menuBox);
-        DisplayPartyPokemonGender(partnerMon.gender, partnerMon.species, partnerMon.nickname, menuBox);
-        DisplayPartyPokemonHP(partnerMon.hp, partnerMon.maxhp, menuBox);
-        DisplayPartyPokemonMaxHP(partnerMon.maxhp, menuBox);
-        DisplayPartyPokemonHPBar(partnerMon.hp, partnerMon.maxhp, menuBox);
+        DisplayPartyPokemonLevel(partnerMon->level, menuBox);
+        DisplayPartyPokemonGender(partnerMon->gender, partnerMon->species, partnerMon->nickname, menuBox);
+        DisplayPartyPokemonHP(partnerMon->hp, partnerMon->maxhp, menuBox);
+        DisplayPartyPokemonMaxHP(partnerMon->maxhp, menuBox);
+        DisplayPartyPokemonHPBar(partnerMon->hp, partnerMon->maxhp, menuBox);
     }
 }
 
@@ -1257,45 +1257,45 @@ static u8 *GetPartyMenuBgTile(u16 tileId)
 
 static void CreatePartyMonSprites(u8 slot)
 {
-    struct MultiPartnerMenuPokemon partnerMon = {0};
+    struct MultiPartnerMenuPokemon *partnerMon = NULL;
     struct PartyMenuBox *menuBox = &sPartyMenuBoxes[slot];
     struct Pokemon *party = NULL, *mon = NULL;
     s8 partySlot = 0;
 
     GetPartyAndSlotFromPartyMenuId(slot, &party, &partySlot);
     mon = &party[partySlot];
-    partnerMon = gMultiPartnerParty[partySlot];
+    partnerMon = &gMultiPartnerParty[partySlot];
 
     if (gPartyMenu.menuType == PARTY_MENU_TYPE_MULTI_FULL_SHOWCASE && gPartyMenu.layout == PARTY_LAYOUT_MULTI_FULL_SHOWCASE_PARTNER)
     {
         u8 status;
 
-        if (partnerMon.species != SPECIES_NONE)
+        if (partnerMon->species != SPECIES_NONE)
         {
-            CreatePartyMonIconSpriteParameterized(partnerMon.species, partnerMon.personality, FALSE, menuBox, 0);
-            CreatePartyMonHeldItemSpriteParameterized(partnerMon.species, partnerMon.heldItem, menuBox);
-            CreatePartyMonPokeballSpriteParameterized(partnerMon.species, menuBox);
-            if (partnerMon.hp == 0)
+            CreatePartyMonIconSpriteParameterized(partnerMon->species, partnerMon->personality, FALSE, menuBox, 0);
+            CreatePartyMonHeldItemSpriteParameterized(partnerMon->species, partnerMon->heldItem, menuBox);
+            CreatePartyMonPokeballSpriteParameterized(partnerMon->species, menuBox);
+            if (partnerMon->hp == 0)
                 status = AILMENT_FNT;
             else
-                status = GetAilmentFromStatus(partnerMon.status);
-            CreatePartyMonStatusSpriteParameterized(partnerMon.species, status, menuBox);
+                status = GetAilmentFromStatus(partnerMon->status);
+            CreatePartyMonStatusSpriteParameterized(partnerMon->species, status, menuBox);
         }
     }
     else if (gPartyMenu.menuType == PARTY_MENU_TYPE_MULTI_SHOWCASE && slot >= MULTI_PARTY_SIZE)
     {
         u8 status;
 
-        if (partnerMon.species != SPECIES_NONE)
+        if (partnerMon->species != SPECIES_NONE)
         {
-            CreatePartyMonIconSpriteParameterized(partnerMon.species, partnerMon.personality, FALSE, menuBox, 0);
-            CreatePartyMonHeldItemSpriteParameterized(partnerMon.species, partnerMon.heldItem, menuBox);
-            CreatePartyMonPokeballSpriteParameterized(partnerMon.species, menuBox);
-            if (partnerMon.hp == 0)
+            CreatePartyMonIconSpriteParameterized(partnerMon->species, partnerMon->personality, FALSE, menuBox, 0);
+            CreatePartyMonHeldItemSpriteParameterized(partnerMon->species, partnerMon->heldItem, menuBox);
+            CreatePartyMonPokeballSpriteParameterized(partnerMon->species, menuBox);
+            if (partnerMon->hp == 0)
                 status = AILMENT_FNT;
             else
-                status = GetAilmentFromStatus(partnerMon.status);
-            CreatePartyMonStatusSpriteParameterized(partnerMon.species, status, menuBox);
+                status = GetAilmentFromStatus(partnerMon->status);
+            CreatePartyMonStatusSpriteParameterized(partnerMon->species, status, menuBox);
         }
     }
     else if (GetMonData(mon, MON_DATA_SPECIES) != SPECIES_NONE)
