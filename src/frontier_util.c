@@ -3066,7 +3066,6 @@ u8 GetFrontierTrainerFrontSpriteId(u16 trainerId)
 enum TrainerClassID GetFrontierOpponentClass(u16 trainerId)
 {
     u8 trainerClass = 0;
-    enum DifficultyLevel difficulty = GetBattlePartnerDifficultyLevel(trainerId);
     SetFacilityPtrsGetLevel();
 
 #if FREE_BATTLE_TOWER_E_READER == FALSE

@@ -27,7 +27,7 @@ enum PartnerType
 {
     PRESET_PARTNER,
     FRONTIER_PARTNER,
-    FRIEND_RECORD_PARTNER,
+    RECORDMIX_APPRENTICE_PARTNER,
     APPRENTICE_PARTNER,
     NO_PARTNER_FOUND
 };
@@ -37,7 +37,7 @@ static enum PartnerType GetPartnerType(u16 trainerId)
     if (trainerId < FRONTIER_TRAINERS_COUNT)
         return FRONTIER_PARTNER;
     if (trainerId < TRAINER_RECORD_MIXING_APPRENTICE)
-        return FRIEND_RECORD_PARTNER;
+        return RECORDMIX_APPRENTICE_PARTNER;
     if (trainerId < TRAINER_EREADER)
         return APPRENTICE_PARTNER;
     if (trainerId > TRAINER_PARTNER(PARTNER_NONE) && trainerId < TRAINER_PARTNER(PARTNER_COUNT))
@@ -127,7 +127,7 @@ void FillPartnerParty(u16 trainerId)
         case FRONTIER_PARTNER:
             FillFrontierPartnerParty(trainerId);
             break;
-        case FRIEND_RECORD_PARTNER:
+        case RECORDMIX_APPRENTICE_PARTNER:
             FillFriendRecordPartnerParty(trainerId - TRAINER_RECORD_MIXING_FRIEND);
             break;
         case APPRENTICE_PARTNER:
@@ -146,10 +146,12 @@ enum TrainerClassID GetPartnerClass(u16 trainerId)
     {
         case PRESET_PARTNER:
             trainerClass = GetTrainerClassFromId(trainerId);
+            break;
         case FRONTIER_PARTNER:
-        case FRIEND_RECORD_PARTNER:
+        case RECORDMIX_APPRENTICE_PARTNER:
         case APPRENTICE_PARTNER:
             trainerClass = GetFrontierOpponentClass(trainerId);
+            break;
         case NO_PARTNER_FOUND:
             errorf("trainerId %d is not a valid id for a partner", trainerId);
             trainerClass = 0;
