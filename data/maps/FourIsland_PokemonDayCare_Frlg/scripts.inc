@@ -83,8 +83,9 @@ FourIsland_PokemonDayCare_OneMonInDaycare::
 	end
 
 FourIsland_PokemonDayCare_TryRetrieveMon::
+	specialvar VAR_0x8004, MfGetMaxPartySize
 	specialvar VAR_RESULT, CalculatePlayerPartyCount
-	goto_if_eq VAR_RESULT, PARTY_SIZE, FourIsland_PokemonDayCare_NoRoomInParty
+	goto_if_eq VAR_RESULT, VAR_0x8004, FourIsland_PokemonDayCare_NoRoomInParty
 	specialvar VAR_RESULT, GetDaycareState
 	setvar VAR_0x8004, 0
 	goto_if_eq VAR_RESULT, DAYCARE_ONE_MON, FourIsland_PokemonDayCare_CostPrompt

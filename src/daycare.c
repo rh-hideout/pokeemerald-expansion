@@ -6,6 +6,7 @@
 #include "caps.h"
 #include "mail.h"
 #include "pokemon_storage_system.h"
+#include "mf_party.h"
 #include "event_data.h"
 #include "random.h"
 #include "main.h"
@@ -328,6 +329,10 @@ static u16 TakeSelectedPokemonFromDaycare(struct DaycareMon *daycareMon)
 {
     u32 experience;
     struct Pokemon pokemon;
+
+    // S40: refuse withdraw when the party is already at the rule limit.
+    if (MfIsPlayerPartyAtLimit())
+        return SPECIES_NONE;
 
     GetBoxMonNickname(&daycareMon->mon, gStringVar1);
     BoxMonToMon(&daycareMon->mon, &pokemon);
@@ -999,6 +1004,10 @@ static void _GiveEggFromDaycare(struct DayCare *daycare)
     bool8 isEgg;
 
     if (GetDaycareCompatibilityScore(daycare) == PARENTS_INCOMPATIBLE)
+        return;
+
+    // S40: refuse egg when the party is already at the rule limit.
+    if (MfIsPlayerPartyAtLimit())
         return;
 
     species = DetermineEggSpeciesAndParentSlots(daycare, parentSlots);

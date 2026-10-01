@@ -19,6 +19,7 @@
 #include "pokemon.h"
 #include "mf_rules.h"
 #include "mf_nuzlocke.h"
+#include "mf_party.h"
 #include "random.h"
 #include "battle_controllers.h"
 #include "battle_interface.h"
@@ -7807,7 +7808,7 @@ static void FinalizeCapture(void)
     struct Pokemon *caughtMon = GetBattlerMon(gBattlerTarget);
     SetMonData(caughtMon, MON_DATA_POKEBALL, &ballId);
 
-    if (CalculatePlayerPartyCount() == PARTY_SIZE)
+    if (CalculatePlayerPartyCount() >= MfGetMaxPartySize())
         gBattleCommunication[MULTISTRING_CHOOSER] = 0;
     else
         gBattleCommunication[MULTISTRING_CHOOSER] = 1;
@@ -8266,7 +8267,7 @@ static void Cmd_givecaughtmon(void)
     switch (state)
     {
     case GIVECAUGHTMON_CHECK_PARTY_SIZE:
-        if (CalculatePlayerPartyCount() == PARTY_SIZE && B_CATCH_SWAP_INTO_PARTY >= GEN_7)
+        if (CalculatePlayerPartyCount() >= MfGetMaxPartySize() && B_CATCH_SWAP_INTO_PARTY >= GEN_7)
         {
             PrepareStringBattleWithWait(STRINGID_SENDCAUGHTMONPARTYORBOX, gBattlerAttacker);
             gBattleCommunication[MULTIUSE_STATE] = GIVECAUGHTMON_ASK_ADD_TO_PARTY;
@@ -8623,7 +8624,7 @@ static void Cmd_trygivecaughtmonnick(void)
             struct Pokemon *caughtMon = GetBattlerMon(gBattlerTarget);
             GetMonData(caughtMon, MON_DATA_NICKNAME, gBattleStruct->caughtMonNick);
             CloseMainBattleScreen();
-            MainCallback callback = CalculatePlayerPartyCount() == PARTY_SIZE ? ReshowBlankBattleScreenAfterMenu : BattleMainCB2;
+            MainCallback callback = CalculatePlayerPartyCount() >= MfGetMaxPartySize() ? ReshowBlankBattleScreenAfterMenu : BattleMainCB2;
 
             DoNamingScreen(NAMING_SCREEN_CAUGHT_MON, gBattleStruct->caughtMonNick,
                            GetMonData(caughtMon, MON_DATA_SPECIES),

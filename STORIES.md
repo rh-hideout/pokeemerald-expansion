@@ -42,7 +42,7 @@ These exist to keep merging from `RHH/master` cheap. Violating them is the main 
 | 4     | Gamemode wiring                      | S27–S32 | Complete    |
 | 5     | Features & item-friction wiring      | S33–S34, S69 | Complete |
 | 6     | Nuzlocke                             | S35–S39 | Complete    |
-| 7     | Difficulty                           | S40–S45 | Not started |
+| 7     | Difficulty                           | S40–S45 | In progress |
 | 8     | Challenges                           | S46–S50 | Not started |
 | 9     | Randomizer                           | S51–S57 | Not started |
 | 10    | Options+ QoL                         | S58–S63 | Not started |
@@ -638,13 +638,14 @@ These exist to keep merging from `RHH/master` cheap. Violating them is the main 
 
 ### S40 — Party limit
 
-- [ ] **Status:** Not started
+- [x] **Status:** Complete
 
 - **Goal:** Cap how many Pokémon can be in the party.
 - **Depends on:** S13
 - **Scope:** Implement a `GetMaxPartySize()` equivalent driven by the rule; enforce it at catch, PC withdrawal, and gift acceptance; make the UI explain the refusal rather than silently failing.
 - **Acceptance:** The party cannot exceed the limit through any path.
 - **Tests:** Unit tests on the size helper; manual attempts via each path.
+- **Decisions:** [`docs-mf/decisions/0041-tech-party-limit-enforcement.md`](docs-mf/decisions/0041-tech-party-limit-enforcement.md) — enforce on add paths only; do not cap `CalculatePlayerPartyCount` (mid-run limit edits).
 
 ### S41 — Level caps
 

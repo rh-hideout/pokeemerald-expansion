@@ -31,6 +31,7 @@
 #include "main.h"
 #include "mail.h"
 #include "mf_moves.h"
+#include "mf_party.h"
 #include "mf_shiny.h"
 #include "mf_stats.h"
 #include "mf_types.h"
@@ -2957,18 +2958,19 @@ void CopyMon(void *dest, void *src, size_t size)
 u8 GiveCapturedMonToPlayer(struct Pokemon *mon)
 {
     s32 i;
+    u8 maxParty = MfGetMaxPartySize();
 
     SetMonData(mon, MON_DATA_OT_NAME, gSaveBlock2Ptr->playerName);
     SetMonData(mon, MON_DATA_OT_GENDER, &gSaveBlock2Ptr->playerGender);
     SetMonData(mon, MON_DATA_OT_ID, gSaveBlock2Ptr->playerTrainerId);
 
-    for (i = 0; i < PARTY_SIZE; i++)
+    for (i = 0; i < maxParty; i++)
     {
         if (GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES) == SPECIES_NONE)
             break;
     }
 
-    if (i >= PARTY_SIZE)
+    if (i >= maxParty)
         return CopyMonToPC(mon);
 
     CopyMon(&gParties[B_TRAINER_PLAYER][i], mon, sizeof(*mon));
@@ -3171,11 +3173,9 @@ enum TrainerClassID GetSecretBaseTrainerClass(void)
 
 bool8 IsPlayerPartyAndPokemonStorageFull(void)
 {
-    s32 i;
-
-    for (i = 0; i < PARTY_SIZE; i++)
-        if (GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES) == SPECIES_NONE)
-            return FALSE;
+    // S40: rule party limit counts as "party full" for catch/gift gates.
+    if (!MfIsPlayerPartyAtLimit())
+        return FALSE;
 
     return IsPokemonStorageFull();
 }
@@ -6669,19 +6669,21 @@ u32 GiveScriptedMonToPlayer(struct Pokemon *mon, u8 slot)
 {
     u32 sentToPc;
     u32 i = 0;
-    if (slot < PARTY_SIZE)
+    u8 maxParty = MfGetMaxPartySize();
+
+    if (slot < maxParty)
     {
         CopyMon(&gParties[B_TRAINER_PLAYER][slot], mon, sizeof(struct Pokemon));
         sentToPc = MON_GIVEN_TO_PARTY;
     }
     else
     {
-        for (i = 0; i < PARTY_SIZE; i++)
+        for (i = 0; i < maxParty; i++)
         {
             if (GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES) == SPECIES_NONE)
                 break;
         }
-        if (i >= PARTY_SIZE)
+        if (i >= maxParty)
         {
             sentToPc = CopyMonToPC(mon);
         }

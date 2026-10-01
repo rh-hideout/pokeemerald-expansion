@@ -149,8 +149,8 @@ FuchsiaCity_SafariZone_Entrance_EventScript_EnterSafariZoneLeft::
 	return
 
 FuchsiaCity_SafariZone_Entrance_EventScript_CheckSpaceForMons::
-	getpartysize
-	goto_if_ne VAR_RESULT, PARTY_SIZE, Common_EventScript_NopReturn
+	specialvar VAR_RESULT, MfIsPlayerPartyAtLimit
+	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_NopReturn
 	specialvar VAR_RESULT, ScriptCheckFreePokemonStorageSpace
 	goto_if_eq VAR_RESULT, TRUE, Common_EventScript_NopReturn
 	msgbox Route121_SafariZoneEntrance_Text_PCIsFull

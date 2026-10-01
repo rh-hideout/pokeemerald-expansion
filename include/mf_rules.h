@@ -400,12 +400,15 @@ static inline u8 MfRules_GetPartyLimit(void)
     return MfRules_GetActiveRules()->partyLimit;
 }
 
-// ME: partyLimit stores (6 - maxParty); 0 means no limit (party of 6).
+// ME: partyLimit stores (6 - maxParty); 0 = Off (party of 6).
+// Prefer MfGetMaxPartySize() at enforcement sites (S40 / mf_party.h).
 static inline u8 MfRules_GetMaxPartySize(void)
 {
     u8 limit = MfRules_GetActiveRules()->partyLimit;
 
-    return (limit == 0) ? 6 : (6 - limit);
+    if (limit > 5)
+        limit = 5;
+    return 6 - limit;
 }
 
 static inline u8 MfRules_GetLevelCap(void)

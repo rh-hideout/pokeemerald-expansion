@@ -90,8 +90,9 @@ FourIsland_EventScript_DaycareEggWaiting::
 	end
 
 FourIsland_EventScript_DaycareAcceptEgg::
+	specialvar VAR_0x8004, MfGetMaxPartySize
 	specialvar VAR_RESULT, CalculatePlayerPartyCount
-	goto_if_ne VAR_RESULT, PARTY_SIZE, FourIsland_EventScript_DaycareReceivedEgg
+	goto_if_ne VAR_RESULT, VAR_0x8004, FourIsland_EventScript_DaycareReceivedEgg
 	msgbox DayCare_Text_YouHaveNoRoomForIt
 	release
 	end

@@ -20,6 +20,7 @@
 #include "main.h"
 #include "menu.h"
 #include "mf_nuzlocke.h"
+#include "mf_party.h"
 #include "mon_markings.h"
 #include "naming_screen.h"
 #include "overworld.h"
@@ -1558,7 +1559,7 @@ static void Task_PCMainMenu(u8 taskId)
             DestroyTask(taskId);
             break;
         default:
-            if (task->tInput == OPTION_WITHDRAW && CountPartyMons() == PARTY_SIZE)
+            if (task->tInput == OPTION_WITHDRAW && CountPartyMons() >= MfGetMaxPartySize())
             {
                 // Can't withdraw
                 FillWindowPixelBuffer(0, PIXEL_FILL(1));
@@ -2239,6 +2240,7 @@ enum {
     MSTATE_WAIT_MSG,
     MSTATE_ERROR_LAST_PARTY_MON,
     MSTATE_ERROR_HAS_MAIL,
+    MSTATE_ERROR_PARTY_FULL,
     MSTATE_WAIT_ERROR_MSG,
     MSTATE_MULTIMOVE_RUN,
     MSTATE_MULTIMOVE_RUN_CANCEL,
@@ -2373,8 +2375,17 @@ static void Task_PokeStorageMain(u8 taskId)
             SetPokeStorageTask(Task_WithdrawMon);
             break;
         case INPUT_PLACE_MON:
-            PlaySE(SE_SELECT);
-            SetPokeStorageTask(Task_PlaceMon);
+            if (sCursorArea == CURSOR_AREA_IN_PARTY
+             && GetMonData(&gParties[B_TRAINER_PLAYER][sCursorPosition], MON_DATA_SPECIES) == SPECIES_NONE
+             && MfIsPlayerPartyAtLimit())
+            {
+                sStorage->state = MSTATE_ERROR_PARTY_FULL;
+            }
+            else
+            {
+                PlaySE(SE_SELECT);
+                SetPokeStorageTask(Task_PlaceMon);
+            }
             break;
         case INPUT_TAKE_ITEM:
             PlaySE(SE_SELECT);
@@ -2472,6 +2483,11 @@ static void Task_PokeStorageMain(u8 taskId)
     case MSTATE_ERROR_HAS_MAIL:
         PlaySE(SE_FAILURE);
         PrintMessage(MSG_PLEASE_REMOVE_MAIL);
+        sStorage->state = MSTATE_WAIT_ERROR_MSG;
+        break;
+    case MSTATE_ERROR_PARTY_FULL:
+        PlaySE(SE_FAILURE);
+        PrintMessage(MSG_PARTY_FULL);
         sStorage->state = MSTATE_WAIT_ERROR_MSG;
         break;
     case MSTATE_WAIT_ERROR_MSG:
@@ -2606,6 +2622,14 @@ static void Task_OnSelectedMon(u8 taskId)
              && MfNuzlocke_IsCemeteryLocked(MfNuzlocke_IsMonDead(&sStorage->movingMon)))
             {
                 sStorage->state = 7;
+                break;
+            }
+            // S40 — party limit: refuse place into party when already at max.
+            if (sIsMonBeingMoved && sCursorArea == CURSOR_AREA_IN_PARTY
+             && GetMonData(&gParties[B_TRAINER_PLAYER][sCursorPosition], MON_DATA_SPECIES) == SPECIES_NONE
+             && MfIsPlayerPartyAtLimit())
+            {
+                sStorage->state = 8;
                 break;
             }
             PlaySE(SE_SELECT);
@@ -2758,6 +2782,11 @@ static void Task_OnSelectedMon(u8 taskId)
         PrintMessage(MSG_NUZLOCKE);
         sStorage->state = 6;
         break;
+    case 8: // S40 — party at rule limit
+        PlaySE(SE_FAILURE);
+        PrintMessage(MSG_PARTY_FULL);
+        sStorage->state = 6;
+        break;
     }
 }
 
@@ -2824,7 +2853,7 @@ static void Task_WithdrawMon(u8 taskId)
     switch (sStorage->state)
     {
     case 0:
-        if (CalculatePlayerPartyCount() == PARTY_SIZE)
+        if (CalculatePlayerPartyCount() >= MfGetMaxPartySize())
         {
             PrintMessage(MSG_PARTY_FULL);
             sStorage->state = 1;
@@ -6229,8 +6258,8 @@ static void SetCursorInParty(void)
     else
     {
         partyCount = CalculatePlayerPartyCount();
-        if (partyCount >= PARTY_SIZE)
-            partyCount = PARTY_SIZE - 1;
+        if (partyCount >= MfGetMaxPartySize())
+            partyCount = MfGetMaxPartySize() - 1;
     }
     if (sStorage->cursorSprite->vFlip)
         sStorage->cursorFlipTimer = 1;
@@ -6941,7 +6970,12 @@ static bool8 CanPlaceMon(void)
     if (sIsMonBeingMoved)
     {
         if (sCursorArea == CURSOR_AREA_IN_PARTY && GetMonData(&gParties[B_TRAINER_PLAYER][sCursorPosition], MON_DATA_SPECIES) == SPECIES_NONE)
+        {
+            // S40: empty party slots beyond the rule limit are not valid place targets.
+            if (MfIsPlayerPartyAtLimit())
+                return FALSE;
             return TRUE;
+        }
         else if (sCursorArea == CURSOR_AREA_IN_BOX && GetBoxMonDataAt(StorageGetCurrentBox(), sCursorPosition, MON_DATA_SPECIES_OR_EGG) == SPECIES_NONE)
             return TRUE;
         else

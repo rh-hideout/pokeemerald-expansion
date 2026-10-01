@@ -25,8 +25,8 @@ FiveIsland_WaterLabyrinth_EventScript_LeadMonMaxFriendship::
 	end
 
 FiveIsland_WaterLabyrinth_EventScript_TryGiveEgg::
-	getpartysize
-	goto_if_eq VAR_RESULT, PARTY_SIZE, FiveIsland_WaterLabyrinth_EventScript_NoRoomForEgg
+	specialvar VAR_RESULT, MfIsPlayerPartyAtLimit
+	goto_if_eq VAR_RESULT, TRUE, FiveIsland_WaterLabyrinth_EventScript_NoRoomForEgg
 	setflag FLAG_GOT_TOGEPI_EGG
 	giveegg SPECIES_TOGEPI
 	textcolor NPC_TEXT_COLOR_NEUTRAL

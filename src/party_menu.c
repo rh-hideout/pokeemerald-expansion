@@ -38,6 +38,7 @@
 #include "link.h"
 #include "link_rfu.h"
 #include "mail.h"
+#include "mf_party.h"
 #include "main.h"
 #include "menu.h"
 #include "menu_helpers.h"
@@ -6641,7 +6642,7 @@ void ItemUseCB_Fusion(u8 taskId, TaskFunc taskFunc)
     case UNFUSE_MON:
         if (task->fusionType == FUSE_MON) // Cancel if An already Fused Mon Is Chosen For The Second Fusion Mon
             break;
-        if (gPartiesCount[B_TRAINER_PLAYER] == PARTY_SIZE)
+        if (MfIsPlayerPartyAtLimit())
         {
             gPartyMenuUseExitCallback = FALSE;
             DisplayPartyMenuMessage(gText_YourPartysFull, TRUE);
