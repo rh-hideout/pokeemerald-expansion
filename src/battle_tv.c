@@ -1116,6 +1116,7 @@ static void AddPointsOnFainting(void)
     u32 defSide = GetBattlerSide(gBattlerTarget);
     u32 atkArrId = tvPtr->side[atkSide].faintCauseMonId;
     s32 i;
+    u32 atkPartyIndex = GetTvPartyIndex(gBattlerAttacker);
 
     if (tvPtr->side[atkSide].faintCause != FNT_NONE)
     {
@@ -1191,7 +1192,7 @@ static void AddPointsOnFainting(void)
             break;
         case FNT_PERISH_SONG:
             if (tvPtr->side[atkSide].perishSong
-                && tvPtr->side[atkSide].perishSongMonId - 1 != GetTvPartyIndex(gBattlerAttacker))
+                && tvPtr->side[atkSide].perishSongMonId - 1 != atkPartyIndex)
             {
                 AddMovePoints(PTS_FAINT, 0, atkSide,
                 (tvPtr->side[atkSide].perishSongMonId - 1) * 4 + tvPtr->side[atkSide].perishSongMoveSlot);
@@ -1235,7 +1236,7 @@ static void AddPointsOnFainting(void)
             if (gBattlerAttacker == gBattleScripting.battler)
             {
                 AddMovePoints(PTS_FAINT_SET_UP, 0, atkSide,
-                (GetTvPartyIndex(gBattlerAttacker)) * 4 + tvPtr->side[atkSide].usedMoveSlot);
+                (atkPartyIndex) * 4 + tvPtr->side[atkSide].usedMoveSlot);
             }
             break;
         case FNT_OTHER:
@@ -1255,7 +1256,7 @@ static void AddPointsOnFainting(void)
         else
         {
             AddMovePoints(PTS_FAINT_SET_UP, 0, atkSide,
-            (GetTvPartyIndex(gBattlerAttacker)) * 4 + tvPtr->side[atkSide].usedMoveSlot);
+            (atkPartyIndex) * 4 + tvPtr->side[atkSide].usedMoveSlot);
         }
     }
 }
