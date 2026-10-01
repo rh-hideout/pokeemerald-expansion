@@ -284,5 +284,5 @@ bool32 IsHalfTeamMultiBattle(void)
 
 bool32 IsFullTeamMultiBattle(void)
 {
-    return (IsMultiBattle() && !AreMultiPartiesFullTeams());
+    return (IsMultiBattle() && AreMultiPartiesFullTeams());
 }
