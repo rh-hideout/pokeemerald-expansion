@@ -27,7 +27,7 @@ enum PartnerType
 {
     PRESET_PARTNER,
     FRONTIER_PARTNER,
-    RECORDMIX_APPRENTICE_PARTNER,
+    RECORDMIX_FRIEND_PARTNER,
     APPRENTICE_PARTNER,
     NO_PARTNER_FOUND
 };
@@ -37,7 +37,7 @@ static enum PartnerType GetPartnerType(u16 trainerId)
     if (trainerId < FRONTIER_TRAINERS_COUNT)
         return FRONTIER_PARTNER;
     if (trainerId < TRAINER_RECORD_MIXING_APPRENTICE)
-        return RECORDMIX_APPRENTICE_PARTNER;
+        return RECORDMIX_FRIEND_PARTNER;
     if (trainerId < TRAINER_EREADER)
         return APPRENTICE_PARTNER;
     if (IsPartnerTrainerId(trainerId))
@@ -121,21 +121,21 @@ void FillPartnerParty(u16 trainerId)
 
     switch(GetPartnerType(trainerId))
     {
-        case PRESET_PARTNER:
-            FillPresetPartnerParty(trainerId);
-            break;
-        case FRONTIER_PARTNER:
-            FillFrontierPartnerParty(trainerId);
-            break;
-        case RECORDMIX_APPRENTICE_PARTNER:
-            FillFriendRecordPartnerParty(trainerId - TRAINER_RECORD_MIXING_FRIEND);
-            break;
-        case APPRENTICE_PARTNER:
-            FillApprenticePartnerParty(trainerId - TRAINER_RECORD_MIXING_APPRENTICE);
-            break;
-        case NO_PARTNER_FOUND:
-            errorf("trainerId %d is not a valid id for a partner", trainerId);
-            break;
+    case PRESET_PARTNER:
+        FillPresetPartnerParty(trainerId);
+        break;
+    case FRONTIER_PARTNER:
+        FillFrontierPartnerParty(trainerId);
+        break;
+    case RECORDMIX_FRIEND_PARTNER:
+        FillFriendRecordPartnerParty(trainerId - TRAINER_RECORD_MIXING_FRIEND);
+        break;
+    case APPRENTICE_PARTNER:
+        FillApprenticePartnerParty(trainerId - TRAINER_RECORD_MIXING_APPRENTICE);
+        break;
+    case NO_PARTNER_FOUND:
+        errorf("trainerId %d is not a valid id for a partner", trainerId);
+        break;
     }
 }
 
@@ -144,17 +144,17 @@ enum TrainerClassID GetPartnerClass(u16 trainerId)
     enum TrainerClassID trainerClass;
     switch(GetPartnerType(trainerId))
     {
-        case PRESET_PARTNER:
-            trainerClass = GetTrainerClassFromId(trainerId);
-            break;
-        case FRONTIER_PARTNER:
-        case RECORDMIX_APPRENTICE_PARTNER:
-        case APPRENTICE_PARTNER:
-            trainerClass = GetFrontierOpponentClass(trainerId);
-            break;
-        case NO_PARTNER_FOUND:
-            errorf("trainerId %d is not a valid id for a partner", trainerId);
-            trainerClass = 0;
+    case PRESET_PARTNER:
+        trainerClass = GetTrainerClassFromId(trainerId);
+        break;
+    case FRONTIER_PARTNER:
+    case RECORDMIX_FRIEND_PARTNER:
+    case APPRENTICE_PARTNER:
+        trainerClass = GetFrontierOpponentClass(trainerId);
+        break;
+    case NO_PARTNER_FOUND:
+        errorf("trainerId %d is not a valid id for a partner", trainerId);
+        trainerClass = 0;
     }
     return trainerClass;
 }
@@ -163,16 +163,16 @@ void GetInGamePartnerName(u8 *dst, u16 trainerId)
 {
     switch(GetPartnerType(trainerId))
     {
-        case PRESET_PARTNER:
-            StringCopy(dst, GetTrainerNameFromId(trainerId));
-            break;
-        case FRONTIER_PARTNER:
-        case RECORDMIX_APPRENTICE_PARTNER:
-        case APPRENTICE_PARTNER:
-            GetFrontierTrainerName(dst, trainerId);
-            break;
-        case NO_PARTNER_FOUND:
-            errorf("trainerId %d is not a valid id for a partner", trainerId);
-            dst[0] = EOS;
+    case PRESET_PARTNER:
+        StringCopy(dst, GetTrainerNameFromId(trainerId));
+        break;
+    case FRONTIER_PARTNER:
+    case RECORDMIX_FRIEND_PARTNER:
+    case APPRENTICE_PARTNER:
+        GetFrontierTrainerName(dst, trainerId);
+        break;
+    case NO_PARTNER_FOUND:
+        errorf("trainerId %d is not a valid id for a partner", trainerId);
+        dst[0] = EOS;
     }
 }
