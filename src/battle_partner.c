@@ -40,7 +40,7 @@ static enum PartnerType GetPartnerType(u16 trainerId)
         return RECORDMIX_APPRENTICE_PARTNER;
     if (trainerId < TRAINER_EREADER)
         return APPRENTICE_PARTNER;
-    if (trainerId > TRAINER_PARTNER(PARTNER_NONE) && trainerId < TRAINER_PARTNER(PARTNER_COUNT))
+    if (IsPartnerTrainerId(trainerId))
         return PRESET_PARTNER;
     return NO_PARTNER_FOUND;
 }
@@ -173,5 +173,6 @@ void GetInGamePartnerName(u8 *dst, u16 trainerId)
             break;
         case NO_PARTNER_FOUND:
             errorf("trainerId %d is not a valid id for a partner", trainerId);
+            dst[0] = EOS;
     }
 }
