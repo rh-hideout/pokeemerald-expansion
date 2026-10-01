@@ -19,7 +19,6 @@ static void TrySetBattleSeminarShow(void);
 static void AddPointsOnFainting(void);
 static void AddPointsBasedOnWeather(u16 weatherFlags, enum Move move, enum MoveSlot moveSlot);
 static bool8 ShouldCalculateDamage(enum Move move, s32 *dmg, u16 *powerOverride);
-static enum PartyMon GetTvPartyIndex(enum BattlerId battler);
 
 #define TABLE_END ((u16)-1)
 
@@ -156,7 +155,8 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
     u32 atkFlank, defFlank, effFlank, flank;
     u8 *perishCount;
     u16 *statStringId, *finishedMoveId;
-    u32 atkPartyIndex, effPartyIndex;
+    u32 atkPartyIndex = gBattlerPartyIndexes[gBattlerAttacker];
+    u32 effPartyIndex = gBattlerPartyIndexes[gEffectBattler];
 
     if (!(gBattleTypeFlags & BATTLE_TYPE_LINK)
      && stringId != STRINGID_ITDOESNTAFFECT
@@ -173,8 +173,18 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
     atkMon = GetBattlerMon(gBattlerAttacker);
     defMon = GetBattlerMon(gBattlerTarget);
     moveSlot = GetBattlerMoveSlotId(gBattlerAttacker, gBattleMsgDataPtr->currentMove);
-    atkPartyIndex = GetTvPartyIndex(gBattlerAttacker);
-    effPartyIndex = GetTvPartyIndex(gEffectBattler);
+
+    if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
+    {
+        if (gBattlerAttacker & BIT_FLANK)
+        {
+            atkPartyIndex += MULTI_PARTY_SIZE;
+        }
+        if (gEffectBattler & BIT_FLANK)
+        {
+            effPartyIndex += MULTI_PARTY_SIZE;
+        }
+    }
 
     if (moveSlot >= MAX_MON_MOVES && IsNotSpecialBattleString(stringId) && stringId > STRINGID_TABLE_START)
     {
@@ -587,7 +597,6 @@ void BattleTv_SetDataBasedOnMove(enum Move move, u16 weatherFlags)
     struct BattleTv *tvPtr;
     u32 atkSide, defSide;
     u8 moveSlot;
-    u32 atkPartyIndex;
 
     if (!(gBattleTypeFlags & BATTLE_TYPE_LINK))
         return;
@@ -597,7 +606,13 @@ void BattleTv_SetDataBasedOnMove(enum Move move, u16 weatherFlags)
     atkSide = GetBattlerSide(gBattlerAttacker);
     defSide = GetBattlerSide(gBattlerTarget);
     moveSlot = GetBattlerMoveSlotId(gBattlerAttacker, move);
-    atkPartyIndex = GetTvPartyIndex(gBattlerAttacker);
+
+    u32 atkPartyIndex = gBattlerPartyIndexes[gBattlerAttacker];
+
+    if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
+    {
+        atkPartyIndex += MULTI_PARTY_SIZE;
+    }
 
     if (moveSlot >= MAX_MON_MOVES)
     {
@@ -664,20 +679,6 @@ void BattleTv_SetDataBasedOnAnimation(u8 animationId)
     }
 }
 
-static struct Pokemon *GetTvPartyMon(u32 scoreIndex, enum BattleSide side)
-{
-    if ((gBattleTypeFlags & BATTLE_TYPE_MULTI) && scoreIndex >= MULTI_PARTY_SIZE)
-    {
-        enum BattleTrainer trainer = (side == B_SIDE_PLAYER) ? B_TRAINER_PARTNER : B_TRAINER_OPPONENT_B;
-        return &gParties[trainer][scoreIndex - MULTI_PARTY_SIZE];
-    }
-    else
-    {
-        enum BattleTrainer trainer = (side == B_SIDE_PLAYER) ? B_TRAINER_PLAYER : B_TRAINER_OPPONENT_A;
-        return &gParties[trainer][scoreIndex];
-    }
-}
-
 void TryPutLinkBattleTvShowOnAir(void)
 {
     enum Species playerBestSpecies = 0, opponentBestSpecies = 0;
@@ -690,6 +691,8 @@ void TryPutLinkBattleTvShowOnAir(void)
     enum Move move = MOVE_NONE;
     s32 i, j;
     int zero = 0, one = 1; //needed for matching
+    enum BattleTrainer trainer = B_TRAINER_PLAYER;
+    enum PartyMon slot = PARTY_MON_0;
 
     if (gBattleStruct->anyMonHasTransformed)
         return;
@@ -716,8 +719,16 @@ void TryPutLinkBattleTvShowOnAir(void)
     for (i = 0; i < PARTY_SIZE; i++)
     {
         struct Pokemon *mon;
+        trainer = B_TRAINER_PLAYER;
+        slot = i;
 
-        mon = GetTvPartyMon(i, B_SIDE_PLAYER);
+        if (gBattleTypeFlags & BATTLE_TYPE_MULTI && i >= MULTI_PARTY_SIZE)
+        {
+            trainer = B_TRAINER_PARTNER;
+            slot = i - MULTI_PARTY_SIZE;
+        }
+
+        mon = &gParties[trainer][slot];
         species = GetMonData(mon, MON_DATA_SPECIES);
         if (species != SPECIES_NONE && !GetMonData(mon, MON_DATA_IS_EGG))
         {
@@ -732,7 +743,16 @@ void TryPutLinkBattleTvShowOnAir(void)
             }
         }
 
-        mon = GetTvPartyMon(i, B_SIDE_OPPONENT);
+        trainer = B_TRAINER_OPPONENT_A;
+        slot = i;
+
+        if (gBattleTypeFlags & BATTLE_TYPE_MULTI && i >= MULTI_PARTY_SIZE)
+        {
+            trainer = B_TRAINER_OPPONENT_B;
+            slot = i - MULTI_PARTY_SIZE;
+        }
+
+        mon = &gParties[trainer][slot];
         species = GetMonData(mon, MON_DATA_SPECIES);
         if (species != SPECIES_NONE && !GetMonData(mon, MON_DATA_IS_EGG))
         {
@@ -741,7 +761,15 @@ void TryPutLinkBattleTvShowOnAir(void)
 
             if (opponentBestSum == sum)
             {
-                if (GetMonData(mon, MON_DATA_EXP) > GetMonData(GetTvPartyMon(opponentBestMonId, B_SIDE_OPPONENT), MON_DATA_EXP))
+                trainer = B_TRAINER_OPPONENT_A;
+                slot = opponentBestMonId;
+
+                if (gBattleTypeFlags & BATTLE_TYPE_MULTI && opponentBestMonId >= MULTI_PARTY_SIZE)
+                {
+                    trainer = B_TRAINER_OPPONENT_B;
+                    slot = opponentBestMonId - MULTI_PARTY_SIZE;
+                }
+                if (GetMonData(mon, MON_DATA_EXP) > GetMonData(&gParties[trainer][slot], MON_DATA_EXP))
                 {
                     opponentBestMonId = i;
                     opponentBestSum = sum;
@@ -766,7 +794,16 @@ void TryPutLinkBattleTvShowOnAir(void)
         }
     }
 
-    move = GetMonData(GetTvPartyMon(playerBestMonId, B_SIDE_PLAYER), MON_DATA_MOVE1 + i);
+    trainer = B_TRAINER_PLAYER;
+    slot = playerBestMonId;
+
+    if (gBattleTypeFlags & BATTLE_TYPE_MULTI && playerBestMonId >= MULTI_PARTY_SIZE)
+    {
+        trainer = B_TRAINER_PARTNER;
+        slot = playerBestMonId - MULTI_PARTY_SIZE;
+    }
+
+    move = GetMonData(&gParties[trainer][slot], MON_DATA_MOVE1 + i);
     if (playerBestSum == 0 || move == MOVE_NONE)
         return;
 
@@ -792,7 +829,12 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
     u32 atkSide = GetBattlerSide(gBattlerAttacker);
     u32 defSide = GetBattlerSide(gBattlerTarget);
     s32 i;
-    u32 atkPartyIndex = GetTvPartyIndex(gBattlerAttacker);
+    u32 atkPartyIndex = gBattlerPartyIndexes[gBattlerAttacker];
+
+    if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
+    {
+        atkPartyIndex += MULTI_PARTY_SIZE;
+    }
 
     switch (caseId)
     {
@@ -1116,7 +1158,12 @@ static void AddPointsOnFainting(void)
     u32 defSide = GetBattlerSide(gBattlerTarget);
     u32 atkArrId = tvPtr->side[atkSide].faintCauseMonId;
     s32 i;
-    u32 atkPartyIndex = GetTvPartyIndex(gBattlerAttacker);
+    u32 atkPartyIndex = gBattlerPartyIndexes[gBattlerAttacker];
+
+    if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
+    {
+        atkPartyIndex += MULTI_PARTY_SIZE;
+    }
 
     if (tvPtr->side[atkSide].faintCause != FNT_NONE)
     {
@@ -1444,12 +1491,4 @@ static void AddPointsBasedOnWeather(u16 weatherFlags, enum Move move, enum MoveS
         AddMovePoints(PTS_SANDSTORM, move, moveSlot, 0);
     else if (weatherFlags & B_WEATHER_ICY_ANY)
         AddMovePoints(PTS_HAIL_SNOW, move, moveSlot, 0);
-}
-
-static enum PartyMon GetTvPartyIndex(enum BattlerId battler)
-{
-    enum PartyMon index = (enum PartyMon)gBattlerPartyIndexes[battler];
-    if ((gBattleTypeFlags & BATTLE_TYPE_MULTI) && (GetBattlerPosition(battler) & BIT_FLANK))
-        index += MULTI_PARTY_SIZE;
-    return index;
 }
