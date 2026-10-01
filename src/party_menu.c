@@ -7564,13 +7564,13 @@ static bool8 TrySwitchInPokemon(void)
     u8 slot = GetCursorSelectionMonId();
     struct Pokemon *party = NULL;
     s8 partySlot = 0, newPartySlot = 0;
-    enum PartyMon battlePartyId = PARTY_MON_0, combinedPartyId = PARTY_MON_0;
+    enum PartyMon battlePartyId = PARTY_MON_0, individualPartyId = PARTY_MON_0;
     bool32 isPartnerSlot = PartyMenuSlotIsMultiPartner(slot);
     enum BattlerId battler = gBattlerInMenuId;
 
     GetPartyAndSlotFromPartyMenuId(slot, &party, &partySlot);
     battlePartyId = GetPartyIdFromBattleSlot(slot);
-    combinedPartyId = CombinedToIndividualPartyId(battlePartyId); // No change unless half-team multi
+    individualPartyId = CombinedToIndividualPartyId(battlePartyId); // No change unless half-team multi
 
     struct Pokemon *mon = &party[partySlot];
 
@@ -7595,7 +7595,7 @@ static bool8 TrySwitchInPokemon(void)
     {
         if (IsOnPlayerSide(i)
          && GetBattlerParty(i) == party
-         && combinedPartyId == gBattlerPartyIndexes[i])
+         && individualPartyId == gBattlerPartyIndexes[i])
         {
             GetMonNickname(mon, gStringVar1);
             StringExpandPlaceholders(gStringVar4, gText_PkmnAlreadyInBattle);
@@ -7637,7 +7637,7 @@ static bool8 TrySwitchInPokemon(void)
         return FALSE;
     }
 
-    gSelectedMonPartyId = combinedPartyId;
+    gSelectedMonPartyId = individualPartyId;
     gPartyMenuUseExitCallback = TRUE;
 
     // Switch allowed. Switch party slots and mons in the party.
