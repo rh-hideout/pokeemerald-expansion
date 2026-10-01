@@ -90,9 +90,7 @@ bool32 CanDynamax(enum BattlerId battler)
     }
 
     // Check if species isn't allowed to Dynamax.
-    if (GetBaseSpecies(species) == SPECIES_ZACIAN
-        || GetBaseSpecies(species) == SPECIES_ZAMAZENTA
-        || GetBaseSpecies(species) == SPECIES_ETERNATUS)
+    if (gSpeciesInfo[species].isDynamaxBanned)
         return FALSE;
 
     // Check if Trainer has already Dynamaxed.
