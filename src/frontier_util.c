@@ -3148,7 +3148,6 @@ u8 GetFrontierTrainerFacilityClass(u16 trainerId)
 void GetFrontierTrainerName(u8 *dst, u16 trainerId)
 {
     s32 i = 0;
-    enum DifficultyLevel difficulty = GetBattlePartnerDifficultyLevel(trainerId);
     SetFacilityPtrsGetLevel();
 
     if (trainerId == TRAINER_EREADER)
@@ -3162,11 +3161,6 @@ void GetFrontierTrainerName(u8 *dst, u16 trainerId)
     {
         CopyFrontierBrainTrainerName(dst);
         return;
-    }
-    else if (trainerId > TRAINER_PARTNER(PARTNER_NONE))
-    {
-        for (i = 0; gBattlePartners[difficulty][trainerId - TRAINER_PARTNER(PARTNER_NONE)].trainerName[i] != EOS; i++)
-            dst[i] = gBattlePartners[difficulty][trainerId - TRAINER_PARTNER(PARTNER_NONE)].trainerName[i];
     }
     else if (trainerId < FRONTIER_TRAINERS_COUNT)
     {

@@ -158,3 +158,20 @@ enum TrainerClassID GetPartnerClass(u16 trainerId)
     }
     return trainerClass;
 }
+
+void GetInGamePartnerName(u8 *dst, u16 trainerId)
+{
+    switch(GetPartnerType(trainerId))
+    {
+        case PRESET_PARTNER:
+            StringCopy(dst, GetTrainerNameFromId(trainerId));
+            break;
+        case FRONTIER_PARTNER:
+        case RECORDMIX_APPRENTICE_PARTNER:
+        case APPRENTICE_PARTNER:
+            GetFrontierTrainerName(dst, trainerId);
+            break;
+        case NO_PARTNER_FOUND:
+            errorf("trainerId %d is not a valid id for a partner", trainerId);
+    }
+}

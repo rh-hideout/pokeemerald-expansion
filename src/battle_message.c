@@ -3057,7 +3057,7 @@ static const u8 *BattleStringGetPlayerName(u8 *text, enum BattlerId battler)
         }
         else if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
         {
-            GetFrontierTrainerName(text, gPartnerTrainerId);
+            GetInGamePartnerName(text, gPartnerTrainerId);
             toCpy = text;
         }
         else
