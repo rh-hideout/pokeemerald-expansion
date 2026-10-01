@@ -502,8 +502,6 @@ static void Task_FirstBattleEnterParty_StartPrintMsg2(u8 taskId);
 static void Task_FirstBattleEnterParty_RunPrinterMsg2(u8 taskId);
 static void Task_FirstBattleEnterParty_FadeNormal(u8 taskId);
 static void Task_FirstBattleEnterParty_WaitFadeNormal(u8 taskId);
-static enum PartyMon CombinedToIndividualPartyId(enum PartyMon index);
-static enum PartyMon IndividualToCombinedPartyId(enum PartyMon index, enum BattlerId battler);
 
 static const u8 sText_askText[] = _("Would you like to change {STR_VAR_1}'s\nability to {STR_VAR_2}?");
 static const u8 sText_doneText[] = _("{STR_VAR_1}'s ability became\n{STR_VAR_2}!{PAUSE_UNTIL_PRESS}");
@@ -1616,7 +1614,16 @@ static void HandleChooseMonSelection(u8 taskId, s8 *slotPtr)
             else
             {
                 PlaySE(SE_SELECT);
-                gSelectedMonPartyId = CombinedToIndividualPartyId(partyId); // No change unless half-team multi
+
+                if (IsHalfTeamMultiBattle() && partyId >= MULTI_PARTY_SIZE)
+                {
+                    gSelectedMonPartyId = partyId - MULTI_PARTY_SIZE;
+                }
+                else
+                {
+                    gSelectedMonPartyId = partyId;
+                }
+
                 Task_ClosePartyMenu(taskId);
             }
             break;
@@ -7567,10 +7574,15 @@ static bool8 TrySwitchInPokemon(void)
     enum PartyMon battlePartyId = PARTY_MON_0, individualPartyId = PARTY_MON_0;
     bool32 isPartnerSlot = PartyMenuSlotIsMultiPartner(slot);
     enum BattlerId battler = gBattlerInMenuId;
+    enum PartyBattleSlot newSlot = PARTY_BATTLE_SLOT_0;
 
     GetPartyAndSlotFromPartyMenuId(slot, &party, &partySlot);
-    battlePartyId = GetPartyIdFromBattleSlot(slot);
-    individualPartyId = CombinedToIndividualPartyId(battlePartyId); // No change unless half-team multi
+    individualPartyId = battlePartyId = GetPartyIdFromBattleSlot(slot);
+
+    if (IsHalfTeamMultiBattle() && battlePartyId >= MULTI_PARTY_SIZE)
+    {
+        individualPartyId -= MULTI_PARTY_SIZE; // No change unless half-team multi
+    }
 
     struct Pokemon *mon = &party[partySlot];
 
@@ -7626,8 +7638,14 @@ static bool8 TrySwitchInPokemon(void)
         return FALSE;
     }
     
-    enum PartyMon battlerCombinedId = IndividualToCombinedPartyId(gBattlerPartyIndexes[battler], battler); // No change unless half-team multi
-    enum PartyBattleSlot newSlot = GetBattleSlotFromBattlePartyId(battlerCombinedId);
+    if (IsHalfTeamMultiBattle() && (battler & BIT_FLANK)) // Half-team multi partner mon
+    {
+        newSlot = GetBattleSlotFromBattlePartyId(gBattlerPartyIndexes[battler] + MULTI_PARTY_SIZE);
+    }
+    else
+    {
+        newSlot = GetBattleSlotFromBattlePartyId(gBattlerPartyIndexes[battler]);
+    }
 
     // Check switch is not blocked by something else
     if (gPartyMenu.action == PARTY_ACTION_CANT_SWITCH)
@@ -8642,21 +8660,6 @@ static void Task_FirstBattleEnterParty_WaitFadeNormal(u8 taskId)
             DisplayPartyMenuStdMessage(PARTY_MSG_CHOOSE_MON);
         gTasks[taskId].func = Task_HandleChooseMonInput;
     }
-}
-
-// Functions for 6v6 multi battle handling
-static enum PartyMon CombinedToIndividualPartyId(enum PartyMon index)
-{
-    if (IsHalfTeamMultiBattle() && index >= MULTI_PARTY_SIZE)
-        return (enum PartyMon)(index - MULTI_PARTY_SIZE);
-    return index;
-}
-
-static enum PartyMon IndividualToCombinedPartyId(enum PartyMon index, enum BattlerId battler)
-{
-    if (IsHalfTeamMultiBattle() && (battler & BIT_FLANK))
-        return (enum PartyMon)(index + MULTI_PARTY_SIZE);
-    return index;
 }
 
 #if TESTING
