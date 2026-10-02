@@ -2,6 +2,7 @@
 #include "battle.h"
 #include "event_data.h"
 #include "caps.h"
+#include "mf_level_cap.h"
 #include "pokemon.h"
 
 
@@ -21,6 +22,10 @@ u32 GetCurrentLevelCap(void)
     };
 
     u32 i;
+
+    // S41: Difficulty LEVEL CAP overrides the compile-time flag/variable map.
+    if (MfIsPartyLevelCapEnabled())
+        return MfGetPartyLevelCap();
 
     if (B_LEVEL_CAP_TYPE == LEVEL_CAP_FLAG_LIST)
     {
@@ -45,12 +50,14 @@ u32 GetSoftLevelCapExpValue(u32 level, u32 expValue)
 
     u32 levelDifference;
     u32 currentLevelCap = GetCurrentLevelCap();
+    u32 expCapType = MfGetEffectiveExpCapType();
 
-    if (B_EXP_CAP_TYPE == EXP_CAP_NONE)
+    if (expCapType == EXP_CAP_NONE)
         return expValue;
 
     if (level < currentLevelCap)
     {
+        // B_LEVEL_CAP_EXP_UP stays a compile-time boost, and only while a cap is active.
         if (B_LEVEL_CAP_EXP_UP)
         {
             levelDifference = currentLevelCap - level;
@@ -64,11 +71,11 @@ u32 GetSoftLevelCapExpValue(u32 level, u32 expValue)
             return expValue;
         }
     }
-    else if (B_EXP_CAP_TYPE == EXP_CAP_HARD)
+    else if (expCapType == EXP_CAP_HARD)
     {
         return 0;
     }
-    else if (B_EXP_CAP_TYPE == EXP_CAP_SOFT)
+    else if (expCapType == EXP_CAP_SOFT)
     {
         levelDifference = level - currentLevelCap;
         if (levelDifference > ARRAY_COUNT(sExpScalingDown) - 1)

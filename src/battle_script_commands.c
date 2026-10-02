@@ -37,6 +37,7 @@
 #include "string_util.h"
 #include "pokemon_icon.h"
 #include "caps.h"
+#include "mf_level_cap.h"
 #include "m4a.h"
 #include "mail.h"
 #include "event_data.h"
@@ -2300,7 +2301,7 @@ static void Cmd_getexp(void)
 
                     ApplyExperienceMultipliers(&gBattleStruct->battlerExpReward, *expMonId, gBattlerFainted);
 
-                    if (B_EXP_CAP_TYPE == EXP_CAP_HARD && gBattleStruct->battlerExpReward != 0)
+                    if (MfGetEffectiveExpCapType() == EXP_CAP_HARD && gBattleStruct->battlerExpReward != 0)
                     {
                         enum GrowthRate growthRate = gSpeciesInfo[GetMonData(&gParties[B_TRAINER_PLAYER][*expMonId], MON_DATA_SPECIES)].growthRate;
                         u32 currentExp = GetMonData(&gParties[B_TRAINER_PLAYER][*expMonId], MON_DATA_EXP);
@@ -2312,32 +2313,36 @@ static void Cmd_getexp(void)
                             gBattleStruct->battlerExpReward = gExperienceTables[growthRate][levelCap] - currentExp;
                     }
 
-                    if (IsTradedMon(&gParties[B_TRAINER_PLAYER][*expMonId]))
+                    // ME skips the gained-exp line when the amount is 0. A sent-out
+                    // mon or Exp. Share holder that did earn some still gets a line.
+                    if (gBattleStruct->battlerExpReward != 0)
                     {
-                        i = STRINGID_ABOOSTED;
-                    }
-                    else
-                    {
-                        i = STRINGID_EMPTYSTRING4;
-                    }
+                        if (IsTradedMon(&gParties[B_TRAINER_PLAYER][*expMonId]))
+                            i = STRINGID_ABOOSTED;
+                        else
+                            i = STRINGID_EMPTYSTRING4;
 
-                    PREPARE_MON_NICK_WITH_PREFIX_BUFFER(gBattleTextBuff1, 0, *expMonId);
-                    // buffer 'gained' or 'gained a boosted'
-                    PREPARE_STRING_BUFFER(gBattleTextBuff2, i);
-                    PREPARE_WORD_NUMBER_BUFFER(gBattleTextBuff3, 6, gBattleStruct->battlerExpReward);
+                        PREPARE_MON_NICK_WITH_PREFIX_BUFFER(gBattleTextBuff1, 0, *expMonId);
+                        // buffer 'gained' or 'gained a boosted'
+                        PREPARE_STRING_BUFFER(gBattleTextBuff2, i);
+                        PREPARE_WORD_NUMBER_BUFFER(gBattleTextBuff3, 6, gBattleStruct->battlerExpReward);
 
-                    if (wasSentOut || holdEffect == HOLD_EFFECT_EXP_SHARE)
-                    {
-                        PrepareStringBattle(STRINGID_PKMNGAINEDEXP, 0);
-                    }
-                    else if (IsGen6ExpShareEnabled() && !gBattleStruct->teamGotExpMsgPrinted) // Print 'the rest of your team got exp' message once, when all of the sent-in mons were given experience
-                    {
-                        gLastUsedItem = ITEM_EXP_SHARE;
-                        PrepareStringBattle(STRINGID_TEAMGAINEDEXP, 0);
-                        gBattleStruct->teamGotExpMsgPrinted = TRUE;
+                        if (wasSentOut || holdEffect == HOLD_EFFECT_EXP_SHARE)
+                        {
+                            PrepareStringBattle(STRINGID_PKMNGAINEDEXP, 0);
+                        }
+                        else if (IsGen6ExpShareEnabled() && !gBattleStruct->teamGotExpMsgPrinted) // Print 'the rest of your team got exp' message once, when all of the sent-in mons were given experience
+                        {
+                            gLastUsedItem = ITEM_EXP_SHARE;
+                            PrepareStringBattle(STRINGID_TEAMGAINEDEXP, 0);
+                            gBattleStruct->teamGotExpMsgPrinted = TRUE;
+                        }
                     }
 
                     MonGainEVs(&gParties[B_TRAINER_PLAYER][*expMonId], faintedSpecies);
+                    // Case 3 plays the exp bar. A 0 reward would jingle with no text.
+                    if (gBattleStruct->battlerExpReward == 0)
+                        gBattleScripting.getexpState = 4;
                 }
                 gBattleScripting.getexpState++;
             }

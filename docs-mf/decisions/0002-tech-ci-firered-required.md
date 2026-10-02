@@ -31,7 +31,7 @@ Separately, expansion already compiles with `-Werror`, but local builds on forks
 
 ## Consequences
 
-- PRs go red when FireRed fails to build or `make check` fails.
+- PRs go red when FireRed fails to build or `make check` fails. ADR 0043 later narrowed the `test` job to `TESTS='MF:'`; the full expansion suite is no longer a gate.
 - Upstream merges that only touch Emerald/LeafGreen/release CI steps may conflict less often; when `build.yml` does conflict, prefer our slim matrix and re-apply any new shared install/cache steps from RHH.
 - Branch protection should require the check named **`build`** (workflow display: `CI / build`).
 - Future `src/mf_*.c` files inherit strict unused/deprecated errors without further CI edits.

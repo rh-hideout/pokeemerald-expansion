@@ -4,7 +4,7 @@ How rules and helper logic get automated coverage, and when manual QA is require
 
 ## What `make check` covers
 
-Expansion’s test runner (`TESTELF` / `make check` / mGBA headless hydra) builds and runs against the **Emerald** game version (`GAME_VERSION=EMERALD`). CI’s `test` job does the same (see ADR 0002).
+Expansion’s test runner (`TESTELF` / `make check` / mGBA headless hydra) builds and runs against the **Emerald** game version (`GAME_VERSION=EMERALD`). CI’s `test` job uses that binary but only runs tests whose names start with `MF:` (ADR 0043).
 
 | Covered well | Not covered by `make check` |
 | ------------ | --------------------------- |
@@ -40,15 +40,17 @@ Makefile already picks up `test/*/*.c`, so `test/modern_firered/` needs no Makef
 
 Sample smoke test: `test/modern_firered/mf_version.c` (asserts `MF_VERSION` is reachable from the Emerald TESTELF).
 
-## Filtering locally
+## Filtering
 
-Run only our tests while iterating:
+CI and local iteration both use the `MF:` name prefix:
 
 ```bash
 make check -j$(sysctl -n hw.ncpu) TESTS='MF:'
 ```
 
 (Exact filter strings match test **names**, not filenames — name MF tests with a stable prefix such as `MF:`.)
+
+`make check` with no `TESTS` still runs the full expansion suite. That suite is not a CI gate. It assumes the stock type chart and vanilla species, so Phase 1 defaults (Improved chart, modern typings) fail upstream battle tests.
 
 ## Related
 

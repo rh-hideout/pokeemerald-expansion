@@ -28,7 +28,7 @@ Drives one story from `STORIES.md` to a verified, documented, complete state.
 
 ```bash
 make firered -j$(sysctl -n hw.ncpu)   # the only build command; never bare `make`
-make check                            # expansion's test suite (targets the Emerald build)
+make check TESTS='MF:'               # Modern FireRed tests on the Emerald TESTELF (ADR 0043)
 make clean                            # required when switching between emerald/firered targets
 ```
 
@@ -73,7 +73,7 @@ Copy this checklist and track it:
 - [ ] 2. Load context (story + PROJECT.md scope + relevant decisions + ME reference)
 - [ ] 3. Mark the story In progress + phase In progress
 - [ ] 4. Implement per Scope, honoring the Definition of Done
-- [ ] 5. Verify: clean build + make check + in-game; confirm every Acceptance bullet
+- [ ] 5. Verify: clean build + make check TESTS='MF:' + in-game; confirm every Acceptance bullet
 - [ ] 6. Record decisions (docs-mf/decisions/)
 - [ ] 7. Mark the story Complete + update the Milestones table
 - [ ] 8. Summarize to the user (always end with Manual verification)
@@ -95,7 +95,7 @@ Copy this checklist and track it:
 - In the Milestones table, set the story's phase to `In progress` if it is currently `Not started`.
 
 ### 4. Implement
-Follow the story's **Scope**. Honor the per-story **Definition of Done** from `STORIES.md`: acceptance criteria met, `make firered` builds clean with no new warnings, `make check` passes, the ROM boots in mGBA, and any non-obvious decision is recorded.
+Follow the story's **Scope**. Honor the per-story **Definition of Done** from `STORIES.md`: acceptance criteria met, `make firered` builds clean with no new warnings, `make check TESTS='MF:'` passes, the ROM boots in mGBA, and any non-obvious decision is recorded.
 
 - Apply the project conventions table above while coding.
 - Keep the change scoped to this one story. If you discover necessary work outside its scope, note it for a follow-up story rather than expanding silently.
@@ -107,7 +107,7 @@ Follow the story's **Scope**. Honor the per-story **Definition of Done** from `S
 Never mark a story Complete on unverified claims. In order:
 
 1. **Build clean.** `make firered -j$(sysctl -n hw.ncpu)`. If you switched targets or changed a widely-included header, `make clean` first. Zero new warnings in our `mf_*` files.
-2. **Test.** Run `make check` and the story's own **Tests** bullet. Note that expansion's test runner targets the Emerald build — if a test cannot cover FR-only code, say so explicitly rather than claiming coverage you don't have.
+2. **Test.** Run `make check TESTS='MF:'` and the story's own **Tests** bullet. The runner still targets the Emerald build — if a test cannot cover FR-only code, say so explicitly rather than claiming coverage you don't have. The full expansion suite is not part of the gate (ADR 0043).
 3. **Boot.** Confirm `pokefirered.gba` loads in mGBA and reaches the overworld.
 4. **Play the acceptance path.** Walk each **Acceptance** bullet in-game and confirm it is actually satisfied. If something fails, fix it and re-run from step 1.
 5. **Check budgets** for data-heavy stories (dual tables, new save fields): report the ROM size delta and confirm any save-struct size assertion still holds.
@@ -184,7 +184,7 @@ Trade-offs, follow-ups, upstream-merge implications, and any affected stories or
 - **No git branch/commit:** Never checkout a new branch or commit code during this workflow. Leave all changes uncommitted on the current branch so the user can review first. Only branch or commit if the user explicitly asks afterward.
 - **Never change the Makefile default target** to FireRed, and never build with bare `make`.
 - **Never merge from Modern Emerald or `cawtds/pokefirered-expansion`.** ME is a read-only reference; the standalone FR expansion is obsolete.
-- Never mark a story Complete without a clean `make firered` build, `make check`, and confirming its Acceptance bullets in-game.
+- Never mark a story Complete without a clean `make firered` build, `make check TESTS='MF:'`, and confirming its Acceptance bullets in-game.
 - Always end the story summary with a **Manual verification** section (concrete mGBA steps, or `N/A`).
 - Never start a story with unmet dependencies without explicit user confirmation.
 - **Never invent scope.** `PROJECT.md`'s "Explicitly out of scope" list (story edits, map changes, followers, music packs, Battle Frontier) is binding. If a story seems to require out-of-scope work, stop and ask.

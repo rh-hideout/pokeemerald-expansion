@@ -1,6 +1,9 @@
 name: CI
 
-# Modern FireRed CI: FireRed ROM build + expansion's Emerald-targeted test suite.
+# Modern FireRed CI: FireRed ROM build + Modern FireRed unit tests.
+# The test binary is still Emerald (expansion's TESTELF). CI runs only tests
+# named with the MF: prefix (ADR 0043). The full expansion battle suite is not
+# a gate.
 # Dropped vs upstream: Emerald ROM, LeafGreen ROM, and release jobs — we never
 # ship those artifacts here; carrying them is merge cost without signal.
 # Required branch-protection check: the gate job named `build` (depends on
@@ -57,8 +60,8 @@ jobs:
         run: make firered -j$(nproc) -O
 
   # Expansion's test runner (`make check` / TESTELF) targets the Emerald build,
-  # not FireRed. Keep it anyway: pure helpers and engine regressions still matter,
-  # and S06 will hang Modern FireRed unit tests off this path.
+  # not FireRed. Modern FireRed unit tests live on that path (ADR 0006). CI runs
+  # only the MF: filter (ADR 0043); the full expansion suite stays local-only.
   test:
     if: github.actor != 'allcontributors[bot]'
     runs-on: ubuntu-latest
@@ -93,11 +96,11 @@ jobs:
             tools/mgba-rom-test-hydra/mgba-rom-test-hydra
           key: tools-check-${{ runner.os }}-${{ hashFiles('tools/*/Makefile', 'tools/**/*.c', 'tools/**/*.cpp', 'tools/**/*.h') }}
 
-      - name: Test (Emerald target — expansion test runner)
+      - name: Test (Emerald target — MF: tests)
         env:
           GAME_VERSION: EMERALD
           TEST: 1
-        run: make -j$(nproc) check
+        run: make -j$(nproc) check TESTS='MF:'
 
   # Gate job: satisfies the "build" branch protection rule.
   # Passes only when FireRed ROM + test suite succeed.
@@ -107,7 +110,7 @@ jobs:
     needs: [build-firered, test]
     steps:
       - name: FireRed build and tests passed
-        run: echo "FireRed ROM build and Emerald-targeted make check passed."
+        run: echo "FireRed ROM build and MF: tests passed."
 
   docs_validate:
     if: github.actor != 'allcontributors[bot]'

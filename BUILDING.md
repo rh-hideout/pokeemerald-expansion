@@ -48,10 +48,10 @@ GitHub Actions (`.github/workflows/build.yml`) on push/PR:
 | Job | What it runs |
 | --- | --- |
 | `build-firered` | `make firered` — the product ROM |
-| `test` | `make check` — expansion’s test runner (**Emerald** target, not FireRed) |
+| `test` | `make check TESTS='MF:'` — Modern FireRed unit tests on the Emerald test binary |
 | `build` | Gate job; require this check in branch protection |
 
-MF unit tests live under `test/modern_firered/` and run inside that Emerald suite. Coverage limits and the manual QA template: [`docs-mf/TESTING.md`](./docs-mf/TESTING.md).
+MF unit tests live under `test/modern_firered/`. CI runs that filter only (ADR 0043). A full `make check` still runs expansion’s battle suite locally. Coverage limits and the manual QA template: [`docs-mf/TESTING.md`](./docs-mf/TESTING.md).
 
 Emerald ROM, LeafGreen, and release builds are intentionally not run here.
 

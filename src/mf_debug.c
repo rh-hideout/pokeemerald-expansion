@@ -1,6 +1,7 @@
 #include "global.h"
 #include "debug.h"
 #include "mf_debug.h"
+#include "mf_level_cap.h"
 #include "mf_nuzlocke.h"
 #include "mf_rules.h"
 #include "mf_rules_menu.h"
@@ -216,10 +217,21 @@ static void MfDebug_FormatEntryName(u8 *dest, const struct MfDebugEntry *entry)
         break;
     case MF_DEBUG_KIND_VALUE:
         value = MfRules_GetValue(entry->id);
-        if (entry->max >= 10)
+        if (entry->id == MF_RULE_VAL_LEVEL_CAP)
+        {
+            // Mode, then the live cap (14 with Normal and no badges; 100 if lifted).
+            end = ConvertIntToDecimalStringN(end, value, STR_CONV_MODE_LEFT_ALIGN, 1);
+            end = StringAppend(end, COMPOUND_STRING("/"));
+            ConvertIntToDecimalStringN(end, MfGetPartyLevelCap(), STR_CONV_MODE_LEFT_ALIGN, 3);
+        }
+        else if (entry->max >= 10)
+        {
             ConvertIntToDecimalStringN(end, value, STR_CONV_MODE_LEFT_ALIGN, 2);
+        }
         else
+        {
             ConvertIntToDecimalStringN(end, value, STR_CONV_MODE_LEFT_ALIGN, 1);
+        }
         break;
     case MF_DEBUG_KIND_UNLOCK:
         ConvertIntToDecimalStringN(end, MfRules_DebugHasUnlockOverride(), STR_CONV_MODE_LEFT_ALIGN, 1);

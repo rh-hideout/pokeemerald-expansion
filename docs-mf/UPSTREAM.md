@@ -43,7 +43,7 @@ If the merge is a no-op (`Already up to date.`), you are current; still run the 
 | Area | Prefer | Then |
 | ---- | ------ | ---- |
 | `include/config/*.h` | **Theirs** (RHH) for the shared file body | Re-apply our compile-time flips. Our knobs live in `modern_firered.h` / `mf_species_enabled.h` (ours). Re-apply the `modern_firered.h` include in `global.h` and the `mf_species_enabled.h` include immediately after `species_enabled.h` in `pokemon.h` if those files conflict. |
-| `.github/workflows/build.yml` | **Ours** (slim FireRed + `make check` gate — ADR 0002) | Re-apply any new shared install/cache steps from RHH that we still need. |
+| `.github/workflows/build.yml` | **Ours** (FireRed ROM + `make check TESTS='MF:'` — ADR 0002 / 0043) | Re-apply any new shared install/cache steps from RHH that we still need. |
 | `Makefile` | **Theirs** for shared rules | Keep our `mf_%.o` warning policy, the `MF_CPPFLAGS` hook, and never change the default target to FireRed. |
 | `src/mf_*.c`, `include/mf_*.h`, `include/config/modern_firered.h`, `include/config/mf_species_enabled.h`, `docs-mf/` | **Ours** | These should not exist upstream; if they collide, something is wrong. |
 | One-line call sites into `mf_` helpers inside upstream `.c` files | Resolve carefully | Keep the `mf_` call; take upstream’s surrounding logic. |
@@ -62,13 +62,13 @@ Run from a clean tree after the merge commit exists:
 ```bash
 make clean
 make firered -j$(sysctl -n hw.ncpu)
-make check
+make check TESTS='MF:'
 ```
 
 Confirm:
 
 1. `pokefirered.gba` is produced and boots in mGBA.
-2. `make check` is green (Emerald TESTELF — expansion’s test runner does not target FireRed).
+2. `make check TESTS='MF:'` is green (Emerald TESTELF, MF tests only — ADR 0043).
 3. No new warnings in `src/mf_*.c` / objects built by the `mf_%.o` rule.
 4. If save structs changed upstream, re-read S12 / S64 notes before shipping — never silently reshuffle our rules blob.
 

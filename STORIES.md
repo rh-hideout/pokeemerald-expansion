@@ -19,7 +19,7 @@ Scope is defined in [`PROJECT.md`](./PROJECT.md). Build and repo rules are in [`
 - **Milestones table:** a phase is `In progress` once any of its stories leaves Not started, and `Complete` once all its stories are Complete.
 - **Implementing stories:** use the `implement-story` skill (`.agents/skills/implement-story/`), which finds the story, builds it against `PROJECT.md` and the conventions below, verifies it in-game, updates status here, and records decisions.
 - **Playtesting stories:** use the `test-story` skill (`.agents/skills/test-story/`); it drives local mGBA against `pokefirered.gba` using `docs-mf/manual-qa/S##.md` and reports pass/fail only (no push required).
-- **Definition of Done (per story):** acceptance criteria met, `make firered -j$(sysctl -n hw.ncpu)` builds clean with no new warnings, `make check` passes, the ROM boots in mGBA, and any non-obvious decision is recorded in `docs-mf/decisions/` (created in S03).
+- **Definition of Done (per story):** acceptance criteria met, `make firered -j$(sysctl -n hw.ncpu)` builds clean with no new warnings, `make check TESTS='MF:'` passes, the ROM boots in mGBA, and any non-obvious decision is recorded in `docs-mf/decisions/` (created in S03).
 
 ## Project conventions (apply to every story)
 
@@ -649,7 +649,7 @@ These exist to keep merging from `RHH/master` cheap. Violating them is the main 
 
 ### S41 — Level caps
 
-- [ ] **Status:** Not started
+- [x] **Status:** Complete
 
 - **Goal:** Runtime-selectable level caps that actually bind.
 - **Depends on:** S13
@@ -659,6 +659,7 @@ These exist to keep merging from `RHH/master` cheap. Violating them is the main 
   - Implement ME's `GetCurrentPartyLevelCap()` equivalent.
 - **Acceptance:** Pokémon stop gaining EXP (or levels) at the cap; the cap rises with badges.
 - **Tests:** Unit tests on cap lookup per badge count; manual EXP checks at a cap boundary.
+- **Decisions:** [`docs-mf/decisions/0042-tech-runtime-level-caps.md`](docs-mf/decisions/0042-tech-runtime-level-caps.md) — Normal/Hard are next-leader high/low levels by badge count; Hall of Fame (`FLAG_SYS_GAME_CLEAR`) lifts the cap. Compile-time `B_EXP_CAP_*` stay off.
 
 ### S42 — EXP multiplier & hard-mode EXP
 

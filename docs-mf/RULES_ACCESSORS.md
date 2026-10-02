@@ -119,6 +119,10 @@ Not a runtime rule. `I_USE_EVO_HELD_ITEMS_FROM_BAG` is `TRUE` so Metal Coat / El
 
 `ModernRules.nuzlockeEncounterFlags` is one bit per `MAPSEC_COUNT` id (ADR 0012 / 0036). Normal/Hardcore only (`MfRules_IsNuzlocke()`), after starter + Pokédex (`FLAG_SYS_POKEMON_GET` + `FLAG_SYS_POKEDEX_GET` on FR; Emerald uses `FLAG_ADVENTURE_STARTED`), off after game clear. First qualifying wild battle end sets the current mapsec bit; later balls fail with “already used your encounter for this area” via `MfNuzlocke_IsAreaCaptureBlocked()` in `GetBallThrowableState` (and Safari selection). Gifts / fossils / starter / `BATTLE_TYPE_LEGENDARY` do not consume. Dupes / shiny bypasses are S37.
 
+### Worked example: LEVEL CAP (S41)
+
+`B_EXP_CAP_TYPE` / `B_LEVEL_CAP_TYPE` / `B_RARE_CANDY_CAP` / `B_LEVEL_CAP_EXP_UP` stay at their expansion defaults (caps off). `MfIsPartyLevelCapEnabled()` is true for Difficulty Normal and Hard. Those modes force `EXP_CAP_HARD` inside `GetCurrentLevelCap`, `GetSoftLevelCapExpValue`, the battle exp clamp, and Rare Candy / Exp Candy. The level itself is `MfGetPartyLevelCap()` (badge count → Kanto table). `FLAG_SYS_GAME_CLEAR` returns `MAX_LEVEL` and drops back to the compile-time exp-cap type. `B_LEVEL_CAP_EXP_UP` is still the compile-time under-cap boost, and it only runs while a cap type is active (ADR 0042).
+
 ### Rules for gates
 
 1. Prefer an existing expansion primitive (`I_*`, `B_*`, `P_*`) as the capability baseline.

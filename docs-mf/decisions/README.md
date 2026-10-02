@@ -76,3 +76,5 @@ Append a row to the index below when you add a record.
 | 0039 | product | Nuzlocke forced nicknaming (ME NICKNAMES) | S38 | 2026-09-29 |
 | 0040 | product | Nuzlocke difficulty tier bundles (Off/Easy/Normal/Hardcore) | S39 | 2026-09-30 |
 | 0041 | tech | Party limit: enforce on add paths without capping CalculatePlayerPartyCount | S40 | 2026-09-30 |
+| 0042 | tech | Runtime Kanto level caps | S41 | 2026-09-30 |
+| 0043 | tech | CI test gate is MF: tests only | — | 2026-09-30 |
