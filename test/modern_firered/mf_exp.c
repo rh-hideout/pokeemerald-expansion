@@ -92,13 +92,28 @@ TEST("MF: live exp scale follows rules, badges not required")
     SetCurrentDifficultyLevel(DIFFICULTY_NORMAL);
 }
 
-static void SetBattleExpRules(u8 multiplier, u8 levelCap, bool8 hardExp)
+TEST("MF: scaled exp gate follows the save bit")
+{
+    struct ModernRules *save = PrepareRules();
+
+    EXPECT(!save->scaledExp);
+    EXPECT(!MfIsScaledExpActive());
+
+    save->scaledExp = TRUE;
+    EXPECT(MfIsScaledExpActive());
+
+    save->scaledExp = FALSE;
+    EXPECT(!MfIsScaledExpActive());
+}
+
+static void SetBattleExpRules(u8 multiplier, u8 levelCap, bool8 hardExp, bool8 scaledExp)
 {
     struct ModernRules *save = PrepareRules();
 
     save->expMultiplier = multiplier;
     save->levelCap = levelCap;
     save->hardExp = hardExp;
+    save->scaledExp = scaledExp;
 }
 
 WILD_BATTLE_TEST("MF: each exp multiplier changes exp from the same battle", s32 exp)
@@ -110,7 +125,7 @@ WILD_BATTLE_TEST("MF: each exp multiplier changes exp from the same battle", s32
     PARAMETRIZE { multiplier = MF_EXP_MULT_2X; }
 
     GIVEN {
-        SetBattleExpRules(multiplier, MF_LEVEL_CAP_OFF, FALSE);
+        SetBattleExpRules(multiplier, MF_LEVEL_CAP_OFF, FALSE, FALSE);
         PLAYER(SPECIES_WOBBUFFET) { Level(20); }
         OPPONENT(SPECIES_CATERPIE) { Level(10); HP(1); }
     } WHEN {
@@ -122,7 +137,7 @@ WILD_BATTLE_TEST("MF: each exp multiplier changes exp from the same battle", s32
     } FINALLY {
         EXPECT_GT(results[1].exp, results[0].exp);
         EXPECT_GT(results[2].exp, results[1].exp);
-        SetBattleExpRules(MF_EXP_MULT_1X, MF_LEVEL_CAP_OFF, FALSE);
+        SetBattleExpRules(MF_EXP_MULT_1X, MF_LEVEL_CAP_OFF, FALSE, FALSE);
     }
 }
 
@@ -131,7 +146,7 @@ WILD_BATTLE_TEST("MF: exp multiplier x0 grants no experience")
     u32 startExp = 0;
 
     GIVEN {
-        SetBattleExpRules(MF_EXP_MULT_0X, MF_LEVEL_CAP_OFF, FALSE);
+        SetBattleExpRules(MF_EXP_MULT_0X, MF_LEVEL_CAP_OFF, FALSE, FALSE);
         PLAYER(SPECIES_WOBBUFFET) { Level(20); }
         OPPONENT(SPECIES_CATERPIE) { Level(10); HP(1); }
     } WHEN {
@@ -143,7 +158,7 @@ WILD_BATTLE_TEST("MF: exp multiplier x0 grants no experience")
     } THEN {
         startExp = gExperienceTables[gSpeciesInfo[SPECIES_WOBBUFFET].growthRate][20];
         EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_EXP), startExp);
-        SetBattleExpRules(MF_EXP_MULT_1X, MF_LEVEL_CAP_OFF, FALSE);
+        SetBattleExpRules(MF_EXP_MULT_1X, MF_LEVEL_CAP_OFF, FALSE, FALSE);
     }
 }
 
@@ -155,7 +170,7 @@ WILD_BATTLE_TEST("MF: hard exp cuts gain while the level cap is Hard", s32 exp)
     PARAMETRIZE { hardExpNormal = TRUE; }
 
     GIVEN {
-        SetBattleExpRules(MF_EXP_MULT_1X, MF_LEVEL_CAP_HARD, hardExpNormal);
+        SetBattleExpRules(MF_EXP_MULT_1X, MF_LEVEL_CAP_HARD, hardExpNormal, FALSE);
         // Under the 0-badge Hard cap (12) so the ceiling does not zero the reward.
         PLAYER(SPECIES_WOBBUFFET) { Level(10); }
         OPPONENT(SPECIES_CATERPIE) { Level(10); HP(1); }
@@ -168,6 +183,53 @@ WILD_BATTLE_TEST("MF: hard exp cuts gain while the level cap is Hard", s32 exp)
     } FINALLY {
         EXPECT_GT(results[1].exp, results[0].exp);
         EXPECT(results[0].exp > 0);
-        SetBattleExpRules(MF_EXP_MULT_1X, MF_LEVEL_CAP_OFF, FALSE);
+        SetBattleExpRules(MF_EXP_MULT_1X, MF_LEVEL_CAP_OFF, FALSE, FALSE);
+    }
+}
+
+WILD_BATTLE_TEST("MF: scaled exp off pays the same at two player levels", s32 exp)
+{
+    u8 level = 0;
+
+    PARAMETRIZE { level = 10; }
+    PARAMETRIZE { level = 20; }
+
+    GIVEN {
+        SetBattleExpRules(MF_EXP_MULT_1X, MF_LEVEL_CAP_OFF, FALSE, FALSE);
+        PLAYER(SPECIES_WOBBUFFET) { Level(level); }
+        OPPONENT(SPECIES_CATERPIE) { Level(10); HP(1); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); }
+    } SCENE {
+        MESSAGE("Wobbuffet used Scratch!");
+        MESSAGE("The wild Caterpie fainted!");
+        EXPERIENCE_BAR(player, captureGainedExp: &results[i].exp);
+    } FINALLY {
+        EXPECT_EQ(results[0].exp, results[1].exp);
+        EXPECT(results[0].exp > 0);
+        SetBattleExpRules(MF_EXP_MULT_1X, MF_LEVEL_CAP_OFF, FALSE, FALSE);
+    }
+}
+
+WILD_BATTLE_TEST("MF: scaled exp on pays less to a higher-level Pokemon", s32 exp)
+{
+    u8 level = 0;
+
+    PARAMETRIZE { level = 10; }
+    PARAMETRIZE { level = 20; }
+
+    GIVEN {
+        SetBattleExpRules(MF_EXP_MULT_1X, MF_LEVEL_CAP_OFF, FALSE, TRUE);
+        PLAYER(SPECIES_WOBBUFFET) { Level(level); }
+        OPPONENT(SPECIES_CATERPIE) { Level(10); HP(1); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); }
+    } SCENE {
+        MESSAGE("Wobbuffet used Scratch!");
+        MESSAGE("The wild Caterpie fainted!");
+        EXPERIENCE_BAR(player, captureGainedExp: &results[i].exp);
+    } FINALLY {
+        EXPECT_GT(results[0].exp, results[1].exp);
+        SetBattleExpRules(MF_EXP_MULT_1X, MF_LEVEL_CAP_OFF, FALSE, FALSE);
     }
 }

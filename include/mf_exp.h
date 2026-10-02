@@ -2,6 +2,7 @@
 #define GUARD_MF_EXP_H
 
 // S42 — battle EXP multiplier and HARD MODE EXP. See ADR 0044.
+// S70 — SCALED EXP gate over B_SCALED_EXP. See ADR 0045.
 // Menu values match sChoicesExpMult: 0 ×1, 1 ×1.5, 2 ×2, 3 ×0.
 
 #include "gba/types.h"
@@ -24,5 +25,9 @@ u32 MfScaleCalculatedExp(u32 calculatedExp);
 
 // TRUE for menu ×0. Call after ApplyExperienceMultipliers: scaled exp adds 1.
 bool8 MfIsExpMultiplierZero(void);
+
+// TRUE when SCALED EXP is On and B_SCALED_EXP is Gen 5 / Gen 7+.
+// Off uses yield × fainted level / 7 with no per-mon level-gap weighting.
+bool8 MfIsScaledExpActive(void);
 
 #endif // GUARD_MF_EXP_H

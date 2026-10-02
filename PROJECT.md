@@ -20,7 +20,7 @@ Play FireRed with ME-like **start-of-run customization** and strong QoL. Keep va
 2. **Features** — e.g. shiny rate, item drops (RTC/day-night only if useful later; not a must)  
 3. **Randomizer** — modular: wild / trainer / static / starter, similar BST/evo stage, legendaries, types, moves, abilities, evolutions, evo methods, type effectiveness, items, chaos  
 4. **Nuzlocke** — Off / Easy / Normal / Hardcore + species clause, shiny clause, nicknaming, faint deletion  
-5. **Difficulty** — party limit, level caps, EXP multiplier, catch rate, player/trainer item bans, IV/EV scaling, escape/Dig restrictions, hard-mode EXP behavior  
+5. **Difficulty** — party limit, level caps, EXP multiplier, scaled EXP, catch rate, player/trainer item bans, IV/EV scaling, escape/Dig restrictions, hard-mode EXP behavior  
 6. **Challenges** — no Poké Centers, no PC heal, expensive shops, evo limits, monotype, BST equalizer, mirror (± thief)
 
 **Battle modernization:**

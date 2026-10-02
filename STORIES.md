@@ -677,7 +677,7 @@ These exist to keep merging from `RHH/master` cheap. Violating them is the main 
 
 ### S70 — Scaled EXP toggle
 
-- [ ] **Status:** Not started
+- [x] **Status:** Complete
 
 - **Goal:** Let the player turn level-gap experience on or off at the start of the game.
 - **Depends on:** S42
@@ -688,6 +688,7 @@ These exist to keep merging from `RHH/master` cheap. Violating them is the main 
   - Gate the two `B_SCALED_EXP` checks in `battle_script_commands.c` through the rule. The S42 multiplier and HARD MODE EXP still apply either way. The row stays editable mid-run with the other Difficulty options unless LOCK DIFFICULTY is on.
 - **Acceptance:** With the toggle Off, two different player levels gain the same Exp from the same wild Pokémon. With it On, the higher-level Pokémon gains less. The row is selectable at new game.
 - **Tests:** Unit test on the gate for both settings; a same-battle check at two player levels.
+- **Decisions:** [`docs-mf/decisions/0045-product-scaled-exp-toggle.md`](docs-mf/decisions/0045-product-scaled-exp-toggle.md) — default Off (flat `/7`); `B_SCALED_EXP` stays `GEN_LATEST`; stored in `paddingTail` bit 0.
 
 ### S43 — Item bans (player & trainer)
 

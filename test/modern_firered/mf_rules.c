@@ -67,6 +67,7 @@ static void FillRulesWithPattern(struct ModernRules *rules)
     rules->lockDifficulty = TRUE;
     rules->escapeRopeDig = TRUE;
     rules->hardExp = TRUE;
+    rules->scaledExp = TRUE;
     rules->catchRate = 5;
 
     rules->evoLimit = 2;
@@ -247,6 +248,7 @@ TEST("MF: rules GetBool covers every bool from save")
     EXPECT_EQ((u32)MfRules_GetBool(MF_RULE_BOOL_LOCK_DIFFICULTY), (u32)TRUE);
     EXPECT_EQ((u32)MfRules_GetBool(MF_RULE_BOOL_ESCAPE_ROPE_DIG), (u32)TRUE);
     EXPECT_EQ((u32)MfRules_GetBool(MF_RULE_BOOL_HARD_EXP), (u32)TRUE);
+    EXPECT_EQ((u32)MfRules_GetBool(MF_RULE_BOOL_SCALED_EXP), (u32)TRUE);
     EXPECT_EQ((u32)MfRules_GetBool(MF_RULE_BOOL_LESS_ESCAPES), (u32)TRUE);
     EXPECT_EQ((u32)MfRules_GetBool(MF_RULE_BOOL_MIRROR), (u32)TRUE);
     EXPECT_EQ((u32)MfRules_GetBool(MF_RULE_BOOL_MIRROR_THIEF), (u32)TRUE);
@@ -310,6 +312,7 @@ TEST("MF: rules GetBool null path matches Phase 1 for every bool")
     EXPECT_EQ((u32)MfRules_GetBool(MF_RULE_BOOL_LOCK_DIFFICULTY), (u32)gMfRulesPhase1Defaults.lockDifficulty);
     EXPECT_EQ((u32)MfRules_GetBool(MF_RULE_BOOL_ESCAPE_ROPE_DIG), (u32)gMfRulesPhase1Defaults.escapeRopeDig);
     EXPECT_EQ((u32)MfRules_GetBool(MF_RULE_BOOL_HARD_EXP), (u32)gMfRulesPhase1Defaults.hardExp);
+    EXPECT_EQ((u32)MfRules_GetBool(MF_RULE_BOOL_SCALED_EXP), (u32)gMfRulesPhase1Defaults.scaledExp);
     EXPECT_EQ((u32)MfRules_GetBool(MF_RULE_BOOL_LESS_ESCAPES), (u32)gMfRulesPhase1Defaults.lessEscapes);
     EXPECT_EQ((u32)MfRules_GetBool(MF_RULE_BOOL_MIRROR), (u32)gMfRulesPhase1Defaults.mirror);
     EXPECT_EQ((u32)MfRules_GetBool(MF_RULE_BOOL_MIRROR_THIEF), (u32)gMfRulesPhase1Defaults.mirrorThief);
@@ -608,6 +611,8 @@ TEST("MF: rules lock allows difficulty writes when LOCK DIFFICULTY off")
     EXPECT_EQ((u32)save->noItemPlayer, (u32)TRUE);
     EXPECT_EQ((u32)MfRules_TrySetBool(MF_RULE_BOOL_LESS_ESCAPES, TRUE), (u32)TRUE);
     EXPECT_EQ((u32)save->lessEscapes, (u32)TRUE);
+    EXPECT_EQ((u32)MfRules_TrySetBool(MF_RULE_BOOL_SCALED_EXP, TRUE), (u32)TRUE);
+    EXPECT_EQ((u32)save->scaledExp, (u32)TRUE);
 
     // Challenges / Features stay locked.
     EXPECT_EQ((u32)MfRules_TrySetValue(MF_RULE_VAL_POKECENTER_LIMIT, 1), (u32)FALSE);
@@ -630,6 +635,8 @@ TEST("MF: rules lock blocks difficulty when LOCK DIFFICULTY on")
     EXPECT_EQ((u32)save->partyLimit, 0u);
     EXPECT_EQ((u32)MfRules_TrySetBool(MF_RULE_BOOL_HARD_EXP, TRUE), (u32)FALSE);
     EXPECT_EQ((u32)save->hardExp, (u32)FALSE);
+    EXPECT_EQ((u32)MfRules_TrySetBool(MF_RULE_BOOL_SCALED_EXP, TRUE), (u32)FALSE);
+    EXPECT_EQ((u32)save->scaledExp, (u32)FALSE);
 }
 
 TEST("MF: rules debug unlock override bypasses lock in non-release")

@@ -135,7 +135,8 @@ struct ModernRules
     /*0x0E*/ u8 monotype:5;           // ME OneTypeChallenge; 31 = off
              u8 expensiveShops:3;
 
-    /*0x0F*/ u8 paddingTail;
+    /*0x0F*/ u8 scaledExp:1;          // S70; low bit of the old paddingTail byte
+             u8 paddingTail:7;
 
     /*0x10*/ u32 randomizerSeed;
 
@@ -200,6 +201,7 @@ enum MfRuleBool
     MF_RULE_BOOL_LOCK_DIFFICULTY,
     MF_RULE_BOOL_ESCAPE_ROPE_DIG,
     MF_RULE_BOOL_HARD_EXP,
+    MF_RULE_BOOL_SCALED_EXP,
     MF_RULE_BOOL_LESS_ESCAPES,
     MF_RULE_BOOL_MIRROR,
     MF_RULE_BOOL_MIRROR_THIEF,
@@ -419,6 +421,11 @@ static inline u8 MfRules_GetLevelCap(void)
 static inline u8 MfRules_GetExpMultiplier(void)
 {
     return MfRules_GetActiveRules()->expMultiplier;
+}
+
+static inline bool8 MfRules_GetScaledExp(void)
+{
+    return MfRules_GetActiveRules()->scaledExp;
 }
 
 static inline bool8 MfRules_HasNoItemPlayer(void)

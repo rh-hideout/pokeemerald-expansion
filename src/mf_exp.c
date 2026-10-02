@@ -1,4 +1,5 @@
 #include "global.h"
+#include "config_changes.h"
 #include "difficulty.h"
 #include "event_data.h"
 #include "mf_exp.h"
@@ -56,4 +57,11 @@ u32 MfScaleCalculatedExp(u32 calculatedExp)
 bool8 MfIsExpMultiplierZero(void)
 {
     return MfRules_GetExpMultiplier() == MF_EXP_MULT_0X;
+}
+
+bool8 MfIsScaledExpActive(void)
+{
+    return MfRules_GetScaledExp()
+        && GetConfig(B_SCALED_EXP) >= GEN_5
+        && GetConfig(B_SCALED_EXP) != GEN_6;
 }

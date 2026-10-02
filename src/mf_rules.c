@@ -77,6 +77,7 @@ const struct ModernRules gMfRulesPhase1Defaults = {
     .lockDifficulty = FALSE,
     .escapeRopeDig = FALSE,
     .hardExp = FALSE,
+    .scaledExp = FALSE,
     .catchRate = 0,
 
     .evoLimit = 0,
@@ -177,6 +178,7 @@ void MfRules_ApplyDevDefaults(struct ModernRules *rules)
     rules->lockDifficulty = MF_TX_DIFFICULTY_LOCK_DIFFICULTY;
     rules->escapeRopeDig = MF_TX_DIFFICULTY_ESCAPE_ROPE_DIG;
     rules->hardExp = MF_TX_DIFFICULTY_HARD_EXP;
+    rules->scaledExp = MF_TX_DIFFICULTY_SCALED_EXP;
     rules->catchRate = MF_TX_DIFFICULTY_CATCH_RATE;
 
     rules->evoLimit = MF_TX_CHALLENGE_EVO_LIMIT;
@@ -345,6 +347,7 @@ bool8 MfRules_GetBool(enum MfRuleBool id)
     case MF_RULE_BOOL_LOCK_DIFFICULTY:            return r->lockDifficulty;
     case MF_RULE_BOOL_ESCAPE_ROPE_DIG:            return r->escapeRopeDig;
     case MF_RULE_BOOL_HARD_EXP:                   return r->hardExp;
+    case MF_RULE_BOOL_SCALED_EXP:                 return r->scaledExp;
     case MF_RULE_BOOL_LESS_ESCAPES:               return r->lessEscapes;
     case MF_RULE_BOOL_MIRROR:                     return r->mirror;
     case MF_RULE_BOOL_MIRROR_THIEF:               return r->mirrorThief;
@@ -537,6 +540,7 @@ static enum MfRuleEditClass MfRules_EditClassForBool(enum MfRuleBool id)
     case MF_RULE_BOOL_NO_EVS:
     case MF_RULE_BOOL_ESCAPE_ROPE_DIG:
     case MF_RULE_BOOL_HARD_EXP:
+    case MF_RULE_BOOL_SCALED_EXP:
     case MF_RULE_BOOL_LESS_ESCAPES: // Difficulty page in ME / S23
         return MF_RULE_EDIT_DIFFICULTY;
 
@@ -618,6 +622,7 @@ static bool8 MfRules_WriteBoolField(struct ModernRules *r, enum MfRuleBool id, b
     case MF_RULE_BOOL_LOCK_DIFFICULTY:            r->lockDifficulty = value; return TRUE;
     case MF_RULE_BOOL_ESCAPE_ROPE_DIG:            r->escapeRopeDig = value; return TRUE;
     case MF_RULE_BOOL_HARD_EXP:                   r->hardExp = value; return TRUE;
+    case MF_RULE_BOOL_SCALED_EXP:                 r->scaledExp = value; return TRUE;
     case MF_RULE_BOOL_LESS_ESCAPES:               r->lessEscapes = value; return TRUE;
     case MF_RULE_BOOL_MIRROR:                     r->mirror = value; return TRUE;
     case MF_RULE_BOOL_MIRROR_THIEF:               r->mirrorThief = value; return TRUE;

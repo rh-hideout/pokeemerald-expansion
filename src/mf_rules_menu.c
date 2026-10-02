@@ -292,6 +292,8 @@ static const u8 sDesc_ExpMult_10[] = _("Pokémon gain normal Exp. Points.\nStack
 static const u8 sDesc_ExpMult_15[] = _("Pokémon gain 50 percent more Exp.\nPoints! Stacks with Hard Mode Exp.");
 static const u8 sDesc_ExpMult_20[] = _("Pokémon gain double Exp. Points!\nStacks with Hard Mode Exp.");
 static const u8 sDesc_ExpMult_00[] = _("Pokémon gain ZERO Exp. Points!!!\nApplies to Hard Mode Exp. as well.");
+static const u8 sDesc_ScaledExp_Off[] = _("Same Exp. at any level. A higher-level\nPokémon is not penalized.");
+static const u8 sDesc_ScaledExp_On[] = _("Higher-level Pokémon gain less Exp.\nfrom weaker foes.");
 static const u8 sDesc_HardExp_Default[] = _("{PKMN} gain 60% Exp. while Level Cap\nis Hard. Stacks with the multiplier.");
 static const u8 sDesc_HardExp_Normal[] = _("{PKMN} gain the usual Exp. while Level\nCap is Hard. Not recommended.");
 static const u8 sDesc_Catch_1x[] = _("No change to Pokémon catch rate.");
@@ -599,6 +601,12 @@ static const struct MfRulesMenuChoice sChoicesExpMult[] =
     { sText_ExpX15, sDesc_ExpMult_15 },
     { sText_ExpX20, sDesc_ExpMult_20 },
     { sText_ExpX00, sDesc_ExpMult_00 },
+};
+
+static const struct MfRulesMenuChoice sChoicesScaledExp[] =
+{
+    { sText_Off, sDesc_ScaledExp_Off },
+    { sText_On,  sDesc_ScaledExp_On  },
 };
 
 static const struct MfRulesMenuChoice sChoicesHardExp[] =
@@ -916,6 +924,7 @@ static const struct MfRulesMenuItem sDifficultyPageItems[] =
     { COMPOUND_STRING("PARTY LIMIT"),     MF_RULES_MENU_ITEM_VALUE, MF_RULE_VAL_PARTY_LIMIT,      6, MF_RULES_MENU_FLAG_NONE, sChoicesPartyLimit   },
     { COMPOUND_STRING("LEVEL CAP"),       MF_RULES_MENU_ITEM_VALUE, MF_RULE_VAL_LEVEL_CAP,        3, MF_RULES_MENU_FLAG_NONE, sChoicesLevelCap     },
     { COMPOUND_STRING("EXP. MULTIPLIER"), MF_RULES_MENU_ITEM_VALUE, MF_RULE_VAL_EXP_MULTIPLIER,   4, MF_RULES_MENU_FLAG_NONE, sChoicesExpMult      },
+    { COMPOUND_STRING("SCALED EXP"),      MF_RULES_MENU_ITEM_BOOL,  MF_RULE_BOOL_SCALED_EXP,      2, MF_RULES_MENU_FLAG_NONE, sChoicesScaledExp    },
     { COMPOUND_STRING("HARD MODE EXP."),  MF_RULES_MENU_ITEM_BOOL,  MF_RULE_BOOL_HARD_EXP,        2, MF_RULES_MENU_FLAG_NONE, sChoicesHardExp      },
     { COMPOUND_STRING("CATCH RATE"),      MF_RULES_MENU_ITEM_VALUE, MF_RULE_VAL_CATCH_RATE,       4, MF_RULES_MENU_FLAG_NONE, sChoicesCatchRate    },
     { COMPOUND_STRING("PLAYER ITEMS"),    MF_RULES_MENU_ITEM_BOOL,  MF_RULE_BOOL_NO_ITEM_PLAYER,  2, MF_RULES_MENU_FLAG_NONE, sChoicesItemsPlayer  },
