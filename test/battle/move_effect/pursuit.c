@@ -431,7 +431,11 @@ DOUBLE_BATTLE_TEST("Pursuit affected by Electrify fails against immune target")
         OPPONENT(SPECIES_WYNAUT);
         OPPONENT(SPECIES_LINOONE);
     } WHEN {
-        TURN { MOVE(playerRight, MOVE_ELECTRIFY, target: opponentLeft); MOVE(playerLeft, MOVE_VOLT_SWITCH, target: opponentLeft); MOVE(opponentLeft, MOVE_PURSUIT, target: playerLeft); SEND_OUT(playerLeft, 2); }
+        TURN {
+            MOVE(playerRight, MOVE_ELECTRIFY, target: opponentLeft);
+            MOVE(playerLeft, MOVE_VOLT_SWITCH, target: opponentLeft);
+            MOVE(opponentLeft, MOVE_PURSUIT, target: playerLeft); SEND_OUT(playerLeft, 2);
+        }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRIFY, playerRight);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_VOLT_SWITCH, playerLeft);

@@ -7,6 +7,13 @@
 
 extern const u8 gMiscBlank_Gfx[]; // unused in Emerald
 
+#define Swap(a, b) \
+    do { \
+        __auto_type temp = a; \
+        a = b; \
+        b = temp; \
+    } while (0);
+
 u8 CreateInvisibleSpriteWithCallback(void (*callback)(struct Sprite *));
 void StoreWordInTwoHalfwords(u16 *h, u32 w);
 void LoadWordFromTwoHalfwords(u16 *h, u32 *w);

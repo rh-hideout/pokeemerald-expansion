@@ -65,7 +65,6 @@ SINGLE_BATTLE_TEST("Roost recovers 50% of the user's Max HP")
 {
     u16 hp;
 
-    KNOWN_FAILING; // All healing is currently rounded down
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { HP(1); MaxHP(99); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -75,10 +74,10 @@ SINGLE_BATTLE_TEST("Roost recovers 50% of the user's Max HP")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROOST, player);
         HP_BAR(player, captureHP: &hp);
     } THEN {
-        //if (B_UPDATED_MOVE_DATA >= GEN_5)
+        if (B_UPDATED_MOVE_DATA >= GEN_5)
             EXPECT(hp == 51); // Rounds up
-        //else
-        //    EXPECT(hp == 50); // Rounds down
+        else
+           EXPECT(hp == 50); // Rounds down
     }
 }
 

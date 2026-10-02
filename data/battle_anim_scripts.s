@@ -23093,13 +23093,6 @@ CreateIceSpiral:
 	return
 
 gBattleAnimMove_Rest::
-	playsewithpan SE_M_SNORE, SOUND_PAN_ATTACKER
-	createsprite gSleepLetterZSpriteTemplate, ANIM_ATTACKER, 2, 4, -10, 16, 0, 0
-	delay 20
-	createsprite gSleepLetterZSpriteTemplate, ANIM_ATTACKER, 2, 4, -10, 16, 0, 0
-	delay 20
-	createsprite gSleepLetterZSpriteTemplate, ANIM_ATTACKER, 2, 4, -10, 16, 0, 0
-	waitforvisualfinish
 	end
 
 gBattleAnimMove_Confusion::
