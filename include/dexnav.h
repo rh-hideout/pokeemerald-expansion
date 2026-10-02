@@ -23,13 +23,6 @@ enum RowGUIInfo
 #define ROW_HIDDEN_ICON_X       52
 #define ROW_HIDDEN_ICON_Y       138
 
-enum EncounterType
-{
-    ENCOUNTER_TYPE_LAND,
-    ENCOUNTER_TYPE_WATER,
-    ENCOUNTER_TYPE_HIDDEN // Get from species
-};
-
 #define COL_WATER_COUNT         5
 #define COL_LAND_COUNT          6
 #define COL_HIDDEN_COUNT        3
