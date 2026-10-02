@@ -1482,16 +1482,22 @@ void FreeOamMatrix(u8 matrixNum)
     SetOamMatrix(matrixNum, 0x100, 0, 0, 0x100);
 }
 
-void InitSpriteAffineAnim(struct Sprite *sprite)
+bool32 TryInitSpriteAffineAnim(struct Sprite *sprite)
 {
     u8 matrixNum = AllocOamMatrix();
-    if (matrixNum != 0xFF)
-    {
-        CalcCenterToCornerVec(sprite, sprite->oam.shape, sprite->oam.size, sprite->oam.affineMode);
-        sprite->oam.matrixNum = matrixNum;
-        sprite->affineAnimBeginning = TRUE;
-        AffineAnimStateReset(matrixNum);
-    }
+    if (matrixNum == 0xFF)
+        return FALSE;
+
+    CalcCenterToCornerVec(sprite, sprite->oam.shape, sprite->oam.size, sprite->oam.affineMode);
+    sprite->oam.matrixNum = matrixNum;
+    sprite->affineAnimBeginning = TRUE;
+    AffineAnimStateReset(matrixNum);
+    return TRUE;
+}
+
+void InitSpriteAffineAnim(struct Sprite *sprite)
+{
+    TryInitSpriteAffineAnim(sprite);
 }
 
 void SetOamMatrixRotationScaling(u8 matrixNum, s16 xScale, s16 yScale, u16 rotation)

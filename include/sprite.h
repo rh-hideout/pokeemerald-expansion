@@ -304,6 +304,7 @@ void ChangeSpriteAffineAnimIfDifferent(struct Sprite *sprite, u8 animNum);
 void SetSpriteSheetFrameTileNum(struct Sprite *sprite);
 u8 AllocOamMatrix(void);
 void FreeOamMatrix(u8 matrixNum);
+bool32 TryInitSpriteAffineAnim(struct Sprite *sprite);
 void InitSpriteAffineAnim(struct Sprite *sprite);
 void SetOamMatrixRotationScaling(u8 matrixNum, s16 xScale, s16 yScale, u16 rotation);
 u16 LoadSpriteSheet(const struct SpriteSheet *sheet);

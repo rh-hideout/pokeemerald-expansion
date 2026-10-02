@@ -38,6 +38,7 @@
   - [Day/Night System FAQ](tutorials/dns.md)
   - [How to use the code entry system](tutorials/how_to_code_entry.md)
   - [How to use Follower NPCs](tutorials/how_to_follower_npc.md)
+  - [How to use Rotating Gates](tutorials/how_to_rotating_gates.md)
   - [Time-Based Encounters](tutorials/how_to_time_of_day_encounters.md)
   - [How to use Trainer Party Pools](tutorials/how_to_trainer_party_pool.md)
   - [How to Apricorn Tree](tutorials/how_to_apricorn_tree.md)
