@@ -29,7 +29,6 @@ SINGLE_BATTLE_TEST("Synchronize will mirror back non volatile status back at opp
 
 SINGLE_BATTLE_TEST("Synchronize won't show ability pop up if it fails")
 {
-    KNOWN_FAILING; // Message depends on gBattlerTarget and calls MoveEnd; #10696
     GIVEN {
         WITH_CONFIG(B_PARALYZE_ELECTRIC, GEN_6);
         ASSUME(MoveMakesContact(MOVE_TACKLE));

@@ -102,21 +102,17 @@ static void HandleSetEffectNonVolatile(struct BattleCalcValues *cv, struct SetEf
 
     se->effectFailed = isSafeguardProtected || !CanSetNonVolatile(cv, se, CHECK_TRIGGER);
 
-    if (cv->onlyChecking)
+    if (!cv->onlyChecking)
     {
-        gBattleStruct->battlerState[se->effectBattler].sleepClauseEffectExempt = exemptSleepClause;
-        return;
-    }
-
-    if (se->effectFailed)
-    {
-        if (!cv->isStatusMove) return;
-        BattleScriptPush(se->script);
-        CanSetNonVolatile(cv, se, RUN_SCRIPT);
-    }
-    else
-    {
-        SetNonVolatileStatus(cv->battlerAtk, se->effectBattler, se->moveEffect, se->script, TRIGGER_ON_MOVE);
+        if (!se->effectFailed)
+        {
+            SetNonVolatileStatus(cv->battlerAtk, se->effectBattler, se->moveEffect, se->script, TRIGGER_ON_MOVE);
+        }
+        else if (cv->isStatusMove)
+        {
+            BattleScriptPush(se->script);
+            CanSetNonVolatile(cv, se, RUN_SCRIPT);
+        }
     }
 
     gBattleStruct->battlerState[se->effectBattler].sleepClauseEffectExempt = exemptSleepClause;
@@ -1378,9 +1374,7 @@ static void SetEffectHealPulse(struct BattleCalcValues *cv, struct SetEffect *se
     }
     else if (!cv->onlyChecking)
     {
-        u32 maxHpWithRounding = GetMaxHpWithRounding(se->effectBattler);
         s32 maxHpFraction = se->additionalEffect->argument.maxHpFraction;
-
         s32 healAmount;
 
         bool32 megaLauncherBoost = cv->abilities[cv->battlerAtk] == ABILITY_MEGA_LAUNCHER && IsPulseMove(cv->move);
@@ -1392,19 +1386,19 @@ static void SetEffectHealPulse(struct BattleCalcValues *cv, struct SetEffect *se
             u32 firstNumerator =  maxHpFraction * 4;
             u32 secondNumerator = (maxHpFraction + 1) * 3;
 
-            healAmount = maxHpWithRounding * (firstNumerator + secondNumerator) / denominator;
+            healAmount = GetNonDynamaxMaxHP(se->effectBattler) * (firstNumerator + secondNumerator) / denominator;
         }
         else if (megaLauncherBoost)
         {
-            healAmount = maxHpWithRounding * (maxHpFraction + 1) / 4;
+            healAmount = GetNonDynamaxMaxHP(se->effectBattler) * (maxHpFraction + 1) / 4;
         }
         else if (grassyTerrainBoost)
         {
-            healAmount = maxHpWithRounding * maxHpFraction / 3;
+            healAmount = GetNonDynamaxMaxHP(se->effectBattler) * maxHpFraction / 3;
         }
         else
         {
-            healAmount = maxHpWithRounding / maxHpFraction;
+            healAmount = GetMaxHpWithRounding(se->effectBattler) / maxHpFraction;
         }
 
        SetHealAmount(se->effectBattler, healAmount);
@@ -1738,11 +1732,13 @@ static void HandleSetEffectSpite(struct BattleCalcValues *cv, struct SetEffect *
     }
 }
 
-static bool32 ShouldGroundAirborneBattler(enum BattlerId battler)
+static bool32 ShouldGroundAirborneBattler(enum BattlerId battler, enum Ability ability)
 {
     enum SemiInvulnerableState state = gBattleMons[battler].volatiles.semiInvulnerable;
 
-    if (state == STATE_ON_AIR
+    if (IS_BATTLER_OF_TYPE(battler, TYPE_FLYING)
+     || ability == ABILITY_LEVITATE
+     || state == STATE_ON_AIR
      || state == STATE_SKY_DROP_ATTACKER
      || state == STATE_SKY_DROP_TARGET
      || gBattleMons[battler].volatiles.magnetRiseTimer
@@ -1775,9 +1771,11 @@ static void HandleSetEffectGravity(struct BattleCalcValues *cv, struct SetEffect
         gFieldStatuses |= STATUS_FIELD_GRAVITY;
         gFieldTimers.gravityTimer = 5;
 
-        if (ShouldGroundAirborneBattler(se->effectBattler))
+        if (ShouldGroundAirborneBattler(se->effectBattler, cv->abilities[se->effectBattler]))
         {
-            BattleScriptCall(BattleScript_GroundAirborneBattler);
+            BattleScriptPushAndSet(se->script, BattleScript_GroundAirborneBattler);
+            if (!gBattleStruct->messagePrinted)
+                se->script = BattleScript_GroundAirborneBattler;
         }
 
         if (!gBattleStruct->messagePrinted)
@@ -2114,9 +2112,7 @@ static void HandleSetEffectToxicSpikes(struct BattleCalcValues *cv, struct SetEf
     }
     else if (!cv->onlyChecking)
     {
-        if (gSideTimers[side].toxicSpikesAmount == 0) // Add only once to the queue
-            PushHazardTypeToQueue(side, HAZARDS_TOXIC_SPIKES);
-        gSideTimers[side].toxicSpikesAmount++;
+        SetToxicSpikesLayer(side, 1);
         PrepareStringBattleWithWait(STRINGID_POISONSPIKESSCATTERED, se->effectBattler);
         BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
     }
@@ -2132,9 +2128,7 @@ static void HandleSetEffectSpikes(struct BattleCalcValues *cv, struct SetEffect 
     }
     else if (!cv->onlyChecking)
     {
-        if (gSideTimers[side].spikesAmount == 0) // Add only once to the queue
-            PushHazardTypeToQueue(side, HAZARDS_SPIKES);
-        gSideTimers[side].spikesAmount++;
+        SetSpikesLayer(side, 1);
         PrepareStringBattleWithWait(STRINGID_SPIKESSCATTERED, se->effectBattler);
         BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
     }
@@ -3021,13 +3015,13 @@ static void HandleSetEffectRefresh(struct BattleCalcValues *cv, struct SetEffect
         if (status & STATUS1_SLEEP)
             TryDeactivateSleepClause(se->effectBattler, gBattlerPartyIndexes[se->effectBattler]);
 
-             if (status & STATUS1_PARALYSIS)    cureString = STRINGID_SCRCUREDPARALYSIS;
+        if (status & STATUS1_PARALYSIS)         cureString = STRINGID_SCRCUREDPARALYSIS;
         else if (status & STATUS1_POISON)       cureString = STRINGID_SCRCUREDPOISON;
         else if (status & STATUS1_TOXIC_POISON) cureString = STRINGID_SCRCUREDPOISON;
         else if (status & STATUS1_BURN)         cureString = STRINGID_SCRCUREDBURN;
-        else if (status & STATUS1_SLEEP)        cureString = STRINGID_SCRCUREDSLEEP;
         else if (status & STATUS1_FREEZE)       cureString = STRINGID_PKMNWASDEFROSTED;
         else if (status & STATUS1_FROSTBITE)    cureString = STRINGID_PKMNFROSTBITEHEALED;
+        else if (status & STATUS1_SLEEP)        cureString = STRINGID_SCRCUREDSLEEP;
 
         gBattleScripting.battler = se->effectBattler;
         gBattleMons[se->effectBattler].status1 = 0;
@@ -3187,9 +3181,8 @@ static void HandleSetEffectGastroAcid(struct BattleCalcValues *cv, struct SetEff
 static void HandleSetEffectLuckyChant(struct BattleCalcValues *cv, struct SetEffect *se)
 {
     enum BattleSide side = GetBattlerSide(se->effectBattler);
-    bool32 luckyChantActive = gSideStatuses[side] & SIDE_STATUS_LUCKY_CHANT;
 
-    if(luckyChantActive)
+    if (gSideStatuses[side] & SIDE_STATUS_LUCKY_CHANT)
     {
         SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
     }
@@ -3236,13 +3229,13 @@ static void HandleSetEffectStatSwap(struct BattleCalcValues *cv, struct SetEffec
 
 static void HandleSetEffectOverwriteAbility(struct BattleCalcValues *cv, struct SetEffect *se)
 {
-    enum Ability *abilityEb = &cv->abilities[se->effectBattler];
+    enum Ability abilityEff = cv->abilities[se->effectBattler];
     enum Ability overwriteAbility = se->additionalEffect->argument.overwriteAbility;
 
-    if (gAbilitiesInfo[*abilityEb].cantBeOverwritten || *abilityEb == overwriteAbility)
+    if (gAbilitiesInfo[abilityEff].cantBeOverwritten || abilityEff == overwriteAbility)
     {
         SetEffectFailAndCheckReturn;
-        RecordAbilityBattle(se->effectBattler, *abilityEb);
+        RecordAbilityBattle(se->effectBattler, abilityEff);
         BattleScriptPushAndSet(se->script, BattleScript_ButItFailedRet);
     }
     else if (CanAbilityShieldActivateForBattler(se->effectBattler))
@@ -3255,7 +3248,7 @@ static void HandleSetEffectOverwriteAbility(struct BattleCalcValues *cv, struct 
             gSpecialStatuses[se->effectBattler].neutralizingGasRemoved = TRUE;
 
         RemoveAbilityFlags(se->effectBattler);
-        gBattleScripting.abilityPopupOverwrite = *abilityEb;
+        gBattleScripting.abilityPopupOverwrite = abilityEff;
         OverwriteBattlerAbility(se->effectBattler, overwriteAbility);
         gBattlerAbility = se->effectBattler;
         RecordAbilityBattle(se->effectBattler, gBattleMons[se->effectBattler].ability);
@@ -3268,23 +3261,23 @@ static void HandleSetEffectOverwriteAbility(struct BattleCalcValues *cv, struct 
 
 static void HandleSetEffectSkillSwap(struct BattleCalcValues *cv, struct SetEffect *se)
 {
-    enum Ability *abilityAtk = &gBattleMons[cv->battlerAtk].ability;
-    enum Ability *abilityDef = &gBattleMons[se->effectBattler].ability;
+    enum Ability abilityAtk = gBattleMons[cv->battlerAtk].ability;
+    enum Ability abilityDef = gBattleMons[se->effectBattler].ability;
 
     if (GetActiveGimmick(se->effectBattler) == GIMMICK_DYNAMAX
-     || gAbilitiesInfo[*abilityAtk].cantBeSwapped
-     || gAbilitiesInfo[*abilityDef].cantBeSwapped)
+     || gAbilitiesInfo[abilityAtk].cantBeSwapped
+     || gAbilitiesInfo[abilityDef].cantBeSwapped)
     {
         SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
         if (!cv->onlyChecking)
         {
-            if (gAbilitiesInfo[*abilityAtk].cantBeSwapped)
+            if (gAbilitiesInfo[abilityAtk].cantBeSwapped)
             {
-                RecordAbilityBattle(cv->battlerAtk, *abilityAtk);
+                RecordAbilityBattle(cv->battlerAtk, abilityAtk);
             }
-            if (gAbilitiesInfo[*abilityDef].cantBeSwapped)
+            if (gAbilitiesInfo[abilityDef].cantBeSwapped)
             {
-                RecordAbilityBattle(se->effectBattler, *abilityDef);
+                RecordAbilityBattle(se->effectBattler, abilityDef);
             }
         }
     }
@@ -3299,13 +3292,13 @@ static void HandleSetEffectSkillSwap(struct BattleCalcValues *cv, struct SetEffe
         if (!isAlly)
             gBattleScripting.abilityPopupOverwrite = gBattleMons[cv->battlerAtk].ability;
 
-        gLastUsedAbility = *abilityDef;
+        gLastUsedAbility = abilityDef;
         RemoveAbilityFlags(se->effectBattler);
         RemoveAbilityFlags(cv->battlerAtk);
-        OverwriteBattlerAbility(se->effectBattler, *abilityAtk);
+        OverwriteBattlerAbility(se->effectBattler, abilityAtk);
         OverwriteBattlerAbility(cv->battlerAtk, gLastUsedAbility);
-        RecordAbilityBattle(se->effectBattler, *abilityDef);
-        RecordAbilityBattle(cv->battlerAtk, *abilityAtk);
+        RecordAbilityBattle(se->effectBattler, abilityDef);
+        RecordAbilityBattle(cv->battlerAtk, abilityAtk);
 
         if (isAlly)
             BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSkillSwapAfterAbilityPopUp);
@@ -3333,6 +3326,11 @@ static void HandleSetEffectRolePlay(struct BattleCalcValues *cv, struct SetEffec
             }
             if (gAbilitiesInfo[sourceAbility].cantBeCopied)
             {
+                RecordAbilityBattle(cv->battlerDef, sourceAbility);
+            }
+            if (destAbility == sourceAbility)
+            {
+                RecordAbilityBattle(se->effectBattler, destAbility);
                 RecordAbilityBattle(cv->battlerDef, sourceAbility);
             }
         }
@@ -3452,7 +3450,7 @@ static void HandleSetEffectSetRoom(struct BattleCalcValues *cv, struct SetEffect
     u32 roomStatus;
     u8 *timer;
 
-    if(cv->onlyChecking) return;
+    if (cv->onlyChecking) return;
 
     enum BattleRoom roomType = se->additionalEffect->argument.roomType;
 
@@ -3854,14 +3852,9 @@ static void HandleSetEffectTopsyTurvy(struct BattleCalcValues *cv, struct SetEff
     {
         for (enum Stat stat = 0; stat < NUM_BATTLE_STATS; stat++)
         {
-            if (gBattleMons[se->effectBattler].statStages[stat] < DEFAULT_STAT_STAGE) // Negative becomes positive.
-            {
-                gBattleMons[se->effectBattler].statStages[stat] = DEFAULT_STAT_STAGE + (DEFAULT_STAT_STAGE - gBattleMons[se->effectBattler].statStages[stat]);
-            }
-            else if (gBattleMons[se->effectBattler].statStages[stat] > DEFAULT_STAT_STAGE) // Positive becomes negative.
-            {
-                gBattleMons[se->effectBattler].statStages[stat] = DEFAULT_STAT_STAGE - (gBattleMons[se->effectBattler].statStages[stat] - DEFAULT_STAT_STAGE);
-            }
+            if (gBattleMons[se->effectBattler].statStages[stat] == DEFAULT_STAT_STAGE)
+                continue;
+            gBattleMons[se->effectBattler].statStages[stat] = MAX_STAT_STAGE - gBattleMons[se->effectBattler].statStages[stat] + MIN_STAT_STAGE;
         }
 
         PrepareStringBattle(STRINGID_TOPSYTURVYSWITCHEDSTATS, se->effectBattler);

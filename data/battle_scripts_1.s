@@ -613,11 +613,6 @@ BattleScript_MoveEffectSkillSwapAfterAbilityPopUp::
 .endif
 	return
 
-BattleScript_MoveEffectGravity::
-	printstring STRINGID_GRAVITYINTENSIFIED
-	waitmessage B_WAIT_TIME_LONG
-	return
-
 BattleScript_GroundAirborneBattler::
 	printstring STRINGID_GRAVITYGROUNDING
 	waitmessage B_WAIT_TIME_LONG

@@ -241,7 +241,6 @@ SINGLE_BATTLE_TEST("Poison Puppeteer and Synchronize may activate from a single 
 
 SINGLE_BATTLE_TEST("Poison Puppeteer activates even if Synchronize activation failed before it")
 {
-    KNOWN_FAILING; // Message depends on gBattlerTarget and calls MoveEnd, so Poison Puppeteer doesn't activate; #10696
     GIVEN {
         ASSUME(MoveHasAdditionalEffect(MOVE_MORTAL_SPIN, MOVE_EFFECT_POISON));
         PLAYER(SPECIES_PECHARUNT) { Ability(ABILITY_POISON_PUPPETEER); Speed(5); }

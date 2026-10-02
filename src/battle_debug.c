@@ -1688,9 +1688,7 @@ static void ChangeHazardsValue(struct BattleDebugMenu *data)
     case LIST_SIDE_SPIKES:
         if (data->modifyArrows.currValue > 0)
         {
-            if (gSideTimers[side].spikesAmount == 0)
-                PushHazardTypeToQueue(side, HAZARDS_SPIKES);
-            gSideTimers[side].spikesAmount = data->modifyArrows.currValue;
+            SetSpikesLayer(side, data->modifyArrows.currValue);
         }
         else if (data->modifyArrows.currValue == 0)
         {
@@ -1701,9 +1699,7 @@ static void ChangeHazardsValue(struct BattleDebugMenu *data)
     case LIST_SIDE_TOXIC_SPIKES:
         if (data->modifyArrows.currValue > 0)
         {
-            if (gSideTimers[side].toxicSpikesAmount == 0)
-                PushHazardTypeToQueue(side, HAZARDS_TOXIC_SPIKES);
-            gSideTimers[side].toxicSpikesAmount = data->modifyArrows.currValue;
+            SetToxicSpikesLayer(side, data->modifyArrows.currValue);
         }
         else if (data->modifyArrows.currValue == 0)
         {

@@ -5208,9 +5208,7 @@ static enum MoveEndResult MoveEndMoveBlock(struct BattleCalcValues *cv)
                 }
                 else
                 {
-                    if (gSideTimers[side].spikesAmount == 0) // Add only once to the queue
-                        PushHazardTypeToQueue(side, HAZARDS_SPIKES);
-                    gSideTimers[side].spikesAmount++;
+                    SetSpikesLayer(side, 1);
                     PrepareStringBattleWithWait(STRINGID_SPIKESSCATTERED, battlerDef);
                     BattleScriptCall(BattleScript_MoveEffectSetStatus);
                     gBattleStruct->eventState.moveEndBattler = 0;

@@ -73,7 +73,7 @@ DOUBLE_BATTLE_TEST("Doodle will change either user's or partner's ability if one
     enum Ability abilityPartner;
 
     PARAMETRIZE {
-        speciesAtk = SPECIES_CRAMORANT;      abilityAtk = ABILITY_GULP_MISSILE;
+        speciesAtk = SPECIES_CRAMORANT; abilityAtk = ABILITY_GULP_MISSILE;
         speciesPartner = SPECIES_WYNAUT; abilityPartner = ABILITY_SHADOW_TAG;
     }
     PARAMETRIZE {
@@ -90,13 +90,8 @@ DOUBLE_BATTLE_TEST("Doodle will change either user's or partner's ability if one
         TURN { MOVE(playerLeft, MOVE_DOODLE, target: opponentLeft); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DOODLE, playerLeft);
-        if (speciesAtk == SPECIES_WYNAUT) {
-            MESSAGE("Wynaut copied the opposing Torchic's Ability!");
-            NOT MESSAGE("Cramorant copied the opposing Torchic's Ability!");
-        } else {
-            MESSAGE("Wynaut copied the opposing Torchic's Ability!");
-            NOT MESSAGE("Cramorant copied the opposing Torchic's Ability!");
-        }
+        MESSAGE("Wynaut copied the opposing Torchic's Ability!");
+        NOT MESSAGE("Cramorant copied the opposing Torchic's Ability!");
     } THEN {
         if (speciesAtk == SPECIES_WYNAUT) {
             EXPECT(playerLeft->ability == ABILITY_BLAZE);

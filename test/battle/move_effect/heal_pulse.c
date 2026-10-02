@@ -50,6 +50,22 @@ SINGLE_BATTLE_TEST("Heal Pulse is boosted by Mega Launcher")
     }
 }
 
+SINGLE_BATTLE_TEST("Heal Pulse boosted by Mega Launcher rounds half-down")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { MaxHP(98); HP(1); }
+        OPPONENT(SPECIES_CLAWITZER);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_HEAL_PULSE); }
+    } SCENE {
+        s32 maxHP = GetMonData(&PLAYER_PARTY[0], MON_DATA_MAX_HP);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_HEAL_PULSE, opponent);
+        HP_BAR(player, damage: -maxHP * 75 / 100);
+    } THEN {
+        EXPECT_EQ(player->hp, 74);
+    }
+}
+
 SINGLE_BATTLE_TEST("Heal Pulse ignores accurace checks")
 {
     GIVEN {

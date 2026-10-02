@@ -279,6 +279,8 @@ ARM_FUNC u32 GetBattlerVolatile(enum BattlerId battler, enum Volatile _volatile)
 void SetMonVolatile(enum BattlerId battler, enum Volatile _volatile, u32 newValue);
 bool32 ItemHealMonVolatile(enum BattlerId battler, enum Item itemId);
 void PushHazardTypeToQueue(enum BattleSide side, enum Hazards hazardType);
+void SetSpikesLayer(enum BattleSide side, u32 amount);
+void SetToxicSpikesLayer(enum BattleSide side, u32 amount);
 bool32 IsHazardOnSide(enum BattleSide side, enum Hazards hazardType);
 bool32 AreAnyHazardsOnSide(enum BattleSide side);
 bool32 IsHazardOnSideAndClear(enum BattleSide side, enum Hazards hazardType);
