@@ -298,22 +298,22 @@ static const u8 sTrainerPicOffset[2][GENDER_COUNT][2] =
     },
 };
 
-static const u8 sTrainerPicFacilityClass[][GENDER_COUNT] =
+static const u8 sTrainerPicCardType[][GENDER_COUNT] =
 {
     [CARD_TYPE_FRLG] =
     {
-        [MALE]   = FACILITY_CLASS_RED,
-        [FEMALE] = FACILITY_CLASS_LEAF
+        [MALE]   = TRAINER_PIC_RED,
+        [FEMALE] = TRAINER_PIC_LEAF
     },
     [CARD_TYPE_RS] =
     {
-        [MALE]   = FACILITY_CLASS_RS_BRENDAN,
-        [FEMALE] = FACILITY_CLASS_RS_MAY
+        [MALE]   = TRAINER_PIC_RS_BRENDAN,
+        [FEMALE] = TRAINER_PIC_RS_MAY
     },
     [CARD_TYPE_EMERALD] =
     {
-        [MALE]   = FACILITY_CLASS_BRENDAN,
-        [FEMALE] = FACILITY_CLASS_MAY
+        [MALE]   = TRAINER_PIC_BRENDAN,
+        [FEMALE] = TRAINER_PIC_MAY
     }
 };
 
@@ -1906,7 +1906,7 @@ static void CreateTrainerCardTrainerPic(void)
     }
     else
     {
-        CreateTrainerCardTrainerPicSprite(FacilityClassToPicIndex(sTrainerPicFacilityClass[sData->cardType][sData->trainerCard.gender]),
+        CreateTrainerCardTrainerPicSprite(sTrainerPicCardType[sData->cardType][sData->trainerCard.gender],
                     TRUE,
                     sTrainerPicOffset[sData->isHoenn][sData->trainerCard.gender][0],
                     sTrainerPicOffset[sData->isHoenn][sData->trainerCard.gender][1],
