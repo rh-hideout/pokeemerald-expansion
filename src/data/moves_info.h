@@ -23204,7 +23204,9 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .category = DAMAGE_CATEGORY_PHYSICAL,
         .battleAnimScript = gBattleAnimMove_GMaxBefuddle,
         .additionalEffects = ADDITIONAL_EFFECTS({
-            .moveEffect = MOVE_EFFECT_EFFECT_SPORE_SIDE,
+            .moveEffect = MOVE_EFFECT_RANDOM_FROM_LIST,
+            .argument.randomMoveEffects = { MOVE_EFFECT_PARALYSIS, MOVE_EFFECT_POISON, MOVE_EFFECT_SLEEP },
+            .onSide = TRUE,
         }),
     },
 
@@ -23224,7 +23226,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .category = DAMAGE_CATEGORY_PHYSICAL,
         .battleAnimScript = gBattleAnimMove_GMaxVoltCrash,
         .additionalEffects = ADDITIONAL_EFFECTS({
-            .moveEffect = MOVE_EFFECT_PARALYZE_SIDE,
+            .moveEffect = MOVE_EFFECT_PARALYSIS,
+            .onSide = TRUE,
         }),
     },
 
@@ -23244,7 +23247,11 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .category = DAMAGE_CATEGORY_PHYSICAL,
         .battleAnimScript = gBattleAnimMove_GMaxGoldRush,
         .additionalEffects = ADDITIONAL_EFFECTS({
-            .moveEffect = MOVE_EFFECT_CONFUSE_PAY_DAY_SIDE,
+            .moveEffect = MOVE_EFFECT_CONFUSION,
+            .onSide = TRUE,
+        },
+        {
+            .moveEffect = MOVE_EFFECT_PAYDAY,
         }),
     },
 
@@ -23389,7 +23396,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .category = DAMAGE_CATEGORY_PHYSICAL,
         .battleAnimScript = gBattleAnimMove_GMaxMalodor,
         .additionalEffects = ADDITIONAL_EFFECTS({
-            .moveEffect = MOVE_EFFECT_POISON_SIDE,
+            .moveEffect = MOVE_EFFECT_POISON,
+            .onSide = TRUE,
         }),
     },
 
@@ -23636,7 +23644,9 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .category = DAMAGE_CATEGORY_PHYSICAL,
         .battleAnimScript = gBattleAnimMove_GMaxStunShock,
         .additionalEffects = ADDITIONAL_EFFECTS({
-            .moveEffect = MOVE_EFFECT_POISON_PARALYZE_SIDE,
+            .moveEffect = MOVE_EFFECT_RANDOM_FROM_LIST,
+            .argument.randomMoveEffects = { MOVE_EFFECT_PARALYSIS, MOVE_EFFECT_POISON, MOVE_EFFECT_NONE },
+            .onSide = TRUE,
         }),
     },
 
@@ -23676,7 +23686,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .category = DAMAGE_CATEGORY_PHYSICAL,
         .battleAnimScript = gBattleAnimMove_GMaxSmite,
         .additionalEffects = ADDITIONAL_EFFECTS({
-            .moveEffect = MOVE_EFFECT_CONFUSE_SIDE,
+            .moveEffect = MOVE_EFFECT_CONFUSION,
+            .onSide = TRUE,
         }),
     },
 
