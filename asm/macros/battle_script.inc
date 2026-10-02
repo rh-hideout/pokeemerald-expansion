@@ -1971,8 +1971,9 @@
 	callnative BS_TryToClearPrimalWeather
 	.endm
 
-	.macro tryendneutralizinggas
+	.macro tryendneutralizinggas battler=BS_TARGET
 	callnative BS_TryEndNeutralizingGas
+	.byte \battler
 	.endm
 
 	.macro consumeberry battler:req, fromBattler:req

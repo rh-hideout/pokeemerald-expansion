@@ -232,7 +232,7 @@ static bool32 ShouldRunTrainerSlideLastSwitchIn(enum BattlerId battler, enum Tra
     if (slideId == TRAINER_SLIDE_OPPONENT_LAST_SWITCHIN)
     {
         enum BattlerId oppositeBattler = GetOppositeBattler(battler);
-        enum BattlerId oppositePartner = GetPartnerBattler(oppositeBattler);
+        enum BattlerId oppositePartner = IsDoubleBattle() ? GetPartnerBattler(oppositeBattler) : oppositeBattler;
 
         return (CountUsablePartyMons(oppositeBattler) == 0 && CountUsablePartyMons(oppositePartner) == 0);
     }

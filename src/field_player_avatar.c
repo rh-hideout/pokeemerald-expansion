@@ -1703,6 +1703,7 @@ void InitPlayerAvatar(s16 x, s16 y, enum Direction direction, enum Gender gender
     u8 objectEventId;
     struct ObjectEvent *objectEvent;
 
+    playerObjEventTemplate.kind = OBJ_KIND_NORMAL;
     playerObjEventTemplate.localId = LOCALID_PLAYER;
     playerObjEventTemplate.graphicsId = GetPlayerAvatarGraphicsIdByStateIdAndGender(PLAYER_AVATAR_STATE_NORMAL, gender);
     playerObjEventTemplate.x = x - MAP_OFFSET;
