@@ -106,3 +106,4 @@ make firered -j$(sysctl -n hw.ncpu) MF_CPPFLAGS='-DMF_RULES_ENGINE=0'
 | Date | `RHH/master` tip | Result |
 | ---- | ---------------- | ------ |
 | 2026-09-11 | `d74f64dc9f` (merge-base; 0 commits behind) | Already up to date. Post-merge checklist run green — see S03. |
+| 2026-10-02 | `dfb0f84374` (1.17.1 / start of 1.17.2; 32 commits) | Clean merge on `merge-rhh`; no conflicts (hot files untouched). |
