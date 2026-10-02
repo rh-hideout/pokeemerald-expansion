@@ -20,6 +20,7 @@
 #include "constants/event_object_movement.h"
 #include "constants/event_objects.h"
 #include "constants/field_effects.h"
+#include "constants/field_specials.h"
 #include "constants/songs.h"
 
 static void Task_DoFieldMove_Init(u8 taskId);
@@ -231,9 +232,9 @@ static const enum Item Gen4CliffCaveSmashTable[] = {
 
 void rockSmashGenerateItem(struct ScriptContext *ctx)
 {
-    if (OW_ROCK_SMASH_ITEMS == GEN_6 || OW_ROCK_SMASH_ITEMS == GEN_6_ORAS)
+    if (OW_ROCK_SMASH_ITEMS >= GEN_6)
         rockSmashGenerateItemGen6();
-    else if (OW_ROCK_SMASH_ITEMS == GEN_4)
+    else if (OW_ROCK_SMASH_ITEMS >= GEN_4)
         rockSmashGenerateItemGen4();
     else
         VarSet(VAR_0x8005, ITEM_NONE);
@@ -247,33 +248,47 @@ static void rockSmashGenerateItemGen4(void)
 {
     enum Item item = ITEM_NONE;
 
-    if (gMapHeader.mapType == MAP_TYPE_INDOOR)
-    {
-        VarSet(VAR_0x8005, ITEM_NONE);// Not given in burned tower
-        return;
-    }
-    u32 randomItem = RandomWeighted(RNG_NONE, 5, 4, 2, 2, 2, 2, 2, 1);
 
-    //Tip: if you want the item table to vary between different breakable rocks, take a look at GetItemBallAmountFromTemplate(gSpecialVar_LastTalked - 1). This pulls data from the x view radius of var_last_talked.
+    u32 randomItem = RandomWeighted(RNG_NONE, 5, 4, 2, 2, 2, 2, 2, 1);
 
     if (randomItem < 7)
     {
         u32 partySlot = VarGet(VAR_0x8006);
         if (DoesRockSmashUserHaveIncreasedItemRarity(partySlot))
             randomItem++;
-    }   
+    }
 
+    //Check for user defined behaviour for this rock
+    u32 ItemTable = gMapHeader.events->objectEvents[gSpecialVar_LastTalked - 1].trainerRange_berryTreeId;
+    switch (ItemTable)
+    {
+    case ROCK_SMASH_ITEM_TABLE_DEFAULT:
+        VarSet(VAR_0x8005, Gen4DefaultSmashTable[randomItem]);
+        return;
+    case ROCK_SMASH_ITEM_TABLE_CLIFF:
+        VarSet(VAR_0x8005, Gen4CliffCaveSmashTable[randomItem]);
+        return;
+    case ROCK_SMASH_ITEM_TABLE_FOSSIL:
+        VarSet(VAR_0x8005, Gen4RuinsOfAlphSmashTable[randomItem]);
+        return;
+    case ROCK_SMASH_ITEM_TABLE_NONE:
+        VarSet(VAR_0x8005, ITEM_NONE);
+        return;
+    default:
+        break;
+    }
+
+    // If nothing is provided, begin reading the player's location and the map header.
     if ((gMapHeader.mapType == MAP_TYPE_OCEAN_ROUTE)
             || (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_CAVE_OF_ORIGIN_B1F) &&
             gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_CAVE_OF_ORIGIN_B1F))) 
-            // These are examples for unique locations for fossils.
         item = Gen4RuinsOfAlphSmashTable[randomItem];
 
     else if (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_ARTISAN_CAVE_B1F) &&
             gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_ARTISAN_CAVE_B1F))
         item = Gen4CliffCaveSmashTable[randomItem];
 
-    else
+    else if (gMapHeader.mapType != MAP_TYPE_INDOOR)
         item = Gen4DefaultSmashTable[randomItem];
 
     VarSet(VAR_0x8005, item);
@@ -284,24 +299,42 @@ static void rockSmashGenerateItemGen4(void)
 static void rockSmashGenerateItemGen6(void)
 {
     enum Item item = ITEM_NONE;
-
-    if (gMapHeader.mapType == MAP_TYPE_INDOOR)
+    u32 randomNumber;
+    //Check for user defined behaviour for this rock
+    u32 ItemTable = gMapHeader.events->objectEvents[gSpecialVar_LastTalked - 1].trainerRange_berryTreeId;
+    switch (ItemTable)
     {
-        VarSet(VAR_0x8005, ITEM_NONE);// Not given in trick house
+    case ROCK_SMASH_ITEM_TABLE_DEFAULT:
+        randomNumber = Random() % ARRAY_COUNT(Gen6DefaultSmashTable);
+        VarSet(VAR_0x8005, Gen6DefaultSmashTable[randomNumber]);
         return;
-    }
-    else if ((gMapHeader.mapType == MAP_TYPE_OCEAN_ROUTE)
-            || (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_CAVE_OF_ORIGIN_B1F) &&
-            gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_CAVE_OF_ORIGIN_B1F))) 
-            // These are example code for unique locations for fossils. They do not happen in game. In ORAS this table is used in mirage islands or Glittering Cave in XY.
-            // If you want the item table to vary between different breakable rocks, take a look at GetItemBallAmountFromTemplate(gSpecialVar_LastTalked - 1). This pulls data from the x view radius of var_last_talked.
-    {
-        u32 randomNumber = Random() % ARRAY_COUNT(Gen6FossilSmashTable);
+    case ROCK_SMASH_ITEM_TABLE_CLIFF:
+    case ROCK_SMASH_ITEM_TABLE_FOSSIL:
+        randomNumber = Random() % ARRAY_COUNT(Gen6FossilSmashTable);
         VarSet(VAR_0x8005, Gen6FossilSmashTable[randomNumber]);
         return;
+    case ROCK_SMASH_ITEM_TABLE_NONE:
+        VarSet(VAR_0x8005, ITEM_NONE);
+        return;
+    default:
+        break; 
     }
-    u32 randomNumber = Random() % ARRAY_COUNT(Gen6DefaultSmashTable);
-    item = Gen6DefaultSmashTable[randomNumber];
+
+    // If nothing is provided, begin reading the player's location and the map header.
+    if ((gMapHeader.mapType == MAP_TYPE_OCEAN_ROUTE)
+            || (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_CAVE_OF_ORIGIN_B1F) &&
+            gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_CAVE_OF_ORIGIN_B1F))) 
+            // These are example code for unique locations for fossils. They do not happen in game. In ORAS this table is used in mirage islands, or Glittering Cave in XY.
+    {
+        randomNumber = Random() % ARRAY_COUNT(Gen6FossilSmashTable);
+        item = Gen6FossilSmashTable[randomNumber];
+    }
+    else if (gMapHeader.mapType != MAP_TYPE_INDOOR)
+    {
+        randomNumber = Random() % ARRAY_COUNT(Gen6DefaultSmashTable);
+        item = Gen6DefaultSmashTable[randomNumber];
+    }
+
 
     VarSet(VAR_0x8005, item);
     return;

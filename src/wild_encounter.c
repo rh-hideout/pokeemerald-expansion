@@ -829,7 +829,7 @@ void rockSmashRNG(struct ScriptContext *ctx)
     }
     //Tip: if you want the item table to vary between different breakable rocks, use . This simply pulls data from the x view radius of var_last_talked.
 
-    if (OW_ROCK_SMASH_ITEMS == GEN_6 || OW_ROCK_SMASH_ITEMS == GEN_6_ORAS)
+    if (OW_ROCK_SMASH_ITEMS >= GEN_6)
     {
         if (encounterChance != 0)
             rockSmashResult = RandomUniform(RNG_NONE, 0, 2);// 1/3 chance to do each. 
@@ -837,14 +837,14 @@ void rockSmashRNG(struct ScriptContext *ctx)
             rockSmashResult = RandomWeighted(RNG_NONE, 2, 0, 1);// 2/3 chance to do nothing, 1/3 chance of item
         //By instead using RandomWeighted(RNG_NONE, 320, encounterChance, 320), you can adjust rock smash encounter odds by map.
     }
-    else if (OW_ROCK_SMASH_ITEMS == GEN_4)
+    else if (OW_ROCK_SMASH_ITEMS >= GEN_4)
     {
         if (EncounterOddsCheck(encounterChance))
         {
             gSpecialVar_Result = ROCK_SMASH_ENCOUNTER;
             return;
         }
-        u32 itemRate = gMapHeader.events->objectEvents[(gSpecialVar_LastTalked - 1)].trainerRange_berryTreeId;// this is 0 on everything by default. 
+        u32 itemRate = gMapHeader.events->objectEvents[(gSpecialVar_LastTalked - 1)].movementRangeX;// this is 0 on everything by default. 
         if (itemRate < OW_ROCK_SMASH_ITEMS_MIN_ODDS)
             itemRate = OW_ROCK_SMASH_ITEMS_MIN_ODDS;
 
