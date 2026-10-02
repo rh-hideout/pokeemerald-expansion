@@ -4847,7 +4847,7 @@ void ItemUseCB_BattleScript(u8 taskId, TaskFunc task)
     {
         gPartyMenuUseExitCallback = FALSE;
         PlaySE(SE_SELECT);
-        DisplayPartyMenuMessage(gText_WontHaveEffect, TRUE);
+        DisplayPartyMenuMessage(gStringVar4, TRUE);
         ScheduleBgCopyTilemapToVram(2);
         gTasks[taskId].func = task;
     }

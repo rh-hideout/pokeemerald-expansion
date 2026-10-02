@@ -692,13 +692,14 @@ These exist to keep merging from `RHH/master` cheap. Violating them is the main 
 
 ### S43 — Item bans (player & trainer)
 
-- [ ] **Status:** Not started
+- [x] **Status:** Complete
 
 - **Goal:** ME's `PLAYER ITEMS` / `TRAINER ITEMS`.
 - **Depends on:** S13
 - **Scope:** Block in-battle item use for the player when banned; suppress AI item use for trainers. Decide whether the Bag option is hidden or shown-and-refused, and whether the ban covers Poké Balls (it must not, or catching breaks).
 - **Acceptance:** Banned items are unusable in battle for the relevant side; catching still works.
 - **Tests:** Battle tests via `make check` where possible; manual battles.
+- **Decisions:** [`docs-mf/decisions/0046-product-battle-item-bans.md`](docs-mf/decisions/0046-product-battle-item-bans.md) — Bag shown-and-refused; balls exempt; no 4-item Hard cap.
 
 ### S44 — IV/EV scaling
 

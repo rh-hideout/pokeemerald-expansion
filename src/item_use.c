@@ -28,6 +28,7 @@
 #include "mail.h"
 #include "main.h"
 #include "menu.h"
+#include "mf_items.h"
 #include "mf_nuzlocke.h"
 #include "menu_helpers.h"
 #include "metatile_behavior.h"
@@ -1212,7 +1213,15 @@ bool32 CannotUseItemsInBattle(enum Item itemId, struct Pokemon *mon)
     bool8 cannotUse = FALSE;
     const u8* failStr = NULL;
     u32 i, battlerTarget;
-    u16 hp = GetMonData(mon, MON_DATA_HP);
+    u16 hp;
+
+    if (!MfIsPlayerBattleItemAllowed(itemId))
+    {
+        StringExpandPlaceholders(gStringVar4, MfGetNoPlayerBattleItemsMessage());
+        return TRUE;
+    }
+
+    hp = GetMonData(mon, MON_DATA_HP);
 
     if (gPartyMenu.slotId == 0)
         battlerTarget = B_POSITION_PLAYER_LEFT;
@@ -1225,7 +1234,10 @@ bool32 CannotUseItemsInBattle(enum Item itemId, struct Pokemon *mon)
     if (battlerTarget < MAX_POSITION_COUNT && GetItemType(itemId) != ITEM_USE_BAG_MENU)
     {
         if (gBattleMons[battlerTarget].volatiles.embargoTimer)
+        {
+            StringExpandPlaceholders(gStringVar4, gText_WontHaveEffect);
             return TRUE;
+        }
     }
 
     // battleUsage checks

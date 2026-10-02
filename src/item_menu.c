@@ -50,6 +50,7 @@
 #include "constants/items.h"
 #include "constants/rgb.h"
 #include "constants/songs.h"
+#include "mf_items.h"
 
 #define TAG_POCKET_SCROLL_ARROW 110
 #define TAG_BAG_SCROLL_ARROW    111
@@ -2107,6 +2108,12 @@ static void ItemMenu_UseInBattle(u8 taskId)
     enum ItemType type = GetItemType(gSpecialVar_ItemId);
     if (!GetItemBattleUsage(gSpecialVar_ItemId))
         return;
+
+    if (!MfIsPlayerBattleItemAllowed(gSpecialVar_ItemId))
+    {
+        DisplayItemMessage(taskId, FONT_NORMAL, MfGetNoPlayerBattleItemsMessage(), CloseItemMessage);
+        return;
+    }
 
     RemoveContextWindow();
     if (type == ITEM_USE_BAG_MENU || (type == ITEM_USE_BATTLER && !IsDoubleBattle()))

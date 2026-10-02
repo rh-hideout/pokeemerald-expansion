@@ -32,6 +32,7 @@
 #include "constants/items.h"
 #include "constants/rgb.h"
 #include "constants/songs.h"
+#include "mf_items.h"
 
 #define TAG_SCROLL_ARROW  2910
 #define TAG_PYRAMID_BAG   4132
@@ -1312,6 +1313,12 @@ static void BagAction_UseInBattle(u8 taskId)
     enum ItemType type = GetItemType(gSpecialVar_ItemId);
     if (!GetItemBattleUsage(gSpecialVar_ItemId))
         return;
+
+    if (!MfIsPlayerBattleItemAllowed(gSpecialVar_ItemId))
+    {
+        DisplayItemMessageInBattlePyramid(taskId, MfGetNoPlayerBattleItemsMessage(), Task_CloseBattlePyramidBagMessage);
+        return;
+    }
 
     CloseMenuActionWindow();
     if (type == ITEM_USE_BAG_MENU)

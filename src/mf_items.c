@@ -46,3 +46,37 @@ const u8 *MfGetClassicSitrusDescription(void)
 {
     return sDesc_SitrusBerryClassic;
 }
+
+// ME gText_BattleRules_NoItems_Player.
+static const u8 sText_NoPlayerBattleItems[] = _(
+    "Competitive rules!\n"
+    "No items in battle!{PAUSE_UNTIL_PRESS}");
+
+const u8 *MfGetNoPlayerBattleItemsMessage(void)
+{
+    return sText_NoPlayerBattleItems;
+}
+
+bool32 MfIsBattlePokeBall(enum Item itemId)
+{
+    return GetItemBattleUsage(itemId) == EFFECT_ITEM_THROW_BALL;
+}
+
+bool32 MfIsPlayerBattleItemAllowed(enum Item itemId)
+{
+    if (!MfRules_HasNoItemPlayer())
+        return TRUE;
+    return MfIsBattlePokeBall(itemId);
+}
+
+bool32 MfAreTrainerBattleItemsAllowed(void)
+{
+    return !MfRules_HasNoItemTrainer();
+}
+
+bool32 MfIsBattlerBattleItemAllowed(bool32 isPlayerSide, enum Item itemId)
+{
+    if (isPlayerSide)
+        return MfIsPlayerBattleItemAllowed(itemId);
+    return MfAreTrainerBattleItemsAllowed();
+}

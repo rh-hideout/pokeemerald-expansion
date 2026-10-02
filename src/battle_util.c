@@ -18,6 +18,7 @@
 #include "pokemon.h"
 #include "mf_types.h"
 #include "mf_rules.h"
+#include "mf_items.h"
 #include "international_string_util.h"
 #include "item.h"
 #include "util.h"
@@ -637,6 +638,11 @@ void HandleAction_UseItem(void)
     ClearVariousBattlerFlags(gBattlerAttacker);
 
     gLastUsedItem = gBattleResources->bufferB[gBattlerAttacker][1] | (gBattleResources->bufferB[gBattlerAttacker][2] << 8);
+    if (!MfIsBattlerBattleItemAllowed(IsOnPlayerSide(gBattlerAttacker), gLastUsedItem))
+    {
+        gCurrentActionFuncId = B_ACTION_FINISHED;
+        return;
+    }
     if (X_ITEM_FRIENDSHIP_INCREASE > 0
         && GetItemEffectType(gLastUsedItem) == ITEM_EFFECT_X_ITEM
         && !ShouldSkipFriendshipChange())

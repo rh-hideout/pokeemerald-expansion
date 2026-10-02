@@ -20,6 +20,7 @@
 #include "constants/battle_move_effects.h"
 #include "constants/items.h"
 #include "constants/moves.h"
+#include "mf_items.h"
 
 // this file's functions
 static bool32 AI_ShouldHeal(enum BattlerId battler, u32 healAmount);
@@ -31,6 +32,9 @@ bool32 ShouldUseItem(enum BattlerId battler)
     u32 healAmount = 0;
 
     if (IsAiVsAiBattle())
+        return FALSE;
+
+    if (!MfAreTrainerBattleItemsAllowed())
         return FALSE;
 
     // If teaming up with player and Pokemon is on the right, or Pokemon is currently held by Sky Drop
