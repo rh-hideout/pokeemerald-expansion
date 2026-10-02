@@ -2210,6 +2210,11 @@
 	.4byte \func
 	.endm
 
+	.macro setdynamicmonchoiceaifunc func:req
+	callnative ScriptSetDynamicAiMonChoiceFunc, requests_effects=1
+	.4byte \func
+	.endm
+
 	@ Set up a totem boost for the next battle.
 	@ 'battler' is the position of the mon you want to gain a boost. see B_POSITION_xx in include/constants/battle.h.
 	@ The rest of the arguments are the stat change values to each stat.
