@@ -126,15 +126,44 @@ DOUBLE_BATTLE_TEST("Symbiosis transfers its item to an ally after it consumes a 
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(opponentLeft, MOVE_TACKLE, target: playerLeft); }
+        TURN { MOVE(opponentLeft, MOVE_SCRATCH, target: playerLeft); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, playerLeft);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
         ABILITY_POPUP(playerRight, ABILITY_SYMBIOSIS);
         STATUS_ICON(playerLeft, STATUS1_TOXIC_POISON);
     } THEN {
         EXPECT_EQ(playerLeft->item, ITEM_TOXIC_ORB);
         EXPECT_EQ(playerRight->item, ITEM_NONE);
+    }
+}
+
+DOUBLE_BATTLE_TEST("A spread move does not consume items received through Symbiosis as resistance Berries")
+{
+    GIVEN {
+        ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == TARGET_FOES_AND_ALLY);
+        ASSUME(GetMoveType(MOVE_EARTHQUAKE) == TYPE_GROUND);
+        ASSUME(GetItemHoldEffect(ITEM_SHUCA_BERRY) == HOLD_EFFECT_RESIST_BERRY);
+        ASSUME(GetItemHoldEffectParam(ITEM_SHUCA_BERRY) == TYPE_GROUND);
+        PLAYER(SPECIES_ORANGURU) { Ability(ABILITY_SYMBIOSIS); Item(ITEM_POTION); }
+        PLAYER(SPECIES_PIKACHU) { Item(ITEM_SHUCA_BERRY); }
+        OPPONENT(SPECIES_PIKACHU) { Item(ITEM_SHUCA_BERRY); }
+        OPPONENT(SPECIES_ORANGURU) { Ability(ABILITY_SYMBIOSIS); Item(ITEM_POTION); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_EARTHQUAKE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, playerRight);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, playerLeft);
+        ABILITY_POPUP(opponentRight, ABILITY_SYMBIOSIS);
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentLeft);
+        ABILITY_POPUP(playerLeft, ABILITY_SYMBIOSIS);
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, playerRight);
+    } THEN {
+        EXPECT_EQ(playerLeft->item, ITEM_NONE);
+        EXPECT_EQ(playerRight->item, ITEM_POTION);
+        EXPECT_EQ(opponentLeft->item, ITEM_POTION);
+        EXPECT_EQ(opponentRight->item, ITEM_NONE);
     }
 }
 

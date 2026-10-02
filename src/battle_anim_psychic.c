@@ -870,7 +870,7 @@ static void AnimTask_ImprisonOrbs_Step(u8 taskId)
         if (++task->data[1] > 8)
         {
             task->data[1] = 0;
-            spriteId = CreateSprite(&gImprisonOrbSpriteTemplate, task->data[13], task->data[14], 0);
+            spriteId = CreateSpriteUnchecked(&gImprisonOrbSpriteTemplate, task->data[13], task->data[14], 0);
             task->data[task->data[2] + 8] = spriteId;
             if (spriteId != MAX_SPRITES)
             {
@@ -1070,7 +1070,7 @@ static void AnimTask_SkillSwap_Step(u8 taskId)
         if (++task->data[1] > 6)
         {
             task->data[1] = 0;
-            spriteId = CreateSprite(&gSkillSwapOrbSpriteTemplate, task->data[11], task->data[12], 0);
+            spriteId = CreateSpriteUnchecked(&gSkillSwapOrbSpriteTemplate, task->data[11], task->data[12], 0);
             if (spriteId != MAX_SPRITES)
             {
                 gSprites[spriteId].data[0] = 16;
@@ -1106,7 +1106,7 @@ static void AnimTask_HeartSwap_Step(u8 taskId)
         if (++task->data[1] > 6)
         {
             task->data[1] = 0;
-            spriteId = CreateSprite(&gHeartSwapOrbSpriteTemplate, task->data[11], task->data[12], 0);
+            spriteId = CreateSpriteUnchecked(&gHeartSwapOrbSpriteTemplate, task->data[11], task->data[12], 0);
             if (spriteId != MAX_SPRITES)
             {
                 gSprites[spriteId].data[0] = 16;

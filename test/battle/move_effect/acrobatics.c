@@ -9,7 +9,7 @@ ASSUMPTIONS
 
 SINGLE_BATTLE_TEST("Acrobatics doubles in power if the user has no held item", s16 damage)
 {
-    u16 heldItem;
+    enum Item heldItem;
     PARAMETRIZE { heldItem = ITEM_POTION; }
     PARAMETRIZE { heldItem = ITEM_NONE; }
     GIVEN {
@@ -26,7 +26,7 @@ SINGLE_BATTLE_TEST("Acrobatics doubles in power if the user has no held item", s
 
 SINGLE_BATTLE_TEST("Acrobatics still doubles in power when Flying Gem is consumed", s16 damage)
 {
-    u16 heldItem;
+    enum Item heldItem;
     PARAMETRIZE { heldItem = ITEM_NONE; }
     PARAMETRIZE { heldItem = ITEM_FLYING_GEM; }
     GIVEN {

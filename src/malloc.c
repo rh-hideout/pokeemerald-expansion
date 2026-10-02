@@ -147,32 +147,6 @@ static void *AllocZeroedInternal(void *heapStart, u32 size, const char *location
     return mem;
 }
 
-static bool32 CheckMemBlockInternal(void *heapStart, void *pointer)
-{
-    struct MemBlock *head = (struct MemBlock *)heapStart;
-    struct MemBlock *block = (struct MemBlock *)((u8 *)pointer - sizeof(struct MemBlock));
-
-    if (block->magic != MALLOC_SYSTEM_ID)
-        return FALSE;
-
-    if (block->next->magic != MALLOC_SYSTEM_ID)
-        return FALSE;
-
-    if (block->next != head && block->next->prev != block)
-        return FALSE;
-
-    if (block->prev->magic != MALLOC_SYSTEM_ID)
-        return FALSE;
-
-    if (block->prev != head && block->prev->next != block)
-        return FALSE;
-
-    if (block->next != head && block->next != (struct MemBlock *)(block->data + block->size))
-        return FALSE;
-
-    return TRUE;
-}
-
 void InitHeap(void *heapStart, u32 heapSize)
 {
     sHeapStart = heapStart;
@@ -236,24 +210,6 @@ void *AllocZeroedUnchecked_(u32 size, const char *location)
 void Free(void *pointer)
 {
     FreeInternal(sHeapStart, pointer);
-}
-
-bool32 CheckMemBlock(void *pointer)
-{
-    return CheckMemBlockInternal(sHeapStart, pointer);
-}
-
-bool32 CheckHeap()
-{
-    struct MemBlock *pos = (struct MemBlock *)sHeapStart;
-
-    do {
-        if (!CheckMemBlockInternal(sHeapStart, pos->data))
-            return FALSE;
-        pos = pos->next;
-    } while (pos != (struct MemBlock *)sHeapStart);
-
-    return TRUE;
 }
 
 const struct MemBlock *HeapHead(void)

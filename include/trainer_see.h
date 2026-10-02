@@ -9,6 +9,8 @@ struct ApproachingTrainer
     u8 taskId;
 };
 
+#define NUM_APPROACHING_TRAINER 2
+
 extern u16 gWhichTrainerToFaceAfterBattle;
 extern u8 gPostBattleMovementScript[4];
 extern struct ApproachingTrainer gApproachingTrainers[2];
@@ -20,6 +22,8 @@ bool8 CheckForTrainersWantingBattle(void);
 void SetBuriedTrainerMovement(struct ObjectEvent *objEvent);
 void DoTrainerApproach(void);
 void TryPrepareSecondApproachingTrainer(void);
+void PrepareSecondApproachingTrainer(void);
+
 u8 FldEff_ExclamationMarkIcon(void);
 u8 FldEff_QuestionMarkIcon(void);
 u8 FldEff_HeartIcon(void);

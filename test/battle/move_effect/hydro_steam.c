@@ -8,7 +8,7 @@ ASSUMPTIONS
 
 SINGLE_BATTLE_TEST("Hydro Steam deals 1.5x damage under both Sunlight and Rain", s16 damage)
 {
-    u16 setupMove;
+    enum Move setupMove;
     PARAMETRIZE { setupMove = MOVE_CELEBRATE; }
     PARAMETRIZE { setupMove = MOVE_SUNNY_DAY; }
     PARAMETRIZE { setupMove = MOVE_RAIN_DANCE; }

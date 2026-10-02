@@ -19,7 +19,7 @@ SINGLE_BATTLE_TEST("Flower Gift transforms Cherrim in harsh sunlight")
 
 SINGLE_BATTLE_TEST("Flower Gift doesn't transform Cherrim if Cloud Nine/Air Lock is on the field")
 {
-    u32 species = 0;
+    enum Species species = SPECIES_NONE;
     enum Ability ability = ABILITY_NONE;
     PARAMETRIZE { species = SPECIES_GOLDUCK; ability = ABILITY_CLOUD_NINE; }
     PARAMETRIZE { species = SPECIES_RAYQUAZA; ability = ABILITY_AIR_LOCK; }
@@ -86,7 +86,7 @@ SINGLE_BATTLE_TEST("Flower Gift transforms Cherrim back to normal when its abili
 
 SINGLE_BATTLE_TEST("Flower Gift transforms Cherrim back to normal under Cloud Nine/Air Lock")
 {
-    u32 species = 0;
+    enum Species species = SPECIES_NONE;
     enum Ability ability = ABILITY_NONE;
     PARAMETRIZE { species = SPECIES_PSYDUCK;  ability = ABILITY_CLOUD_NINE; }
     PARAMETRIZE { species = SPECIES_RAYQUAZA; ability = ABILITY_AIR_LOCK; }

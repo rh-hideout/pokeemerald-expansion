@@ -95,3 +95,33 @@ DOUBLE_BATTLE_TEST("Howl does not work on partner if it has Soundproof but doesn
         EXPECT_EQ(damage[0], damage[1]);
     }
 }
+
+DOUBLE_BATTLE_TEST("Howl ignores user's Substitute and partner's Substitute is ignored from Champions onwards")
+{
+    bool32 isChampionsOnwards = B_UPDATED_MOVE_FLAGS >= GEN_CHAMPIONS;
+
+    GIVEN {
+        ASSUME(GetMoveTarget(MOVE_HOWL) == TARGET_USER_AND_ALLY);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(15); }
+        PLAYER(SPECIES_WYNAUT) { Speed(10); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(13); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(12); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_SUBSTITUTE); MOVE(playerRight, MOVE_SUBSTITUTE); }
+        TURN { MOVE(playerLeft, MOVE_HOWL); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_HOWL, playerLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
+        if (isChampionsOnwards)
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
+        else
+            NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
+
+    } THEN {
+        EXPECT_EQ(playerLeft->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 1);
+        if (isChampionsOnwards)
+            EXPECT_EQ(playerRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 1);
+        else
+            EXPECT_EQ(playerRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
+    }
+}

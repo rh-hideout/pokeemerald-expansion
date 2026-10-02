@@ -2935,7 +2935,7 @@ static void AnimTask_SpeedDust_Step(u8 taskId)
         {
             u8 spriteId;
             task->data[1] = 0;
-            spriteId = CreateSprite(&gSpeedDustSpriteTemplate, task->data[14], task->data[15], 0);
+            spriteId = CreateSpriteUnchecked(&gSpeedDustSpriteTemplate, task->data[14], task->data[15], 0);
             if (spriteId != MAX_SPRITES)
             {
                 gSprites[spriteId].data[0] = taskId;

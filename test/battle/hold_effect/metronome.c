@@ -144,7 +144,7 @@ SINGLE_BATTLE_TEST("Metronome Item doesn't increase damage per hit of multi-hit 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FURY_ATTACK, player);
         HP_BAR(opponent, captureDamage: &damage[0]);
         HP_BAR(opponent, captureDamage: &damage[1]);
-        MESSAGE("The Pokémon was hit 5 time(s)!");
+        MESSAGE("The Pokémon was hit 5 times!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FURY_ATTACK, player);
         HP_BAR(opponent, captureDamage: &damage[2]);
     } THEN {

@@ -118,5 +118,46 @@ DOUBLE_BATTLE_TEST("Corrosive Gas destroys foes and ally's items if they have on
     }
 }
 
-TO_DO_BATTLE_TEST("Corrosive Gas doesn't destroy the item of a Pokemon behind a Substitute");
-TO_DO_BATTLE_TEST("Corrosive Gas doesn't destroy items if they change the Pokémon's form"); // Giratina, Genesect, Silvally, Zacian, Zamazenta. Bulbapedia hasn't confirmed Arceus or Ogerpon, but it's a safe assumption that they will also fail.
+SINGLE_BATTLE_TEST("Corrosive Gas doesn't destroy the target's item behind a Substitute")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SUBSTITUTE) == EFFECT_SUBSTITUTE);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); Item(ITEM_ORAN_BERRY); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SUBSTITUTE); MOVE(player, MOVE_CORROSIVE_GAS); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, opponent);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_CORROSIVE_GAS, player);
+    } THEN {
+        EXPECT_EQ(opponent->item, ITEM_ORAN_BERRY);
+    }
+}
+
+SINGLE_BATTLE_TEST("Corrosive Gas doesn't destroy items required for the target's form change")
+{
+    enum Species species;
+    enum Item item;
+
+    PARAMETRIZE { species = SPECIES_BLAZIKEN;            item = ITEM_BLAZIKENITE; }
+    PARAMETRIZE { species = SPECIES_GROUDON;             item = ITEM_RED_ORB; }
+    PARAMETRIZE { species = SPECIES_NECROZMA_DUSK_MANE; item = ITEM_ULTRANECROZIUM_Z; }
+    PARAMETRIZE { species = SPECIES_GIRATINA_ORIGIN;     item = ITEM_GRISEOUS_CORE; }
+    PARAMETRIZE { species = SPECIES_ARCEUS;              item = ITEM_SKY_PLATE; }
+    PARAMETRIZE { species = SPECIES_GENESECT;            item = ITEM_BURN_DRIVE; }
+    PARAMETRIZE { species = SPECIES_SILVALLY;            item = ITEM_FIRE_MEMORY; }
+    PARAMETRIZE { species = SPECIES_ZACIAN_HERO;         item = ITEM_RUSTED_SWORD; }
+    PARAMETRIZE { species = SPECIES_ZAMAZENTA_HERO;      item = ITEM_RUSTED_SHIELD; }
+    PARAMETRIZE { species = SPECIES_OGERPON;             item = ITEM_HEARTHFLAME_MASK; }
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(species) { Item(item); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_CORROSIVE_GAS); }
+    } SCENE {
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_CORROSIVE_GAS, player);
+    } THEN {
+        EXPECT_EQ(opponent->item, item);
+    }
+}

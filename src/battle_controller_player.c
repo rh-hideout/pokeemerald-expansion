@@ -216,7 +216,7 @@ static enum Item GetPrevBall(enum Item ballId)
 static enum Item GetNextBall(enum Item ballId)
 {
     s32 i;
-    s32 index = ItemIdToBallId(ballId);
+    enum PokeBall index = ItemIdToBallId(ballId);
     enum Item newBall = ITEM_NONE;
 
     for (i = 0; i < POKEBALL_COUNT; i++)
@@ -421,7 +421,7 @@ void HandleInputChooseTarget(enum BattlerId battler)
         B_POSITION_OPPONENT_LEFT,
     };
     enum Move move = GetMonData(GetBattlerMon(battler), MON_DATA_MOVE1 + gMoveSelectionCursor[battler]);
-    enum MoveTarget moveTarget = GetBattlerMoveTargetType(battler, move);
+    enum MoveTarget moveTarget = GetBattlerMoveSelectionTargetType(battler, move);
 
     DoBounceEffect(gMultiUsePlayerCursor, BOUNCE_HEALTHBOX, 15, 1);
     for (i = 0; i < gBattlersCount; i++)
@@ -579,7 +579,7 @@ static void HideAllTargets(void)
 {
     for (enum BattlerId i = 0; i < MAX_BATTLERS_COUNT; i++)
     {
-        if (IsBattlerAlive(i) && gBattleSpritesDataPtr->healthBoxesData[i].healthboxIsBouncing)
+        if (ShouldHideBattler(i))
         {
             gSprites[gBattlerSpriteIds[i]].callback = SpriteCB_HideAsMoveTarget;
             EndBounceEffect(i, BOUNCE_HEALTHBOX);
@@ -689,7 +689,7 @@ void HandleInputChooseMove(enum BattlerId battler)
         TryToHideMoveInfoWindow();
         PlaySE(SE_SELECT);
 
-        enum MoveTarget moveTarget = GetBattlerMoveTargetType(battler, moveInfo->moves[gMoveSelectionCursor[battler]]);
+        enum MoveTarget moveTarget = GetBattlerMoveSelectionTargetType(battler, moveInfo->moves[gMoveSelectionCursor[battler]]);
         bool32 isUserOrAlly = moveTarget == TARGET_USER || moveTarget == TARGET_USER_OR_ALLY || moveTarget == TARGET_USER_AND_ALLY;
 
         if (gBattleStruct->zmove.viewing)
@@ -703,27 +703,24 @@ void HandleInputChooseMove(enum BattlerId battler)
         if (GetActiveGimmick(battler) == GIMMICK_DYNAMAX || IsGimmickSelected(battler, GIMMICK_DYNAMAX))
             moveTarget = GetMoveTarget(GetMaxMove(battler, moveInfo->moves[gMoveSelectionCursor[battler]]));
 
-        if (isUserOrAlly)
-            gMultiUsePlayerCursor = battler;
-        else if (moveTarget == TARGET_ALLY)
-            gMultiUsePlayerCursor = GetPartnerBattler(battler);
-        else
-            gMultiUsePlayerCursor = GetBattlerLeftFoe(battler);
+        gMultiUsePlayerCursor = GetDefaultSelectionTarget(battler, moveTarget);
+        
+        enum BattlerId partner = GetPartnerBattler(battler);
 
         if (gBattleResources->bufferA[battler][1]) // a double battle
         {
             if (!CanSelectBattler(moveTarget))
                 canSelectTarget = 1; // either selected or user
-            if (moveTarget == TARGET_USER_OR_ALLY && IsBattlerAlive(GetPartnerBattler(battler)))
+            if (moveTarget == TARGET_USER_OR_ALLY && IsBattlerAlive(partner))
                 canSelectTarget = 1;
 
             if (moveInfo->currentPP[gMoveSelectionCursor[battler]] == 0)
             {
                 canSelectTarget = 0;
             }
-            else if (isUserOrAlly && CountAliveMonsInBattle(BATTLE_ALIVE_EXCEPT_BATTLER, battler) <= 1)
+            else if (isUserOrAlly && !IsBattlerAlive(partner))
             {
-                gMultiUsePlayerCursor = GetDefaultMoveTarget(battler);
+                gMultiUsePlayerCursor = battler;
                 canSelectTarget = 0;
             }
 
@@ -765,7 +762,7 @@ void HandleInputChooseMove(enum BattlerId battler)
 
             if (moveTarget == TARGET_USER || moveTarget == TARGET_USER_OR_ALLY)
                 gMultiUsePlayerCursor = battler;
-            else if (gAbsentBattlerFlags & (1u << GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT)))
+            else if (!IsBattlerAlive(GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT)))
                 gMultiUsePlayerCursor = GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT);
             else
                 gMultiUsePlayerCursor = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
@@ -1602,7 +1599,10 @@ static void OpenBagAndChooseItem(enum BattlerId battler)
         gBattlerControllerFuncs[battler] = CompleteWhenChoseItem;
         ReshowBattleScreenDummy();
         CloseMainBattleScreen();
-        CB2_BagMenuFromBattle();
+        if (gBattleStruct->victoryCatchState == VICTORY_CATCH_OPEN_BAG)
+            CB2_ChooseBall();
+        else
+            CB2_BagMenuFromBattle();
     }
 }
 
@@ -1787,8 +1787,9 @@ static void MoveSelectionDisplayMoveDescription(enum BattlerId battler)
     StringAppend(gDisplayedStringBattle, acc_start);
     StringAppend(gDisplayedStringBattle, acc_desc);
     StringAppend(gDisplayedStringBattle, acc_num);
-    StringAppend(gDisplayedStringBattle, gText_NewLine);
-    StringAppend(gDisplayedStringBattle, GetMoveDescription(move));
+    u8 *descStart = StringAppend(gDisplayedStringBattle, gText_NewLine);
+    u8 *descEnd = StringAppend(gDisplayedStringBattle, GetMoveDescription(move));
+    WrapFontIdToFit(descStart, descEnd, FONT_NORMAL, WindowWidthPx(B_WIN_MOVE_DESCRIPTION));
     BattlePutTextOnWindow(gDisplayedStringBattle, B_WIN_MOVE_DESCRIPTION);
 
     if (gCategoryIconSpriteId == 0xFF)
@@ -2022,7 +2023,7 @@ static void PlayerHandleChooseAction(enum BattlerId battler)
         StringCopy(gStringVar1, COMPOUND_STRING("Partner will use:\n"));
         enum Move move = GetBattlerChosenMove(partner);
         StringAppend(gStringVar1, GetMoveName(move));
-        enum MoveTarget moveTarget = GetBattlerMoveTargetType(partner, move);
+        enum MoveTarget moveTarget = GetBattlerMoveSelectionTargetType(partner, move);
         if (moveTarget == TARGET_SELECTED || moveTarget == TARGET_SMART)
         {
             if (gAiBattleData->chosenTarget[partner] == B_POSITION_OPPONENT_LEFT)
@@ -2352,9 +2353,11 @@ enum
 {
     EFFECTIVENESS_CANNOT_VIEW,
     EFFECTIVENESS_NO_EFFECT,
+    EFFECTIVENESS_MOSTLY_INEFFECTIVE,
     EFFECTIVENESS_NOT_VERY_EFFECTIVE,
     EFFECTIVENESS_NORMAL,
     EFFECTIVENESS_SUPER_EFFECTIVE,
+    EFFECTIVENESS_EXTREMELY_EFFECTIVE,
 };
 
 static bool32 ShouldShowTypeEffectiveness(u32 targetId)
@@ -2380,6 +2383,8 @@ static u32 CheckTypeEffectiveness(enum BattlerId battlerAtk, enum BattlerId batt
     ctx.move = moveInfo->moves[gMoveSelectionCursor[battlerAtk]];
     ctx.moveType = CheckDynamicMoveType(GetBattlerMon(battlerAtk), ctx.move, battlerAtk, MON_IN_BATTLE);
     ctx.updateFlags = FALSE;
+    ctx.weather = GetWeather();
+    ctx.terrain = gFieldTimers.terrain;
     ctx.abilities[ctx.battlerAtk] = GetBattlerAbility(battlerAtk);
     ctx.abilities[ctx.battlerDef] = GetBattlerAbility(battlerDef);
     ctx.holdEffects[ctx.battlerAtk] = GetBattlerHoldEffect(battlerAtk);
@@ -2392,8 +2397,12 @@ static u32 CheckTypeEffectiveness(enum BattlerId battlerAtk, enum BattlerId batt
 
     if (modifier == UQ_4_12(0.0))
         return EFFECTIVENESS_NO_EFFECT; // No effect
+    else if (modifier <= UQ_4_12(0.25))
+        return EFFECTIVENESS_MOSTLY_INEFFECTIVE; // Mostly ineffective
     else if (modifier <= UQ_4_12(0.5))
         return EFFECTIVENESS_NOT_VERY_EFFECTIVE; // Not very effective
+    else if (modifier >= UQ_4_12(4.0))
+        return EFFECTIVENESS_EXTREMELY_EFFECTIVE; // Extremely effective
     else if (modifier >= UQ_4_12(2.0))
         return EFFECTIVENESS_SUPER_EFFECTIVE; // Super effective
     return EFFECTIVENESS_NORMAL; // Normal effectiveness
@@ -2421,8 +2430,10 @@ static void MoveSelectionDisplayMoveEffectiveness(u32 foeEffectiveness, enum Bat
 {
     static const u8 noIcon[] =  _("");
     static const u8 effectiveIcon[] =  _("{CIRCLE_HOLLOW}");
+    static const u8 extremeleyEffectiveIcon[] =  _("{STAR}");
     static const u8 superEffectiveIcon[] =  _("{CIRCLE_DOT}");
     static const u8 notVeryEffectiveIcon[] =  _("{TRIANGLE}");
+    static const u8 mostlyIneffectiveIcon[] =  _("{TRIANGLE_UPSIDE_DOWN}");
     static const u8 immuneIcon[] =  _("{BIG_MULT_X}");
     struct ChooseMoveStruct *moveInfo = (struct ChooseMoveStruct *)(&gBattleResources->bufferA[battler][4]);
     u8 *txtPtr;
@@ -2433,11 +2444,17 @@ static void MoveSelectionDisplayMoveEffectiveness(u32 foeEffectiveness, enum Bat
     {
         switch (foeEffectiveness)
         {
+        case EFFECTIVENESS_EXTREMELY_EFFECTIVE:
+            StringCopy(txtPtr, extremeleyEffectiveIcon);
+            break;
         case EFFECTIVENESS_SUPER_EFFECTIVE:
             StringCopy(txtPtr, superEffectiveIcon);
             break;
         case EFFECTIVENESS_NOT_VERY_EFFECTIVE:
             StringCopy(txtPtr, notVeryEffectiveIcon);
+            break;
+        case EFFECTIVENESS_MOSTLY_INEFFECTIVE:
+            StringCopy(txtPtr, mostlyIneffectiveIcon);
             break;
         case EFFECTIVENESS_NO_EFFECT:
             StringCopy(txtPtr, immuneIcon);

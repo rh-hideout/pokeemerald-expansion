@@ -398,7 +398,7 @@ void SetMewAboveGrass(void)
         x = mew->currentCoords.x;
         y = mew->currentCoords.y;
         SetSpritePosToOffsetMapCoords(&x, &y, 8, 8);
-        sGrassSpriteId = CreateSpriteAtEnd(gFieldEffectObjectTemplatePointers[FLDEFFOBJ_LONG_GRASS], x, y, gSprites[mew->spriteId].subpriority - 1);
+        sGrassSpriteId = CreateSpriteAtEndUnchecked(gFieldEffectObjectTemplatePointers[FLDEFFOBJ_LONG_GRASS], x, y, gSprites[mew->spriteId].subpriority - 1);
         if (sGrassSpriteId != MAX_SPRITES)
         {
             struct Sprite *sprite = &gSprites[sGrassSpriteId];

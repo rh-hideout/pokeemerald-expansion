@@ -19,8 +19,4 @@
 #define DAYCARE_LEVEL_MENU_EXIT 5
 #define DAYCARE_EXITED_LEVEL_MENU 2 // would be redundant with above if GF had used the same value
 
-// Array buffers
-#define EGG_MOVES_ARRAY_COUNT           19
-#define EGG_LVL_UP_MOVES_ARRAY_COUNT    (MAX_LEVEL_UP_MOVES > 50 ? MAX_LEVEL_UP_MOVES : 50)
-
 #endif //GUARD_DAYCARE_CONSTANTS_H

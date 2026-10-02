@@ -17,11 +17,11 @@ SINGLE_BATTLE_TEST("Magician gets self-damage recoil after stealing Life Orb")
         ABILITY_POPUP(player, ABILITY_MAGICIAN);
         MESSAGE("Delphox stole the opposing Wobbuffet's Life Orb!");
         HP_BAR(player);
-        MESSAGE("Delphox was hurt by the Life Orb!");
+        MESSAGE("Delphox lost some of its HP!");
         // 2nd turn - Life Orb recoil happens now
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         HP_BAR(player);
-        MESSAGE("Delphox was hurt by the Life Orb!");
+        MESSAGE("Delphox lost some of its HP!");
     } THEN {
         EXPECT_EQ(player->item, ITEM_LIFE_ORB);
         EXPECT_EQ(opponent->item, ITEM_NONE);
@@ -33,7 +33,7 @@ DOUBLE_BATTLE_TEST("Magician prioritizes opponents over allies among valid targe
     u32 playerRightSpeed = 0;
     u32 opponentLeftSpeed = 0;
     u32 opponentRightSpeed = 0;
-    u32 expectedItem = ITEM_NONE;
+    enum Item expectedItem = ITEM_NONE;
 
     PARAMETRIZE { playerRightSpeed = 4; opponentLeftSpeed = 2; opponentRightSpeed = 3; expectedItem = ITEM_ULTRA_BALL; }
     PARAMETRIZE { playerRightSpeed = 3; opponentLeftSpeed = 4; opponentRightSpeed = 2; expectedItem = ITEM_GREAT_BALL; }

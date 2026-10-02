@@ -732,7 +732,7 @@ static void GetOwnerState(void)
 static void GiveChallengePrize(void)
 {
 #if FREE_TRAINER_TOWER == FALSE && IS_FRLG
-    u16 itemId = sPrizeList[sTrainerTowerState->data.floors->prize];
+    enum Item itemId = sPrizeList[sTrainerTowerState->data.floors->prize];
 
     if (TRAINER_TOWER.receivedPrize)
     {

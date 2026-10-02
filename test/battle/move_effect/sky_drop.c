@@ -294,7 +294,7 @@ SINGLE_BATTLE_TEST("Sky Drop: Flying types will still get confused if they rampa
 
 DOUBLE_BATTLE_TEST("Sky Drop user and target can't activate Eject items while the move is being used")
 {
-    u32 item;
+    enum Item item;
 
     PARAMETRIZE { item = ITEM_EJECT_BUTTON; }
     PARAMETRIZE { item = ITEM_EJECT_PACK; }
@@ -335,7 +335,7 @@ SINGLE_BATTLE_TEST("Sky Drop does not mistake a replacement using Fly for its or
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_FLY) == EFFECT_SEMI_INVULNERABLE);
-        ASSUME(GetMoveTwoTurnAttackStatus(MOVE_FLY) == STATE_ON_AIR);
+        ASSUME(GetTwoTurnMoveSemiInvulnerability(MOVE_FLY) == STATE_ON_AIR);
         PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(2); HP(1); Status1(STATUS1_BURN); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(3); }

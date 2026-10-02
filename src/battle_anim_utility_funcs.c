@@ -97,7 +97,7 @@ void AnimTask_BlendBattleAnimPalExclude(u8 taskId)
     for (battler = 0; battler < MAX_BATTLERS_COUNT; battler++)
     {
         if (battler != animBattlers[0] && battler != animBattlers[1] && IsBattlerSpriteVisible(battler))
-            selectedPalettes |= 0x10000 << GetSpritePalIdxByBattler(battler);
+            selectedPalettes |= 0x10000 << battler;
     }
 
     StartBlendAnimSpriteColor(taskId, selectedPalettes);
@@ -744,12 +744,6 @@ void AnimTask_GetAttackerSide(u8 taskId)
     DestroyAnimVisualTask(taskId);
 }
 
-void AnimTask_GetTargetSide(u8 taskId)
-{
-    gBattleAnimArgs[ARG_RET_ID] = GetBattlerSide(gBattleAnimTarget);
-    DestroyAnimVisualTask(taskId);
-}
-
 void AnimTask_GetTargetIsAttackerPartner(u8 taskId)
 {
     gBattleAnimArgs[ARG_RET_ID] = GetPartnerBattler(gBattleAnimAttacker) == gBattleAnimTarget;
@@ -768,7 +762,7 @@ void AnimTask_SetAllNonAttackersInvisiblity(u8 taskId)
     DestroyAnimVisualTask(taskId);
 }
 
-void StartMonScrollingBgMask(u8 taskId, int UNUSED unused, u16 scrollSpeed, enum BattlerId battler, bool8 includePartner, u8 numFadeSteps, u8 fadeStepDelay, u8 duration, const u32 *gfx, const u32 *tilemap, const u16 *palette)
+void StartMonScrollingBgMask(u8 taskId, u16 scrollSpeed, enum BattlerId battler, bool8 includePartner, u8 numFadeSteps, u8 fadeStepDelay, u8 duration, const u32 *gfx, const u32 *tilemap, const u16 *palette)
 {
     enum Species species;
     u8 spriteId, spriteId2;
@@ -889,15 +883,9 @@ static void UpdateMonScrollingBgMask(u8 taskId)
     }
 }
 
-void AnimTask_GetBattleEnvironment(u8 taskId)
-{
-    gBattleAnimArgs[0] = gBattleEnvironment;
-    DestroyAnimVisualTask(taskId);
-}
-
 void AnimTask_GetFieldTerrain(u8 taskId)
 {
-    gBattleAnimArgs[0] = gFieldStatuses & STATUS_FIELD_TERRAIN_ANY;
+    gBattleAnimArgs[0] = gFieldTimers.terrain;
     DestroyAnimVisualTask(taskId);
 }
 
@@ -1064,15 +1052,6 @@ void AnimTask_IsDoubleBattle(u8 taskId)
     DestroyAnimVisualTask(taskId);
 }
 
-void AnimTask_CanBattlerSwitch(u8 taskId)
-{
-    if (gBattleTypeFlags & BATTLE_TYPE_ARENA)
-        gBattleAnimArgs[ARG_RET_ID] = FALSE;
-    else
-        gBattleAnimArgs[ARG_RET_ID] = CanBattlerSwitch(GetAnimBattlerId(gBattleAnimArgs[0]));
-    DestroyAnimVisualTask(taskId);
-}
-
 void AnimTask_SetInvisible(u8 taskId)
 {
     enum BattlerId battlerId = GetAnimBattlerId(gBattleAnimArgs[0]);
@@ -1086,4 +1065,69 @@ void AnimTask_SetAnimTargetToAttackerOpposite(u8 taskId)
 {
     gBattleAnimTarget = GetOppositeBattler(gBattleAnimAttacker);
     DestroyAnimVisualTask(taskId);
+}
+
+static const u8 sBattleAnimBgCnts[] = {REG_OFFSET_BG0CNT, REG_OFFSET_BG1CNT, REG_OFFSET_BG2CNT, REG_OFFSET_BG3CNT};
+
+void SetAnimBgAttribute(u8 bgId, u8 attributeId, u8 value)
+{
+    if (bgId < 4)
+    {
+        u32 bgCnt = GetGpuReg(sBattleAnimBgCnts[bgId]);
+        switch (attributeId)
+        {
+        case BG_ANIM_SCREEN_SIZE:
+            ((vBgCnt *)&bgCnt)->screenSize = value;
+            break;
+        case BG_ANIM_AREA_OVERFLOW_MODE:
+            ((vBgCnt *)&bgCnt)->areaOverflowMode = value;
+            break;
+        case BG_ANIM_MOSAIC:
+            ((vBgCnt *)&bgCnt)->mosaic = value;
+            break;
+        case BG_ANIM_CHAR_BASE_BLOCK:
+            ((vBgCnt *)&bgCnt)->charBaseBlock = value;
+            break;
+        case BG_ANIM_PRIORITY:
+            ((vBgCnt *)&bgCnt)->priority = value;
+            break;
+        case BG_ANIM_PALETTES_MODE:
+            ((vBgCnt *)&bgCnt)->palettes = value;
+            break;
+        case BG_ANIM_SCREEN_BASE_BLOCK:
+            ((vBgCnt *)&bgCnt)->screenBaseBlock = value;
+            break;
+        }
+
+        SetGpuReg(sBattleAnimBgCnts[bgId], bgCnt);
+    }
+}
+
+int GetAnimBgAttribute(u8 bgId, u8 attributeId)
+{
+    u32 bgCnt;
+
+    if (bgId < 4)
+    {
+        bgCnt = GetGpuReg(sBattleAnimBgCnts[bgId]);
+        switch (attributeId)
+        {
+        case BG_ANIM_SCREEN_SIZE:
+            return ((vBgCnt *)&bgCnt)->screenSize;
+        case BG_ANIM_AREA_OVERFLOW_MODE:
+            return ((vBgCnt *)&bgCnt)->areaOverflowMode;
+        case BG_ANIM_MOSAIC:
+            return ((vBgCnt *)&bgCnt)->mosaic;
+        case BG_ANIM_CHAR_BASE_BLOCK:
+            return ((vBgCnt *)&bgCnt)->charBaseBlock;
+        case BG_ANIM_PRIORITY:
+            return ((vBgCnt *)&bgCnt)->priority;
+        case BG_ANIM_PALETTES_MODE:
+            return ((vBgCnt *)&bgCnt)->palettes;
+        case BG_ANIM_SCREEN_BASE_BLOCK:
+            return ((vBgCnt *)&bgCnt)->screenBaseBlock;
+        }
+    }
+
+    return 0;
 }

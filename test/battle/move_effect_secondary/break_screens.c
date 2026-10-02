@@ -12,6 +12,71 @@ ASSUMPTIONS
     ASSUME(GetMoveEffect(MOVE_AURORA_VEIL) == EFFECT_AURORA_VEIL);
 }
 
+SINGLE_BATTLE_TEST("Screen-breaking moves do not announce expiration again on later turns")
+{
+    enum Move screen;
+    enum Move move;
+
+    PARAMETRIZE { screen = MOVE_REFLECT; move = MOVE_BRICK_BREAK; }
+    PARAMETRIZE { screen = MOVE_LIGHT_SCREEN; move = MOVE_BRICK_BREAK; }
+    PARAMETRIZE { screen = MOVE_AURORA_VEIL; move = MOVE_BRICK_BREAK; }
+    PARAMETRIZE { screen = MOVE_REFLECT; move = MOVE_PSYCHIC_FANGS; }
+    PARAMETRIZE { screen = MOVE_LIGHT_SCREEN; move = MOVE_PSYCHIC_FANGS; }
+    PARAMETRIZE { screen = MOVE_AURORA_VEIL; move = MOVE_PSYCHIC_FANGS; }
+    PARAMETRIZE { screen = MOVE_REFLECT; move = MOVE_RAGING_BULL; }
+    PARAMETRIZE { screen = MOVE_LIGHT_SCREEN; move = MOVE_RAGING_BULL; }
+    PARAMETRIZE { screen = MOVE_AURORA_VEIL; move = MOVE_RAGING_BULL; }
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SNOWSCAPE); MOVE(opponent, screen); }
+        TURN { MOVE(player, move); }
+        TURN {}
+        TURN {}
+        TURN {}
+        TURN {}
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SNOWSCAPE, player);
+        ANIMATION(ANIM_TYPE_MOVE, screen, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, move, player);
+        HP_BAR(opponent);
+        NONE_OF {
+            MESSAGE("The opposing side's Reflect wore off!");
+            MESSAGE("The opposing side's Light Screen wore off!");
+            MESSAGE("The opposing side's Aurora Veil wore off!");
+        }
+    }
+}
+
+SINGLE_BATTLE_TEST("Screen-breaking moves do not announce Reflect when breaking a subsequent Light Screen")
+{
+    enum Move move;
+
+    PARAMETRIZE { move = MOVE_BRICK_BREAK; }
+    PARAMETRIZE { move = MOVE_PSYCHIC_FANGS; }
+    PARAMETRIZE { move = MOVE_RAGING_BULL; }
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_REFLECT); MOVE(player, move); }
+        TURN { MOVE(opponent, MOVE_LIGHT_SCREEN); MOVE(player, move); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_REFLECT, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, move, player);
+        MESSAGE("The opposing side's Reflect wore off!");
+        HP_BAR(opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_LIGHT_SCREEN, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, move, player);
+        NOT MESSAGE("The opposing side's Reflect wore off!");
+        MESSAGE("The opposing side's Light Screen wore off!");
+        HP_BAR(opponent);
+    }
+}
+
 SINGLE_BATTLE_TEST("Brick Break, Psychic Fangs, and Raging Bull remove Light Screen, Reflect and Aurora Veil from the target's side of the field")
 {
     enum Move move;
@@ -40,13 +105,13 @@ SINGLE_BATTLE_TEST("Brick Break, Psychic Fangs, and Raging Bull remove Light Scr
         switch (move)
         {
             case MOVE_REFLECT:
-                MESSAGE("The opposing team's Reflect wore off!");
+                MESSAGE("The opposing side's Reflect wore off!");
                 break;
             case MOVE_LIGHT_SCREEN:
-                MESSAGE("The opposing team's Light Screen wore off!");
+                MESSAGE("The opposing side's Light Screen wore off!");
                 break;
             default:
-                MESSAGE("The opposing team's Aurora Veil wore off!");
+                MESSAGE("The opposing side's Aurora Veil wore off!");
                 break;
         }
         HP_BAR(opponent);
@@ -82,13 +147,13 @@ SINGLE_BATTLE_TEST("Brick Break, Psychic Fangs, and Raging Bull don't remove Lig
             switch (move)
             {
                 case MOVE_REFLECT:
-                    MESSAGE("The opposing team's Reflect wore off!");
+                    MESSAGE("The opposing side's Reflect wore off!");
                     break;
                 case MOVE_LIGHT_SCREEN:
-                    MESSAGE("The opposing team's Light Screen wore off!");
+                    MESSAGE("The opposing side's Light Screen wore off!");
                     break;
                 default:
-                    MESSAGE("The opposing team's Aurora Veil wore off!");
+                    MESSAGE("The opposing side's Aurora Veil wore off!");
                     break;
             }
             HP_BAR(opponent);
@@ -126,13 +191,13 @@ SINGLE_BATTLE_TEST("Brick Break, Psychic Fangs, and Raging Bull don't remove Lig
             switch (move)
             {
                 case MOVE_REFLECT:
-                    MESSAGE("The opposing team's Reflect wore off!");
+                    MESSAGE("The opposing side's Reflect wore off!");
                     break;
                 case MOVE_LIGHT_SCREEN:
-                    MESSAGE("The opposing team's Light Screen wore off!");
+                    MESSAGE("The opposing side's Light Screen wore off!");
                     break;
                 default:
-                    MESSAGE("The opposing team's Aurora Veil wore off!");
+                    MESSAGE("The opposing side's Aurora Veil wore off!");
                     break;
             }
             HP_BAR(opponent);
@@ -169,13 +234,13 @@ SINGLE_BATTLE_TEST("Brick Break, Psychic Fangs, and Raging Bull don't remove Lig
             switch (move)
             {
                 case MOVE_REFLECT:
-                    MESSAGE("The opposing team's Reflect wore off!");
+                    MESSAGE("The opposing side's Reflect wore off!");
                     break;
                 case MOVE_LIGHT_SCREEN:
-                    MESSAGE("The opposing team's Light Screen wore off!");
+                    MESSAGE("The opposing side's Light Screen wore off!");
                     break;
                 default:
-                    MESSAGE("The opposing team's Aurora Veil wore off!");
+                    MESSAGE("The opposing side's Aurora Veil wore off!");
                     break;
             }
             HP_BAR(opponent);
@@ -216,13 +281,13 @@ DOUBLE_BATTLE_TEST("Brick Break, Psychic Fangs, and Raging Bull can remove Light
         switch (move)
         {
             case MOVE_REFLECT:
-                MESSAGE("Your team's Reflect wore off!");
+                MESSAGE("Your side's Reflect wore off!");
                 break;
             case MOVE_LIGHT_SCREEN:
-                MESSAGE("Your team's Light Screen wore off!");
+                MESSAGE("Your side's Light Screen wore off!");
                 break;
             default:
-                MESSAGE("Your team's Aurora Veil wore off!");
+                MESSAGE("Your side's Aurora Veil wore off!");
                 break;
         }
         HP_BAR(playerLeft);
@@ -247,7 +312,7 @@ SINGLE_BATTLE_TEST("Brick Break, Psychic Fangs, and Raging Bull can remove scree
         ANIMATION(ANIM_TYPE_MOVE, MOVE_REFLECT, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, player);
         ANIMATION(ANIM_TYPE_MOVE, move, opponent);
-        MESSAGE("Your team's Reflect wore off!");
+        MESSAGE("Your side's Reflect wore off!");
         SUB_HIT(player);
     }
 }
@@ -272,8 +337,8 @@ SINGLE_BATTLE_TEST("Brick Break, Psychic Fangs, and Raging Bull remove screens i
         ANIMATION(ANIM_TYPE_MOVE, MOVE_LIGHT_SCREEN, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_AURORA_VEIL, opponent);
         ANIMATION(ANIM_TYPE_MOVE, move, player);
-        MESSAGE("The opposing team's Reflect wore off!");
-        MESSAGE("The opposing team's Light Screen wore off!");
-        MESSAGE("The opposing team's Aurora Veil wore off!");
+        MESSAGE("The opposing side's Reflect wore off!");
+        MESSAGE("The opposing side's Light Screen wore off!");
+        MESSAGE("The opposing side's Aurora Veil wore off!");
     }
 }

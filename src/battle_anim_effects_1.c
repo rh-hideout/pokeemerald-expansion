@@ -6,6 +6,7 @@
 #include "decompress.h"
 #include "gpu_regs.h"
 #include "graphics.h"
+#include "item_icon.h"
 #include "main.h"
 #include "math_util.h"
 #include "palette.h"
@@ -4020,12 +4021,9 @@ static void AnimConstrictBinding(struct Sprite *sprite)
 
 static void AnimConstrictBinding_Step1(struct Sprite *sprite)
 {
-    u8 UNUSED spriteId;
-
     if ((u16)gBattleAnimArgs[7] == 0xFFFF)
     {
         sprite->affineAnimPaused = 0;
-        spriteId = GetAnimBattlerSpriteId(ANIM_TARGET);
         sprite->data[0] = 0x100;
         sprite->callback = AnimConstrictBinding_Step2;
     }
@@ -4033,7 +4031,6 @@ static void AnimConstrictBinding_Step1(struct Sprite *sprite)
 
 static void AnimConstrictBinding_Step2(struct Sprite *sprite)
 {
-    u8 UNUSED spriteId = GetAnimBattlerSpriteId(ANIM_TARGET);
     if (!sprite->data[2])
         sprite->data[0] += 11;
     else
@@ -4372,6 +4369,30 @@ static void AnimKnockOffItem(struct Sprite *sprite)
     }
 }
 
+void AnimTask_KnockOffItem(u8 taskId)
+{
+    u8 iconSpriteId = AddItemIconSprite(ANIM_TAG_ITEM_BAG, ANIM_TAG_ITEM_BAG, gLastUsedItem);
+
+    if (iconSpriteId != MAX_SPRITES)
+    {
+        struct Sprite* sprite = &gSprites[iconSpriteId];
+        sprite->x = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X);
+        sprite->y = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y) + (GetBattlerSpriteCoordAttr(gBattleAnimTarget, BATTLER_COORD_ATTR_HEIGHT) / 2);
+        sprite->oam.priority = 2;
+        sprite->oam.affineMode = ST_OAM_AFFINE_NORMAL;
+        sprite->affineAnims = gFallingBagAffineAnimTable;
+        sprite->callback = AnimKnockOffItem;
+
+		CalcCenterToCornerVec(sprite, sprite->oam.shape, sprite->oam.size, sprite->oam.affineMode);
+		InitSpriteAffineAnim(sprite);
+		++gAnimVisualTaskCount;
+    }
+
+    FreeSpriteTilesByTag(ANIM_TAG_ITEM_BAG);
+    FreeSpritePaletteByTag(ANIM_TAG_ITEM_BAG);
+    DestroyAnimVisualTask(taskId);
+}
+
 // Animates a heal particle upward.
 static void AnimPresentHealParticle(struct Sprite *sprite)
 {
@@ -4438,6 +4459,30 @@ static void AnimItemSteal_Step3(struct Sprite *sprite)
         sprite->callback = AnimItemSteal_Step2;
         PlaySE12WithPanning(SE_M_BUBBLE2, BattleAnimAdjustPanning(SOUND_PAN_ATTACKER));
     }
+}
+
+void AnimTask_StealItem(u8 taskId)
+{
+    u8 iconSpriteId = AddItemIconSprite(ANIM_TAG_ITEM_BAG, ANIM_TAG_ITEM_BAG, gLastUsedItem);
+
+    if (iconSpriteId != MAX_SPRITES)
+    {
+        struct Sprite* sprite = &gSprites[iconSpriteId];
+        sprite->x = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X);
+        sprite->y = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y) + (GetBattlerSpriteCoordAttr(gBattleAnimTarget, BATTLER_COORD_ATTR_HEIGHT) / 2);
+        sprite->oam.priority = 2;
+        sprite->oam.affineMode = ST_OAM_AFFINE_NORMAL;
+        sprite->affineAnims = gFallingBagAffineAnimTable;
+        sprite->callback = AnimItemSteal;
+
+		CalcCenterToCornerVec(sprite, sprite->oam.shape, sprite->oam.size, sprite->oam.affineMode);
+		InitSpriteAffineAnim(sprite);
+		++gAnimVisualTaskCount;
+    }
+
+    DestroyAnimVisualTask(taskId);
+    FreeSpriteTilesByTag(ANIM_TAG_ITEM_BAG);
+    FreeSpritePaletteByTag(ANIM_TAG_ITEM_BAG);
 }
 
 // Moves a bag in a circular motion.
@@ -4558,9 +4603,12 @@ void AnimTask_LeafBlade(u8 taskId)
     task->data[5] = (!IsOnPlayerSide(gBattleAnimTarget)) ? 1 : -1;
     task->data[9] = 56 - (task->data[5] * 64);
     task->data[8] = task->data[7] - task->data[9] + task->data[6];
-    task->data[2] = CreateSprite(&gLeafBladeSpriteTemplate, task->data[8], task->data[9], task->data[4]);
+    task->data[2] = CreateSpriteUnchecked(&gLeafBladeSpriteTemplate, task->data[8], task->data[9], task->data[4]);
     if (task->data[2] == MAX_SPRITES)
+    {
         DestroyAnimVisualTask(taskId);
+        return;
+    }
 
     gSprites[task->data[2]].data[0] = 10;
     gSprites[task->data[2]].data[1] = task->data[8];
@@ -4777,7 +4825,7 @@ static void AnimTask_LeafBlade_Step2(struct Task *task, u8 taskId)
         task->data[14] = 0;
         spriteX = gSprites[task->data[2]].x + gSprites[task->data[2]].x2;
         spriteY = gSprites[task->data[2]].y + gSprites[task->data[2]].y2;
-        spriteId = CreateSprite(&gLeafBladeSpriteTemplate, spriteX, spriteY, task->data[4]);
+        spriteId = CreateSpriteUnchecked(&gLeafBladeSpriteTemplate, spriteX, spriteY, task->data[4]);
         if (spriteId != MAX_SPRITES)
         {
             gSprites[spriteId].data[6] = taskId;

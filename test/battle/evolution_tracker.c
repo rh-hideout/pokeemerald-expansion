@@ -57,7 +57,7 @@ WILD_BATTLE_TEST("Evolution Tracker: Bisharp KO-ing a Bisharp that doesn't hold 
 
 WILD_BATTLE_TEST("Evolution Tracker: Bisharp KO-ing a non-Bisharp that holds Leader's Crest doesn't increase tracker")
 {
-    u32 species;
+    enum Species species;
 
     PARAMETRIZE { species = SPECIES_WOBBUFFET; }
     PARAMETRIZE { species = SPECIES_PAWNIARD; }

@@ -16,6 +16,7 @@
 #include "string_util.h"
 #include "task.h"
 #include "text.h"
+#include "trainer_util.h"
 #include "constants/abilities.h"
 #include "constants/battle_frontier.h"
 #include "constants/battle_frontier_mons.h"
@@ -180,10 +181,9 @@ void DoFacilityTrainerBattle(struct ScriptContext *ctx)
 
 void FacilityTrainerBattle(struct ScriptContext *ctx)
 {
-    InitTrainerBattleParameter();
-
     u8 facility = ScriptReadByte(ctx);
-    ctx->scriptPtr = BattleSetup_ConfigureFacilityTrainerBattle(facility, ctx->scriptPtr);
+
+    ConfigureFacilityTrainerBattle(facility, ctx->scriptPtr);
 }
 
 void FillFrontierTrainerParty(u8 monsCount)
@@ -310,15 +310,16 @@ void CreateFacilityMon(const struct TrainerMon *fmon, u16 level, u8 fixedIV, u32
 {
     enum PokeBall ball = (fmon->ball == 0xFF) ? Random() % POKEBALL_COUNT : fmon->ball;
     enum Move move;
-    u32 personality = 0, ability, friendship, j;
+    u32 personality = 0, friendship, j;
+    enum Ability ability;
 
     if (fmon->gender == TRAINER_MON_MALE)
     {
-        personality = GeneratePersonalityForGender(MON_MALE, fmon->species);
+        personality = GeneratePersonalityForGender(MON_MALE, fmon->species) + 0x1000;
     }
     else if (fmon->gender == TRAINER_MON_FEMALE)
     {
-        personality = GeneratePersonalityForGender(MON_FEMALE, fmon->species);
+        personality = GeneratePersonalityForGender(MON_FEMALE, fmon->species) + 0x1000;
     }
 
     ModifyPersonalityForNature(&personality, fmon->nature);

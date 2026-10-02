@@ -86,11 +86,6 @@ void AgbRFU_SoftReset(void)
     gSTWIStatus->sending = FALSE;
 }
 
-void STWI_set_MS_mode(u8 mode)
-{
-    gSTWIStatus->msMode = mode;
-}
-
 u16 STWI_read_status(u8 index)
 {
     switch (index)
@@ -159,15 +154,6 @@ void STWI_send_LinkStatusREQ(void)
     }
 }
 
-void STWI_send_VersionStatusREQ(void)
-{
-    if (!STWI_init(ID_VERSION_STATUS_REQ))
-    {
-        gSTWIStatus->reqLength = 0;
-        STWI_start_Command();
-    }
-}
-
 void STWI_send_SystemStatusREQ(void)
 {
     if (!STWI_init(ID_SYSTEM_STATUS_REQ))
@@ -180,15 +166,6 @@ void STWI_send_SystemStatusREQ(void)
 void STWI_send_SlotStatusREQ(void)
 {
     if (!STWI_init(ID_SLOT_STATUS_REQ))
-    {
-        gSTWIStatus->reqLength = 0;
-        STWI_start_Command();
-    }
-}
-
-void STWI_send_ConfigStatusREQ(void)
-{
-    if (!STWI_init(ID_CONFIG_STATUS_REQ))
     {
         gSTWIStatus->reqLength = 0;
         STWI_start_Command();
@@ -362,47 +339,6 @@ void STWI_send_MS_ChangeREQ(void)
     if (!STWI_init(ID_MS_CHANGE_REQ))
     {
         gSTWIStatus->reqLength = 0;
-        STWI_start_Command();
-    }
-}
-
-void STWI_send_DataReadyAndChangeREQ(u8 unk)
-{
-    if (!STWI_init(ID_DATA_READY_AND_CHANGE_REQ))
-    {
-        if (!unk)
-        {
-            gSTWIStatus->reqLength = 0;
-        }
-        else
-        {
-            u8 *packetBytes;
-
-            gSTWIStatus->reqLength = 1;
-            packetBytes = gSTWIStatus->txPacket->rfuPacket8.data;
-            packetBytes += sizeof(u32);
-            *packetBytes++ = unk;
-            *packetBytes++ = 0;
-            *packetBytes++ = 0;
-            *packetBytes = 0;
-        }
-        STWI_start_Command();
-    }
-}
-
-void STWI_send_DisconnectedAndChangeREQ(u8 unk0, u8 unk1)
-{
-    if (!STWI_init(ID_DISCONNECTED_AND_CHANGE_REQ))
-    {
-        u8 *packetBytes;
-
-        gSTWIStatus->reqLength = 1;
-        packetBytes = gSTWIStatus->txPacket->rfuPacket8.data;
-        packetBytes += sizeof(u32);
-        *packetBytes++ = unk0;
-        *packetBytes++ = unk1;
-        *packetBytes++ = 0;
-        *packetBytes = 0;
         STWI_start_Command();
     }
 }

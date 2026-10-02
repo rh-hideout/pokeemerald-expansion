@@ -109,7 +109,7 @@ SINGLE_BATTLE_TEST("Orichalcum Pulse boosts physical moves by 33% in sun", s16 d
 
 SINGLE_BATTLE_TEST("Orichalcum Pulse boost applies even if the target holds Utility Umbrella", s16 damage)
 {
-    u16 targetItem;
+    enum Item targetItem;
     PARAMETRIZE { targetItem = ITEM_NONE; }
     PARAMETRIZE { targetItem = ITEM_UTILITY_UMBRELLA; }
 
@@ -131,7 +131,7 @@ SINGLE_BATTLE_TEST("Orichalcum Pulse boost applies even if the target holds Util
 
 SINGLE_BATTLE_TEST("Orichalcum Pulse does not boost physical moves if holder has Utility Umbrella", s16 damage)
 {
-    u16 holdItem;
+    enum Item holdItem;
     PARAMETRIZE { holdItem = ITEM_NONE; }
     PARAMETRIZE { holdItem = ITEM_UTILITY_UMBRELLA; }
 
@@ -148,5 +148,24 @@ SINGLE_BATTLE_TEST("Orichalcum Pulse does not boost physical moves if holder has
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {
         EXPECT_MUL_EQ(results[1].damage, Q_4_12(1.3333), results[0].damage);
+    }
+}
+
+SINGLE_BATTLE_TEST("Orichalcum Pulse activates when entering battle in sun (Overworld Sun)")
+{
+    SetStartingStatus(STARTING_STATUS_WEATHER_SUN);
+
+    GIVEN {
+        WITH_CONFIG(B_OVERWORLD_WEATHER_OVERRIDE, GEN_9);
+        PLAYER(SPECIES_KORAIDON) { Ability(ABILITY_ORICHALCUM_PULSE); }
+        OPPONENT(SPECIES_WOBBUFFET) {};
+    } WHEN {
+        TURN {}
+    } SCENE {
+        ABILITY_POPUP(player, ABILITY_ORICHALCUM_PULSE);
+        NOT MESSAGE("But it failed!");
+        MESSAGE("Koraidon basked in the sunlight, sending its ancient pulse into a frenzy!");
+    } THEN {
+        ResetStartingStatuses();
     }
 }

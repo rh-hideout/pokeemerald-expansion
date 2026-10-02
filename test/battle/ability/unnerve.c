@@ -16,7 +16,7 @@ SINGLE_BATTLE_TEST("Unnerve prevents opposing Pokémon from eating their own ber
         TURN {}
     } SCENE {
         ABILITY_POPUP(player, ability);
-        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
         HP_BAR(opponent);
     }
 }
@@ -52,7 +52,7 @@ SINGLE_BATTLE_TEST("Unnerve prints the correct string (player)")
         TURN {}
     } SCENE {
         ABILITY_POPUP(player, ability);
-        MESSAGE("The opposing team is too nervous to eat Berries!");
+        MESSAGE("The opposing side is too nervous to eat Berries!");
     }
 }
 
@@ -69,7 +69,7 @@ SINGLE_BATTLE_TEST("Unnerve prints the correct string (opponent)")
         TURN {}
     } SCENE {
         ABILITY_POPUP(opponent, ability);
-        MESSAGE("Your team is too nervous to eat Berries!");
+        MESSAGE("Your side is too nervous to eat Berries!");
     }
 }
 

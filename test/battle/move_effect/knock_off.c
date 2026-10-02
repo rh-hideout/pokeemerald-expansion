@@ -215,7 +215,6 @@ SINGLE_BATTLE_TEST("Knock Off does not prevent targets from receiving another it
         if (B_KNOCK_OFF_REMOVAL >= GEN_5) {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_BESTOW, player);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT);
-            MESSAGE("The opposing Wobbuffet restored a little HP using its Leftovers!");
         } else {
             NOT { ANIMATION(ANIM_TYPE_MOVE, MOVE_BESTOW, player); }
             MESSAGE("But it failed!");
@@ -392,9 +391,10 @@ SINGLE_BATTLE_TEST("Knock Off doesn't knock off begin-battle form-change hold it
     }
 }
 
-SINGLE_BATTLE_TEST("Knock Off does not activate if user faints")
+SINGLE_BATTLE_TEST("Knock Off does not activate if user faints (Gen9)")
 {
     GIVEN {
+        WITH_CONFIG(B_FAINT_MOVE_EFFECT_TIMING, GEN_9);
         PLAYER(SPECIES_WOBBUFFET) { HP(1); }
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_ROCKY_HELMET); }
     } WHEN {
@@ -408,6 +408,29 @@ SINGLE_BATTLE_TEST("Knock Off does not activate if user faints")
     }
 }
 
+SINGLE_BATTLE_TEST("Knock Off does activate if user faints (Champions)")
+{
+    GIVEN {
+        WITH_CONFIG(B_FAINT_MOVE_EFFECT_TIMING, GEN_CHAMPIONS);
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_ROCKY_HELMET); }
+    } WHEN {
+        TURN {
+            MOVE(player, MOVE_KNOCK_OFF);
+            SEND_OUT(player, 1);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_KNOCK_OFF, player);
+        MESSAGE("Wobbuffet was hurt by the opposing Wobbuffet's Rocky Helmet!");
+        MESSAGE("Wobbuffet fainted!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_KNOCKOFF);
+        MESSAGE("Wobbuffet knocked off the opposing Wobbuffet's Rocky Helmet!");
+    } THEN {
+        EXPECT(opponent->item == ITEM_NONE);
+    }
+}
+
 SINGLE_BATTLE_TEST("Knock Off doesn't remove item if it's prevented by Sticky Hold")
 {
     GIVEN {
@@ -418,6 +441,23 @@ SINGLE_BATTLE_TEST("Knock Off doesn't remove item if it's prevented by Sticky Ho
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_STICKY_HOLD);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
+    }
+}
+
+SINGLE_BATTLE_TEST("Knock Off is boosted against targets with Sticky Hold", s16 damage)
+{
+    enum Ability ability;
+
+    PARAMETRIZE { ability = ABILITY_STENCH; }
+    PARAMETRIZE { ability = ABILITY_STICKY_HOLD; }
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_MUK) { MaxHP(100); Item(ITEM_MASTER_BALL); Ability(ability); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_KNOCK_OFF); }
+    } FINALLY {
+        EXPECT_MUL_EQ(results[0].damage, UQ_4_12(1.0), results[1].damage);
     }
 }
 
@@ -501,8 +541,60 @@ SINGLE_BATTLE_TEST("Knock Off used by a Paradox mon doesn't knock off a non-Para
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_KNOCK_OFF); }
     } SCENE {
-        NOT MESSAGE("Great Tust knocked off the opposing Wobbuffet's Booster Energy!");
+        NOT MESSAGE("Great Tusk knocked off the opposing Wobbuffet's Booster Energy!");
     } THEN {
         EXPECT(opponent->item == ITEM_BOOSTER_ENERGY);
+    }
+}
+
+SINGLE_BATTLE_TEST("Knock Off does not remove items that can change the form of the Knock Off user (Gen9-)", s16 damage)
+{
+    enum Item item;
+    
+    PARAMETRIZE { item = ITEM_MASTER_BALL; }
+    PARAMETRIZE { item = ITEM_MALAMARITE; }
+
+    GIVEN {
+        WITH_CONFIG(B_KNOCK_OFF_REMOVAL, GEN_9);
+        PLAYER(SPECIES_MALAMAR);
+        OPPONENT(SPECIES_WOBBUFFET) { Item(item); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_KNOCK_OFF); }
+    } SCENE {
+        NOT MESSAGE("Malamar knocked off the opposing Wobbuffet's Malamarite!");
+    } THEN {
+        if (item == ITEM_MALAMARITE)
+        {
+            EXPECT(opponent->item == ITEM_MALAMARITE);
+        }
+    } FINALLY {
+        EXPECT_MUL_EQ(results[1].damage, UQ_4_12(1.5), results[0].damage);
+    }
+}
+
+SINGLE_BATTLE_TEST("Knock Off remove items that can change the form of the Knock Off user (Champions)", s16 damage)
+{
+    enum Item item;
+    
+    PARAMETRIZE { item = ITEM_MASTER_BALL; }
+    PARAMETRIZE { item = ITEM_MALAMARITE; }
+
+    GIVEN {
+        WITH_CONFIG(B_KNOCK_OFF_REMOVAL, GEN_CHAMPIONS);
+        PLAYER(SPECIES_MALAMAR);
+        OPPONENT(SPECIES_WOBBUFFET) { Item(item); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_KNOCK_OFF); }
+    } SCENE {
+        if (item == ITEM_MASTER_BALL)
+        {
+            MESSAGE("Malamar knocked off the opposing Wobbuffet's Master Ball!");
+        } else {
+            MESSAGE("Malamar knocked off the opposing Wobbuffet's Malamarite!");
+        }
+    } THEN {
+        EXPECT(opponent->item == ITEM_NONE);
+    } FINALLY {
+        EXPECT_MUL_EQ(results[1].damage, UQ_4_12(1.0), results[0].damage);
     }
 }

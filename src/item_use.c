@@ -1000,12 +1000,6 @@ static void Task_UseRepel(u8 taskId)
             DisplayItemMessageInBattlePyramid(taskId, gStringVar4, Task_CloseBattlePyramidBagMessage);
     }
 }
-void HandleUseExpiredRepel(struct ScriptContext *ctx)
-{
-#if VAR_LAST_REPEL_LURE_USED != 0
-    VarSet(VAR_REPEL_STEP_COUNT, GetItemHoldEffectParam(VarGet(VAR_LAST_REPEL_LURE_USED)));
-#endif
-}
 
 void ItemUseOutOfBattle_Lure(u8 taskId)
 {
@@ -1043,13 +1037,6 @@ static void Task_UseLure(u8 taskId)
         else
             DisplayItemMessageInBattlePyramid(taskId, gStringVar4, Task_CloseBattlePyramidBagMessage);
     }
-}
-
-void HandleUseExpiredLure(struct ScriptContext *ctx)
-{
-#if VAR_LAST_REPEL_LURE_USED != 0
-    VarSet(VAR_REPEL_STEP_COUNT, GetItemHoldEffectParam(VarGet(VAR_LAST_REPEL_LURE_USED)) | REPEL_LURE_MASK);
-#endif
 }
 
 static void Task_UsedBlackWhiteFlute(u8 taskId)
@@ -1155,44 +1142,6 @@ bool32 CanThrowBall(void)
 static const u8 sText_CantThrowPokeBall_TwoMons[] = _("Cannot throw a ball!\nThere are two Pokémon out there!\p");
 static const u8 sText_CantThrowPokeBall_SemiInvulnerable[] = _("Cannot throw a ball!\nThere's no Pokémon in sight!\p");
 static const u8 sText_CantThrowPokeBall_Disabled[] = _("POKé BALLS cannot be used\nright now!\p");
-void ItemUseInBattle_PokeBall(u8 taskId)
-{
-    switch (GetBallThrowableState())
-    {
-    case BALL_THROW_ABLE:
-    default:
-        RemoveBagItem(gSpecialVar_ItemId, 1);
-        if (CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE)
-            Task_FadeAndCloseBagMenu(taskId);
-        else
-            CloseBattlePyramidBag(taskId);
-        break;
-    case BALL_THROW_UNABLE_TWO_MONS:
-        if (CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE)
-            DisplayItemMessage(taskId, FONT_NORMAL, sText_CantThrowPokeBall_TwoMons, CloseItemMessage);
-        else
-            DisplayItemMessageInBattlePyramid(taskId, sText_CantThrowPokeBall_TwoMons, Task_CloseBattlePyramidBagMessage);
-        break;
-    case BALL_THROW_UNABLE_NO_ROOM:
-        if (CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE)
-            DisplayItemMessage(taskId, FONT_NORMAL, gText_BoxFull, CloseItemMessage);
-        else
-            DisplayItemMessageInBattlePyramid(taskId, gText_BoxFull, Task_CloseBattlePyramidBagMessage);
-        break;
-    case BALL_THROW_UNABLE_SEMI_INVULNERABLE:
-        if (CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE)
-            DisplayItemMessage(taskId, FONT_NORMAL, sText_CantThrowPokeBall_SemiInvulnerable, CloseItemMessage);
-        else
-            DisplayItemMessageInBattlePyramid(taskId, sText_CantThrowPokeBall_SemiInvulnerable, Task_CloseBattlePyramidBagMessage);
-        break;
-    case BALL_THROW_UNABLE_DISABLED_FLAG:
-        if (CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE)
-            DisplayItemMessage(taskId, FONT_NORMAL, sText_CantThrowPokeBall_Disabled, CloseItemMessage);
-        else
-            DisplayItemMessageInBattlePyramid(taskId, sText_CantThrowPokeBall_Disabled, Task_CloseBattlePyramidBagMessage);
-        break;
-    }
-}
 
 static void ItemUseInBattle_ShowPartyMenu(u8 taskId)
 {
@@ -1224,11 +1173,11 @@ static bool32 IteamHealsMonVolatile(enum BattlerId battler, enum Item itemId)
 {
     const u8 *effect = GetItemEffect(itemId);
     if (effect[3] & ITEM3_STATUS_ALL)
-        return (gBattleMons[battler].volatiles.infatuation || gBattleMons[battler].volatiles.confusionTurns > 0);
+        return (gBattleMons[battler].volatiles.infatuation || gBattleMons[battler].volatiles.confusionTimer > 0);
     else if (effect[0] & ITEM0_INFATUATION)
         return gBattleMons[battler].volatiles.infatuation;
     else if (effect[3] & ITEM3_CONFUSION)
-        return gBattleMons[battler].volatiles.confusionTurns > 0;
+        return gBattleMons[battler].volatiles.confusionTimer > 0;
 
     return FALSE;
 }
@@ -1245,7 +1194,7 @@ static bool32 SelectedMonHasVolatile(enum Item itemId)
 // Returns whether an item can be used in battle and sets the fail text.
 bool32 CannotUseItemsInBattle(enum Item itemId, struct Pokemon *mon)
 {
-    u16 battleUsage = GetItemBattleUsage(itemId);
+    enum EffectItem battleUsage = GetItemBattleUsage(itemId);
     bool8 cannotUse = FALSE;
     const u8* failStr = NULL;
     u32 i, battlerTarget;
@@ -1261,7 +1210,7 @@ bool32 CannotUseItemsInBattle(enum Item itemId, struct Pokemon *mon)
     // Embargo Check
     if (battlerTarget < MAX_POSITION_COUNT && GetItemType(itemId) != ITEM_USE_BAG_MENU)
     {
-        if (gBattleMons[battlerTarget].volatiles.embargo)
+        if (gBattleMons[battlerTarget].volatiles.embargoTimer)
             return TRUE;
     }
 
@@ -1362,6 +1311,9 @@ bool32 CannotUseItemsInBattle(enum Item itemId, struct Pokemon *mon)
         {
             cannotUse = TRUE;
         }
+        break;
+    case EFFECT_ITEM_USE_POKE_FLUTE:
+        // ISSUE #10182
         break;
     }
 

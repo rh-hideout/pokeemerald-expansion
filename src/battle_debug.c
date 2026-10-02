@@ -370,7 +370,6 @@ static const struct ListMenuItem sVolatileStatusListItems[] =
     {COMPOUND_STRING("Electrified"),        VOLATILE_ELECTRIFIED},
     {COMPOUND_STRING("MudSport"),           VOLATILE_MUD_SPORT},
     {COMPOUND_STRING("WaterSport"),         VOLATILE_WATER_SPORT},
-    {COMPOUND_STRING("Infinite Confusion"), VOLATILE_INFINITE_CONFUSION},
     {COMPOUND_STRING("Salt Cure"),          VOLATILE_SALT_CURE},
     {COMPOUND_STRING("Syrup Bomb"),         VOLATILE_SYRUP_BOMB},
     {COMPOUND_STRING("Glaive Rush"),        VOLATILE_GLAIVE_RUSH},
@@ -384,14 +383,12 @@ static const struct ListMenuItem sVolatileStatusListItems[] =
     {COMPOUND_STRING("Imprison"),           VOLATILE_IMPRISON},
     {COMPOUND_STRING("Grudge"),             VOLATILE_GRUDGE},
     {COMPOUND_STRING("Gastro Acid"),        VOLATILE_GASTRO_ACID},
-    {COMPOUND_STRING("Embargo"),            VOLATILE_EMBARGO},
+    {COMPOUND_STRING("Embargo"),            VOLATILE_EMBARGO_TIMER},
     {COMPOUND_STRING("Smack Down"),         VOLATILE_SMACK_DOWN},
     {COMPOUND_STRING("Telekinesis"),        VOLATILE_TELEKINESIS},
     {COMPOUND_STRING("Miracle Eye"),        VOLATILE_MIRACLE_EYE},
-    {COMPOUND_STRING("Magnet Rise"),        VOLATILE_MAGNET_RISE},
-    {COMPOUND_STRING("Heal Block"),         VOLATILE_HEAL_BLOCK},
+    {COMPOUND_STRING("Heal Block"),         VOLATILE_HEAL_BLOCK_TIMER},
     {COMPOUND_STRING("Aqua Ring"),          VOLATILE_AQUA_RING},
-    {COMPOUND_STRING("Laser Focus"),        VOLATILE_LASER_FOCUS},
     {COMPOUND_STRING("Power Trick"),        VOLATILE_POWER_TRICK},
 };
 
@@ -773,7 +770,7 @@ static void PutMovesPointsText(struct BattleDebugMenu *data)
     if (gAiLogicData->shouldSwitch & (1u << data->aiBattlerId))
     {
         struct Pokemon *party = GetBattlerParty(data->aiBattlerId);
-        u32 switchMon = GetMonData(&party[gAiLogicData->mostSuitableMonId[data->aiBattlerId]], MON_DATA_SPECIES);
+        enum Species switchMon = GetMonData(&party[gAiLogicData->mostSuitableMonId[data->aiBattlerId]], MON_DATA_SPECIES);
         AddTextPrinterParameterized3(data->aiMovesWindowId, FONT_NORMAL, 74, 79, sTextColorTable[COLORID_RED], 0, COMPOUND_STRING("Switching to "));
         AddTextPrinterParameterized3(data->aiMovesWindowId, FONT_NORMAL, 74 + 68, 79, sTextColorTable[COLORID_RED], 0, gSpeciesInfo[switchMon].speciesName);
     }
@@ -2170,11 +2167,7 @@ static const u8 *const sHoldEffectNames[HOLD_EFFECT_COUNT] =
     [HOLD_EFFECT_RESTORE_PP]       = COMPOUND_STRING("Restore Pp"),
     [HOLD_EFFECT_CURE_CONFUSION]   = COMPOUND_STRING("Cure Confusion"),
     [HOLD_EFFECT_CURE_STATUS]      = COMPOUND_STRING("Cure Status"),
-    [HOLD_EFFECT_CONFUSE_SPICY]    = COMPOUND_STRING("Confuse Spicy"),
-    [HOLD_EFFECT_CONFUSE_DRY]      = COMPOUND_STRING("Confuse Dry"),
-    [HOLD_EFFECT_CONFUSE_SWEET]    = COMPOUND_STRING("Confuse Sweet"),
-    [HOLD_EFFECT_CONFUSE_BITTER]   = COMPOUND_STRING("Confuse Bitter"),
-    [HOLD_EFFECT_CONFUSE_SOUR]     = COMPOUND_STRING("Confuse Sour"),
+    [HOLD_EFFECT_CONFUSE_FLAVOR]   = COMPOUND_STRING("Confuse Flavor"),
     [HOLD_EFFECT_ATTACK_UP]        = COMPOUND_STRING("Attack Up"),
     [HOLD_EFFECT_DEFENSE_UP]       = COMPOUND_STRING("Defense Up"),
     [HOLD_EFFECT_SPEED_UP]         = COMPOUND_STRING("Speed Up"),

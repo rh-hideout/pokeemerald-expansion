@@ -1,13 +1,13 @@
 #ifndef GUARD_CONSTANTS_BATTLE_SCRIPT_COMMANDS_H
 #define GUARD_CONSTANTS_BATTLE_SCRIPT_COMMANDS_H
 
+#include "constants/battle_set_effect.h"
+
 enum BattleScriptOpcode
 {
     B_SCR_OP_ATTACKCANCELER,
-    B_SCR_OP_ACCURACYCHECK,
     B_SCR_OP_PRINTATTACKSTRING,
     B_SCR_OP_PRINTSELECTIONSTRINGFROMTABLE,
-    B_SCR_OP_DAMAGECALC,
     B_SCR_OP_TYPECALC,
     B_SCR_OP_MULTIHITRESULTMESSAGE,
     B_SCR_OP_ATTACKANIMATION,
@@ -21,10 +21,8 @@ enum BattleScriptOpcode
     B_SCR_OP_PRINTSELECTIONSTRING,
     B_SCR_OP_WAITMESSAGE,
     B_SCR_OP_PRINTFROMTABLE,
-    B_SCR_OP_SETPREATTACKADDITIONALEFFECT,
     B_SCR_OP_SETADDITIONALEFFECTS,
     B_SCR_OP_SETEFFECTPRIMARY,
-    B_SCR_OP_SETEFFECTSECONDARY,
     B_SCR_OP_CLEARVOLATILE,
     B_SCR_OP_TRYFAINTMON,
     B_SCR_OP_DOFAINTANIMATION,
@@ -60,7 +58,6 @@ enum BattleScriptOpcode
     B_SCR_OP_TRYSELFCONFUSIONDMGFORMCHANGE,
     B_SCR_OP_RETURN,
     B_SCR_OP_END,
-    B_SCR_OP_END2,
     B_SCR_OP_END3,
     B_SCR_OP_SETCHARGINGTURN,
     B_SCR_OP_CALL,
@@ -161,7 +158,6 @@ enum BattleScriptOpcode
     B_SCR_OP_TRYSETPERISHSONG,
     B_SCR_OP_JUMPIFCONFUSEDANDSTATMAXED,
     B_SCR_OP_SETEMBARGO,
-    B_SCR_OP_PRESENTDAMAGECALCULATION,
     B_SCR_OP_SETSAFEGUARD,
     B_SCR_OP_JUMPIFNOPURSUITSWITCHDMG,
     B_SCR_OP_TRYACTIVATEITEM,
@@ -171,7 +167,6 @@ enum BattleScriptOpcode
     B_SCR_OP_SETSTICKYWEB,
     B_SCR_OP_SELECTFIRSTVALIDTARGET,
     B_SCR_OP_SETSEMIINVULNERABLEBIT,
-    B_SCR_OP_TRYMEMENTO,
     B_SCR_OP_SETFORCEDTARGET,
     B_SCR_OP_CURESTATUSWITHMOVE,
     B_SCR_OP_SETTORMENT,
@@ -194,7 +189,6 @@ enum BattleScriptOpcode
     B_SCR_OP_JUMPIFHASNOHP,
     B_SCR_OP_PICKUP,
     B_SCR_OP_SETTYPEBASEDHALVERS,
-    B_SCR_OP_JUMPIFSUBSTITUTEBLOCKS,
     B_SCR_OP_TRYRECYCLEITEM,
     B_SCR_OP_SETTYPETOENVIRONMENT,
     B_SCR_OP_SNATCHSETBATTLERS,
@@ -218,6 +212,7 @@ enum BattleScriptOpcode
     B_SCR_OP_TRYMOVESTATCHANGES,
     B_SCR_OP_TRYSTATCHANGES,
     B_SCR_OP_TRYBATTLERSTATCHANGE,
+    B_SCR_OP_JUMPIFTERRAIN,
 
     // Expansion users, please don't use any of the unused commands.
     // They are reserved for expansion usage.
@@ -258,6 +253,12 @@ enum BattleScriptOpcode
     B_SCR_OP_UNUSED_34,
     B_SCR_OP_UNUSED_35,
     B_SCR_OP_UNUSED_36,
+    B_SCR_OP_UNUSED_37,
+    B_SCR_OP_UNUSED_38,
+    B_SCR_OP_UNUSED_39,
+    B_SCR_OP_UNUSED_40,
+    B_SCR_OP_UNUSED_41,
+    B_SCR_OP_UNUSED_42,
     B_SCR_OP_CALLNATIVE,
 };
 
@@ -315,7 +316,10 @@ enum BattleScriptOpcode
 #define BATTLE_COMMUNICATION_ENTRIES_COUNT  8
 
 #define cMULTISTRING_CHOOSER (gBattleCommunication + MULTISTRING_CHOOSER)
-#define cMISS_TYPE           (gBattleCommunication + MISS_TYPE)
+
+// Used for MSG_DISPLAY
+#define MSG_DISPLAY_CONTINUE 0
+#define MSG_DISPLAY_WAIT     1
 
 // Battle Script defines for getting the wanted battler
 #define BS_TARGET                   0
@@ -353,14 +357,6 @@ enum BattleScriptOpcode
 
 #define PARTY_SCREEN_OPTIONAL (1 << 7) // Flag for first argument to openpartyscreen
 
-enum SetMoveEffectFlags
-{
-    NO_FLAGS          = 0,
-    EFFECT_PRIMARY    = (1 << 0),
-    EFFECT_CERTAIN    = (1 << 1),
-    EFFECT_ON_SIDE    = (1 << 2),
-};
-
 enum SwitchInCases
 {
     B_SWITCH_NORMAL,
@@ -380,12 +376,6 @@ enum TriggerOnFieldStatus
     ON_ANY,
     ON_TERRAIN,
     ON_WEATHER,
-};
-
-enum HealthUpdate
-{
-    PASSIVE_HP_UPDATE,
-    MOVE_DAMAGE_HP_UPDATE,
 };
 
 enum FlungItem
@@ -409,6 +399,12 @@ enum SynchronizeState
     SYNCH_STATE_SET_STATUS,
     SYNCH_STATE_SHOW_ABILITY_POPUP,
     SYNCH_STATE_END,
+};
+
+enum AssuranceDoubleDamage
+{
+    ASSURANCE_DOUBLE,
+    ASSURANCE_IGNORE,
 };
 
 #endif // GUARD_CONSTANTS_BATTLE_SCRIPT_COMMANDS_H
