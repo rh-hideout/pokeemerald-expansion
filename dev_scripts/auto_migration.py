@@ -54,7 +54,7 @@ def merge_commits_if_no_conflict(commit, message):
     result = subprocess.run(["git", "merge", "--no-commit", "--no-ff", commit], capture_output=True)
     if result.returncode:
         subprocess.run(["git", "merge", "--abort"])
-        print(f"Could not merge without creating conflicts\nPlease manually run\ngit merge {commit}")
+        print(f"Could not merge without creating conflicts\nPlease manually run:\ngit merge {commit}")
         exit()
     commit_message = f"Merge commit automated by auto_migration.py: {message}"
     result = subprocess.run(["git", "commit", "-m", commit_message])
@@ -113,13 +113,13 @@ if not result.returncode:
     remaining_commits = len(result.stdout.splitlines())
     if remaining_commits == 3:
         print("Can't continue automatic migration. You need to do some manual merging.")
-        print("Please run the following command")
+        print("Please run the following command:")
         print("git merge temporary_migration_branch_split~2")
         exit()
     elif remaining_commits == 2:
         if os.path.exists("migration_scripts/auto_migration_tag_data_was_migrated"):
             print("Can't continue automatic migration. You need to do some manual merging.")
-            print("Please run the following command")
+            print("Please run the following command:")
             print("git merge temporary_migration_branch_split~1")
             exit()
         else:
