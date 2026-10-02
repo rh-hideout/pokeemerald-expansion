@@ -42,7 +42,7 @@ These exist to keep merging from `RHH/master` cheap. Violating them is the main 
 | 4     | Gamemode wiring                      | S27–S32 | Complete    |
 | 5     | Features & item-friction wiring      | S33–S34, S69 | Complete |
 | 6     | Nuzlocke                             | S35–S39 | Complete    |
-| 7     | Difficulty                           | S40–S45 | In progress |
+| 7     | Difficulty                           | S40–S45, S70 | In progress |
 | 8     | Challenges                           | S46–S50 | Not started |
 | 9     | Randomizer                           | S51–S57 | Not started |
 | 10    | Options+ QoL                         | S58–S63 | Not started |
@@ -663,7 +663,7 @@ These exist to keep merging from `RHH/master` cheap. Violating them is the main 
 
 ### S42 — EXP multiplier & hard-mode EXP
 
-- [ ] **Status:** Not started
+- [x] **Status:** Complete
 
 - **Goal:** Scale progression speed.
 - **Depends on:** S41
@@ -673,6 +673,21 @@ These exist to keep merging from `RHH/master` cheap. Violating them is the main 
   - Note ME gates the multiplier behind Nuzlocke/randomizer in some builds (`TX_EXP_MULTIPLER_ONLY_ON_NUZLOCKE_AND_RANDOMIZER`); decide whether we do the same.
 - **Acceptance:** Each multiplier setting measurably changes EXP gained from the same battle.
 - **Tests:** Unit tests on the EXP calculation per setting.
+- **Decisions:** [`docs-mf/decisions/0044-product-exp-multiplier-and-hard-exp.md`](docs-mf/decisions/0044-product-exp-multiplier-and-hard-exp.md) — ×1 / ×1.5 / ×2 / ×0 always apply; 60% only while Level Cap is Hard (or expansion Hard difficulty) until Hall of Fame.
+
+### S70 — Scaled EXP toggle
+
+- [ ] **Status:** Not started
+
+- **Goal:** Let the player turn level-gap experience on or off at the start of the game.
+- **Depends on:** S42
+- **Scope:**
+  - `B_SCALED_EXP` stays `GEN_LATEST`. Do not compile it off. It is not a rules-menu option today, and Modern Emerald has no matching row.
+  - Add a Difficulty-page Off/On toggle, next to `EXP. MULTIPLIER`, on the new-game rules menu and the rules viewer. Off uses the flat formula (yield × fainted level / 7): the same foe pays the same Exp no matter the receiver's level. On keeps the Gen 9 weighting, where a higher-level Pokémon gains less.
+  - Default is Off. Store it in the spare `paddingTail` byte (low bit). Do not reorder `ModernRules` or bump `MF_RULES_VERSION`. Existing saves already have that byte at 0, so they read as Off.
+  - Gate the two `B_SCALED_EXP` checks in `battle_script_commands.c` through the rule. The S42 multiplier and HARD MODE EXP still apply either way. The row stays editable mid-run with the other Difficulty options unless LOCK DIFFICULTY is on.
+- **Acceptance:** With the toggle Off, two different player levels gain the same Exp from the same wild Pokémon. With it On, the higher-level Pokémon gains less. The row is selectable at new game.
+- **Tests:** Unit test on the gate for both settings; a same-battle check at two player levels.
 
 ### S43 — Item bans (player & trainer)
 

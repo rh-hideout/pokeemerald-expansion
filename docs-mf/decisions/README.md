@@ -78,3 +78,4 @@ Append a row to the index below when you add a record.
 | 0041 | tech | Party limit: enforce on add paths without capping CalculatePlayerPartyCount | S40 | 2026-09-30 |
 | 0042 | tech | Runtime Kanto level caps | S41 | 2026-09-30 |
 | 0043 | tech | CI test gate is MF: tests only | — | 2026-09-30 |
+| 0044 | product | EXP multiplier and hard-mode EXP | S42 | 2026-10-01 |

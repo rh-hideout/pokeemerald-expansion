@@ -18,7 +18,7 @@ Drives one story from `STORIES.md` to a verified, documented, complete state.
 
 - **Product scope:** `PROJECT.md`. Single source of truth for what is in and out of scope. If a story appears to conflict with it, `PROJECT.md` wins — stop and ask.
 - **Build & repo rules:** `AGENTS.md`. Build command, upstream policy, and the "do not do" list.
-- **Backlog:** `STORIES.md` (repo root, **not** `docs/`). Ordered stories `S01`–`S69` (S69 sits in Phase 5), a Milestones table, project conventions, and status conventions.
+- **Backlog:** `STORIES.md` (repo root, **not** `docs/`). Ordered stories `S01`–`S70` (S69 sits in Phase 5, S70 sits in Phase 7 after S42), a Milestones table, project conventions, and status conventions.
 - **Decision records:** `docs-mf/decisions/`. One markdown file per non-trivial tech/product/UX decision (created on demand — see below). Note the `docs-mf/` prefix: upstream's `docs/` is their mdbook and will conflict on merge.
 - **Upstream merge guide:** `docs-mf/UPSTREAM.md` (created in S03).
 - **Expansion configs:** `include/config/*.h`. Always check for an existing config before writing new code — `PROJECT.md` says flip what exists first.

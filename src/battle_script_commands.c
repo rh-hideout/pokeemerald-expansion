@@ -38,6 +38,7 @@
 #include "pokemon_icon.h"
 #include "caps.h"
 #include "mf_level_cap.h"
+#include "mf_exp.h"
 #include "m4a.h"
 #include "mail.h"
 #include "event_data.h"
@@ -2219,6 +2220,9 @@ static void Cmd_getexp(void)
             if (GetConfig(B_TRAINER_EXP_MULTIPLIER) <= GEN_7 && gBattleTypeFlags & BATTLE_TYPE_TRAINER)
                 calculatedExp = (calculatedExp * 150) / 100;
 
+            // S42: scale the pool the split and per-mon scaled exp still share.
+            calculatedExp = MfScaleCalculatedExp(calculatedExp);
+
             if (GetConfig(B_SPLIT_EXP) < GEN_6)
             {
                 if (viaExpShare) // at least one mon is getting exp via exp share
@@ -2300,6 +2304,10 @@ static void Cmd_getexp(void)
                     }
 
                     ApplyExperienceMultipliers(&gBattleStruct->battlerExpReward, *expMonId, gBattlerFainted);
+
+                    // Scaled exp adds 1, which would leak a point through ×0.
+                    if (MfIsExpMultiplierZero())
+                        gBattleStruct->battlerExpReward = 0;
 
                     if (MfGetEffectiveExpCapType() == EXP_CAP_HARD && gBattleStruct->battlerExpReward != 0)
                     {
