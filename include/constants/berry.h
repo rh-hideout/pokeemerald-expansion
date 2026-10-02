@@ -50,6 +50,14 @@ enum __attribute__((__packed__)) Flavor
 // - BERRY_STAGE_FLOWERING
 #define NUM_WATER_STAGES 4
 
+#define ROCK_SMASH_ITEM_TABLE_DEFAULT 11
+#define ROCK_SMASH_ITEM_TABLE_CLIFF 12
+#define ROCK_SMASH_ITEM_TABLE_FOSSIL 13
+#define ROCK_SMASH_ITEM_TABLE_NONE 14
+// These are intended to be read from trainerRange_berryTreeId which is u16
+
+
+
 // IDs for berry tree objects, indexes into berryTrees in SaveBlock1
 // Named for whatever berry is initially planted there on a new game
 // Those with no initial berry are named "soil"
