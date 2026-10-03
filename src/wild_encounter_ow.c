@@ -936,7 +936,7 @@ static bool32 CheckCanLoadOWE_Tiles(enum Species speciesId, bool32 isFemale, boo
     u32 graphicsId = GetGraphicsIdForMon(speciesId, isShiny, isFemale);
     const struct ObjectEventGraphicsInfo *graphicsInfo = GetObjectEventGraphicsInfo(graphicsId);
     u32 tileCount = graphicsInfo->size / TILE_SIZE_4BPP;
-    if (OW_GFX_COMPRESS)
+    if (OW_GFX_COMPRESS == OGC_SMALL)
     {
         u32 tag = graphicsInfo->tileTag;
         u32 frames;
