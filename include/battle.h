@@ -70,7 +70,6 @@ struct ProtectStruct
     u32 noValidMoves:1;
     u32 bounceMove:1;
     u32 stealMove:1;
-    u32 chargingTurn:1;
     u32 fleeType:2; // 0: Normal, 1: FLEE_ITEM, 2: FLEE_ABILITY
     u32 laggingTail:1;
     u32 palaceUnableToUseMove:1;
@@ -88,7 +87,7 @@ struct ProtectStruct
     u32 forcedSwitch:1;
     u32 myceliumMight:1;
     u32 survivedOHKO:1; // Used to keep track of effects that allow focus punch when surviving moves like Fissure
-    u32 padding1:3;
+    u32 padding1:4;
     // End of 32-bit bitfield
     u16 helpingHand:3;
     u16 revengeDoubled:4;
@@ -157,6 +156,8 @@ struct SideTimer
 {
     u16 reflectTimer;
     u16 lightscreenTimer;
+    u16 reflectTimerTotal;
+    u16 lightscreenTimerTotal;
     u16 mistTimer;
     u16 safeguardTimer;
     u8 spikesAmount:4;
@@ -164,6 +165,7 @@ struct SideTimer
     u8 stickyWebBattlerId;
     u8 stickyWebBattlerSide; // Used for Court Change
     u16 auroraVeilTimer;
+    u16 auroraVeilTimerTotal;
     u16 tailwindTimer;
     u16 luckyChantTimer;
     // Timers below this point are not swapped by Court Change
@@ -185,8 +187,10 @@ struct FieldTimer
     u8 wonderRoomTimer;
     u8 magicRoomTimer;
     u8 trickRoomTimer;
-    u8 terrain;
+    u8 terrain:7;
+    u8 terrainSide:1;
     u8 terrainTimer;
+    u8 terrainTimerTotal;
     u8 gravityTimer;
     u8 fairyLockTimer;
 };
@@ -600,6 +604,8 @@ struct BattleStruct
     u32 expShareExpValue;
     u32 expValue;
     u8 weatherDuration;
+    u8 weatherDurationTotal;
+    u8 weatherSide;
     enum PartyMon expGettersOrder[PARTY_SIZE]; // First battlers which were sent out, then via exp-share
     enum PartyMon expGetterMonId;
     u8 expOrderId:3;
@@ -695,6 +701,7 @@ struct BattleStruct
     u8 throwingPokeBall:1;
     u8 ballSpriteIds[2];    // item gfx, window gfx
     u8 moveInfoSpriteId; // move info, window gfx
+    u8 battleStatusHintSpriteId; // battle status hint, window gfx
     // When using a move which hits multiple opponents which is then bounced by a target, we need to make sure, the move hits both opponents, the one with bounce, and the one without.
     enum Species beatUpSpecies[PARTY_SIZE]; // Species for Gen5+ Beat Up, otherwise party indexes
     u8 beatUpSlot:3;

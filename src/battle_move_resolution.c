@@ -1136,7 +1136,7 @@ static enum CancelerResult CancelerWeatherPrimal(struct BattleCalcValues *cv)
         }
         if (result == CANCELER_RESULT_FAILURE)
         {
-            gProtectStructs[cv->battlerAtk].chargingTurn = FALSE;
+            gBattleMons[cv->battlerAtk].volatiles.chargeTurn = FALSE;
             CancelMultiTurnMoves(cv->battlerAtk);
             gBattlescriptCurrInstr = BattleScript_PrimalWeatherBlocksMove;
         }
@@ -1793,6 +1793,7 @@ static enum CancelerResult HandleSkyDropResult(struct BattleCalcValues *cv)
         gBattleScripting.animTurn = 1;
         gBattleScripting.animTargetsHit = 0;
         gBattleMons[cv->battlerAtk].volatiles.multipleTurns = FALSE;
+        gBattleMons[cv->battlerAtk].volatiles.chargeTurn = FALSE;
         gBattleMons[cv->battlerAtk].volatiles.semiInvulnerable = STATE_NONE;
 
         // Sky Drop fails if target already left the field
@@ -1808,17 +1809,11 @@ static enum CancelerResult HandleSkyDropResult(struct BattleCalcValues *cv)
         return CANCELER_RESULT_SUCCESS;
     }
 
-    if (IsBattlerAlly(cv->battlerAtk, cv->battlerDef))
-    {
-        gBattlescriptCurrInstr = BattleScript_ButItFailed;
-        return CANCELER_RESULT_FAILURE;
-    }
-    else if (gBattleMons[cv->battlerDef].volatiles.semiInvulnerable != STATE_NONE)
-    {
-        gBattlescriptCurrInstr = BattleScript_ButItFailed;
-        return CANCELER_RESULT_FAILURE;
-    }
-    else if (DoesSubstituteBlockMove(cv->battlerAtk, cv->battlerDef, cv->move))
+    bool32 isAlly = IsBattlerAlly(cv->battlerAtk, cv->battlerDef);
+    bool32 IsSemiInvulnerable = gBattleMons[cv->battlerDef].volatiles.semiInvulnerable != STATE_NONE;
+    bool32 isSubBlocked = DoesSubstituteBlockMove(cv->battlerAtk, cv->battlerDef, cv->move);
+
+    if (isAlly || IsSemiInvulnerable || isSubBlocked)
     {
         gBattlescriptCurrInstr = BattleScript_ButItFailed;
         return CANCELER_RESULT_FAILURE;
@@ -1836,7 +1831,7 @@ static enum CancelerResult HandleSkyDropResult(struct BattleCalcValues *cv)
 
     CancelMultiTurnMoves(cv->battlerDef);
     gLockedMoves[cv->battlerAtk] = cv->move;
-    gProtectStructs[cv->battlerAtk].chargingTurn = TRUE;
+    gBattleMons[cv->battlerAtk].volatiles.chargeTurn = TRUE;
     gBattleMons[cv->battlerAtk].volatiles.multipleTurns = TRUE;
     gBattleMons[cv->battlerAtk].volatiles.skyDropTarget = cv->battlerDef + 1;
     gBattleMons[cv->battlerAtk].volatiles.semiInvulnerable = STATE_SKY_DROP_ATTACKER;
@@ -1862,15 +1857,16 @@ static enum CancelerResult CancelerCharging(struct BattleCalcValues *cv)
         gBattleScripting.animTurn = 1;
         gBattleScripting.animTargetsHit = 0;
         gBattleMons[cv->battlerAtk].volatiles.multipleTurns = FALSE;
+        gBattleMons[cv->battlerAtk].volatiles.chargeTurn = FALSE;
         if (gBattleMoveEffects[cv->moveEffect].semiInvulnerableEffect)
             gBattleMons[cv->battlerAtk].volatiles.semiInvulnerable = STATE_NONE;
         return CANCELER_RESULT_SUCCESS;
     }
 
-    if (!gProtectStructs[cv->battlerAtk].chargingTurn) // First turn charge
+    if (!gBattleMons[cv->battlerAtk].volatiles.chargeTurn) // First turn charge
     {
         gLockedMoves[cv->battlerAtk] = cv->move;
-        gProtectStructs[cv->battlerAtk].chargingTurn = TRUE;
+        gBattleMons[cv->battlerAtk].volatiles.chargeTurn = TRUE;
         if (gBattleMoveEffects[cv->moveEffect].semiInvulnerableEffect)
             gBattleMons[cv->battlerAtk].volatiles.semiInvulnerable = GetTwoTurnMoveSemiInvulnerability(cv->move);
         BattleScriptCall(BattleScript_TwoTurnMoveCharging);
@@ -1890,7 +1886,7 @@ static enum CancelerResult CancelerCharging(struct BattleCalcValues *cv)
     gBattleScripting.animTurn = 1;
     gBattleScripting.animTargetsHit = 0;
     gBattleScripting.battler = cv->battlerAtk;
-    gProtectStructs[cv->battlerAtk].chargingTurn = FALSE;
+    gBattleMons[cv->battlerAtk].volatiles.chargeTurn = FALSE;
     if (gBattleMoveEffects[cv->moveEffect].semiInvulnerableEffect)
         gBattleMons[cv->battlerAtk].volatiles.semiInvulnerable = STATE_NONE;
 
@@ -2107,7 +2103,7 @@ static bool32 IsTargetUnaffectedByMoveEffect(struct BattleCalcValues *cv)
         }
         break;
     case EFFECT_SKY_DROP:
-        if (!gProtectStructs[cv->battlerAtk].chargingTurn
+        if (!gBattleMons[cv->battlerAtk].volatiles.chargeTurn
          && IS_BATTLER_OF_TYPE(cv->battlerDef, TYPE_FLYING))
         {
             gBattleStruct->moveResultFlags[cv->battlerDef] = MOVE_RESULT_NO_EFFECT;
@@ -3691,7 +3687,7 @@ static enum MoveEndResult MoveEndEndureDamageMessage(struct BattleCalcValues *cv
 
 static bool32 ShouldApplyProtectLikeEffects(enum BattlerId battlerDef, struct BattleCalcValues *cv)
 {
-    if (gProtectStructs[cv->battlerAtk].chargingTurn
+    if (gBattleMons[cv->battlerAtk].volatiles.chargeTurn
      || !IsBattlerAlive(cv->battlerAtk)
      || gBattleStruct->unableToUseMove)
         return FALSE;
@@ -3807,7 +3803,7 @@ static bool32 CanApplyAdditionalEffect(enum BattlerId battlerAtk, enum BattlerId
         return FALSE;
 
     // Don't apply chargeTurnOnly effects here
-    if (additionalEffect->onChargeTurnOnly || gProtectStructs[battlerAtk].chargingTurn)
+    if (additionalEffect->onChargeTurnOnly || gBattleMons[battlerAtk].volatiles.chargeTurn)
         return FALSE;
 
     return TRUE;
@@ -4407,7 +4403,7 @@ static enum MoveEndResult MoveEndNextTarget(struct BattleCalcValues *cv)
 {
     enum MoveTarget moveTarget = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove);
 
-    if (gBattleStruct->unableToUseMove || gProtectStructs[gBattlerAttacker].chargingTurn || !IsBattleMoveStatus(cv->move))
+    if (gBattleStruct->unableToUseMove || gBattleMons[gBattlerAttacker].volatiles.chargeTurn || !IsBattleMoveStatus(cv->move))
     {
         // go to next state
     }
@@ -5408,7 +5404,7 @@ static enum MoveEndResult MoveEndLifeOrbShellBell(struct BattleCalcValues *cv)
         gBattleScripting.moveendState++;
         return result;
     }
-    
+
     if (ItemBattleEffects(cv->battlerAtk, 0, cv->holdEffects[cv->battlerAtk], IsLifeOrbShellBellActivation))
         result = MOVEEND_RESULT_RUN_SCRIPT;
 
@@ -6651,7 +6647,9 @@ static void TryClearChargeVolatile(enum Type moveType)
         return;
 
     if (moveType == TYPE_ELECTRIC && gBattleMons[gBattlerAttacker].volatiles.chargeTimer == 1)
+    {
         gBattleMons[gBattlerAttacker].volatiles.chargeTimer = 0;
+    }
 
     for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
     {
