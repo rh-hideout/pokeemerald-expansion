@@ -192,7 +192,7 @@ u16 AddSpriteTextPrinterParameterized(u8 spriteId, u8 fontId, const u8 *str, u8 
 void AddSpriteTextPrinterParameterized3(u8 spriteId, u8 fontId, u8 left, u8 top, const u8 *color, s8 speed, const u8 *str);
 void AddSpriteTextPrinterParameterized4(u8 spriteId, u8 fontId, u8 left, u8 top, u8 letterSpacing, u8 lineSpacing, const u8 *color, s8 speed, const u8 *str);
 void AddSpriteTextPrinterParameterized6(u8 spriteId, u8 fontId, u8 left, u8 top, u8 letterSpacing, u8 lineSpacing, const union TextColor color, s8 speed, const u8 *str);
-bool32 AddTextPrinter(struct TextPrinterTemplate *printerTemplate, u8 speed, void (*callback)(struct TextPrinterTemplate *, u16));
+bool32 AddTextPrinter(struct TextPrinterTemplate *printerTemplate, u8 speed, TextPrinterCallback callback);
 void RunTextPrinters(void);
 bool32 IsTextPrinterActiveOnWindow(u32 windowId);
 bool32 IsTextPrinterActiveOnSprite(u32 spriteId);
