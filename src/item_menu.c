@@ -1299,7 +1299,7 @@ static void Task_BagMenu_HandleInput(u8 taskId)
                 {
                     static const u8 sText_NothingToSort[] = _("There's nothing to sort!");
                     PlaySE(SE_FAILURE);
-                    DisplayItemMessage(taskId, 1, sText_NothingToSort, HandleErrorMessage);
+                    DisplayItemMessage(taskId, FONT_NORMAL, sText_NothingToSort, HandleErrorMessage);
                     break;
                 }
                 else
@@ -2872,7 +2872,7 @@ static void SortBagItems(u8 taskId)
 
     StringCopy(gStringVar1, sSortTypeStrings[tSortType]);
     StringExpandPlaceholders(gStringVar4, sText_ItemsSorted);
-    DisplayItemMessage(taskId, 1, gStringVar4, Task_SortFinish);
+    DisplayItemMessage(taskId, FONT_NORMAL, gStringVar4, Task_SortFinish);
 }
 
 #undef tSortType
