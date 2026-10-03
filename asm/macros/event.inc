@@ -2045,7 +2045,7 @@
 	1:
 	.endm
 
-	.macro goto_if_nbetween a:req, l:req, h:req, c @ NOT BETWEEN low (l) and high (h), inclusive
+	.macro goto_if_notbetween a:req, l:req, h:req, c @ NOT BETWEEN low (l) and high (h), inclusive
 	trycompare goto_if, 0, \a, \l, \c
 	trycompare goto_if, 2, \a, \h, \c
 	.endm
@@ -2090,7 +2090,7 @@
 	1:
 	.endm
 
-	.macro call_if_nbetween a:req, l:req, h:req, c @ NOT BETWEEN low (l) and high (h), inclusive
+	.macro call_if_notbetween a:req, l:req, h:req, c @ NOT BETWEEN low (l) and high (h), inclusive
 	trycompare call_if, 0, \a, \l, \c
 	trycompare call_if, 2, \a, \h, \c
 	.endm
