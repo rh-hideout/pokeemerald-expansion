@@ -2165,6 +2165,7 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
             }
         }
         gBattleStruct->eventState.moveEndBlock++;
+        [[fallthrough]];
     case TARGET_FAILURE_PSYCHIC_TERRAIN:
         for (u32 slot = 0; slot < gBattlersCount; slot++)
         {
@@ -2184,6 +2185,7 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
             }
         }
         gBattleStruct->eventState.moveEndBlock++;
+        [[fallthrough]];
     case TARGET_FAILURE_PROTECT:
         for (u32 slot = 0; slot < gBattlersCount; slot++)
         {
@@ -2207,6 +2209,7 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
             }
         }
         gBattleStruct->eventState.moveEndBlock++;
+        [[fallthrough]];
     case TARGET_FAILURE_BOUNCE:
         for (u32 slot = 0; slot < gBattlersCount; slot++)
         {
@@ -2231,6 +2234,7 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
             return CANCELER_RESULT_FAILURE;
         }
         gBattleStruct->eventState.moveEndBlock++;
+        [[fallthrough]];
     case TARGET_FAILURE_TARGET_BLOCKED:
         for (u32 slot = 0; slot < gBattlersCount; slot++)
         {
@@ -2250,6 +2254,7 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
             }
         }
         gBattleStruct->eventState.moveEndBlock++;
+        [[fallthrough]];
     case TARGET_FAILURE_EFFECTIVENESS:
         for (u32 slot = 0; slot < gBattlersCount; slot++)
         {
@@ -2730,6 +2735,7 @@ static enum CancelerResult CancelerPreAnimActivations(struct BattleCalcValues *c
             }
         }
         gBattleStruct->eventState.moveEndBlock++;
+        [[fallthrough]];
     case PRE_ANIM_TERA_SHELL:
         for (u32 slot = 0; slot < MAX_BATTLERS_COUNT; slot++)
         {
@@ -4843,7 +4849,7 @@ static enum MoveEndResult MoveEndMoveBlockRecoil(struct BattleCalcValues *cv)
     case EFFECT_RECOIL:
         if (gBattleStruct->moveDamage[cv->battlerDef] == 0)
             break;
-        // fallthrough
+        [[fallthrough]];
     case EFFECT_CHLOROBLAST:
         if (IsBattlerTurnDamaged(cv->battlerDef, INCLUDING_SUBSTITUTES) && IsBattlerAlive(cv->battlerAtk))
         {

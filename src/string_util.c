@@ -376,8 +376,10 @@ u8 *StringExpandPlaceholders(u8 *dest, const u8 *src)
             case EXT_CTRL_CODE_COLOR_HIGHLIGHT_SHADOW:
             case EXT_CTRL_CODE_TEXT_COLORS:
                 *dest++ = *src++;
+                [[fallthrough]];
             case EXT_CTRL_CODE_PLAY_BGM:
                 *dest++ = *src++;
+                [[fallthrough]];
             default:
                 *dest++ = *src++;
             }

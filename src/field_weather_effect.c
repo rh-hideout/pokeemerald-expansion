@@ -315,7 +315,7 @@ static void UpdateDroughtBlend(u8 taskId)
         SetGpuReg(REG_OFFSET_BLDCNT, BLDCNT_TGT1_BG1 | BLDCNT_TGT1_BG2 | BLDCNT_TGT1_BG3 | BLDCNT_TGT1_OBJ | BLDCNT_EFFECT_LIGHTEN);
         SetGpuReg(REG_OFFSET_BLDY, 0);
         task->tState++;
-        // fall through
+        [[fallthrough]];
     case 1:
         task->tBlendY += 3;
         if (task->tBlendY > 16)
@@ -533,7 +533,7 @@ bool8 Rain_Finish(void)
             gWeatherPtr->targetRainSpriteCount = 0;
             gWeatherPtr->finishStep++;
         }
-        // fall through
+        [[fallthrough]];
     case 1:
         if (!UpdateVisibleRainSprites())
         {
@@ -812,7 +812,7 @@ bool8 Snow_Finish(void)
         gWeatherPtr->targetSnowflakeSpriteCount = 0;
         gWeatherPtr->snowflakeVisibleCounter = 0;
         gWeatherPtr->finishStep++;
-        // fall through
+        [[fallthrough]];
     case 1:
         if (!UpdateVisibleSnowflakeSprites())
         {
@@ -1100,7 +1100,7 @@ void Thunderstorm_Main(void)
         gWeatherPtr->thunderAllowEnd = TRUE;
         gWeatherPtr->thunderTimer = (Random() % 360) + 360;
         gWeatherPtr->initStep++;
-        // fall through
+        [[fallthrough]];
     case THUNDER_STATE_NEW_CYCLE_WAIT:
         // Wait between 360-720 frames before starting a new cycle.
         if (--gWeatherPtr->thunderTimer == 0)
@@ -1114,7 +1114,7 @@ void Thunderstorm_Main(void)
     case THUNDER_STATE_INIT_CYCLE_2:
         gWeatherPtr->thunderShortBolts = (Random() & 1) + 1;
         gWeatherPtr->initStep++;
-        // fall through
+        [[fallthrough]];
     case THUNDER_STATE_SHORT_BOLT:
         // Short bolt of lightning strikes.
         ApplyWeatherColorMapIfIdle(19);
@@ -1192,7 +1192,7 @@ bool8 Thunderstorm_Finish(void)
     case 0:
         gWeatherPtr->thunderAllowEnd = FALSE;
         gWeatherPtr->finishStep++;
-        // fall through
+        [[fallthrough]];
     case 1:
         Thunderstorm_Main();
         if (gWeatherPtr->thunderAllowEnd)

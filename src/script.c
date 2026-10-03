@@ -103,7 +103,7 @@ bool8 RunScriptCommand(struct ScriptContext *ctx)
             return TRUE;
         }
         ctx->mode = SCRIPT_MODE_BYTECODE;
-        // fallthrough
+        [[fallthrough]];
     case SCRIPT_MODE_BYTECODE:
         while (1)
         {
