@@ -1945,7 +1945,7 @@ void GiveMonContestRibbon(void)
     {
         ribbonData++;
         SetMonData(mon, ribbon, &ribbonData);
-        if (GetRibbonCount(mon) > NUM_CUTIES_RIBBONS)
+        if (GetMonData(mon, MON_DATA_RIBBON_COUNT) > NUM_CUTIES_RIBBONS)
             TryPutSpotTheCutiesOnAir(mon, ribbon);
     }
 }
@@ -2446,7 +2446,7 @@ bool8 GiveMonArtistRibbon(void)
     {
         hasArtistRibbon = 1;
         SetMonData(&gParties[B_TRAINER_PLAYER][gContestMonPartyIndex], MON_DATA_ARTIST_RIBBON, &hasArtistRibbon);
-        if (GetRibbonCount(&gParties[B_TRAINER_PLAYER][gContestMonPartyIndex]) > NUM_CUTIES_RIBBONS)
+        if (GetMonData(&gParties[B_TRAINER_PLAYER][gContestMonPartyIndex], MON_DATA_RIBBON_COUNT) > NUM_CUTIES_RIBBONS)
             TryPutSpotTheCutiesOnAir(&gParties[B_TRAINER_PLAYER][gContestMonPartyIndex], MON_DATA_ARTIST_RIBBON);
 
         return TRUE;
