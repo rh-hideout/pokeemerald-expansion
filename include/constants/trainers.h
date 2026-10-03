@@ -540,9 +540,6 @@ enum TrainerClassID
 #define TRAINER_ENCOUNTER_MUSIC_INTERVIEWER 12
 #define TRAINER_ENCOUNTER_MUSIC_RICH        13 // Used for Rich Boys and Gentlemen
 
-#define TRAINER_GENDER_MALE   0
-#define TRAINER_GENDER_FEMALE 1
-
 // Trainer party defines
 #define TRAINER_MON_MALE          1
 #define TRAINER_MON_FEMALE        2

@@ -26,8 +26,8 @@ Route25_SeaCottage_EventScript_Bill::
 	goto_if_set FLAG_GOT_SS_TICKET, Route25_SeaCottage_EventScript_BillGoToSSAnne
 	goto_if_set FLAG_HELPED_BILL_IN_SEA_COTTAGE, Route25_SeaCottage_EventScript_BillGiveSSTicket
 	checkplayergender
-	goto_if_eq VAR_RESULT, MALE, Route25_SeaCottage_EventScript_BillAskForHelpMale
-	goto_if_eq VAR_RESULT, FEMALE, Route25_SeaCottage_EventScript_BillAskForHelpFemale
+	goto_if_eq VAR_RESULT, TRAINER_GENDER_MALE, Route25_SeaCottage_EventScript_BillAskForHelpMale
+	goto_if_eq VAR_RESULT, TRAINER_GENDER_FEMALE, Route25_SeaCottage_EventScript_BillAskForHelpFemale
 	end
 
 Route25_SeaCottage_EventScript_BillAskForHelpMale::
@@ -64,8 +64,8 @@ Route25_SeaCottage_EventScript_BillAskForHelp::
 @ Just returns after message, execution continues as if player had said yes
 Route25_SeaCottage_EventScript_DeclineHelpBill::
 	checkplayergender
-	call_if_eq VAR_RESULT, MALE, Route25_SeaCottage_EventScript_DeclineHelpBillMale
-	call_if_eq VAR_RESULT, FEMALE, Route25_SeaCottage_EventScript_DeclineHelpBillFemale
+	call_if_eq VAR_RESULT, TRAINER_GENDER_MALE, Route25_SeaCottage_EventScript_DeclineHelpBillMale
+	call_if_eq VAR_RESULT, TRAINER_GENDER_FEMALE, Route25_SeaCottage_EventScript_DeclineHelpBillFemale
 	return
 
 Route25_SeaCottage_EventScript_DeclineHelpBillMale::
@@ -94,8 +94,8 @@ Route25_SeaCottage_EventScript_BillGoToSSAnne::
 Route25_SeaCottage_EventScript_BillGiveSSTicket::
 	famechecker FAMECHECKER_BILL, FCPICKSTATE_COLORED, UpdatePickStateFromSpecialVar8005
 	checkplayergender
-	call_if_eq VAR_RESULT, MALE, Route25_SeaCottage_EventScript_BillThanksMale
-	call_if_eq VAR_RESULT, FEMALE, Route25_SeaCottage_EventScript_BillThanksFemale
+	call_if_eq VAR_RESULT, TRAINER_GENDER_MALE, Route25_SeaCottage_EventScript_BillThanksMale
+	call_if_eq VAR_RESULT, TRAINER_GENDER_FEMALE, Route25_SeaCottage_EventScript_BillThanksFemale
 	checkitemspace ITEM_SS_TICKET
 	goto_if_eq VAR_RESULT, FALSE, Route25_SeaCottage_EventScript_NoRoomForSSTicket
 	giveitem_msg Route25_SeaCottage_Text_ReceivedSSTicketFromBill, ITEM_SS_TICKET, 1, MUS_RG_OBTAIN_KEY_ITEM

@@ -216,11 +216,11 @@ enum ContestCategories
 
 #define MAX_STAMP_CARD_STAMPS 7
 
-enum Gender
+enum TrainerGender
 {
-    MALE,
-    FEMALE,
-    GENDER_COUNT,
+    TRAINER_GENDER_MALE,
+    TRAINER_GENDER_FEMALE,
+    TRAINER_GENDER_COUNT,
 };
 
 #define NUM_BARD_SONG_WORDS    6
