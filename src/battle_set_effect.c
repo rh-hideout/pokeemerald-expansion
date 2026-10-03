@@ -1390,11 +1390,11 @@ static void SetEffectHealPulse(struct BattleCalcValues *cv, struct SetEffect *se
         }
         else if (megaLauncherBoost)
         {
-            healAmount = GetNonDynamaxMaxHP(se->effectBattler) * (maxHpFraction + 1) / 4;
+            healAmount = (GetNonDynamaxMaxHP(se->effectBattler) * (maxHpFraction + 1) + 1) / 4;
         }
         else if (grassyTerrainBoost)
         {
-            healAmount = GetNonDynamaxMaxHP(se->effectBattler) * maxHpFraction / 3;
+            healAmount = (GetNonDynamaxMaxHP(se->effectBattler) * maxHpFraction + 1) / 3;
         }
         else
         {
@@ -1738,6 +1738,7 @@ static bool32 ShouldGroundAirborneBattler(enum BattlerId battler, enum Ability a
 
     if (IS_BATTLER_OF_TYPE(battler, TYPE_FLYING)
      || ability == ABILITY_LEVITATE
+     || ability == ABILITY_EELEVATE
      || state == STATE_ON_AIR
      || state == STATE_SKY_DROP_ATTACKER
      || state == STATE_SKY_DROP_TARGET
@@ -3297,8 +3298,8 @@ static void HandleSetEffectSkillSwap(struct BattleCalcValues *cv, struct SetEffe
         RemoveAbilityFlags(cv->battlerAtk);
         OverwriteBattlerAbility(se->effectBattler, abilityAtk);
         OverwriteBattlerAbility(cv->battlerAtk, gLastUsedAbility);
-        RecordAbilityBattle(se->effectBattler, abilityDef);
-        RecordAbilityBattle(cv->battlerAtk, abilityAtk);
+        RecordAbilityBattle(se->effectBattler, abilityAtk);
+        RecordAbilityBattle(cv->battlerAtk, abilityDef);
 
         if (isAlly)
             BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSkillSwapAfterAbilityPopUp);

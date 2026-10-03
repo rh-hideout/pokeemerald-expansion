@@ -1689,6 +1689,7 @@ static void ChangeHazardsValue(struct BattleDebugMenu *data)
         if (data->modifyArrows.currValue > 0)
         {
             SetSpikesLayer(side, data->modifyArrows.currValue);
+            gSideTimers[side].spikesAmount = data->modifyArrows.currValue;
         }
         else if (data->modifyArrows.currValue == 0)
         {
@@ -1700,6 +1701,7 @@ static void ChangeHazardsValue(struct BattleDebugMenu *data)
         if (data->modifyArrows.currValue > 0)
         {
             SetToxicSpikesLayer(side, data->modifyArrows.currValue);
+            gSideTimers[side].toxicSpikesAmount = data->modifyArrows.currValue;
         }
         else if (data->modifyArrows.currValue == 0)
         {
