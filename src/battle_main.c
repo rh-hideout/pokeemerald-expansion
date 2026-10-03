@@ -3216,10 +3216,12 @@ static void DoBattleIntro(void)
         {
             struct HpAndStatus hpStatus[MAX_BATTLE_TRAINERS][PARTY_SIZE];
 
-            u32 lastId = MULTI_PARTY_SIZE;
+            u32 lastId;
             for (enum BattleTrainer trainer = B_TRAINER_PLAYER; trainer < MAX_BATTLE_TRAINERS; trainer++)
             {
-                if (AreMultiPartiesFullTeams() || !BattleSideHasTwoTrainers(trainer & BIT_SIDE))
+                if (AreMultiPartiesHalfTeams() && BattleSideHasTwoTrainers(trainer & BIT_SIDE))
+                    lastId = MULTI_PARTY_SIZE;
+                else
                     lastId = PARTY_SIZE;
 
                 for (i = 0; i < PARTY_SIZE; i++)

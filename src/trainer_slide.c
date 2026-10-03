@@ -310,7 +310,7 @@ static void SetTrainerSlideParameters(enum BattlerId battler, u32* lastId, u32* 
     {
         if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
         {
-            if (!AreMultiPartiesFullTeams())
+            if (AreMultiPartiesHalfTeams())
                 *lastId = MULTI_PARTY_SIZE;
             if (GetBattlerTrainer(battler) == B_TRAINER_OPPONENT_B)
             {
@@ -321,7 +321,7 @@ static void SetTrainerSlideParameters(enum BattlerId battler, u32* lastId, u32* 
     }
     else if (GetBattlerTrainer(battler) == B_TRAINER_PARTNER && gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
     {
-        if (!AreMultiPartiesFullTeams())
+        if (AreMultiPartiesHalfTeams())
             *lastId = MULTI_PARTY_SIZE;
         *trainerId = gPartnerTrainerId;
         *retValue = TRAINER_SLIDE_TARGET_TRAINER_PARTNER;

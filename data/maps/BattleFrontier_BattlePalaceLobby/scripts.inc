@@ -152,8 +152,7 @@ BattleFrontier_BattlePalaceLobby_EventScript_TryEnterChallenge::
 	callnative RemoveFollowingPokemon
 	call BattleFrontier_EventScript_GetLvlMode
 	copyvar VAR_0x8004, VAR_RESULT
-	setvar VAR_0x8005, FRONTIER_PARTY_SIZE
-	special ChoosePartyForBattleFrontier
+	choosepartyforbattlefrontier FRONTIER_PARTY_SIZE
 	goto_if_eq VAR_RESULT, 0, BattleFrontier_BattlePalaceLobby_EventScript_LoadPartyAndCancelChallenge
 	msgbox BattleFrontier_BattlePalaceLobby_Text_MustSaveBeforeChallenge2, MSGBOX_YESNO
 	switch VAR_RESULT
