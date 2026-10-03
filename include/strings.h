@@ -498,34 +498,6 @@ extern const u8 BattleFrontier_Lounge3_Text_GetToBattlePyramid[];
 
 extern const u8 gText_BP[];
 
-// Battle Frontier Exchange Corner
-extern const u8 BattleFrontier_ExchangeServiceCorner_Text_KissPosterDesc[];
-extern const u8 BattleFrontier_ExchangeServiceCorner_Text_KissCushionDesc[];
-extern const u8 BattleFrontier_ExchangeServiceCorner_Text_SmoochumDollDesc[];
-extern const u8 BattleFrontier_ExchangeServiceCorner_Text_TogepiDollDesc[];
-extern const u8 BattleFrontier_ExchangeServiceCorner_Text_MeowthDollDesc[];
-extern const u8 BattleFrontier_ExchangeServiceCorner_Text_ClefairyDollDesc[];
-extern const u8 BattleFrontier_ExchangeServiceCorner_Text_DittoDollDesc[];
-extern const u8 BattleFrontier_ExchangeServiceCorner_Text_CyndaquilDollDesc[];
-extern const u8 BattleFrontier_ExchangeServiceCorner_Text_ChikoritaDollDesc[];
-extern const u8 BattleFrontier_ExchangeServiceCorner_Text_TotodileDollDesc[];
-extern const u8 BattleFrontier_ExchangeServiceCorner_Text_LargeDollDesc[];
-extern const u8 BattleFrontier_ExchangeServiceCorner_Text_ProteinDesc[];
-extern const u8 BattleFrontier_ExchangeServiceCorner_Text_CalciumDesc[];
-extern const u8 BattleFrontier_ExchangeServiceCorner_Text_IronDesc[];
-extern const u8 BattleFrontier_ExchangeServiceCorner_Text_ZincDesc[];
-extern const u8 BattleFrontier_ExchangeServiceCorner_Text_CarbosDesc[];
-extern const u8 BattleFrontier_ExchangeServiceCorner_Text_HPUpDesc[];
-extern const u8 BattleFrontier_ExchangeServiceCorner_Text_LeftoversDesc[];
-extern const u8 BattleFrontier_ExchangeServiceCorner_Text_WhiteHerbDesc[];
-extern const u8 BattleFrontier_ExchangeServiceCorner_Text_QuickClawDesc[];
-extern const u8 BattleFrontier_ExchangeServiceCorner_Text_MentalHerbDesc[];
-extern const u8 BattleFrontier_ExchangeServiceCorner_Text_BrightpowderDesc[];
-extern const u8 BattleFrontier_ExchangeServiceCorner_Text_ChoiceBandDesc[];
-extern const u8 BattleFrontier_ExchangeServiceCorner_Text_KingsRockDesc[];
-extern const u8 BattleFrontier_ExchangeServiceCorner_Text_FocusBandDesc[];
-extern const u8 BattleFrontier_ExchangeServiceCorner_Text_ScopeLensDesc[];
-
 // Battle Frontier Move Tutors
 extern const u8 BattleFrontier_Lounge7_Text_SoftboiledDesc[];
 extern const u8 BattleFrontier_Lounge7_Text_SeismicTossDesc[];
