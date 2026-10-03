@@ -1300,9 +1300,13 @@
 	.endm
 
 	@ Opens the Pokemart system, offering the specified products for sale.
+	@ Includes parameters for currency and Buy/Sell/Quit menu flow.
 	@ Products should be a list of .2byte item values preceded by an .align 2
-	.macro pokemart products=Pokemart_DefaultItemList
+	@ Optional: martinlineprices for manually inlined prices
+	.macro pokemart products=Pokemart_DefaultItemList, currency=MART_CURRENCY_MONEY, menu=MART_MENU_ACTIONS
 	.byte SCR_OP_POKEMART
+	.byte \currency
+	.byte \menu
 	.4byte \products
 	.endm
 
@@ -1315,15 +1319,42 @@
 
 	@ Opens the Pokemart system and treats the list of items as decorations.
 	@ Products should be a list of .2byte decoration values preceded by an .align 2
-	.macro pokemartdecoration products:req
+	.macro pokemartdecoration products:req, currency=MART_CURRENCY_MONEY, menu=MART_MENU_ACTIONS
 	.byte SCR_OP_POKEMARTDECORATION
+	.byte \currency
+	.byte \menu
 	.4byte \products
 	.endm
 
 	@ Identical to pokemartdecoration, but with slight changes to the clerk dialogue. See uses of MART_TYPE_DECOR2.
-	.macro pokemartdecoration2 products:req
+	.macro pokemartdecoration2 products:req, currency=MART_CURRENCY_MONEY, menu=MART_MENU_ACTIONS
 	.byte SCR_OP_POKEMARTDECORATION2
+	.byte \currency
+	.byte \menu
 	.4byte \products
+	.endm
+
+	.set _mart_inline_prices, 0
+
+	@ Flags a product list as having manually inlined prices.
+	.macro martinlineprices
+	.set _mart_inline_prices, 1
+	.2byte MART_LIST_INLINE_PRICES
+	.endm
+
+	@ A product in a list with inlined prices.
+	.macro martitem item:req, price:req
+	.if _mart_inline_prices == 0
+		.error "martitem requires martinlineprices at the start of the list"
+	.endif
+	.2byte \item
+	.2byte \price
+	.endm
+
+	@ Used as the endpoint for a martinlineprices product list
+	.macro martlistend
+	.set _mart_inline_prices, 0
+	pokemartlistend
 	.endm
 
 	@ Starts up the slot machine minigame. id is a SLOT_MACHINE_* value that influences probabilities of certain reel outcomes.

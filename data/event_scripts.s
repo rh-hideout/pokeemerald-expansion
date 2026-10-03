@@ -61,6 +61,7 @@
 #include "constants/script_menu.h"
 #include "constants/seagallop.h"
 #include "constants/secret_bases.h"
+#include "constants/shop.h"
 #include "constants/siirtc.h"
 #include "constants/songs.h"
 #include "constants/sound.h"

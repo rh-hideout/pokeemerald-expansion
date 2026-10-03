@@ -1472,18 +1472,18 @@ static void SetupMart(const u16 *itemsForSale, enum MartCurrency currency, u8 ma
     }
 }
 
-void CreatePokemartMenu(const u16 *itemsForSale)
+void CreatePokemartMenu(const u16 *itemsForSale, enum MartCurrency currency, enum MartMenu menu)
 {
-    SetupMart(itemsForSale, MART_CURRENCY_MONEY, MART_TYPE_NORMAL, MART_MENU_ACTIONS);
+    SetupMart(itemsForSale, currency, MART_TYPE_NORMAL, menu);
     ClearItemPurchases();
 }
 
-void CreateDecorationShop1Menu(const u16 *itemsForSale)
+void CreateDecorationShop1Menu(const u16 *itemsForSale, enum MartCurrency currency, enum MartMenu menu)
 {
-    SetupMart(itemsForSale, MART_CURRENCY_MONEY, MART_TYPE_DECOR, MART_MENU_ACTIONS);
+    SetupMart(itemsForSale, currency, MART_TYPE_DECOR, menu);
 }
 
-void CreateDecorationShop2Menu(const u16 *itemsForSale)
+void CreateDecorationShop2Menu(const u16 *itemsForSale, enum MartCurrency currency, enum MartMenu menu)
 {
-    SetupMart(itemsForSale, MART_CURRENCY_MONEY, MART_TYPE_DECOR2, MART_MENU_ACTIONS);
+    SetupMart(itemsForSale, currency, MART_TYPE_DECOR2, menu);
 }
