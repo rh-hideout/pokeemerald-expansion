@@ -2648,7 +2648,7 @@ static enum CancelerResult CancelerPreAttackMoveEffect(struct BattleCalcValues *
 
             if (!additionalEffect->preAttackEffect
              || isSelf != additionalEffect->self
-             || (!isSelf && ShouldSkipFailureCheckOnBattler(cv->battlerAtk, gEffectBattler)))
+             || (!isSelf && ShouldSkipFailureCheckOnBattler(cv->battlerAtk, effectBattler)))
             {
                 gBattleStruct->additionalEffectsCounter++;
                 continue;
@@ -3950,7 +3950,7 @@ static void TryTriggerAdditionalEffect(struct BattleCalcValues *cv, const struct
 {
     struct SetEffect se = {0};
 
-    bool32 percentChance = CalcSecondaryEffectChance(cv->battlerAtk, cv->abilities[cv->battlerAtk], additionalEffect);
+    bool32 percentChance = CalcSecondaryEffectChance(cv->battlerAtk, cv->abilities[cv->battlerAtk], additionalEffect, cv->move);
     bool32 isPrimary = percentChance == 0;
     bool32 failedToTrigger = TRUE;
 
@@ -3975,10 +3975,6 @@ static void TryTriggerAdditionalEffect(struct BattleCalcValues *cv, const struct
             se.effectBattler = GetPartnerBattler(se.effectBattler);
         else if (additionalEffect->onSide)
             gBattleStruct->setEffectOnAlly = TRUE;
-
-    // Reminders for myself:
-    // - Change secondary effect chance function so it can be used by G-Max Replenish.
-    // - G-Max Meltdown should only apply Torment for 3 turns unlike Torment itself.
 
         SetMoveEffect(cv, &se);
     }

@@ -2492,6 +2492,8 @@ static void HandleSetEffectTorment(struct BattleCalcValues *cv, struct SetEffect
     else if (!cv->onlyChecking)
     {
         gBattleMons[se->effectBattler].volatiles.torment = TRUE;
+        if (IsMaxMove(cv->move))
+            gBattleMons[se->effectBattler].volatiles.tormentTimer = 3;
         PrepareStringBattleWithWait(STRINGID_PKMNSUBJECTEDTOTORMENT, se->effectBattler);
         BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
     }

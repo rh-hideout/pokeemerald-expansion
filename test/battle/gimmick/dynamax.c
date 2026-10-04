@@ -1170,7 +1170,7 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Smite confuses both opponents")
 DOUBLE_BATTLE_TEST("Dynamax: G-Max Cuddle infatuates both opponents, if possible")
 {
     GIVEN {
-        ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_CUDDLE, MOVE_EFFECT_INFATUATE_SIDE));
+        ASSUME(MoveHasAdditionalEffectOnSide(MOVE_G_MAX_CUDDLE, MOVE_EFFECT_ATTRACT));
         PLAYER(SPECIES_EEVEE) { Gender(MON_MALE); GigantamaxFactor(TRUE); }
         PLAYER(SPECIES_EEVEE);
         OPPONENT(SPECIES_WOBBUFFET) { Gender(MON_FEMALE); }
@@ -1191,7 +1191,7 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Cuddle infatuates both opponents, if possible
 DOUBLE_BATTLE_TEST("Dynamax: G-Max Terror traps both opponents")
 {
     GIVEN {
-        ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_TERROR, MOVE_EFFECT_PREVENT_ESCAPE_SIDE));
+        ASSUME(MoveHasAdditionalEffectOnSide(MOVE_G_MAX_TERROR, MOVE_EFFECT_PREVENT_ESCAPE));
         PLAYER(SPECIES_GENGAR) { GigantamaxFactor(TRUE); }
         PLAYER(SPECIES_GASTLY);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -1210,7 +1210,7 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Terror traps both opponents")
 SINGLE_BATTLE_TEST("Dynamax: Baton Pass passes G-Max Terror's escape prevention effect")
 {
     GIVEN {
-        ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_TERROR, MOVE_EFFECT_PREVENT_ESCAPE_SIDE));
+        ASSUME(MoveHasAdditionalEffectOnSide(MOVE_G_MAX_TERROR, MOVE_EFFECT_PREVENT_ESCAPE));
         PLAYER(SPECIES_GENGAR) { GigantamaxFactor(TRUE); }
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WYNAUT);
@@ -1227,7 +1227,7 @@ SINGLE_BATTLE_TEST("Dynamax: Baton Pass passes G-Max Terror's escape prevention 
 DOUBLE_BATTLE_TEST("Dynamax: G-Max Meltdown torments both opponents for 3 turns")
 {
     GIVEN {
-        ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_MELTDOWN, MOVE_EFFECT_TORMENT_SIDE));
+        ASSUME(MoveHasAdditionalEffectOnSide(MOVE_G_MAX_MELTDOWN, MOVE_EFFECT_TORMENT));
         PLAYER(SPECIES_MELMETAL) { GigantamaxFactor(TRUE); }
         PLAYER(SPECIES_MELTAN);
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_SPLASH, MOVE_CELEBRATE); }
@@ -1310,7 +1310,8 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Replenish recycles allies' berries 50% of the
 {
     PASSES_RANDOMLY(1, 2, RNG_G_MAX_REPLENISH);
     GIVEN {
-        ASSUME(MoveHasAdditionalEffectSelf(MOVE_G_MAX_REPLENISH, MOVE_EFFECT_RECYCLE_BERRIES));
+        ASSUME(MoveHasAdditionalEffectOnSide(MOVE_G_MAX_REPLENISH, MOVE_EFFECT_RECYCLE));
+        ASSUME(MoveHasAdditionalEffectSelf(MOVE_G_MAX_REPLENISH, MOVE_EFFECT_RECYCLE));
         ASSUME(GetItemHoldEffect(ITEM_APICOT_BERRY) == HOLD_EFFECT_SP_DEFENSE_UP);
         PLAYER(SPECIES_SNORLAX) { Item(ITEM_APICOT_BERRY); GigantamaxFactor(TRUE); }
         PLAYER(SPECIES_MUNCHLAX) { Item(ITEM_APICOT_BERRY); Ability(ABILITY_THICK_FAT); }
@@ -1341,7 +1342,7 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Snooze makes only the target drowsy")
 {
     PASSES_RANDOMLY(1, 2, RNG_G_MAX_SNOOZE);
     GIVEN {
-        ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_SNOOZE, MOVE_EFFECT_YAWN_FOE));
+        ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_SNOOZE, MOVE_EFFECT_YAWN));
         ASSUME(GetMoveCategory(MOVE_DARK_PULSE) == DAMAGE_CATEGORY_SPECIAL); // Otherwise, Blissey faints.
         PLAYER(SPECIES_GRIMMSNARL) { GigantamaxFactor(TRUE); }
         PLAYER(SPECIES_IMPIDIMP);
@@ -1667,15 +1668,15 @@ DOUBLE_BATTLE_TEST("Dynamax stat lowering moves don't make stat-changing abiliti
     }
     GIVEN {
         ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_WYRMWIND, attack: -1);
-        ASSUME(MoveHasAdditionalOnSideEffect(MOVE_MAX_WYRMWIND));
+        ASSUME(MoveHasAdditionalEffectOnSide(MOVE_MAX_WYRMWIND, MOVE_EFFECT_STAT_MINUS));
         ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_PHANTASM, defense: -1);
-        ASSUME(MoveHasAdditionalOnSideEffect(MOVE_MAX_PHANTASM));
+        ASSUME(MoveHasAdditionalEffectOnSide(MOVE_MAX_PHANTASM, MOVE_EFFECT_STAT_MINUS));
         ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_FLUTTERBY, spAtk: -1);
-        ASSUME(MoveHasAdditionalOnSideEffect(MOVE_MAX_FLUTTERBY));
+        ASSUME(MoveHasAdditionalEffectOnSide(MOVE_MAX_FLUTTERBY, MOVE_EFFECT_STAT_MINUS));
         ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_DARKNESS, spDef: -1);
-        ASSUME(MoveHasAdditionalOnSideEffect(MOVE_MAX_DARKNESS));
+        ASSUME(MoveHasAdditionalEffectOnSide(MOVE_MAX_DARKNESS, MOVE_EFFECT_STAT_MINUS));
         ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_STRIKE, speed: -1);
-        ASSUME(MoveHasAdditionalOnSideEffect(MOVE_MAX_STRIKE));
+        ASSUME(MoveHasAdditionalEffectOnSide(MOVE_MAX_STRIKE, MOVE_EFFECT_STAT_MINUS));
 
         PLAYER(SPECIES_WOBBUFFET) { }
         PLAYER(SPECIES_WOBBUFFET) { }
@@ -1707,15 +1708,15 @@ DOUBLE_BATTLE_TEST("Dynamax stat raising moves don't make stat-changing abilitie
     }
     GIVEN {
         ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_WYRMWIND, attack: -1);
-        ASSUME(MoveHasAdditionalOnSideEffect(MOVE_MAX_WYRMWIND));
+        ASSUME(MoveHasAdditionalEffectOnSide(MOVE_MAX_WYRMWIND, MOVE_EFFECT_STAT_MINUS));
         ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_PHANTASM, defense: -1);
-        ASSUME(MoveHasAdditionalOnSideEffect(MOVE_MAX_PHANTASM));
+        ASSUME(MoveHasAdditionalEffectOnSide(MOVE_MAX_PHANTASM, MOVE_EFFECT_STAT_MINUS));
         ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_FLUTTERBY, spAtk: -1);
-        ASSUME(MoveHasAdditionalOnSideEffect(MOVE_MAX_FLUTTERBY));
+        ASSUME(MoveHasAdditionalEffectOnSide(MOVE_MAX_FLUTTERBY, MOVE_EFFECT_STAT_MINUS));
         ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_DARKNESS, spDef: -1);
-        ASSUME(MoveHasAdditionalOnSideEffect(MOVE_MAX_DARKNESS));
+        ASSUME(MoveHasAdditionalEffectOnSide(MOVE_MAX_DARKNESS, MOVE_EFFECT_STAT_MINUS));
         ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_STRIKE, speed: -1);
-        ASSUME(MoveHasAdditionalOnSideEffect(MOVE_MAX_STRIKE));
+        ASSUME(MoveHasAdditionalEffectOnSide(MOVE_MAX_STRIKE, MOVE_EFFECT_STAT_MINUS));
         PLAYER(SPECIES_WOBBUFFET) { Ability(ability); }
         PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_SHADOW_TAG); }
         OPPONENT(SPECIES_WOBBUFFET);

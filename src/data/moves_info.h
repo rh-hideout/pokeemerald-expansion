@@ -23870,7 +23870,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .category = DAMAGE_CATEGORY_PHYSICAL,
         .battleAnimScript = gBattleAnimMove_GMaxTerror,
         .additionalEffects = ADDITIONAL_EFFECTS({
-            .moveEffect = MOVE_EFFECT_PREVENT_ESCAPE_SIDE,
+            .moveEffect = MOVE_EFFECT_PREVENT_ESCAPE,
+            .onSide = TRUE,
         }),
     },
 
@@ -23933,7 +23934,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .category = DAMAGE_CATEGORY_PHYSICAL,
         .battleAnimScript = gBattleAnimMove_GMaxCuddle,
         .additionalEffects = ADDITIONAL_EFFECTS({
-            .moveEffect = MOVE_EFFECT_INFATUATE_SIDE,
+            .moveEffect = MOVE_EFFECT_ATTRACT,
+            .onSide = TRUE,
         }),
     },
 
@@ -23953,8 +23955,10 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .category = DAMAGE_CATEGORY_PHYSICAL,
         .battleAnimScript = gBattleAnimMove_GMaxReplenish,
         .additionalEffects = ADDITIONAL_EFFECTS({
-            .moveEffect = MOVE_EFFECT_RECYCLE_BERRIES,
+            .moveEffect = MOVE_EFFECT_RECYCLE,
             .self = TRUE,
+            .onSide = TRUE,
+            .chance = 50,
         }),
     },
 
@@ -23995,7 +23999,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .category = DAMAGE_CATEGORY_PHYSICAL,
         .battleAnimScript = gBattleAnimMove_GMaxMeltdown,
         .additionalEffects = ADDITIONAL_EFFECTS({
-            .moveEffect = MOVE_EFFECT_TORMENT_SIDE,
+            .moveEffect = MOVE_EFFECT_TORMENT,
+            .onSide = TRUE,
         }),
     },
 
@@ -24286,7 +24291,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .category = DAMAGE_CATEGORY_PHYSICAL,
         .battleAnimScript = gBattleAnimMove_GMaxSnooze,
         .additionalEffects = ADDITIONAL_EFFECTS({
-            .moveEffect = MOVE_EFFECT_YAWN_FOE,
+            .moveEffect = MOVE_EFFECT_YAWN,
+            .chance = 50,
         }),
     },
 
