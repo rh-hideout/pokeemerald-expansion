@@ -548,19 +548,8 @@ extern const u8 BattleScript_MoveEffectDamageNonTypes[];
 extern const u8 BattleScript_DamageNonTypesContinues[];
 extern const u8 BattleScript_MoveEffectDefog[];
 extern const u8 BattleScript_GroundAirborneBattler[];
-extern const u8 BattleScript_MoveEffectYawnFoe[];
-extern const u8 BattleScript_EffectParalyzeSide[];
-extern const u8 BattleScript_EffectPoisonSide[];
-extern const u8 BattleScript_EffectPoisonParalyzeSide[];
-extern const u8 BattleScript_EffectEffectSporeSide[];
-extern const u8 BattleScript_EffectConfuseSide[];
-extern const u8 BattleScript_EffectInfatuateSide[];
-extern const u8 BattleScript_EffectTormentSide[];
-extern const u8 BattleScript_EffectMeanLookSide[];
 extern const u8 BattleScript_TormentEnds[];
 extern const u8 BattleScript_EffectRaiseCritAnim[];
-extern const u8 BattleScript_EffectHealOneSixthAllies[];
-extern const u8 BattleScript_EffectRecycleBerriesAllies[];
 extern const u8 BattleScript_RemoveGenericType[];
 
 // dynamax and max raids
