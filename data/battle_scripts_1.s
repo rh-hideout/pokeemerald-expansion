@@ -1242,6 +1242,8 @@ BattleScript_SwapTargetAttackerButItFailed:
 	goto BattleScript_ButItFailed
 
 BattleScript_MoveEffectAttract::
+	volatileanimation BS_EFFECT_BATTLER, VOLATILE_INFATUATION
+	waitanimation
 	printstring STRINGID_PKMNFELLINLOVE
 	waitmessage B_WAIT_TIME_LONG
 	call BattleScript_TryDestinyKnotAttacker
