@@ -381,7 +381,9 @@ static void HandleSetEffectPreventEscape(struct BattleCalcValues *cv, struct Set
         gBattleMons[se->effectBattler].volatiles.escapePrevention = TRUE;
         gBattleMons[se->effectBattler].volatiles.battlerPreventingEscape = cv->battlerAtk;
     }
-    gBattlescriptCurrInstr = se->script;
+
+    PrepareStringBattleWithWait(STRINGID_TARGETCANTESCAPENOW, se->effectBattler);
+    BattleScriptPushAndSet(se->script, BattleScript_MoveEffectSetStatus);
 }
 
 static void HandleSetEffectNightmare(struct BattleCalcValues *cv, struct SetEffect *se)

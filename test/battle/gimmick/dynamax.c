@@ -1308,7 +1308,7 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Wildfire sets a field effect that damages non
 
 DOUBLE_BATTLE_TEST("Dynamax: G-Max Replenish recycles allies' berries 50% of the time")
 {
-    PASSES_RANDOMLY(1, 2, RNG_G_MAX_REPLENISH);
+    PASSES_RANDOMLY(1, 2, RNG_SECONDARY_EFFECT);
     GIVEN {
         ASSUME(MoveHasAdditionalEffectOnSide(MOVE_G_MAX_REPLENISH, MOVE_EFFECT_RECYCLE));
         ASSUME(MoveHasAdditionalEffectSelf(MOVE_G_MAX_REPLENISH, MOVE_EFFECT_RECYCLE));
@@ -1340,7 +1340,7 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Replenish recycles allies' berries 50% of the
 
 DOUBLE_BATTLE_TEST("Dynamax: G-Max Snooze makes only the target drowsy")
 {
-    PASSES_RANDOMLY(1, 2, RNG_G_MAX_SNOOZE);
+    PASSES_RANDOMLY(1, 2, RNG_SECONDARY_EFFECT);
     GIVEN {
         ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_SNOOZE, MOVE_EFFECT_YAWN));
         ASSUME(GetMoveCategory(MOVE_DARK_PULSE) == DAMAGE_CATEGORY_SPECIAL); // Otherwise, Blissey faints.
@@ -1755,9 +1755,9 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Finale heals allies by 1/6 of their health, e
 
 DOUBLE_BATTLE_TEST("Dynamax: G-Max Replenish recycles allies' berries 50\% of the time, even if it faints the foe")
 {
-    PASSES_RANDOMLY(1, 2, RNG_G_MAX_REPLENISH);
+    PASSES_RANDOMLY(1, 2, RNG_SECONDARY_EFFECT);
     GIVEN {
-        ASSUME(MoveHasAdditionalEffectSelf(MOVE_G_MAX_REPLENISH, MOVE_EFFECT_RECYCLE_BERRIES));
+        ASSUME(MoveHasAdditionalEffectSelf(MOVE_G_MAX_REPLENISH, MOVE_EFFECT_RECYCLE));
         ASSUME(GetItemHoldEffect(ITEM_APICOT_BERRY) == HOLD_EFFECT_SP_DEFENSE_UP);
         PLAYER(SPECIES_SNORLAX) { Item(ITEM_APICOT_BERRY); GigantamaxFactor(TRUE); }
         PLAYER(SPECIES_MUNCHLAX) { Item(ITEM_APICOT_BERRY); Ability(ABILITY_THICK_FAT); }
