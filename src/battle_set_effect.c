@@ -1544,17 +1544,13 @@ static void HandleSetEffectConfusePayDaySide(struct BattleCalcValues *cv, struct
     gBattlescriptCurrInstr = BattleScript_EffectConfuseSide;
 }
 
-static void HandleSetEffectCritPlusSide(struct BattleCalcValues *cv, struct SetEffect *se)
+static void HandleSetEffectCritPlus(struct BattleCalcValues *cv, struct SetEffect *se)
 {
     if (gBattleMons[se->effectBattler].volatiles.bonusCritStages < 3)
         gBattleMons[se->effectBattler].volatiles.bonusCritStages++;
 
-    enum BattlerId partner = GetPartnerBattler(se->effectBattler);
-    if (gBattleMons[partner].volatiles.bonusCritStages < 3)
-        gBattleMons[partner].volatiles.bonusCritStages++;
-
     BattleScriptPush(se->script);
-    gBattlescriptCurrInstr = BattleScript_EffectRaiseCritAlliesAnim;
+    gBattlescriptCurrInstr = BattleScript_EffectRaiseCritAnim;
 }
 
 static void HandleSetEffectPreventEscapeSide(struct BattleCalcValues *cv, struct SetEffect *se)
@@ -4470,7 +4466,7 @@ static void (*const sSetEffectHandlers[])(struct BattleCalcValues *cv, struct Se
     [MOVE_EFFECT_EFFECT_SPORE_SIDE] = HandleSetEffectEffectSporeSide,
     [MOVE_EFFECT_PARALYZE_SIDE] = HandleSetEffectParalyzeSide,
     [MOVE_EFFECT_CONFUSE_PAY_DAY_SIDE] = HandleSetEffectConfusePayDaySide,
-    [MOVE_EFFECT_CRIT_PLUS_SIDE] = HandleSetEffectCritPlusSide,
+    [MOVE_EFFECT_CRIT_PLUS] = HandleSetEffectCritPlus,
     [MOVE_EFFECT_PREVENT_ESCAPE_SIDE] = HandleSetEffectPreventEscapeSide,
     [MOVE_EFFECT_AURORA_VEIL] = HandleSetEffectAuroraVeil,
     [MOVE_EFFECT_INFATUATE_SIDE] = HandleSetEffectInfatuateSide,

@@ -23849,8 +23849,9 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .category = DAMAGE_CATEGORY_PHYSICAL,
         .battleAnimScript = gBattleAnimMove_GMaxChiStrike,
         .additionalEffects = ADDITIONAL_EFFECTS({
-            .moveEffect = MOVE_EFFECT_CRIT_PLUS_SIDE,
+            .moveEffect = MOVE_EFFECT_CRIT_PLUS,
             .self = TRUE,
+            .onSide = TRUE,
         }),
     },
 
@@ -24312,8 +24313,10 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .category = DAMAGE_CATEGORY_PHYSICAL,
         .battleAnimScript = gBattleAnimMove_GMaxFinale,
         .additionalEffects = ADDITIONAL_EFFECTS({
-            .moveEffect = MOVE_EFFECT_HEAL_TEAM,
+            .moveEffect = MOVE_EFFECT_RESTORE_HP,
+            .argument.maxHpFraction = 6,
             .self = TRUE,
+            .onSide = TRUE,
         }),
     },
 

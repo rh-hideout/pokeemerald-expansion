@@ -4936,21 +4936,10 @@ BattleScript_MeanLookSideEnd:
 	restoretarget
 	return
 
-BattleScript_EffectRaiseCritAlliesAnim::
-	savetarget
-	copybyte sBATTLER, gEffectBattler
-	copybyte gBattlerTarget, gEffectBattler
-BattleScript_RaiseCritAlliesLoop:
-	jumpifabsent BS_TARGET, BattleScript_RaiseCritAlliesIncrement
-	raisecritstatchangeanim  BS_TARGET
-	copybyte gEffectBattler, gBattlerTarget
+BattleScript_EffectRaiseCritAnim::
+	raisecritstatchangeanim BS_EFFECT_BATTLER
 	printstring STRINGID_PKMNGETTINGPUMPED
 	waitmessage B_WAIT_TIME_LONG
-BattleScript_RaiseCritAlliesIncrement:
-	jumpifbytenotequal gBattlerTarget, sBATTLER, BattleScript_RaiseCritAlliesEnd
-	setallytonexttarget BattleScript_RaiseCritAlliesLoop
-BattleScript_RaiseCritAlliesEnd:
-	restoretarget
 	return
 
 BattleScript_EffectHealOneSixthAllies::
