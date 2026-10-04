@@ -2,10 +2,8 @@
 
 Rotating gates are map objects that provide the affine graphics and collision.
 They are used in vanilla Emerald by the Fortree Gym and Trick House puzzles. 
-They now activate automatically:
-no map script, special, variable, or flag setup is required.
 
-## Placing a gate in Porymap
+## How to place a gate in Porymap
 
 Add an object event and choose one of these graphics IDs:
 
@@ -29,35 +27,18 @@ Set the movement type to choose the starting orientation:
 | `MOVEMENT_TYPE_FACE_UP` | Up / 180 degrees clockwise |
 | `MOVEMENT_TYPE_FACE_LEFT` | Left / 270 degrees clockwise |
 
-Other movement types are invalid. Debug builds report an assertion; release
-builds recover by using the down-facing orientation.
+They should activate automatically:
+no map script, special, variable, or flag setup is required.
 
-Note that rotating gates utilise 4 graphical frames, meaning that the default
-Porymap settings will use a hflipped left facing gate for the right facing value.
+## My gates look wrong in Porymap
+
+### Incorrect rotation
+Rotating gates utilise 4 graphical frames, meaning that the default Porymap settings will use a hflipped left facing gate for the right facing value.
 This can be amended in the Porymap settings (coming soon).
-Also note that gates are slightly misalligned in Porymap and actually appear 8px
-to the left in-game comparitively (potential fix soon).
 
-## Important limitations
-
-Rotating-gate objects are always-active puzzle geometry, not normal object
-events. The following standard object fields are intentionally ignored:
-
-- elevation
-- movement ranges
-- trainer type
-- script
-- flag
-
-The trainer range field is reserved for private rotating-gate state in the
-runtime copy of the template. Its authored value is ignored and overwritten on
-a fresh map load. The ROM map template and the template's `filler` field are
-left untouched.
-
-Gate markers do not consume normal object-event slots. Their orientation is
-kept in the trainer range of the runtime map object template, so it survives
-battles and menus without reserving temp variables, heap memory, or EWRAM. 
-Loading another map resets the new map's gates to their default orientations.
+### Slightly offset to the right
+Gates are slightly misalligned in Porymap and actually appear 8px to the left in-game comparitively.
+This is because the sprites need to pivot around their center, and is a normal consiquence of the way Porymap works.
 
 ## Graphics resource limits
 
