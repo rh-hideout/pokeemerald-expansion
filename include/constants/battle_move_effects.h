@@ -186,7 +186,7 @@ enum  BattleMoveEffects
     EFFECT_ME_FIRST,
     EFFECT_ELECTRIFY,
     EFFECT_REFLECT_TYPE,
-    EFFECT_SOAK,
+    EFFECT_OVERWRITE_TYPE,
     EFFECT_GROWTH,
     EFFECT_LAST_RESORT,
     EFFECT_STAT_CHANGE_ON_STATUS,
@@ -283,6 +283,7 @@ enum  BattleMoveEffects
     EFFECT_CEASELESS_EDGE, // Same applies to spikes
     EFFECT_SPECIES_POWER_OVERRIDE, // Uses argument field to for the species, power and (number of hits, used only for multi hit moves)
     EFFECT_SCALE_SHOT,
+    EFFECT_SECRET_POWER,
     NUM_BATTLE_MOVE_EFFECTS,
 };
 

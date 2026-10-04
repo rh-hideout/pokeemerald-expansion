@@ -238,7 +238,6 @@ struct AiLogicData
     enum Item items[MAX_BATTLERS_COUNT];
     enum HoldEffect holdEffects[MAX_BATTLERS_COUNT];
     enum Move lastUsedMove[MAX_BATTLERS_COUNT];
-    u8 hpPercents[MAX_BATTLERS_COUNT];
     enum Move partnerMove;
     u16 speedStats[MAX_BATTLERS_COUNT]; // Speed stats for all battles, calculated only once, same way as damages
     struct SimulatedDamage simulatedDmg[MAX_BATTLERS_COUNT][MAX_BATTLERS_COUNT][MAX_MON_MOVES]; // attacker, target, moveIndex
@@ -479,6 +478,7 @@ struct BattleGimmickData
     u8 triggerSpriteId;
     u8 indicatorSpriteId[MAX_BATTLERS_COUNT];
     u8 toActivate;                                       // stores whether a battler should transform at start of turn as bitfield
+    u8 activatedThisTurn;                                // stores whether a battler activated a gimmick this turn as bitfield
     u8 activeGimmick[MAX_BATTLE_TRAINERS][PARTY_SIZE];   // stores the active gimmick for each party member
     bool8 activated[MAX_BATTLERS_COUNT][GIMMICKS_COUNT]; // stores whether a trainer has used gimmick
 };
@@ -517,7 +517,7 @@ struct SleepClause
 
 struct BattlerState
 {
-    u8 targetsDone[MAX_BATTLERS_COUNT];
+    u8 notTargeted[MAX_BATTLERS_COUNT];
 
     u32 commandingDondozo:1;
     u32 focusPunchBattlers:1;
@@ -645,7 +645,9 @@ struct BattleStruct
     u8 isSkyBattle:1;
     u8 unableToUseMove:1; // for the current action only, to check if the battler failed to act at end turn use the DisableStruct member
     u8 triAttackBurn:1;
-    u8 padding1:3;
+    u8 fickleBeamBoosted:1;
+    u8 battlersSorted:1; // To avoid unnessasery computation
+    u8 statusMoveFailed:1; // For status move effects that fail on all targets
     void (*savedCallback)(void);
     enum Item chosenItem[MAX_BATTLERS_COUNT];
     enum Move choicedMove[MAX_BATTLERS_COUNT];
@@ -656,9 +658,8 @@ struct BattleStruct
         struct BattleVideo battleVideo;
     } multiBuffer;
     u8 battlerKOAnimsRunning:3;
-    u8 fickleBeamBoosted:1;
-    u8 battlersSorted:1; // To avoid unnessasery computation
-    u8 unused1:3;
+    u8 messagePrinted:1; // To prevented repeated attackmessages (Perish Song)
+    u8 unused1:4;
     struct BattleTvMovePoints tvMovePoints;
     struct BattleTv tv;
     enum PartyMon AI_monToSwitchIntoId[MAX_BATTLERS_COUNT];
@@ -876,7 +877,7 @@ struct BattleScripting
     u8 animTurn;
     u8 animTargetsHit;
     u8 unused_0x1a;
-    u8 unused_0x1b;
+    u8 savedBattlerTwo;
     u8 getexpState;
     u8 battleStyle;
     u8 drawlvlupboxState;

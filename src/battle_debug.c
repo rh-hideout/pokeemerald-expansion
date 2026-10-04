@@ -365,8 +365,7 @@ static const struct ListMenuItem sVolatileStatusListItems[] =
     {COMPOUND_STRING("EscapePrevention"),   VOLATILE_ESCAPE_PREVENTION},
     {COMPOUND_STRING("Cursed"),             VOLATILE_CURSED},
     {COMPOUND_STRING("Foresight"),          VOLATILE_FORESIGHT},
-    {COMPOUND_STRING("DragonCheer"),        VOLATILE_DRAGON_CHEER},
-    {COMPOUND_STRING("FocusEnergy"),        VOLATILE_FOCUS_ENERGY},
+    {COMPOUND_STRING("CriticalHitBoost"),   VOLATILE_CRITICAL_HIT_BOOST},
     {COMPOUND_STRING("Electrified"),        VOLATILE_ELECTRIFIED},
     {COMPOUND_STRING("MudSport"),           VOLATILE_MUD_SPORT},
     {COMPOUND_STRING("WaterSport"),         VOLATILE_WATER_SPORT},
@@ -1689,8 +1688,7 @@ static void ChangeHazardsValue(struct BattleDebugMenu *data)
     case LIST_SIDE_SPIKES:
         if (data->modifyArrows.currValue > 0)
         {
-            if (gSideTimers[side].spikesAmount == 0)
-                PushHazardTypeToQueue(side, HAZARDS_SPIKES);
+            SetSpikesLayer(side, data->modifyArrows.currValue);
             gSideTimers[side].spikesAmount = data->modifyArrows.currValue;
         }
         else if (data->modifyArrows.currValue == 0)
@@ -1702,8 +1700,7 @@ static void ChangeHazardsValue(struct BattleDebugMenu *data)
     case LIST_SIDE_TOXIC_SPIKES:
         if (data->modifyArrows.currValue > 0)
         {
-            if (gSideTimers[side].toxicSpikesAmount == 0)
-                PushHazardTypeToQueue(side, HAZARDS_TOXIC_SPIKES);
+            SetToxicSpikesLayer(side, data->modifyArrows.currValue);
             gSideTimers[side].toxicSpikesAmount = data->modifyArrows.currValue;
         }
         else if (data->modifyArrows.currValue == 0)

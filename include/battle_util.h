@@ -49,6 +49,8 @@ struct BattleCalcValues
     enum BattleMoveEffects moveEffect:10;
     enum Ability abilities[MAX_BATTLERS_COUNT];
     enum HoldEffect holdEffects[MAX_BATTLERS_COUNT];
+    u32 onlyChecking:1;
+    u32 isStatusMove:1;
 };
 
 void HandleAction_ThrowBall(void);
@@ -80,6 +82,7 @@ void CancelMultiTurnMoves(enum BattlerId battler);
 bool32 IsLastMonToMove(enum BattlerId battler);
 void PrepareStringBattleWithWait(enum StringID stringId, enum BattlerId battler);
 void PrepareStringBattle(enum StringID stringId, enum BattlerId battler);
+void PrepareStringBattleWithWait(enum StringID stringId, enum BattlerId battler);
 void ResetSentPokesToOpponentValue(void);
 void OpponentSwitchInResetSentPokesToOpponentValue(enum BattlerId battler);
 void UpdateSentPokesToOpponentValue(enum BattlerId battler);
@@ -111,6 +114,14 @@ enum Ability GetBattlerAbilityIgnoreMoldBreaker(enum BattlerId battler);
 enum Ability GetBattlerAbilityNoAbilityShield(enum BattlerId battler);
 enum Ability GetBattlerAbilityInternal(enum BattlerId battler, bool32 ignoreMoldBreaker, bool32 noAbilityShield);
 enum Ability GetBattlerAbility(enum BattlerId battler);
+bool32 IsAbilityOnSideWithArr(enum BattlerId effectBattler, enum Ability ability, enum Ability abilities[], enum BattlerId *abilityBattler);
+bool32 IsBattlerLoafing(enum BattlerId battler);
+bool32 AreEndTurnEventsRunning(void);
+void UpdateTruantToggle(enum BattlerId battler);
+void OverwriteBattlerAbility(enum BattlerId battler, enum Ability ability);
+void UpdateTruantToggleForAbilityChange(enum BattlerId battler, enum Ability oldAbility);
+void UpdateTruantTogglesOnNeutralizingGasEnd(void);
+void ResetTruantToggleOnAbilitySuppression(enum BattlerId battler);
 u32 IsAbilityOnSide(enum BattlerId battler, enum Ability ability);
 u32 IsAbilityOnField(enum Ability ability);
 u32 IsAbilityPreventingEscape(enum BattlerId battler);
@@ -198,7 +209,6 @@ bool32 IsBattlerWeatherAffected(enum HoldEffect holdEffect, u32 weather, u32 wea
 enum MoveTarget GetBattlerMoveSelectionTargetType(enum BattlerId battler, enum Move move);
 enum MoveTarget GetBattlerMoveTargetType(enum BattlerId battler, enum Move move);
 bool32 CanTargetBattler(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move);
-u32 GetNextTarget(u32 moveTarget, bool32 excludeCurrent);
 void CopyMonLevelAndBaseStatsToBattleMon(enum BattlerId battler, struct Pokemon *mon, bool32 updateSpeedStat);
 void CopyMonAbilityAndTypesToBattleMon(enum BattlerId battler, struct Pokemon *mon);
 void RecalcBattlerStats(enum BattlerId battler, struct Pokemon *mon, bool32 isDynamaxing);
@@ -211,6 +221,7 @@ bool32 IsMoveEffectRemoveSpeciesType(enum Move move, enum MoveEffect moveEffect,
 bool32 MoveHasChargeTurnAdditionalEffect(enum Move move);
 bool32 CanTargetPartner(enum BattlerId battlerAtk, enum BattlerId battlerDef);
 bool32 IsBattlerUnaffectedByMove(enum BattlerId battler);
+bool32 IsBattlerMoveResult(enum BattlerId battler, u32 moveResult);
 bool32 MoodyCantRaiseStat(u32 stat);
 bool32 MoodyCantLowerStat(u32 stat);
 bool32 IsPsychicTerrainAffected(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect, enum BattleTerrain currTerrain);
@@ -268,10 +279,13 @@ ARM_FUNC u32 GetBattlerVolatile(enum BattlerId battler, enum Volatile _volatile)
 void SetMonVolatile(enum BattlerId battler, enum Volatile _volatile, u32 newValue);
 bool32 ItemHealMonVolatile(enum BattlerId battler, enum Item itemId);
 void PushHazardTypeToQueue(enum BattleSide side, enum Hazards hazardType);
+void SetSpikesLayer(enum BattleSide side, u32 amount);
+void SetToxicSpikesLayer(enum BattleSide side, u32 amount);
 bool32 IsHazardOnSide(enum BattleSide side, enum Hazards hazardType);
 bool32 AreAnyHazardsOnSide(enum BattleSide side);
 bool32 IsHazardOnSideAndClear(enum BattleSide side, enum Hazards hazardType);
 void RemoveHazardFromField(enum BattleSide side, enum Hazards hazardType);
+enum TwoTurnMoveActivation GetTwoTurnMoveActivation(struct BattleCalcValues *cv, u32 weather);
 bool32 CanMoveSkipAccuracyCalc(struct BattleCalcValues *cv, u32 weather, enum ResultOption option);
 u32 GetTotalAccuracy(struct BattleCalcValues *cv, u32 weather);
 bool32 DoesOHKOMoveMissTarget(struct BattleCalcValues *cv);
@@ -296,14 +310,12 @@ bool32 IsBattlerInvalidForSpreadMove(enum BattlerId battlerAtk, enum BattlerId b
 void SetStartingStatus(enum StartingStatus status);
 void ResetStartingStatuses(void);
 bool32 IsUsableWhileAsleepEffect(enum BattleMoveEffects effect);
-void SetWrapTurns(enum BattlerId battler, enum HoldEffect holdEffect);
 bool32 ChangeOrderTargetAfterAttacker(enum BattlerId battlerDef);
 void TryUpdateEvolutionTracker(enum EvolutionConditions evolutionCondition, u32 upAmount, enum Move usedMove);
 bool32 CanUseMoveConsecutively(enum BattlerId battler);
 void TryResetConsecutiveUseCounter(enum BattlerId battler);
 void SetOrClearRageVolatile(void);
 enum BattlerId GetTargetBySlot(enum BattlerId battlerAtk, u32 slot);
-enum BattlerId GetTargetFromSlotId(enum BattlerId battlerAtk, u32 slot);
 bool32 IsNaturalEnemy(enum Species speciesAttacker, enum Species speciesTarget);
 enum Stat GetDownloadStat(enum BattlerId battler);
 bool32 BattlerJustSwitchedIn(enum BattlerId battler);
@@ -313,10 +325,17 @@ void SetValuesOnFaint(enum BattlerId battler);
 bool32 IsVictoryCatch(void);
 bool32 IsVictoryCatchGuaranteed(void);
 bool32 IsBattlerInvolvedInSkyDrop(enum BattlerId battler);
+const u8 *GetRestFailureScript(enum BattlerId battler, enum Ability ability);
 bool32 IsAsleepOrComatose(enum BattlerId battler, enum Ability ability);
 u32 GetWeatherFromOverworldWeather(u32 owWeather);
 enum BattleTerrain GetBattleTerrainFromOverworldWeather(u32 owWeather);
 bool32 IsCommanderActive(enum BattlerId battler);
 bool32 IsWholeSideAlive(enum BattlerId sideBattler);
+
+// Damage calc modifiers
+uq4_12_t GetBurnOrFrostBiteModifier(struct DamageContext *ctx);
+uq4_12_t GetSameTypeAttackBonusModifier(struct DamageContext *ctx);
+uq4_12_t GetMoveAgainstProtectionModifier(struct DamageContext *ctx);
+uq4_12_t GetOtherModifiers(struct DamageContext *ctx);
 
 #endif // GUARD_BATTLE_UTIL_H

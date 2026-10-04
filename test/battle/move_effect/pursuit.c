@@ -431,7 +431,11 @@ DOUBLE_BATTLE_TEST("Pursuit affected by Electrify fails against immune target")
         OPPONENT(SPECIES_WYNAUT);
         OPPONENT(SPECIES_LINOONE);
     } WHEN {
-        TURN { MOVE(playerRight, MOVE_ELECTRIFY, target: opponentLeft); MOVE(playerLeft, MOVE_VOLT_SWITCH, target: opponentLeft); MOVE(opponentLeft, MOVE_PURSUIT, target: playerLeft); SEND_OUT(playerLeft, 2); }
+        TURN {
+            MOVE(playerRight, MOVE_ELECTRIFY, target: opponentLeft);
+            MOVE(playerLeft, MOVE_VOLT_SWITCH, target: opponentLeft);
+            MOVE(opponentLeft, MOVE_PURSUIT, target: playerLeft); SEND_OUT(playerLeft, 2);
+        }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRIFY, playerRight);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_VOLT_SWITCH, playerLeft);
@@ -725,4 +729,33 @@ SINGLE_BATTLE_TEST("Pursuit doesn't trigger a switching mon's Emergency Exit")
     }
 }
 
-TO_DO_BATTLE_TEST("Baton Pass doesn't cause Pursuit to increase its power or priority");
+SINGLE_BATTLE_TEST("Baton Pass doesn't cause Pursuit to increase its power or priority", s16 damage)
+{
+    bool32 batonPass;
+
+    PARAMETRIZE { batonPass = FALSE; }
+    PARAMETRIZE { batonPass = TRUE; }
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_BATON_PASS) == EFFECT_BATON_PASS);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(2); Defense(100); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(2); Defense(100); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(1); Attack(100); }
+    } WHEN {
+        if (batonPass)
+            TURN { MOVE(player, MOVE_BATON_PASS); MOVE(opponent, MOVE_PURSUIT); SEND_OUT(player, 1); }
+        else
+            TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_PURSUIT); }
+    } SCENE {
+        if (batonPass) {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_BATON_PASS, player);
+            SEND_IN_MESSAGE("Wobbuffet");
+        } else {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
+        }
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PURSUIT, opponent);
+        HP_BAR(player, captureDamage: &results[i].damage);
+    } FINALLY {
+        EXPECT_EQ(results[0].damage, results[1].damage);
+    }
+}

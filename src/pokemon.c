@@ -4637,7 +4637,7 @@ enum Species NationalPokedexNumToSpecies(enum NationalDexOrder nationalNum)
     if (species == NUM_SPECIES)
         return SPECIES_NONE;
 
-    return GET_BASE_SPECIES_ID(species);
+    return GetBaseSpecies(species);
 }
 
 u32 NationalToRegionalOrder(enum NationalDexOrder nationalNum)
@@ -6007,11 +6007,20 @@ enum Species GetFormChangeTargetSpecies_Internal(struct FormChangeContext ctx)
             break;
         case FORM_CHANGE_WITHDRAW:
         case FORM_CHANGE_DEPOSIT:
-        case FORM_CHANGE_FAINT:
         case FORM_CHANGE_DAYS_PASSED:
         case FORM_CHANGE_BEGIN_WILD_ENCOUNTER:
             targetSpecies = formChanges[i].targetSpecies;
             break;
+        case FORM_CHANGE_FAINT:
+        #if TESTING
+            if (GetConfig(B_FAINTING_KEEPS_FORM) < GEN_CHAMPIONS || formChanges[i].param1 != DONT_REVERT_FORM_AFTER_FAINTING_IN_BATTLE)
+                targetSpecies = formChanges[i].targetSpecies;
+            break;
+        #else
+            if (formChanges[i].param1 != DONT_REVERT_FORM_AFTER_FAINTING_IN_BATTLE)
+                targetSpecies = formChanges[i].targetSpecies;
+            break;
+        #endif
         case FORM_CHANGE_STATUS:
             if (ctx.status & formChanges[i].param1)
                 targetSpecies = formChanges[i].targetSpecies;
@@ -6565,6 +6574,11 @@ uq4_12_t GetDynamaxLevelHPMultiplier(u32 dynamaxLevel, bool32 inverseMultiplier)
     if (inverseMultiplier)
         return UQ_4_12(1.0/(1.5 + 0.05 * dynamaxLevel));
     return UQ_4_12(1.5 + 0.05 * dynamaxLevel);
+}
+
+enum Species GetBaseSpecies(enum Species species)
+{
+    return GetFormSpeciesId(species, 0);
 }
 
 bool32 IsSpeciesRegionalForm(enum Species species)

@@ -18,6 +18,7 @@ SINGLE_BATTLE_TEST("Eject Pack does not cause the new Pokémon to lose HP due to
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_OVERHEAT, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        ITEM_POPUP(player, ITEM_EJECT_PACK);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
         MESSAGE("Wobbuffet is switched out with the Eject Pack!");
         SEND_IN_MESSAGE("Wynaut");
@@ -37,6 +38,7 @@ SINGLE_BATTLE_TEST("Eject Pack does not activate if there are no Pokémon left t
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         NONE_OF {
+            ITEM_POPUP(player, ITEM_EJECT_PACK);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
             MESSAGE("Wobbuffet is switched out with the Eject Pack!");
         }
@@ -56,7 +58,11 @@ SINGLE_BATTLE_TEST("Eject Pack is triggered by self-inflicting stat decreases")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_OVERHEAT, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        NONE_OF {
+            ITEM_POPUP(opponent, ITEM_EJECT_PACK);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        }
+        ITEM_POPUP(player, ITEM_EJECT_PACK);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
         MESSAGE("Wobbuffet is switched out with the Eject Pack!");
         SEND_IN_MESSAGE("Wynaut");
@@ -78,6 +84,7 @@ SINGLE_BATTLE_TEST("Eject Pack switches the user out even if rooted by Ingrain")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_INGRAIN, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_OVERHEAT, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        ITEM_POPUP(player, ITEM_EJECT_PACK);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
         MESSAGE("Wobbuffet is switched out with the Eject Pack!");
         SEND_IN_MESSAGE("Wynaut");
@@ -97,6 +104,7 @@ SINGLE_BATTLE_TEST("Eject Pack will miss timing to switch out user if Emergency 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_OVERHEAT, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         NONE_OF {
+            ITEM_POPUP(player, ITEM_EJECT_PACK);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
             MESSAGE("Wobbuffet is switched out with the Eject Pack!");
         }
@@ -118,6 +126,7 @@ SINGLE_BATTLE_TEST("Eject Pack activates once intimidate mon switches in")
         TURN { SWITCH(opponent, 1); SEND_OUT(player, 1); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        ITEM_POPUP(player, ITEM_EJECT_PACK);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
         MESSAGE("Wobbuffet is switched out with the Eject Pack!");
     }
@@ -135,6 +144,7 @@ SINGLE_BATTLE_TEST("Eject Pack will not activate if Parting Shot user can switch
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PARTING_SHOT, opponent);
         NONE_OF {
+            ITEM_POPUP(player, ITEM_EJECT_PACK);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
             MESSAGE("Wobbuffet is switched out with the Eject Pack!");
         }
@@ -171,9 +181,11 @@ SINGLE_BATTLE_TEST("Eject Pack will miss timing to switch out user if Eject Butt
         ANIMATION(ANIM_TYPE_MOVE, MOVE_OVERHEAT, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         NONE_OF {
+            ITEM_POPUP(player, ITEM_EJECT_PACK);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
             MESSAGE("Wobbuffet is switched out with the Eject Pack!");
         }
+        ITEM_POPUP(opponent, ITEM_EJECT_BUTTON);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
     } THEN {
         EXPECT(player->species == SPECIES_WOBBUFFET);
@@ -214,13 +226,19 @@ DOUBLE_BATTLE_TEST("Eject Pack: Only the fastest Eject Pack will activate after 
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
         if (speed == 11) {
             NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, playerRight);
+            ITEM_POPUP(playerRight, ITEM_EJECT_PACK);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerRight);
-            NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
+            NONE_OF {
+                ITEM_POPUP(playerLeft, ITEM_EJECT_PACK);
+                ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
+            }
         } else {
             NONE_OF {
                 ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, playerLeft);
+                ITEM_POPUP(playerRight, ITEM_EJECT_PACK);
                 ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerRight);
             }
+            ITEM_POPUP(playerLeft, ITEM_EJECT_PACK);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
         }
     }
@@ -252,10 +270,18 @@ DOUBLE_BATTLE_TEST("Eject Pack: Only the fastest Eject Pack will activate after 
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
         if (speed == 11) {
+            ITEM_POPUP(playerRight, ITEM_EJECT_PACK);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerRight);
-            NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
+            NONE_OF {
+                ITEM_POPUP(playerLeft, ITEM_EJECT_PACK);
+                ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
+            }
         } else {
-            NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerRight);
+            NONE_OF {
+                ITEM_POPUP(playerRight, ITEM_EJECT_PACK);
+                ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerRight);
+            }
+            ITEM_POPUP(playerLeft, ITEM_EJECT_PACK);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
         }
     }
@@ -290,10 +316,18 @@ DOUBLE_BATTLE_TEST("Eject Pack: Only the fastest Eject Pack will activate after 
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
         if (speed == 11) {
+            ITEM_POPUP(playerRight, ITEM_EJECT_PACK);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerRight);
-            NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
+            NONE_OF {
+                ITEM_POPUP(playerLeft, ITEM_EJECT_PACK);
+                ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
+            }
         } else {
-            NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerRight);
+            NONE_OF {
+                ITEM_POPUP(playerRight, ITEM_EJECT_PACK);
+                ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerRight);
+            }
+            ITEM_POPUP(playerLeft, ITEM_EJECT_PACK);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
         }
     }
@@ -330,10 +364,15 @@ DOUBLE_BATTLE_TEST("Eject Pack: Only the fastest Eject Pack will activate after 
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
         if (speed == 11) {
+            ITEM_POPUP(playerRight, ITEM_EJECT_PACK);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerRight);
             NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
         } else {
-            NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerRight);
+            NONE_OF {   
+                ITEM_POPUP(playerRight, ITEM_EJECT_PACK);
+                ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerRight);
+            }
+            ITEM_POPUP(playerLeft, ITEM_EJECT_PACK);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
         }
     }
@@ -353,10 +392,14 @@ SINGLE_BATTLE_TEST("Eject Pack does not activate if mon is switched in due to Ej
         }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BULLDOZE, player);
+        ITEM_POPUP(opponent, ITEM_EJECT_BUTTON);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
         MESSAGE("The opposing Wobbuffet is switched out with the Eject Button!");
         MESSAGE("2 sent out Wobbuffet!");
-        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        NONE_OF {
+            ITEM_POPUP(opponent, ITEM_EJECT_PACK);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        }
     }
 }
 
@@ -378,8 +421,12 @@ DOUBLE_BATTLE_TEST("Eject Pack will trigger on the fastest mon at the end of the
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SYRUP_BOMB_SPEED_DROP, playerRight);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SYRUP_BOMB_SPEED_DROP, playerLeft);
+        ITEM_POPUP(playerRight, ITEM_EJECT_PACK);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerRight);
-        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
+        NONE_OF {
+            ITEM_POPUP(playerLeft, ITEM_EJECT_PACK);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
+        }
     }
 }
 
@@ -395,6 +442,7 @@ SINGLE_BATTLE_TEST("Eject Pack will trigger after a Mega Evolution")
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, opponent);
         ABILITY_POPUP(opponent, ABILITY_INTIMIDATE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        ITEM_POPUP(player, ITEM_EJECT_PACK);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
     }
 }
