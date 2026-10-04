@@ -273,7 +273,7 @@ enum BattleScriptOpcode
 #define sB_ANIM_TURN                 (gBattleScripting + 0x18) // animTurn
 #define sB_ANIM_TARGETS_HIT          (gBattleScripting + 0x19) // animTargetsHit
 #define sUNUSED_0x1A                 (gBattleScripting + 0x1A) // unused_0x1a
-#define sUNUSED_0x1B                 (gBattleScripting + 0x1B) // unused_0x1b
+#define sSAVED_BATTLER_2             (gBattleScripting + 0x1B) // savedBattlerTwo
 #define sGIVEEXP_STATE               (gBattleScripting + 0x1C) // getexpState
 #define sBATTLE_STYLE                (gBattleScripting + 0x1D) // battleStyle
 #define sLVLBOX_STATE                (gBattleScripting + 0x1E) // drawlvlupboxState

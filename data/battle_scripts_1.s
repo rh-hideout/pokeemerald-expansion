@@ -799,21 +799,17 @@ BattleScript_EffectHealingWishRestore:
 
 BattleScript_MoveEffectOverwriteAbility::
 	tryillusionoff BS_EFFECT_BATTLER
+	tryendneutralizinggas BS_EFFECT_BATTLER
 	trytoclearprimalweather
 	call BattleScript_TryRevertWeatherform
 	flushtextbox
-	tryendneutralizinggas
 	switchinabilities BS_EFFECT_BATTLER
 	return
 
 BattleScript_MoveEffectGastroAcid::
 	printstring STRINGID_PKMNSABILITYSUPPRESSED
 	waitmessage B_WAIT_TIME_LONG
-	tryillusionoff BS_EFFECT_BATTLER
-	trytoclearprimalweather
-	call BattleScript_TryRevertWeatherform
-	flushtextbox
-	tryendneutralizinggas
+	call BattleScript_MoveEffectOverwriteAbility
 	return
 
 BattleScript_TryRoomServiceLoop::
@@ -1118,10 +1114,6 @@ BattleScript_TwoTurnMoveCharging::
 	setadditionaleffects @ only onChargeTurnOnly effects will work here
 	return
 
-BattleScript_SkyDropCharging::
-	call BattleScript_TwoTurnMoveCharging
-	goto BattleScript_MoveEnd
-
 BattleScript_TwoTurnMovesSecondTurnRet:
 	setbyte sB_ANIM_TURN, 1
 	setbyte sB_ANIM_TARGETS_HIT, 0
@@ -1407,7 +1399,7 @@ BattleScript_MoveEffectRolePlay::
 	call BattleScript_AbilityPopUpOverwriteThenNormal
 	printstring STRINGID_PKMNCOPIEDFOE
 	waitmessage B_WAIT_TIME_LONG
-	switchinabilities BS_EFFECT_BATTLER
+	call BattleScript_MoveEffectOverwriteAbility
 	return
 
 @ TO-DO: The battle messages from this should come after the move has resolved
@@ -1602,6 +1594,7 @@ BattleScript_HandleFaintedMonLoop::
 	trytrainerslidemsglaston BS_FAINTED
 	switchineffects BS_FAINTED_MULTIPLE_1
 	jumpifbytenotequal gBattlerFainted, gBattlersCount, BattleScript_HandleFaintedMonLoop
+	setbyte gBattlerFainted, 0
 BattleScript_HandleFaintedMonMultipleEnd::
 	switchinevents
 	trytrainerslidemsglaston BS_FAINTED_MULTIPLE_2
@@ -3781,7 +3774,11 @@ BattleScript_MummyActivates::
 	recordability BS_ATTACKER
 	printstring STRINGID_ATTACKERACQUIREDABILITY
 	waitmessage B_WAIT_TIME_LONG
-	call BattleScript_MoveEffectOverwriteAbility
+	trytoclearprimalweather
+	call BattleScript_TryRevertWeatherform
+	flushtextbox
+	tryillusionoff BS_ATTACKER
+	tryendneutralizinggas BS_ATTACKER
 	return
 
 BattleScript_WanderingSpiritActivates::
@@ -4744,7 +4741,7 @@ BattleScript_PastelVeilEnd:
 
 BattleScript_NeutralizingGasExits::
     copybyte sSAVED_BATTLER, sBATTLER
-    savetarget
+    copybyte sSAVED_BATTLER_2, gEffectBattler
     pause B_WAIT_TIME_SHORT
     printstring STRINGID_NEUTRALIZINGGASOVER
     waitmessage B_WAIT_TIME_LONG
@@ -4759,8 +4756,8 @@ BattleScript_NeutralizingGasExitsLoopIncrement:
     addbyte gBattlerOrderIndex, 1
     jumpifbytenotequal gBattlerOrderIndex, gBattlersCount, BattleScript_NeutralizingGasExitsLoop
     restorebattlerorderindex
-    restoretarget
     copybyte sBATTLER, sSAVED_BATTLER
+    copybyte gEffectBattler, sSAVED_BATTLER_2
     return
 
 BattleScript_MagicianActivates::
@@ -5148,6 +5145,7 @@ BattleScript_ForfeitBattleGaveMoney::
 
 BattleScript_Attackstring::
 	printattackstring
+	waitmessage B_WAIT_TIME_SHORT
 	return
 
 BattleScript_SubmoveAttackstring::

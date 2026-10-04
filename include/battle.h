@@ -876,7 +876,7 @@ struct BattleScripting
     u8 animTurn;
     u8 animTargetsHit;
     u8 unused_0x1a;
-    u8 unused_0x1b;
+    u8 savedBattlerTwo;
     u8 getexpState;
     u8 battleStyle;
     u8 drawlvlupboxState;

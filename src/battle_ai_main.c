@@ -845,7 +845,7 @@ static void SetBattlerAiMovesData(struct AiLogicData *aiData, enum BattlerId bat
 
         SaveBattlerData(battlerDef);
         SetBattlerData(battlerDef);
-        CalcBattlerAiMovesData(aiData, battlerAtk, battlerDef, weather, gFieldStatuses);
+        CalcBattlerAiMovesData(aiData, battlerAtk, battlerDef, weather, gFieldTimers.terrain);
         RestoreBattlerData(battlerDef);
     }
     RestoreBattlerData(battlerAtk);
@@ -855,6 +855,10 @@ void SetAiLogicDataForTurn(struct AiLogicData *aiData)
 {
     memset(aiData, 0, sizeof(struct AiLogicData));
     gAiBattleData->aiUsingGimmick = 0;
+    if (IsDoubleBattle())
+    {
+        aiData->reverseBattlerLogicOrder = RandomPercentage(RNG_AI_REVERSE_BATTLER_LOGIC_ORDER, GetConfig(AI_REVERSE_BATTLER_LOGIC_ORDER_CHANCE));
+    }
 
     if (!IsSmartBattle())
         return;
@@ -1198,7 +1202,7 @@ void BattleAI_DoAIProcessing_PredictedSwitchin(struct AiThinkingStruct *aiThink,
     gBattleMons[battlerDef] = switchinCandidate;
     gAiThinkingStruct->saved[battlerDef].saved = TRUE;
     SetBattlerAiData(battlerDef, aiData);
-    CalcBattlerAiMovesData(aiData, battlerAtk, battlerDef, AI_GetWeather(), gFieldStatuses);
+    CalcBattlerAiMovesData(aiData, battlerAtk, battlerDef, AI_GetWeather(), gFieldTimers.terrain);
     gAiThinkingStruct->saved[battlerDef].saved = FALSE;
 
     // Regular processing with new battler
@@ -2495,18 +2499,21 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
           || ((aiData->abilities[battlerDef] == ABILITY_CONTRARY) && !IsTargetingPartner(battlerAtk, battlerDef))) // don't want to raise target stats unless its your partner
             ADJUST_SCORE(-10);
         break;
-    case EFFECT_PSYCH_UP:   // haze stats check
+    case EFFECT_PSYCH_UP:
         {
+            s32 statScore = 0;
             for (enum Stat statId = STAT_ATK; statId < NUM_BATTLE_STATS; statId++)
             {
-                if (gBattleMons[battlerAtk].statStages[statId] > DEFAULT_STAT_STAGE || gBattleMons[GetPartnerBattler(battlerAtk)].statStages[statId] > DEFAULT_STAT_STAGE)
-                    ADJUST_SCORE(-10);  // Don't want to reset our boosted stats
+                if (statId == STAT_ATK && !HasMoveWithCategory(battlerAtk, DAMAGE_CATEGORY_PHYSICAL))
+                    continue;
+                if (statId == STAT_SPATK && !HasMoveWithCategory(battlerAtk, DAMAGE_CATEGORY_SPECIAL))
+                    continue;
+
+                statScore += gBattleMons[battlerDef].statStages[statId] - gBattleMons[battlerAtk].statStages[statId];
             }
-            for (enum Stat statId = STAT_ATK; statId < NUM_BATTLE_STATS; statId++)
-            {
-                if (gBattleMons[battlerDef].statStages[statId] < DEFAULT_STAT_STAGE || gBattleMons[GetPartnerBattler(battlerDef)].statStages[statId] < DEFAULT_STAT_STAGE)
-                    ADJUST_SCORE(-10); //Don't want to copy enemy lowered stats
-            }
+
+            if (statScore < 0)
+                ADJUST_SCORE(-10); // Drops our stats more than the amount raised
         }
         break;
     case EFFECT_SEMI_INVULNERABLE:
