@@ -1366,7 +1366,8 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Finale heals allies by 1/6 of their health")
 {
     s16 damage1, damage2;
     GIVEN {
-        ASSUME(MoveHasAdditionalEffectSelf(MOVE_G_MAX_FINALE, MOVE_EFFECT_HEAL_TEAM));
+        ASSUME(MoveHasAdditionalEffectSelf(MOVE_G_MAX_FINALE, MOVE_EFFECT_RESTORE_HP));
+        ASSUME(MoveHasAdditionalEffectOnSide(MOVE_G_MAX_FINALE, MOVE_EFFECT_RESTORE_HP));
         PLAYER(SPECIES_ALCREMIE) { HP(1); GigantamaxFactor(TRUE); }
         PLAYER(SPECIES_MILCERY) { HP(1); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -1736,7 +1737,8 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Finale heals allies by 1/6 of their health, e
 {
     s16 damage1, damage2;
     GIVEN {
-        ASSUME(MoveHasAdditionalEffectSelf(MOVE_G_MAX_FINALE, MOVE_EFFECT_HEAL_TEAM));
+        ASSUME(MoveHasAdditionalEffectSelf(MOVE_G_MAX_FINALE, MOVE_EFFECT_RESTORE_HP));
+        ASSUME(MoveHasAdditionalEffectOnSide(MOVE_G_MAX_FINALE, MOVE_EFFECT_RESTORE_HP));
         PLAYER(SPECIES_ALCREMIE) { HP(1); GigantamaxFactor(TRUE); }
         PLAYER(SPECIES_MILCERY) { HP(1); }
         OPPONENT(SPECIES_WOBBUFFET)  { HP(1); }

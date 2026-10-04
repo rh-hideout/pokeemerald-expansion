@@ -4463,29 +4463,17 @@ static void (*const sSetEffectHandlers[])(struct BattleCalcValues *cv, struct Se
     [MOVE_EFFECT_VINE_LASH] = HandleSetEffectGmaxNonTypeDamage,
     [MOVE_EFFECT_WILDFIRE] = HandleSetEffectGmaxNonTypeDamage,
     [MOVE_EFFECT_CANNONADE] = HandleSetEffectGmaxNonTypeDamage,
-    [MOVE_EFFECT_EFFECT_SPORE_SIDE] = HandleSetEffectEffectSporeSide,
-    [MOVE_EFFECT_PARALYZE_SIDE] = HandleSetEffectParalyzeSide,
-    [MOVE_EFFECT_CONFUSE_PAY_DAY_SIDE] = HandleSetEffectConfusePayDaySide,
     [MOVE_EFFECT_CRIT_PLUS] = HandleSetEffectCritPlus,
-    [MOVE_EFFECT_PREVENT_ESCAPE_SIDE] = HandleSetEffectPreventEscapeSide,
     [MOVE_EFFECT_AURORA_VEIL] = HandleSetEffectAuroraVeil,
-    [MOVE_EFFECT_INFATUATE_SIDE] = HandleSetEffectInfatuateSide,
-    [MOVE_EFFECT_RECYCLE_BERRIES] = HandleSetEffectRecycleBerriesSide,
     [MOVE_EFFECT_RECYCLE] = HandleSetEffectRecycle,
-    [MOVE_EFFECT_POISON_SIDE] = HandleSetEffectPoisonSide,
     [MOVE_EFFECT_DEFOG] = HandleSetEffectDefog,
-    [MOVE_EFFECT_POISON_PARALYZE_SIDE] = HandleSetEffectPoisonParalyzeSide,
-    [MOVE_EFFECT_HEAL_TEAM] = HandleSetEffectHealTeam,
     [MOVE_EFFECT_SPITE] = HandleSetEffectSpite,
     [MOVE_EFFECT_GRAVITY] = HandleSetEffectGravity,
     [MOVE_EFFECT_SANDBLAST_SIDE] = HandleSetEffectSandblastSide,
     [MOVE_EFFECT_FIRE_SPIN_SIDE] = HandleSetEffectFireSpinSide,
-    [MOVE_EFFECT_YAWN_FOE] = HandleSetEffectYawnFoe,
     [MOVE_EFFECT_AROMATHERAPY] = HandleSetEffectAromatherapy,
-    [MOVE_EFFECT_CONFUSE_SIDE] = HandleSetEffectConfuseSide,
     [MOVE_EFFECT_STEELSURGE] = HandleSetEffectSteelsurge,
     [MOVE_EFFECT_STEALTH_ROCK] = HandleSetEffectStealthRock,
-    [MOVE_EFFECT_TORMENT_SIDE] = HandleSetEffectTormentSide,
     [MOVE_EFFECT_FIXED_POWER] = HandleSetEffectNone,
     [STAT_CHANGE_EFFECT_PLUS] = HandleSetEffectNone,
     [STAT_CHANGE_EFFECT_MINUS] = HandleSetEffectNone,
@@ -4598,17 +4586,8 @@ static inline bool32 IgnoreTargetingForMoveEffect(enum MoveEffect moveEffect) //
     case MOVE_EFFECT_WILDFIRE:
     case MOVE_EFFECT_CANNONADE:
     case MOVE_EFFECT_VOLCALITH:
-    case MOVE_EFFECT_PREVENT_ESCAPE_SIDE:
     case MOVE_EFFECT_SANDBLAST_SIDE:
     case MOVE_EFFECT_FIRE_SPIN_SIDE:
-    case MOVE_EFFECT_PARALYZE_SIDE:
-    case MOVE_EFFECT_POISON_SIDE:
-    case MOVE_EFFECT_CONFUSE_PAY_DAY_SIDE:
-    case MOVE_EFFECT_POISON_PARALYZE_SIDE:
-    case MOVE_EFFECT_EFFECT_SPORE_SIDE:
-    case MOVE_EFFECT_INFATUATE_SIDE:
-    case MOVE_EFFECT_CONFUSE_SIDE:
-    case MOVE_EFFECT_TORMENT_SIDE:
     case MOVE_EFFECT_CORE_ENFORCER:
     case MOVE_EFFECT_RAINBOW:
     case MOVE_EFFECT_SEA_OF_FIRE:

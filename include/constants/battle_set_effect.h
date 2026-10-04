@@ -171,27 +171,15 @@ enum __attribute__((packed)) MoveEffect
     MOVE_EFFECT_VINE_LASH,
     MOVE_EFFECT_WILDFIRE,
     MOVE_EFFECT_CANNONADE,
-    MOVE_EFFECT_EFFECT_SPORE_SIDE,
-    MOVE_EFFECT_PARALYZE_SIDE,
-    MOVE_EFFECT_CONFUSE_PAY_DAY_SIDE,
     MOVE_EFFECT_CRIT_PLUS, // G-Max Chi Strike
-    MOVE_EFFECT_PREVENT_ESCAPE_SIDE,
     MOVE_EFFECT_AURORA_VEIL,
-    MOVE_EFFECT_INFATUATE_SIDE,
-    MOVE_EFFECT_RECYCLE_BERRIES,
-    MOVE_EFFECT_POISON_SIDE,
     MOVE_EFFECT_DEFOG,
-    MOVE_EFFECT_POISON_PARALYZE_SIDE,
-    MOVE_EFFECT_HEAL_TEAM,
     MOVE_EFFECT_GRAVITY,
     MOVE_EFFECT_VOLCALITH,
     MOVE_EFFECT_SANDBLAST_SIDE,
-    MOVE_EFFECT_YAWN_FOE,
     MOVE_EFFECT_AROMATHERAPY,
-    MOVE_EFFECT_CONFUSE_SIDE,
     MOVE_EFFECT_STEELSURGE, // Steel type rocks
     MOVE_EFFECT_STEALTH_ROCK, // Max Move rocks, not to be confused with rocks set up from Ceasless Edge (same but differ in execution order)
-    MOVE_EFFECT_TORMENT_SIDE,
     MOVE_EFFECT_FIRE_SPIN_SIDE,
     MOVE_EFFECT_FIXED_POWER, // This has no real use outside of dmax moves
     // Max move effects end. They can be used for (custom) normal moves.
