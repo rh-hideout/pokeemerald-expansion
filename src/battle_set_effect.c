@@ -4524,6 +4524,9 @@ static bool32 ShouldTryToApplyEffect(struct BattleCalcValues *cv, struct SetEffe
      && IsFinalStrikeEffect(se->moveEffect))
         return FALSE;
 
+    if (gBattleStruct->setEffectOnAlly && !IsBattlerAlive(se->effectBattler)) // Ally wasn't alive
+        return FALSE;
+
     if (cv->isStatusMove)
         return TRUE;
 

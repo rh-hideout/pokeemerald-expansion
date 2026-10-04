@@ -2722,7 +2722,6 @@ static enum CancelerResult CancelerStatusEffects(struct BattleCalcValues *cv)
             se.effectBattler = isAllyAffected ? partner : se.effectBattler;
             se.primary = TRUE;
             se.certain = TRUE;
-            se.onSide = additionalEffect->onSide;
             SetMoveEffect(cv, &se);
             gBattleStruct->moveResultFlags[se.effectBattler] |= MOVE_RESULT_VALID_STATUS_TARGET;
             if (!se.effectFailed)

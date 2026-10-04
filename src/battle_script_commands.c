@@ -1437,7 +1437,6 @@ static void Cmd_setadditionaleffects(void)
                     se.effectBattler = effectBattler;
                     se.primary = percentChance == 0;
                     se.certain = percentChance >= 100;
-                    se.onSide = additionalEffect->onSide; // TODO
                     SetMoveEffect(&cv, &se);
                 }
             }
