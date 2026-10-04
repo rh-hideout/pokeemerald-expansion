@@ -1778,7 +1778,7 @@ static void HandleSetEffectFireSpinSide(struct BattleCalcValues *cv, struct SetE
     SetWrapForOpposingSide(cv, se, MOVE_FIRE_SPIN);
 }
 
-static void HandleSetEffectSandblastSide(struct BattleCalcValues *cv, struct SetEffect *se)
+static void HandleSetEffectSandTombSide(struct BattleCalcValues *cv, struct SetEffect *se)
 {
     SetWrapForOpposingSide(cv, se, MOVE_SAND_TOMB);
 }
@@ -4379,7 +4379,7 @@ static void (*const sSetEffectHandlers[])(struct BattleCalcValues *cv, struct Se
     [MOVE_EFFECT_DEFOG] = HandleSetEffectDefog,
     [MOVE_EFFECT_SPITE] = HandleSetEffectSpite,
     [MOVE_EFFECT_GRAVITY] = HandleSetEffectGravity,
-    [MOVE_EFFECT_SANDBLAST_SIDE] = HandleSetEffectSandblastSide,
+    [MOVE_EFFECT_SAND_TOMB_SIDE] = HandleSetEffectSandTombSide,
     [MOVE_EFFECT_FIRE_SPIN_SIDE] = HandleSetEffectFireSpinSide,
     [MOVE_EFFECT_AROMATHERAPY] = HandleSetEffectAromatherapy,
     [MOVE_EFFECT_STEELSURGE] = HandleSetEffectSteelsurge,
@@ -4496,7 +4496,7 @@ static inline bool32 IgnoreTargetingForMoveEffect(enum MoveEffect moveEffect) //
     case MOVE_EFFECT_WILDFIRE:
     case MOVE_EFFECT_CANNONADE:
     case MOVE_EFFECT_VOLCALITH:
-    case MOVE_EFFECT_SANDBLAST_SIDE:
+    case MOVE_EFFECT_SAND_TOMB_SIDE:
     case MOVE_EFFECT_FIRE_SPIN_SIDE:
     case MOVE_EFFECT_CORE_ENFORCER:
     case MOVE_EFFECT_RAINBOW:

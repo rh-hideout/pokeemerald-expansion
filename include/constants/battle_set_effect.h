@@ -176,7 +176,7 @@ enum __attribute__((packed)) MoveEffect
     MOVE_EFFECT_DEFOG,
     MOVE_EFFECT_GRAVITY,
     MOVE_EFFECT_VOLCALITH,
-    MOVE_EFFECT_SANDBLAST_SIDE,
+    MOVE_EFFECT_SAND_TOMB_SIDE,
     MOVE_EFFECT_AROMATHERAPY,
     MOVE_EFFECT_STEELSURGE, // Steel type rocks
     MOVE_EFFECT_STEALTH_ROCK, // Max Move rocks, not to be confused with rocks set up from Ceasless Edge (same but differ in execution order)
