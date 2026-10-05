@@ -1752,8 +1752,8 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Finale heals allies by 1/6 of their health, e
         HP_BAR(playerLeft, captureDamage: &damage1);
         HP_BAR(playerRight, captureDamage: &damage2);
     } THEN {
-        EXPECT_MUL_EQ(-damage1, Q_4_12(6), playerLeft->maxHP); // heals based on Dynamax HP. Appears to have a problem with milcery in this case!?
-        EXPECT_MUL_EQ(-damage2, Q_4_12(6), playerRight->maxHP); // heals based on Dynamax HP. Appears to have a problem with milcery in this case!?
+        EXPECT_MUL_EQ(-damage1, Q_4_12(6), playerLeft->maxHP);
+        EXPECT_MUL_EQ(-damage2, Q_4_12(6), playerRight->maxHP);
     }
 }
 
