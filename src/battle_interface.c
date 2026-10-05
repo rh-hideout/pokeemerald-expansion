@@ -846,28 +846,23 @@ static bool32 ShouldShowHealthbar(enum BattlerId battler)
 void UpdateHpTextInHealthbox(u32 healthboxSpriteId, s16 currHp, s16 maxHp)
 {
     enum BattlerId battler = gSprites[healthboxSpriteId].hMain_Battler;
-    switch (GetBattlerCoordsIndex(battler))
-    {
-    default:
+
+    if (GetBattlerCoordsIndex(battler) == BATTLE_COORDS_DOUBLES)
     {
         UpdateHpTextInHealthboxInDoubles(healthboxSpriteId, currHp, maxHp);
-        break;
+        return;
     }
-    case BATTLE_COORDS_SINGLES:
+
+    if (IsOnPlayerSide(battler)) // Player
     {
-        if (IsOnPlayerSide(battler)) // Player
-        {
-            PrintHpOnHealthbox(healthboxSpriteId, currHp, maxHp, HEALTHBOX_BG_INDEX, 0, 16, FALSE);
-        }
-        else // Opponent
-        {
-            if (B_HP_PERCENTAGE_DISPLAY)
-                PrintHpOnHealthbox(healthboxSpriteId, currHp, maxHp, HEALTHBOX_BG_INDEX, -8, 16, TRUE);
-            else if (gBattleSpritesDataPtr->battlerData[battler].hpNumbersNoBars)
-                PrintHpOnHealthbox(healthboxSpriteId, currHp, maxHp, HEALTHBOX_BG_INDEX, -8, 8, FALSE);  // debug only
-        }
-        break;
+        PrintHpOnHealthbox(healthboxSpriteId, currHp, maxHp, HEALTHBOX_BG_INDEX, 0, 16, FALSE);
     }
+    else // Opponent
+    {
+        if (B_HP_PERCENTAGE_DISPLAY)
+            PrintHpOnHealthbox(healthboxSpriteId, currHp, maxHp, HEALTHBOX_BG_INDEX, -8, 16, TRUE);
+        else if (gBattleSpritesDataPtr->battlerData[battler].hpNumbersNoBars)
+            PrintHpOnHealthbox(healthboxSpriteId, currHp, maxHp, HEALTHBOX_BG_INDEX, -8, 8, FALSE); // debug only
     }
 }
 
