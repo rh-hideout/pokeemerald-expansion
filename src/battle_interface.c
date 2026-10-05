@@ -113,6 +113,8 @@ static void SpriteCB_LastUsedBall(struct Sprite *);
 static void SpriteCB_LastUsedBallWin(struct Sprite *);
 static void SpriteCB_MoveInfoWin(struct Sprite *sprite);
 
+static bool32 CanShowHpText(enum BattlerId battler);
+
 static const struct OamData sOamData_64x32 =
 {
     .y = 0,
@@ -911,8 +913,14 @@ static void UpdateHpTextInHealthboxInDoubles(u32 healthboxSpriteId, s16 currHp, 
 
 void SwapHpBarsWithHpText(void)
 {
+    if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
+        return;
+
     for (enum BattlerId i = 0; i < gBattlersCount; i++)
     {
+        if (!CanShowHpText(i))
+            continue;
+
         u32 healthboxRightSpriteId = GetHealthboxRightSpriteId(gHealthboxSpriteIds[i]);
         struct Pokemon *mon = GetBattlerMon(i);
         struct Sprite* healthboxSprite = &gSprites[gHealthboxSpriteIds[i]];
@@ -922,17 +930,13 @@ void SwapHpBarsWithHpText(void)
         {
             s32 currHp = GetMonData(mon, MON_DATA_HP);
             s32 maxHp = GetMonData(mon, MON_DATA_MAX_HP);
-            bool8 noBars;
+            bool32 noBars;
 
             gBattleSpritesDataPtr->battlerData[i].hpNumbersNoBars ^= 1;
             noBars = gBattleSpritesDataPtr->battlerData[i].hpNumbersNoBars;
+
             if (IsOnPlayerSide(i))
             {
-                if (GetBattlerCoordsIndex(i) == BATTLE_COORDS_SINGLES)
-                    continue;
-                if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
-                    continue;
-
                 if (noBars == TRUE) // bars to text
                 {
                     Tile4BPP* dest = SpriteTile(healthBarSprite);
@@ -953,11 +957,6 @@ void SwapHpBarsWithHpText(void)
             }
             else
             {
-                if (GetBattlerCoordsIndex(i) == BATTLE_COORDS_SINGLES)
-                    continue;
-                if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
-                    continue;
-
                 if (noBars == TRUE) // bars to text
                 {
                         Tile4BPP* dest = SpriteTile(healthBarSprite);
@@ -977,6 +976,13 @@ void SwapHpBarsWithHpText(void)
             }
         }
     }
+}
+
+static bool32 CanShowHpText(enum BattlerId battler)
+{
+    return IsOnPlayerSide(battler)
+        || B_HP_PERCENTAGE_DISPLAY
+        || GetBattlerCoordsIndex(battler) == BATTLE_COORDS_SINGLES;
 }
 
 #undef tBattler
