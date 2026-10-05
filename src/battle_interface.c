@@ -392,9 +392,9 @@ static const struct SpritePalette sStatusSummaryBallsSpritePal =
 
 static const struct SpriteSheet sStatusSummaryBallsSpriteSheet =
 {
-    gBattleBallDisplay,
-    4 * TILE_SIZE_4BPP,
-    TAG_STATUS_SUMMARY_BALLS_TILE,
+    .data = gBattleBallDisplay,
+    .size = 4 * TILE_SIZE_4BPP,
+    .tag = TAG_STATUS_SUMMARY_BALLS_TILE,
 };
 
 static const struct OamData sOamData_StatusSummaryBalls =
