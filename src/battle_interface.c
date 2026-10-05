@@ -1811,10 +1811,11 @@ static u32 GetHealthBarColour(s32 maxValue, s32 currValue)
     case HP_BAR_YELLOW:
         return BUI_HPBAR_YELLOW;
     case HP_BAR_RED:
-    default: // Handles Shedinja
-        return (maxValue > 1)
-                   ? BUI_HPBAR_RED
-                   : BUI_HPBAR_GREEN;
+    case HP_BAR_EMPTY:
+        if (maxValue == 1) // Shedinja
+            return BUI_HPBAR_GREEN;
+        else
+            return BUI_HPBAR_RED;
     }
     __builtin_unreachable();
 }
