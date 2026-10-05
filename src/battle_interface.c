@@ -1,4 +1,5 @@
 #include "global.h"
+#include "assertf.h"
 #include "config/battle.h"
 #include "config/general.h"
 #include "constants/battle.h"
@@ -114,6 +115,7 @@ static void SpriteCB_LastUsedBallWin(struct Sprite *);
 static void SpriteCB_MoveInfoWin(struct Sprite *sprite);
 
 static bool32 CanShowHpText(enum BattlerId battler);
+static s32 GetStatusIconTileOffset(enum BattlerId battler);
 
 static const struct OamData sOamData_64x32 =
 {
@@ -1561,80 +1563,54 @@ void TryAddPokeballIconToHealthbox(u8 healthboxSpriteId, bool8 noStatus)
         CpuFill32(0, SpriteTile(healthBarSprite) + 8, sizeof(Tile4BPP));
 }
 
+const static struct
+{
+    u32 status;
+    u32 tileNum;
+    u32 pal;
+} sStatusIconArray[] = {
+    {STATUS1_SLEEP,     BUI_STATUS_SLP, PAL_STATUS_SLP},
+    {STATUS1_PSN_ANY,   BUI_STATUS_PSN, PAL_STATUS_PSN},
+    {STATUS1_BURN,      BUI_STATUS_BRN, PAL_STATUS_BRN},
+    {STATUS1_FREEZE,    BUI_STATUS_FRZ, PAL_STATUS_FRZ},
+    {STATUS1_FROSTBITE, BUI_STATUS_FRB, PAL_STATUS_FRZ},
+    {STATUS1_PARALYSIS, BUI_STATUS_PAR, PAL_STATUS_PAR},
+};
+
 #define STATUS_PAL_START 12
 static void UpdateStatusIconInHealthbox(u8 healthboxSpriteId)
 {
-    u32 status;
-    const Tile4BPP *statusGfxPtr;
-    s16 tileNumAdder;
-    u8 statusPalId;
+    const Tile4BPP *statusGfxPtr = NULL;
+    u8 statusPalId = 0;
 
     enum BattlerId battler = gSprites[healthboxSpriteId].hMain_Battler;
     struct Sprite* healthBoxSprite = &gSprites[healthboxSpriteId];
     struct Sprite* healthBarSprite = &gSprites[healthBoxSprite->hMain_HealthBarSpriteId];
-    status = GetMonData(GetBattlerMon(battler), MON_DATA_STATUS);
-    if (IsOnPlayerSide(battler))
-    {
-        switch (GetBattlerCoordsIndex(battler))
-        {
-        case BATTLE_COORDS_SINGLES:
-            tileNumAdder = 0x1A;
-            break;
-        default:
-            tileNumAdder = 0x12;
-            break;
-        }
-    }
-    else
-    {
-        if (B_HP_PERCENTAGE_DISPLAY && GetBattlerCoordsIndex(battler) == BATTLE_COORDS_SINGLES)
-            tileNumAdder = 0x19;
-        else
-            tileNumAdder = 0x11;
-    }
+    u32 status = GetMonData(GetBattlerMon(battler), MON_DATA_STATUS);
 
-    if (status & STATUS1_SLEEP)
-    {
-        statusGfxPtr = &gBattleStatusGfx[BUI_STATUS_SLP];
-        statusPalId = PAL_STATUS_SLP;
-    }
-    else if (status & STATUS1_PSN_ANY)
-    {
-        statusGfxPtr = &gBattleStatusGfx[BUI_STATUS_PSN];
-        statusPalId = PAL_STATUS_PSN;
-    }
-    else if (status & STATUS1_BURN)
-    {
-        statusGfxPtr = &gBattleStatusGfx[BUI_STATUS_BRN];
-        statusPalId = PAL_STATUS_BRN;
-    }
-    else if (status & STATUS1_FREEZE)
-    {
-        statusGfxPtr = &gBattleStatusGfx[BUI_STATUS_FRZ];
-        statusPalId = PAL_STATUS_FRZ;
-    }
-    else if (status & STATUS1_FROSTBITE)
-    {
-        statusGfxPtr = &gBattleStatusGfx[BUI_STATUS_FRB];
-        statusPalId = PAL_STATUS_FRZ;
-    }
-    else if (status & STATUS1_PARALYSIS)
-    {
-        statusGfxPtr = &gBattleStatusGfx[BUI_STATUS_PAR];
-        statusPalId = PAL_STATUS_PAR;
-    }
-    else
+    s32 tileOffset = GetStatusIconTileOffset(battler);
+
+    if (!(status & STATUS1_ANY))
     {
         statusGfxPtr = &gHealthBoxMisc[BUI_MISC_BLANK];
 
-            Tile4BPP *dest = SpriteTile(healthBoxSprite) + tileNumAdder;
-            FillTiles((Tile4BPP*)statusGfxPtr, dest, 3);
+        Tile4BPP *dest = SpriteTile(healthBoxSprite) + tileOffset;
+        FillTiles((Tile4BPP *)statusGfxPtr, dest, 3);
 
         if (ShouldShowHealthbar(battler))
             CopyTiles(&gBattleHpBarGfx[BUI_HPBAR_LABEL], SpriteTile(healthBarSprite), 2);
 
         TryAddPokeballIconToHealthbox(healthboxSpriteId, TRUE);
         return;
+    }
+
+    for (int i = 0; i < NELEMS(sStatusIconArray); i++)
+    {
+        if (sStatusIconArray[i].status & status)
+        {
+            statusGfxPtr = &gBattleStatusGfx[sStatusIconArray[i].tileNum];
+            statusPalId = sStatusIconArray[i].pal;
+        }
     }
 
     u32 paletteNum = healthBoxSprite->oam.paletteNum;
@@ -1649,16 +1625,34 @@ static void UpdateStatusIconInHealthbox(u8 healthboxSpriteId)
     CopyTiles(statusGfxPtr, tempStatusGfx, NELEMS(tempStatusGfx));
     ReplacePalIndexInTiles(tempStatusGfx, 3, STATUS_PAL_START, STATUS_PAL_START + battler);
 
-    Tile4BPP *dest = SpriteTile(healthBoxSprite) + tileNumAdder;
+    Tile4BPP *dest = SpriteTile(healthBoxSprite) + tileOffset;
     CopyTiles(tempStatusGfx, dest, 3);
 
-    if (!CanShowHpText(battler) && ShouldShowHealthbar(battler))
+    if (ShouldShowHealthbar(battler))
     {
         CopyTiles(&gBattleHpBarGfx[BUI_HPBAR_START], SpriteTile(healthBarSprite), 1);
         CopyTiles(&gBattleHpBarGfx[BUI_HPBAR_EDGE], SpriteTile(healthBarSprite) + 1, 1);
     }
 
     TryAddPokeballIconToHealthbox(healthboxSpriteId, (B_HP_PERCENTAGE_DISPLAY && GetBattlerCoordsIndex(battler) == BATTLE_COORDS_SINGLES));
+}
+
+static s32 GetStatusIconTileOffset(enum BattlerId battler)
+{
+    s32 tileOffset = 0;
+
+    bool32 isSingleCoords =
+        GetBattlerCoordsIndex(battler) == BATTLE_COORDS_SINGLES;
+
+    bool32 isPlayerSide = IsOnPlayerSide(battler);
+
+    if (isSingleCoords && (B_HP_PERCENTAGE_DISPLAY || isPlayerSide))
+        tileOffset = 25;
+    else
+        tileOffset = 17;
+
+    return tileOffset + !!isPlayerSide;
+
 }
 
 static void UpdateSafariBallsTextOnHealthbox(u8 healthboxSpriteId)
@@ -1822,6 +1816,7 @@ static u32 GetHealthBarColour(s32 maxValue, s32 currValue)
                    ? BUI_HPBAR_RED
                    : BUI_HPBAR_GREEN;
     }
+    __builtin_unreachable();
 }
 
 static void DrawHealthBarTiles(enum BattlerId battler)
