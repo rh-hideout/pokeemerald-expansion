@@ -1652,14 +1652,12 @@ static void UpdateStatusIconInHealthbox(u8 healthboxSpriteId)
     Tile4BPP *dest = SpriteTile(healthBoxSprite) + tileNumAdder;
     CopyTiles(tempStatusGfx, dest, 3);
 
-    if ((!B_HP_PERCENTAGE_DISPLAY && !IsOnPlayerSide(battler)) || GetBattlerCoordsIndex(battler) == BATTLE_COORDS_DOUBLES)
+    if (!CanShowHpText(battler) && ShouldShowHealthbar(battler))
     {
-        if (!gBattleSpritesDataPtr->battlerData[battler].hpNumbersNoBars)
-        {
-            CopyTiles(&gBattleHpBarGfx[BUI_HPBAR_START], SpriteTile(healthBarSprite), 1);
-            CopyTiles(&gBattleHpBarGfx[BUI_HPBAR_EDGE], SpriteTile(healthBarSprite) + 1, 1);
-        }
+        CopyTiles(&gBattleHpBarGfx[BUI_HPBAR_START], SpriteTile(healthBarSprite), 1);
+        CopyTiles(&gBattleHpBarGfx[BUI_HPBAR_EDGE], SpriteTile(healthBarSprite) + 1, 1);
     }
+
     TryAddPokeballIconToHealthbox(healthboxSpriteId, (B_HP_PERCENTAGE_DISPLAY && GetBattlerCoordsIndex(battler) == BATTLE_COORDS_SINGLES));
 }
 
