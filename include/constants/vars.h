@@ -298,6 +298,10 @@
 #define VAR_TRAINER_CARD_MON_ICON_6         0
 #define VAR_HERACROSS_SIZE_RECORD           0
 #define VAR_MAGIKARP_SIZE_RECORD            0
+#define VAR_HOF_BRAG_STATE                  0
+#define VAR_EGG_BRAG_STATE                  0
+#define VAR_LINK_WIN_BRAG_STATE             0
+#define VAR_RENEWABLE_ITEM_STEP_COUNTER     0
 
 #define VAR_MAP_SCENE_PALLET_TOWN_OAK                        0
 #define VAR_MAP_SCENE_PALLET_TOWN_PROFESSOR_OAKS_LAB         0
