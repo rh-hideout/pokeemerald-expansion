@@ -1366,8 +1366,8 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Finale heals allies by 1/6 of their health")
 {
     s16 damage1, damage2;
     GIVEN {
-        ASSUME(MoveHasAdditionalEffectSelf(MOVE_G_MAX_FINALE, MOVE_EFFECT_RESTORE_HP));
-        ASSUME(MoveHasAdditionalEffectOnSide(MOVE_G_MAX_FINALE, MOVE_EFFECT_RESTORE_HP));
+        ASSUME(MoveHasAdditionalEffectSelf(MOVE_G_MAX_FINALE, MOVE_EFFECT_RESTORE_HP_DYNAMAX));
+        ASSUME(MoveHasAdditionalEffectOnSide(MOVE_G_MAX_FINALE, MOVE_EFFECT_RESTORE_HP_DYNAMAX));
         PLAYER(SPECIES_ALCREMIE) { HP(1); GigantamaxFactor(TRUE); }
         PLAYER(SPECIES_MILCERY) { HP(1); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -1737,8 +1737,8 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Finale heals allies by 1/6 of their health, e
 {
     s16 damage1, damage2;
     GIVEN {
-        ASSUME(MoveHasAdditionalEffectSelf(MOVE_G_MAX_FINALE, MOVE_EFFECT_RESTORE_HP));
-        ASSUME(MoveHasAdditionalEffectOnSide(MOVE_G_MAX_FINALE, MOVE_EFFECT_RESTORE_HP));
+        ASSUME(MoveHasAdditionalEffectSelf(MOVE_G_MAX_FINALE, MOVE_EFFECT_RESTORE_HP_DYNAMAX));
+        ASSUME(MoveHasAdditionalEffectOnSide(MOVE_G_MAX_FINALE, MOVE_EFFECT_RESTORE_HP_DYNAMAX));
         PLAYER(SPECIES_ALCREMIE) { HP(1); GigantamaxFactor(TRUE); }
         PLAYER(SPECIES_MILCERY) { HP(1); }
         OPPONENT(SPECIES_WOBBUFFET)  { HP(1); }
@@ -1753,6 +1753,7 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Finale heals allies by 1/6 of their health, e
         HP_BAR(playerRight, captureDamage: &damage2);
     } THEN {
         EXPECT_MUL_EQ(-damage1, Q_4_12(6), playerLeft->maxHP); // heals based on Dynamax HP. Appears to have a problem with milcery in this case!?
+        EXPECT_MUL_EQ(-damage2, Q_4_12(6), playerRight->maxHP); // heals based on Dynamax HP. Appears to have a problem with milcery in this case!?
     }
 }
 

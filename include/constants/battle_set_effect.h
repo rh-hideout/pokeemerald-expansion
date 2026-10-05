@@ -181,6 +181,7 @@ enum __attribute__((packed)) MoveEffect
     MOVE_EFFECT_STEELSURGE, // Steel type rocks
     MOVE_EFFECT_STEALTH_ROCK, // Max Move rocks, not to be confused with rocks set up from Ceasless Edge (same but differ in execution order)
     MOVE_EFFECT_FIRE_SPIN_SIDE,
+    MOVE_EFFECT_RESTORE_HP_DYNAMAX,
     MOVE_EFFECT_FIXED_POWER, // This has no real use outside of dmax moves
     // Max move effects end. They can be used for (custom) normal moves.
 

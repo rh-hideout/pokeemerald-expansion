@@ -1243,7 +1243,13 @@ static void SetEffectRestoreHp(struct BattleCalcValues *cv, struct SetEffect *se
     else if (!cv->onlyChecking)
     {
         s32 maxHpFraction = se->additionalEffect->argument.maxHpFraction;
-        s32 healAmount = GetMaxHpWithRounding(se->effectBattler) / maxHpFraction;
+        s32 healAmount;
+
+        if (se->moveEffect == MOVE_EFFECT_RESTORE_HP_DYNAMAX)
+            healAmount = gBattleMons[se->effectBattler].maxHP / maxHpFraction;
+        else
+            healAmount = GetMaxHpWithRounding(se->effectBattler) / maxHpFraction;
+    
         SetHealAmount(se->effectBattler, healAmount);
         BattleScriptPushAndSet(se->script, BattleScript_RestoreHpEffectBattler);
     }
@@ -4357,6 +4363,7 @@ static void (*const sSetEffectHandlers[])(struct BattleCalcValues *cv, struct Se
     [MOVE_EFFECT_ROOST] = HandleSetEffectRoost,
     [MOVE_EFFECT_RESTORE_HP] = HandleSetEffectRestoreHp,
     [MOVE_EFFECT_RESTORE_HP_ON_WEATHER] = HandleSetEffectRestoreHpOnWeather,
+    [MOVE_EFFECT_RESTORE_HP_DYNAMAX] = HandleSetEffectRestoreHp,
     [MOVE_EFFECT_HEAL_PULSE] = HandleSetEffectHealPulse,
     [MOVE_EFFECT_POLLEN_PUFF] = HandleSetEffectPollenPuff,
     [MOVE_EFFECT_FLORAL_HEALING] = HandleSetEffectHealPulse,
