@@ -2130,11 +2130,7 @@ static void HandleSetEffectEncore(struct BattleCalcValues *cv, struct SetEffect 
 {
     enum BattlerId aromaVeilBattler = B_BATTLER_0;
     enum Move lastMove = gLastMoves[se->effectBattler];
-    enum Ability abilities[MAX_BATTLERS_COUNT];
     s32 moveIndex;
-
-    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
-        abilities[battler] = GetBattlerAbility(battler);
 
     if (IsMaxMove(lastMove) && GetActiveGimmick(se->effectBattler) != GIMMICK_DYNAMAX)
     {
@@ -2153,7 +2149,7 @@ static void HandleSetEffectEncore(struct BattleCalcValues *cv, struct SetEffect 
         }
     }
 
-    if (IsAbilityOnSideWithArr(se->effectBattler, ABILITY_AROMA_VEIL, abilities, &aromaVeilBattler))
+    if (IsAbilityOnSideWithArr(se->effectBattler, ABILITY_AROMA_VEIL, cv->abilities, &aromaVeilBattler))
     {
         SetEffectFailAndCheckReturn;
         gBattlerAbility = aromaVeilBattler;
