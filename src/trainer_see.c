@@ -16,7 +16,6 @@
 #include "util.h"
 #include "battle_pyramid.h"
 #include "constants/battle_frontier.h"
-#include "constants/battle_setup.h"
 #include "constants/event_objects.h"
 #include "constants/event_object_movement.h"
 #include "constants/field_effects.h"
@@ -24,10 +23,10 @@
 #include "constants/trainer_types.h"
 
 // this file's functions
-static u8 CheckTrainer(u8 objectEventId);
+static enum ScriptType GetActiveObjectScriptType(struct ApproachingTrainer *approachingObject);
 static u8 GetTrainerApproachDistance(struct ObjectEvent *trainerObj);
 static u8 CheckPathBetweenTrainerAndPlayer(struct ObjectEvent *trainerObj, u8 approachDistance, enum Direction direction);
-static void InitTrainerApproachTask(struct ObjectEvent *trainerObj, u8 range);
+static void InitTrainerApproachTask(struct ApproachingTrainer *approachingObject);
 static void Task_RunTrainerSeeFuncList(u8 taskId);
 static void Task_EndTrainerApproach(u8 taskId);
 static void SetIconSpriteData(struct Sprite *sprite, u16 fldEffId, u8 spriteAnimNum);
@@ -56,7 +55,7 @@ static void SpriteCB_TrainerIcons(struct Sprite *sprite);
 // IWRAM common
 COMMON_DATA u16 gWhichTrainerToFaceAfterBattle = 0;
 COMMON_DATA u8 gPostBattleMovementScript[4] = {0};
-COMMON_DATA struct ApproachingTrainer gApproachingTrainers[2] = {0};
+COMMON_DATA struct ApproachingTrainer gApproachingTrainers[NUM_APPROACHING_TRAINER] = {0};
 COMMON_DATA u8 gNoOfApproachingTrainers = 0;
 COMMON_DATA bool8 gTrainerApproachedPlayer = 0;
 
@@ -97,6 +96,15 @@ enum {
     TRSEE_REVEAL_BURIED_WAIT,
 };
 
+enum ScriptType
+{
+    NO_EFFECT_SCRIPT,
+    NON_BATTLE_SCRIPT,
+    SINGLES_BATTLE_SCRIPT,
+    SINGLE_TRAINER_BATTLE_SCRIPT,
+    DOUBLES_BATTLE_SCRIPT
+};
+
 static bool8 (*const sTrainerSeeFuncList[])(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj) =
 {
     [TRSEE_NONE]                 = TrainerSeeIdle,
@@ -118,8 +126,7 @@ static bool8 (*const sTrainerSeeFuncList2[])(u8 taskId, struct Task *task, struc
 {
     RevealBuriedTrainer,
     PopOutOfAshBuriedTrainer,
-    JumpInPlaceBuriedTrainer,
-    WaitRevealBuriedTrainer,
+    JumpInPlaceBuriedTrainer
 };
 
 static const struct OamData sOamData_Icons =
@@ -434,12 +441,43 @@ static const struct SpriteTemplate sSpriteTemplate_Emote =
     .callback = SpriteCB_TrainerIcons
 };
 
-// code
+static enum ScriptType GetActiveObjectNextScript(u8 *activeObjects, u8 activeObjectsCount, u8 *objectIndex)
+{
+    struct ApproachingTrainer *approachingObject = &gApproachingTrainers[gNoOfApproachingTrainers];
+    for (; *objectIndex <= activeObjectsCount; (*objectIndex)++)
+    {
+        approachingObject->objectEventId = activeObjects[*objectIndex];
+        enum ScriptType scriptType = GetActiveObjectScriptType(approachingObject);
+        if (scriptType != NO_EFFECT_SCRIPT)
+        {
+            InitTrainerApproachTask(approachingObject);
+            gNoOfApproachingTrainers++;
+            return scriptType;
+        }
+    }
+    memset(approachingObject, 0, sizeof(struct ApproachingTrainer));
+    return NO_EFFECT_SCRIPT;
+}
+
+static void TrySecondTrainerApproach(u8 *activeObjects, u8 activeObjectsCount, u8 *objectIndex)
+{
+    if (GetMonsStateToDoubles_2() != PLAYER_HAS_TWO_USABLE_MONS)
+        return;
+    (*objectIndex)++;
+    enum ScriptType scriptType = GetActiveObjectNextScript(activeObjects, activeObjectsCount, objectIndex);
+    if (scriptType == NON_BATTLE_SCRIPT || scriptType == DOUBLES_BATTLE_SCRIPT)
+    {
+        // if the next object in order is not a battle,we do not start a single battle even if there are more trainers waiting
+        // if the next object is a double battle, the double trainer wait its turn
+        gNoOfApproachingTrainers--;
+    }
+
+}
+
 bool8 CheckForTrainersWantingBattle(void)
 {
-    u8 i;
-    u8 trainerObjects[OBJECT_EVENTS_COUNT] = {0};
-    u8 trainerObjectsCount = 0;
+    u8 activeObjects[OBJECT_EVENTS_COUNT] = {0};
+    u32 activeObjectsCount = 0;
 
     if (FlagGet(OW_FLAG_NO_TRAINER_SEE))
         return FALSE;
@@ -448,192 +486,117 @@ bool8 CheckForTrainersWantingBattle(void)
     gApproachingTrainerId = 0;
 
     // Adds trainers wanting to battle to array
-    for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
+    for (u32 i = 0; i < OBJECT_EVENTS_COUNT; i++)
     {
         if (!gObjectEvents[i].active)
             continue;
-        if (gObjectEvents[i].trainerType != TRAINER_TYPE_NORMAL && gObjectEvents[i].trainerType != TRAINER_TYPE_SEE_ALL_DIRECTIONS && gObjectEvents[i].trainerType != TRAINER_TYPE_BURIED)
+        if (gObjectEvents[i].trainerType == TRAINER_TYPE_NONE || gObjectEvents[i].trainerType == TRAINER_TYPE_OW_WILD_ENCOUNTER)
             continue;
-        trainerObjects[trainerObjectsCount++] = i;
+        activeObjects[activeObjectsCount++] = i;
     }
 
     // Sorts array by localId
-    for (i = 1; i <= trainerObjectsCount; i++)
+    for (u32 i = 1; i <= activeObjectsCount; i++)
     {
-        u8 x = trainerObjects[i];
-        u8 j = i;
-        while (j > 0 && gObjectEvents[trainerObjects[j-1]].localId > gObjectEvents[x].localId)
+        u32 x = activeObjects[i];
+        u32 j = i;
+        while (j > 0 && gObjectEvents[activeObjects[j-1]].localId > gObjectEvents[x].localId)
         {
-            trainerObjects[j] = trainerObjects[j-1];
+            activeObjects[j] = activeObjects[j-1];
             j--;
         }
-        trainerObjects[j] = x;
+        activeObjects[j] = x;
     }
 
-    for (i = 0; i <= trainerObjectsCount; i++)
-    {
-        u8 numTrainers;
-        numTrainers = CheckTrainer(trainerObjects[i]);
-        if (numTrainers == 0xFF) // non-trainerbattle script
-        {
-            u32 objectEventId = gApproachingTrainers[gNoOfApproachingTrainers - 1].objectEventId;
-            gApproachingTrainers[gNoOfApproachingTrainers - 1].trainerScriptPtr = GetObjectEventScriptPointerByObjectEventId(objectEventId);
-            gSelectedObjectEvent = objectEventId;
-            gSpecialVar_LastTalked = gObjectEvents[objectEventId].localId;
-            ScriptContext_SetupScript(EventScript_ObjectApproachPlayer);
-            LockPlayerFieldControls();
-            return TRUE;
-        }
-
-        if (numTrainers == 2)
-            break;
-
-        if (numTrainers == 0)
-            continue;
-
-        if (gNoOfApproachingTrainers > 1)
-            break;
-        if (GetMonsStateToDoubles_2() != PLAYER_HAS_TWO_USABLE_MONS) // one trainer found and can't have a double battle
-            break;
-    }
-
-
-    if (InBattlePyramid_() || InTrainerHillChallenge())
-    {
-        u8 facility = InBattlePyramid_() ? FACILITY_BATTLE_PYRAMID : FACILITY_BATTLE_TRAINER_HILL;
-
-        if (gNoOfApproachingTrainers > 0)
-        {
-            ResetTrainerOpponentIds();
-            InitTrainerBattleParameter();
-
-            gSelectedObjectEvent = gApproachingTrainers[0].objectEventId;
-            gSpecialVar_LastTalked = gObjectEvents[gApproachingTrainers[0].objectEventId].localId;
-            BattleSetup_ConfigureFacilityTrainerBattle(facility, gApproachingTrainers[0].trainerScriptPtr + 2);
-            if (gNoOfApproachingTrainers > 1)
-            {
-                gApproachingTrainerId++;
-                gSelectedObjectEvent = gApproachingTrainers[1].objectEventId;
-                gSpecialVar_LastTalked = gObjectEvents[gApproachingTrainers[1].objectEventId].localId;
-                BattleSetup_ConfigureFacilityTrainerBattle(facility, gApproachingTrainers[0].trainerScriptPtr + 2);
-                gApproachingTrainerId = 0;
-            }
-            ScriptContext_SetupScript(EventScript_StartTrainerApproach);
-            LockPlayerFieldControls();
-            return TRUE;
-        }
-    }
-
-    if (gNoOfApproachingTrainers == 1)
-    {
-        ResetTrainerOpponentIds();
-        ConfigureAndSetUpOneTrainerBattle(gApproachingTrainers[gNoOfApproachingTrainers - 1].objectEventId,
-                                          gApproachingTrainers[gNoOfApproachingTrainers - 1].trainerScriptPtr);
-        gTrainerApproachedPlayer = TRUE;
-        return TRUE;
-    }
-    else if (gNoOfApproachingTrainers == 2)
-    {
-        ResetTrainerOpponentIds();
-        for (i = 0; i < gNoOfApproachingTrainers; i++, gApproachingTrainerId++)
-        {
-            ConfigureTwoTrainersBattle(gApproachingTrainers[i].objectEventId,
-                                       gApproachingTrainers[i].trainerScriptPtr);
-        }
-        SetUpTwoTrainersBattle();
-        gApproachingTrainerId = 0;
-        gTrainerApproachedPlayer = TRUE;
-        return TRUE;
-    }
-    else
+    u8 objectIndex = 0;
+    enum ScriptType scriptType = GetActiveObjectNextScript(activeObjects, activeObjectsCount, &objectIndex);
+    if (scriptType == NO_EFFECT_SCRIPT)
     {
         gTrainerApproachedPlayer = FALSE;
         return FALSE;
     }
+
+    if (scriptType == NON_BATTLE_SCRIPT)
+    {
+        gSelectedObjectEvent = activeObjects[objectIndex];
+        gSpecialVar_LastTalked = gObjectEvents[activeObjects[objectIndex]].localId;
+        ScriptContext_SetupScript(EventScript_ObjectApproachPlayer);
+        LockPlayerFieldControls();
+        return TRUE;
+    }
+
+    if (scriptType == SINGLES_BATTLE_SCRIPT)
+        TrySecondTrainerApproach(activeObjects, activeObjectsCount, &objectIndex);
+
+    if (InBattlePyramid() || InTrainerHillChallenge())
+        ConfigureApproachingFacilityTrainerBattle(gApproachingTrainers);
+    else
+        ConfigureApproachingTrainerBattle(gApproachingTrainers);
+
+    gTrainerApproachedPlayer = TRUE;
+    gApproachingTrainerId = 0;
+    return TRUE;
 }
 
-static u8 CheckTrainer(u8 objectEventId)
+static enum ScriptType GetActiveObjectScriptType(struct ApproachingTrainer *approachingObject)
 {
-    const u8 *trainerBattlePtr;
-    u8 numTrainers = 1;
+    approachingObject->radius = GetTrainerApproachDistance(&gObjectEvents[approachingObject->objectEventId]);
+    if (approachingObject->radius == 0)
+        return NO_EFFECT_SCRIPT;
 
-    u8 approachDistance = GetTrainerApproachDistance(&gObjectEvents[objectEventId]);
-    if (approachDistance == 0)
-        return 0;
-
-    if (InTrainerHill() == TRUE)
+    if (InTrainerHill())
     {
-        trainerBattlePtr = GetTrainerHillTrainerScript();
+        if (GetHillTrainerFlag(approachingObject->objectEventId))
+            return NO_EFFECT_SCRIPT;
+        approachingObject->trainerScriptPtr = GetTrainerHillTrainerScript();
+        return SINGLES_BATTLE_SCRIPT;
     }
-    else
+
+    if (InBattlePyramid())
     {
-        trainerBattlePtr = GetObjectEventScriptPointerByObjectEventId(objectEventId);
-        struct ScriptContext ctx;
-        if (RunScriptImmediatelyUntilEffect(SCREFF_V1 | SCREFF_SAVE | SCREFF_HARDWARE | SCREFF_TRAINERBATTLE, trainerBattlePtr, &ctx))
+        if (GetBattlePyramidTrainerFlag(approachingObject->objectEventId))
+            return NO_EFFECT_SCRIPT;
+        approachingObject->trainerScriptPtr = GetBattlePyramidTrainerScript();
+        return SINGLES_BATTLE_SCRIPT;
+    }
+
+    approachingObject->trainerScriptPtr = GetObjectEventScriptPointerByObjectEventId(approachingObject->objectEventId);
+    struct ScriptContext ctx;
+    if (!RunScriptImmediatelyUntilEffect(SCREFF_V1 | SCREFF_SAVE | SCREFF_HARDWARE | SCREFF_TRAINERBATTLE, approachingObject->trainerScriptPtr, &ctx))
+    {
+        return NO_EFFECT_SCRIPT;
+    }
+    if (*ctx.scriptPtr != SCR_OP_TRAINERBATTLE)
+        return NON_BATTLE_SCRIPT;
+
+    if (GetTrainerFlagFromScriptPointer(approachingObject->trainerScriptPtr))
+    {
+        if (I_VS_SEEKER_CHARGING && GetRematchFromScriptPointer(approachingObject->trainerScriptPtr))
         {
-            if (*ctx.scriptPtr == SCR_OP_TRAINERBATTLE)
-                trainerBattlePtr = ctx.scriptPtr;
-            else
-                trainerBattlePtr = NULL;
+            // rematches are not considered battle scripts because they don't use the trainer battle shortcuts but work like a regular script
+            return NON_BATTLE_SCRIPT;
         }
         else
         {
-            return 0; // no effect
+            return NO_EFFECT_SCRIPT;
         }
     }
 
-    if (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE)
+    TrainerBattleParameter *temp = (TrainerBattleParameter *)(approachingObject->trainerScriptPtr + 1);
+    if (GetTrainerBattleType(temp->params.opponentA) == TRAINER_BATTLE_TYPE_DOUBLES)
     {
-        if (GetBattlePyramidTrainerFlag(objectEventId))
-            return 0;
+        // player can't start double battle
+        if (GetMonsStateToDoubles_2() != PLAYER_HAS_TWO_USABLE_MONS)
+            return NO_EFFECT_SCRIPT;
+
+        return DOUBLES_BATTLE_SCRIPT;
     }
-    else if (InTrainerHill() == TRUE)
+    else if (gObjectEvents[approachingObject->objectEventId].trainerType == TRAINER_TYPE_SINGLE_TRAINER)
     {
-        if (GetHillTrainerFlag(objectEventId))
-            return 0;
-    }
-    else if (trainerBattlePtr)
-    {
-        if (GetTrainerFlagFromScriptPointer(trainerBattlePtr))
-        {
-            //If there is a rematch, we want to trigger the approach sequence
-            if (I_VS_SEEKER_CHARGING && GetRematchFromScriptPointer(trainerBattlePtr))
-            {
-                trainerBattlePtr = NULL;
-                numTrainers = 0xFF;
-            }
-            else
-            {
-                 return 0;
-            }
-        }
-    }
-    else
-    {
-        numTrainers = 0xFF;
+        return SINGLE_TRAINER_BATTLE_SCRIPT;
     }
 
-    if (trainerBattlePtr)
-    {
-        TrainerBattleParameter *temp = (TrainerBattleParameter *)(trainerBattlePtr + 1);
-        if (temp->params.mode == TRAINER_BATTLE_DOUBLE
-            || temp->params.mode == TRAINER_BATTLE_REMATCH_DOUBLE
-            || temp->params.mode == TRAINER_BATTLE_CONTINUE_SCRIPT_DOUBLE)
-        {
-            if (GetMonsStateToDoubles_2() != PLAYER_HAS_TWO_USABLE_MONS)
-                return 0;
-
-            numTrainers = 2;
-        }
-    }
-
-    gApproachingTrainers[gNoOfApproachingTrainers].objectEventId = objectEventId;
-    gApproachingTrainers[gNoOfApproachingTrainers].trainerScriptPtr = trainerBattlePtr;
-    gApproachingTrainers[gNoOfApproachingTrainers].radius = approachDistance;
-    InitTrainerApproachTask(&gObjectEvents[objectEventId], approachDistance - 1);
-    gNoOfApproachingTrainers++;
-
-    return numTrainers;
+    return SINGLES_BATTLE_SCRIPT;
 }
 
 static u8 GetTrainerApproachDistance(struct ObjectEvent *trainerObj)
@@ -643,7 +606,8 @@ static u8 GetTrainerApproachDistance(struct ObjectEvent *trainerObj)
     u8 approachDistance;
 
     PlayerGetDestCoords(&x, &y);
-    if (trainerObj->trainerType == TRAINER_TYPE_NORMAL)  // can only see in one direction
+
+    if (IsNormalTypeTrainer(trainerObj->trainerType)) // can only see in one direction
     {
         // Disable trainer approach while moving diagonally (usually moving on sideway stairs)
         if (trainerObj->facingDirection > DIR_EAST)
@@ -750,14 +714,14 @@ static u8 CheckPathBetweenTrainerAndPlayer(struct ObjectEvent *trainerObj, u8 ap
 #define tOutOfAshSpriteId   data[4]
 #define tTrainerObjectEventId data[7]
 
-static void InitTrainerApproachTask(struct ObjectEvent *trainerObj, u8 range)
+static void InitTrainerApproachTask(struct ApproachingTrainer *approachingObject)
 {
     struct Task *task;
 
-    gApproachingTrainers[gNoOfApproachingTrainers].taskId = CreateTask(Task_RunTrainerSeeFuncList, 0x50);
-    task = &gTasks[gApproachingTrainers[gNoOfApproachingTrainers].taskId];
-    task->tTrainerRange = range;
-    task->tTrainerObjectEventId = gApproachingTrainers[gNoOfApproachingTrainers].objectEventId;
+    approachingObject->taskId = CreateTask(Task_RunTrainerSeeFuncList, 0x50);
+    task = &gTasks[approachingObject->taskId];
+    task->tTrainerRange = approachingObject->radius - 1;
+    task->tTrainerObjectEventId = approachingObject->objectEventId;
 }
 
 static void StartTrainerApproach(TaskFunc followupFunc)
@@ -851,9 +815,17 @@ static bool8 TrainerMoveToPlayer(u8 taskId, struct Task *task, struct ObjectEven
     if (!ObjectEventIsMovementOverridden(trainerObj) || ObjectEventClearHeldMovementIfFinished(trainerObj))
     {
         if (task->tTrainerRange--)
+        {
             ObjectEventSetHeldMovement(trainerObj, GetWalkNormalMovementAction(trainerObj->facingDirection));
+        }
         else
+        {
+            // Set trainer's movement type so they stop and remain facing that direction
+            SetTrainerMovementType(trainerObj, GetTrainerFacingDirectionMovementType(trainerObj->facingDirection));
+            TryOverrideTemplateCoordsForObjectEvent(trainerObj, GetTrainerFacingDirectionMovementType(trainerObj->facingDirection));
+            OverrideTemplateCoordsForObjectEvent(trainerObj);
             task->tFuncId++;
+        }
     }
     return FALSE;
 }
@@ -862,14 +834,6 @@ static bool8 TrainerMoveToPlayer(u8 taskId, struct Task *task, struct ObjectEven
 static bool8 PlayerFaceApproachingTrainer(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj)
 {
     struct ObjectEvent *playerObj;
-
-    if (ObjectEventIsMovementOverridden(trainerObj) && !ObjectEventClearHeldMovementIfFinished(trainerObj))
-        return FALSE;
-
-    // Set trainer's movement type so they stop and remain facing that direction
-    SetTrainerMovementType(trainerObj, GetTrainerFacingDirectionMovementType(trainerObj->facingDirection));
-    TryOverrideTemplateCoordsForObjectEvent(trainerObj, GetTrainerFacingDirectionMovementType(trainerObj->facingDirection));
-    OverrideTemplateCoordsForObjectEvent(trainerObj);
 
     playerObj = &gObjectEvents[gPlayerAvatar.objectEventId];
     if (ObjectEventIsMovementOverridden(playerObj) && !ObjectEventClearHeldMovementIfFinished(playerObj))
@@ -986,17 +950,18 @@ static void Task_SetBuriedTrainerMovement(u8 taskId)
         ObjectEventClearHeldMovement(objEvent);
         task->data[7]++;
     }
-    sTrainerSeeFuncList2[task->tFuncId](taskId, task, objEvent);
-    if (task->tFuncId == ((int)ARRAY_COUNT(sTrainerSeeFuncList2) - 1) && !FieldEffectActiveListContains(FLDEFF_ASH_PUFF))
+    if (task->tFuncId < ARRAY_COUNT(sTrainerSeeFuncList2))
+    {
+        sTrainerSeeFuncList2[task->tFuncId](taskId, task, objEvent);
+    }
+    else if (!FieldEffectActiveListContains(FLDEFF_ASH_PUFF))
     {
         SetTrainerMovementType(objEvent, GetTrainerFacingDirectionMovementType(objEvent->facingDirection));
         TryOverrideTemplateCoordsForObjectEvent(objEvent, GetTrainerFacingDirectionMovementType(objEvent->facingDirection));
         DestroyTask(taskId);
+        return;
     }
-    else
-    {
-        objEvent->heldMovementFinished = 0;
-    }
+    objEvent->heldMovementFinished = 0;
 }
 
 // Called when a buried Trainer has the reveal_trainer movement applied, from direct interaction
@@ -1016,26 +981,44 @@ static void Task_EndTrainerApproach(u8 taskId)
     ScriptContext_Enable();
 }
 
+void PrepareSecondApproachingTrainer(void)
+{
+    if (gApproachingTrainerId == 0)
+    {
+        gApproachingTrainerId++;
+        gSpecialVar_Result = TRUE;
+        UnfreezeObjectEvents();
+        FreezeObjectEventsExceptOne(gApproachingTrainers[1].objectEventId);
+    }
+    else
+    {
+        gApproachingTrainerId = 0;
+        gSpecialVar_Result = FALSE;
+    }
+}
+
 void TryPrepareSecondApproachingTrainer(void)
 {
     if (gNoOfApproachingTrainers == 2)
     {
-        if (gApproachingTrainerId == 0)
-        {
-            gApproachingTrainerId++;
-            gSpecialVar_Result = TRUE;
-            UnfreezeObjectEvents();
-            FreezeObjectEventsExceptOne(gApproachingTrainers[1].objectEventId);
-        }
-        else
-        {
-            gApproachingTrainerId = 0;
-            gSpecialVar_Result = FALSE;
-        }
+        PrepareSecondApproachingTrainer();
     }
     else
     {
         gSpecialVar_Result = FALSE;
+    }
+}
+
+
+bool32 IsNormalTypeTrainer(u32 trainerType)
+{
+    switch (trainerType)
+    {
+    case TRAINER_TYPE_NORMAL:
+    case TRAINER_TYPE_SINGLE_TRAINER:
+        return TRUE;
+    default:
+        return FALSE;
     }
 }
 
@@ -1048,7 +1031,7 @@ void TryPrepareSecondApproachingTrainer(void)
 
 u8 FldEff_ExclamationMarkIcon(void)
 {
-    u8 spriteId = CreateSpriteAtEnd(&sSpriteTemplate_ExclamationQuestionMark, 0, 0, 0x53);
+    u8 spriteId = CreateSpriteAtEndUnchecked(&sSpriteTemplate_ExclamationQuestionMark, 0, 0, 0x53);
 
     if (spriteId != MAX_SPRITES)
     {
@@ -1066,14 +1049,14 @@ u8 FldEff_QuestionMarkIcon(void)
     {
         // Use follower emotes
         u8 emotion = gFieldEffectArguments[7];
-        spriteId = CreateSpriteAtEnd(&sSpriteTemplate_Emote, 0, 0, 0x52);
+        spriteId = CreateSpriteAtEndUnchecked(&sSpriteTemplate_Emote, 0, 0, 0x52);
         if (spriteId == MAX_SPRITES)
             return 0;
         SetIconSpriteData(&gSprites[spriteId], FLDEFF_EMOTE, emotion); // Set animation based on emotion
         UpdateSpritePaletteByTemplate(&sSpriteTemplate_Emote, &gSprites[spriteId]);
         return 0;
     }
-    spriteId = CreateSpriteAtEnd(&sSpriteTemplate_ExclamationQuestionMark, 0, 0, 0x52);
+    spriteId = CreateSpriteAtEndUnchecked(&sSpriteTemplate_ExclamationQuestionMark, 0, 0, 0x52);
 
     if (spriteId != MAX_SPRITES)
     {
@@ -1086,7 +1069,7 @@ u8 FldEff_QuestionMarkIcon(void)
 
 u8 FldEff_HeartIcon(void)
 {
-    u8 spriteId = CreateSpriteAtEnd(&sSpriteTemplate_HeartIcon, 0, 0, 0x52);
+    u8 spriteId = CreateSpriteAtEndUnchecked(&sSpriteTemplate_HeartIcon, 0, 0, 0x52);
 
     if (spriteId != MAX_SPRITES)
     {
@@ -1101,7 +1084,7 @@ u8 FldEff_HeartIcon(void)
 
 u8 FldEff_DoubleExclMarkIcon(void)
 {
-    u8 spriteId = CreateSpriteAtEnd(&sSpriteTemplate_ExclamationQuestionMark, 0, 0, 0x53);
+    u8 spriteId = CreateSpriteAtEndUnchecked(&sSpriteTemplate_ExclamationQuestionMark, 0, 0, 0x53);
 
     if (spriteId != MAX_SPRITES)
     {
@@ -1116,7 +1099,7 @@ u8 FldEff_DoubleExclMarkIcon(void)
 
 u8 FldEff_XIcon(void)
 {
-    u8 spriteId = CreateSpriteAtEnd(&sSpriteTemplate_ExclamationQuestionMark, 0, 0, 0x53);
+    u8 spriteId = CreateSpriteAtEndUnchecked(&sSpriteTemplate_ExclamationQuestionMark, 0, 0, 0x53);
 
     if (spriteId != MAX_SPRITES)
     {
@@ -1131,7 +1114,7 @@ u8 FldEff_XIcon(void)
 
 u8 FldEff_SmileyFaceIcon(void)
 {
-    u8 spriteId = CreateSpriteAtEnd(&sSpriteTemplate_Emoticons, 0, 0, 0x53);
+    u8 spriteId = CreateSpriteAtEndUnchecked(&sSpriteTemplate_Emoticons, 0, 0, 0x53);
 
     if (spriteId != MAX_SPRITES)
         SetIconSpriteData(&gSprites[spriteId], FLDEFF_SMILEY_FACE_ICON, 3);

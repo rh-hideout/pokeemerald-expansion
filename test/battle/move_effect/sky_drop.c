@@ -294,7 +294,7 @@ SINGLE_BATTLE_TEST("Sky Drop: Flying types will still get confused if they rampa
 
 DOUBLE_BATTLE_TEST("Sky Drop user and target can't activate Eject items while the move is being used")
 {
-    u32 item;
+    enum Item item;
 
     PARAMETRIZE { item = ITEM_EJECT_BUTTON; }
     PARAMETRIZE { item = ITEM_EJECT_PACK; }
@@ -328,5 +328,51 @@ DOUBLE_BATTLE_TEST("Sky Drop user and target can't activate Eject items while th
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BREAKING_SWIPE, playerRight);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
+    }
+}
+
+SINGLE_BATTLE_TEST("Sky Drop does not mistake a replacement using Fly for its original target")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_FLY) == EFFECT_SEMI_INVULNERABLE);
+        ASSUME(GetTwoTurnMoveSemiInvulnerability(MOVE_FLY) == STATE_ON_AIR);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); HP(1); Status1(STATUS1_BURN); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(3); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SKY_DROP); SEND_OUT(opponent, 1); }
+        TURN { MOVE(opponent, MOVE_FLY); SKIP_TURN(player); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLY, opponent);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, player);
+            HP_BAR(opponent);
+        }
+    } THEN {
+        EXPECT_EQ(opponent->hp, opponent->maxHP);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Sky Drop does not mistake a replacement being held by another battler's Sky Drop for its original target")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
+        PLAYER(SPECIES_WYNAUT) { Speed(4); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); HP(1); Status1(STATUS1_BURN); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(3); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(3); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_SKY_DROP, target: opponentLeft); SEND_OUT(opponentLeft, 2); }
+        TURN { MOVE(playerRight, MOVE_SKY_DROP, target: opponentLeft); SKIP_TURN(playerLeft); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, playerRight);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, playerLeft);
+            HP_BAR(opponentLeft);
+        }
+    } THEN {
+        EXPECT_EQ(opponentLeft->hp, opponentLeft->maxHP);
     }
 }

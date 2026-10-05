@@ -72,8 +72,11 @@ SINGLE_BATTLE_TEST("Rest fails if the user is protected by Electric/Misty Terrai
     PARAMETRIZE { move = MOVE_ELECTRIC_TERRAIN; }
     PARAMETRIZE { move = MOVE_MISTY_TERRAIN; }
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_ELECTRIC_TERRAIN) == EFFECT_ELECTRIC_TERRAIN);
-        ASSUME(GetMoveEffect(MOVE_MISTY_TERRAIN) == EFFECT_MISTY_TERRAIN);
+        ASSUME(GetMoveEffect(move) == EFFECT_TERRAIN);
+
+        ASSUME(GetMoveTerrainType(MOVE_ELECTRIC_TERRAIN) == B_TERRAIN_ELECTRIC);
+        ASSUME(GetMoveTerrainType(MOVE_MISTY_TERRAIN) == B_TERRAIN_MISTY);
+
         ASSUME(GetSpeciesType(SPECIES_WYNAUT, 0) != TYPE_FLYING && GetSpeciesType(SPECIES_WYNAUT, 1) != TYPE_FLYING);
         PLAYER(SPECIES_WYNAUT) { HP(1); }
         OPPONENT(SPECIES_WOBBUFFET);

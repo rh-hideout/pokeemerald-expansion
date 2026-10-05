@@ -24,8 +24,7 @@ void ActivateTera(enum BattlerId battler)
     SetGimmickAsActivated(battler, GIMMICK_TERA);
 
     // Remove Tera Orb charge.
-    if (B_FLAG_TERA_ORB_CHARGED != 0
-        && (B_FLAG_TERA_ORB_NO_COST == 0 || !FlagGet(B_FLAG_TERA_ORB_NO_COST))
+    if (IsTeraOrbCharged()
         && IsOnPlayerSide(battler)
         && !(IsDoubleBattle() && !IsPartnerMonFromSameTrainer(battler)))
     {
@@ -47,7 +46,7 @@ void ActivateTera(enum BattlerId battler)
 void ApplyBattlerVisualsForTeraAnim(enum BattlerId battler)
 {
     struct Pokemon *party = GetBattlerParty(battler);
-    u32 index = gBattlerPartyIndexes[battler];
+    enum PartyMon index = gBattlerPartyIndexes[battler];
 
     // Show indicator and do palette blend.
     UpdateHealthboxAttribute(gHealthboxSpriteIds[battler], &party[index], HEALTHBOX_ALL);
@@ -58,12 +57,20 @@ void ApplyBattlerVisualsForTeraAnim(enum BattlerId battler)
     BlendPalette(OBJ_PLTT_ID(battler), 16, 16, RGB_WHITEALPHA);
 }
 
+// Returns whether the Tera Orb is charged.
+bool32 IsTeraOrbCharged(void)
+{
+    if (FlagGet(B_FLAG_TERA_ORB_NO_COST) || B_TERA_ORB_ALWAYS_CHARGED)
+        return TRUE;
+    return FlagGet(B_FLAG_TERA_ORB_CHARGED);
+}
+
 // Returns whether a battler can Terastallize.
 bool32 CanTerastallize(enum BattlerId battler)
 {
     enum HoldEffect holdEffect = GetBattlerHoldEffectIgnoreNegation(battler);
 
-    if (gBattleMons[battler].volatiles.transformed && GET_BASE_SPECIES_ID(gBattleMons[battler].species) == SPECIES_TERAPAGOS)
+    if (gBattleMons[battler].volatiles.transformed && GetBaseSpecies(gBattleMons[battler].species) == SPECIES_TERAPAGOS)
         return FALSE;
 
     // Prevents Zigzagoon from terastalizing in vanilla.
@@ -78,11 +85,7 @@ bool32 CanTerastallize(enum BattlerId battler)
     {
         return FALSE;
     }
-    else if (FlagGet(B_FLAG_TERA_ORB_NO_COST))
-    {
-        // Tera Orb is not depleted, go to HasTrainerUsedGimmick
-    }
-    else if (!FlagGet(B_FLAG_TERA_ORB_CHARGED))
+    else if (!IsTeraOrbCharged())
     {
         return FALSE;
     }

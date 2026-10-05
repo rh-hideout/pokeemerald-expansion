@@ -611,6 +611,7 @@ enum
     QUEUED_STATUS_EVENT,
     QUEUED_CATCH_CHANCE_EVENT,
     QUEUED_EFFECTIVENESS_EVENT,
+    QUEUED_ITEM_POPUP_EVENT,
 };
 
 struct QueuedEffectiveness
@@ -623,6 +624,13 @@ struct QueuedAbilityEvent
 {
     enum BattlerId battlerId;
     enum Ability ability;
+};
+
+
+struct QueuedItemEvent
+{
+    enum BattlerId battlerId;
+    enum Item item;
 };
 
 struct QueuedAnimationEvent
@@ -683,6 +691,7 @@ struct QueuedEvent
     union
     {
         struct QueuedAbilityEvent ability;
+        struct QueuedItemEvent item;
         struct QueuedAnimationEvent animation;
         struct QueuedHPEvent hp;
         struct QueuedSubHitEvent subHit;
@@ -721,8 +730,8 @@ struct ExpectedAIAction
 struct ExpectedAiScore
 {
     // We can compare AI's move score to a value or to another move's score.
-    u8 moveSlot1:2;
-    u8 moveSlot2:2;
+    enum MoveSlot moveSlot1:2;
+    enum MoveSlot moveSlot2:2;
     u8 target:2;
     s8 value; // value
     u8 cmp:3; // Uses battle script command's CMP_ macros
@@ -778,7 +787,7 @@ struct BattleTestData
     u32 slowerThan[MAX_BATTLE_TRAINERS][PARTY_SIZE];
     enum BattleTrainer battlerParty;
     u8 battlerTrainers;
-    u8 currentPartyIndex;
+    enum PartyMon currentPartyIndex;
     struct Pokemon *currentMon;
     u8 gender;
     u8 nature;
@@ -787,7 +796,7 @@ struct BattleTestData
     u8 chosenGimmick[MAX_BATTLE_TRAINERS][PARTY_SIZE];
     u8 forcedEnvironment;
 
-    u8 currentMonIndexes[MAX_BATTLERS_COUNT];
+    enum PartyMon currentMonIndexes[MAX_BATTLERS_COUNT];
     u8 turnState;
     u8 turns;
     u8 actionBattlers;
@@ -1156,9 +1165,9 @@ enum { TURN_CLOSED, TURN_OPEN, TURN_CLOSING };
 
 struct MoveContext
 {
-    u16 move;
+    enum Move move;
     u16 explicitMove:1;
-    u16 moveSlot:2;
+    enum MoveSlot moveSlot:2;
     u16 explicitMoveSlot:1;
     u16 hit:1;
     u16 explicitHit:1;
@@ -1171,7 +1180,7 @@ struct MoveContext
     u16 allowed:1;
     // End of word
     u16 explicitAllowed:1;
-    u16 partyIndex:3; // Used for moves where you select a party member without swiching, such as Revival Blessing
+    enum PartyMon partyIndex:3; // Used for moves where you select a party member without swiching, such as Revival Blessing
     u16 explicitPartyIndex:1;
     u16 notExpected:1; // Has effect only with EXPECT_MOVE
     u16 explicitNotExpected:1;
@@ -1185,9 +1194,9 @@ struct ItemContext
 {
     enum Item itemId;
     u16 explicitItemId:1;
-    u16 partyIndex;
+    enum PartyMon partyIndex;
     u16 explicitPartyIndex:1;
-    u16 move;
+    enum Move move;
     u16 explicitMove:1;
     struct RiggedRNG rng;
     u16 explicitRNG:1;
@@ -1198,14 +1207,14 @@ void CloseTurn(u32 sourceLine);
 void Move(u32 sourceLine, struct BattlePokemon *, struct MoveContext);
 void ExpectMove(u32 sourceLine, struct BattlePokemon *, struct MoveContext);
 void ExpectMoves(u32 sourceLine, struct BattlePokemon *battler, bool32 notExpected, struct FourMoves moves);
-void ExpectSendOut(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex);
-void ExpectSwitch(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex);
+void ExpectSendOut(u32 sourceLine, struct BattlePokemon *battler, enum PartyMon partyIndex);
+void ExpectSwitch(u32 sourceLine, struct BattlePokemon *battler, enum PartyMon partyIndex);
 void Score(u32 sourceLine, struct BattlePokemon *battler, u32 cmp, bool32 toValue, struct TestAIScoreStruct cmpCtx);
 void ForcedMove(u32 sourceLine, struct BattlePokemon *);
-void Switch(u32 sourceLine, struct BattlePokemon *, u32 partyIndex);
+void Switch(u32 sourceLine, struct BattlePokemon *, enum PartyMon partyIndex);
 void SkipTurn(u32 sourceLine, struct BattlePokemon *);
 void UseItem(u32 sourceLine, struct BattlePokemon *, struct ItemContext);
-void SendOut(u32 sourceLine, struct BattlePokemon *, u32 partyIndex);
+void SendOut(u32 sourceLine, struct BattlePokemon *, enum PartyMon partyIndex);
 void GivePlayerItem(u32 sourceLine, enum Item, u32 quantity);
 
 /* Scene */
@@ -1228,6 +1237,8 @@ void GivePlayerItem(u32 sourceLine, enum Item, u32 quantity);
 #define CATCHING_CHANCE(address) QueueCatchingChance(__LINE__, address)
 #define FREEZE_OR_FROSTBURN_STATUS(battler, isFrostbite) \
     (B_USE_FROSTBITE ? STATUS_ICON(battler, frostbite: isFrostbite) : STATUS_ICON(battler, freeze: isFrostbite))
+
+#define ITEM_POPUP(battler, ...) QueueItem(__LINE__, battler, (struct ItemEventContext) { __VA_ARGS__ })
 
 #define SWITCH_OUT_MESSAGE(name) ONE_OF {                                         \
                                      MESSAGE(name ", that's enough! Come back!"); \
@@ -1259,6 +1270,11 @@ struct EffectivenessEventContext
 struct AbilityEventContext
 {
     enum Ability ability;
+};
+
+struct ItemEventContext
+{
+    enum Item item;
 };
 
 struct AnimationEventContext
@@ -1342,6 +1358,7 @@ void QueueMessage(u32 sourceLine, const u8 *pattern);
 void QueueStatus(u32 sourceLine, struct BattlePokemon *battler, struct StatusEventContext);
 void QueueCatchingChance(u32 sourceLine, u32 *captureAdress);
 void QueueEffectivenessSound(u32 sourceLine, struct BattlePokemon *battler, struct EffectivenessEventContext);
+void QueueItem(u32 sourceLine, struct BattlePokemon *battler, struct ItemEventContext);
 
 /* Then */
 

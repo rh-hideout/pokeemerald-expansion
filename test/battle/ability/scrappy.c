@@ -94,7 +94,6 @@ SINGLE_BATTLE_TEST("Scrappy doesn't bypass a Ghost-type's Wonder Guard")
 
 SINGLE_BATTLE_TEST("Scrappy will bypass Ghost-type's even if the Ability is replaced mid attack")
 {
-    KNOWN_FAILING; // The test might pass on upcoming
     GIVEN {
         ASSUME(GetMoveType(MOVE_DOUBLE_HIT) == TYPE_NORMAL);
         ASSUME(GetMoveStrikeCount(MOVE_DOUBLE_HIT) == 2);

@@ -52,7 +52,6 @@ SINGLE_BATTLE_TEST("Shed Tail's HP cost can trigger a berry before the user swit
         TURN { MOVE(player, MOVE_SHED_TAIL); SEND_OUT(player, 1); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SHED_TAIL, player);
-        MESSAGE("Wobbuffet restored its health using its Sitrus Berry!");
         SEND_IN_MESSAGE("Wynaut");
     }
 }

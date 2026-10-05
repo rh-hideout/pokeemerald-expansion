@@ -253,11 +253,11 @@ static void UpdateTrainerCardWinsLosses(s32 battler)
     switch (gBattleOutcome)
     {
     case B_OUTCOME_WON:
-        IncTrainerCardWins(BATTLE_OPPOSITE(battler));
+        IncTrainerCardWins(GetOppositeBattler(battler));
         IncTrainerCardLosses(battler);
         break;
     case B_OUTCOME_LOST:
-        IncTrainerCardLosses(BATTLE_OPPOSITE(battler));
+        IncTrainerCardLosses(GetOppositeBattler(battler));
         IncTrainerCardWins(battler);
         break;
     }

@@ -143,7 +143,7 @@ SINGLE_BATTLE_TEST("Embargo negates a held item's Speed reduction")
 
 SINGLE_BATTLE_TEST("Embargo doesn't block a held item's form-changing effect, but it does block its other effects", s16 damage)
 {
-    u32 heldItem;
+    enum Item heldItem;
 
     PARAMETRIZE { heldItem = ITEM_NONE; }
     PARAMETRIZE { heldItem = ITEM_MEADOW_PLATE; }
@@ -164,7 +164,8 @@ SINGLE_BATTLE_TEST("Embargo doesn't block a held item's form-changing effect, bu
 
 SINGLE_BATTLE_TEST("Embargo makes Fling and Natural Gift fail")
 {
-    u32 heldItem, moveId;
+    enum Item heldItem;
+    enum Move moveId;
 
     PARAMETRIZE { heldItem = ITEM_LIGHT_BALL; moveId = MOVE_FLING; }
     PARAMETRIZE { heldItem = ITEM_CHERI_BERRY; moveId = MOVE_NATURAL_GIFT; }
@@ -255,7 +256,7 @@ SINGLE_BATTLE_TEST("Embargo doesn't block the effects of berries obtained throug
 
 SINGLE_BATTLE_TEST("Embargo disables the effect of the Plate items on the move Judgment", s16 damage)
 {
-    u32 heldItem;
+    enum Item heldItem;
 
     PARAMETRIZE { heldItem = ITEM_NONE; }
     PARAMETRIZE { heldItem = ITEM_PIXIE_PLATE; }
@@ -276,7 +277,7 @@ SINGLE_BATTLE_TEST("Embargo disables the effect of the Plate items on the move J
 
 SINGLE_BATTLE_TEST("Embargo disables the effect of the Drive items on the move Techno Blast", s16 damage)
 {
-    u32 heldItem;
+    enum Item heldItem;
 
     PARAMETRIZE { heldItem = ITEM_NONE; }
     PARAMETRIZE { heldItem = ITEM_SHOCK_DRIVE; }
@@ -297,7 +298,7 @@ SINGLE_BATTLE_TEST("Embargo disables the effect of the Drive items on the move T
 
 SINGLE_BATTLE_TEST("Embargo disables the effect of the Memory items on the move Multi Attack", s16 damage)
 {
-    u32 heldItem;
+    enum Item heldItem;
 
     PARAMETRIZE { heldItem = ITEM_NONE; }
     PARAMETRIZE { heldItem = ITEM_FIRE_MEMORY; }
@@ -389,5 +390,40 @@ SINGLE_BATTLE_TEST("Embargo doesn't prevent Primal Reversion")
     }
 }
 
-TO_DO_BATTLE_TEST("Embargo doesn't prevent the usage of Z-Moves")
-TO_DO_BATTLE_TEST("Embargo doesn't block held item effects that affect prize money")
+SINGLE_BATTLE_TEST("Embargo doesn't prevent the usage of Z-Moves")
+{
+    GIVEN {
+        ASSUME(GetMoveType(MOVE_SCRATCH) == TYPE_NORMAL);
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_EMBARGO); }
+        TURN { MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_Z_MOVE); }
+    } SCENE {
+        MESSAGE("The opposing Wobbuffet used Embargo!");
+        MESSAGE("Wobbuffet can't use items anymore!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ZMOVE_ACTIVATE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BREAKNECK_BLITZ, player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Embargo doesn't block held item effects that affect prize money")
+{
+    GIVEN {
+        ASSUME(GetItemHoldEffect(ITEM_AMULET_COIN) == HOLD_EFFECT_DOUBLE_PRIZE);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT) { Item(ITEM_AMULET_COIN); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_EMBARGO); }
+        TURN { MOVE(player, MOVE_BATON_PASS); SEND_OUT(player, 1); }
+    } SCENE {
+        MESSAGE("The opposing Wobbuffet used Embargo!");
+        MESSAGE("Wobbuffet can't use items anymore!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BATON_PASS, player);
+        SEND_IN_MESSAGE("Wynaut");
+    } THEN {
+        EXPECT_EQ((u32)gBattleStruct->moneyMultiplier, 2);
+        EXPECT((bool32)gBattleStruct->moneyMultiplierItem);
+    }
+}

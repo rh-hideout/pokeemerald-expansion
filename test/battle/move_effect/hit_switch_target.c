@@ -82,10 +82,10 @@ SINGLE_BATTLE_TEST("Dragon Tail switches the target after Rocky Helmet and Iron 
         TURN { MOVE(player, MOVE_DRAGON_TAIL); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_TAIL, player);
+        ABILITY_POPUP(opponent, ABILITY_IRON_BARBS);
         HP_BAR(player);
-        MESSAGE("Wobbuffet was hurt!");
+        ITEM_POPUP(opponent, ITEM_ROCKY_HELMET);
         HP_BAR(player);
-        MESSAGE("Wobbuffet was hurt by the opposing Togedemaru's Rocky Helmet!");
         MESSAGE("The opposing Charmander was dragged out!");
     }
 }
@@ -159,7 +159,7 @@ SINGLE_BATTLE_TEST("Dragon Tail switches target out and incoming mon has Levitat
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_TAIL, player);
         HP_BAR(opponent);
         MESSAGE("The opposing Weezing was dragged out!");
-        MESSAGE("The poison spikes disappeared from the ground around the opposing team!");
+        MESSAGE("The toxic spikes disappeared from the ground around the opposing side!");
         NOT STATUS_ICON(opponent, poison: TRUE);
         HP_BAR(opponent);
     }

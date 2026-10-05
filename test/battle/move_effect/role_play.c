@@ -22,6 +22,22 @@ SINGLE_BATTLE_TEST("Role Play copies target's ability")
     }
 }
 
+SINGLE_BATTLE_TEST("Ability Shield prevents Role Play from changing the user's ability")
+{
+    GIVEN {
+        ASSUME(GetItemHoldEffect(ITEM_ABILITY_SHIELD) == HOLD_EFFECT_ABILITY_SHIELD);
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Item(ITEM_ABILITY_SHIELD); Speed(2); }
+        OPPONENT(SPECIES_CHARMANDER) { Ability(ABILITY_BLAZE); Speed(1); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_ROLE_PLAY); }
+    } SCENE {
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_ROLE_PLAY, player);
+        MESSAGE("Wobbuffet's Ability is protected by the effects of its Ability Shield!");
+    } THEN {
+        EXPECT_EQ(player->ability, ABILITY_TELEPATHY);
+    }
+}
+
 DOUBLE_BATTLE_TEST("Role Play copies target's current ability even if it changed during that turn")
 {
     GIVEN {
@@ -50,7 +66,7 @@ DOUBLE_BATTLE_TEST("Role Play copies target's current ability even if it changed
 
 SINGLE_BATTLE_TEST("Role Play and Doodle fail if target's ability can't be copied'")
 {
-    u32 species;
+    enum Species species;
     enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_SHEDINJA; ability = ABILITY_WONDER_GUARD; }
@@ -90,7 +106,7 @@ SINGLE_BATTLE_TEST("Role Play and Doodle fail if target's ability can't be copie
 
 SINGLE_BATTLE_TEST("Role Play fails if user's ability can't be suppressed")
 {
-    u32 species;
+    enum Species species;
     enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_ARCEUS; ability = ABILITY_MULTITYPE; }

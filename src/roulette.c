@@ -3793,7 +3793,7 @@ static void CreateWheelBallSprites(void)
     u8 i;
     for (i = 0; i < BALLS_PER_ROUND; i++)
     {
-        sRoulette->spriteIds[i] = CreateSprite(&sSpriteTemplate_Ball, 116, 80, 57 - i);
+        sRoulette->spriteIds[i] = CreateSpriteUnchecked(&sSpriteTemplate_Ball, 116, 80, 57 - i);
         if (sRoulette->spriteIds[i] != MAX_SPRITES)
         {
             gSprites[sRoulette->spriteIds[i]].invisible = TRUE;
@@ -4264,10 +4264,8 @@ static void CreateShroomishSprite(struct Sprite *ball)
         {116, 44},
         {116, 112}
     };
-    struct Roulette UNUSED *roulette;
 
     t = ball->data[7] - 2;
-    roulette = sRoulette;  // Unnecessary, needed to match
     sRoulette->spriteIds[SPR_CLEAR_MON] = CreateSprite(&sSpriteTemplate_Shroomish, 36, -12, 50);
     sRoulette->spriteIds[SPR_CLEAR_MON_SHADOW_1] = CreateSprite(&sSpriteTemplate_ShroomishShadow[0], coords[ball->sStuckOnWheelLeft][0], coords[ball->sStuckOnWheelLeft][1], 59);
     sRoulette->spriteIds[SPR_CLEAR_MON_SHADOW_2] = CreateSprite(&sSpriteTemplate_ShroomishShadow[1], 36, 140, 51);

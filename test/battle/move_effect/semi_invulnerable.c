@@ -4,17 +4,17 @@
 ASSUMPTIONS
 {
     ASSUME(GetMoveEffect(MOVE_FLY) == EFFECT_SEMI_INVULNERABLE);
-    ASSUME(GetMoveTwoTurnAttackStatus(MOVE_FLY) == STATE_ON_AIR);
+    ASSUME(GetTwoTurnMoveSemiInvulnerability(MOVE_FLY) == STATE_ON_AIR);
     ASSUME(GetMoveEffect(MOVE_DIG) == EFFECT_SEMI_INVULNERABLE);
-    ASSUME(GetMoveTwoTurnAttackStatus(MOVE_DIG) == STATE_UNDERGROUND);
+    ASSUME(GetTwoTurnMoveSemiInvulnerability(MOVE_DIG) == STATE_UNDERGROUND);
     ASSUME(GetMoveEffect(MOVE_BOUNCE) == EFFECT_SEMI_INVULNERABLE);
-    ASSUME(GetMoveTwoTurnAttackStatus(MOVE_BOUNCE) == STATE_ON_AIR);
+    ASSUME(GetTwoTurnMoveSemiInvulnerability(MOVE_BOUNCE) == STATE_ON_AIR);
     ASSUME(GetMoveEffect(MOVE_DIVE) == EFFECT_SEMI_INVULNERABLE);
-    ASSUME(GetMoveTwoTurnAttackStatus(MOVE_DIVE) == STATE_UNDERWATER);
+    ASSUME(GetTwoTurnMoveSemiInvulnerability(MOVE_DIVE) == STATE_UNDERWATER);
     ASSUME(GetMoveEffect(MOVE_PHANTOM_FORCE) == EFFECT_SEMI_INVULNERABLE);
-    ASSUME(GetMoveTwoTurnAttackStatus(MOVE_PHANTOM_FORCE) == STATE_PHANTOM_FORCE);
+    ASSUME(GetTwoTurnMoveSemiInvulnerability(MOVE_PHANTOM_FORCE) == STATE_PHANTOM_FORCE);
     ASSUME(GetMoveEffect(MOVE_SHADOW_FORCE) == EFFECT_SEMI_INVULNERABLE);
-    ASSUME(GetMoveTwoTurnAttackStatus(MOVE_SHADOW_FORCE) == STATE_PHANTOM_FORCE);
+    ASSUME(GetTwoTurnMoveSemiInvulnerability(MOVE_SHADOW_FORCE) == STATE_PHANTOM_FORCE);
 }
 
 SINGLE_BATTLE_TEST("Semi-invulnerable moves make the user semi-invulnerable turn 1, then strike turn 2")
@@ -208,6 +208,7 @@ SINGLE_BATTLE_TEST("Semi-invulnerable moves don't need to charge with Power Herb
         }
         else
             ANIMATION(ANIM_TYPE_MOVE, move, player);
+        ITEM_POPUP(player, ITEM_POWER_HERB);
         MESSAGE("Wobbuffet became fully charged due to its Power Herb!");
         if (B_UPDATED_MOVE_DATA < GEN_5)
         {
@@ -252,6 +253,7 @@ SINGLE_BATTLE_TEST("Power Herb semi-invulnerable moves do not keep the user unta
         NOT MESSAGE("Basculegion vanished instantly!");
         MESSAGE("Basculegion used Phantom Force!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PHANTOM_FORCE, player);
+        ITEM_POPUP(player, ITEM_POWER_HERB);
         MESSAGE("Basculegion became fully charged due to its Power Herb!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PHANTOM_FORCE, player);
         HP_BAR(opponent);

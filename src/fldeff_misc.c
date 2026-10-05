@@ -165,30 +165,18 @@ static const union AnimCmd *const sAnimTable_SecretPowerShrub[] =
 
 static const struct SpriteFrameImage sPicTable_SecretPowerCave[] =
 {
-    overworld_frame(sSecretPowerCave_Gfx, 2, 2, 0),
-    overworld_frame(sSecretPowerCave_Gfx, 2, 2, 1),
-    overworld_frame(sSecretPowerCave_Gfx, 2, 2, 2),
-    overworld_frame(sSecretPowerCave_Gfx, 2, 2, 3),
-    overworld_frame(sSecretPowerCave_Gfx, 2, 2, 4),
+    overworld_ascending_frames(sSecretPowerCave_Gfx, 2, 2),
 };
 
 static const struct SpriteFrameImage sPicTable_SecretPowerTree[] =
 {
-    overworld_frame(sSecretPowerTree_Gfx, 2, 2, 0),
-    overworld_frame(sSecretPowerTree_Gfx, 2, 2, 1),
-    overworld_frame(sSecretPowerTree_Gfx, 2, 2, 2),
-    overworld_frame(sSecretPowerTree_Gfx, 2, 2, 3),
-    overworld_frame(sSecretPowerTree_Gfx, 2, 2, 4),
+    overworld_ascending_frames(sSecretPowerTree_Gfx, 2, 2),
     // 6th frame exists but isnt accessed, the tree vine metatile is used instead
 };
 
 static const struct SpriteFrameImage sPicTable_SecretPowerShrub[] =
 {
-    overworld_frame(sSecretPowerShrub_Gfx, 2, 2, 0),
-    overworld_frame(sSecretPowerShrub_Gfx, 2, 2, 1),
-    overworld_frame(sSecretPowerShrub_Gfx, 2, 2, 2),
-    overworld_frame(sSecretPowerShrub_Gfx, 2, 2, 3),
-    overworld_frame(sSecretPowerShrub_Gfx, 2, 2, 4),
+    overworld_ascending_frames(sSecretPowerShrub_Gfx, 2, 2),
 };
 
 static const struct SpriteTemplate sSpriteTemplate_SecretPowerCave =
@@ -273,9 +261,7 @@ static const u16 sRecordMixLights_Pal[] = INCGFX_U16("graphics/field_effects/pal
 
 static const struct SpriteFrameImage sPicTable_RecordMixLights[] =
 {
-    overworld_frame(sRecordMixLights_Gfx, 4, 1, 0),
-    overworld_frame(sRecordMixLights_Gfx, 4, 1, 1),
-    overworld_frame(sRecordMixLights_Gfx, 4, 1, 2),
+    overworld_ascending_frames(sRecordMixLights_Gfx, 4, 1),
 };
 
 static const struct SpritePalette sSpritePalette_RecordMixLights = {sRecordMixLights_Pal, 0x1000};
@@ -1018,7 +1004,7 @@ void DoSecretBaseGlitterMatSparkle(void)
 
     SetSpritePosToOffsetMapCoords(&x, &y, 8, 4);
 
-    spriteId = CreateSpriteAtEnd(gFieldEffectObjectTemplatePointers[FLDEFFOBJ_SPARKLE], x, y, 0);
+    spriteId = CreateSpriteAtEndUnchecked(gFieldEffectObjectTemplatePointers[FLDEFFOBJ_SPARKLE], x, y, 0);
     if (spriteId != MAX_SPRITES)
     {
         gSprites[spriteId].coordOffsetEnabled = TRUE;
@@ -1295,7 +1281,7 @@ u8 CreateRecordMixingLights(void)
 
     LoadSpritePalette(&sSpritePalette_RecordMixLights);
 
-    spriteId = CreateSprite(&sSpriteTemplate_RecordMixLights, 0, 0, 82);
+    spriteId = CreateSpriteUnchecked(&sSpriteTemplate_RecordMixLights, 0, 0, 82);
 
     if (spriteId == MAX_SPRITES)
     {

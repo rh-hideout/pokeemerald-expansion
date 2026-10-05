@@ -1,4 +1,5 @@
 #include "global.h"
+#include "constants/battle_move_effects.h"
 #include "test/battle.h"
 #include "battle_ai_util.h"
 
@@ -60,6 +61,9 @@ AI_DOUBLE_BATTLE_TEST("AI values moves above Splash, 1-100")
             break;
         case EFFECT_OHKO:
             TURN { EXPECT_MOVE(opponentLeft, move); SEND_OUT(playerLeft, 2); }
+            break;
+        case EFFECT_CONFUSE:
+            TURN { EXPECT_MOVE(opponentRight, move); }
             break;
         default:
             TURN { EXPECT_MOVE(opponentLeft, move); }
@@ -141,6 +145,9 @@ AI_DOUBLE_BATTLE_TEST("AI values moves above Splash, 101-200")
         case EFFECT_OHKO:
             TURN { EXPECT_MOVE(opponentLeft, move); SEND_OUT(playerLeft, 2); }
             break;
+        case EFFECT_CONFUSE:
+            TURN { EXPECT_MOVE(opponentRight, move); }
+            break;
         default:
             TURN { EXPECT_MOVE(opponentLeft, move); }
         }
@@ -188,6 +195,7 @@ AI_DOUBLE_BATTLE_TEST("AI values moves above Splash, 201-300")
         case EFFECT_SPIT_UP:
         case EFFECT_SWALLOW:
         case EFFECT_WISH:
+        case EFFECT_HEAL_PULSE:
 
         // tests exist elsewhere
         case EFFECT_STAT_CHANGE:
@@ -222,6 +230,9 @@ AI_DOUBLE_BATTLE_TEST("AI values moves above Splash, 201-300")
         case EFFECT_RECYCLE:
         case EFFECT_SLEEP_TALK:
             TURN { SCORE_LT_VAL(opponentLeft, move, AI_SCORE_DEFAULT, target: playerLeft); }
+            break;
+        case EFFECT_SWAGGER:
+            TURN { SCORE_LT_VAL(opponentRight, move, AI_SCORE_DEFAULT, target: playerLeft); }
             break;
         default:
             TURN { EXPECT_MOVE(opponentLeft, move); }
@@ -411,8 +422,7 @@ AI_DOUBLE_BATTLE_TEST("AI values moves above Splash, 501-600")
         case EFFECT_STAT_CHANGE:
         case EFFECT_ROTOTILLER:
         case EFFECT_FLOWER_SHIELD:
-        case EFFECT_GRASSY_TERRAIN:
-        case EFFECT_MISTY_TERRAIN:
+        case EFFECT_TERRAIN:
 
         // Skipped on purpose.
         case EFFECT_PROTECT:
@@ -473,15 +483,16 @@ AI_DOUBLE_BATTLE_TEST("AI values moves above Splash, 601-700")
         case EFFECT_LASER_FOCUS:
         case EFFECT_PURIFY:
         case EFFECT_INSTRUCT:
-        case EFFECT_SOAK:
+        case EFFECT_OVERWRITE_TYPE:
+
+        // Needs Snow / Hail on the field
+        case EFFECT_AURORA_VEIL:
 
         // tests exist elsewhere
         case EFFECT_STAT_CHANGE:
         case EFFECT_STUFF_CHEEKS:
         case EFFECT_GEOMANCY:
-        case EFFECT_ELECTRIC_TERRAIN:
-        case EFFECT_PSYCHIC_TERRAIN:
-        case EFFECT_AURORA_VEIL:
+        case EFFECT_TERRAIN:
 
         // Skipped on purpose.
         case EFFECT_PROTECT:
@@ -558,6 +569,7 @@ AI_DOUBLE_BATTLE_TEST("AI values moves above Splash, 701-800")
         case EFFECT_LIFE_DEW:
 
         // Skipped on purpose.
+        case EFFECT_AURA_WHEEL:
         case EFFECT_PROTECT:
         case EFFECT_NON_VOLATILE_STATUS:
             break;

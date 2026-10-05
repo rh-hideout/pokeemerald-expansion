@@ -9,23 +9,26 @@
 #include "script.h"
 #include "task.h"
 
+#define MIRAGE_ISLAND_SALT 0x0300714C // Adress of the mirage island var in vanilla Emerald
+
 static u32 GetMirageRnd(void)
 {
+    #if OW_USE_DAILY_SEED_FOR_VANILLA_VARIABLES == FALSE
     u32 hi = VarGet(VAR_MIRAGE_RND_H);
     u32 lo = VarGet(VAR_MIRAGE_RND_L);
     return (hi << 16) | lo;
+    #else
+    rng_value_t localRngState = LocalRandomSeed(gSaveBlock1Ptr->dailySeed ^ MIRAGE_ISLAND_SALT);
+    return LocalRandom32(&localRngState);
+    #endif
 }
 
 static void SetMirageRnd(u32 rnd)
 {
+    #if OW_USE_DAILY_SEED_FOR_VANILLA_VARIABLESD == FALSE
     VarSet(VAR_MIRAGE_RND_H, rnd >> 16);
     VarSet(VAR_MIRAGE_RND_L, rnd);
-}
-
-// unused
-void InitMirageRnd(void)
-{
-    SetMirageRnd(Random32());
+    #endif
 }
 
 void UpdateMirageRnd(u16 days)

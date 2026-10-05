@@ -16,6 +16,7 @@ SINGLE_BATTLE_TEST("Air Balloon prevents the holder from taking damage from grou
     } WHEN {
         TURN { MOVE(opponent, MOVE_EARTHQUAKE); }
     } SCENE {
+        ITEM_POPUP(player, ITEM_AIR_BALLOON);
         MESSAGE("Wobbuffet floats in the air with its Air Balloon!");
         MESSAGE("The opposing Wobbuffet used Earthquake!");
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, opponent);
@@ -32,6 +33,7 @@ SINGLE_BATTLE_TEST("Air Balloon only displays entry message when user switches i
     } WHEN {
         TURN { SWITCH(opponent, 1); }
     } SCENE {
+        ITEM_POPUP(player, ITEM_AIR_BALLOON);
         MESSAGE("Wobbuffet floats in the air with its Air Balloon!");
         NOT MESSAGE("Wobbuffet floats in the air with its Air Balloon!");
     }
@@ -45,6 +47,7 @@ SINGLE_BATTLE_TEST("Air Balloon pops when the holder is hit by a move that is no
     } WHEN {
         TURN { MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {
+        ITEM_POPUP(player, ITEM_AIR_BALLOON);
         MESSAGE("Wobbuffet floats in the air with its Air Balloon!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
         MESSAGE("Wobbuffet's Air Balloon popped!");
@@ -60,6 +63,7 @@ SINGLE_BATTLE_TEST("Air Balloon no longer prevents the holder from taking damage
         TURN { MOVE(opponent, MOVE_SCRATCH); }
         TURN { MOVE(opponent, MOVE_EARTHQUAKE); }
     } SCENE {
+        ITEM_POPUP(player, ITEM_AIR_BALLOON);
         MESSAGE("Wobbuffet floats in the air with its Air Balloon!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
         MESSAGE("Wobbuffet's Air Balloon popped!");
@@ -80,6 +84,7 @@ SINGLE_BATTLE_TEST("Air Balloon can not be restored with Recycle after it has be
             MOVE(player, MOVE_RECYCLE);
         }
     } SCENE {
+        ITEM_POPUP(player, ITEM_AIR_BALLOON);
         MESSAGE("Wobbuffet floats in the air with its Air Balloon!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
         MESSAGE("Wobbuffet's Air Balloon popped!");
@@ -91,12 +96,14 @@ SINGLE_BATTLE_TEST("Air Balloon can not be restored with Recycle after it has be
 SINGLE_BATTLE_TEST("Air Balloon prevents the user from being healed by Grassy Terrain")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_GRASSY_TERRAIN) == EFFECT_GRASSY_TERRAIN);
+        ASSUME(GetMoveEffect(MOVE_GRASSY_TERRAIN) == EFFECT_TERRAIN);
+        ASSUME(GetMoveTerrainType(MOVE_GRASSY_TERRAIN) == B_TERRAIN_GRASSY);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_AIR_BALLOON); MaxHP(100); HP(1); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_GRASSY_TERRAIN); }
     } SCENE {
+        ITEM_POPUP(player, ITEM_AIR_BALLOON);
         MESSAGE("Wobbuffet floats in the air with its Air Balloon!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_GRASSY_TERRAIN, player);
         NOT MESSAGE("Wobbuffet is healed by the Grassy Terrain!");
@@ -111,6 +118,7 @@ SINGLE_BATTLE_TEST("Air Balloon pops before it can be stolen with Magician")
     } WHEN {
         TURN { MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {
+        ITEM_POPUP(player, ITEM_AIR_BALLOON);
         MESSAGE("Wobbuffet floats in the air with its Air Balloon!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
         MESSAGE("Wobbuffet's Air Balloon popped!");
@@ -127,6 +135,7 @@ SINGLE_BATTLE_TEST("Air Balloon pops before it can be stolen by Thief")
     } WHEN {
         TURN { MOVE(opponent, MOVE_THIEF); }
     } SCENE {
+        ITEM_POPUP(player, ITEM_AIR_BALLOON);
         MESSAGE("Wobbuffet floats in the air with its Air Balloon!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_THIEF, opponent);
         MESSAGE("Wobbuffet's Air Balloon popped!");
@@ -143,6 +152,7 @@ SINGLE_BATTLE_TEST("Air Balloon pops if a damaging move hits the holder's Substi
     } WHEN {
         TURN {MOVE(player, MOVE_SUBSTITUTE); MOVE(opponent, MOVE_EMBER);}
     } SCENE {
+        ITEM_POPUP(player, ITEM_AIR_BALLOON);
         MESSAGE("Wobbuffet floats in the air with its Air Balloon!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EMBER, opponent);
@@ -154,21 +164,22 @@ SINGLE_BATTLE_TEST("Air Balloon pops if a damaging move hits the holder's Substi
 
 SINGLE_BATTLE_TEST("Air Balloon pops when Disguise is broken")
 {
-    u32 species, newSpecies;
+    enum Species species, newSpecies;
     PARAMETRIZE { species = SPECIES_MIMIKYU_DISGUISED;       newSpecies = SPECIES_MIMIKYU_BUSTED; }
     PARAMETRIZE { species = SPECIES_MIMIKYU_TOTEM_DISGUISED; newSpecies = SPECIES_MIMIKYU_BUSTED_TOTEM; }
-    
+
     GIVEN {
         PLAYER(species) { Ability(ABILITY_DISGUISE); Item(ITEM_AIR_BALLOON); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_AERIAL_ACE); }
     } SCENE {
+        ITEM_POPUP(player, ITEM_AIR_BALLOON);
         MESSAGE("Mimikyu floats in the air with its Air Balloon!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_AERIAL_ACE, opponent);
+        MESSAGE("Mimikyu's Air Balloon popped!");
         ABILITY_POPUP(player, ABILITY_DISGUISE);
         HP_BAR(player);
-        MESSAGE("Mimikyu's Air Balloon popped!");
     } THEN {
         EXPECT_EQ(player->species, newSpecies);
     }
@@ -182,6 +193,7 @@ SINGLE_BATTLE_TEST("Air Balloon pops when the holder faints from a damaging move
     } WHEN {
         TURN { MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {
+        ITEM_POPUP(player, ITEM_AIR_BALLOON);
         MESSAGE("Wobbuffet floats in the air with its Air Balloon!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
         MESSAGE("Wobbuffet's Air Balloon popped!");

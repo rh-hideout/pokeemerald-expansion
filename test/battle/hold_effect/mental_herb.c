@@ -91,6 +91,7 @@ SINGLE_BATTLE_TEST("Mental Herb cures Heal Block volatile status (Gen 5+)")
         WITH_CONFIG(B_MENTAL_HERB, GEN_5);
         ASSUME(GetMoveEffect(MOVE_HEAL_BLOCK) == EFFECT_HEAL_BLOCK);
         ASSUME(MoveHasAdditionalEffect(MOVE_PSYCHIC_NOISE, MOVE_EFFECT_PSYCHIC_NOISE));
+        ASSUME(MoveHasAdditionalEffect(MOVE_HEAL_BLOCK, MOVE_EFFECT_HEAL_BLOCK));
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_MENTAL_HERB); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -101,7 +102,6 @@ SINGLE_BATTLE_TEST("Mental Herb cures Heal Block volatile status (Gen 5+)")
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
         MESSAGE("Wobbuffet is no longer prevented from healing!");
     } THEN {
-        EXPECT(player->volatiles.healBlock == FALSE);
         EXPECT(player->volatiles.healBlockTimer == 0);
     }
 }
@@ -179,7 +179,6 @@ DOUBLE_BATTLE_TEST("Mental Herb cures volatile statuses in the following order -
         EXPECT(playerLeft->volatiles.torment == FALSE);
         EXPECT(playerLeft->volatiles.disabledMove == MOVE_NONE);
         EXPECT(playerLeft->volatiles.disableTimer == 0);
-        EXPECT(playerLeft->volatiles.healBlock == FALSE);
         EXPECT(playerLeft->volatiles.healBlockTimer == 0);
         EXPECT(playerLeft->volatiles.encoredMove == MOVE_NONE);
         EXPECT(playerLeft->volatiles.encoreTimer == 0);

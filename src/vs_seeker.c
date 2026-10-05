@@ -209,8 +209,8 @@ void VsSeekerResetObjectMovementAfterChargeComplete(void)
 
     for (i = 0; i < gMapHeader.events->objectEventCount; i++)
     {
-        if (templates[i].trainerType != TRAINER_TYPE_NORMAL
-        && templates[i].trainerType != TRAINER_TYPE_BURIED)
+        if (!IsNormalTypeTrainer(templates[i].trainerType)
+          && templates[i].trainerType != TRAINER_TYPE_BURIED)
             continue;
 
         if (templates[i].movementType != MOVEMENT_TYPE_ROTATE_CLOCKWISE)
@@ -508,7 +508,7 @@ static u8 GetVsSeekerResponseInArea(void)
 
 static bool32 ShouldChangeMovementForTrainerType(u32 trainerType)
 {
-    if (trainerType == TRAINER_TYPE_NORMAL)
+    if (IsNormalTypeTrainer(trainerType))
         return TRUE;
     return (trainerType == TRAINER_TYPE_BURIED);
 }

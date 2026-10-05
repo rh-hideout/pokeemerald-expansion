@@ -2008,7 +2008,7 @@ static void TormentAttacker_Step(u8 taskId)
         }
 
         y = task->data[3] + task->data[5];
-        spriteId = CreateSprite(&gThoughtBubbleSpriteTemplate, x, y, 6 - task->data[1]);
+        spriteId = CreateSpriteUnchecked(&gThoughtBubbleSpriteTemplate, x, y, 6 - task->data[1]);
         PlaySE12WithPanning(SE_M_METRONOME, BattleAnimAdjustPanning(SOUND_PAN_ATTACKER));
 
         if (spriteId != MAX_SPRITES)
@@ -2549,12 +2549,6 @@ void AnimTask_TransformMon(u8 taskId)
         DestroyAnimVisualTask(taskId);
         break;
     }
-}
-
-void AnimTask_IsMonInvisible(u8 taskId)
-{
-    gBattleAnimArgs[ARG_RET_ID] = gSprites[gBattlerSpriteIds[gBattleAnimAttacker]].invisible;
-    DestroyAnimVisualTask(taskId);
 }
 
 void AnimTask_MorningSunLightBeam(u8 taskId)
@@ -3995,7 +3989,7 @@ static void CreateSweatDroplets(u8 taskId, bool8 lowerDroplets)
 
     for (u32 i = 0; i < 4; i++)
     {
-        u8 spriteId = CreateSprite(&gFacadeSweatDropSpriteTemplate, xCoords[i], yCoords[i & 1], task->tSubpriority - 5);
+        u8 spriteId = CreateSpriteUnchecked(&gFacadeSweatDropSpriteTemplate, xCoords[i], yCoords[i & 1], task->tSubpriority - 5);
         if (spriteId != MAX_SPRITES)
         {
             gSprites[spriteId].sTimer = 0;
@@ -4071,7 +4065,6 @@ void AnimTask_StatusClearedEffect(u8 taskId)
 {
     StartMonScrollingBgMask(
         taskId,
-        0,
         0x1A0,
         gBattleAnimAttacker,
         gBattleAnimArgs[0],
@@ -4212,7 +4205,7 @@ static void AnimTask_GlareEyeDots_Step(u8 taskId)
             // Create dot pair
             for (i = 0; i < 2; i++)
             {
-                u8 spriteId = CreateSprite(&gGlareEyeDotSpriteTemplate, x, y, 35);
+                u8 spriteId = CreateSpriteUnchecked(&gGlareEyeDotSpriteTemplate, x, y, 35);
                 if (spriteId != MAX_SPRITES)
                 {
                     if (!task->tIsContest)
@@ -4341,7 +4334,7 @@ void AnimTask_BarrageBall(u8 taskId)
     task->data[12] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET);
     task->data[13] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
     task->data[14] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET) + GetBattlerSpriteCoordAttr(gBattleAnimTarget, BATTLER_COORD_ATTR_HEIGHT) / 4;
-    task->data[15] = CreateSprite(&gBarrageBallSpriteTemplate, task->data[11], task->data[12], GetBattlerSpriteSubpriority(gBattleAnimTarget) - 5);
+    task->data[15] = CreateSpriteUnchecked(&gBarrageBallSpriteTemplate, task->data[11], task->data[12], GetBattlerSpriteSubpriority(gBattleAnimTarget) - 5);
     if (task->data[15] != MAX_SPRITES)
     {
         gSprites[task->data[15]].data[0] = 16;
@@ -4682,7 +4675,7 @@ void AnimTask_HelpingHandAttackerMovement(u8 taskId)
         if (IsDoubleBattle() == TRUE)
         {
             int attackerX = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X);
-            int partnerX = GetBattlerSpriteCoord(BATTLE_PARTNER(gBattleAnimAttacker), BATTLER_COORD_X);
+            int partnerX = GetBattlerSpriteCoord(GetPartnerBattler(gBattleAnimAttacker), BATTLER_COORD_X);
             if (attackerX > partnerX)
                 task->data[14] = 1;
             else
@@ -4938,9 +4931,6 @@ static void AnimMeteorMashStar_Step(struct Sprite *sprite)
 // arg 4: duration
 static void AnimMeteorMashStar(struct Sprite *sprite)
 {
-    s16 UNUSED y = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
-    s16 UNUSED x = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
-
     if (IsOnPlayerSide(gBattleAnimTarget) || IsContest())
     {
         sprite->data[0] = sprite->x - gBattleAnimArgs[0];

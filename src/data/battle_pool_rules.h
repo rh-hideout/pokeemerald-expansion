@@ -1,6 +1,6 @@
 #include "battle_main.h"
 
-const u16 poolItemClauseExclusions[] =
+const enum Item poolItemClauseExclusions[] =
 {
     ITEM_ORAN_BERRY,
     ITEM_SITRUS_BERRY,

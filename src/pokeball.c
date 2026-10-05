@@ -1317,12 +1317,6 @@ static void SpriteCB_TradePokeballEnd(struct Sprite *sprite)
 #undef sFadePalsHi
 #undef sTimer
 
-// Unreferenced here and in RS, but used in FRLG, possibly by mistake.
-static void UNUSED DestroySpriteAndFreeResources_Ball(struct Sprite *sprite)
-{
-    DestroySpriteAndFreeResources(sprite);
-}
-
 #define sSpeedX data[0]
 #define sSpeedY data[1]
 
@@ -1438,7 +1432,7 @@ static enum PokeBall GetBattlerPokeballItemId(enum BattlerId battler)
     return GetMonData(mon, MON_DATA_POKEBALL);
 }
 
-enum PokeBall ItemIdToBallId(u32 ballItem)
+enum PokeBall ItemIdToBallId(enum Item ballItem)
 {
     enum PokeBall secondaryId = GetItemSecondaryId(ballItem);
 
