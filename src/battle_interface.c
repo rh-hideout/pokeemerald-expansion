@@ -856,14 +856,15 @@ void UpdateHpTextInHealthbox(u32 healthboxSpriteId, s16 currHp, s16 maxHp)
     if (IsOnPlayerSide(battler)) // Player
     {
         PrintHpOnHealthbox(healthboxSpriteId, currHp, maxHp, HEALTHBOX_BG_INDEX, 0, 16, FALSE);
+        return;
     }
-    else // Opponent
-    {
-        if (B_HP_PERCENTAGE_DISPLAY)
-            PrintHpOnHealthbox(healthboxSpriteId, currHp, maxHp, HEALTHBOX_BG_INDEX, -8, 16, TRUE);
-        else if (gBattleSpritesDataPtr->battlerData[battler].hpNumbersNoBars)
-            PrintHpOnHealthbox(healthboxSpriteId, currHp, maxHp, HEALTHBOX_BG_INDEX, -8, 8, FALSE); // debug only
-    }
+
+    // Opponent
+    if (B_HP_PERCENTAGE_DISPLAY)
+        PrintHpOnHealthbox(healthboxSpriteId, currHp, maxHp, HEALTHBOX_BG_INDEX, -8, 16, TRUE);
+    else if (gBattleSpritesDataPtr->battlerData[battler].hpNumbersNoBars)
+        PrintHpOnHealthbox(healthboxSpriteId, currHp, maxHp, HEALTHBOX_BG_INDEX, -8, 8, FALSE); // debug only
+
 }
 
 static void UpdateHpTextInHealthboxInDoubles(u32 healthboxSpriteId, s16 currHp, s16 maxHp)
