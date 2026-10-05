@@ -1860,10 +1860,10 @@ static void DrawExpBarTiles(enum BattlerId battler)
     for (u32 i = 0; i < 8; i++)
     {
         struct Sprite* healthboxSprite = &gSprites[bar->healthboxSpriteId];
-        u32 offset = (i < 4) ? 36 : 92; // The exp bar tiles are not contiguous
+        u32 tileOffset = (i < 4) ? 36 : 92; // The exp bar tiles are not contiguous
 
         const Tile4BPP *src = gBattleExpBarGfx + pixelsArray[i];
-        Tile4BPP *dest = SpriteTile(healthboxSprite) + offset + i;
+        Tile4BPP *dest = SpriteTile(healthboxSprite) + tileOffset + i;
 
         *dest = *src;
     }
