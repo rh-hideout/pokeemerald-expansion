@@ -675,7 +675,7 @@ SINGLE_BATTLE_TEST("Dynamax: Max Strike lowers single opponent's speed")
 {
     GIVEN {
         // Fails?: ASSUME(GetMaxMove(B_POSITION_PLAYER_LEFT, MOVE_SCRATCH) == MOVE_MAX_STRIKE);
-        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_STRIKE, speed: -1);
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_STRIKE, onSide: TRUE, speed: -1);
         OPPONENT(SPECIES_WOBBUFFET) { Speed(100); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(80); }
     } WHEN {
@@ -699,7 +699,7 @@ SINGLE_BATTLE_TEST("Dynamax: Max Strike lowers single opponent's speed")
 DOUBLE_BATTLE_TEST("Dynamax: Max Strike lowers both opponents' speed")
 {
     GIVEN {
-        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_STRIKE, speed: -1);
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_STRIKE, onSide: TRUE, speed: -1);
         PLAYER(SPECIES_WOBBUFFET) { Speed(80); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(79); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(100); }
@@ -736,7 +736,7 @@ DOUBLE_BATTLE_TEST("Dynamax: Max Knuckle raises both allies' attack")
 {
     s16 damage[4];
     GIVEN {
-        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_KNUCKLE, self: TRUE, attack: 1);
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_KNUCKLE, self: TRUE, onSide: TRUE, attack: 1);
         ASSUME(GetMoveCategory(MOVE_CLOSE_COMBAT) == DAMAGE_CATEGORY_PHYSICAL);
         ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
         PLAYER(SPECIES_WOBBUFFET);
@@ -988,7 +988,7 @@ SINGLE_BATTLE_TEST("Dynamax: G-Max Hydrosnipe has fixed power and ignores abilit
 DOUBLE_BATTLE_TEST("Dynamax: G-Max Volt Crash paralyzes both opponents")
 {
     GIVEN {
-        ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_VOLT_CRASH, MOVE_EFFECT_PARALYSIS));
+        ASSUME(MoveHasAdditionalEffectOnSide(MOVE_G_MAX_VOLT_CRASH, MOVE_EFFECT_PARALYSIS));
         PLAYER(SPECIES_PIKACHU) { GigantamaxFactor(TRUE); }
         PLAYER(SPECIES_PICHU);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -1016,7 +1016,7 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Stun Shock paralyzes or poisons both opponent
     PARAMETRIZE { statusAnim = B_ANIM_STATUS_PRZ; rng = 0; }
     PARAMETRIZE { statusAnim = B_ANIM_STATUS_PSN; rng = 1; }
     GIVEN {
-        ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_STUN_SHOCK, MOVE_EFFECT_RANDOM_FROM_LIST));
+        ASSUME(MoveHasAdditionalEffectOnSide(MOVE_G_MAX_STUN_SHOCK, MOVE_EFFECT_RANDOM_FROM_LIST));
         PLAYER(SPECIES_TOXTRICITY) { GigantamaxFactor(TRUE); }
         PLAYER(SPECIES_TOXEL);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -1053,7 +1053,7 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Stun Shock paralyzes or poisons both opponent
 DOUBLE_BATTLE_TEST("Dynamax: G-Max Stun Shock chooses statuses before considering immunities")
 {
     GIVEN {
-        ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_STUN_SHOCK, MOVE_EFFECT_RANDOM_FROM_LIST));
+        ASSUME(MoveHasAdditionalEffectOnSide(MOVE_G_MAX_STUN_SHOCK, MOVE_EFFECT_RANDOM_FROM_LIST));
         PLAYER(SPECIES_TOXTRICITY) { GigantamaxFactor(TRUE); }
         PLAYER(SPECIES_TOXEL);
         OPPONENT(SPECIES_GARBODOR);
@@ -1086,7 +1086,7 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Befuddle paralyzes, poisons, or sleeps both o
     PARAMETRIZE { statusAnim = B_ANIM_STATUS_PSN; rng = 1; }
     PARAMETRIZE { statusAnim = B_ANIM_STATUS_SLP; rng = 2; }
     GIVEN {
-        ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_BEFUDDLE, MOVE_EFFECT_RANDOM_FROM_LIST));
+        ASSUME(MoveHasAdditionalEffectOnSide(MOVE_G_MAX_BEFUDDLE, MOVE_EFFECT_RANDOM_FROM_LIST));
         PLAYER(SPECIES_BUTTERFREE) { GigantamaxFactor(TRUE); }
         PLAYER(SPECIES_CATERPIE);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -1130,7 +1130,7 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Befuddle paralyzes, poisons, or sleeps both o
 DOUBLE_BATTLE_TEST("Dynamax: G-Max Gold Rush confuses both opponents and generates money")
 {
     GIVEN {
-        ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_GOLD_RUSH, MOVE_EFFECT_CONFUSION));
+        ASSUME(MoveHasAdditionalEffectOnSide(MOVE_G_MAX_GOLD_RUSH, MOVE_EFFECT_CONFUSION));
         ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_GOLD_RUSH, MOVE_EFFECT_PAYDAY));
         PLAYER(SPECIES_MEOWTH) { GigantamaxFactor(TRUE); }
         PLAYER(SPECIES_PERSIAN);
@@ -1151,7 +1151,7 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Gold Rush confuses both opponents and generat
 DOUBLE_BATTLE_TEST("Dynamax: G-Max Smite confuses both opponents")
 {
     GIVEN {
-        ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_SMITE, MOVE_EFFECT_CONFUSION));
+        ASSUME(MoveHasAdditionalEffectOnSide(MOVE_G_MAX_SMITE, MOVE_EFFECT_CONFUSION));
         PLAYER(SPECIES_HATTERENE) { GigantamaxFactor(TRUE); }
         PLAYER(SPECIES_HATENNA);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -1669,16 +1669,11 @@ DOUBLE_BATTLE_TEST("Dynamax stat lowering moves don't make stat-changing abiliti
         PARAMETRIZE { move = MOVE_CRUNCH; stat = STAT_SPDEF; ability = abilityList[j]; }
     }
     GIVEN {
-        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_WYRMWIND, attack: -1);
-        ASSUME(MoveHasAdditionalEffectOnSide(MOVE_MAX_WYRMWIND, MOVE_EFFECT_STAT_MINUS));
-        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_PHANTASM, defense: -1);
-        ASSUME(MoveHasAdditionalEffectOnSide(MOVE_MAX_PHANTASM, MOVE_EFFECT_STAT_MINUS));
-        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_FLUTTERBY, spAtk: -1);
-        ASSUME(MoveHasAdditionalEffectOnSide(MOVE_MAX_FLUTTERBY, MOVE_EFFECT_STAT_MINUS));
-        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_DARKNESS, spDef: -1);
-        ASSUME(MoveHasAdditionalEffectOnSide(MOVE_MAX_DARKNESS, MOVE_EFFECT_STAT_MINUS));
-        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_STRIKE, speed: -1);
-        ASSUME(MoveHasAdditionalEffectOnSide(MOVE_MAX_STRIKE, MOVE_EFFECT_STAT_MINUS));
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_WYRMWIND, onSide: TRUE, attack: -1);
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_PHANTASM, onSide: TRUE, defense: -1);
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_FLUTTERBY, onSide: TRUE, spAtk: -1);
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_DARKNESS, onSide: TRUE, spDef: -1);
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_STRIKE, onSide: TRUE, speed: -1);
 
         PLAYER(SPECIES_WOBBUFFET) { }
         PLAYER(SPECIES_WOBBUFFET) { }
@@ -1709,16 +1704,11 @@ DOUBLE_BATTLE_TEST("Dynamax stat raising moves don't make stat-changing abilitie
         PARAMETRIZE { move = MOVE_MUD_SLAP; stat = STAT_SPDEF; ability = abilityList[j]; }
     }
     GIVEN {
-        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_WYRMWIND, attack: -1);
-        ASSUME(MoveHasAdditionalEffectOnSide(MOVE_MAX_WYRMWIND, MOVE_EFFECT_STAT_MINUS));
-        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_PHANTASM, defense: -1);
-        ASSUME(MoveHasAdditionalEffectOnSide(MOVE_MAX_PHANTASM, MOVE_EFFECT_STAT_MINUS));
-        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_FLUTTERBY, spAtk: -1);
-        ASSUME(MoveHasAdditionalEffectOnSide(MOVE_MAX_FLUTTERBY, MOVE_EFFECT_STAT_MINUS));
-        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_DARKNESS, spDef: -1);
-        ASSUME(MoveHasAdditionalEffectOnSide(MOVE_MAX_DARKNESS, MOVE_EFFECT_STAT_MINUS));
-        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_STRIKE, speed: -1);
-        ASSUME(MoveHasAdditionalEffectOnSide(MOVE_MAX_STRIKE, MOVE_EFFECT_STAT_MINUS));
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_WYRMWIND, onSide: TRUE, attack: -1);
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_PHANTASM, onSide: TRUE, defense: -1);
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_FLUTTERBY, onSide: TRUE, spAtk: -1);
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_DARKNESS, onSide: TRUE, spDef: -1);
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_STRIKE, onSide: TRUE, speed: -1);
         PLAYER(SPECIES_WOBBUFFET) { Ability(ability); }
         PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_SHADOW_TAG); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -1762,6 +1752,7 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Replenish recycles allies' berries 50\% of th
     PASSES_RANDOMLY(1, 2, RNG_SECONDARY_EFFECT);
     GIVEN {
         ASSUME(MoveHasAdditionalEffectSelf(MOVE_G_MAX_REPLENISH, MOVE_EFFECT_RECYCLE));
+        ASSUME(MoveHasAdditionalEffectOnSide(MOVE_G_MAX_REPLENISH, MOVE_EFFECT_RECYCLE));
         ASSUME(GetItemHoldEffect(ITEM_APICOT_BERRY) == HOLD_EFFECT_SP_DEFENSE_UP);
         PLAYER(SPECIES_SNORLAX) { Item(ITEM_APICOT_BERRY); GigantamaxFactor(TRUE); }
         PLAYER(SPECIES_MUNCHLAX) { Item(ITEM_APICOT_BERRY); Ability(ABILITY_THICK_FAT); }

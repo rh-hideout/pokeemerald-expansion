@@ -4078,6 +4078,7 @@ void AssumeMoveEffectStatChange_(u32 sourceLine, u32 moveId, struct StatChangeAs
                 ASSUME(asc.evasion == (-1 * effect->evasion));
 
             ASSUME(asc.self == effect->self);
+            ASSUME(asc.onSide == effect->onSide);
         }
         else if (effect->moveEffect == MOVE_EFFECT_STAT_PLUS)
         {
@@ -4101,6 +4102,7 @@ void AssumeMoveEffectStatChange_(u32 sourceLine, u32 moveId, struct StatChangeAs
                 ASSUME(asc.evasion == effect->evasion);
 
             ASSUME(asc.self == effect->self);
+            ASSUME(asc.onSide == effect->onSide);
         }
     }
 
