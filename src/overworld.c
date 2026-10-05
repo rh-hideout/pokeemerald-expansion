@@ -3717,29 +3717,20 @@ static u8 ReformatItemDescription(enum Item item, u8 *dest)
 
 void ScriptShowItemDescription(struct ScriptContext *ctx)
 {
+    (void) ScriptReadByte(ctx);
     if (OW_SHOW_ITEM_DESCRIPTIONS == OW_ITEM_DESCRIPTIONS_OFF)
-    {
-        (void) ScriptReadByte(ctx);
         return;
-    }
-
-    u8 headerType = ScriptReadByte(ctx);
 
     Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);
 
     struct WindowTemplate template;
     enum Item item = gSpecialVar_0x8006;
     u8 textY;
-    u8 *dst;
+    u8 dst[0x100];
     bool8 handleFlash = FALSE;
 
     if (GetFlashLevel() > 0 || InBattlePyramid())
         handleFlash = TRUE;
-
-    if (headerType == 1) // berry
-        dst = gStringVar3;
-    else
-        dst = gStringVar1;
 
     if (GetSetItemObtained(item, FLAG_GET_ITEM_OBTAINED))
     {

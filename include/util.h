@@ -16,6 +16,13 @@ static inline s32 Clamp(s32 min, s32 max, s32 value)
     return value;
 }
 
+#define Swap(a, b) \
+    do { \
+        __auto_type temp = a; \
+        a = b; \
+        b = temp; \
+    } while (0);
+
 u8 CreateInvisibleSpriteWithCallback(void (*callback)(struct Sprite *));
 void StoreWordInTwoHalfwords(u16 *h, u32 w);
 void LoadWordFromTwoHalfwords(u16 *h, u32 *w);
