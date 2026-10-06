@@ -5,7 +5,7 @@
 In Expansion, a safari is a special event that
 - limits the number of steps that you can take
 - can be ended by using "RETIRE" from the overworld start menu
-- modifies how some things work in the game.
+- modifies some mechanics about encounters and battles
 Once a safari ends, the player is warped to a predetermined location and a var set to explain how the safari ended
 so that a script can appropriately respond to the outcome
 
@@ -25,7 +25,7 @@ A safari's properties are contained in its `struct SafariZone`, so let's go over
 - `startingSteps` is the number of steps the player will have before the safari ends
 - `catchMultiplier` is a multiplier applied to your catch rate during the safari. In Expansion, the Safari Ball has the same catch multiplier as a PokeBall to match gen 8 behaviour, so this is used to simulate increase catch rate in Safari Zone. You can stack it with regular ball multipliers. The value will be divided by 100 so 150 is a 1.5 multiplier
 - `exitWarpOnWhiteout` is a flag and if it's set to TRUE, the player wil warp to the safari exit warp instead of last heal location if they whiteout during safari
-- `exitWarp` is a `struct Warp Data` that indicates where the player will be warped to when the safari ends
+- `exitWarp` is a `struct WarpData` that indicates where the player will be warped to when the safari ends
 - `noEscape` is a flag and if it's set to TRUE, it will prevent the player from using Escape Rope or field moves like Dig, Teleport and Fly
 
 
@@ -39,7 +39,7 @@ A safari's properties are contained in its `struct SafariZone`, so let's go over
 
 `safari_exitnowarp` ends the safari but does not warp the player
 
-Both `safari_exit` and `safari_exitnowarp` will not set `VAR_SAFARI_ZONE_STATE` because it is assumed to be in the developer perview to set up potential script follow-ups
+Both `safari_exit` and `safari_exitnowarp` will not set `VAR_SAFARI_ZONE_STATE` allowing it to be used to trigger post-exit map scripts
 
 ## Understanding `VAR_SAFARI_ZONE_STATE`
 
