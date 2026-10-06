@@ -14,7 +14,7 @@ In Expansion, the default safaris are the Route 121 Safari Zone from Emerald and
 While the Safari Zone maps are exclusive to the safari mode in vanilla Emerald or FRLG, a safari state can occur anywhere using any number of maps.
 Being in a safari is a game state and it is not tied to any specific location
 
-In Expansion, safari ids are defined as `enum SafariIds` in `include/constants/safaris` so that they can be called in scripts
+In Expansion, safari ids are defined as `enum SafariEvents` in `include/constants/safaris` so that they can be called in scripts
 and the actual safari properties are defined in `sSafariZones` in `src/data/safaris.h`
 
 ## Safari Properties
@@ -31,9 +31,9 @@ A safari's properties are contained in its `struct SafariZone`, so let's go over
 
 ## Script commands
 
-`getactivesafari` sets VAR_RESULT to the currently active safariId, returns 0/NONE_SAFARI if there is no active safari
+`getactivesafari` sets VAR_RESULT to the currently active safariId, returns 0/SAFARI_EVENT_NONE if there is no active safari
 
-`safari_enter` let you start a safari. The command must be used with an `enum SafariIds` argument, defined in `include/constants/safaris.h`
+`safari_enter` let you start a safari. The command must be used with an `enum SafariEvents` argument, defined in `include/constants/safaris.h`
 
 `safari_exit` will end the active safari and warps the player to the safari exit location
 

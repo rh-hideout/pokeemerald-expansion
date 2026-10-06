@@ -2974,7 +2974,7 @@
 
 @ Safaris
 
-	@ sets VAR_RESULT to the currently active safariId, returns 0/NONE_SAFARI if there is no active safari
+	@ sets VAR_RESULT to the currently active safariId, returns 0/SAFARI_EVENT_NONE if there is no active safari
 	.macro getactivesafari
 	callnative ScrCmd_getactivesafari
 	.endm

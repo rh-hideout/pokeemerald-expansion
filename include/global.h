@@ -299,7 +299,7 @@ struct SaveBlock3
     u8 apricornTrees[NUM_APRICORN_TREE_BYTES];
 #endif
 #if OW_ALLOW_SAFARI_SAVING
-    enum SafariIds activeSafari:8;
+    enum SafariEvents activeSafari:8;
     u8 numSafariBalls;
     u8 safariZoneCaughtMons;
     u8 safariZonePkblkUses;

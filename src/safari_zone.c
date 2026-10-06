@@ -57,7 +57,7 @@ extern const u8 *const gBattlescriptsForSafariActions[];
 
 #else
 
-EWRAM_DATA static enum SafariIds sActiveSafari = 0;
+EWRAM_DATA static enum SafariEvents sActiveSafari = 0;
 EWRAM_DATA static u8 sNumSafariBalls = 0;
 EWRAM_DATA static u8 sSafariZoneCaughtMons = 0;
 EWRAM_DATA static u8 sSafariZonePkblkUses = 0;
@@ -73,22 +73,22 @@ static void DecrementFeederStepCounters(void);
 
 bool32 GetSafariZoneFlag(void)
 {
-    return sActiveSafari != NONE_SAFARI;
+    return sActiveSafari != SAFARI_EVENT_NONE;
 }
 
 void ResetSafariZoneFlag(void)
 {
-     sActiveSafari = NONE_SAFARI;
+     sActiveSafari = SAFARI_EVENT_NONE;
 }
 
 
-void EnterSafariMode(enum SafariIds safariId)
+void EnterSafariMode(enum SafariEvents safariId)
 {
     assertf(!GetSafariZoneFlag(), "Game is already in a safari")
     {
         return;
     }
-    assertf(NONE_SAFARI < safariId && safariId < SAFARI_COUNT , "Trying to enter undefined safari zone %d", safariId)
+    assertf(SAFARI_EVENT_NONE < safariId && safariId < SAFARI_EVENT_COUNT , "Trying to enter undefined safari zone %d", safariId)
     {
         return;
     }

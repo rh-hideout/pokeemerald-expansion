@@ -1,6 +1,6 @@
-static const struct SafariZone sSafariZones[SAFARI_COUNT] = {
-    [NONE_SAFARI] = {0},
-    [ROUTE_121_HOENN_SAFARI] = {
+static const struct SafariZone sSafariZones[SAFARI_EVENT_COUNT] = {
+    [SAFARI_EVENT_NONE] = {0},
+    [SAFARI_EVENT_HOENN] = {
         .rules = RSE_SAFARI,
         .startingBalls = 30,
         .startingSteps = 500,
@@ -11,7 +11,7 @@ static const struct SafariZone sSafariZones[SAFARI_COUNT] = {
             .warpId = 0
         }
     },
-    [FUSCHIA_CITY_SAFARI] = {
+    [SAFARI_EVENT_KANTO] = {
         .rules = FRLG_SAFARI,
         .startingBalls = 30,
         .startingSteps = 600,

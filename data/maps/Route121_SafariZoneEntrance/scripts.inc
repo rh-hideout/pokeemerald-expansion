@@ -77,7 +77,7 @@ Route121_SafariZoneEntrance_EventScript_TryEnterSafariZone::
 	hidemoneybox
 	applymovement LOCALID_PLAYER, Route121_SafariZoneEntrance_Movement_EnterSafariZone
 	waitmovement 0
-	safari_enter ROUTE_121_HOENN_SAFARI
+	safari_enter SAFARI_EVENT_HOENN
 	clearflag FLAG_GOOD_LUCK_SAFARI_ZONE
 	warp MAP_SAFARI_ZONE_SOUTH, 32, 33
 	waitstate
