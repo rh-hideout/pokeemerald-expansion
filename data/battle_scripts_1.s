@@ -26,7 +26,7 @@ BattleScript_MoveResolution::
 	attackcanceler
 	goto BattleScript_MoveEnd
 
-BattleScript_TryRevertWeatherForms:
+BattleScript_TryRevertWeatherForms::
 	savebattlerorderindex
 	setbyte gBattlerOrderIndex, 0
 	sortbattlers
