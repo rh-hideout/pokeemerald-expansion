@@ -1747,7 +1747,7 @@ static void Cmd_getexp(void)
     CMD_ARGS(u8 battler);
 
     enum HoldEffect holdEffect;
-    s32 i; // also used as stringId
+    s32 stringId;
     enum PartyMon *expMonId = &gBattleStruct->expGetterMonId;
     u32 currLvl;
 
@@ -1786,7 +1786,7 @@ static void Cmd_getexp(void)
             s32 viaSentIn = 0;
             s32 viaExpShare = 0;
 
-            for (i = 0; i < PARTY_SIZE; i++)
+            for (u32 i = 0; i < PARTY_SIZE; i++)
             {
                 if (!IsValidForBattle(&gParties[B_TRAINER_PLAYER][i]))
                     continue;
@@ -1919,16 +1919,16 @@ static void Cmd_getexp(void)
 
                     if (IsTradedMon(&gParties[B_TRAINER_PLAYER][*expMonId]))
                     {
-                        i = STRINGID_ABOOSTED;
+                        stringId = STRINGID_ABOOSTED;
                     }
                     else
                     {
-                        i = STRINGID_EMPTYSTRING4;
+                        stringId = STRINGID_EMPTYSTRING4;
                     }
 
                     PREPARE_MON_NICK_WITH_PREFIX_BUFFER(gBattleTextBuff1, 0, *expMonId);
                     // buffer 'gained' or 'gained a boosted'
-                    PREPARE_STRING_BUFFER(gBattleTextBuff2, i);
+                    PREPARE_STRING_BUFFER(gBattleTextBuff2, stringId);
                     PREPARE_WORD_NUMBER_BUFFER(gBattleTextBuff3, 6, gBattleStruct->battlerExpReward);
 
                     if (wasSentOut || holdEffect == HOLD_EFFECT_EXP_SHARE)
