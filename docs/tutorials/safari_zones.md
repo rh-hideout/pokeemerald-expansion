@@ -31,15 +31,15 @@ A safari's properties are contained in its `struct SafariZone`, so let's go over
 
 ## Script commands
 
-`getactivesafri` sets VAR_RESULT to the currently active safariId, returns 0/NONE_SAFARI if there is no active safari
+`getactivesafari` sets VAR_RESULT to the currently active safariId, returns 0/NONE_SAFARI if there is no active safari
 
-`entersafari` let you start a safari. The command must be used with an `enum SafariIds` argument, defined in `include/constants/safaris.h`
+`safari_enter` let you start a safari. The command must be used with an `enum SafariIds` argument, defined in `include/constants/safaris.h`
 
-`exitsafari` will end the active safari and warps the player to the safari exit location
+`safari_exit` will end the active safari and warps the player to the safari exit location
 
-`exitsafari_nowarp` ends the safari but does not warp the player
+`safari_exitnowarp` ends the safari but does not warp the player
 
-Both `exitsafari` and `exitsafari_nowarp` will not set `VAR_SAFARI_ZONE_STATE` because it is assumed to be in the developer perview to set up potential script follow-ups
+Both `safari_exit` and `safari_exitnowarp` will not set `VAR_SAFARI_ZONE_STATE` because it is assumed to be in the developer perview to set up potential script follow-ups
 
 ## Understanding `VAR_SAFARI_ZONE_STATE`
 

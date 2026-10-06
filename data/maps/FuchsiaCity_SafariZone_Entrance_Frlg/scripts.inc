@@ -47,7 +47,7 @@ FuchsiaCity_SafariZone_Entrance_EventScript_ExitEarly::
 	closemessage
 	applymovement LOCALID_PLAYER, FuchsiaCity_SafariZone_Entrance_Movement_Exit
 	waitmovement 0
-	exitsafari_nowarp
+	safari_exitnowarp
 	setvar VAR_SAFARI_ZONE_STATE, 0
 	releaseall
 	end
@@ -128,7 +128,7 @@ FuchsiaCity_SafariZone_Entrance_EventScript_TryEnterSafariZone::
 	call_if_eq VAR_TEMP_2, 0, FuchsiaCity_SafariZone_Entrance_EventScript_EnterSafariZoneMid
 	call_if_eq VAR_TEMP_2, 1, FuchsiaCity_SafariZone_Entrance_EventScript_EnterSafariZoneRight
 	call_if_eq VAR_TEMP_2, 2, FuchsiaCity_SafariZone_Entrance_EventScript_EnterSafariZoneLeft
-	entersafari FUSCHIA_CITY_SAFARI
+	safari_enter FUSCHIA_CITY_SAFARI
 	warp MAP_SAFARI_ZONE_CENTER, 255, 26, 30
 	waitstate
 	end

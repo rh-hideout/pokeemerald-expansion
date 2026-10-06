@@ -540,7 +540,7 @@ void HandleAction_SafariZoneRun(void)
 #undef safariBaitThrowCounter
 #undef safariRockThrowCounter
 
-bool8 ScrCmd_getactivesafri(struct ScriptContext * ctx)
+bool8 ScrCmd_getactivesafari(struct ScriptContext * ctx)
 {
     gSpecialVar_Result = sActiveSafari;
     return FALSE;

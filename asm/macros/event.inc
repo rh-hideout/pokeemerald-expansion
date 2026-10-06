@@ -2975,21 +2975,21 @@
 @ Safaris
 
 	@ sets VAR_RESULT to the currently active safariId, returns 0/NONE_SAFARI if there is no active safari
-	.macro getactivesafri
-	callnative ScrCmd_getactivesafri
+	.macro getactivesafari
+	callnative ScrCmd_getactivesafari
 	.endm
 
-	.macro entersafari safariId:req
+	.macro safari_enter safariId:req
 	callnative ScrCmd_entersafari
 	.byte \safariId
 	.endm
 
-	.macro exitsafari_nowarp
+	.macro safari_exitnowarp
 	callnative ScrCmd_exitsafari
 	.byte FALSE
 	.endm
 
-	.macro exitsafari
+	.macro safari_exit
 	callnative ScrCmd_exitsafari
 	.byte TRUE
 	waitstate

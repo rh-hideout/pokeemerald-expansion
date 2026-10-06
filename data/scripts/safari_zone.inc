@@ -1,10 +1,10 @@
 SafariZone_EventScript_OutOfBallsMidBattle::
 	setvar VAR_SAFARI_ZONE_STATE, SAFARI_ZONE_NO_BALLS_MID_BATTLE
-	exitsafari_nowarp
+	safari_exitnowarp
 	end
 
 SafariZone_EventScript_Exit::
-	exitsafari
+	safari_exit
 	end
 
 SafariZone_EventScript_RetirePrompt::
