@@ -280,7 +280,8 @@ struct ObjectEvent
              u32 hideReflection:1;
              u32 shiny:1; // OW mon shininess
              u32 jumpDone:1;
-             u32 padding:2;
+             u32 disableFloorGroundEffects:1;
+             u32 padding:1;
     /*0x04*/ u16 graphicsId; // 12 bits for species; high 4 bits for form
     /*0x06*/ u8 movementType;
     /*0x07*/ u8 trainerType;
