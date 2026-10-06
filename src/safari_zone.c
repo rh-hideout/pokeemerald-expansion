@@ -78,7 +78,7 @@ bool32 GetSafariZoneFlag(void)
 
 void ResetSafariZoneFlag(void)
 {
-     sActiveSafari = SAFARI_EVENT_NONE;
+    sActiveSafari = SAFARI_EVENT_NONE;
 }
 
 
@@ -129,8 +129,7 @@ bool8 SafariZoneTakeStep(void)
     }
 
     DecrementFeederStepCounters();
-    sSafariZoneStepCounter--;
-    if (sSafariZoneStepCounter == 0)
+    if (--sSafariZoneStepCounter == 0)
     {
         ScriptContext_SetupScript(SafariZone_EventScript_TimesUp);
         return TRUE;
@@ -148,7 +147,7 @@ void CB2_EndSafariBattle(void)
     sSafariZonePkblkUses += gBattleResults.pokeblockThrows;
     if (gBattleOutcome == B_OUTCOME_CAUGHT)
         sSafariZoneCaughtMons++;
-    if (sNumSafariBalls != 0)
+    if (sNumSafariBalls)
     {
         SetMainCallback2(CB2_ReturnToField);
     }
