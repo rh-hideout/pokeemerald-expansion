@@ -18,15 +18,15 @@
 #include "constants/songs.h"
 #include "field_screen_effect.h"
 
-enum SafariRules
+enum SafariActions
 {
-    RSE_SAFARI,
-    FRLG_SAFARI,
+    SAFARI_ACTIONS_RSE,
+    SAFARI_ACTIONS_FRLG,
 };
 
 struct SafariData
 {
-    enum SafariRules rules:8;
+    enum SafariActions actions:8;
     u8 startingBalls;
     u16 noEscape:1; // prevents the player from using Escape Rope or field moves like Dig/Teleport/Fly to exit the safari
     u16 exitWarpOnWhiteout:1; // if the players whiteouts, return them to the exit warp instead of the last pokecenter
@@ -301,8 +301,8 @@ bool32 IsSafariEnding(void)
 
 bool32 InSafariThatDoesNotSendMons(void)
 {
-    enum SafariRules rules = sSafariZones[sActiveSafari].rules;
-    return (rules == RSE_SAFARI || rules == FRLG_SAFARI);
+    enum SafariActions rules = sSafariZones[sActiveSafari].actions;
+    return (rules == SAFARI_ACTIONS_RSE || rules == SAFARI_ACTIONS_FRLG);
 }
 
 u32 GetSafariZoneBallMultiplier(void)
@@ -316,23 +316,23 @@ u32 GetSafariBallCount(void)
 }
 
 static const u8 *sSafariControllerMenuString[] = {
-    [RSE_SAFARI] = gText_SafariZoneMenu,
-    [FRLG_SAFARI] = gText_SafariZoneMenuFrlg,
+    [SAFARI_ACTIONS_RSE] = gText_SafariZoneMenu,
+    [SAFARI_ACTIONS_FRLG] = gText_SafariZoneMenuFrlg,
 };
 
 const u8 *GetSafariControllerMenu(void)
 {
-    return sSafariControllerMenuString[sSafariZones[sActiveSafari].rules];
+    return sSafariControllerMenuString[sSafariZones[sActiveSafari].actions];
 }
 
 static const u8 sSafariControllerActions[][4] = {
-    [RSE_SAFARI] = {
+    [SAFARI_ACTIONS_RSE] = {
         B_ACTION_SAFARI_BALL,
         B_ACTION_SAFARI_POKEBLOCK,
         B_ACTION_SAFARI_GO_NEAR,
         B_ACTION_SAFARI_RUN,
     },
-    [FRLG_SAFARI] = {
+    [SAFARI_ACTIONS_FRLG] = {
         B_ACTION_SAFARI_BALL,
         B_ACTION_SAFARI_BAIT,
         B_ACTION_SAFARI_ROCK,
@@ -342,7 +342,7 @@ static const u8 sSafariControllerActions[][4] = {
 
 const u8 *GetSafariControllerActions(void)
 {
-    return sSafariControllerActions[sSafariZones[sActiveSafari].rules];
+    return sSafariControllerActions[sSafariZones[sActiveSafari].actions];
 }
 
 u32 GetInitialSafariCatchFactor(void)
@@ -388,7 +388,7 @@ void HandleAction_WatchesCarefully(void)
     gBattle_BG0_Y = 0;
 
     gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_MON_WATCHING;
-    if (sSafariZones[sActiveSafari].rules == FRLG_SAFARI)
+    if (sSafariZones[sActiveSafari].actions == SAFARI_ACTIONS_FRLG)
     {
         if (gBattleStruct->safariRockThrowCounter > 0)
         {
