@@ -19,7 +19,7 @@ and the actual safari properties are defined in `sSafariZones` in `src/data/safa
 
 ## Safari Properties
 
-A safari's properties are contained in its `struct SafariZone`, so let's go over each field of the struct:
+A safari's properties are contained in its `struct SafariData`, so let's go over each field of the struct:
 - `rules` can be either `RSE_SAFARI` or `FRLG_SAFARI`, which determines two of the wild encounter battle actions in the safari as either "Bait" and "Rock", as in FRLG, or "Pokeblock" and "Go Near" like in Emerald
 - `startingBalls` is the number of Safari balls you will have when starting the safari
 - `startingSteps` is the number of steps the player will have before the safari ends

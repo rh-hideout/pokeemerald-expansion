@@ -24,7 +24,7 @@ enum SafariRules
     FRLG_SAFARI,
 };
 
-struct SafariZone
+struct SafariData
 {
     enum SafariRules rules:8;
     u8 startingBalls;

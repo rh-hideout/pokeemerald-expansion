@@ -1,4 +1,4 @@
-static const struct SafariZone sSafariZones[SAFARI_EVENT_COUNT] = {
+static const struct SafariData sSafariZones[SAFARI_EVENT_COUNT] = {
     [SAFARI_EVENT_NONE] = {0},
     [SAFARI_EVENT_HOENN] = {
         .rules = RSE_SAFARI,
