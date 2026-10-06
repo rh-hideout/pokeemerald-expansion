@@ -582,9 +582,10 @@ struct EventStates
     u32 atkCancelerBattler:4;
     enum BattleIntroStates battleIntro:8;
     enum SwitchInEvents switchIn:8;
-    u32 battlerSwitchIn:8; // SwitchInFirstEventBlock, SwitchInSecondEventBlock
+    u32 battlerSwitchIn:4; // SwitchInFirstEventBlock, SwitchInSecondEventBlock
     u32 moveEndBlock:8;
     enum StatChangeResolution resolution:8;
+    enum FaintedEffectsBlock faintedEffects;
 };
 
 // Cleared at the beginning of the battle. Fields need to be cleared when needed manually otherwise.

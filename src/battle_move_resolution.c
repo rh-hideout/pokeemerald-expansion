@@ -2905,7 +2905,7 @@ static enum CancelerResult CancelerMoveAnimation(struct BattleCalcValues *cv)
     {
         gBattleScripting.animTurn++;
         gBattleScripting.animTargetsHit++;
-        BattleScriptCall(BattleScript_Pausex20);
+        BattleScriptCall(BattleScript_PauseShort);
         return CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT;
     }
 
@@ -2983,7 +2983,7 @@ static enum CancelerResult CancelerMoveAllySwitch(struct BattleCalcValues *cv)
         gProtectStructs[gBattlerAttacker].usedAllySwitch = TRUE; // set used ally switch for user
         gBattleScripting.battler = GetPartnerBattler(gBattlerAttacker);
         PrepareStringBattleWithWait(STRINGID_ALLYSWITCHPOSITION, gBattlerAttacker);
-        BattleScriptCall(BattleScript_MoveEffectSetStatus);
+        BattleScriptCall(BattleScript_WaitMessage);
         return CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT;
     }
 
@@ -4447,31 +4447,6 @@ static enum MoveEndResult MoveEndFaintBlock(struct BattleCalcValues *cv)
                 }
                 gBattleStruct->eventState.moveEndBlock++;
                 break;
-            case FAINT_BLOCK_VICTORY_CATCH:
-                if (IsVictoryCatch()
-                 && gBattleStruct->victoryCatchState != VICTORY_CATCH_FAINTED
-                 && !IsOnPlayerSide(battlerDef))
-                {
-                    u8 hp = 1;
-                    SetMonData(GetBattlerMon(battlerDef), MON_DATA_HP, &hp);
-                    BattleScriptCall(BattleScript_WildBattleVictory);
-                    result = MOVEEND_RESULT_RUN_SCRIPT;
-                }
-                gBattleStruct->eventState.moveEndBlock++;
-                break;
-            case FAINT_BLOCK_END_NEUTRALIZING_GAS:
-                if (gBattleMons[battlerDef].volatiles.neutralizingGas)
-                {
-                    gBattleMons[battlerDef].volatiles.neutralizingGas = FALSE;
-                    if (!IsNeutralizingGasOnField())
-                    {
-                        UpdateTruantTogglesOnNeutralizingGasEnd();
-                        BattleScriptCall(BattleScript_NeutralizingGasExits);
-                        result = MOVEEND_RESULT_RUN_SCRIPT;
-                    }
-                }
-                gBattleStruct->eventState.moveEndBlock++;
-                break;
             case FAINT_BLOCK_TRY_DESTINY_BOND: // Checked before FAINT_BLOCK_FAINT_TARGET but occurs after since volatiles are cleared on faint
                 if (gBattleMons[battlerDef].volatiles.destinyBond
                  && IsBattlerTurnDamaged(battlerDef, EXCLUDING_SUBSTITUTES)
@@ -4514,17 +4489,6 @@ static enum MoveEndResult MoveEndFaintAttacker(struct BattleCalcValues *cv)
 {
     if (!IsBattlerAlive(cv->battlerAtk) && !gBattleStruct->battlerState[cv->battlerAtk].notOnField)
     {
-        if (gBattleMons[cv->battlerAtk].volatiles.neutralizingGas)
-        {
-            gBattleMons[cv->battlerAtk].volatiles.neutralizingGas = FALSE;
-            if (!IsNeutralizingGasOnField())
-            {
-                UpdateTruantTogglesOnNeutralizingGasEnd();
-                BattleScriptCall(BattleScript_NeutralizingGasExits);
-                return MOVEEND_RESULT_RUN_SCRIPT;
-            }
-        }
-
         SetValuesOnFaint(cv->battlerAtk);
         BattleScriptCall(BattleScript_FaintBattler);
         return MOVEEND_RESULT_RUN_SCRIPT;
@@ -5213,7 +5177,7 @@ static enum MoveEndResult MoveEndMoveBlock(struct BattleCalcValues *cv)
             {
                 PushHazardTypeToQueue(side, HAZARDS_STEALTH_ROCK);
                 PrepareStringBattleWithWait(STRINGID_POINTEDSTONESFLOAT, battlerDef);
-                BattleScriptCall(BattleScript_MoveEffectSetStatus);
+                BattleScriptCall(BattleScript_WaitMessage);
                 gBattleStruct->eventState.moveEndBattler = 0;
                 gBattleScripting.moveendState++;
                 return MOVEEND_RESULT_RUN_SCRIPT;
@@ -5234,7 +5198,7 @@ static enum MoveEndResult MoveEndMoveBlock(struct BattleCalcValues *cv)
                 {
                     SetSpikesLayer(side, 1);
                     PrepareStringBattleWithWait(STRINGID_SPIKESSCATTERED, battlerDef);
-                    BattleScriptCall(BattleScript_MoveEffectSetStatus);
+                    BattleScriptCall(BattleScript_WaitMessage);
                     gBattleStruct->eventState.moveEndBattler = 0;
                     gBattleScripting.moveendState++;
                     return MOVEEND_RESULT_RUN_SCRIPT;
