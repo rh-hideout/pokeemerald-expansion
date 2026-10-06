@@ -26,11 +26,11 @@ enum SafariActions
 
 struct SafariData
 {
-    enum SafariActions actions:8;
     u8 startingBalls;
-    u16 noEscape:1; // prevents the player from using Escape Rope or field moves like Dig/Teleport/Fly to exit the safari
-    u16 exitWarpOnWhiteout:1; // if the players whiteouts, return them to the exit warp instead of the last pokecenter
-    u16 padding:14;
+    enum SafariActions actions:6;
+    u8 noEscape:1; // prevents the player from using Escape Rope or field moves like Dig/Teleport/Fly to exit the safari
+    u8 exitWarpOnWhiteout:1; // if the players whiteouts, return them to the exit warp instead of the last pokecenter
+    u16 padding;
     u16 startingSteps;
     u16 catchMultiplier; // value will be divided by 100 so 150 is a 1.5 multiplier
     struct WarpData exitWarp;
