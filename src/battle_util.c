@@ -11691,6 +11691,7 @@ bool32 DoFaintedEffectsBlock(void)
             gBattleStruct->eventState.faintedEffects++;
             return TRUE;
         case FAINTED_EFFECTS_BLOCK_FAINT_MESSAGE:
+            gBattleScripting.battler = gBattlerFainted;
             PrepareStringBattleWithWait(STRINGID_BATTLERFAINTED, gBattlerFainted);
             BattleScriptCall(BattleScript_WaitMessage);
             gBattleStruct->eventState.faintedEffects++;
