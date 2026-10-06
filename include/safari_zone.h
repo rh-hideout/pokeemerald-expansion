@@ -30,8 +30,8 @@ void SafariZoneRetirePrompt(void);
 
 void IncrementSafariValuesPostBattle(u32 pokeblocksUsed, bool32 wasMonCaught);
 
-struct Pokeblock *SafariZoneGetActivePokeblock(void);
 void SafariZoneActivatePokeblockFeeder(u8 pkblId);
+u32 GetPokeblockFeederNature(void);
 
 bool32 IsSafariEnding(void);
 void PrepareStartMenuSafariString();

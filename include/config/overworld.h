@@ -170,5 +170,6 @@
 #define OW_ALLOW_SAFARI_SAVING FALSE    // If TRUE, Safari data will be added to the savefile and you will be allowed to save during safaris
 #define OW_DISABLE_POKEFEEDERS IS_FRLG  // Make pokefeeders unusable but free 160 bytes of EWRAM (or save data if OW_ALLOW_SAFARI_SAVING if TRUE), TRUE by default for FRLG because there is no pokefeeders in that game
 #define OW_ALLOW_CRITICAL_CAPTURE_SAFARI TRUE // If TRUE, critical capture can occur during safaris (you still need the general critical capture config B_CRITICAL_CAPTURE to be enabled)
+#define OW_POKEFEEDER_FORCE_NATURE_CHANCE 80 // Percentage chance for an active pokefeeder in range to affect the nature of the encountered Pokemon
 
 #endif // GUARD_CONFIG_OVERWORLD_H

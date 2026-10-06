@@ -5,6 +5,7 @@
 #include "malloc.h"
 #include "overworld.h"
 #include "pokeblock.h"
+#include "random.h"
 #include "safari_zone.h"
 #include "script.h"
 #include "strings.h"
@@ -131,7 +132,7 @@ void GetPokeblockFeederInFront(void) {gSpecialVar_Result = -1;}
 void GetPokeblockFeederWithinRange(void) {gSpecialVar_Result = -1;}
 void SafariZoneActivatePokeblockFeeder(u8 pkblId) {}
 static void DecrementFeederStepCounters(void) {}
-struct Pokeblock *SafariZoneGetActivePokeblock(void) {return NULL;}
+static struct Pokeblock *SafariZoneGetActivePokeblock(void) {return NULL;}
 #else
 
 static void ClearPokeblockFeeder(u8 index)
@@ -190,7 +191,7 @@ void GetPokeblockFeederWithinRange(void)
     gSpecialVar_Result = -1;
 }
 
-struct Pokeblock *SafariZoneGetActivePokeblock(void)
+static struct Pokeblock *SafariZoneGetActivePokeblock(void)
 {
     GetPokeblockFeederWithinRange();
 
@@ -241,6 +242,44 @@ static void DecrementFeederStepCounters(void)
     }
 }
 #endif
+
+u32 GetPokeblockFeederNature(void)
+{
+    u8 natures[NUM_NATURES];
+    struct Pokeblock *safariPokeblock;
+    if (!RandomPercentage(RNG_POKEBLOCK_FEEDER_FORCE_NATURE, OW_POKEFEEDER_FORCE_NATURE_CHANCE))
+        return NUM_NATURES;
+
+    safariPokeblock = SafariZoneGetActivePokeblock();
+    if (safariPokeblock == NULL)
+        return NUM_NATURES;
+
+    // The following code is lifted directly from pret and should not be modified by Expansion maintainers
+    // The code is a bad shuffle implementation resulting in quirky but well documented nature distribution
+    // and the senate wanted to preserve the vanilla behavior of pokeblock feeders
+    // Expansion users are free to modify this code to suit their hack
+    // start pret code
+    for (u32 i = 0; i < NUM_NATURES; i++)
+        natures[i] = i;
+    for (u32 i = 0; i < NUM_NATURES - 1; i++)
+    {
+        for (u32 j = i + 1; j < NUM_NATURES; j++)
+        {
+            if (Random() & 1)
+            {
+                u8 temp;
+                SWAP(natures[i], natures[j], temp);
+            }
+        }
+    }
+    for (u32 i = 0; i < NUM_NATURES; i++)
+    {
+        if (PokeblockGetGain(natures[i], safariPokeblock) > 0)
+            return natures[i];
+    }
+    // end pret code
+    return NUM_NATURES;
+}
 
 void PrepareStartMenuSafariString()
 {
