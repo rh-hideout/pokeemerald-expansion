@@ -668,7 +668,9 @@ static void CB2_InitBuyMenu(void)
         sShopData->itemSpriteIds[0] = SPRITE_NONE;
         sShopData->itemSpriteIds[1] = SPRITE_NONE;
         if (sMartInfo.martType == MART_TYPE_NORMAL && !sMartInfo.inlinePrices)
+        {
             TryBuildDynamicShopItemList(&sMartInfo.itemList, &sMartInfo.itemCount);
+        }
         BuyMenuBuildListMenuTemplate();
         BuyMenuInitBgs();
         FillBgTilemapBufferRect_Palette0(0, 0, 0, 0, 0x20, 0x20);
@@ -699,7 +701,9 @@ static void CB2_InitBuyMenu(void)
 static void BuyMenuFreeMemory(void)
 {
     if (sMartInfo.martType == MART_TYPE_NORMAL && !sMartInfo.inlinePrices)
+    {
         TryFreeDynamicShopItemList(&sMartInfo.itemList);
+    }
 
     Free(sShopData);
     Free(sListMenuItems);
@@ -714,7 +718,9 @@ static void BuyMenuBuildListMenuTemplate(void)
     sListMenuItems = Alloc((sMartInfo.itemCount + 1) * sizeof(*sListMenuItems));
     sItemNames = Alloc((sMartInfo.itemCount + 1) * sizeof(*sItemNames));
     for (i = 0; i < sMartInfo.itemCount; i++)
+    {
         BuyMenuSetListEntry(&sListMenuItems[i], MartGetEntryId(i), sItemNames[i]);
+    }
 
     StringCopy(sItemNames[i], gText_Cancel2);
     sListMenuItems[i].name = sItemNames[i];
@@ -778,9 +784,13 @@ static void BuyMenuPrintPriceInList(u8 windowId, u32 itemId, u8 y)
     if (itemId != LIST_CANCEL)
     {
         if (GetItemImportance(itemId) && (CheckBagHasItem(itemId, 1) || CheckPCHasItem(itemId, 1)))
+        {
             StringCopy(gStringVar4, gText_SoldOut);
+        }
         else
+        {
             MartFormatAmount(gStringVar4, MartGetCost(itemId), STR_CONV_MODE_LEFT_ALIGN);
+        }
         x = GetStringRightAlignXOffset(FONT_NARROW, gStringVar4, 120);
         AddTextPrinterParameterized4(windowId, FONT_NARROW, x, y, 0, 0, sShopBuyMenuTextColors[COLORID_ITEM_LIST], TEXT_SKIP_DRAW, gStringVar4);
     }
@@ -911,7 +921,9 @@ static void BuyMenuDrawGraphics(void)
     BuyMenuDrawMapGraphics();
     BuyMenuCopyMenuBgToBg1TilemapBuffer();
     if (MartUsesMoney())
+    {
         AddMoneyLabelObject(19, 11);
+    }
     DrawStdFrameWithCustomTileAndPalette(WIN_MONEY, FALSE, 1, 13);
     MartPrintBalance();
     ScheduleBgCopyTilemapToVram(0);
@@ -1175,9 +1187,13 @@ static void Task_BuyMenu(u8 taskId)
                     MartFormatAmount(gStringVar2, sShopData->totalCost, STR_CONV_MODE_LEFT_ALIGN);
 
                     if (sMartInfo.martType == MART_TYPE_DECOR)
+                    {
                         StringExpandPlaceholders(gStringVar4, COMPOUND_STRING("{STR_VAR_1}, is it?\nThat'll be {STR_VAR_2}. Do you want it?"));
+                    }
                     else // MART_TYPE_DECOR2
+                    {
                         StringExpandPlaceholders(gStringVar4, COMPOUND_STRING("You wanted {STR_VAR_1}?\nThat'll be {STR_VAR_2}. Will that be okay?"));
+                    }
 
                     BuyMenuDisplayMessage(taskId, gStringVar4, BuyMenuConfirmPurchase);
                 }
@@ -1205,9 +1221,13 @@ static void Task_BuyHowManyDialogueInit(u8 taskId)
 
     // Avoid division by zero in-case something costs 0 pokedollars.
     if (sShopData->totalCost == 0)
+    {
         maxQuantity = MAX_BAG_ITEM_CAPACITY;
+    }
     else
+    {
         maxQuantity = MartGetBalance() / sShopData->totalCost;
+    }
 
     if (maxQuantity > MAX_BAG_ITEM_CAPACITY)
         sShopData->maxQuantity = MAX_BAG_ITEM_CAPACITY;
@@ -1270,7 +1290,9 @@ static void BuyMenuTryMakePurchase(u8 taskId)
         {
             GetSetItemObtained(tItemId, FLAG_SET_ITEM_OBTAINED);
             if (MartUsesMoney())
+            {
                 RecordItemPurchase(taskId);
+            }
             BuyMenuDisplayMessage(taskId, gText_HereYouGoThankYou, BuyMenuSubtractMoney);
         }
         else
@@ -1297,7 +1319,9 @@ static void BuyMenuTryMakePurchase(u8 taskId)
 static void BuyMenuSubtractMoney(u8 taskId)
 {
     if (MartUsesMoney())
+    {
         IncrementGameStat(GAME_STAT_SHOPPED);
+    }
 
     MartTakePayment(sShopData->totalCost);
     PlaySE(SE_SHOP);
@@ -1381,7 +1405,9 @@ static void BuyMenuPrintItemQuantityAndPrice(u8 taskId)
 static void ExitBuyMenu(u8 taskId)
 {
     if (sMartInfo.showMenu)
+    {
         gFieldCallback = MapPostLoadHook_ReturnToShopMenu;
+    }
     BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
     gTasks[taskId].func = Task_ExitBuyMenu;
 }
@@ -1391,7 +1417,9 @@ static void Task_ExitBuyMenu(u8 taskId)
     if (!gPaletteFade.active)
     {
         if (MartUsesMoney())
+        {
             RemoveMoneyLabelObject();
+        }
 
         bool32 showMenu = sMartInfo.showMenu;
         BuyMenuFreeMemory();
