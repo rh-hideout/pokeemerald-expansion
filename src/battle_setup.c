@@ -86,6 +86,7 @@ static void CB2_EndFirstBattle(void);
 static void SaveChangesToPlayerParty(void);
 static void HandleBattleVariantEndParty(void);
 static void CB2_EndTrainerBattle(void);
+static void CB2_EndSafariBattle(void);
 static bool32 IsPlayerDefeated(u32 battleOutcome);
 #if FREE_MATCH_CALL == FALSE
 static u16 GetRematchTrainerId(u16 trainerId);
@@ -1663,6 +1664,28 @@ static void CB2_EndRematchBattle(void)
         SetBattledTrainersFlags();
         HandleRematchVarsOnBattleEnd();
         DowngradeBadPoison();
+    }
+}
+
+static void CB2_EndSafariBattle(void)
+{
+    IncrementSafariValuesPostBattle(gBattleResults.pokeblockThrows, (gBattleOutcome == B_OUTCOME_CAUGHT));
+    if (GetSafariBallCount())
+    {
+        SetMainCallback2(CB2_ReturnToField);
+    }
+    else if (gBattleOutcome == B_OUTCOME_NO_SAFARI_BALLS)
+    {
+        RunScriptImmediately(SafariZone_EventScript_OutOfBallsMidBattle);
+        WarpIntoMap();
+        gFieldCallback = FieldCB_ReturnToFieldNoScriptCheckMusic;
+        SetMainCallback2(CB2_LoadMap);
+    }
+    else if (gBattleOutcome == B_OUTCOME_CAUGHT)
+    {
+        ScriptContext_SetupScript(SafariZone_EventScript_OutOfBalls);
+        ScriptContext_Stop();
+        SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
     }
 }
 

@@ -3,6 +3,18 @@
 
 #include "constants/safaris.h"
 
+extern const u8 SafariZone_EventScript_TimesUp[];
+extern const u8 SafariZone_EventScript_RetirePrompt[];
+extern const u8 SafariZone_EventScript_OutOfBallsMidBattle[];
+extern const u8 SafariZone_EventScript_OutOfBalls[];
+extern const u8 *const gBattlescriptsForSafariActions[];
+
+enum SafariActions
+{
+    SAFARI_ACTIONS_RSE,
+    SAFARI_ACTIONS_FRLG,
+};
+
 bool32 GetSafariZoneFlag(void);
 void ResetSafariZoneFlag(void);
 
@@ -16,7 +28,7 @@ bool32 CannotEscapeSafari(void);
 bool8 SafariZoneTakeStep(void);
 void SafariZoneRetirePrompt(void);
 
-void CB2_EndSafariBattle(void);
+void IncrementSafariValuesPostBattle(u32 pokeblocksUsed, bool32 wasMonCaught);
 
 struct Pokeblock *SafariZoneGetActivePokeblock(void);
 void SafariZoneActivatePokeblockFeeder(u8 pkblId);
@@ -27,15 +39,7 @@ bool32 InSafariThatDoesNotSendMons(void);
 
 u32 GetSafariBallCount(void);
 u32 GetSafariZoneBallMultiplier(void);
-const u8 *GetSafariControllerMenu(void);
-const u8 *GetSafariControllerActions(void);
-u32 GetInitialSafariCatchFactor(void);
-void HandleAction_WatchesCarefully(void);
-void HandleAction_SafariZoneBallThrow(void);
-void HandleAction_ThrowPokeblock(void);
-void HandleAction_GoNear(void);
-void HandleAction_ThrowBait(void);
-void HandleAction_ThrowRock(void);
-void HandleAction_SafariZoneRun(void);
+enum SafariActions GetSafariActions(void);
+void DecrementSafariBalls(void);
 
 #endif // GUARD_SAFARI_ZONE_H

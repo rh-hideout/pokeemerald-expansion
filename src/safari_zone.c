@@ -1,6 +1,4 @@
 #include "global.h"
-#include "battle.h"
-#include "battle_scripts.h"
 #include "event_data.h"
 #include "field_player_avatar.h"
 #include "main.h"
@@ -9,20 +7,12 @@
 #include "pokeblock.h"
 #include "safari_zone.h"
 #include "script.h"
-#include "sound.h"
 #include "strings.h"
 #include "string_util.h"
 #include "tv.h"
 #include "constants/game_stat.h"
 #include "constants/map_groups.h"
-#include "constants/songs.h"
 #include "field_screen_effect.h"
-
-enum SafariActions
-{
-    SAFARI_ACTIONS_RSE,
-    SAFARI_ACTIONS_FRLG,
-};
 
 struct SafariData
 {
@@ -39,12 +29,6 @@ struct SafariData
 #include "data/safaris.h"
 
 #define POKEFEEDER_STEP_DURATION 100 // How many steps do pokefeeder stay active
-
-extern const u8 SafariZone_EventScript_TimesUp[];
-extern const u8 SafariZone_EventScript_RetirePrompt[];
-extern const u8 SafariZone_EventScript_OutOfBallsMidBattle[];
-extern const u8 SafariZone_EventScript_OutOfBalls[];
-extern const u8 *const gBattlescriptsForSafariActions[];
 
 #if OW_ALLOW_SAFARI_SAVING
 
@@ -140,30 +124,6 @@ bool8 SafariZoneTakeStep(void)
 void SafariZoneRetirePrompt(void)
 {
     ScriptContext_SetupScript(SafariZone_EventScript_RetirePrompt);
-}
-
-void CB2_EndSafariBattle(void)
-{
-    sSafariZonePkblkUses += gBattleResults.pokeblockThrows;
-    if (gBattleOutcome == B_OUTCOME_CAUGHT)
-        sSafariZoneCaughtMons++;
-    if (sNumSafariBalls)
-    {
-        SetMainCallback2(CB2_ReturnToField);
-    }
-    else if (gBattleOutcome == B_OUTCOME_NO_SAFARI_BALLS)
-    {
-        RunScriptImmediately(SafariZone_EventScript_OutOfBallsMidBattle);
-        WarpIntoMap();
-        gFieldCallback = FieldCB_ReturnToFieldNoScriptCheckMusic;
-        SetMainCallback2(CB2_LoadMap);
-    }
-    else if (gBattleOutcome == B_OUTCOME_CAUGHT)
-    {
-        ScriptContext_SetupScript(SafariZone_EventScript_OutOfBalls);
-        ScriptContext_Stop();
-        SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
-    }
 }
 
 #if OW_DISABLE_POKEFEEDERS
@@ -315,229 +275,22 @@ u32 GetSafariBallCount(void)
     return sNumSafariBalls;
 }
 
-static const u8 *sSafariControllerMenuString[] = {
-    [SAFARI_ACTIONS_RSE] = gText_SafariZoneMenu,
-    [SAFARI_ACTIONS_FRLG] = gText_SafariZoneMenuFrlg,
-};
-
-const u8 *GetSafariControllerMenu(void)
+void DecrementSafariBalls(void)
 {
-    return sSafariControllerMenuString[sSafariZones[sActiveSafari].actions];
-}
-
-static const u8 sSafariControllerActions[][4] = {
-    [SAFARI_ACTIONS_RSE] = {
-        B_ACTION_SAFARI_BALL,
-        B_ACTION_SAFARI_POKEBLOCK,
-        B_ACTION_SAFARI_GO_NEAR,
-        B_ACTION_SAFARI_RUN,
-    },
-    [SAFARI_ACTIONS_FRLG] = {
-        B_ACTION_SAFARI_BALL,
-        B_ACTION_SAFARI_BAIT,
-        B_ACTION_SAFARI_ROCK,
-        B_ACTION_SAFARI_RUN,
-    }
-};
-
-const u8 *GetSafariControllerActions(void)
-{
-    return sSafariControllerActions[sSafariZones[sActiveSafari].actions];
-}
-
-u32 GetInitialSafariCatchFactor(void)
-{
-    return gSpeciesInfo[GetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_SPECIES)].catchRate * 100 / 1275;
-}
-
-static const u8 sPkblToEscapeFactor[][3] = {
-    {
-        [B_MSG_MON_CURIOUS]    = 0,
-        [B_MSG_MON_ENTHRALLED] = 0,
-        [B_MSG_MON_IGNORED]    = 0
-    },{
-        [B_MSG_MON_CURIOUS]    = 3,
-        [B_MSG_MON_ENTHRALLED] = 5,
-        [B_MSG_MON_IGNORED]    = 0
-    },{
-        [B_MSG_MON_CURIOUS]    = 2,
-        [B_MSG_MON_ENTHRALLED] = 3,
-        [B_MSG_MON_IGNORED]    = 0
-    },{
-        [B_MSG_MON_CURIOUS]    = 1,
-        [B_MSG_MON_ENTHRALLED] = 2,
-        [B_MSG_MON_IGNORED]    = 0
-    },{
-        [B_MSG_MON_CURIOUS]    = 1,
-        [B_MSG_MON_ENTHRALLED] = 1,
-        [B_MSG_MON_IGNORED]    = 0
-    }
-};
-static const u8 sGoNearCounterToCatchFactor[] = {4, 3, 2, 1};
-static const u8 sGoNearCounterToEscapeFactor[] = {4, 4, 4, 4};
-
-#define safariBaitThrowCounter safariPkblThrowCounter
-#define safariRockThrowCounter safariGoNearCounter
-
-// B_ACTION_SAFARI_WATCH_CAREFULLY
-void HandleAction_WatchesCarefully(void)
-
-{
-    gBattlerAttacker = gBattlerByTurnOrder[gCurrentTurnActionNumber];
-    gBattle_BG0_X = 0;
-    gBattle_BG0_Y = 0;
-
-    gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_MON_WATCHING;
-    if (sSafariZones[sActiveSafari].actions == SAFARI_ACTIONS_FRLG)
-    {
-        if (gBattleStruct->safariRockThrowCounter > 0)
-        {
-            gBattleStruct->safariRockThrowCounter--;
-            if (gBattleStruct->safariRockThrowCounter > 0)
-                gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_MON_ANGRY;
-            else
-                gBattleStruct->safariCatchFactor = GetInitialSafariCatchFactor();
-        }
-        else if (gBattleStruct->safariBaitThrowCounter > 0)
-        {
-            gBattleStruct->safariBaitThrowCounter--;
-            if (gBattleStruct->safariBaitThrowCounter > 0)
-                gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_MON_EATING;
-        }
-        gBattlescriptCurrInstr = gBattlescriptsForSafariActions[0];
-    }
-    gBattlescriptCurrInstr = gBattlescriptsForSafariActions[0];
-    gCurrentActionFuncId = B_ACTION_EXEC_SCRIPT;
-}
-
-// B_ACTION_SAFARI_BALL
-void HandleAction_SafariZoneBallThrow(void)
-{
-    gBattlerAttacker = gBattlerByTurnOrder[gCurrentTurnActionNumber];
-    gBattle_BG0_X = 0;
-    gBattle_BG0_Y = 0;
     sNumSafariBalls--;
-    gLastUsedItem = ITEM_SAFARI_BALL;
-    gBattlescriptCurrInstr = BattleScript_SafariBallThrow;
-    gCurrentActionFuncId = B_ACTION_EXEC_SCRIPT;
 }
 
-// B_ACTION_SAFARI_POKEBLOCK
-void HandleAction_ThrowPokeblock(void)
+enum SafariActions GetSafariActions(void)
 {
-    gBattlerAttacker = gBattlerByTurnOrder[gCurrentTurnActionNumber];
-    gBattle_BG0_X = 0;
-    gBattle_BG0_Y = 0;
-
-    gBattleCommunication[MULTISTRING_CHOOSER] = gBattleResources->bufferB[gBattlerAttacker][1] - 1;
-    gLastUsedItem = gBattleResources->bufferB[gBattlerAttacker][2];
-
-    if (gBattleResults.pokeblockThrows < 255)
-        gBattleResults.pokeblockThrows++;
-    if (gBattleStruct->safariPkblThrowCounter < 3)
-        gBattleStruct->safariPkblThrowCounter++;
-    if (gBattleStruct->safariEscapeFactor > 1)
-    {
-        // BUG: safariEscapeFactor can become 0 below. This causes the pokeblock throw glitch.
-        #ifdef BUGFIX
-        if (gBattleStruct->safariEscapeFactor <= sPkblToEscapeFactor[gBattleStruct->safariPkblThrowCounter][gBattleCommunication[MULTISTRING_CHOOSER]])
-        #else
-        if (gBattleStruct->safariEscapeFactor < sPkblToEscapeFactor[gBattleStruct->safariPkblThrowCounter][gBattleCommunication[MULTISTRING_CHOOSER]])
-        #endif
-            gBattleStruct->safariEscapeFactor = 1;
-        else
-            gBattleStruct->safariEscapeFactor -= sPkblToEscapeFactor[gBattleStruct->safariPkblThrowCounter][gBattleCommunication[MULTISTRING_CHOOSER]];
-    }
-
-    gBattlescriptCurrInstr = gBattlescriptsForSafariActions[2];
-
-    gCurrentActionFuncId = B_ACTION_EXEC_SCRIPT;
+    return sSafariZones[sActiveSafari].actions;
 }
 
-// B_ACTION_SAFARI_GO_NEAR
-void HandleAction_GoNear(void)
+void IncrementSafariValuesPostBattle(u32 pokeblocksUsed, bool32 wasMonCaught)
 {
-    gBattlerAttacker = gBattlerByTurnOrder[gCurrentTurnActionNumber];
-    gBattle_BG0_X = 0;
-    gBattle_BG0_Y = 0;
-
-    gBattleStruct->safariCatchFactor += sGoNearCounterToCatchFactor[gBattleStruct->safariGoNearCounter];
-    if (gBattleStruct->safariCatchFactor > 20)
-        gBattleStruct->safariCatchFactor = 20;
-
-    gBattleStruct->safariEscapeFactor += sGoNearCounterToEscapeFactor[gBattleStruct->safariGoNearCounter];
-    if (gBattleStruct->safariEscapeFactor > 20)
-        gBattleStruct->safariEscapeFactor = 20;
-
-    if (gBattleStruct->safariGoNearCounter < 3)
-    {
-        gBattleStruct->safariGoNearCounter++;
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CREPT_CLOSER;
-    }
-    else
-    {
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CANT_GET_CLOSER;
-    }
-    gBattlescriptCurrInstr = gBattlescriptsForSafariActions[1];
-
-    gCurrentActionFuncId = B_ACTION_EXEC_SCRIPT;
+    sSafariZonePkblkUses += pokeblocksUsed;
+    if (wasMonCaught)
+        sSafariZoneCaughtMons++;
 }
-
-// B_ACTION_SAFARI_BAIT
-void HandleAction_ThrowBait(void)
-{
-    gBattlerAttacker = gBattlerByTurnOrder[gCurrentTurnActionNumber];
-    gBattle_BG0_X = 0;
-    gBattle_BG0_Y = 0;
-
-    gBattleStruct->safariBaitThrowCounter += Random() % 5 + 2;
-    if (gBattleStruct->safariBaitThrowCounter > 6)
-        gBattleStruct->safariBaitThrowCounter = 6;
-
-    gBattleStruct->safariRockThrowCounter = 0;
-    gBattleStruct->safariCatchFactor >>= 1;
-
-    if (gBattleStruct->safariCatchFactor <= 2)
-        gBattleStruct->safariCatchFactor = 3;
-
-    gBattlescriptCurrInstr = gBattlescriptsForSafariActions[5];
-
-    gCurrentActionFuncId = B_ACTION_EXEC_SCRIPT;
-}
-
-// B_ACTION_SAFARI_ROCK
-void HandleAction_ThrowRock(void)
-{
-    gBattlerAttacker = gBattlerByTurnOrder[gCurrentTurnActionNumber];
-    gBattle_BG0_X = 0;
-    gBattle_BG0_Y = 0;
-
-    gBattleStruct->safariRockThrowCounter += Random() % 5 + 2;
-    if (gBattleStruct->safariRockThrowCounter > 6)
-        gBattleStruct->safariRockThrowCounter = 6;
-
-    gBattleStruct->safariBaitThrowCounter = 0;
-    gBattleStruct->safariCatchFactor <<= 1;
-
-    if (gBattleStruct->safariCatchFactor > 20)
-        gBattleStruct->safariCatchFactor = 20;
-
-    gBattlescriptCurrInstr = gBattlescriptsForSafariActions[4];
-
-    gCurrentActionFuncId = B_ACTION_EXEC_SCRIPT;
-}
-
-// B_ACTION_SAFARI_RUN
-void HandleAction_SafariZoneRun(void)
-{
-    gBattlerAttacker = gBattlerByTurnOrder[gCurrentTurnActionNumber];
-    PlaySE(SE_FLEE);
-    gCurrentTurnActionNumber = gBattlersCount;
-    gBattleOutcome = B_OUTCOME_RAN;
-}
-
-#undef safariBaitThrowCounter
-#undef safariRockThrowCounter
 
 bool8 ScrCmd_getactivesafari(struct ScriptContext * ctx)
 {
