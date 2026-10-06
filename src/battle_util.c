@@ -11649,9 +11649,8 @@ bool32 DoFaintedEffectsBlock(void)
             break;
         case FAINTED_EFFECTS_BLOCK_END_ILLUSION:
             if (TryClearIllusion(gBattlerFainted, abilityFainted))
-            {
                 return TRUE;
-            }
+
             gBattleStruct->eventState.faintedEffects++;
             break;
         case FAINTED_EFFECTS_BLOCK_END_DYNAMAX:    
@@ -11660,6 +11659,7 @@ bool32 DoFaintedEffectsBlock(void)
                 UndoDynamax(gBattlerFainted);
                 gBattleScripting.battler = gBattlerFainted;
                 BattleScriptCall(BattleScript_DynamaxEnds_Ret);
+                gBattleStruct->eventState.faintedEffects++;
                 return TRUE;
             }
             gBattleStruct->eventState.faintedEffects++;

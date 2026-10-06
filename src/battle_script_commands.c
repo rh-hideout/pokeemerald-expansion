@@ -8742,9 +8742,9 @@ void BS_TryToClearPrimalWeather(void)
 {
     NATIVE_ARGS();
 
-    TryClearPrimalWeather();
-
     gBattlescriptCurrInstr = cmd->nextInstr;
+
+    TryClearPrimalWeather();
 }
 
 void BS_TryEndNeutralizingGas(void)
