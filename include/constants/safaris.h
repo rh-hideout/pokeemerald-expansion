@@ -8,12 +8,13 @@ enum SafariEvents {
     SAFARI_EVENT_COUNT
 };
 
-// VAR_SAFARI_ZONE_STATE
-#define ENTERING_SAFARI_ZONE                    1
-#define SAFARI_ZONE_NO_STEP_LEFT                2
-#define SAFARI_ZONE_NO_BALLS_LEFT               3
-#define SAFARI_ZONE_NO_BALLS_MID_BATTLE         4
-#define SAFARI_ZONE_RETIRING                    5
-#define SAFARI_ZONE_WHITEOUT                    6
+// VAR_SAFARI_WARP_STATE
+#define SAFARI_WARP_ENTERING                    1
+#define SAFARI_WARP_MANUAL_EXIT                 1 // reused SAFARI_WARP_ENTERING on purpose, if you manually leave, it may happen because of a warp without a script to set the value so the warp state would be the same as when you entered
+#define SAFARI_WARP_NO_STEPS                    2
+#define SAFARI_WARP_NO_BALLS                    3
+#define SAFARI_WARP_NO_BALLS_MID_BATTLE         4
+#define SAFARI_WARP_RETIRING                    5
+#define SAFARI_WARP_WHITEOUT                    6
 
 #endif // GUARD_CONSTANTS_SAFARIS_H

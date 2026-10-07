@@ -398,7 +398,7 @@ void DoWhiteOut(void)
     SetWarpDestinationToLastHealLocation();
     if (GetSafariZoneFlag())
     {
-        VarSet(VAR_SAFARI_ZONE_STATE, SAFARI_ZONE_WHITEOUT);
+        VarSet(VAR_SAFARI_WARP_STATE, SAFARI_WARP_WHITEOUT);
         if (ShouldRetireFromSafariOnWhiteout())
             SetSafariExitWarp();
     }
@@ -465,7 +465,7 @@ static void Overworld_ResetStateAfterWhiteOut(void)
     ResetInitialPlayerAvatarState();
     FlagClear(FLAG_SYS_CYCLING_ROAD);
     FlagClear(FLAG_SYS_CRUISE_MODE);
-    VarSet(VAR_SAFARI_ZONE_STATE, 0);
+    VarSet(VAR_SAFARI_WARP_STATE, 0);
     FlagClear(FLAG_SYS_USE_STRENGTH);
     FlagClear(FLAG_SYS_USE_FLASH);
     if (B_RESET_FLAGS_VARS_AFTER_WHITEOUT == TRUE)

@@ -1469,7 +1469,7 @@ static void Task_RushInjuredPokemonToCenter(u8 taskId)
             {
                 ResetSafariZoneFlag();
                 // Script on respawn should be handled by the developer inside the map script using
-                // `map_script_2 VAR_SAFARI_ZONE_STATE, SAFARI_ZONE_WHITEOUT, Script_Something`
+                // `map_script_2 VAR_SAFARI_WARP_STATE, SAFARI_WARP_WHITEOUT, Script_Something`
                 if (!TryRunOnFrameMapScript())
                 {
                     UnlockPlayerFieldControls();

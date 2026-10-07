@@ -181,7 +181,7 @@
 #define VAR_UNUSED_0x40A1                                0x40A1 // Unused var
 #define VAR_SEAFLOOR_CAVERN_STATE                        0x40A2
 #define VAR_CABLE_CAR_STATION_STATE                      0x40A3
-#define VAR_SAFARI_ZONE_STATE                            0x40A4 // see include/constants/safaris.h
+#define VAR_SAFARI_WARP_STATE                            0x40A4 // see include/constants/safaris.h
 #define VAR_TRICK_HOUSE_BEING_WATCHED_STATE              0x40A5
 #define VAR_TRICK_HOUSE_FOUND_TRICK_MASTER               0x40A6
 #define VAR_TRICK_HOUSE_ENTRANCE_STATE                   0x40A7

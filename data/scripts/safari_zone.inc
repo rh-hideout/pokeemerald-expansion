@@ -1,5 +1,5 @@
 SafariZone_EventScript_OutOfBallsMidBattle::
-	setvar VAR_SAFARI_ZONE_STATE, SAFARI_ZONE_NO_BALLS_MID_BATTLE
+	setvar VAR_SAFARI_WARP_STATE, SAFARI_WARP_NO_BALLS_MID_BATTLE
 	safari_exitnowarp
 	end
 
@@ -15,7 +15,7 @@ SafariZone_EventScript_RetirePrompt::
 	end
 
 SafariZone_EventScript_Retire::
-	setvar VAR_SAFARI_ZONE_STATE, SAFARI_ZONE_RETIRING
+	setvar VAR_SAFARI_WARP_STATE, SAFARI_WARP_RETIRING
 	goto SafariZone_EventScript_Exit
 
 SafariZone_EventScript_TimesUp::
@@ -25,7 +25,7 @@ SafariZone_EventScript_TimesUp::
 	waitmessage
 	waitbuttonpress
 	releaseall
-	setvar VAR_SAFARI_ZONE_STATE, SAFARI_ZONE_NO_STEP_LEFT
+	setvar VAR_SAFARI_WARP_STATE, SAFARI_WARP_NO_STEPS
 	goto SafariZone_EventScript_Exit
 
 SafariZone_EventScript_OutOfBalls::
@@ -35,7 +35,7 @@ SafariZone_EventScript_OutOfBalls::
 	waitmessage
 	waitbuttonpress
 	releaseall
-	setvar VAR_SAFARI_ZONE_STATE, SAFARI_ZONE_NO_BALLS_LEFT
+	setvar VAR_SAFARI_WARP_STATE, SAFARI_WARP_NO_BALLS
 	goto SafariZone_EventScript_Exit
 
 EventScript_PokeBlockFeeder::

@@ -122,8 +122,8 @@
 #define VAR_MAP_SCENE_PEWTER_CITY                                              0x406C
 #define VAR_0x406D                                                             0x406D
 #if IS_FRLG
-#undef VAR_SAFARI_ZONE_STATE
-#define VAR_SAFARI_ZONE_STATE                                                  0x406E
+#undef VAR_SAFARI_WARP_STATE
+#define VAR_SAFARI_WARP_STATE                                                  0x406E
 #endif
 #define VAR_CABLE_CLUB_STATE_FRLG                                              0x406F
 #define VAR_MAP_SCENE_PALLET_TOWN_SIGN_LADY                                    0x4070

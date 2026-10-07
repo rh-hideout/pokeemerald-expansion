@@ -39,14 +39,14 @@ A safari's properties are contained in its `struct SafariData`, so let's go over
 
 `safari_exitnowarp` ends the safari but does not warp the player
 
-Both `safari_exit` and `safari_exitnowarp` will not set `VAR_SAFARI_ZONE_STATE` allowing it to be used to trigger post-exit map scripts
+Both `safari_exit` and `safari_exitnowarp` will not set `VAR_SAFARI_WARP_STATE` allowing it to be used to trigger post-exit map scripts
 
-## Understanding `VAR_SAFARI_ZONE_STATE`
+## Understanding `VAR_SAFARI_WARP_STATE`
 
-`VAR_SAFARI_ZONE_STATE` is set by the when starting or finishing a safari and it can be used to set up scripts that trigger when a safari starts or ends.
+`VAR_SAFARI_WARP_STATE` is set by the when starting or finishing a safari and it can be used to set up scripts that trigger when a safari starts or ends.
 However the value of the var is not maintained outside of these specific states and the value should not be used to check if the player is in a safari.
-The possible values for `VAR_SAFARI_ZONE_STATE` are defined in `include/constants/safaris.h` and are accessible by scripts.
-`ENTERING_SAFARI_ZONE` is used to indicate a safari is starting
-`SAFARI_ZONE_NO_STEP_LEFT`, `SAFARI_ZONE_NO_BALLS_LEFT`, `SAFARI_ZONE_NO_BALLS_MID_BATTLE`, `SAFARI_ZONE_RETIRING` are used when a safari ends and indicate how the safari was ending in case you want to have different post-exit events.
-The difference between `SAFARI_ZONE_NO_BALLS_LEFT` and `SAFARI_ZONE_NO_BALLS_MID_BATTLE` is that if you capture a pokemon with your last ball, the safari ends from the overworld instead of the battle. These are distinct, despite being similar, to match the way vanilla safari scripts work.
-`SAFARI_ZONE_WHITEOUT` only occurs if the safari has the `exitWarpOnWhiteout` flag and indicate that the player ended their safari by having all their pokemon knocked out
+The possible values for `VAR_SAFARI_WARP_STATE` are defined in `include/constants/safaris.h` and are accessible by scripts.
+`SAFARI_WARP_ENTERING` is used to indicate a safari is starting
+`SAFARI_WARP_NO_STEPS`, `SAFARI_WARP_NO_BALLS`, `SAFARI_WARP_NO_BALLS_MID_BATTLE`, `SAFARI_WARP_RETIRING` are used when a safari ends and indicate how the safari was ending in case you want to have different post-exit events.
+The difference between `SAFARI_WARP_NO_BALLS` and `SAFARI_WARP_NO_BALLS_MID_BATTLE` is that if you capture a pokemon with your last ball, the safari ends from the overworld instead of the battle. These are distinct, despite being similar, to match the way vanilla safari scripts work.
+`SAFARI_WARP_WHITEOUT` only occurs if the safari has the `exitWarpOnWhiteout` flag and indicate that the player ended their safari by having all their pokemon knocked out

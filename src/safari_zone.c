@@ -78,7 +78,7 @@ void EnterSafariMode(enum SafariEvents safariId)
         return;
     }
     IncrementGameStat(GAME_STAT_ENTERED_SAFARI_ZONE);
-    VarSet(VAR_SAFARI_ZONE_STATE, ENTERING_SAFARI_ZONE);
+    VarSet(VAR_SAFARI_WARP_STATE, SAFARI_WARP_ENTERING);
     sActiveSafari = safariId;
     sNumSafariBalls = sSafariZones[safariId].startingBalls;
     sSafariZoneStepCounter = sSafariZones[safariId].startingSteps;

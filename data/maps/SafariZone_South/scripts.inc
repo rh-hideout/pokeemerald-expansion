@@ -4,7 +4,7 @@ SafariZone_South_MapScripts::
 	.byte 0
 
 SafariZone_South_OnFrame:
-	map_script_2 VAR_SAFARI_ZONE_STATE, ENTERING_SAFARI_ZONE, SafariZone_South_EventScript_EnterSafariZone
+	map_script_2 VAR_SAFARI_WARP_STATE, SAFARI_WARP_ENTERING, SafariZone_South_EventScript_EnterSafariZone
 	.2byte 0
 
 SafariZone_South_EventScript_EnterSafariZone::
@@ -14,12 +14,12 @@ SafariZone_South_EventScript_EnterSafariZone::
 	applymovement LOCALID_SAFARI_EXIT_ATTENDANT, SafariZone_South_Movement_ExitAttendantBlockDoor
 	waitmovement 0
 	setobjectxyperm LOCALID_SAFARI_EXIT_ATTENDANT, 32, 34
-	setvar VAR_SAFARI_ZONE_STATE, 0
+	setvar VAR_SAFARI_WARP_STATE, 0
 	releaseall
 	end
 
 SafariZone_South_OnTransition:
-	call_if_eq VAR_SAFARI_ZONE_STATE, ENTERING_SAFARI_ZONE, SafariZone_South_EventScript_SetExitAttendantAside
+	call_if_eq VAR_SAFARI_WARP_STATE, SAFARI_WARP_ENTERING, SafariZone_South_EventScript_SetExitAttendantAside
 	end
 
 SafariZone_South_EventScript_SetExitAttendantAside::
@@ -88,7 +88,7 @@ SafariZone_South_EventScript_ExitEarlyEast::
 	end
 
 SafariZone_South_EventScript_Exit::
-	setvar VAR_SAFARI_ZONE_STATE, 1
+	setvar VAR_SAFARI_WARP_STATE, SAFARI_WARP_MANUAL_EXIT
 	safari_exit
 	warpdoor MAP_ROUTE121_SAFARI_ZONE_ENTRANCE, 2, 5
 	waitstate
