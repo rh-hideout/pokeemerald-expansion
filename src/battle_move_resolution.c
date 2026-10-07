@@ -4326,13 +4326,9 @@ static enum MoveEndResult MoveEndMoveBlock(struct BattleCalcValues *cv)
 
                 struct LostItem *lostItem = GetLostItemState(GetBattlerTrainer(battlerDef), gBattlerPartyIndexes[battlerDef]);
 
-                if (addStolenWildItemToBag)
+                if (addStolenWildItemToBag && !IsOnPlayerSide(battlerDef))
                 {
-                    if (!lostItem->stolen) // don't overwrite initial stolen item
-                    {
-                        lostItem->wildItem = gLastUsedItem;
-                        lostItem->stolen = TRUE;
-                    }
+                    lostItem->wildItemPending = TRUE;
                 }
                 else
                 {

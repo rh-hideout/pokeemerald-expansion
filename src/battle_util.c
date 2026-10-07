@@ -9313,21 +9313,16 @@ void TryRestoreHeldItems(void)
         for (u32 partySlot = 0; partySlot < PARTY_SIZE; partySlot++)
         {
             struct LostItem *lostItem = GetLostItemState(trainer, partySlot);
+            enum Item originaItem = lostItem->originalItem;
 
-            if (trainer != B_TRAINER_PLAYER)
+            if (lostItem->stolen && lostItem->wildItemPending)
             {
-                if (lostItem->stolen && lostItem->wildItem != ITEM_NONE) // Non caught wild mon held items
-                {
-                    AddBagItem(lostItem->wildItem, 1);
-                    lostItem->stolen = FALSE;
-                }
+                AddBagItem(originaItem, 1);
                 continue;
             }
 
             if (!lostItem->stolen && !lostItem->restoreAfterBattle)
                 continue;
-
-            enum Item originaItem = lostItem->originalItem;
 
             if (originaItem == ITEM_NONE)
                 continue;
@@ -9344,21 +9339,19 @@ void RestoreCaughtWildMonHeldItem(struct Pokemon *mon, enum BattlerId battler)
 {
     struct LostItem *lostItem = GetLostItemState(GetBattlerTrainer(battler), gBattlerPartyIndexes[battler]);
 
-    if (lostItem->stolen)
+    if (GetMonData(mon, MON_DATA_HELD_ITEM) != lostItem->originalItem)
     {
-        enum Item itemToRestore = lostItem->wildItem;
+        enum Item itemToRestore = ITEM_NONE;
         SetMonData(mon, MON_DATA_HELD_ITEM, &itemToRestore);
-        lostItem->wildItem = ITEM_NONE;
-        lostItem->stolen = FALSE;
     }
 
-    if (lostItem->originalItem != GetMonData(mon, MON_DATA_HELD_ITEM))
+    if (lostItem->stolen && lostItem->wildItemPending)
     {
-        // If restored item isn't the same, clear it
-        enum Item item = ITEM_NONE;
-        SetMonData(mon, MON_DATA_HELD_ITEM, &item);
-    }
+        enum Item itemToRestore = lostItem->originalItem;
+        SetMonData(mon, MON_DATA_HELD_ITEM, &itemToRestore);
 
+        lostItem->wildItemPending = FALSE;
+    }
 }
 
 bool32 CanStealItem(enum BattlerId battlerStealing, enum BattlerId battlerItem, enum Item item)

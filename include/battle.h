@@ -480,10 +480,10 @@ struct BattleGimmickData
 
 struct LostItem
 {
-    enum Item originalItem:14;
+    enum Item originalItem;
     u16 stolen:1;
     u16 restoreAfterBattle:1;
-    enum Item wildItem;
+    u16 wildItemPending:1;
 };
 
 struct BattleVideo {
