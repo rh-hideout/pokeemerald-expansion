@@ -6717,63 +6717,39 @@ static bool32 DoFaintedEffectsBlock(void)
             gBattleStruct->eventState.faintedEffects++;
             break;
         case FAINTED_EFFECTS_BLOCK_TRAINER_SLIDE:
+            gBattleScripting.battler = gBattlerFainted;
             switch (gBattlerFainted)
             {
             case B_BATTLER_0:
                 if ((ShouldDoTrainerSlide(B_BATTLER_1, TRAINER_SLIDE_ATTACKER_FAINTS_FIRST_MON)))
-                {
-                    gBattleScripting.battler = gBattlerFainted;
                     BattleScriptCall(BattleScript_TrainerASlideMsgRet);
-                }
                 else if ((ShouldDoTrainerSlide(B_BATTLER_3, TRAINER_SLIDE_ATTACKER_FAINTS_FIRST_MON)))
-                {
-                    gBattleScripting.battler = gBattlerFainted;
                     BattleScriptCall(BattleScript_TrainerBSlideMsgRet);
-                }
                 break;
             case B_BATTLER_2:
                 if (ShouldDoTrainerSlide(B_BATTLER_2, TRAINER_SLIDE_DEFENDER_LOSES_FIRST_MON))
                 {
-                    gBattleScripting.battler = gBattlerFainted;
                     BattleScriptCall(BattleScript_TrainerBSlideMsgRet);
                 }
                 else
                 {
                     if ((ShouldDoTrainerSlide(B_BATTLER_1, TRAINER_SLIDE_ATTACKER_FAINTS_FIRST_MON)))
-                    {
-                        gBattleScripting.battler = gBattlerFainted;
                         BattleScriptCall(BattleScript_TrainerASlideMsgRet);
-                    }
                     else if ((ShouldDoTrainerSlide(B_BATTLER_3, TRAINER_SLIDE_ATTACKER_FAINTS_FIRST_MON)))
-                    {
-                        gBattleScripting.battler = gBattlerFainted;
                         BattleScriptCall(BattleScript_TrainerASlideMsgRet);
-                    }
                 }
                 break;
             case B_BATTLER_1:
                 if ((ShouldDoTrainerSlide(B_BATTLER_1, TRAINER_SLIDE_DEFENDER_LOSES_FIRST_MON)))
-                {
-                    gBattleScripting.battler = gBattlerFainted;
                     BattleScriptCall(BattleScript_TrainerASlideMsgRet);
-                }
                 else if ((ShouldDoTrainerSlide(B_BATTLER_2, TRAINER_SLIDE_ATTACKER_FAINTS_FIRST_MON)))
-                {
-                    gBattleScripting.battler = gBattlerFainted;
                     BattleScriptCall(BattleScript_TrainerBSlideMsgRet);
-                }
                 break;
             case B_BATTLER_3:
                 if ((ShouldDoTrainerSlide(B_BATTLER_3, TRAINER_SLIDE_DEFENDER_LOSES_FIRST_MON)))
-                {
-                    gBattleScripting.battler = gBattlerFainted;
                     BattleScriptCall(BattleScript_TrainerASlideMsgRet);
-                }
                 else if ((ShouldDoTrainerSlide(B_BATTLER_2, TRAINER_SLIDE_ATTACKER_FAINTS_FIRST_MON)))
-                {
-                    gBattleScripting.battler = gBattlerFainted;
                     BattleScriptCall(BattleScript_TrainerBSlideMsgRet);
-                }
                 break;
             default:
                 break;
