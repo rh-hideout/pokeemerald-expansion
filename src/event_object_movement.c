@@ -2004,7 +2004,7 @@ u8 CreateObjectGraphicsSpriteWithTag(u16 graphicsId, void (*callback)(struct Spr
     struct Sprite *sprite;
     u8 spriteId;
 
-    spriteTemplate = Alloc(sizeof(struct SpriteTemplate));
+    spriteTemplate = AllocZeroed(sizeof(struct SpriteTemplate));
     CopyObjectGraphicsInfoToSpriteTemplate(graphicsId, callback, spriteTemplate, &subspriteTables);
 
 
@@ -2014,6 +2014,8 @@ u8 CreateObjectGraphicsSpriteWithTag(u16 graphicsId, void (*callback)(struct Spr
         if (graphicsInfo->compressionMode == OBJECT_EVENT_COMPRESSION_SLOW)
             spriteTemplate->tileTag = LoadSheetGraphicsInfo(graphicsInfo, graphicsId, NULL);
     }
+
+    spriteTemplate->compressedFast = (graphicsInfo->compressionMode == OBJECT_EVENT_COMPRESSION_FAST);
 
     if (spriteTemplate->paletteTag == OBJ_EVENT_PAL_TAG_DYNAMIC)
     {
