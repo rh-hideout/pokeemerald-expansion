@@ -298,10 +298,16 @@ bool32 IsSafariEnding(void)
     return TRUE;
 }
 
-bool32 InSafariThatDoesNotSendMons(void)
+bool32 DoesSafariUsePlayerPokemon(void)
 {
-    enum SafariActions rules = sSafariZones[sActiveSafari].actions;
-    return (rules == SAFARI_ACTIONS_RSE || rules == SAFARI_ACTIONS_FRLG);
+    switch (sSafariZones[sActiveSafari].actions)
+    {
+    case SAFARI_ACTIONS_RSE:
+    case SAFARI_ACTIONS_FRLG:
+        return FALSE;
+    default:
+        return TRUE;
+    }
 }
 
 u32 GetSafariZoneBallMultiplier(void)

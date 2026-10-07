@@ -35,7 +35,7 @@ u32 GetPokeblockFeederNature(void);
 
 bool32 IsSafariEnding(void);
 void PrepareStartMenuSafariString();
-bool32 InSafariThatDoesNotSendMons(void);
+bool32 DoesSafariUsePlayerPokemon(void);
 
 u32 GetSafariBallCount(void);
 u32 GetSafariZoneBallMultiplier(void);
