@@ -35,6 +35,7 @@ BattleScript_TryRevertWeatherFormsLoop:
 	addbyte gBattlerOrderIndex, 1
 	jumpifbytenotequal gBattlerOrderIndex, gBattlersCount, BattleScript_TryRevertWeatherFormsLoop
 	restorebattlerorderindex
+	flushtextbox
 	return
 
 BattleScript_FickleBeamMessage::
@@ -766,7 +767,6 @@ BattleScript_EffectHealingWishGen4:
 	hpthresholds BS_ATTACKER
 	trytoclearprimalweather
 	call BattleScript_TryRevertWeatherForms
-	flushtextbox
 	tryendneutralizinggas
 	flushtextbox
 	printstring STRINGID_SWITCHINMON
@@ -802,7 +802,6 @@ BattleScript_MoveEffectOverwriteAbility::
 	tryendneutralizinggas BS_EFFECT_BATTLER
 	trytoclearprimalweather
 	call BattleScript_TryRevertWeatherForms
-	flushtextbox
 	switchinabilities BS_EFFECT_BATTLER
 	return
 
@@ -1085,7 +1084,6 @@ BattleScript_RecoilEnd:
 BattleScript_MoveEffectTransform::
 	trytoclearprimalweather
 	call BattleScript_TryRevertWeatherForms
-	flushtextbox
 	tryendneutralizinggas
 	flushtextbox
 	printfromtable gTransformUsedStringIds
@@ -3309,7 +3307,6 @@ BattleScript_TraceActivates::
 	return
 
 BattleScript_ReceiverActivates::
-	flushtextbox
 	call BattleScript_AbilityPopUp
 	printstring STRINGID_RECEIVERABILITYTAKEOVER
 	waitmessage B_WAIT_TIME_LONG
@@ -3757,7 +3754,6 @@ BattleScript_MummyActivates::
 	waitmessage B_WAIT_TIME_LONG
 	trytoclearprimalweather
 	call BattleScript_TryRevertWeatherForms
-	flushtextbox
 	tryillusionoff BS_ATTACKER
 	tryendneutralizinggas BS_ATTACKER
 	return

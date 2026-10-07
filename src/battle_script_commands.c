@@ -6547,6 +6547,248 @@ static void Cmd_tryabilityonstatuschange(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
+static void TryClearPrimalWeather(void)
+{
+    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
+    {
+        enum Ability ability = GetBattlerAbility(battler);
+    
+        if (((ability == ABILITY_DESOLATE_LAND && gBattleWeather & B_WEATHER_SUN_PRIMAL)
+          || (ability == ABILITY_PRIMORDIAL_SEA && gBattleWeather & B_WEATHER_RAIN_PRIMAL)
+          || (ability == ABILITY_DELTA_STREAM && gBattleWeather & B_WEATHER_STRONG_WINDS)))
+            return; // Keep primal weather
+    }
+
+    if (gBattleWeather & B_WEATHER_SUN_PRIMAL)
+    {
+        gBattleWeather &= ~B_WEATHER_SUN_PRIMAL;
+        PrepareStringBattleWithWait(STRINGID_EXTREMESUNLIGHTFADED, gBattlerAttacker);
+    }
+    else if (gBattleWeather & B_WEATHER_RAIN_PRIMAL)
+    {
+        gBattleWeather &= ~B_WEATHER_RAIN_PRIMAL;
+        PrepareStringBattleWithWait(STRINGID_HEAVYRAINLIFTED, gBattlerAttacker);
+    }
+    else if (gBattleWeather & B_WEATHER_STRONG_WINDS)
+    {
+        gBattleWeather &= ~B_WEATHER_STRONG_WINDS;
+        PrepareStringBattleWithWait(STRINGID_STRONGWINDSDISSIPATED, gBattlerAttacker);
+    }
+
+    BattleScriptCall(BattleScript_WaitMessage);
+}
+
+static bool32 DoFaintedEffectsBlock(void)
+{
+    enum Ability abilityFainted = GetBattlerAbility(gBattlerFainted);
+
+    while (gBattleStruct->eventState.faintedEffects < FAINTED_EFFECTS_BLOCK_COUNT)
+    {
+        switch (gBattleStruct->eventState.faintedEffects)
+        {
+        case FAINTED_EFFECTS_BLOCK_END_NEUTRALIZING_GAS:
+            if (gBattleMons[gBattlerFainted].volatiles.neutralizingGas)
+            {
+                gBattleMons[gBattlerFainted].volatiles.neutralizingGas = FALSE;
+                if (!IsNeutralizingGasOnField())
+                {
+                    UpdateTruantTogglesOnNeutralizingGasEnd();
+                    BattleScriptCall(BattleScript_NeutralizingGasExits);
+                    return TRUE;
+                }
+            }
+            gBattleStruct->eventState.faintedEffects++;
+            break;
+        case FAINTED_EFFECTS_BLOCK_END_ILLUSION:
+            if (TryClearIllusion(gBattlerFainted, abilityFainted))
+                return TRUE;
+
+            gBattleStruct->eventState.faintedEffects++;
+            break;
+        case FAINTED_EFFECTS_BLOCK_END_DYNAMAX:    
+            if (GetActiveGimmick(gBattlerFainted) == GIMMICK_DYNAMAX)
+            {
+                UndoDynamax(gBattlerFainted);
+                gBattleScripting.battler = gBattlerFainted;
+                BattleScriptCall(BattleScript_DynamaxEnds_Ret);
+                gBattleStruct->eventState.faintedEffects++;
+                return TRUE;
+            }
+            gBattleStruct->eventState.faintedEffects++;
+            break;
+        case FAINTED_EFFECTS_BLOCK_VICTORY_CATCH:
+            if (IsVictoryCatch()
+             && gBattleStruct->victoryCatchState != VICTORY_CATCH_FAINTED
+             && !IsOnPlayerSide(gBattlerFainted))
+            {
+                u8 hp = 1;
+                SetMonData(GetBattlerMon(gBattlerFainted), MON_DATA_HP, &hp);
+                BattleScriptCall(BattleScript_WildBattleVictory);
+                gBattleStruct->eventState.faintedEffects++;
+                return TRUE;
+            }
+            gBattleStruct->eventState.faintedEffects++;
+            break;
+        case FAINTED_EFFECTS_BLOCK_FAINT_CRY:
+            BtlController_EmitFaintingCry(gBattlerFainted, B_COMM_TO_CONTROLLER);
+            MarkBattlerForControllerExec(gBattlerFainted);
+            BattleScriptCall(BattleScript_PauseLong);
+            gBattleStruct->eventState.faintedEffects++;
+            return TRUE;
+        case FAINTED_EFFECTS_BLOCK_FAINT_ANIMATION:
+            gBattleStruct->battlerState[gBattlerFainted].notOnField = TRUE;
+
+            BtlController_EmitFaintAnimation(gBattlerFainted, B_COMM_TO_CONTROLLER);
+            MarkBattlerForControllerExec(gBattlerFainted);
+            gBattleStruct->eventState.faintedEffects++;
+            return TRUE;
+        case FAINTED_EFFECTS_BLOCK_FAINT_MESSAGE:
+            gBattleScripting.battler = gBattlerFainted;
+            PrepareStringBattleWithWait(STRINGID_BATTLERFAINTED, gBattlerFainted);
+            BattleScriptCall(BattleScript_WaitMessage);
+            gBattleStruct->eventState.faintedEffects++;
+            return TRUE;
+        case FAINTED_EFFECTS_BLOCK_SKY_DROP_CONFUSION:
+        {
+            enum BattlerId skyDropTarget = gBattleMons[gBattlerFainted].volatiles.skyDropTarget;
+
+            if (gBattleMons[gBattlerFainted].volatiles.semiInvulnerable == STATE_SKY_DROP_ATTACKER
+             && skyDropTarget
+             && gBattleMons[--skyDropTarget].volatiles.semiInvulnerable == STATE_SKY_DROP_TARGET)
+            {
+                BtlController_EmitSpriteInvisibility(skyDropTarget, B_COMM_TO_CONTROLLER, FALSE);
+                MarkBattlerForControllerExec(skyDropTarget);
+                gBattleMons[skyDropTarget].volatiles.semiInvulnerable = STATE_NONE;
+                gSpecialStatuses[skyDropTarget].restoredBattlerSprite = TRUE;
+
+                if (gBattleMons[skyDropTarget].volatiles.confuseAfterDrop)
+                {
+                    gBattleMons[skyDropTarget].volatiles.confuseAfterDrop = FALSE;
+
+                    if (CanBeConfused(skyDropTarget, skyDropTarget))
+                    {
+                        gBattleScripting.battler = skyDropTarget;
+                        BattleScriptCall(BattleScript_ConfusionAfterRampage);
+                        return TRUE;
+                    }
+                }
+            }
+            gBattleStruct->eventState.faintedEffects++;
+            break;
+        }
+        case FAINTED_EFFECTS_BLOCK_CLEAR_EFFECTS:
+            gBattleMons[gBattlerFainted].status1 = 0;
+            BtlController_EmitSetMonData(gBattlerFainted, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, sizeof(gBattleMons[gBattlerFainted].status1), &gBattleMons[gBattlerFainted].status1);
+            MarkBattlerForControllerExec(gBattlerFainted);
+            FaintClearSetData(gBattlerFainted); // Effects like attractions, trapping, etc.
+            gBattleStruct->eventState.faintedEffects++;
+            return TRUE;
+        case FAINTED_EFFECTS_BLOCK_CLEAR_PRIMAL_WEATHER:
+            TryClearPrimalWeather();
+            gBattleStruct->eventState.faintedEffects++;
+            return TRUE;
+        case FAINTED_EFFECTS_BLOCK_REVERT_WEATHER_FORMS:
+            BattleScriptCall(BattleScript_TryRevertWeatherForms);
+            gBattleStruct->eventState.faintedEffects++;
+            return TRUE;
+        case FAINTED_EFFECTS_BLOCK_RECEIVER:
+        {
+            enum BattlerId faintedPartner = GetPartnerBattler(gBattlerFainted);
+            gBattleStruct->eventState.faintedEffects++;
+
+            if (AbilityBattleEffects(ABILITYEFFECT_RECEIVER, faintedPartner, GetBattlerAbility(faintedPartner), MOVE_NONE, TRUE))
+                return TRUE;
+            break;
+        }
+        case FAINTED_EFFECTS_BLOCK_SAVE_ORDER_INDEX:
+            SaveBattlerOrderIndex();
+            gBattleStruct->eventState.faintedEffects++;
+            gBattlerOrderIndex = 0;
+            // fallthrough
+        case FAINTED_EFFECTS_BLOCK_SOUL_HEART_BLOCK:
+            while (gBattlerOrderIndex < gBattlersCount)
+            {
+                enum BattlerId battler = gBattlerOrderIndex++;
+
+                if (AbilityBattleEffects(ABILITYEFFECT_ON_FAINT, battler, GetBattlerAbility(battler), MOVE_NONE, TRUE))
+                    return TRUE;
+            }
+            RestoreBattlerOrderIndex();
+            gBattleStruct->eventState.faintedEffects++;
+            break;
+        case FAINTED_EFFECTS_BLOCK_TRAINER_SLIDE:
+            switch (gBattlerFainted)
+            {
+            case B_BATTLER_0:
+                if ((ShouldDoTrainerSlide(B_BATTLER_1, TRAINER_SLIDE_ATTACKER_FAINTS_FIRST_MON)))
+                {
+                    gBattleScripting.battler = gBattlerFainted;
+                    BattleScriptCall(BattleScript_TrainerASlideMsgRet);
+                }
+                else if ((ShouldDoTrainerSlide(B_BATTLER_3, TRAINER_SLIDE_ATTACKER_FAINTS_FIRST_MON)))
+                {
+                    gBattleScripting.battler = gBattlerFainted;
+                    BattleScriptCall(BattleScript_TrainerBSlideMsgRet);
+                }
+                break;
+            case B_BATTLER_2:
+                if (ShouldDoTrainerSlide(B_BATTLER_2, TRAINER_SLIDE_DEFENDER_LOSES_FIRST_MON))
+                {
+                    gBattleScripting.battler = gBattlerFainted;
+                    BattleScriptCall(BattleScript_TrainerBSlideMsgRet);
+                }
+                else
+                {
+                    if ((ShouldDoTrainerSlide(B_BATTLER_1, TRAINER_SLIDE_ATTACKER_FAINTS_FIRST_MON)))
+                    {
+                        gBattleScripting.battler = gBattlerFainted;
+                        BattleScriptCall(BattleScript_TrainerASlideMsgRet);
+                    }
+                    else if ((ShouldDoTrainerSlide(B_BATTLER_3, TRAINER_SLIDE_ATTACKER_FAINTS_FIRST_MON)))
+                    {
+                        gBattleScripting.battler = gBattlerFainted;
+                        BattleScriptCall(BattleScript_TrainerASlideMsgRet);
+                    }
+                }
+                break;
+            case B_BATTLER_1:
+                if ((ShouldDoTrainerSlide(B_BATTLER_1, TRAINER_SLIDE_DEFENDER_LOSES_FIRST_MON)))
+                {
+                    gBattleScripting.battler = gBattlerFainted;
+                    BattleScriptCall(BattleScript_TrainerASlideMsgRet);
+                }
+                else if ((ShouldDoTrainerSlide(B_BATTLER_2, TRAINER_SLIDE_ATTACKER_FAINTS_FIRST_MON)))
+                {
+                    gBattleScripting.battler = gBattlerFainted;
+                    BattleScriptCall(BattleScript_TrainerBSlideMsgRet);
+                }
+                break;
+            case B_BATTLER_3:
+                if ((ShouldDoTrainerSlide(B_BATTLER_3, TRAINER_SLIDE_DEFENDER_LOSES_FIRST_MON)))
+                {
+                    gBattleScripting.battler = gBattlerFainted;
+                    BattleScriptCall(BattleScript_TrainerASlideMsgRet);
+                }
+                else if ((ShouldDoTrainerSlide(B_BATTLER_2, TRAINER_SLIDE_ATTACKER_FAINTS_FIRST_MON)))
+                {
+                    gBattleScripting.battler = gBattlerFainted;
+                    BattleScriptCall(BattleScript_TrainerBSlideMsgRet);
+                }
+                break;
+            default:
+                break;
+            }
+            gBattleStruct->eventState.faintedEffects++;
+            return TRUE;
+        case FAINTED_EFFECTS_BLOCK_COUNT:
+            break;
+        }
+    }
+
+    gBattleStruct->eventState.faintedEffects = 0;
+    return FALSE;
+}
+
 static void Cmd_dofainteffectsblock(void)
 {
     CMD_ARGS();
