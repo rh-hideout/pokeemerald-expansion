@@ -983,8 +983,7 @@ static bool32 HandleEndTurnYawn(enum BattlerId battler)
 
                 CancelMultiTurnMoves(battler);
                 TryActivateSleepClause(battler, gBattlerPartyIndexes[battler]);
-                BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, 4, &gBattleMons[battler].status1);
-                MarkBattlerForControllerExec(battler);
+                RequestNonVolatileChange(battler);
                 BattleScriptCall(BattleScript_YawnMakesAsleep);
             }
             effect = TRUE;
@@ -1298,8 +1297,7 @@ static bool32 HandleEndTurnThirdEventBlock(enum BattlerId battler)
                     gBattleMons[gEffectBattler].volatiles.nightmare = FALSE;
                     gBattleCommunication[MULTISTRING_CHOOSER] = 1;
                     BattleScriptCall(BattleScript_MonWokeUpInUproar);
-                    BtlController_EmitSetMonData(gEffectBattler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, 4, &gBattleMons[gBattlerAttacker].status1);
-                    MarkBattlerForControllerExec(gEffectBattler);
+                    RequestNonVolatileChange(gEffectBattler);
                     effect = TRUE;
                     break;
                 }

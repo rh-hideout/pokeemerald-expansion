@@ -534,4 +534,9 @@ void OakOldManHandleInputChooseMove(enum BattlerId battler);
 void BtlCtrl_DrawVoiceoverMessageFrame(void);
 void BtlCtrl_RemoveVoiceoverMessageFrame(void);
 
+void RequestNonVolatileChange(enum BattlerId battler);
+void RequestHeldItemChange(enum BattlerId battler);
+void RequestHPChange(enum BattlerId battler);
+void RequestMovePPChange(enum BattlerId battler, enum MoveSlot slot);
+
 #endif // GUARD_BATTLE_CONTROLLERS_H

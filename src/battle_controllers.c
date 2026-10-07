@@ -3431,3 +3431,28 @@ void SetFinalChosenTarget(enum BattlerId battler, bool32 checkPartner)
         BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, (chosenMoveIndex) | (chosenTarget << 8));
     }
 }
+
+void RequestNonVolatileChange(enum BattlerId battler)
+{
+    BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, sizeof(gBattleMons[battler].status1), &gBattleMons[battler].status1);
+    MarkBattlerForControllerExec(battler);
+}
+
+void RequestHeldItemChange(enum BattlerId battler)
+{
+    BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_HELDITEM_BATTLE, 0, sizeof(gBattleMons[battler].item), &gBattleMons[battler].item);
+    MarkBattlerForControllerExec(battler);
+}
+
+void RequestHPChange(enum BattlerId battler)
+{
+    BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_HP_BATTLE, 0, sizeof(gBattleMons[battler].hp), &gBattleMons[battler].hp);
+    MarkBattlerForControllerExec(battler);
+}
+
+void RequestMovePPChange(enum BattlerId battler, enum MoveSlot slot)
+{
+    BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_PPMOVE1_BATTLE + slot, 0, sizeof(gBattleMons[battler].pp[slot]), &gBattleMons[battler].pp[slot]);
+    MarkBattlerForControllerExec(battler);
+}
+

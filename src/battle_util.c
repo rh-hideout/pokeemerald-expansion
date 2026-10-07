@@ -3693,8 +3693,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                     gBattleMons[battler].volatiles.nightmare = FALSE;
                     gBattleScripting.battler = battler;
                     BattleScriptCall(BattleScript_ShedSkinActivates);
-                    BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, 4, &gBattleMons[battler].status1);
-                    MarkBattlerForControllerExec(battler);
+                    RequestNonVolatileChange(battler);
                     effect++;
                 }
                 break;
@@ -9293,8 +9292,7 @@ enum ImmunityHealStatusOutcome TryImmunityAbilityHealStatus(enum BattlerId battl
     gBattleScripting.battler = gBattlerAbility = battler;
     if (outcome == IMMUNITY_STATUS_CLEARED)
     {
-        BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, 4, &gBattleMons[battler].status1);
-        MarkBattlerForControllerExec(battler);
+        RequestNonVolatileChange(battler);
     }
     return outcome;
 }

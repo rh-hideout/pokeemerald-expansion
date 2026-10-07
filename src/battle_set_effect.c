@@ -444,8 +444,7 @@ static void CureNonVolatile(struct BattleCalcValues *cv, struct SetEffect *se, u
         gBattleScripting.battler = se->effectBattler;
         u32 currentNonVolatile = gBattleMons[se->effectBattler].status1;
         gBattleMons[se->effectBattler].status1 = STATUS1_NONE;
-        BtlController_EmitSetMonData(se->effectBattler, 0, REQUEST_STATUS_BATTLE, 0, 4, &gBattleMons[se->effectBattler].status1);
-        MarkBattlerForControllerExec(se->effectBattler);
+        RequestNonVolatileChange(se->effectBattler);
         BattleScriptPush(se->script);
         gBattlescriptCurrInstr = GetCureNonVolatileScript(currentNonVolatile);
         if (currentNonVolatile & STATUS1_SLEEP)
@@ -610,9 +609,7 @@ static void HandleSetEffectIncinerate(struct BattleCalcValues *cv, struct SetEff
         gLastUsedItem = gBattleMons[se->effectBattler].item;
         gBattleMons[se->effectBattler].item = ITEM_NONE;
         CheckSetUnburden(se->effectBattler);
-
-        BtlController_EmitSetMonData(se->effectBattler, B_COMM_TO_CONTROLLER, REQUEST_HELDITEM_BATTLE, 0, sizeof(gBattleMons[se->effectBattler].item), &gBattleMons[se->effectBattler].item);
-        MarkBattlerForControllerExec(se->effectBattler);
+        RequestHeldItemChange(se->effectBattler);
         BattleScriptPush(se->script);
         gBattlescriptCurrInstr = BattleScript_MoveEffectIncinerate;
     }
@@ -632,9 +629,7 @@ static void HandleSetEffectBugBite(struct BattleCalcValues *cv, struct SetEffect
         gLastUsedItem = gBattleMons[se->effectBattler].item;
         gBattleMons[se->effectBattler].item = ITEM_NONE;
         CheckSetUnburden(se->effectBattler);
-
-        BtlController_EmitSetMonData(se->effectBattler, B_COMM_TO_CONTROLLER, REQUEST_HELDITEM_BATTLE, 0, sizeof(gBattleMons[se->effectBattler].item), &gBattleMons[se->effectBattler].item);
-        MarkBattlerForControllerExec(se->effectBattler);
+        RequestHeldItemChange(se->effectBattler);
         BattleScriptPush(se->script);
         gBattlescriptCurrInstr = BattleScript_MoveEffectBugBite;
     }
@@ -1030,8 +1025,7 @@ static void HandleSetEffectEerieSpell(struct BattleCalcValues *cv, struct SetEff
         if (!(gBattleMons[se->effectBattler].volatiles.mimickedMoves & (1u << i))
             && !(gBattleMons[se->effectBattler].volatiles.transformed))
         {
-            BtlController_EmitSetMonData(se->effectBattler, B_COMM_TO_CONTROLLER, REQUEST_PPMOVE1_BATTLE + i, 0, sizeof(gBattleMons[se->effectBattler].pp[i]), &gBattleMons[se->effectBattler].pp[i]);
-            MarkBattlerForControllerExec(se->effectBattler);
+            RequestMovePPChange(se->effectBattler, i);
         }
 
         if (gBattleMons[se->effectBattler].pp[i] == 0)
@@ -1249,7 +1243,7 @@ static void SetEffectRestoreHp(struct BattleCalcValues *cv, struct SetEffect *se
             healAmount = gBattleMons[se->effectBattler].maxHP / maxHpFraction;
         else
             healAmount = GetMaxHpWithRounding(se->effectBattler) / maxHpFraction;
-    
+
         SetHealAmount(se->effectBattler, healAmount);
         BattleScriptPushAndSet(se->script, BattleScript_RestoreHpEffectBattler);
     }
@@ -1568,17 +1562,7 @@ static void HandleSetEffectRecycle(struct BattleCalcValues *cv, struct SetEffect
         *usedHeldItem = ITEM_NONE;
         gBattleMons[se->effectBattler].item = gLastUsedItem;
         gBattleMons[se->effectBattler].volatiles.unburdenActive = FALSE;
-
-        BtlController_EmitSetMonData(
-                se->effectBattler,
-                B_COMM_TO_CONTROLLER,
-                REQUEST_HELDITEM_BATTLE,
-                0,
-                sizeof(gBattleMons[se->effectBattler].item),
-                &gBattleMons[se->effectBattler].item
-            );
-        MarkBattlerForControllerExec(se->effectBattler);
-
+        RequestHeldItemChange(se->effectBattler);
         PrepareStringBattleWithWait(STRINGID_XFOUNDONEY, se->effectBattler);
         BattleScriptPushAndSet(se->script, BattleScript_WaitMessage);
     }
@@ -1649,15 +1633,7 @@ static void HandleSetEffectSpite(struct BattleCalcValues *cv, struct SetEffect *
         if (!(gBattleMons[se->effectBattler].volatiles.mimickedMoves & (1u << moveSlot))
          && !(gBattleMons[se->effectBattler].volatiles.transformed))
         {
-            BtlController_EmitSetMonData(
-                    se->effectBattler,
-                    B_COMM_TO_CONTROLLER,
-                    REQUEST_PPMOVE1_BATTLE + moveSlot,
-                    0,
-                    sizeof(gBattleMons[se->effectBattler].pp[moveSlot]),
-                    &gBattleMons[se->effectBattler].pp[moveSlot]
-                );
-            MarkBattlerForControllerExec(se->effectBattler);
+            RequestMovePPChange(se->effectBattler, moveSlot);
         }
 
         if (gBattleMons[se->effectBattler].pp[moveSlot] == 0)
@@ -2671,9 +2647,7 @@ static void HandleSetEffectRest(struct BattleCalcValues *cv, struct SetEffect *s
                                                     ? B_MSG_REST_STATUSED
                                                     : B_MSG_REST;
         gBattleMons[se->effectBattler].status1 = STATUS1_SLEEP_TURN(3);
-        BtlController_EmitSetMonData(se->effectBattler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0,
-                                     sizeof(gBattleMons[se->effectBattler].status1), &gBattleMons[se->effectBattler].status1);
-        MarkBattlerForControllerExec(se->effectBattler);
+        RequestNonVolatileChange(se->effectBattler);
         BattleScriptPushAndSet(se->script, BattleScript_MoveEffectRest);
     }
 }
@@ -2940,8 +2914,7 @@ static void HandleSetEffectRefresh(struct BattleCalcValues *cv, struct SetEffect
 
         gBattleScripting.battler = se->effectBattler;
         gBattleMons[se->effectBattler].status1 = 0;
-        BtlController_EmitSetMonData(se->effectBattler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, sizeof(gBattleMons[se->effectBattler].status1), &gBattleMons[se->effectBattler].status1);
-        MarkBattlerForControllerExec(se->effectBattler);
+        RequestNonVolatileChange(se->effectBattler);
         gBattleScripting.savedStringId = cureString;
         BattleScriptPushAndSet(se->script, BattleScript_MoveEffectRefresh);
 
@@ -3037,16 +3010,7 @@ static void HandleSetEffectPsychoShift(struct BattleCalcValues *cv, struct SetEf
     {
         gBattleMons[se->effectBattler].status1 = attackerStatus & STATUS1_ANY;
 
-        BtlController_EmitSetMonData(
-            se->effectBattler,
-            B_COMM_TO_CONTROLLER,
-            REQUEST_STATUS_BATTLE,
-            0,
-            sizeof(effectStatus),
-            &gBattleMons[se->effectBattler].status1);
-
-        MarkBattlerForControllerExec(se->effectBattler);
-
+        RequestNonVolatileChange(se->effectBattler);
         gBattleScripting.savedStringId = GetStatus1String(attackerStatus);
 
         TryActivateSleepClause(se->effectBattler, gBattlerPartyIndexes[se->effectBattler]);
@@ -3306,11 +3270,8 @@ static void HandleSetEffectTrick(struct BattleCalcValues *cv, struct SetEffect *
         RecordItemEffectBattle(cv->battlerAtk, GetItemHoldEffect(oldItemDef));
         RecordItemEffectBattle(se->effectBattler, GetItemHoldEffect(oldItemAtk));
 
-        BtlController_EmitSetMonData(cv->battlerAtk, B_COMM_TO_CONTROLLER, REQUEST_HELDITEM_BATTLE, 0, sizeof(gBattleMons[cv->battlerAtk].item), &gBattleMons[cv->battlerAtk].item);
-        MarkBattlerForControllerExec(cv->battlerAtk);
-
-        BtlController_EmitSetMonData(se->effectBattler, B_COMM_TO_CONTROLLER, REQUEST_HELDITEM_BATTLE, 0, sizeof(gBattleMons[se->effectBattler].item), &gBattleMons[se->effectBattler].item);
-        MarkBattlerForControllerExec(se->effectBattler);
+        RequestHeldItemChange(cv->battlerAtk);
+        RequestHeldItemChange(se->effectBattler);
 
         BattleScriptPushAndSet(se->script, BattleScript_MoveEffectTrick);
 

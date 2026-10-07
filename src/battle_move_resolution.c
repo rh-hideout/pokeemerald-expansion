@@ -24,7 +24,6 @@ static enum Move GetOriginallyUsedMove(enum Move chosenMove);
 static void SetSameMoveTurnValues(enum BattleMoveEffects moveEffect);
 static void TryClearChargeVolatile(enum Type moveType);
 static inline bool32 IsBattlerUsingBeakBlast(enum BattlerId battler);
-static void RequestNonVolatileChange(enum BattlerId battlerAtk);
 static bool32 CanBattlerBounceBackMove(struct BattleCalcValues *cv);
 static bool32 TryMagicBounce(struct BattleCalcValues *cv);
 static bool32 TryMagicCoat(struct BattleCalcValues *cv);
@@ -1066,14 +1065,7 @@ static enum CancelerResult CancelerPPDeduction(struct BattleCalcValues *cv)
 
     if (MOVE_IS_PERMANENT(cv->battlerAtk, movePosition))
     {
-        BtlController_EmitSetMonData(
-            cv->battlerAtk,
-            B_COMM_TO_CONTROLLER,
-            REQUEST_PPMOVE1_BATTLE + movePosition,
-            0,
-            sizeof(gBattleMons[cv->battlerAtk].pp[movePosition]),
-            &gBattleMons[cv->battlerAtk].pp[movePosition]);
-        MarkBattlerForControllerExec(cv->battlerAtk);
+        RequestMovePPChange(cv->battlerAtk, movePosition);
     }
 
     if (gBattleStruct->submoveAnnouncement != SUBMOVE_NO_EFFECT)
@@ -3180,9 +3172,7 @@ static bool32 TryMoveDamageUpdate(struct BattleCalcValues *cv)
             gProtectStructs[cv->battlerDef].revengeDoubled |= 1u << cv->battlerAtk;
 
         }
-        // Send updated HP
-        BtlController_EmitSetMonData(cv->battlerDef, B_COMM_TO_CONTROLLER, REQUEST_HP_BATTLE, 0, sizeof(gBattleMons[cv->battlerDef].hp), &gBattleMons[cv->battlerDef].hp);
-        MarkBattlerForControllerExec(cv->battlerDef);
+        RequestHPChange(cv->battlerDef);
     }
 
     // Note: While physicalDmg/specialDmg below are only distinguished between for Counter/Mirror Coat,
@@ -4269,8 +4259,7 @@ static enum MoveEndResult MoveEndDamagedEffectsBlock(struct BattleCalcValues *cv
                     enum MoveSlot moveIndex = gBattleStruct->chosenMovePositions[cv->battlerAtk];
 
                     gBattleMons[cv->battlerAtk].pp[moveIndex] = 0;
-                    BtlController_EmitSetMonData(cv->battlerAtk, B_COMM_TO_CONTROLLER, moveIndex + REQUEST_PPMOVE1_BATTLE, 0, sizeof(gBattleMons[cv->battlerAtk].pp[moveIndex]), &gBattleMons[cv->battlerAtk].pp[moveIndex]);
-                    MarkBattlerForControllerExec(cv->battlerAtk);
+                    RequestMovePPChange(cv->battlerAtk, moveIndex);
                     PREPARE_MOVE_BUFFER(gBattleTextBuff1, gBattleMons[cv->battlerAtk].moves[moveIndex])
                     BattleScriptCall(BattleScript_GrudgeTakesPP);
                     result = MOVEEND_RESULT_RUN_SCRIPT;
@@ -4283,8 +4272,7 @@ static enum MoveEndResult MoveEndDamagedEffectsBlock(struct BattleCalcValues *cv
                  && CanBeBurned(cv->battlerAtk, cv->battlerAtk, cv->abilities[cv->battlerAtk]))
                 {
                     gBattleMons[cv->battlerAtk].status1 = STATUS1_BURN;
-                    BtlController_EmitSetMonData(cv->battlerAtk, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, sizeof(gBattleMons[cv->battlerAtk].status1), &gBattleMons[cv->battlerAtk].status1);
-                    MarkBattlerForControllerExec(cv->battlerAtk);
+                    RequestNonVolatileChange(cv->battlerAtk);
                     BattleScriptCall(BattleScript_BeakBlastBurn);
                     result = MOVEEND_RESULT_RUN_SCRIPT;
                 }
@@ -5002,8 +4990,7 @@ static enum MoveEndResult MoveEndMoveBlock(struct BattleCalcValues *cv)
                 // In Gen 5+, Knock Off removes the target's item rather than rendering it unusable
                 if (B_KNOCK_OFF_REMOVAL >= GEN_5)
                 {
-                    BtlController_EmitSetMonData(battlerDef, B_COMM_TO_CONTROLLER, REQUEST_HELDITEM_BATTLE, 0, sizeof(gBattleMons[battlerDef].item), &gBattleMons[battlerDef].item);
-                    MarkBattlerForControllerExec(battlerDef);
+                    RequestHeldItemChange(battlerDef);
                     // Mark item as stolen so it will be restored after battle
                     gBattleStruct->itemLost[GetBattlerTrainer(battlerDef)][gBattlerPartyIndexes[battlerDef]].stolen = TRUE;
                 }
@@ -5427,7 +5414,7 @@ static enum MoveEndResult MoveEndCardButton(struct BattleCalcValues *cv)
 static enum MoveEndResult MoveEndFormChange(struct BattleCalcValues *cv)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
-    
+
     if (IsSheerForceAffected(cv->move, cv->abilities[cv->battlerAtk]))
     {
         gBattleScripting.moveendState++;
@@ -5697,14 +5684,7 @@ static enum MoveEndResult MoveEndPickpocket(struct BattleCalcValues *cv)
                          && itemToSteal == gBattleStruct->itemLost[GetBattlerTrainer(cv->battlerAtk)][originalAttackerPartyId].originalItem)
                             gBattleStruct->itemLost[GetBattlerTrainer(cv->battlerAtk)][originalAttackerPartyId].stolen = TRUE;
                         itemToSteal = ITEM_NONE;
-                        BtlController_EmitSetMonData(
-                            cv->battlerAtk,
-                            B_COMM_TO_CONTROLLER,
-                            REQUEST_HELDITEM_BATTLE,
-                            1u << originalAttackerPartyId,
-                            sizeof(itemToSteal),
-                            &itemToSteal);
-                        MarkBattlerForControllerExec(cv->battlerAtk);
+                        RequestHeldItemChange(cv->battlerAtk);
                     }
                     BattleScriptCall(BattleScript_Pickpocket);
                 }
@@ -5785,14 +5765,7 @@ static enum MoveEndResult MoveEndThirdMoveBlock(struct BattleCalcValues *cv)
             gBattleStruct->battlerState[cv->battlerAtk].canPickupItem = TRUE;
             GetBattlerPartyState(cv->battlerAtk)->usedHeldItem = item;
             CheckSetUnburden(cv->battlerAtk);
-            BtlController_EmitSetMonData(
-                cv->battlerAtk,
-                B_COMM_TO_CONTROLLER,
-                REQUEST_HELDITEM_BATTLE,
-                0,
-                sizeof(gBattleMons[cv->battlerAtk].item),
-                &gBattleMons[cv->battlerAtk].item);
-            MarkBattlerForControllerExec(cv->battlerAtk);
+            RequestHeldItemChange(cv->battlerAtk);
             ClearBattlerItemEffectHistory(cv->battlerAtk);
 
             if (!TrySymbiosis(cv->battlerAtk, item, NULL))
@@ -6453,8 +6426,7 @@ static enum MoveResult StatChangeBeforeChange(struct BattleCalcValues *cv)
 
             gBattleScripting.battler = cv->battlerAtk;
             gBattleMons[gBattlerAttacker].status1 = 0;
-            BtlController_EmitSetMonData(cv->battlerAtk, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, sizeof(gBattleMons[cv->battlerAtk].status1), &gBattleMons[cv->battlerAtk].status1);
-            MarkBattlerForControllerExec(cv->battlerAtk);
+            RequestNonVolatileChange(cv->battlerAtk);
             BattleScriptCall(BattleScript_TakeHeart);
             return MOVE_RESULT_RUN_SCRIPT_INCREMENT;
         }
@@ -6720,18 +6692,6 @@ static inline bool32 IsBattlerUsingBeakBlast(enum BattlerId battler)
     if (GetMoveEffect(gChosenMoveByBattler[battler]) != EFFECT_BEAK_BLAST)
         return FALSE;
     return !HasBattlerActedThisTurn(battler);
-}
-
-static void RequestNonVolatileChange(enum BattlerId battlerAtk)
-{
-    BtlController_EmitSetMonData(
-        battlerAtk,
-        B_COMM_TO_CONTROLLER,
-        REQUEST_STATUS_BATTLE,
-        0,
-        sizeof(gBattleMons[battlerAtk].status1),
-        &gBattleMons[battlerAtk].status1);
-    MarkBattlerForControllerExec(battlerAtk);
 }
 
 static enum Move GetMirrorMoveMove(void)

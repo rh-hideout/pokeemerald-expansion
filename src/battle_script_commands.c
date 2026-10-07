@@ -1113,15 +1113,7 @@ static void Cmd_datahpupdate(void)
     if (gBattleMons[battler].hp > gBattleMons[battler].maxHP / 2)
         gBattleStruct->battlerState[battler].wasAboveHalfHp = TRUE;
 
-    // Send updated HP
-    BtlController_EmitSetMonData(
-        battler,
-        B_COMM_TO_CONTROLLER,
-        REQUEST_HP_BATTLE,
-        0,
-        sizeof(gBattleMons[battler].hp), &gBattleMons[battler].hp);
-    MarkBattlerForControllerExec(battler);
-
+    RequestHPChange(battler);
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
@@ -1284,8 +1276,7 @@ void StealTargetItem(enum BattlerId battlerStealer, enum BattlerId itemBattler, 
         gBattleMons[battlerStealer].item = gLastUsedItem;
 
         gBattleMons[battlerStealer].volatiles.unburdenActive = FALSE;
-        BtlController_EmitSetMonData(battlerStealer, B_COMM_TO_CONTROLLER, REQUEST_HELDITEM_BATTLE, 0, sizeof(gLastUsedItem), &gLastUsedItem); // set attacker item
-        MarkBattlerForControllerExec(battlerStealer);
+        RequestHeldItemChange(battlerStealer);
     }
 
     if (itemOverride) // don't change flags for unintended battler
@@ -1295,9 +1286,7 @@ void StealTargetItem(enum BattlerId battlerStealer, enum BattlerId itemBattler, 
 
     RecordItemEffectBattle(itemBattler, HOLD_EFFECT_NONE);
     CheckSetUnburden(itemBattler);
-
-    BtlController_EmitSetMonData(itemBattler, B_COMM_TO_CONTROLLER, REQUEST_HELDITEM_BATTLE, 0, sizeof(gBattleMons[itemBattler].item), &gBattleMons[itemBattler].item);  // remove target item
-    MarkBattlerForControllerExec(itemBattler);
+    RequestHeldItemChange(itemBattler);
 
     if (GetBattlerAbility(itemBattler) != ABILITY_GORILLA_TACTICS)
         gBattleStruct->choicedMove[itemBattler] = MOVE_NONE;
@@ -1380,13 +1369,9 @@ void SetNonVolatileStatus(enum BattlerId battlerAtk, enum BattlerId effectBattle
         break;
     }
 
-    BtlController_EmitSetMonData(effectBattler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, sizeof(gBattleMons[effectBattler].status1), &gBattleMons[effectBattler].status1);
-    MarkBattlerForControllerExec(effectBattler);
-
+    RequestNonVolatileChange(effectBattler);
     gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_STATUSED;
-
     gBattleScripting.moveEffect = MOVE_EFFECT_NONE;
-
     TrySynchronizeActivation(battlerAtk, effectBattler, effect);
     gBattleStruct->statusedBattler = effectBattler;
     gBattleStruct->statusInflicterBattler = battlerAtk;
@@ -1536,8 +1521,7 @@ static void Cmd_cleareffectsonfaint(void)
         if (!(gBattleTypeFlags & BATTLE_TYPE_ARENA) || !IsBattlerAlive(battler))
         {
             gBattleMons[battler].status1 = 0;
-            BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, sizeof(gBattleMons[battler].status1), &gBattleMons[battler].status1);
-            MarkBattlerForControllerExec(battler);
+            RequestNonVolatileChange(battler);
         }
 
         FaintClearSetData(battler); // Effects like attractions, trapping, etc.
@@ -3953,10 +3937,7 @@ static void Cmd_removeitem(void)
     gBattleStruct->battlerState[battler].canPickupItem = TRUE;
     gBattleStruct->adrenalineOrbActivated = FALSE;
     CheckSetUnburden(battler);
-
-    BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_HELDITEM_BATTLE, 0, sizeof(gBattleMons[battler].item), &gBattleMons[battler].item);
-    MarkBattlerForControllerExec(battler);
-
+    RequestHeldItemChange(battler);
     ClearBattlerItemEffectHistory(battler);
     scriptQueued = TrySymbiosis(battler, itemId, cmd->nextInstr);
     if (TryCheekPouch(battler, itemId, scriptQueued ? gBattlescriptCurrInstr : cmd->nextInstr))
@@ -4603,9 +4584,7 @@ static void Cmd_setatkhptozero(void)
         return;
 
     gBattleMons[gBattlerAttacker].hp = 0;
-    BtlController_EmitSetMonData(gBattlerAttacker, B_COMM_TO_CONTROLLER, REQUEST_HP_BATTLE, 0, sizeof(gBattleMons[gBattlerAttacker].hp), &gBattleMons[gBattlerAttacker].hp);
-    MarkBattlerForControllerExec(gBattlerAttacker);
-
+    RequestHPChange(gBattlerAttacker);
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
@@ -5165,8 +5144,7 @@ static void Cmd_healpartystatus(void)
 
     if (toHeal)
     {
-        BtlController_EmitSetMonData(gBattlerAttacker, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, toHeal, sizeof(zero), &zero);
-        MarkBattlerForControllerExec(gBattlerAttacker);
+        RequestNonVolatileChange(gBattlerAttacker);
     }
 
     gBattlescriptCurrInstr = cmd->nextInstr;
@@ -5366,11 +5344,7 @@ static void Cmd_switchoutabilities(void)
             TryDeactivateSleepClause(battler, gBattlerPartyIndexes[battler]);
 
         gBattleMons[battler].status1 = 0;
-        BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE,
-                                        1u << gBattlerPartyIndexes[battler],
-                                        sizeof(gBattleMons[battler].status1),
-                                        &gBattleMons[battler].status1);
-        MarkBattlerForControllerExec(battler);
+        RequestNonVolatileChange(battler);
         break;
     case ABILITY_REGENERATOR:
     {
@@ -5378,11 +5352,7 @@ static void Cmd_switchoutabilities(void)
         regenerate += gBattleMons[battler].hp;
         if (regenerate > gBattleMons[battler].maxHP)
             regenerate = gBattleMons[battler].maxHP;
-        BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_HP_BATTLE,
-                                        1u << gBattlerPartyIndexes[battler],
-                                        sizeof(regenerate),
-                                        &regenerate);
-        MarkBattlerForControllerExec(battler);
+        RequestHPChange(battler);
         break;
     }
     default:
@@ -5547,10 +5517,7 @@ static void Cmd_tryrecycleitem(void)
         *usedHeldItem = ITEM_NONE;
         gBattleMons[gBattlerAttacker].item = gLastUsedItem;
         gBattleMons[gBattlerAttacker].volatiles.unburdenActive = FALSE;
-
-        BtlController_EmitSetMonData(gBattlerAttacker, B_COMM_TO_CONTROLLER, REQUEST_HELDITEM_BATTLE, 0, sizeof(gBattleMons[gBattlerAttacker].item), &gBattleMons[gBattlerAttacker].item);
-        MarkBattlerForControllerExec(gBattlerAttacker);
-
+        RequestHeldItemChange(gBattlerAttacker);
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
     else
@@ -6552,7 +6519,7 @@ static void TryClearPrimalWeather(void)
     for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
     {
         enum Ability ability = GetBattlerAbility(battler);
-    
+
         if (((ability == ABILITY_DESOLATE_LAND && gBattleWeather & B_WEATHER_SUN_PRIMAL)
           || (ability == ABILITY_PRIMORDIAL_SEA && gBattleWeather & B_WEATHER_RAIN_PRIMAL)
           || (ability == ABILITY_DELTA_STREAM && gBattleWeather & B_WEATHER_STRONG_WINDS)))
@@ -6605,7 +6572,7 @@ static bool32 DoFaintedEffectsBlock(void)
 
             gBattleStruct->eventState.faintedEffects++;
             break;
-        case FAINTED_EFFECTS_BLOCK_END_DYNAMAX:    
+        case FAINTED_EFFECTS_BLOCK_END_DYNAMAX:
             if (GetActiveGimmick(gBattlerFainted) == GIMMICK_DYNAMAX)
             {
                 UndoDynamax(gBattlerFainted);
@@ -6678,8 +6645,7 @@ static bool32 DoFaintedEffectsBlock(void)
         }
         case FAINTED_EFFECTS_BLOCK_CLEAR_EFFECTS:
             gBattleMons[gBattlerFainted].status1 = 0;
-            BtlController_EmitSetMonData(gBattlerFainted, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, sizeof(gBattleMons[gBattlerFainted].status1), &gBattleMons[gBattlerFainted].status1);
-            MarkBattlerForControllerExec(gBattlerFainted);
+            RequestNonVolatileChange(gBattlerFainted);
             FaintClearSetData(gBattlerFainted); // Effects like attractions, trapping, etc.
             gBattleStruct->eventState.faintedEffects++;
             return TRUE;
@@ -6771,7 +6737,7 @@ static void Cmd_dofainteffectsblock(void)
 
     if (gBattleControllerExecFlags)
         return;
-    
+
     if (DoFaintedEffectsBlock())
         return;
 
@@ -7693,8 +7659,7 @@ static void UpdatePokeFlutePartyStatus(struct Pokemon* party, enum BattlerPositi
     {
         battler = GetBattlerAtPosition(position);
         status = 0;
-        BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, monToCheck, 4, &status);
-        MarkBattlerForControllerExec(battler);
+        RequestNonVolatileChange(battler);
         gBattleCommunication[MULTISTRING_CHOOSER] = 1;
     }
 }
@@ -7929,10 +7894,7 @@ void BS_TryRecycleBerry(void)
         *usedHeldItem = ITEM_NONE;
         gBattleMons[gBattlerTarget].item = gLastUsedItem;
         gBattleMons[gBattlerTarget].volatiles.unburdenActive = FALSE;
-
-        BtlController_EmitSetMonData(gBattlerTarget, B_COMM_TO_CONTROLLER, REQUEST_HELDITEM_BATTLE, 0, sizeof(gBattleMons[gBattlerTarget].item), &gBattleMons[gBattlerTarget].item);
-        MarkBattlerForControllerExec(gBattlerTarget);
-
+        RequestHeldItemChange(gBattlerTarget);
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
     else
@@ -8502,14 +8464,7 @@ void BS_ClearStatus(void)
     NATIVE_ARGS(u8 battler);
     enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
     gBattleMons[battler].status1 = 0;
-    BtlController_EmitSetMonData(
-        battler,
-        B_COMM_TO_CONTROLLER,
-        REQUEST_STATUS_BATTLE,
-        0,
-        sizeof(gBattleMons[battler].status1),
-        &gBattleMons[battler].status1);
-    MarkBattlerForControllerExec(battler);
+    RequestNonVolatileChange(battler);
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
@@ -8668,14 +8623,7 @@ void BS_TryPsychoShift(void)
     gBattleStruct->statusedBattler = gEffectBattler = gBattlerTarget;
     gBattleStruct->statusInflicterBattler = gBattlerAttacker;
 
-    BtlController_EmitSetMonData(
-        gBattlerTarget,
-        B_COMM_TO_CONTROLLER,
-        REQUEST_STATUS_BATTLE,
-        0,
-        sizeof(gBattleMons[gBattlerTarget].status1),
-        &gBattleMons[gBattlerTarget].status1);
-    MarkBattlerForControllerExec(gBattlerTarget);
+    RequestNonVolatileChange(gBattlerTarget);
     TryActivateSleepClause(gBattlerTarget, gBattlerPartyIndexes[gBattlerTarget]);
     TrySynchronizeActivation(gBattlerAttacker, gBattlerTarget, synchronizeEffect);
     gBattlescriptCurrInstr = cmd->nextInstr;
@@ -8706,8 +8654,7 @@ void BS_CureStatus(void)
     gBattleScripting.battler = battler;
 
     gBattleMons[battler].status1 = 0;
-    BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, sizeof(gBattleMons[battler].status1), &gBattleMons[battler].status1);
-    MarkBattlerForControllerExec(battler);
+    RequestNonVolatileChange(battler);
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
@@ -9224,9 +9171,7 @@ void BS_TryWakeBattlersUproar(void)
             TryDeactivateSleepClause(battler, gBattlerPartyIndexes[battler]);
             gBattleMons[battler].status1 = 0;
             gEffectBattler = battler;
-            BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, sizeof(gBattleMons[battler].status1), &gBattleMons[battler].status1);
-            MarkBattlerForControllerExec(battler);
-
+            RequestNonVolatileChange(battler);
             BattleScriptCall(BattleScript_BattlerWokeUp);
             return;
         }

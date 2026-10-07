@@ -876,14 +876,16 @@ static enum ItemEffect ItemRestorePp(enum BattlerId battler, enum Item itemId)
             changedPP = maxPP;
 
         PREPARE_MOVE_BUFFER(gBattleTextBuff1, move);
-
         BattleScriptCall(BattleScript_BerryPPHeal);
-
         gBattleScripting.battler = battler;
-        BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, restoreMove + REQUEST_PPMOVE1_BATTLE, 0, 1, &changedPP);
-        MarkBattlerForControllerExec(battler);
+        RequestMovePPChange(battler, restoreMove);
+
         if (MOVE_IS_PERMANENT(battler, restoreMove))
+        {
+            // is this a bug? shouldn't this also go through the request
             gBattleMons[battler].pp[restoreMove] = changedPP;
+        }
+
         effect = ITEM_PP_CHANGE;
     }
     return effect;
