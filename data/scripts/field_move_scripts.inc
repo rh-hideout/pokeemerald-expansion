@@ -103,18 +103,12 @@ EventScript_RockSmashWildEncounter::
 
 EventScript_RockSmashItem::
     callnative rockSmashGenerateItem
-	call_if_ne VAR_0x8005, ITEM_NONE, EventScript_TryGiveRockSmashItem
+	goto_if_eq VAR_0x8005, ITEM_NONE, EventScript_EndSmash
+    checkitemspace VAR_0x8005
+	goto_if_eq VAR_RESULT, FALSE, EventScript_EndSmash
+    giveitem VAR_0x8005
 	releaseall
 	end
-
-EventScript_TryGiveRockSmashItem::
-    checkitemspace VAR_0x8005
-	goto_if_ne VAR_RESULT, FALSE, EventScript_GiveSmashItem
-	return
-
-EventScript_GiveSmashItem::
-    giveitem VAR_0x8005
-    return
 
 EventScript_FollowerFieldMove:
 	getdirectiontoface VAR_0x8005, OBJ_EVENT_ID_FOLLOWER, OBJ_EVENT_ID_PLAYER

@@ -27,8 +27,8 @@ static void Task_DoFieldMove_Init(u8 taskId);
 static void Task_DoFieldMove_ShowMonAfterPose(u8 taskId);
 static void Task_DoFieldMove_WaitForMon(u8 taskId);
 static void Task_DoFieldMove_RunFunc(u8 taskId);
-static void rockSmashGenerateItemGen4(void);
-static void rockSmashGenerateItemGen6(void);
+static enum Item rockSmashGenerateItemGen4(void);
+static enum Item rockSmashGenerateItemGen6(void);
 
 static void FieldCallback_RockSmash(void);
 static void FieldMove_RockSmash(void);
@@ -232,23 +232,22 @@ static const enum Item Gen4CliffCaveSmashTable[] = {
 
 void rockSmashGenerateItem(struct ScriptContext *ctx)
 {
+    enum Item item = ITEM_NONE;
     if (OW_ROCK_SMASH_ITEMS >= GEN_6)
-        rockSmashGenerateItemGen6();
+        item = rockSmashGenerateItemGen6();
     else if (OW_ROCK_SMASH_ITEMS >= GEN_4)
-        rockSmashGenerateItemGen4();
+        item = rockSmashGenerateItemGen4();
     else
-        VarSet(VAR_0x8005, ITEM_NONE);
+        errorf("Trying to get rock smash item but the OW_ROCK_SMASH_ITEMS config doesn't allow it");
+    VarSet(VAR_0x8005, item);
     return;
 }
 
 
 
 
-static void rockSmashGenerateItemGen4(void)
+static enum Item rockSmashGenerateItemGen4(void)
 {
-    enum Item item = ITEM_NONE;
-
-
     u32 randomItem = RandomWeighted(RNG_NONE, 5, 4, 2, 2, 2, 2, 2, 1);
 
     if (randomItem < 7)
@@ -259,21 +258,19 @@ static void rockSmashGenerateItemGen4(void)
     }
 
     //Check for user defined behaviour for this rock
-    u32 ItemTable = gMapHeader.events->objectEvents[gSpecialVar_LastTalked - 1].trainerRange_berryTreeId;
+    u16 ItemTable = gMapHeader.events->objectEvents[(gSpecialVar_LastTalked - 1)].trainerRange_berryTreeId;
+    ItemTable >>= 8;// remove data that is being used for probability
     switch (ItemTable)
     {
     case ROCK_SMASH_ITEM_TABLE_DEFAULT:
-        VarSet(VAR_0x8005, Gen4DefaultSmashTable[randomItem]);
-        return;
+        return Gen4DefaultSmashTable[randomItem];
     case ROCK_SMASH_ITEM_TABLE_CLIFF:
-        VarSet(VAR_0x8005, Gen4CliffCaveSmashTable[randomItem]);
-        return;
+        return Gen4CliffCaveSmashTable[randomItem];
     case ROCK_SMASH_ITEM_TABLE_FOSSIL:
-        VarSet(VAR_0x8005, Gen4RuinsOfAlphSmashTable[randomItem]);
-        return;
+        return Gen4RuinsOfAlphSmashTable[randomItem];
     case ROCK_SMASH_ITEM_TABLE_NONE:
-        VarSet(VAR_0x8005, ITEM_NONE);
-        return;
+        return ITEM_NONE;
+    case ROCK_SMASH_ITEM_TABLE_AUTOASSIGNED:
     default:
         break;
     }
@@ -282,40 +279,37 @@ static void rockSmashGenerateItemGen4(void)
     if ((gMapHeader.mapType == MAP_TYPE_OCEAN_ROUTE)
             || (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_CAVE_OF_ORIGIN_B1F) &&
             gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_CAVE_OF_ORIGIN_B1F))) 
-        item = Gen4RuinsOfAlphSmashTable[randomItem];
+        return Gen4RuinsOfAlphSmashTable[randomItem];
 
     else if (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_ARTISAN_CAVE_B1F) &&
             gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_ARTISAN_CAVE_B1F))
-        item = Gen4CliffCaveSmashTable[randomItem];
+        return Gen4CliffCaveSmashTable[randomItem];
 
     else if (gMapHeader.mapType != MAP_TYPE_INDOOR)
-        item = Gen4DefaultSmashTable[randomItem];
+        return Gen4DefaultSmashTable[randomItem];
 
-    VarSet(VAR_0x8005, item);
-    return;
+    return ITEM_NONE;
 }
 
 
-static void rockSmashGenerateItemGen6(void)
+static enum Item rockSmashGenerateItemGen6(void)
 {
-    enum Item item = ITEM_NONE;
     u32 randomNumber;
     //Check for user defined behaviour for this rock
-    u32 ItemTable = gMapHeader.events->objectEvents[gSpecialVar_LastTalked - 1].trainerRange_berryTreeId;
+    u16 ItemTable = gMapHeader.events->objectEvents[(gSpecialVar_LastTalked - 1)].trainerRange_berryTreeId;
+    ItemTable >>= 8;// bitshift to remove data that is being used for probability
     switch (ItemTable)
     {
     case ROCK_SMASH_ITEM_TABLE_DEFAULT:
         randomNumber = Random() % ARRAY_COUNT(Gen6DefaultSmashTable);
-        VarSet(VAR_0x8005, Gen6DefaultSmashTable[randomNumber]);
-        return;
+        return Gen6DefaultSmashTable[randomNumber];
     case ROCK_SMASH_ITEM_TABLE_CLIFF:
     case ROCK_SMASH_ITEM_TABLE_FOSSIL:
         randomNumber = Random() % ARRAY_COUNT(Gen6FossilSmashTable);
-        VarSet(VAR_0x8005, Gen6FossilSmashTable[randomNumber]);
-        return;
+        return Gen6FossilSmashTable[randomNumber];
     case ROCK_SMASH_ITEM_TABLE_NONE:
-        VarSet(VAR_0x8005, ITEM_NONE);
-        return;
+        return ITEM_NONE;
+    case ROCK_SMASH_ITEM_TABLE_AUTOASSIGNED:
     default:
         break; 
     }
@@ -326,16 +320,13 @@ static void rockSmashGenerateItemGen6(void)
             gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_CAVE_OF_ORIGIN_B1F))) 
             // These are example code for unique locations for fossils. They do not happen in game. In ORAS this table is used in mirage islands, or Glittering Cave in XY.
     {
-        randomNumber = Random() % ARRAY_COUNT(Gen6FossilSmashTable);
-        item = Gen6FossilSmashTable[randomNumber];
+        u32 randomNumber = Random() % ARRAY_COUNT(Gen6FossilSmashTable);
+        return Gen6FossilSmashTable[randomNumber];
     }
     else if (gMapHeader.mapType != MAP_TYPE_INDOOR)
     {
-        randomNumber = Random() % ARRAY_COUNT(Gen6DefaultSmashTable);
-        item = Gen6DefaultSmashTable[randomNumber];
+        u32 randomNumber = Random() % ARRAY_COUNT(Gen6DefaultSmashTable);
+        return Gen6DefaultSmashTable[randomNumber];
     }
-
-
-    VarSet(VAR_0x8005, item);
-    return;
+    return ITEM_NONE;
 }

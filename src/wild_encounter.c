@@ -844,7 +844,8 @@ void rockSmashRNG(struct ScriptContext *ctx)
             gSpecialVar_Result = ROCK_SMASH_ENCOUNTER;
             return;
         }
-        u32 itemRate = gMapHeader.events->objectEvents[(gSpecialVar_LastTalked - 1)].movementRangeX;// this is 0 on everything by default. 
+        u16 itemRate = gMapHeader.events->objectEvents[(gSpecialVar_LastTalked - 1)].trainerRange_berryTreeId;// this is 0 on everything by default. 
+        itemRate &= 0xFF;//bitmask to remove any data representing user's table
         if (itemRate < OW_ROCK_SMASH_ITEMS_MIN_ODDS)
             itemRate = OW_ROCK_SMASH_ITEMS_MIN_ODDS;
 
@@ -852,8 +853,7 @@ void rockSmashRNG(struct ScriptContext *ctx)
         if (DoesRockSmashUserHaveIncreasedItemRarity(partySlot))
             itemRate += 5;
 
-        struct Pokemon *mon = GetFirstLiveMon();
-        if (VarGet(VAR_0x8004) == TRUE || (OW_FOLLOWERS_ENABLED && mon == &gParties[B_TRAINER_PLAYER][partySlot]))// either a rock smash anim is playing or the user would be the current follower.
+        if (VarGet(VAR_0x8004) == TRUE)// if an anim is playing for the follower smashing a rock
             itemRate += 5;
 
         rockSmashResult = ROCK_SMASH_ITEM * RandomPercentage(RNG_NONE, itemRate);// returns either 0 or 2

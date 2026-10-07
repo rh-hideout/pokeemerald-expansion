@@ -50,12 +50,13 @@ enum __attribute__((__packed__)) Flavor
 // - BERRY_STAGE_FLOWERING
 #define NUM_WATER_STAGES 4
 
-#define ROCK_SMASH_ITEM_TABLE_DEFAULT 11
-#define ROCK_SMASH_ITEM_TABLE_CLIFF 12
-#define ROCK_SMASH_ITEM_TABLE_FOSSIL 13
-#define ROCK_SMASH_ITEM_TABLE_NONE 14
-// These are intended to be read from trainerRange_berryTreeId which is u16
 
+// rock smash item tables are defined here as they need to be read by porymap but didn't need to be an extra file lol
+#define ROCK_SMASH_ITEM_TABLE_AUTOASSIGNED  1
+#define ROCK_SMASH_ITEM_TABLE_DEFAULT       2
+#define ROCK_SMASH_ITEM_TABLE_CLIFF         3
+#define ROCK_SMASH_ITEM_TABLE_FOSSIL        4
+#define ROCK_SMASH_ITEM_TABLE_NONE          5
 
 
 // IDs for berry tree objects, indexes into berryTrees in SaveBlock1
