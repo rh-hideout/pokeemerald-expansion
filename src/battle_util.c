@@ -9315,7 +9315,7 @@ void TryRestoreHeldItems(void)
             struct LostItem *lostItem = GetLostItemState(trainer, partySlot);
             enum Item originaItem = lostItem->originalItem;
 
-            if (lostItem->stolen && lostItem->wildItemPending)
+            if (lostItem->wildItemPending)
             {
                 AddBagItem(originaItem, 1);
                 continue;
@@ -9345,11 +9345,10 @@ void RestoreCaughtWildMonHeldItem(struct Pokemon *mon, enum BattlerId battler)
         SetMonData(mon, MON_DATA_HELD_ITEM, &itemToRestore);
     }
 
-    if (lostItem->stolen && lostItem->wildItemPending)
+    if (lostItem->wildItemPending)
     {
         enum Item itemToRestore = lostItem->originalItem;
         SetMonData(mon, MON_DATA_HELD_ITEM, &itemToRestore);
-
         lostItem->wildItemPending = FALSE;
     }
 }
