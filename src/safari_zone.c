@@ -55,7 +55,6 @@ EWRAM_DATA static struct PokeblockFeeder sPokeblockFeeders[NUM_POKEBLOCK_FEEDERS
 
 static void DecrementFeederStepCounters(void);
 
-
 bool32 GetSafariZoneFlag(void)
 {
     return sActiveSafari != SAFARI_EVENT_NONE;
