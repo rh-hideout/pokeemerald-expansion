@@ -58,8 +58,7 @@ static bool8 TryGetAbilityInfluencedWildMonIndex(const struct WildPokemon *wildM
 
 EWRAM_DATA static u8 sWildEncountersDisabled = 0;
 EWRAM_DATA static u32 sFeebasRngValue = 0;
-EWRAM_DATA bool8 gIsFishingEncounter = 0;
-EWRAM_DATA bool8 gIsSurfingEncounter = 0;
+EWRAM_INIT u8 gEncounterType = ENCOUNTER_TYPE_NONE;
 EWRAM_DATA u8 gChainFishingDexNavStreak = 0;
 
 #include "data/wild_encounters.h"
@@ -514,6 +513,7 @@ void CreateWildMon(enum Species species, u8 level)
 {
     ZeroEnemyPartyMons();
     u32 personality = GetMonPersonality(species, GetSynchronizedGender(WILDMON_ORIGIN, species), PickWildMonNature(species), RANDOM_UNOWN_LETTER);
+    SET_ENCOUNTER_ORIGIN(gEncounterType, WILDMON_ORIGIN);
     CreateMonWithIVs(&gParties[B_TRAINER_OPPONENT_A][0], species, level, personality, OTID_STRUCT_PLAYER_ID, USE_RANDOM_IVS);
     GiveMonInitialMoveset(&gParties[B_TRAINER_OPPONENT_A][0]);
 }
@@ -686,8 +686,12 @@ bool8 StandardWildEncounter(u16 curMetatileBehavior, u16 prevMetatileBehavior)
             else if (TryGenerateWildMon(gBattlePikeWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo, WILD_AREA_LAND, WILD_CHECK_KEEN_EYE) != TRUE)
                 return FALSE;
             else if (!TryGenerateBattlePikeWildMon(TRUE))
+            {
+                SET_ENCOUNTER_ORIGIN(gEncounterType, UNDEFINED_MON_ORIGIN);
                 return FALSE;
+            }
 
+            SET_ENCOUNTER_AREA(gEncounterType, WILD_AREA_LAND);
             BattleSetup_StartBattlePikeWildBattle();
             return TRUE;
         }
@@ -703,6 +707,7 @@ bool8 StandardWildEncounter(u16 curMetatileBehavior, u16 prevMetatileBehavior)
             else if (TryGenerateWildMon(gBattlePyramidWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo, WILD_AREA_LAND, WILD_CHECK_KEEN_EYE) != TRUE)
                 return FALSE;
 
+            SET_ENCOUNTER_AREA(gEncounterType, WILD_AREA_LAND);
             GenerateBattlePyramidWildMon(SPECIES_NONE);
             BattleSetup_StartWildBattle();
             return TRUE;
@@ -741,6 +746,7 @@ bool8 StandardWildEncounter(u16 curMetatileBehavior, u16 prevMetatileBehavior)
                 // try a regular wild land encounter
                 if (TryGenerateWildMon(gWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo, WILD_AREA_LAND, WILD_CHECK_REPEL | WILD_CHECK_KEEN_EYE) == TRUE)
                 {
+                    SET_ENCOUNTER_AREA(gEncounterType, WILD_AREA_LAND);
                     if (TryDoDoubleWildBattle())
                     {
                         struct Pokemon mon1 = gParties[B_TRAINER_OPPONENT_A][0];
@@ -785,7 +791,7 @@ bool8 StandardWildEncounter(u16 curMetatileBehavior, u16 prevMetatileBehavior)
             {
                 if (TryGenerateWildMon(gWildMonHeaders[headerId].encounterTypes[timeOfDay].waterMonsInfo, WILD_AREA_WATER, WILD_CHECK_REPEL | WILD_CHECK_KEEN_EYE) == TRUE)
                 {
-                    gIsSurfingEncounter = TRUE;
+                    SET_ENCOUNTER_AREA(gEncounterType, WILD_AREA_WATER);
                     if (TryDoDoubleWildBattle())
                     {
                         struct Pokemon mon1 = gParties[B_TRAINER_OPPONENT_A][0];
@@ -823,18 +829,24 @@ void RockSmashWildEncounter(void)
         {
             gSpecialVar_Result = FALSE;
         }
-        else if (WildEncounterCheck(wildPokemonInfo->encounterRate, TRUE) == TRUE
-         && TryGenerateWildMon(wildPokemonInfo, WILD_AREA_ROCKS, WILD_CHECK_REPEL | WILD_CHECK_KEEN_EYE) == TRUE)
+        else if (WildEncounterCheck(wildPokemonInfo->encounterRate, TRUE) == TRUE)
         {
-            if (TryDoDoubleWildBattle())
+            if (TryGenerateWildMon(wildPokemonInfo, WILD_AREA_ROCKS, WILD_CHECK_REPEL | WILD_CHECK_KEEN_EYE) != TRUE)
+            {
+                gSpecialVar_Result = FALSE;
+            }
+            else if (TryDoDoubleWildBattle())
             {
                 struct Pokemon mon1 = gParties[B_TRAINER_OPPONENT_A][0];
                 TryGenerateWildMon(wildPokemonInfo, WILD_AREA_ROCKS, WILD_CHECK_REPEL | WILD_CHECK_KEEN_EYE);
                 gParties[B_TRAINER_OPPONENT_A][1] = mon1;
+                SET_ENCOUNTER_AREA(gEncounterType, WILD_AREA_ROCKS);
                 BattleSetup_StartDoubleWildBattle();
                 gSpecialVar_Result = TRUE;
             }
-            else {
+            else
+            {
+                SET_ENCOUNTER_AREA(gEncounterType, WILD_AREA_ROCKS);
                 BattleSetup_StartWildBattle();
                 gSpecialVar_Result = TRUE;
             }
@@ -869,6 +881,7 @@ bool8 SweetScentWildEncounter(void)
                 return FALSE;
 
             TryGenerateBattlePikeWildMon(FALSE);
+            SET_ENCOUNTER_AREA(gEncounterType, WILD_AREA_LAND);
             BattleSetup_StartBattlePikeWildBattle();
             return TRUE;
         }
@@ -881,6 +894,7 @@ bool8 SweetScentWildEncounter(void)
                 return FALSE;
 
             GenerateBattlePyramidWildMon(SPECIES_NONE);
+            SET_ENCOUNTER_AREA(gEncounterType, WILD_AREA_LAND);
             BattleSetup_StartWildBattle();
             return TRUE;
         }
@@ -903,7 +917,10 @@ bool8 SweetScentWildEncounter(void)
             if (DoMassOutbreakEncounterTest() == TRUE)
                 SetUpMassOutbreakEncounter(0);
             else
+            {
                 TryGenerateWildMon(gWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo, WILD_AREA_LAND, 0);
+                SET_ENCOUNTER_AREA(gEncounterType, WILD_AREA_LAND);
+            }
 
             BattleSetup_StartWildBattle();
             return TRUE;
@@ -924,6 +941,7 @@ bool8 SweetScentWildEncounter(void)
             }
 
             TryGenerateWildMon(gWildMonHeaders[headerId].encounterTypes[timeOfDay].waterMonsInfo, WILD_AREA_WATER, 0);
+            SET_ENCOUNTER_AREA(gEncounterType, WILD_AREA_WATER);
             BattleSetup_StartWildBattle();
             return TRUE;
         }
@@ -950,7 +968,7 @@ void FishingWildEncounter(u8 rod)
     s16 x, y;
     enum TimeOfDay timeOfDay;
 
-    gIsFishingEncounter = TRUE;
+    SET_ENCOUNTER_AREA(gEncounterType, WILD_AREA_FISHING);
     GetXYCoordsOneStepInFrontOfPlayer(&x, &y);
     if (CheckFeebasAtCoords(x, y) == TRUE)
     {
