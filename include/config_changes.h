@@ -3,6 +3,7 @@
 
 #include "constants/config_changes.h"
 #include "config/battle.h"
+#include "config/fishing.h"
 #include "config/pokerus.h"
 #include "config/ai.h"
 
