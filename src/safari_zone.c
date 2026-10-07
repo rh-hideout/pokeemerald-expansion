@@ -66,7 +66,6 @@ void ResetSafariZoneFlag(void)
     sActiveSafari = SAFARI_EVENT_NONE;
 }
 
-
 void EnterSafariMode(enum SafariEvents safariId)
 {
     assertf(!GetSafariZoneFlag(), "Game is already in a safari")

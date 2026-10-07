@@ -83,16 +83,14 @@ void HandleAction_WatchesCarefully(void)
     {
         if (gBattleStruct->safariRockThrowCounter > 0)
         {
-            gBattleStruct->safariRockThrowCounter--;
-            if (gBattleStruct->safariRockThrowCounter > 0)
+            if (--gBattleStruct->safariRockThrowCounter > 0)
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_MON_ANGRY;
             else
                 gBattleStruct->safariCatchFactor = GetInitialSafariCatchFactor();
         }
         else if (gBattleStruct->safariBaitThrowCounter > 0)
         {
-            gBattleStruct->safariBaitThrowCounter--;
-            if (gBattleStruct->safariBaitThrowCounter > 0)
+            if (--gBattleStruct->safariBaitThrowCounter > 0)
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_MON_EATING;
         }
         gBattlescriptCurrInstr = gBattlescriptsForSafariActions[0];
