@@ -17,6 +17,21 @@ python3 migration_scripts/*.py ; #run the migration script
 
 `*` will need to be replaced with the name of the appropriate script.
 
+## 1.17.x to 1.18.x+
+
+### Level-up Learnsets
+
+* Filepath [`migration_scripts/1.18/migrate_level_up_learnsets.py`](1.18/migrate_level_up_learnsets.py)
+* Introduced in [Generate level-up learnsets from porymoves data #10742](https://github.com/rh-hideout/pokeemerald-expansion/pull/10742)
+
+Replaces the generation-specific level-up learnset headers with the project's single editable `src/data/pokemon/level_up_learnsets.h`. Run the migration through Make so `P_LVL_UP_LEARNSETS` is resolved with the same preprocessor configuration as the build:
+
+```bash
+make migrate-level-up-learnsets
+```
+
+The selected legacy header is copied exactly, including project changes. The script can recover a header already removed by Git from the merge index, `ORIG_HEAD`, or reachable history. It archives any remaining non-selected headers to `level_up_learnsets_legacy_backup.zip`, removes the legacy files, and makes the new file trackable. The migration refuses to overwrite either a different existing `level_up_learnsets.h` or an existing backup archive.
+
 ## 1.10.x to 1.11.x+
 
 ### Contest Opponents
