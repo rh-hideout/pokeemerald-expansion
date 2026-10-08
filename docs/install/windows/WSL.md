@@ -6,22 +6,16 @@ If you want the best performance and least amount of issues with Windows interfe
 1. Open [Windows Powershell **as Administrator**](https://i.imgur.com/QKmVbP9.png), and run the following commands (Right Click or Shift+Insert is paste in the Powershell).
 
     ```powershell
-	wsl --install -d Ubuntu --enable-wsl1
+	wsl --install -d Debian --enable-wsl1
     ```
 
 2. Once the process finishes, restart your machine.
 
-### WSL1
-3. Open Windows Powershell **as Administrator** again (after restarting), and run the following command to configure Ubuntu to use WSL1.
-
-    ```powershell
-    wsl --set-version Ubuntu 1
-    ```
 ### WSL2
 3. Open Windows Powershell **as Administrator** again (after restarting), and run the following command to configure Ubuntu to use WSL2.
 
     ```powershell
-    wsl --set-version Ubuntu 2
+    wsl --set-version Debian 2
     ```
 
     <details>
@@ -37,15 +31,15 @@ Some tips before proceeding:
     - **Ctrl+Shift+C/Ctrl+Shift+V** (enabled by right-clicking the title bar, going to Properties, then checking the checkbox next to "Use Ctrl+Shift+C/V as Copy/Paste").
 - Some of the commands that you'll run will ask for your WSL password and/or confirmation to perform the stated action. This is to be expected, just enter your WSL password and/or the yes action when necessary.
 
-1. Open **Ubuntu** (e.g. using Search).
-2. WSL/Ubuntu will set up its own installation when it runs for the first time. Once WSL/Ubuntu finishes installing, it will ask for a username and password (to be input in).
+1. Open **Debian** (e.g. using Search).
+2. WSL/Debian will set up its own installation when it runs for the first time. Once WSL/Debian finishes installing, it will ask for a username and password (to be input in).
     <details>
         <summary><i>Note...</i></summary>
 
     >   When typing in the password, there will be no visible response, but the terminal will still read in input.
     </details>
 
-3. Update WSL/Ubuntu before continuing. Do this by running the following command. These commands will likely take a long time to finish:
+3. Update WSL/Debian before continuing. Do this by running the following command. These commands will likely take a long time to finish:
 
     ```bash
     sudo apt update && sudo apt upgrade
@@ -76,7 +70,7 @@ cd /mnt/c/Users/<user>/Desktop/decomps
 
 ## Choosing a location to store pokeemerald Expansion, WSL2
 WSL has its own file system that's not natively accessible from Windows, but Windows files *are* accessible from WSL. But accessing files on the Windows file system with WSL2 is very slow, so you're going to want to store pokeemerald Expansion within WSL2.
-To access the files on the WSL filesystem from Windowsm, you have to open the WSL filesystem as a network attached storage in the file explorer, it should be at the bottom of the left sidebar as "Ubuntu".
+To access the files on the WSL filesystem from Windowsm, you have to open the WSL filesystem as a network attached storage in the file explorer, it should be at the bottom of the left sidebar as "Debian".
 
 Thus you're going to make sure that you're in the WSL filesystem, then create the folder for decomps if it doesn't already exist, then move into that folder.
 
