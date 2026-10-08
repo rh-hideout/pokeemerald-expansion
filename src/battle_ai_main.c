@@ -60,6 +60,7 @@ static u32 GetWindAbilityScore(enum BattlerId battlerAtk, enum BattlerId battler
 EWRAM_DATA const u8 *gAIScriptPtr = NULL;   // Still used in contests
 EWRAM_DATA AiScoreFunc sDynamicAiFunc = NULL;
 EWRAM_DATA AiSwitchFunc gDynamicAiSwitchFunc = NULL;
+EWRAM_DATA AiMonChoiceFunc gDynamicAiMonChoiceFunc = NULL;
 
 // const rom data
 static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, s32 score);
@@ -6898,8 +6899,17 @@ void ScriptSetDynamicAiSwitchFunc(struct ScriptContext *ctx)
     gDynamicAiSwitchFunc = func;
 }
 
+void ScriptSetDynamicAiMonChoiceFunc(struct ScriptContext *ctx)
+{
+    Script_RequestEffects(SCREFF_V1);
+
+    AiMonChoiceFunc func = (AiMonChoiceFunc)ScriptReadWord(ctx);
+    gDynamicAiMonChoiceFunc = func;
+}
+
 void ResetDynamicAiFunctions(void)
 {
     sDynamicAiFunc = NULL;
     gDynamicAiSwitchFunc = NULL;
+    gDynamicAiMonChoiceFunc = NULL;
 }
