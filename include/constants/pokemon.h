@@ -370,6 +370,7 @@ enum PokemonJumpType {
 };
 
 enum EvoSpinDirections {
+    SPIN_NONE,
     SPIN_CW_SHORT,              // Player spins clockwise
     SPIN_CW_LONG,               // Player spins clockwise
     SPIN_CCW_SHORT,             // Player spins counter-clockwise

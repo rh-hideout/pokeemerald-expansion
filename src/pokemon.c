@@ -6243,6 +6243,7 @@ bool32 CheckSpecialOverworldEvo(void)
 void TrySpecialOverworldEvo(void)
 {
     u8 i;
+    u32 triedEvolvingCopy = gTriedEvolving;
     bool32 canStopEvo = FALSE;
 
     for (i = 0; i < PARTY_SIZE; i++)
@@ -6263,9 +6264,10 @@ void TrySpecialOverworldEvo(void)
             return;
         }
     }
+    if (triedEvolvingCopy != 0)
+        SetMainCallback2(CB2_ReturnToFieldContinueScript);
 
     gTriedEvolving = 0;
-    SetMainCallback2(CB2_ReturnToField);
 }
 
 bool32 SpeciesHasGenderDifferences(enum Species species)
