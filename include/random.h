@@ -273,22 +273,23 @@ enum RandomTag
 
 #define RandomPercentage(tag, t) \
     ({ \
+        s32 p = (t); \
         u32 r; \
-        if_comptime (t == 50) \
+        if_comptime (p == 50) \
         { \
             r = RandomUniform(tag, FALSE, TRUE); \
         } \
-        else if (t <= 0) \
+        else if (p <= 0) \
         { \
             r = FALSE; \
         } \
-        else if (t >= 100) \
+        else if (p >= 100) \
         { \
             r = TRUE; \
         } \
         else \
         { \
-          const u16 weights[] = { 100 - t, t }; \
+          const u16 weights[] = { 100 - p, p }; \
           r = RandomWeightedArray(tag, 100, ARRAY_COUNT(weights), weights); \
         } \
         r; \
