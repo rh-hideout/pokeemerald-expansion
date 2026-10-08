@@ -5059,7 +5059,6 @@ static void Cmd_healpartystatus(void)
     CMD_ARGS();
 
     enum PartyMon i = PARTY_MON_0;
-    u32 zero = 0;
     u32 toHeal = 0;
     enum BattlerId partner = GetBattlerAtPosition(GetPartnerPosition(GetBattlerPosition(gBattlerAttacker)));
     struct Pokemon *party = GetBattlerParty(gBattlerAttacker);
@@ -5144,6 +5143,7 @@ static void Cmd_healpartystatus(void)
 
     if (toHeal)
     {
+        gBattleMons[gBattlerAttacker].status1 = 0;
         RequestNonVolatileChange(gBattlerAttacker);
     }
 
