@@ -1135,6 +1135,8 @@ enum BattlerPosition GetOppositePosition(enum BattlerPosition position);
 enum BattlerId GetBattlerLeftFoe(enum BattlerId battler);
 enum BattlerId GetBattlerRightFoe(enum BattlerId battler);
 enum BattlerId GetDefaultSelectionTarget(enum BattlerId battler, enum MoveTarget moveTarget);
+bool32 IsHalfTeamMultiBattle(void);
+bool32 IsFullTeamMultiBattle(void);
 
 static inline bool32 IsBattlerAlive(enum BattlerId battler)
 {

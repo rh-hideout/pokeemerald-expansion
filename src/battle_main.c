@@ -1345,22 +1345,27 @@ static void CB2_HandleStartMultiPartnerBattle(void)
 
 static void SetMultiPartnerMenuParty(enum BattleTrainer trainer)
 {
-    s32 i;
+    struct Pokemon *mon = NULL;
+    struct MultiPartnerMenuPokemon *partnerMon = NULL;
 
-    for (i = 0; i < PARTY_SIZE; i++)
+    for (s32 i = 0; i < PARTY_SIZE; i++)
     {
-        gMultiPartnerParty[i].species     = GetMonData(&gParties[trainer][i], MON_DATA_SPECIES);
-        gMultiPartnerParty[i].heldItem    = GetMonData(&gParties[trainer][i], MON_DATA_HELD_ITEM);
-        GetMonData(&gParties[trainer][i], MON_DATA_NICKNAME, gMultiPartnerParty[i].nickname);
-        gMultiPartnerParty[i].level       = GetMonData(&gParties[trainer][i], MON_DATA_LEVEL);
-        gMultiPartnerParty[i].hp          = GetMonData(&gParties[trainer][i], MON_DATA_HP);
-        gMultiPartnerParty[i].maxhp       = GetMonData(&gParties[trainer][i], MON_DATA_MAX_HP);
-        gMultiPartnerParty[i].status      = GetMonData(&gParties[trainer][i], MON_DATA_STATUS);
-        gMultiPartnerParty[i].personality = GetMonData(&gParties[trainer][i], MON_DATA_PERSONALITY);
-        gMultiPartnerParty[i].gender      = GetMonGender(&gParties[trainer][i]);
-        StripExtCtrlCodes(gMultiPartnerParty[i].nickname);
-        if (GetMonData(&gParties[trainer][i], MON_DATA_LANGUAGE) != LANGUAGE_JAPANESE)
-            PadNameString(gMultiPartnerParty[i].nickname, CHAR_SPACE);
+        partnerMon = &gMultiPartnerParty[i];
+        mon = &gParties[trainer][i];
+        partnerMon->species     = GetMonData(mon, MON_DATA_SPECIES);
+        partnerMon->heldItem    = GetMonData(mon, MON_DATA_HELD_ITEM);
+        GetMonData(mon, MON_DATA_NICKNAME, partnerMon->nickname);
+        partnerMon->level       = GetMonData(mon, MON_DATA_LEVEL);
+        partnerMon->hp          = GetMonData(mon, MON_DATA_HP);
+        partnerMon->maxhp       = GetMonData(mon, MON_DATA_MAX_HP);
+        partnerMon->status      = GetMonData(mon, MON_DATA_STATUS);
+        partnerMon->personality = GetMonData(mon, MON_DATA_PERSONALITY);
+        partnerMon->gender      = GetMonGender(mon);
+        StripExtCtrlCodes(partnerMon->nickname);
+        if (GetMonData(mon, MON_DATA_LANGUAGE) != LANGUAGE_JAPANESE)
+        {
+            PadNameString(partnerMon->nickname, CHAR_SPACE);
+        }
     }
 }
 
