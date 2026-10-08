@@ -2980,17 +2980,17 @@
 	.endm
 
 	.macro safari_enter safariId:req
-	callnative ScrCmd_entersafari
+	callnative ScrCmd_safari_enter
 	.byte \safariId
 	.endm
 
 	.macro safari_exitnowarp
-	callnative ScrCmd_exitsafari
+	callnative ScrCmd_safari_exit
 	.byte FALSE
 	.endm
 
 	.macro safari_exit
-	callnative ScrCmd_exitsafari
+	callnative ScrCmd_safari_exit
 	.byte TRUE
 	waitstate
 	.endm

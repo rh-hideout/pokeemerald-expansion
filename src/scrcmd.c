@@ -3381,7 +3381,7 @@ bool8 ScrCmd_getbraillestringwidth(struct ScriptContext * ctx)
     return FALSE;
 }
 
-bool8 ScrCmd_entersafari(struct ScriptContext * ctx)
+bool8 ScrCmd_safari_enter(struct ScriptContext * ctx)
 {
     u8 value = ScriptReadByte(ctx);
 
@@ -3390,7 +3390,7 @@ bool8 ScrCmd_entersafari(struct ScriptContext * ctx)
     return FALSE;
 }
 
-bool8 ScrCmd_exitsafari(struct ScriptContext * ctx)
+bool8 ScrCmd_safari_exit(struct ScriptContext * ctx)
 {
     u8 doWarp = ScriptReadByte(ctx);
 
