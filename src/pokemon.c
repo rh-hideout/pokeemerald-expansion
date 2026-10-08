@@ -4559,6 +4559,21 @@ enum Species GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode m
             }
         }
         break;
+    case EVO_MODE_OVERWORLD_SPIN_EVO_CHECK:
+        for (i = 0; evolutions[i].method != EVOLUTIONS_END; i++)
+        {
+            if (SanitizeSpeciesId(evolutions[i].targetSpecies) == SPECIES_NONE)
+                continue;
+            if (evolutions[i].method != EVO_SPIN)
+                continue;
+
+            if (DoesMonMeetAdditionalConditions(mon, evolutions[i].params, NULL, PARTY_SIZE, canStopEvo, evoState))
+            {
+                targetSpecies = evolutions[i].targetSpecies;
+                break;
+            }
+        }
+        break;
     case EVO_MODE_SCRIPT_TRIGGER:
         for (i = 0; evolutions[i].method != EVOLUTIONS_END; i++)
         {
@@ -6225,18 +6240,23 @@ void RemoveIVIndexFromList(u8 *ivs, u8 selectedIv)
     }
 }
 
-bool32 CheckSpecialOverworldEvo(void)
+void CheckSpecialOverworldEvo(bool32 isLinkOrContest)
 {
-    bool32 canStopEvo = FALSE;
-    for (u8 i = 0; i < PARTY_SIZE; i++)
+    if (!isLinkOrContest)
     {
-        enum Species targetSpecies = GetEvolutionTargetSpecies(&gParties[B_TRAINER_PLAYER][i], EVO_MODE_OVERWORLD_SPECIAL, 0, NULL, &canStopEvo, CHECK_EVO);
+        bool32 canStopEvo = FALSE;
+        for (u8 i = 0; i < PARTY_SIZE; i++)
+        {
+            enum Species targetSpecies = GetEvolutionTargetSpecies(&gParties[B_TRAINER_PLAYER][i], EVO_MODE_OVERWORLD_SPIN_EVO_CHECK, 0, NULL, &canStopEvo, CHECK_EVO);
 
-        if (targetSpecies != SPECIES_NONE && !(gTriedEvolving & (1u << i)))
-            return TRUE;
+            if (targetSpecies != SPECIES_NONE)
+            {
+                ToggleSpinChecking(TRUE);
+                return;
+            }
+        }
     }
-
-    return FALSE;
+    ToggleSpinChecking(FALSE);
 }
 
 

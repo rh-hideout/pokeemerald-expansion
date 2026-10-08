@@ -953,7 +953,7 @@ bool32 DoesSpeciesHaveFormChangeMethod(enum Species species, enum FormChanges me
 u16 MonTryLearningNewMoveEvolution(struct Pokemon *mon, bool8 firstMove);
 void RemoveIVIndexFromList(u8 *ivs, u8 selectedIv);
 void TrySpecialOverworldEvo(void);
-bool32 CheckSpecialOverworldEvo(void);
+void CheckSpecialOverworldEvo(bool32);
 bool32 SpeciesHasGenderDifferences(enum Species species);
 bool32 TryFormChange(struct Pokemon *mon, enum FormChanges method, enum BattleTrainer trainer);
 bool32 TryBoxMonFormChange(struct BoxPokemon *boxMon, enum FormChanges method);
