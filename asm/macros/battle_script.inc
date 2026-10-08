@@ -1135,18 +1135,8 @@
 	callnative BS_RemoveTerrain
 	.endm
 
-	.macro setmoveresultflags flags:req
-	callnative BS_SetMoveResultFlags
-	.4byte \flags
-	.endm
-
 	.macro clearspecialstatuses
 	callnative BS_ClearSpecialStatuses
-	.endm
-
-	.macro clearmoveresultflags flags:req
-	callnative BS_ClearMoveResultFlags
-	.4byte \flags
 	.endm
 
 	.macro jumpifmoveresultflags flags:req failInstr:req

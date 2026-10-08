@@ -8319,7 +8319,7 @@ s32 GetAdjustedDamage(struct DamageContext *ctx, s32 damage)
     if (gBattleMons[ctx->battlerDef].volatiles.endured)
     {
         enduredHit = TRUE;
-        gBattleStruct->moveResultFlags[ctx->battlerDef] |= MOVE_RESULT_FOE_ENDURED;
+        SetMoveResultFlag(ctx->battlerDef, MOVE_RESULT_FOE_ENDURED);
     }
     else if (GetMoveEffect(ctx->move) == EFFECT_FALSE_SWIPE)
     {
@@ -8330,21 +8330,21 @@ s32 GetAdjustedDamage(struct DamageContext *ctx, s32 damage)
         enduredHit = TRUE;
         RecordAbilityBattle(ctx->battlerDef, ABILITY_STURDY);
         gLastUsedAbility = ABILITY_STURDY;
-        gBattleStruct->moveResultFlags[ctx->battlerDef] |= MOVE_RESULT_STURDIED;
+        SetMoveResultFlag(ctx->battlerDef, MOVE_RESULT_STURDIED);
     }
     else if (ctx->holdEffects[ctx->battlerDef] == HOLD_EFFECT_FOCUS_BAND && rand < GetBattlerHoldEffectParam(ctx->battlerDef))
     {
         enduredHit = TRUE;
         RecordItemEffectBattle(ctx->battlerDef, ctx->holdEffects[ctx->battlerDef]);
         gLastUsedItem = gBattleMons[ctx->battlerDef].item;
-        gBattleStruct->moveResultFlags[ctx->battlerDef] |= MOVE_RESULT_FOE_HUNG_ON;
+        SetMoveResultFlag(ctx->battlerDef, MOVE_RESULT_FOE_HUNG_ON);
     }
     else if (ctx->holdEffects[ctx->battlerDef] == HOLD_EFFECT_FOCUS_SASH && IsBattlerAtMaxHp(ctx->battlerDef))
     {
         enduredHit = TRUE;
         RecordItemEffectBattle(ctx->battlerDef, ctx->holdEffects[ctx->battlerDef]);
         gLastUsedItem = gBattleMons[ctx->battlerDef].item;
-        gBattleStruct->moveResultFlags[ctx->battlerDef] |= MOVE_RESULT_FOE_HUNG_ON;
+        SetMoveResultFlag(ctx->battlerDef, MOVE_RESULT_FOE_HUNG_ON);
     }
     else if (B_AFFECTION_MECHANICS == TRUE && IsOnPlayerSide(ctx->battlerDef) && affectionScore >= AFFECTION_THREE_HEARTS)
     {
@@ -8353,7 +8353,7 @@ s32 GetAdjustedDamage(struct DamageContext *ctx, s32 damage)
          || (affectionScore == AFFECTION_THREE_HEARTS && rand < 10))
         {
             enduredHit = TRUE;
-            gBattleStruct->moveResultFlags[ctx->battlerDef] |= MOVE_RESULT_FOE_ENDURED_AFFECTION;
+            SetMoveResultFlag(ctx->battlerDef, MOVE_RESULT_FOE_ENDURED_AFFECTION);
         }
     }
 
@@ -8564,7 +8564,7 @@ static inline uq4_12_t CalcTypeEffectivenessMultiplierInternal(struct DamageCont
         if (ctx->updateFlags)
         {
             gLastUsedAbility = ctx->abilities[ctx->battlerDef];
-            gBattleStruct->moveResultFlags[ctx->battlerDef] |= MOVE_RESULT_MISSED;
+            SetMoveResultFlag(ctx->battlerDef, MOVE_RESULT_MISSED);
             RecordAbilityBattle(ctx->battlerDef, gBattleMons[ctx->battlerDef].ability);
         }
     }
@@ -10089,9 +10089,14 @@ bool32 IsBattlerUnaffectedByMove(enum BattlerId battler)
     return gBattleStruct->moveResultFlags[battler] & MOVE_RESULT_NO_EFFECT;
 }
 
-bool32 IsBattlerMoveResult(enum BattlerId battler, u32 moveResult)
+bool32 IsBattlerMoveResultSet(enum BattlerId battler, enum MoveResultFlags flag)
 {
-    return gBattleStruct->moveResultFlags[battler] & moveResult;
+    return gBattleStruct->moveResultFlags[battler] & flag;
+}
+
+void SetMoveResultFlag(enum BattlerId battler, enum MoveResultFlags flag)
+{
+    gBattleStruct->moveResultFlags[battler] |= flag;
 }
 
 enum Type GetBattleMoveType(enum Move move)
@@ -10855,19 +10860,19 @@ bool32 DoesOHKOMoveMissTarget(struct BattleCalcValues *cv)
     // Dynamaxed Pokemon cannot be hit by OHKO moves.
     if (GetActiveGimmick(cv->battlerDef) == GIMMICK_DYNAMAX)
     {
-        gBattleStruct->moveResultFlags[cv->battlerDef] |= MOVE_RESULT_ONE_HIT_KO_NO_AFFECT;
+        SetMoveResultFlag(cv->battlerDef, MOVE_RESULT_ONE_HIT_KO_NO_AFFECT);
         return TRUE;
     }
 
     if (gBattleMons[cv->battlerDef].level > gBattleMons[cv->battlerAtk].level)
     {
-        gBattleStruct->moveResultFlags[cv->battlerDef] |= MOVE_RESULT_ONE_HIT_KO_NO_AFFECT;
+        SetMoveResultFlag(cv->battlerDef, MOVE_RESULT_ONE_HIT_KO_NO_AFFECT);
         return TRUE;
     }
 
     if (cv->abilities[cv->battlerDef] == ABILITY_STURDY)
     {
-        gBattleStruct->moveResultFlags[cv->battlerDef] |= MOVE_RESULT_ONE_HIT_KO_STURDY;
+        SetMoveResultFlag(cv->battlerDef, MOVE_RESULT_ONE_HIT_KO_STURDY);
         return TRUE;
     }
 
@@ -10896,7 +10901,7 @@ bool32 DoesOHKOMoveMissTarget(struct BattleCalcValues *cv)
 
     if (lands == SURE_HIT)
     {
-        gBattleStruct->moveResultFlags[cv->battlerDef] |= MOVE_RESULT_ONE_HIT_KO_NO_AFFECT;
+        SetMoveResultFlag(cv->battlerDef, MOVE_RESULT_ONE_HIT_KO_NO_AFFECT);
         return FALSE;
     }
 
@@ -11097,7 +11102,7 @@ bool32 IsAnyTargetAffected(void)
 
     for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
     {
-        if (gBattleStruct->moveResultFlags[battler] & MOVE_RESULT_NOT_PRESENT)
+        if (IsBattlerMoveResultSet(battler, MOVE_RESULT_NOT_PRESENT))
             continue;
 
         switch (moveTarget)

@@ -1249,7 +1249,7 @@ static void SetEffectRestoreHp(struct BattleCalcValues *cv, struct SetEffect *se
             healAmount = gBattleMons[se->effectBattler].maxHP / maxHpFraction;
         else
             healAmount = GetMaxHpWithRounding(se->effectBattler) / maxHpFraction;
-    
+
         SetHealAmount(se->effectBattler, healAmount);
         BattleScriptPushAndSet(se->script, BattleScript_RestoreHpEffectBattler);
     }
@@ -1700,7 +1700,7 @@ static void HandleSetEffectGravity(struct BattleCalcValues *cv, struct SetEffect
         for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
         {
             // Workaround for TARGET_FIELD to still try to ground all battlers
-            gBattleStruct->moveResultFlags[battler] |= MOVE_RESULT_VALID_STATUS_TARGET;
+            SetMoveResultFlag(battler, MOVE_RESULT_VALID_STATUS_TARGET);
         }
     }
     else
