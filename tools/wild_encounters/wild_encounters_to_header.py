@@ -146,9 +146,8 @@ class WildEncounterAssembler:
             self.WriteLine(f"[{time}] =", 3)
             self.WriteLine("{", 3)
             for mon_type in self.config.mon_types:
-                member_name = mon_type.title().replace("_", "")
-                member_name = member_name[0].lower() + member_name[1:] + "Info"
-                self.WriteLine(f".{member_name} = NULL,", 4)
+                member_name = "WILD_" + mon_type.upper()
+                self.WriteLine(f"[{member_name}] = NULL,", 4)
             self.WriteLine("},", 3)
         self.WriteLine("},", 2)
         self.WriteLine("},", 1)
@@ -179,17 +178,16 @@ class WildEncounterAssembler:
             for time in self.config.times_of_day:
                 if not self.config.time_encounters and time != self.config.time_fallback:
                     continue
-                self.WriteLine(f"[{time}] =", 4)
-                self.WriteLine("{", 4)
+                self.WriteLine(f"[{time}] =", 3)
+                self.WriteLine("{", 3)
                 for mon_type in self.config.mon_types:
-                    member_name = mon_type.title().replace("_", "")
-                    member_name = member_name[0].lower() + member_name[1:] + "Info"
+                    member_name = "WILD_" + mon_type.upper()
                     value = "NULL"
                     if time in encounter_data and mon_type in encounter_data[time]:
                         value = encounter_data[time][mon_type]
                     if value != "NULL":
                         value = "&" + value
-                    self.WriteLine(f".{member_name} = {value},", 5)
+                    self.WriteLine(f"[{member_name}] = {value},", 4)
 
                 self.WriteLine("},", 3)
             
@@ -258,6 +256,13 @@ class WildEncounterAssembler:
 
             self.WritePokemonHeaders(headers)
 
+    def WriteEncounterTypes(self):
+        self.WriteLine("enum WildEncounterType {")
+        for encounter_type in self.config.mon_types:
+            self.WriteLine("WILD_" + encounter_type.upper() + ",", 1)
+        self.WriteLine("WILD_ENCOUNTER_TYPES_COUNT", 1)
+        self.WriteLine("};")
+        self.WriteLine("")
 
 def ConvertToHeaderFile(json_data):
     with open('src/data/wild_encounters.h', 'w') as output_file:
@@ -266,6 +271,16 @@ def ConvertToHeaderFile(json_data):
         assembler.WriteHeader()
         assembler.WriteMacros()
         assembler.WriteEncounters()
+
+    with open('include/constants/wild_encounter_types.h', 'w') as output_file:
+        assembler.output_file = output_file
+        assembler.WriteLine("#ifndef GUARD_CONSTANTS_WILD_ENCOUNTER_TYPES_H")
+        assembler.WriteLine("#define GUARD_CONSTANTS_WILD_ENCOUNTER_TYPES_H")
+        assembler.WriteLine("")
+        assembler.WriteHeader()
+        assembler.WriteEncounterTypes()
+        assembler.WriteLine("#endif // GUARD_CONSTANTS_WILD_ENCOUNTER_TYPES_H")
+
 
 def main():
     with open('src/data/wild_encounters.json', 'r') as json_file:
