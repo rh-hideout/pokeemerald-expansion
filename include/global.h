@@ -1,6 +1,7 @@
 #ifndef GUARD_GLOBAL_H
 #define GUARD_GLOBAL_H
 
+#include "gba/defines.h"
 #include <string.h>
 #include <limits.h>
 #include "config/general.h" // we need to define config before gba headers as print stuff needs the functions nulled before defines.
@@ -180,6 +181,18 @@ static inline u32 CycleCountEnd()
     // return result
     return REG_TM2CNT_L | (REG_TM3CNT_L << 16u);
 }
+
+typedef struct {u32 data[8];} Tile4BPP;
+typedef struct {u32 data[16];} Tile8BPP;
+typedef Tile4BPP Charblock4BPP[512], Charblock4BPPDouble[1024];
+typedef Tile8BPP Charblock8BPP[256], Charblock8BPPAll[1024];
+
+#define BG_CHAR_TILE4_SAFE(cbb, tile) \
+    (&(__builtin_choose_expr(__builtin_constant_p(cbb) && (cbb) == 3, \
+                             ((Charblock4BPP *)VRAM)[(cbb)], \
+                             ((Charblock4BPPDouble *)VRAM)[(cbb)])[tile]))
+
+#define OBJ_TILE(tile) (&((Charblock4BPP *)VRAM)[(4)][tile])
 
 struct Coords8
 {
