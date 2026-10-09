@@ -838,13 +838,6 @@ static inline bool32 IsBattleMoveStatus(enum Move move)
 #define IS_BATTLER_ANY_BASE_TYPE(battler, ...) _IS_BATTLER_ANY_TYPE(battler, TRUE, __VA_ARGS__)
 #define IS_BATTLER_OF_BASE_TYPE IS_BATTLER_ANY_BASE_TYPE
 
-#define IS_BATTLER_TYPELESS(battlerId)                                                    \
-    ({                                                                                    \
-        enum Type types[3];                                                               \
-        GetBattlerTypes(battlerId, FALSE, types);                                         \
-        types[0] == TYPE_MYSTERY && types[1] == TYPE_MYSTERY && types[2] == TYPE_MYSTERY; \
-    })
-
 #define SET_BATTLER_TYPE(battler, type)              \
 {                                                    \
     gBattleMons[battler].types[0] = type;            \

@@ -620,7 +620,7 @@ static void HandleSetEffectIncinerate(struct BattleCalcValues *cv, struct SetEff
 
 static void HandleSetEffectBugBite(struct BattleCalcValues *cv, struct SetEffect *se)
 {
-    if (GetBattlerHoldEffect(se->effectBattler) == HOLD_EFFECT_JABOCA_BERRY || gSpecialStatuses[se->effectBattler].berryReduced)
+    if (cv->holdEffects[se->effectBattler] == HOLD_EFFECT_JABOCA_BERRY || gSpecialStatuses[se->effectBattler].berryReduced)
     {
         // jaboca berry / resist berries trigger instead of being stolen
         gBattlescriptCurrInstr = se->script;
@@ -2633,7 +2633,7 @@ static void HandleSetEffectSketch(struct BattleCalcValues *cv, struct SetEffect 
 static void HandleSetEffectRest(struct BattleCalcValues *cv, struct SetEffect *se)
 {
     enum Ability ability = cv->abilities[se->effectBattler];
-    enum HoldEffect holdEffect = GetBattlerHoldEffect(se->effectBattler);
+    enum HoldEffect holdEffect = cv->holdEffects[se->effectBattler];
     const u8 *failScript = GetRestFailureScript(se->effectBattler, ability);
 
     if (failScript != NULL)
@@ -2678,7 +2678,7 @@ static void HandleSetEffectRest(struct BattleCalcValues *cv, struct SetEffect *s
     }
 }
 
-static bool32 CanTransformBattler(enum BattlerId battlerAtk, enum BattlerId battlerDef)
+bool32 CanTransformBattler(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
     return !((GetConfig(B_TRANSFORM_SEMI_INV_FAIL) >= GEN_2 && IsSemiInvulnerable(battlerDef, EXCLUDE_COMMANDER))
           || (GetConfig(B_TRANSFORM_TARGET_FAIL) >= GEN_2 && gBattleMons[battlerDef].volatiles.transformed)
@@ -2686,11 +2686,8 @@ static bool32 CanTransformBattler(enum BattlerId battlerAtk, enum BattlerId batt
           || gBattleStruct->illusion[battlerDef].state == ILLUSION_ON);
 }
 
-bool32 TryTransformBattler(enum BattlerId battlerAtk, enum BattlerId battlerDef)
+void TryTransformBattler(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
-    if (!CanTransformBattler(battlerAtk, battlerDef))
-        return FALSE;
-
     u8 *battleMonAttacker;
     u8 *battleMonTarget;
     u8 timesGotHit;
@@ -2733,8 +2730,6 @@ bool32 TryTransformBattler(enum BattlerId battlerAtk, enum BattlerId battlerDef)
     BtlController_EmitResetActionMoveSelection(battlerAtk, B_COMM_TO_CONTROLLER, RESET_MOVE_SELECTION);
     MarkBattlerForControllerExec(battlerAtk);
     gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TRANSFORMED;
-
-    return TRUE;
 }
 
 static void HandleSetEffectTransform(struct BattleCalcValues *cv, struct SetEffect *se)
@@ -3573,8 +3568,8 @@ static void HandleSetEffectQuash(struct BattleCalcValues *cv, struct SetEffect *
         struct BattleCalcValues calcValues = {0};
         for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
         {
-            calcValues.abilities[battler] = GetBattlerAbility(battler);
-            calcValues.holdEffects[battler] = GetBattlerHoldEffect(battler);
+            calcValues.abilities[battler] = cv->abilities[battler];
+            calcValues.holdEffects[battler] = cv->holdEffects[battler];
         }
 
         u32 turnOrder = GetBattlerTurnOrderNum(se->effectBattler);
@@ -3627,7 +3622,9 @@ static void HandleSetEffectReflectType(struct BattleCalcValues *cv, struct SetEf
 
     bool32 isTeraActive = GetActiveGimmick(cv->battlerAtk) == GIMMICK_TERA;
 
-    if (speciesTypeImmutable || isTeraActive || IS_BATTLER_TYPELESS(se->effectBattler))
+    bool32 typelessBattler = targetTypes[0] == targetTypes[1] && targetTypes[1] == targetTypes[2] && targetTypes[0] == TYPE_MYSTERY;
+
+    if (speciesTypeImmutable || isTeraActive || typelessBattler)
     {
         SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
         return;
