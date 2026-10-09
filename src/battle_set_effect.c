@@ -3622,7 +3622,7 @@ static void HandleSetEffectReflectType(struct BattleCalcValues *cv, struct SetEf
 
     bool32 isTeraActive = GetActiveGimmick(cv->battlerAtk) == GIMMICK_TERA;
 
-    bool32 typelessBattler = targetTypes[0] == targetTypes[1] && targetTypes[1] == targetTypes[2] && targetTypes[0] == TYPE_MYSTERY;
+    bool32 typelessBattler = targetTypes[0] == TYPE_MYSTERY && targetTypes[1] == TYPE_MYSTERY && targetTypes[2] == TYPE_MYSTERY;
 
     if (speciesTypeImmutable || isTeraActive || typelessBattler)
     {
