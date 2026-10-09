@@ -1,0 +1,33 @@
+const struct FacilitySingleClassData gFacilitySingleClassList[] = {
+## for facility_class in data
+{% if facility_class.obj_gfx != "" and not facility_class.doubles %}
+    [{{ facility_class.facility_class }}] = {
+        .trainerClass = {{ facility_class.trainer_class }},
+        .trainerPic = {{ facility_class.trainer_pic }},
+        .approachMusic = {{ facility_class.approach_music }},
+        .gfxId = {{ facility_class.obj_gfx }},
+        .gender = {{ facility_class.gender }},
+    },
+{% else %}
+    [UNUSED_{{ facility_class.facility_class }}] = {0},
+{% endif %}
+## endfor
+};
+
+const struct FacilityDoubleClassData gFacilityDoubleClassList[] = {
+## for facility_class in data
+{% if facility_class.doubles %}
+{% if facility_class.obj_gfx != "" %}
+    [{{ facility_class.facility_class }}] = {
+        .trainerClass = {{ facility_class.trainer_class }},
+        .trainerPic = {{ facility_class.trainer_pic }},
+        .approachMusic = {{ facility_class.approach_music }},
+        .gfxId1 = {{ facility_class.obj_gfx }},
+        .gfxId2 = {{ facility_class.obj_gfx2 }},
+        .gender1 = {{ facility_class.gender }},
+        .gender2 = {{ facility_class.gender2 }},
+    },
+{% endif %}
+{% endif %}
+## endfor
+};
