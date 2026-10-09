@@ -3546,8 +3546,6 @@ static void HandleSetEffectEntrainment(struct BattleCalcValues *cv, struct SetEf
     }
     else if (!cv->onlyChecking)
     {
-        // DebugPrintf("eff: %d", gEffectBattler);
-        // DebugPrintf("target: %d", gBattlerTarget);
         RemoveAbilityFlags(se->effectBattler);
         OverwriteBattlerAbility(se->effectBattler, *srcAbility);
         PrepareStringBattleWithWait(STRINGID_PKMNACQUIREDABILITY, se->effectBattler);
