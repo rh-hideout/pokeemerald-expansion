@@ -3012,6 +3012,29 @@
 	call EventScript_BrailleCursorWaitButton
 	.endm
 
+	@ Opens party menu to select up to a maximum team size for battle (outside of Frontier)
+	.macro choosepartyforbattle size=MULTI_PARTY_SIZE
+	.if \size == 0 || \size >= PARTY_SIZE
+		.error "choosepartyforbattle must use a value between 1 and 5"
+	.endif
+	setvar VAR_0x8005, \size
+	special ChoosePartyForBattle
+	.endm
+
+	@ Opens party menu to select up to a maximum team size for battle (Frontier)
+	.macro choosepartyforbattlefrontier size:req
+	.if \size == 0 || \size >= PARTY_SIZE
+		.error "choosepartyforbattlefrontier must use a value between 1 and 5"
+	.endif
+	setvar VAR_0x8005, \size
+	special ChoosePartyForBattleFrontier
+	.endm
+
+	@ Reduces player party in line with order set in choosepartyforbattle or choosepartyforbattlefrontier 
+	.macro reduceplayerpartytoselectedmons
+	special ReducePlayerPartyToSelectedMons
+	.endm
+
 	@ Opens a UI that has the player choose a number of Pokemon (bringSize) in their party
 	@ to battle against a trainer(s) that will also pick the same number of Pokemon to battle.
 	@ This mimics Battle Stadium behavior in official titles (Scarlet/Violet, Sword/Shield, etc.)
