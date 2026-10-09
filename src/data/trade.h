@@ -980,7 +980,7 @@ static const struct InGameTrade sIngameTrades[] =
         .heldItem = ITEM_CHESTO_BERRY,
         .mailNum = -1,
         .otName = _("KOBE"),
-        .otGender = MALE,
+        .otGender = TRAINER_GENDER_MALE,
         .sheen = 10,
         .requestedSpecies = SPECIES_RALTS
     },
@@ -996,7 +996,7 @@ static const struct InGameTrade sIngameTrades[] =
         .heldItem = ITEM_WOOD_MAIL,
         .mailNum = 0,
         .otName = _("ROMAN"),
-        .otGender = MALE,
+        .otGender = TRAINER_GENDER_MALE,
         .sheen = 10,
         .requestedSpecies = SPECIES_VOLBEAT
     },
@@ -1012,7 +1012,7 @@ static const struct InGameTrade sIngameTrades[] =
         .heldItem = ITEM_WAVE_MAIL,
         .mailNum = 1,
         .otName = _("SKYLAR"),
-        .otGender = MALE,
+        .otGender = TRAINER_GENDER_MALE,
         .sheen = 10,
         .requestedSpecies = SPECIES_BAGON
     },
@@ -1028,7 +1028,7 @@ static const struct InGameTrade sIngameTrades[] =
         .heldItem = ITEM_RETRO_MAIL,
         .mailNum = 2,
         .otName = _("ISIS"),
-        .otGender = FEMALE,
+        .otGender = TRAINER_GENDER_FEMALE,
         .sheen = 10,
         .requestedSpecies = SPECIES_SKITTY
     },
@@ -1044,7 +1044,7 @@ static const struct InGameTrade sIngameTrades[] =
         .heldItem = ITEM_NONE,
         .mailNum = MAIL_NONE,
         .otName = _("REYLEY"),
-        .otGender = MALE,
+        .otGender = TRAINER_GENDER_MALE,
         .sheen = 10,
         .requestedSpecies = SPECIES_ABRA
     },
@@ -1060,7 +1060,7 @@ static const struct InGameTrade sIngameTrades[] =
         .heldItem = ITEM_FAB_MAIL,
         .mailNum = 3,
         .otName = _("DONTAE"),
-        .otGender = MALE,
+        .otGender = TRAINER_GENDER_MALE,
         .sheen = 10,
         .requestedSpecies = SPECIES_POLIWHIRL
     },
@@ -1077,7 +1077,7 @@ static const struct InGameTrade sIngameTrades[] =
         .heldItem = ITEM_TINY_MUSHROOM,
         .mailNum = MAIL_NONE,
         .otName = _("SAIGE"),
-        .otGender = FEMALE,
+        .otGender = TRAINER_GENDER_FEMALE,
         .sheen = 10,
         .requestedSpecies = SPECIES_NIDORAN_M
 #else
@@ -1091,7 +1091,7 @@ static const struct InGameTrade sIngameTrades[] =
         .heldItem = ITEM_TINY_MUSHROOM,
         .mailNum = MAIL_NONE,
         .otName = _("SAIGE"),
-        .otGender = FEMALE,
+        .otGender = TRAINER_GENDER_FEMALE,
         .sheen = 10,
         .requestedSpecies = SPECIES_NIDORAN_F
 #endif
@@ -1108,7 +1108,7 @@ static const struct InGameTrade sIngameTrades[] =
         .heldItem = ITEM_STICK,
         .mailNum = MAIL_NONE,
         .otName = _("ELYSSA"),
-        .otGender = MALE,
+        .otGender = TRAINER_GENDER_MALE,
         .sheen = 10,
         .requestedSpecies = SPECIES_SPEAROW
     },
@@ -1125,7 +1125,7 @@ static const struct InGameTrade sIngameTrades[] =
         .heldItem = ITEM_NONE,
         .mailNum = 255,
         .otName = _("TURNER"),
-        .otGender = MALE,
+        .otGender = TRAINER_GENDER_MALE,
         .sheen = 10,
         .requestedSpecies = SPECIES_NIDORINO
 #else
@@ -1139,7 +1139,7 @@ static const struct InGameTrade sIngameTrades[] =
         .heldItem = ITEM_NONE,
         .mailNum = MAIL_NONE,
         .otName = _("TURNER"),
-        .otGender = MALE,
+        .otGender = TRAINER_GENDER_MALE,
         .sheen = 10,
         .requestedSpecies = SPECIES_NIDORINA
 #endif
@@ -1156,7 +1156,7 @@ static const struct InGameTrade sIngameTrades[] =
         .heldItem = ITEM_NONE,
         .mailNum = MAIL_NONE,
         .otName = _("HADEN"),
-        .otGender = MALE,
+        .otGender = TRAINER_GENDER_MALE,
         .sheen = 10,
 #if defined(FIRERED)
         .requestedSpecies = SPECIES_GOLDUCK
@@ -1176,7 +1176,7 @@ static const struct InGameTrade sIngameTrades[] =
         .heldItem = ITEM_NONE,
         .mailNum = 255,
         .otName = _("CLIFTON"),
-        .otGender = MALE,
+        .otGender = TRAINER_GENDER_MALE,
         .sheen = 10,
         .requestedSpecies = SPECIES_RAICHU
     },
@@ -1192,7 +1192,7 @@ static const struct InGameTrade sIngameTrades[] =
         .heldItem = ITEM_STARDUST,
         .mailNum = 255,
         .otName = _("NORMA"),
-        .otGender = FEMALE,
+        .otGender = TRAINER_GENDER_FEMALE,
         .sheen = 10,
         .requestedSpecies = SPECIES_VENONAT
     },
@@ -1208,7 +1208,7 @@ static const struct InGameTrade sIngameTrades[] =
         .heldItem = ITEM_NONE,
         .mailNum = 255,
         .otName = _("GARETT"),
-        .otGender = MALE,
+        .otGender = TRAINER_GENDER_MALE,
         .sheen = 10,
         .requestedSpecies = SPECIES_PONYTA
     }

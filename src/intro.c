@@ -177,7 +177,7 @@ enum {
 #define TIMER_POKEBALL_FADE              28
 #define TIMER_START_LEGENDARIES          43
 
-static EWRAM_DATA enum Gender sIntroCharacterGender = 0;
+static EWRAM_DATA enum TrainerGender sIntroCharacterGender = 0;
 static EWRAM_DATA u16 sFlygonYOffset = 0;
 
 COMMON_DATA u32 gIntroFrameCounter = 0;
@@ -1161,7 +1161,7 @@ void CB2_InitCopyrightScreenAfterTitleScreen(void)
 void Task_Scene1_Load(u8 taskId)
 {
     SetVBlankCallback(NULL);
-    sIntroCharacterGender = MOD(Random(), GENDER_COUNT);
+    sIntroCharacterGender = MOD(Random(), TRAINER_GENDER_COUNT);
     IntroResetGpuRegs();
     SetGpuReg(REG_OFFSET_BG3VOFS, 0);
     SetGpuReg(REG_OFFSET_BG2VOFS, 80);
@@ -1369,7 +1369,7 @@ static void Task_Scene2_CreateSprites(u8 taskId)
     u8 spriteId;
 
     // Load sprite sheets
-    if (sIntroCharacterGender == MALE)
+    if (sIntroCharacterGender == TRAINER_GENDER_MALE)
         LoadCompressedSpriteSheet(gSpriteSheet_IntroBrendan);
     else
         LoadCompressedSpriteSheet(gSpriteSheet_IntroMay);
@@ -1388,7 +1388,7 @@ static void Task_Scene2_CreateSprites(u8 taskId)
     CreateSprite(&sSpriteTemplate_Manectric, DISPLAY_WIDTH + 32, 128, 0);
     CreateSprite(&sSpriteTemplate_Torchic, DISPLAY_WIDTH + 48, 110, 1);
 
-    if (sIntroCharacterGender == MALE)
+    if (sIntroCharacterGender == TRAINER_GENDER_MALE)
         spriteId = CreateIntroBrendanSprite(DISPLAY_WIDTH + 32, 100);
     else
         spriteId = CreateIntroMaySprite(DISPLAY_WIDTH + 32, 100);

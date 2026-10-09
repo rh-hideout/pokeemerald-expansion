@@ -1327,23 +1327,21 @@ void SetDaycareCompatibilityString(void)
     StringCopy(gStringVar4, sCompatibilityMessages[whichString]);
 }
 
-bool8 NameHasGenderSymbol(const u8 *name, u8 genderRatio)
+bool32 NameHasMatchingGenderSymbol(const u8 *name, u8 genderRatio)
 {
-    u8 i;
-    u8 symbolsCount[GENDER_COUNT];
-    symbolsCount[MALE] = symbolsCount[FEMALE] = 0;
+    u8 symbolsCount[2] = {0};
 
-    for (i = 0; name[i] != EOS; i++)
+    for (u32 i = 0; name[i] != EOS; i++)
     {
         if (name[i] == CHAR_MALE)
-            symbolsCount[MALE]++;
+            symbolsCount[0]++;
         if (name[i] == CHAR_FEMALE)
-            symbolsCount[FEMALE]++;
+            symbolsCount[1]++;
     }
 
-    if (genderRatio == MON_MALE   && symbolsCount[MALE] != 0 && symbolsCount[FEMALE] == 0)
+    if (genderRatio == MON_MALE   && symbolsCount[0] != 0 && symbolsCount[1] == 0)
         return TRUE;
-    if (genderRatio == MON_FEMALE && symbolsCount[FEMALE] != 0 && symbolsCount[MALE] == 0)
+    if (genderRatio == MON_FEMALE && symbolsCount[0] != 0 && symbolsCount[1] == 0)
         return TRUE;
 
     return FALSE;
@@ -1351,18 +1349,12 @@ bool8 NameHasGenderSymbol(const u8 *name, u8 genderRatio)
 
 static u8 *AppendGenderSymbol(u8 *name, u8 gender)
 {
-    if (gender == MON_MALE)
-    {
-        if (!NameHasGenderSymbol(name, MON_MALE))
-            return StringAppend(name, gText_MaleSymbol4);
-    }
-    else if (gender == MON_FEMALE)
-    {
-        if (!NameHasGenderSymbol(name, MON_FEMALE))
-            return StringAppend(name, gText_FemaleSymbol4);
-    }
-
-    return StringAppend(name, gText_GenderlessSymbol);
+    if (gender == MON_GENDERLESS || NameHasMatchingGenderSymbol(name, gender))
+        return StringAppend(name, gText_GenderlessSymbol);
+    else if (gender == MON_MALE)
+        return StringAppend(name, gText_MaleSymbol4);
+    else // gender == MON_FEMALE
+         return StringAppend(name, gText_FemaleSymbol4);
 }
 
 static u8 *AppendMonGenderSymbol(u8 *name, struct BoxPokemon *boxMon)
