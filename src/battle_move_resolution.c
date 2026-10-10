@@ -743,7 +743,10 @@ enum FailureCheck IsTargetingSelfAndAlly(enum BattlerId battlerAtk, enum Battler
     if (battlerDef == GetPartnerBattler(battlerAtk))
         return CHECK_MOVE_FAILURE;
 
-    if (battlerAtk == battlerDef && GetConfig(B_CHECK_USER_FAILURE) >= GEN_5)
+    if (battlerAtk == battlerDef && GetConfig(B_CHECK_USER_FAILURE) <= GEN_4)
+        return CHECK_MOVE_FAILURE;
+
+    if (battlerAtk == battlerDef)
         return IGNORE_USER_MOVE_FAILURE;
 
     return SKIP_MOVE_FAILURE_CHECK;
@@ -4543,7 +4546,7 @@ static enum MoveEndResult MoveEndUpdateLastMoves(struct BattleCalcValues *cv)
                     gBattleStruct->dynamax.lastUsedBaseMove = gBattleStruct->dynamax.baseMoves[cv->battlerAtk];
             }
 
-            if (cv->battlerAtk == battlerDef || IsBattlerMoveResultSet(battlerDef , MOVE_RESULT_NOT_TARGETED))
+            if (cv->battlerAtk == battlerDef || IsBattlerMoveResultSet(battlerDef, MOVE_RESULT_NOT_TARGETED))
                 continue;
 
             gLastHitBy[cv->battlerDef] = cv->battlerAtk; // Used by switch AI only
