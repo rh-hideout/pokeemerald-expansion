@@ -517,8 +517,6 @@ struct SleepClause
 
 struct BattlerState
 {
-    u8 notTargeted[MAX_BATTLERS_COUNT];
-
     u32 commandingDondozo:1;
     u32 focusPunchBattlers:1;
     u32 multipleSwitchInBattlers:1;

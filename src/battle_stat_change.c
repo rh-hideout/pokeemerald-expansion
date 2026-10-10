@@ -448,7 +448,7 @@ static enum StatChangeResult IncreaseStat(struct BattleCalcValues *cv, struct St
 
 static void StatChanged(struct BattleCalcValues *cv, struct StatChange *st, bool32 isMaxStage)
 {
-    SetMoveResultFlag(cv->battlerDef, MOVE_RESULT_STAT_CHANGED);
+    AddBattlerMoveResultFlag(cv->battlerDef, MOVE_RESULT_STAT_CHANGED);
     gBattleScripting.battler = cv->battlerDef;
     gBattleMons[cv->battlerDef].statStages[st->stat] += st->stage;
 

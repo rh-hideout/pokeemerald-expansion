@@ -4949,7 +4949,7 @@ static void Cmd_tryinfatuating(void)
     {
         gEffectBattler = gBattlerTarget; // for message
         gBattlescriptCurrInstr = BattleScript_NotAffectedAbilityPopUp;
-        SetMoveResultFlag(gBattlerTarget, MOVE_RESULT_DOESNT_AFFECT_FOE);
+        AddBattlerMoveResultFlag(gBattlerTarget, MOVE_RESULT_DOESNT_AFFECT_FOE);
         gBattlerAbility = gBattlerTarget;
         gLastUsedAbility = ABILITY_OBLIVIOUS;
         RecordAbilityBattle(gBattlerTarget, ABILITY_OBLIVIOUS);
@@ -5023,7 +5023,7 @@ static void Cmd_setmist(void)
 
     if (gSideTimers[GetBattlerSide(gBattlerAttacker)].mistTimer)
     {
-        SetMoveResultFlag(gBattlerTarget, MOVE_RESULT_FAILED);
+        AddBattlerMoveResultFlag(gBattlerTarget, MOVE_RESULT_FAILED);
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_MIST_FAILED;
     }
     else
@@ -5042,7 +5042,7 @@ static void Cmd_setfocusenergy(void)
 
     if (gBattleMons[battler].volatiles.criticalHitBoost)
     {
-        SetMoveResultFlag(gBattlerTarget, MOVE_RESULT_FAILED);
+        AddBattlerMoveResultFlag(gBattlerTarget, MOVE_RESULT_FAILED);
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_FOCUS_ENERGY_FAILED;
     }
     else

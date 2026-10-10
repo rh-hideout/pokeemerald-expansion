@@ -1700,7 +1700,7 @@ static void HandleSetEffectGravity(struct BattleCalcValues *cv, struct SetEffect
         for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
         {
             // Workaround for TARGET_FIELD to still try to ground all battlers
-            SetMoveResultFlag(battler, MOVE_RESULT_VALID_STATUS_TARGET);
+            AddBattlerMoveResultFlag(battler, MOVE_RESULT_VALID_STATUS_TARGET);
         }
     }
     else

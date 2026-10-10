@@ -222,7 +222,7 @@ bool32 MoveHasChargeTurnAdditionalEffect(enum Move move);
 bool32 CanTargetPartner(enum BattlerId battlerAtk, enum BattlerId battlerDef);
 bool32 IsBattlerUnaffectedByMove(enum BattlerId battler);
 bool32 IsBattlerMoveResultSet(enum BattlerId battler, enum MoveResultFlags flag);
-void SetMoveResultFlag(enum BattlerId battler, enum MoveResultFlags flag);
+void AddBattlerMoveResultFlag(enum BattlerId battler, enum MoveResultFlags flag);
 bool32 MoodyCantRaiseStat(u32 stat);
 bool32 MoodyCantLowerStat(u32 stat);
 bool32 IsPsychicTerrainAffected(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect, enum BattleTerrain currTerrain);
