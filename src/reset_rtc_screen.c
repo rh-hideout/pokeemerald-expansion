@@ -684,6 +684,7 @@ static void Task_ShowResetRtcPrompt(u8 taskId)
         CopyWindowToVram(WIN_TIME, COPYWIN_GFX);
         ScheduleBgCopyTilemapToVram(0);
         tState++;
+        [[fallthrough]];
     case 1:
         if (JOY_NEW(B_BUTTON))
         {
@@ -794,13 +795,13 @@ static void Task_ResetRtcScreen(u8 taskId)
             PlaySE(SE_BOO);
         }
         tState = MAINSTATE_WAIT_EXIT;
-        // fallthrough
+        [[fallthrough]];
     case MAINSTATE_WAIT_EXIT:
         if (JOY_NEW(A_BUTTON))
         {
             BeginNormalPaletteFade(PALETTES_ALL, 1, 0, 0x10, RGB_WHITEALPHA);
             tState = MAINSTATE_EXIT;
-            // fallthrough
+            [[fallthrough]];
         }
         else
         {

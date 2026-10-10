@@ -384,7 +384,7 @@ void CB2_InitTitleScreenFrlg(void)
     {
     default:
         gMain.state = 0;
-        // fallthrough
+        [[fallthrough]];
     case 0:
         SetVBlankCallback(NULL);
         StartTimer1();
@@ -666,7 +666,7 @@ static void SetTitleScreenScene_Run(s16 *data)
         SetGpuRegsForTitleScreenRun();
         tSlashSpriteId = CreateSlashSprite();
         tState++;
-        // fallthrough
+        [[fallthrough]];
     case 1:
         if (JOY_HELD(KEYSTROKE_DELSAVE) == KEYSTROKE_DELSAVE)
         {

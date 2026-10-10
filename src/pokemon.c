@@ -3991,7 +3991,7 @@ u8 GetItemEffectParamOffset(enum BattlerId battler, enum Item itemId, u8 effectB
                     case 2: // ITEM4_HEAL_HP
                         if (effectFlags & (ITEM4_REVIVE >> 2))
                             effectFlags &= ~(ITEM4_REVIVE >> 2);
-                        // fallthrough
+                        [[fallthrough]];
                     case 0: // ITEM4_EV_HP
                         if (i == effectByte && (effectFlags & effectBit))
                             return offset;
