@@ -44,6 +44,7 @@ enum SpinDirection
     SPIN_DIRECTION_NONE,
     SPIN_DIRECTION_CLOCKWISE,
     SPIN_DIRECTION_COUNTER_CLOCKWISE,
+    SPIN_IGNORED,
 };
 
 struct SpinData
@@ -731,27 +732,38 @@ static void PlayerNotOnBikeNotMoving(enum Direction direction, u16 heldKeys)
     PlayerFaceDirection(GetPlayerFacingDirection());
 }
 
+void ToggleSpinChecking(bool32 turnOn)
+{
+    gPlayerSpinData.spinDirection = (turnOn ? SPIN_DIRECTION_NONE : SPIN_IGNORED);
+}
+
 void UpdateSpinData(void)
 {
-    if (gPlayerSpinData.spinTimeout != 0)
+    if (gPlayerSpinData.spinDirection != SPIN_IGNORED)
     {
-        gPlayerSpinData.spinTimeout--;
-        if (gPlayerSpinData.VBlanksSpinning < 2048)
-            gPlayerSpinData.VBlanksSpinning++;
-        if (gPlayerSpinData.spinTimeout == 0 && gPlayerSpinData.spinDirection != SPIN_DIRECTION_NONE)
-            gPlayerSpinData.triggerEvo = TRUE;
+        if (gPlayerSpinData.spinTimeout != 0)
+        {
+            gPlayerSpinData.spinTimeout--;
+            if (gPlayerSpinData.VBlanksSpinning < 2048)
+                gPlayerSpinData.VBlanksSpinning++;
+            if (gPlayerSpinData.spinTimeout == 0 && gPlayerSpinData.spinDirection != SPIN_DIRECTION_NONE)
+                gPlayerSpinData.triggerEvo = TRUE;
+        }
     }
 }
 
 void ResetSpinTimer(void)
 {
-    gPlayerSpinData.spinTimeout = 0;
-    gPlayerSpinData.VBlanksSpinning = 0;
-    gPlayerSpinData.spinDirection = SPIN_DIRECTION_NONE;
-    gPlayerSpinData.spinHistory0 = DIR_NONE;
-    gPlayerSpinData.spinHistory1 = DIR_NONE;
-    gPlayerSpinData.spinHistory2 = DIR_NONE;
-    gPlayerSpinData.spinHistory3 = DIR_NONE;
+    if (gPlayerSpinData.spinDirection != SPIN_IGNORED)
+    {
+        gPlayerSpinData.spinTimeout = 0;
+        gPlayerSpinData.VBlanksSpinning = 0;
+        gPlayerSpinData.spinDirection = SPIN_DIRECTION_NONE;
+        gPlayerSpinData.spinHistory0 = DIR_NONE;
+        gPlayerSpinData.spinHistory1 = DIR_NONE;
+        gPlayerSpinData.spinHistory2 = DIR_NONE;
+        gPlayerSpinData.spinHistory3 = DIR_NONE;
+    }
 }
 
 static const u8 sClockwiseDirections[4][4] =
@@ -772,42 +784,45 @@ static const u8 sCounterClockwiseDirections[4][4] =
 
 static void WindUpSpinTimer(enum Direction direction)
 {
-    gPlayerSpinData.spinTimeout = 60;
-    gPlayerSpinData.spinHistory0 = gPlayerSpinData.spinHistory1;
-    gPlayerSpinData.spinHistory1 = gPlayerSpinData.spinHistory2;
-    gPlayerSpinData.spinHistory2 = gPlayerSpinData.spinHistory3;
-    gPlayerSpinData.spinHistory3 = direction;
+    if (gPlayerSpinData.spinDirection != SPIN_IGNORED)
+    {
+        gPlayerSpinData.spinTimeout = 60;
+        gPlayerSpinData.spinHistory0 = gPlayerSpinData.spinHistory1;
+        gPlayerSpinData.spinHistory1 = gPlayerSpinData.spinHistory2;
+        gPlayerSpinData.spinHistory2 = gPlayerSpinData.spinHistory3;
+        gPlayerSpinData.spinHistory3 = direction;
 
-    for (int i = 0; i < ARRAY_COUNT(sClockwiseDirections); i++)
-    {
-        if (gPlayerSpinData.spinHistory0 == sClockwiseDirections[i][0]
-            && gPlayerSpinData.spinHistory1 == sClockwiseDirections[i][1]
-            && gPlayerSpinData.spinHistory2 == sClockwiseDirections[i][2]
-            && gPlayerSpinData.spinHistory3 == sClockwiseDirections[i][3])
+        for (int i = 0; i < ARRAY_COUNT(sClockwiseDirections); i++)
         {
-            gPlayerSpinData.spinDirection = SPIN_DIRECTION_CLOCKWISE;
-            return;
+            if (gPlayerSpinData.spinHistory0 == sClockwiseDirections[i][0]
+                && gPlayerSpinData.spinHistory1 == sClockwiseDirections[i][1]
+                && gPlayerSpinData.spinHistory2 == sClockwiseDirections[i][2]
+                && gPlayerSpinData.spinHistory3 == sClockwiseDirections[i][3])
+            {
+                gPlayerSpinData.spinDirection = SPIN_DIRECTION_CLOCKWISE;
+                return;
+            }
         }
-    }
-    for (int i = 0; i < ARRAY_COUNT(sCounterClockwiseDirections); i++)
-    {
-        if (gPlayerSpinData.spinHistory0 == sCounterClockwiseDirections[i][0]
-            && gPlayerSpinData.spinHistory1 == sCounterClockwiseDirections[i][1]
-            && gPlayerSpinData.spinHistory2 == sCounterClockwiseDirections[i][2]
-            && gPlayerSpinData.spinHistory3 == sCounterClockwiseDirections[i][3])
+        for (int i = 0; i < ARRAY_COUNT(sCounterClockwiseDirections); i++)
         {
-            gPlayerSpinData.spinDirection = SPIN_DIRECTION_COUNTER_CLOCKWISE;
-            return;
+            if (gPlayerSpinData.spinHistory0 == sCounterClockwiseDirections[i][0]
+                && gPlayerSpinData.spinHistory1 == sCounterClockwiseDirections[i][1]
+                && gPlayerSpinData.spinHistory2 == sCounterClockwiseDirections[i][2]
+                && gPlayerSpinData.spinHistory3 == sCounterClockwiseDirections[i][3])
+            {
+                gPlayerSpinData.spinDirection = SPIN_DIRECTION_COUNTER_CLOCKWISE;
+                return;
+            }
         }
+        gPlayerSpinData.spinDirection = SPIN_DIRECTION_NONE;
     }
-    gPlayerSpinData.spinDirection = SPIN_DIRECTION_NONE;
 }
 
 bool32 CanTriggerSpinEvolution()
 {
-    gSpecialVar_0x8000 = EVO_NONE;
     if (gPlayerSpinData.triggerEvo)
     {
+        gSpecialVar_0x8000 = SPIN_NONE;
         u32 seconds = gPlayerSpinData.VBlanksSpinning / 60;
         u32 direction = gPlayerSpinData.spinDirection;
         if (seconds >= 10)
@@ -830,9 +845,10 @@ bool32 CanTriggerSpinEvolution()
                 gSpecialVar_0x8000 = SPIN_CCW_SHORT;
         }
         gPlayerSpinData.triggerEvo = FALSE;
+
+        if (gSpecialVar_0x8000 != SPIN_NONE)
+            return TRUE;
     }
-    if (gSpecialVar_0x8000 != EVO_NONE)
-        return TRUE;
 
     return FALSE;
 }

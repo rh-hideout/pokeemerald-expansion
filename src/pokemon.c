@@ -4559,6 +4559,21 @@ enum Species GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode m
             }
         }
         break;
+    case EVO_MODE_OVERWORLD_SPIN_EVO_CHECK:
+        for (i = 0; evolutions[i].method != EVOLUTIONS_END; i++)
+        {
+            if (SanitizeSpeciesId(evolutions[i].targetSpecies) == SPECIES_NONE)
+                continue;
+            if (evolutions[i].method != EVO_SPIN)
+                continue;
+
+            if (DoesMonMeetAdditionalConditions(mon, evolutions[i].params, NULL, PARTY_SIZE, canStopEvo, evoState))
+            {
+                targetSpecies = evolutions[i].targetSpecies;
+                break;
+            }
+        }
+        break;
     case EVO_MODE_SCRIPT_TRIGGER:
         for (i = 0; evolutions[i].method != EVOLUTIONS_END; i++)
         {
@@ -6225,19 +6240,43 @@ void RemoveIVIndexFromList(u8 *ivs, u8 selectedIv)
     }
 }
 
+void CheckSpecialOverworldEvo(bool32 isLinkOrContest)
+{
+    if (!isLinkOrContest)
+    {
+        bool32 canStopEvo = FALSE;
+        for (u8 i = 0; i < PARTY_SIZE; i++)
+        {
+            enum Species targetSpecies = GetEvolutionTargetSpecies(&gParties[B_TRAINER_PLAYER][i], EVO_MODE_OVERWORLD_SPIN_EVO_CHECK, 0, NULL, &canStopEvo, CHECK_EVO);
+
+            if (targetSpecies != SPECIES_NONE)
+            {
+                ToggleSpinChecking(TRUE);
+                return;
+            }
+        }
+    }
+    ToggleSpinChecking(FALSE);
+}
+
+
 void TrySpecialOverworldEvo(void)
 {
     u8 i;
+    u32 triedEvolvingCopy = gTriedEvolving;
     bool32 canStopEvo = FALSE;
 
     for (i = 0; i < PARTY_SIZE; i++)
     {
+        if (gTriedEvolving & (1u << i))
+            continue;
+
         enum Species targetSpecies = GetEvolutionTargetSpecies(&gParties[B_TRAINER_PLAYER][i], EVO_MODE_OVERWORLD_SPECIAL, 0, NULL, &canStopEvo, CHECK_EVO);
 
-        if (targetSpecies != SPECIES_NONE && !(gTriedEvolving & (1u << i)))
+        if (targetSpecies != SPECIES_NONE)
         {
-            GetEvolutionTargetSpecies(&gParties[B_TRAINER_PLAYER][i], EVO_MODE_OVERWORLD_SPECIAL, 0, NULL, &canStopEvo, DO_EVO);
             gTriedEvolving |= 1u << i;
+            GetEvolutionTargetSpecies(&gParties[B_TRAINER_PLAYER][i], EVO_MODE_OVERWORLD_SPECIAL, 0, NULL, &canStopEvo, DO_EVO);
 
             if (gMain.callback2 == TrySpecialOverworldEvo) // This fixes small graphics glitches.
                 EvolutionScene(&gParties[B_TRAINER_PLAYER][i], targetSpecies, canStopEvo, i);
@@ -6248,9 +6287,10 @@ void TrySpecialOverworldEvo(void)
             return;
         }
     }
+    if (triedEvolvingCopy != 0)
+        SetMainCallback2(CB2_ReturnToFieldContinueScript);
 
     gTriedEvolving = 0;
-    SetMainCallback2(CB2_ReturnToField);
 }
 
 bool32 SpeciesHasGenderDifferences(enum Species species)
