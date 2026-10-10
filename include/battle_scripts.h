@@ -587,7 +587,6 @@ extern const u8 BattleScript_StatChangeHalfHp[];
 extern const u8 BattleScript_ForseeFutureSight[];
 extern const u8 BattleScript_EffectTeleport[];
 extern const u8 BattleScript_MoveEffectOverwriteAbility[];
-extern const u8 BattleScript_MoveEffectRolePlay[];
 extern const u8 BattleScript_MoveEffectRefresh[];
 extern const u8 BattleScript_EffectHitEscape[];
 extern const u8 BattleScript_PartingShotEscape[];

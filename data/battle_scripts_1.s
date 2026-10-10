@@ -798,6 +798,10 @@ BattleScript_EffectHealingWishRestore:
 	return
 
 BattleScript_MoveEffectOverwriteAbility::
+	call BattleScript_AbilityPopUpOverwriteThenNormal
+	printsavedstring BS_EFFECT_BATTLER
+	waitmessage B_WAIT_TIME_LONG
+BattleScript_EffectsOnAbilityOverwrite:
 	tryillusionoff BS_EFFECT_BATTLER
 	tryendneutralizinggas BS_EFFECT_BATTLER
 	trytoclearprimalweather
@@ -808,7 +812,7 @@ BattleScript_MoveEffectOverwriteAbility::
 BattleScript_MoveEffectGastroAcid::
 	printstring STRINGID_PKMNSABILITYSUPPRESSED
 	waitmessage B_WAIT_TIME_LONG
-	call BattleScript_MoveEffectOverwriteAbility
+	call BattleScript_EffectsOnAbilityOverwrite
 	return
 
 BattleScript_TryRoomServiceLoop::
@@ -1386,13 +1390,6 @@ BattleScript_FocusPunchLostFocus::
 	printstring STRINGID_PKMNLOSTFOCUS
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
-
-BattleScript_MoveEffectRolePlay::
-	call BattleScript_AbilityPopUpOverwriteThenNormal
-	printstring STRINGID_PKMNCOPIEDFOE
-	waitmessage B_WAIT_TIME_LONG
-	call BattleScript_MoveEffectOverwriteAbility
-	return
 
 @ TO-DO: The battle messages from this should come after the move has resolved
 BattleScript_BreakScreens::
