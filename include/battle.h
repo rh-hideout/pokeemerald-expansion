@@ -517,8 +517,6 @@ struct SleepClause
 
 struct BattlerState
 {
-    u8 notTargeted[MAX_BATTLERS_COUNT];
-
     u32 commandingDondozo:1;
     u32 focusPunchBattlers:1;
     u32 multipleSwitchInBattlers:1;
@@ -837,13 +835,6 @@ static inline bool32 IsBattleMoveStatus(enum Move move)
 #define IS_BATTLER_OF_TYPE IS_BATTLER_ANY_TYPE
 #define IS_BATTLER_ANY_BASE_TYPE(battler, ...) _IS_BATTLER_ANY_TYPE(battler, TRUE, __VA_ARGS__)
 #define IS_BATTLER_OF_BASE_TYPE IS_BATTLER_ANY_BASE_TYPE
-
-#define IS_BATTLER_TYPELESS(battlerId)                                                    \
-    ({                                                                                    \
-        enum Type types[3];                                                               \
-        GetBattlerTypes(battlerId, FALSE, types);                                         \
-        types[0] == TYPE_MYSTERY && types[1] == TYPE_MYSTERY && types[2] == TYPE_MYSTERY; \
-    })
 
 #define SET_BATTLER_TYPE(battler, type)              \
 {                                                    \
