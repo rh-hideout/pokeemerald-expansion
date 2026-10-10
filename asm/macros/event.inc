@@ -2972,6 +2972,29 @@
 	.byte \dataField
 	.endm
 
+@ Safaris
+
+	@ sets VAR_RESULT to the currently active safariId, returns 0/SAFARI_EVENT_NONE if there is no active safari
+	.macro getactivesafari
+	callnative ScrCmd_getactivesafari
+	.endm
+
+	.macro safari_enter safariId:req
+	callnative ScrCmd_safari_enter
+	.byte \safariId
+	.endm
+
+	.macro safari_exitnowarp
+	callnative ScrCmd_safari_exit
+	.byte FALSE
+	.endm
+
+	.macro safari_exit
+	callnative ScrCmd_safari_exit
+	.byte TRUE
+	waitstate
+	.endm
+
 @ FRLG
 
 
