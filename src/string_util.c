@@ -343,8 +343,116 @@ u8 *ConvertIntToHexStringN(u8 *dest, s32 value, enum StringConvertMode mode, u8 
     return dest;
 }
 
-u8 *StringExpandPlaceholders(u8 *dest, const u8 *src)
+static bool8 TextConditionUsesSecondBranch(u8 conditionId)
 {
+    switch (conditionId)
+    {
+    case TEXT_CONDITION_CHECKGENDER:
+        return gSaveBlock2Ptr->playerGender == FEMALE;
+    default:
+        return FALSE;
+    }
+}
+
+static u8 GetExtCtrlCodeArgCount(u8 code)
+{
+    u8 length = GetExtCtrlCodeLength(code);
+
+    // Codes missing from the lengths table are assumed to have one argument
+    // byte, matching the historical StringExpandPlaceholders default.
+    return length != 0 ? length - 1 : 1;
+}
+
+static u8 *CopyExtCtrlCode(u8 *dest, const u8 **srcPtr, u8 code)
+{
+    const u8 *src = *srcPtr;
+    u8 i;
+    u8 argCount = GetExtCtrlCodeArgCount(code);
+
+    *dest++ = EXT_CTRL_CODE_BEGIN;
+    *dest++ = code;
+
+    for (i = 0; i < argCount; i++)
+        *dest++ = *src++;
+
+    *srcPtr = src;
+    return dest;
+}
+
+static void SkipExtCtrlCodeArgs(const u8 **srcPtr, u8 code)
+{
+    *srcPtr += GetExtCtrlCodeArgCount(code);
+}
+
+enum TextUntil
+{
+    UNTIL_EOS = 0,
+    UNTIL_COND_ELSE = (1 << 0),
+    UNTIL_COND_END = (1 << 1),
+};
+
+static void SkipPlaceholdersUntil(const u8 **srcPtr, u32 until, u8 *stopCode)
+{
+    const u8 *src = *srcPtr;
+
+    for (;;)
+    {
+        u8 c = *src++;
+
+        switch (c)
+        {
+        case PLACEHOLDER_BEGIN:
+            src++;
+            break;
+        case EXT_CTRL_CODE_BEGIN:
+            c = *src++;
+
+            switch (c)
+            {
+            case EXT_CTRL_CODE_CONDITION:
+                {
+                    u8 branchStopCode = 0;
+
+                    src++;
+                    SkipPlaceholdersUntil(&src, UNTIL_COND_ELSE | UNTIL_COND_END, &branchStopCode);
+                    if (branchStopCode == EXT_CTRL_CODE_CONDITION_ELSE)
+                        SkipPlaceholdersUntil(&src, UNTIL_COND_END, &branchStopCode);
+                }
+                break;
+            case EXT_CTRL_CODE_CONDITION_ELSE:
+                if (until & UNTIL_COND_ELSE)
+                {
+                    *stopCode = c;
+                    *srcPtr = src;
+                    return;
+                }
+                break;
+            case EXT_CTRL_CODE_CONDITION_END:
+                if (until & UNTIL_COND_END)
+                {
+                    *stopCode = c;
+                    *srcPtr = src;
+                    return;
+                }
+                break;
+            default:
+                SkipExtCtrlCodeArgs(&src, c);
+            }
+            break;
+        case EOS:
+            *stopCode = EOS;
+            *srcPtr = src;
+            return;
+        default:
+            break;
+        }
+    }
+}
+
+static u8 *ExpandPlaceholdersUntil(u8 *dest, const u8 **srcPtr, u32 until, u8 *stopCode)
+{
+    const u8 *src = *srcPtr;
+
     for (;;)
     {
         u8 c = *src++;
@@ -356,34 +464,55 @@ u8 *StringExpandPlaceholders(u8 *dest, const u8 *src)
         case PLACEHOLDER_BEGIN:
             placeholderId = *src++;
             expandedString = GetExpandedPlaceholder(placeholderId);
-            dest = StringExpandPlaceholders(dest, expandedString);
+            dest = ExpandPlaceholdersUntil(dest, &expandedString, UNTIL_EOS, stopCode);
             break;
         case EXT_CTRL_CODE_BEGIN:
-            *dest++ = c;
             c = *src++;
-            *dest++ = c;
 
             switch (c)
             {
-            case EXT_CTRL_CODE_RESET_FONT:
-            case EXT_CTRL_CODE_PAUSE_UNTIL_PRESS:
-            case EXT_CTRL_CODE_FILL_WINDOW:
-            case EXT_CTRL_CODE_JPN:
-            case EXT_CTRL_CODE_ENG:
-            case EXT_CTRL_CODE_PAUSE_MUSIC:
-            case EXT_CTRL_CODE_RESUME_MUSIC:
+            case EXT_CTRL_CODE_CONDITION:
+                {
+                    u8 branchStopCode = 0;
+                    bool8 useSecondBranch = TextConditionUsesSecondBranch(*src++);
+
+                    if (useSecondBranch)
+                    {
+                        SkipPlaceholdersUntil(&src, UNTIL_COND_ELSE | UNTIL_COND_END, &branchStopCode);
+                        if (branchStopCode == EXT_CTRL_CODE_CONDITION_ELSE)
+                            dest = ExpandPlaceholdersUntil(dest, &src, UNTIL_COND_END, &branchStopCode);
+                    }
+                    else
+                    {
+                        dest = ExpandPlaceholdersUntil(dest, &src, UNTIL_COND_ELSE | UNTIL_COND_END, &branchStopCode);
+                        if (branchStopCode == EXT_CTRL_CODE_CONDITION_ELSE)
+                            SkipPlaceholdersUntil(&src, UNTIL_COND_END, &branchStopCode);
+                    }
+                }
                 break;
-            case EXT_CTRL_CODE_COLOR_HIGHLIGHT_SHADOW:
-            case EXT_CTRL_CODE_TEXT_COLORS:
-                *dest++ = *src++;
-            case EXT_CTRL_CODE_PLAY_BGM:
-                *dest++ = *src++;
+            case EXT_CTRL_CODE_CONDITION_ELSE:
+                if (until & UNTIL_COND_ELSE)
+                {
+                    *stopCode = c;
+                    *srcPtr = src;
+                    return dest;
+                }
+                break;
+            case EXT_CTRL_CODE_CONDITION_END:
+                if (until & UNTIL_COND_END)
+                {
+                    *stopCode = c;
+                    *srcPtr = src;
+                    return dest;
+                }
+                break;
             default:
-                *dest++ = *src++;
+                dest = CopyExtCtrlCode(dest, &src, c);
             }
             break;
         case EOS:
-            *dest = EOS;
+            *stopCode = EOS;
+            *srcPtr = src;
             return dest;
         case CHAR_PROMPT_SCROLL:
         case CHAR_PROMPT_CLEAR:
@@ -392,6 +521,15 @@ u8 *StringExpandPlaceholders(u8 *dest, const u8 *src)
             *dest++ = c;
         }
     }
+}
+
+u8 *StringExpandPlaceholders(u8 *dest, const u8 *src)
+{
+    u8 stopCode;
+
+    dest = ExpandPlaceholdersUntil(dest, &src, UNTIL_EOS, &stopCode);
+    *dest = EOS;
+    return dest;
 }
 
 u8 *StringBraille(u8 *dest, const u8 *src)
@@ -702,10 +840,13 @@ u8 GetExtCtrlCodeLength(u8 code)
         [EXT_CTRL_CODE_ENG]                    = 1,
         [EXT_CTRL_CODE_PAUSE_MUSIC]            = 1,
         [EXT_CTRL_CODE_RESUME_MUSIC]           = 1,
-        [EXT_CTRL_CODE_SPEAKER]                = 1,
+        [EXT_CTRL_CODE_SPEAKER]                = 2,
         [EXT_CTRL_CODE_ACCENT]                 = 2,
         [EXT_CTRL_CODE_BACKGROUND]             = 2,
         [EXT_CTRL_CODE_TEXT_COLORS]            = 4,
+        [EXT_CTRL_CODE_CONDITION]              = 2,
+        [EXT_CTRL_CODE_CONDITION_ELSE]         = 1,
+        [EXT_CTRL_CODE_CONDITION_END]          = 1,
     };
 
     u8 length = 0;
