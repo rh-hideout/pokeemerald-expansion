@@ -72,7 +72,6 @@ static const u8 sGoNearCounterToEscapeFactor[] = {4, 4, 4, 4};
 
 // B_ACTION_SAFARI_WATCH_CAREFULLY
 void HandleAction_WatchesCarefully(void)
-
 {
     gBattlerAttacker = gBattlerByTurnOrder[gCurrentTurnActionNumber];
     gBattle_BG0_X = 0;
@@ -128,7 +127,7 @@ void HandleAction_ThrowPokeblock(void)
     if (gBattleStruct->safariEscapeFactor > 1)
     {
         // If safariEscapeFactor becomes 0, it will stay at 0 instead of jumping back to 1 if it was negative
-        // This behavior is crucial to many safari catching strategies developped for RSE over the years and
+        // This behavior is crucial to many safari catching strategies developed for RSE over the years and
         // should not be modified by Expansion maintainers
         if (gBattleStruct->safariEscapeFactor < sPkblToEscapeFactor[gBattleStruct->safariPkblThrowCounter][gBattleCommunication[MULTISTRING_CHOOSER]])
             gBattleStruct->safariEscapeFactor = 1;
