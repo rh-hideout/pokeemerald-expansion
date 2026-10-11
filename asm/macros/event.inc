@@ -2727,6 +2727,8 @@
 	special CreateInGameTradePokemon
 	special DoInGameTradeScene
 	bufferspeciesname STR_VAR_1, VAR_0x8009
+	specialvar VAR_0x800B, GetTradeSpecies
+	bufferspeciesname STR_VAR_2, VAR_0x800B
 	msgbox \tradeCompleteMsg, MSGBOX_DEFAULT
 	.endm
 
