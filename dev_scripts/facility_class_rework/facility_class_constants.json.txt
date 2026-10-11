@@ -1,0 +1,25 @@
+enum FacilitySingleClass
+{
+## for facility_class in data
+{% if facility_class.obj_gfx != "" and not facility_class.doubles %}
+    {{ facility_class.facility_class }},
+{% else %}
+    UNUSED_{{ facility_class.facility_class }},
+{% endif %}
+## endfor
+
+    FACILITY_SINGLE_CLASS_COUNT
+};
+
+enum FacilityDoubleClass
+{
+## for facility_class in data
+{% if facility_class.doubles %}
+{% if facility_class.obj_gfx != "" %}
+    {{ facility_class.facility_class }},
+{% endif %}
+{% endif %}
+## endfor
+
+    FACILITY_DOUBLE_CLASS_COUNT
+};

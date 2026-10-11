@@ -350,8 +350,7 @@ enum TrainerPicID GetMatchCallTrainerPic(int index)
         return GetTrainerPicFromId(index);
     }
 
-    index = MatchCall_GetOverrideFacilityClass(headerId);
-    return gFacilityClassToPicIndex[index];
+    return MatchCall_GetOverrideTrainerPic(headerId);
 }
 
 const u8 *GetMatchCallMessageText(int index, bool8 *newRematchRequest)

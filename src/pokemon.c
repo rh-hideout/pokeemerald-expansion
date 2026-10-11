@@ -456,7 +456,6 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
 
 #include "data/graphics/pokemon.h"
 
-#include "data/pokemon/trainer_class_lookups.h"
 #include "data/pokemon/experience_tables.h"
 
 #if P_LVL_UP_LEARNSETS >= GEN_9
@@ -1286,7 +1285,7 @@ static void CreateEventMon(struct Pokemon *mon, enum Species species, u8 level, 
     CalculateMonStats(mon);
 }
 
-enum TrainerPicID GetUnionRoomTrainerPic(void)
+static u32 GetUnionRoomFacilityClass(void)
 {
     u8 linkId;
     u32 arrId;
@@ -1298,22 +1297,17 @@ enum TrainerPicID GetUnionRoomTrainerPic(void)
 
     arrId = gLinkPlayers[linkId].trainerId % NUM_UNION_ROOM_CLASSES;
     arrId |= gLinkPlayers[linkId].gender * NUM_UNION_ROOM_CLASSES;
-    return FacilityClassToPicIndex(gUnionRoomFacilityClasses[arrId]);
+    return arrId;
+}
+
+enum TrainerPicID GetUnionRoomTrainerPic(void)
+{
+    return FacilityClassToPicIndex(gUnionRoomFacilityClasses[GetUnionRoomFacilityClass()]);
 }
 
 enum TrainerClassID GetUnionRoomTrainerClass(void)
 {
-    u8 linkId;
-    u32 arrId;
-
-    if (gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK)
-        linkId = gRecordedBattleMultiplayerId ^ 1;
-    else
-        linkId = GetMultiplayerId() ^ 1;
-
-    arrId = gLinkPlayers[linkId].trainerId % NUM_UNION_ROOM_CLASSES;
-    arrId |= gLinkPlayers[linkId].gender * NUM_UNION_ROOM_CLASSES;
-    return gFacilityClassToTrainerClass[gUnionRoomFacilityClasses[arrId]];
+    return gFacilitySingleClassList[GetUnionRoomFacilityClass()].trainerClass;
 }
 
 void CreateEnemyEventMon(void)
@@ -3142,13 +3136,13 @@ void CreateSecretBaseEnemyParty(struct SecretBase *secretBaseRecord)
 enum TrainerPicID GetSecretBaseTrainerPicIndex(void)
 {
     u8 facilityClass = sSecretBaseFacilityClasses[gBattleResources->secretBase->gender][gBattleResources->secretBase->trainerId[0] % NUM_SECRET_BASE_CLASSES];
-    return gFacilityClassToPicIndex[facilityClass];
+    return gFacilitySingleClassList[facilityClass].trainerPic;
 }
 
 enum TrainerClassID GetSecretBaseTrainerClass(void)
 {
     u8 facilityClass = sSecretBaseFacilityClasses[gBattleResources->secretBase->gender][gBattleResources->secretBase->trainerId[0] % NUM_SECRET_BASE_CLASSES];
-    return gFacilityClassToTrainerClass[facilityClass];
+    return gFacilitySingleClassList[facilityClass].trainerClass;
 }
 
 bool8 IsPlayerPartyAndPokemonStorageFull(void)
@@ -5642,15 +5636,15 @@ u8 GetOpposingLinkMultiBattlerId(bool8 rightSide, u8 multiplayerId)
 
 enum TrainerPicID FacilityClassToPicIndex(u16 facilityClass)
 {
-    return gFacilityClassToPicIndex[facilityClass];
+    return gFacilitySingleClassList[facilityClass].trainerPic;
 }
 
 enum TrainerPicID PlayerGenderToFrontTrainerPicId(enum Gender playerGender)
 {
     if (playerGender != MALE)
-        return FacilityClassToPicIndex(IS_FRLG ? FACILITY_CLASS_LEAF : FACILITY_CLASS_MAY);
+        return (IS_FRLG ? TRAINER_PIC_LEAF : TRAINER_PIC_MAY);
     else
-        return FacilityClassToPicIndex(IS_FRLG ? FACILITY_CLASS_RED : FACILITY_CLASS_BRENDAN);
+        return (IS_FRLG ? TRAINER_PIC_RED : TRAINER_PIC_BRENDAN);
 }
 
 void HandleSetPokedexFlag(enum NationalDexOrder nationalNum, u8 caseId, u32 personality)

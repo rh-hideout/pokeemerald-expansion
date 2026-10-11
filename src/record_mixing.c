@@ -125,9 +125,7 @@ static void GetSavedApprentices(struct Apprentice *, struct Apprentice *);
 static void ReceiveApprenticeData(struct Apprentice *, size_t, u32);
 static void ReceiveRankingHallRecords(struct PlayerHallRecords *, size_t, u32);
 static void GetRecordMixingDaycareMail(struct RecordMixingDaycareMail *);
-static void SanitizeDaycareMailForRuby(struct RecordMixingDaycareMail *);
 static void SanitizeEmeraldBattleTowerRecord(struct EmeraldBattleTowerRecord *);
-static void SanitizeRubyBattleTowerRecord(struct RSBattleTowerRecord *);
 
 static const u8 sPlayerIdxOrders_2Player[] = {1, 0};
 
@@ -185,6 +183,7 @@ static void SetSrcLookupPointers(void)
     sBattleTowerSave_Duplicate = &gSaveBlock2Ptr->frontier.towerPlayer;
 }
 
+/*
 static void PrepareUnknownExchangePacket(struct PlayerRecordRS *dest)
 {
     memcpy(dest->secretBases, sSecretBasesSave, sizeof(dest->secretBases));
@@ -218,6 +217,7 @@ static void PrepareExchangePacketForRubySapphire(struct PlayerRecordRS *dest)
     if (GetMultiplayerId() == 0)
         dest->giftItem = GetRecordMixingGift();
 }
+*/
 
 static void PrepareExchangePacket(void)
 {
@@ -225,6 +225,7 @@ static void PrepareExchangePacket(void)
     DeactivateAllNormalTVShows();
     SetSrcLookupPointers();
 
+    /*
     if (Link_AnyPartnersPlayingRubyOrSapphire())
     {
         if (LinkDummy_Return2() == 0)
@@ -234,6 +235,7 @@ static void PrepareExchangePacket(void)
     }
     else
     {
+    */
         memcpy(sSentRecord->emerald.secretBases, sSecretBasesSave, sizeof(sSentRecord->emerald.secretBases));
         memcpy(sSentRecord->emerald.tvShows, sTvShowsSave, sizeof(sSentRecord->emerald.tvShows));
         memcpy(sSentRecord->emerald.pokeNews, sPokeNewsSave, sizeof(sSentRecord->emerald.pokeNews));
@@ -249,7 +251,7 @@ static void PrepareExchangePacket(void)
 
         GetSavedApprentices(sSentRecord->emerald.apprentices, sApprenticesSave);
         GetPlayerHallRecords(&sSentRecord->emerald.hallRecords);
-    }
+    //}
 }
 
 static void ReceiveExchangePacket(u32 multiplayerId)
@@ -657,6 +659,7 @@ static void ReceiveBattleTowerData(void *records, size_t recordSize, u8 multipla
     s32 i;
 
     ShufflePlayerIndices(mixIndices);
+    /*
     if (Link_AnyPartnersPlayingRubyOrSapphire())
     {
         if (RubyBattleTowerRecordToEmerald((void *)records + recordSize * mixIndices[multiplayerId], (void *)records + recordSize * multiplayerId) == TRUE)
@@ -668,6 +671,7 @@ static void ReceiveBattleTowerData(void *records, size_t recordSize, u8 multipla
     }
     else
     {
+    */
         memcpy((void *)records + recordSize * multiplayerId, (void *)records + recordSize * mixIndices[multiplayerId], sizeof(struct EmeraldBattleTowerRecord));
         battleTowerRecord = (void *)records + recordSize * multiplayerId;
         for (i = 0; i < MAX_FRONTIER_PARTY_SIZE; i++)
@@ -677,7 +681,7 @@ static void ReceiveBattleTowerData(void *records, size_t recordSize, u8 multipla
                 ConvertInternationalString(btPokemon->nickname, LANGUAGE_JAPANESE);
         }
         CalcEmeraldBattleTowerChecksum(battleTowerRecord);
-    }
+    //}
     PutNewBattleTowerRecord((void *)records + recordSize * multiplayerId);
 }
 
@@ -1368,28 +1372,6 @@ static void GetRecordMixingDaycareMail(struct RecordMixingDaycareMail *dst)
     sRecordMixMail.mail[1] = gSaveBlock1Ptr->daycare.mons[1].mail;
     InitDaycareMailRecordMixing(&gSaveBlock1Ptr->daycare, &sRecordMixMail);
     *dst = *sRecordMixMailSave;
-}
-
-static void SanitizeDaycareMailForRuby(struct RecordMixingDaycareMail *src)
-{
-    s32 i;
-
-    for (i = 0; i < src->numDaycareMons; i++)
-    {
-        struct DaycareMail *mail = &src->mail[i];
-        if (mail->message.itemId != ITEM_NONE)
-        {
-            if (mail->gameLanguage != LANGUAGE_JAPANESE)
-                PadNameString(mail->otName, EXT_CTRL_CODE_BEGIN);
-
-            ConvertInternationalString(mail->monName, mail->monLanguage);
-        }
-    }
-}
-
-static void SanitizeRubyBattleTowerRecord(struct RSBattleTowerRecord *src)
-{
-
 }
 
 static void SanitizeEmeraldBattleTowerRecord(struct EmeraldBattleTowerRecord *dst)

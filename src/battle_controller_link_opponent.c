@@ -299,17 +299,9 @@ static void LinkOpponentHandleDrawTrainerPic(enum BattlerId battler)
             || (gLinkPlayers[GetBattlerMultiplayerId(battler)].version & 0xFF) == VERSION_LEAF_GREEN)
             {
                 if (gLinkPlayers[GetBattlerMultiplayerId(battler)].gender != MALE)
-                    trainerPicId = gFacilityClassToPicIndex[FACILITY_CLASS_LEAF];
+                    trainerPicId = TRAINER_PIC_LEAF;
                 else
-                    trainerPicId = gFacilityClassToPicIndex[FACILITY_CLASS_RED];
-            }
-            else if ((gLinkPlayers[GetBattlerMultiplayerId(battler)].version & 0xFF) == VERSION_RUBY
-                     || (gLinkPlayers[GetBattlerMultiplayerId(battler)].version & 0xFF) == VERSION_SAPPHIRE)
-            {
-                if (gLinkPlayers[GetBattlerMultiplayerId(battler)].gender != MALE)
-                    trainerPicId = gFacilityClassToPicIndex[FACILITY_CLASS_RS_MAY];
-                else
-                    trainerPicId = gFacilityClassToPicIndex[FACILITY_CLASS_RS_BRENDAN];
+                    trainerPicId = TRAINER_PIC_RED;
             }
             else
             {
@@ -328,17 +320,9 @@ static void LinkOpponentHandleDrawTrainerPic(enum BattlerId battler)
                  || (gLinkPlayers[GetMultiplayerId() ^ BIT_SIDE].version & 0xFF) == VERSION_LEAF_GREEN)
         {
             if (gLinkPlayers[GetMultiplayerId() ^ BIT_SIDE].gender != MALE)
-                trainerPicId = gFacilityClassToPicIndex[FACILITY_CLASS_LEAF];
+                trainerPicId = TRAINER_PIC_LEAF;
             else
-                trainerPicId = gFacilityClassToPicIndex[FACILITY_CLASS_RED];
-        }
-        else if ((gLinkPlayers[GetMultiplayerId() ^ BIT_SIDE].version & 0xFF) == VERSION_RUBY
-                 || (gLinkPlayers[GetMultiplayerId() ^ BIT_SIDE].version & 0xFF) == VERSION_SAPPHIRE)
-        {
-            if (gLinkPlayers[GetMultiplayerId() ^ BIT_SIDE].gender != MALE)
-                trainerPicId = gFacilityClassToPicIndex[FACILITY_CLASS_RS_MAY];
-            else
-                trainerPicId = gFacilityClassToPicIndex[FACILITY_CLASS_RS_BRENDAN];
+                trainerPicId = TRAINER_PIC_RED;
         }
         else
         {

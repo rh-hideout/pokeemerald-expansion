@@ -27,15 +27,15 @@ u8 GetFrontierBrainMonNature(u8 monId);
 u8 GetFrontierBrainMonEvs(u8 monId, u8 evStatId);
 s32 GetFronterBrainSymbol(void);
 void ClearEnemyPartyAfterChallenge(void);
-bool8 IsFrontierTrainerFemale(u16 trainerId);
 u8 GetFrontierTrainerFixedIvs(u16 trainerId);
 u16 GetRandomScaledFrontierTrainerId(u8 challengeNum, u8 battleNum);
 void SetBattleFacilityTrainerGfxId(u16 trainerId, u8 tempVarId);
 u16 GetBattleFacilityTrainerGfxId(u16 trainerId);
 u8 GetFrontierTrainerFrontSpriteId(u16 trainerId);
 enum TrainerClassID GetFrontierOpponentClass(u16 trainerId);
-u8 GetFrontierTrainerFacilityClass(u16 trainerId);
+enum FacilitySingleClass GetFrontierTrainerFacilityClass(u16 trainerId);
 void GetFrontierTrainerName(u8 *dst, u16 trainerId);
+enum Gender GetFrontierTrainerGender(u16 trainerId);
 u16 GetRandomFrontierMonFromSet(u16 trainerId);
 void FrontierSpeechToString(const u16 *words);
 u8 SetFacilityPtrsGetLevel(void);
@@ -48,7 +48,7 @@ struct FrontierBrain
 {
     u16 trainerId;
     u8 objEventGfx;
-    u8 isFemale;
+    enum Gender gender;
     const u8 *lostTexts[2];
     const u8 *wonTexts[2];
     u16 battledBit[2];

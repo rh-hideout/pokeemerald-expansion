@@ -16,16 +16,26 @@ struct RSBattleTowerRecord
     /*0xA0*/ u32 checksum;
 };
 
-struct FacilityClass {
-    u16 class;
+struct FacilitySingleClassData {
+    enum TrainerClassID trainerClass;
+    enum TrainerPicID trainerPic;
+    enum TrainerApproachMusic approachMusic;
     u16 gfxId;
+    enum Gender gender;
 };
 
-#define FACILITY_CLASSES_MALE   30
-#define FACILITY_CLASSES_FEMALE 20
+struct FacilityDoubleClassData {
+    enum TrainerClassID trainerClass;
+    enum TrainerPicID trainerPic;
+    enum TrainerApproachMusic approachMusic;
+    u16 gfxId1;
+    u16 gfxId2;
+    enum Gender gender1;
+    enum Gender gender2;
+};
 
-extern const struct FacilityClass gTowerMaleFacilityClasses[FACILITY_CLASSES_MALE];
-extern const struct FacilityClass gTowerFemaleFacilityClasses[FACILITY_CLASSES_FEMALE];
+extern const struct FacilitySingleClassData gFacilitySingleClassList[];
+extern const struct FacilityDoubleClassData gFacilityDoubleClassList[];
 extern const struct TrainerMon gSlateportBattleTentMons[];
 extern const struct BattleFrontierTrainer gSlateportBattleTentTrainers[];
 

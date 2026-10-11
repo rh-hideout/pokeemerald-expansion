@@ -354,9 +354,9 @@ u16 PlayerGenderToFrontTrainerPicId_Debug(enum Gender gender, bool8 getClass)
     if (getClass == TRUE)
     {
         if (gender != MALE)
-            return gFacilityClassToPicIndex[FACILITY_CLASS_MAY];
+            return TRAINER_PIC_MAY;
         else
-            return gFacilityClassToPicIndex[FACILITY_CLASS_BRENDAN];
+            return TRAINER_PIC_BRENDAN;
     }
     return gender;
 }
