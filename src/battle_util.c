@@ -3158,10 +3158,8 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                     && gBattleStruct->illusion[diagonalBattler].state != ILLUSION_ON
                     && !IsSemiInvulnerable(diagonalBattler, EXCLUDE_COMMANDER))
                 {
-                    SaveBattlerAttacker(gBattlerAttacker);
-                    SaveBattlerTarget(gBattlerTarget);
-                    gBattlerAttacker = battler;
-                    gBattlerTarget = diagonalBattler;
+                    gEffectBattler = battler;
+                    gBattleScripting.battler = diagonalBattler;
                     BattleScriptCall(BattleScript_ImposterActivates);
                     effect++;
                 }
@@ -4856,6 +4854,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
              && gBattleMons[partner].hp < gBattleMons[partner].maxHP
              && IsBattlerAlive(partner))
             {
+                gBattleScripting.battler = battler;
                 gEffectBattler = partner;
                 SetHealAmount(partner, GetNonDynamaxMaxHP(partner) / 4);
                 BattleScriptCall(BattleScript_HospitalityActivates);

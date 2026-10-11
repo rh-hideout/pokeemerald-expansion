@@ -5062,13 +5062,13 @@ static void Cmd_transformdataexecution(void)
     CMD_ARGS();
 
     gBattlescriptCurrInstr = cmd->nextInstr;
-    if (!CanTransformBattler(gBattlerAttacker, gBattlerTarget))
+    if (!CanTransformBattler(gEffectBattler, gBattleScripting.battler))
     {
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TRANSFORM_FAILED;
     }
     else
     {
-        TryTransformBattler(gBattlerAttacker, gBattlerTarget);
+        TryTransformBattler(gEffectBattler, gBattleScripting.battler);
     }
 }
 
