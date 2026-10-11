@@ -194,7 +194,11 @@ static enum Item GetRockSmashRandomItem(void)
         return ITEM_NONE;
     }
 
-    u32 randomIndex = RandomWeightedArray(RNG_ROCK_SMASH_ITEM_DROP, sRockSmashTables[itemTable].weightsSum, sRockSmashTables[itemTable].size, sRockSmashTables[itemTable].weights);
+    u32 randomIndex;
+    if (sRockSmashTables[itemTable].weightsSum)
+        randomIndex = RandomWeightedArray(RNG_ROCK_SMASH_ITEM_DROP, sRockSmashTables[itemTable].weightsSum, sRockSmashTables[itemTable].size, sRockSmashTables[itemTable].weights);
+    else
+        randomIndex = RandomUniform(RNG_ROCK_SMASH_ITEM_DROP, 0, sRockSmashTables[itemTable].size - 1);
     if (OW_ROCK_SMASH_RARER_ITEM_ABILIY && randomIndex < sRockSmashTables[itemTable].size - 1)
     {
         u32 partySlot = VarGet(VAR_0x8006);
