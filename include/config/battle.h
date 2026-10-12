@@ -338,6 +338,8 @@
 #define B_SNOW_WARNING                  GEN_LATEST // In Gen9+, Snow Warning will summon snow instead of hail.
 #define B_PREFERRED_ICE_WEATHER         B_ICE_WEATHER_BOTH // Toggles hail move effects to snow and vice versa.
 #define B_OVERWORLD_WEATHER_OVERRIDE    GEN_LATEST // In Gen9+, overworld weather cannot be overridden.
+#define B_SHOW_WEATHER_INDICATOR        TRUE       // If TRUE, shows an indicator for current weather during player move selection.
+#define B_INSTANT_WEATHER_INDICATORS    FALSE      // If TRUE, weather indicators don't slide in.
 
 // Terrain settings
 #define B_TERRAIN_BG_CHANGE         TRUE       // If set to TRUE, terrain moves permanently change the default battle background until the effect fades.

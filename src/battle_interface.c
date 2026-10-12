@@ -3327,3 +3327,161 @@ void CategoryIcons_LoadSpritesGfx(void)
     LoadCompressedSpriteSheet(&gSpriteSheet_CategoryIcons);
     LoadSpritePalette(&gSpritePal_CategoryIcons);
 }
+
+#define tState    data[0]
+#define tSpriteId data[1]
+#define tWeather  data[2]
+#define TAG_WEATHER_INDICATOR_GFX 0x7825
+#define TAG_WEATHER_INDICATOR_PAL 0x7825
+#define INDICATOR_STATE_DRAW_SPRITE 0
+#define INDICATOR_STATE_SLIDE_IN    1
+#define INDICATOR_STATE_SLIDE_END   2
+#define INDICATOR_STATE_WAIT        3
+#define INDICATOR_STATE_SLIDE_OUT   4
+#define INDICATOR_STATE_REMOVE      5
+
+static const u32 sWeatherIndicatorGfx[] = INCGFX_U32("graphics/battle_interface/weather_indicators.png", ".4bpp.smol");
+static const u16 sWeatherIndicatorPal[] = INCGFX_U16("graphics/battle_interface/weather_indicators.png", ".gbapal");
+
+static const struct CompressedSpriteSheet sSpriteSheet_WeatherIndicator =
+{
+    .data = sWeatherIndicatorGfx,
+    .size = 0x400,
+    .tag = TAG_WEATHER_INDICATOR_GFX,
+};
+
+static const struct SpritePalette sSpritePalette_WeatherIndicator =
+{
+    .data = sWeatherIndicatorPal,
+    .tag = TAG_WEATHER_INDICATOR_PAL,
+};
+
+static const struct OamData sOamData_WeatherIndicator =
+{
+    .y = -8,
+    .affineMode = ST_OAM_AFFINE_OFF,
+    .objMode = ST_OAM_OBJ_NORMAL,
+    .mosaic = FALSE,
+    .bpp = ST_OAM_4BPP,
+    .shape = SPRITE_SHAPE(32x16),
+    .x = 120,
+    .matrixNum = 0,
+    .size = SPRITE_SIZE(32x16),
+    .tileNum = 0,
+    .priority = 0,
+    .paletteNum = 0,
+    .affineParam = 0,
+};
+
+static const struct SpriteTemplate sSpriteTemplate_WeatherIndicator =
+{
+    .tileTag = TAG_WEATHER_INDICATOR_GFX,
+    .paletteTag = TAG_WEATHER_INDICATOR_GFX,
+    .oam = &sOamData_WeatherIndicator,
+    .anims = gDummySpriteAnimTable,
+    .callback = SpriteCallbackDummy,
+};
+
+static void Task_WeatherIndicatorHandler(u8 taskId)
+{
+    switch (gTasks[taskId].tState)
+    {
+    case INDICATOR_STATE_DRAW_SPRITE:
+        LoadCompressedSpriteSheet(&sSpriteSheet_WeatherIndicator);
+        LoadSpritePalette(&sSpritePalette_WeatherIndicator);
+        gTasks[taskId].tSpriteId = CreateSprite(&sSpriteTemplate_WeatherIndicator, 120, -8, 0);
+
+        //  Sun already has correct offset
+        if (gTasks[taskId].tWeather & B_WEATHER_RAIN)
+            gSprites[gTasks[taskId].tSpriteId].oam.tileNum += 8;
+        else if (gTasks[taskId].tWeather & B_WEATHER_SANDSTORM)
+            gSprites[gTasks[taskId].tSpriteId].oam.tileNum += 16;
+        else if (gTasks[taskId].tWeather & (B_WEATHER_SNOW | B_WEATHER_HAIL))
+            gSprites[gTasks[taskId].tSpriteId].oam.tileNum += 24;
+
+        gTasks[taskId].tState++;
+        break;
+    case INDICATOR_STATE_SLIDE_IN:
+        if (gSprites[gTasks[taskId].tSpriteId].y < 8)
+            gSprites[gTasks[taskId].tSpriteId].y += 1;
+        else
+            gTasks[taskId].tState++;
+        break;
+    case INDICATOR_STATE_SLIDE_END:
+        gSprites[gTasks[taskId].tSpriteId].y = 8;
+        gTasks[taskId].tState++;
+        break;
+    case INDICATOR_STATE_WAIT:
+        break;
+    case INDICATOR_STATE_SLIDE_OUT:
+        if (gSprites[gTasks[taskId].tSpriteId].y > -8)
+            gSprites[gTasks[taskId].tSpriteId].y -= 1;
+        else
+            gTasks[taskId].tState++;
+        break;
+    case INDICATOR_STATE_REMOVE:
+        DestroySprite(&gSprites[gTasks[taskId].tSpriteId]);
+        FreeSpriteTilesByTag(TAG_WEATHER_INDICATOR_GFX);
+        FreeSpritePaletteByTag(TAG_WEATHER_INDICATOR_PAL);
+
+        DestroyTask(taskId);
+        break;
+    }
+}
+
+void ShowWeatherIndicator(bool32 instant)
+{
+    u32 weather = GetWeather();
+    if (weather == B_WEATHER_NONE)
+    {
+        return;
+    }
+
+    u32 taskId = FindTaskIdByFunc(Task_WeatherIndicatorHandler);
+    if (taskId == TASK_NONE)
+    {
+        taskId = CreateTask(Task_WeatherIndicatorHandler, 1);
+        gTasks[taskId].tState = INDICATOR_STATE_DRAW_SPRITE;
+        gTasks[taskId].tSpriteId = SPRITE_NONE;
+        gTasks[taskId].tWeather = weather;
+        gTasks[taskId].func(taskId);
+        if (instant)
+        {
+            gTasks[taskId].tState = INDICATOR_STATE_SLIDE_END;
+            gTasks[taskId].func(taskId);
+        }
+    }
+    else if (instant)
+    {
+    }
+}
+
+void HideWeatherIndicator(bool32 instant)
+{
+    u32 taskId = FindTaskIdByFunc(Task_WeatherIndicatorHandler);
+
+    if (taskId != TASK_NONE)
+    {
+        if (instant)
+        {
+            gTasks[taskId].tState = INDICATOR_STATE_REMOVE;
+            gTasks[taskId].func(taskId);
+        }
+        else
+        {
+            gTasks[taskId].tState = INDICATOR_STATE_SLIDE_OUT;
+        }
+    }
+}
+
+#undef tState
+#undef tSpriteId
+#undef tWeather
+#undef TAG_WEATHER_INDICATOR_GFX
+#undef TAG_WEATHER_INDICATOR_PAL
+#undef INDICATOR_STATE_DRAW_SPRITE
+#undef INDICATOR_STATE_SLIDE_IN
+#undef INDICATOR_STATE_SLIDE_END
+#undef INDICATOR_STATE_WAIT
+#undef INDICATOR_STATE_SLIDE_OUT
+#undef INDICATOR_STATE_REMOVE
