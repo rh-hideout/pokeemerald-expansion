@@ -2157,6 +2157,15 @@ static void Unused_InitDomeOpponentParty(void)
 
 }
 
+void PickDomeFacilityMons(u16 trainerId)
+{
+    u16 tournamentTrainerId = TrainerIdToTournamentId(trainerId);
+    for (u32 i = 0; i < FRONTIER_PARTY_SIZE; i++)
+    {
+        gFrontierTempParty[i] = DOME_MONS[tournamentTrainerId][i];
+    }
+}
+
 // Returns a bitmask representing which 2 of the trainer's 3 Pokémon to select.
 // The choice is calculated solely depending on the type effectiveness of their
 // movesets against the player's Pokémon.
@@ -2168,7 +2177,7 @@ u32 GetDomeTrainerSelectedMons(u16 trainerId)
 {
     u16 tournamentTrainerId = TrainerIdToTournamentId(trainerId);
     int selectedMonBits;
-    bool32 effectiveness = Random() & 1;
+    bool32 effectiveness = RandomPercentage(RNG_NONE, 50);
     selectedMonBits = SelectOpponentMons(tournamentTrainerId, effectiveness);
     if (selectedMonBits == 0)
         selectedMonBits = SelectOpponentMons(tournamentTrainerId, ~effectiveness);

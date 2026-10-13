@@ -225,12 +225,12 @@ void PickRandomFacilityMons(struct FacilityMonGenerator *generator, u16 trainerI
         bool32 isMonValid = TRUE;
         for (u32 j = 0; j < i; j++)
         {
-            if (generator->facilityMonList[j].species == generator->facilityMonList[monId].species)
+            if (generator->facilityMonList[dest[j]].species == generator->facilityMonList[monId].species)
             {
                 isMonValid = FALSE;
                 break;
             }
-            if (generator->facilityMonList[j].heldItem == generator->facilityMonList[monId].heldItem)
+            if (generator->facilityMonList[dest[j]].heldItem == generator->facilityMonList[monId].heldItem)
             {
                 isMonValid = FALSE;
                 break;
@@ -260,6 +260,45 @@ void PickRandomFacilityMons(struct FacilityMonGenerator *generator, u16 trainerI
             dest[i] = monId;
             i++;
         }
+    }
+}
+
+static void PickFacilityMons(struct FacilityMonGenerator *generator, u16 trainerId)
+{
+    if (generator->facility == FACILITY_BATTLE_FACTORY)
+        return;
+    if (generator->facility == FACILITY_BATTLE_DOME)
+    {
+        PickDomeFacilityMons(trainerId);
+        return;
+    }
+    PickRandomFacilityMons(generator, trainerId, gFrontierTempParty);
+}
+
+static void ModifyPartyOrder(struct FacilityMonGenerator *generator, u16 trainerId)
+{
+    u16 tmp[MAX_FRONTIER_PARTY_SIZE];
+    u32 monsCount = 0;
+    if (generator->facility == FRONTIER_FACILITY_DOME)
+    {
+        u32 selectedMonBits = GetDomeTrainerSelectedMons(trainerId);
+        for (u32 i = 0; i < FRONTIER_PARTY_SIZE; i++)
+        {
+            if (selectedMonBits & 1)
+                tmp[monsCount++] = i;
+            selectedMonBits >>= 1;
+        }
+        if (RandomPercentage(RNG_NONE, 60))
+        {
+            gFrontierTempParty[0] = gFrontierTempParty[tmp[0]];
+            gFrontierTempParty[1] = gFrontierTempParty[tmp[1]];
+        }
+        else
+        {
+            gFrontierTempParty[0] = gFrontierTempParty[tmp[1]];
+            gFrontierTempParty[1] = gFrontierTempParty[tmp[0]];
+        }
+        generator->partySize = DOME_BATTLE_PARTY_SIZE;
     }
 }
 
@@ -310,21 +349,10 @@ static void FillTrainerParty(u16 trainerId, enum BattleTrainer trainer, u8 monCo
     }
 
     generator.partySize = monCount;
-    if (generator.facility != FACILITY_BATTLE_FACTORY)
+    PickFacilityMons(&generator, trainerId);
+    ModifyPartyOrder(&generator, trainerId);
+    for (i = 0; i < generator.partySize; i++)
     {
-        PickRandomFacilityMons(&generator, trainerId, gFrontierTempParty);
-    }
-
-    u32 selectedMonBits;
-    if (generator.facility == FRONTIER_FACILITY_DOME)
-        selectedMonBits = GetDomeTrainerSelectedMons(trainerId);
-    else
-        selectedMonBits = 0b00001111; // all mons selected
-
-    for (i = 0; i < generator.partySize; selectedMonBits >>= 1, i++)
-    {
-        if (!(selectedMonBits & 1))
-            continue;
         CreateFacilityMon(&gParties[trainer][i], &generator, gFrontierTempParty[i]);
     }
 }
