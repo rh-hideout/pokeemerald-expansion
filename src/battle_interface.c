@@ -43,7 +43,7 @@
 #include <stdint.h>
 #include <string.h>
 
-#define HEALTHBOX_BG_COLOUR_INDEX 2;
+#define HEALTHBOX_BG_COLOUR_INDEX 2
 // Each colour has 9 tiles (0-8px filled)
 enum Bui_HealthBar
 {
