@@ -43,7 +43,7 @@
 #include <stdint.h>
 #include <string.h>
 
-#define HEALTHBOX_BG_INDEX 2
+#define HEALTHBOX_BG_COLOUR_INDEX 2;
 // Each colour has 9 tiles (0-8px filled)
 enum Bui_HealthBar
 {
@@ -779,12 +779,12 @@ static void UpdateLvlInHealthbox(u8 healthboxSpriteId, u8 lvl)
 
     if (IsOnPlayerSide(battler))
     {
-        FillSpriteRectColor(spriteId, 8, 5, 24, 11, HEALTHBOX_BG_INDEX);
+        FillSpriteRectColor(spriteId, 8, 5, 24, 11, HEALTHBOX_BG_COLOUR_INDEX);
         AddSpriteTextPrinterParameterized6(spriteId, FONT_SMALL, 32 - width, 3, 0, 0, sHealthBoxTextColor, 0, text);
     }
     else
     {
-        FillSpriteRectColor(spriteId, 0, 5, 24, 11, HEALTHBOX_BG_INDEX);
+        FillSpriteRectColor(spriteId, 0, 5, 24, 11, HEALTHBOX_BG_COLOUR_INDEX);
         AddSpriteTextPrinterParameterized6(spriteId, FONT_SMALL, 24 - width, 3, 0, 0, sHealthBoxTextColor, 0, text);
     }
 }
@@ -859,15 +859,15 @@ void UpdateHpTextInHealthbox(u32 healthboxSpriteId, s16 currHp, s16 maxHp)
 
     if (IsOnPlayerSide(battler)) // Player
     {
-        PrintHpOnHealthbox(healthboxSpriteId, currHp, maxHp, HEALTHBOX_BG_INDEX, 0, 16, FALSE);
+        PrintHpOnHealthbox(healthboxSpriteId, currHp, maxHp, HEALTHBOX_BG_COLOUR_INDEX, 0, 16, FALSE);
         return;
     }
 
     // Opponent
     if (B_HP_PERCENTAGE_DISPLAY)
-        PrintHpOnHealthbox(healthboxSpriteId, currHp, maxHp, HEALTHBOX_BG_INDEX, -8, 16, TRUE);
+        PrintHpOnHealthbox(healthboxSpriteId, currHp, maxHp, HEALTHBOX_BG_COLOUR_INDEX, -8, 16, TRUE);
     else if (gBattleSpritesDataPtr->battlerData[battler].hpNumbersNoBars)
-        PrintHpOnHealthbox(healthboxSpriteId, currHp, maxHp, HEALTHBOX_BG_INDEX, -8, 8, FALSE); // debug only
+        PrintHpOnHealthbox(healthboxSpriteId, currHp, maxHp, HEALTHBOX_BG_COLOUR_INDEX, -8, 8, FALSE); // debug only
 
 }
 
@@ -881,7 +881,7 @@ static void UpdateHpTextInHealthboxInDoubles(u32 healthboxSpriteId, s16 currHp, 
     {
         if (gBattleSpritesDataPtr->battlerData[battler].hpNumbersNoBars) // don't print text if only bars are visible
         {
-            PrintHpOnHealthbox(healthboxSpriteId, currHp, maxHp, HEALTHBOX_BG_INDEX, 0, 8, FALSE);
+            PrintHpOnHealthbox(healthboxSpriteId, currHp, maxHp, HEALTHBOX_BG_COLOUR_INDEX, 0, 8, FALSE);
 
             // Clears the end of the healthbar gfx.
             const Tile4BPP *src = &gHealthBoxFrameEnd[BUI_PLAYER_FRAME_END];
@@ -897,9 +897,9 @@ static void UpdateHpTextInHealthboxInDoubles(u32 healthboxSpriteId, s16 currHp, 
         if (gBattleSpritesDataPtr->battlerData[battler].hpNumbersNoBars) // don't print text if only bars are visible
         {
             if (B_HP_PERCENTAGE_DISPLAY)
-                PrintHpOnHealthbox(healthboxSpriteId, currHp, maxHp, HEALTHBOX_BG_INDEX, -8, 8, TRUE);
+                PrintHpOnHealthbox(healthboxSpriteId, currHp, maxHp, HEALTHBOX_BG_COLOUR_INDEX, -8, 8, TRUE);
             else 
-                PrintHpOnHealthbox(healthboxSpriteId, currHp, maxHp, HEALTHBOX_BG_INDEX, -8, 8, FALSE); // debug only
+                PrintHpOnHealthbox(healthboxSpriteId, currHp, maxHp, HEALTHBOX_BG_COLOUR_INDEX, -8, 8, FALSE); // debug only
 
             // Clears the end of the healthbar gfx.
             const Tile4BPP *src = &gHealthBoxFrameEnd[BUI_OPPONENT_FRAME_END];
@@ -947,8 +947,8 @@ void SwapHpBarsWithHpText(void)
                 }
                 else // text to bars
                 {
-                    FillSpriteRectColor(gHealthboxSpriteIds[i], 32, 16, 32, 8, HEALTHBOX_BG_INDEX);
-                    FillSpriteRectColor(healthboxRightSpriteId, 0, 16, 32, 8, HEALTHBOX_BG_INDEX);
+                    FillSpriteRectColor(gHealthboxSpriteIds[i], 32, 16, 32, 8, HEALTHBOX_BG_COLOUR_INDEX);
+                    FillSpriteRectColor(healthboxRightSpriteId, 0, 16, 32, 8, HEALTHBOX_BG_COLOUR_INDEX);
                     UpdateStatusIconInHealthbox(gHealthboxSpriteIds[i]);
                     UpdateHealthboxAttribute(gHealthboxSpriteIds[i], mon, HEALTHBOX_HEALTH_BAR);
 
@@ -967,8 +967,8 @@ void SwapHpBarsWithHpText(void)
                 }
                 else // text to bars
                 {
-                    FillSpriteRectColor(gHealthboxSpriteIds[i], 32, 16, 32, 8, HEALTHBOX_BG_INDEX);
-                    FillSpriteRectColor(gSprites[gHealthboxSpriteIds[i]].oam.affineParam, 0, 16, 32, 8, HEALTHBOX_BG_INDEX);
+                    FillSpriteRectColor(gHealthboxSpriteIds[i], 32, 16, 32, 8, HEALTHBOX_BG_COLOUR_INDEX);
+                    FillSpriteRectColor(gSprites[gHealthboxSpriteIds[i]].oam.affineParam, 0, 16, 32, 8, HEALTHBOX_BG_COLOUR_INDEX);
                     UpdateStatusIconInHealthbox(gHealthboxSpriteIds[i]);
                     UpdateHealthboxAttribute(gHealthboxSpriteIds[i], mon, HEALTHBOX_HEALTH_BAR);
                     const Tile4BPP* src = &gHealthBoxFrameEnd[BUI_OPPONENT_FRAME_END_BAR];
@@ -1524,12 +1524,12 @@ void UpdateNickInHealthbox(u8 healthboxSpriteId, struct Pokemon *mon)
 
     if (IsOnPlayerSide(gSprites[healthboxSpriteId].data[6]))
     {
-        FillSpriteRectColor(healthboxSpriteId, 16, 5, 55, 11, HEALTHBOX_BG_INDEX);
+        FillSpriteRectColor(healthboxSpriteId, 16, 5, 55, 11, HEALTHBOX_BG_COLOUR_INDEX);
         AddSpriteTextPrinterParameterized6(healthboxSpriteId, fontId, 16, 3, 0, 0, sHealthBoxTextColor, 0, gDisplayedStringBattle);
     }
     else
     {
-        FillSpriteRectColor(healthboxSpriteId, 8, 5, 55, 11, HEALTHBOX_BG_INDEX);
+        FillSpriteRectColor(healthboxSpriteId, 8, 5, 55, 11, HEALTHBOX_BG_COLOUR_INDEX);
         AddSpriteTextPrinterParameterized6(healthboxSpriteId, fontId, 8, 3, 0, 0, sHealthBoxTextColor, 0, gDisplayedStringBattle);
     }
 
@@ -1686,7 +1686,7 @@ static void UpdateLeftNoOfBallsTextOnHealthbox(u8 healthboxSpriteId)
     txtPtr = StringCopy(text, gText_SafariBallLeft);
     ConvertIntToDecimalStringN(txtPtr, gNumSafariBalls, STR_CONV_MODE_LEFT_ALIGN, 2);
 
-    FillSpriteRectColor(healthboxSpriteId, 55, 19, 40, 12, HEALTHBOX_BG_INDEX);
+    FillSpriteRectColor(healthboxSpriteId, 55, 19, 40, 12, HEALTHBOX_BG_COLOUR_INDEX);
     AddSpriteTextPrinterParameterized6(healthboxSpriteId, FONT_SMALL, 55, 19, 0, 0, sHealthBoxTextColor, 0, text);
 
     gSprites[healthboxSpriteId].data[1] = savedValue1;
