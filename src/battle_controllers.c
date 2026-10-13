@@ -687,10 +687,12 @@ static void Task_HandleSendLinkBuffersData(u8 taskId)
         }
         else
         {
-            if (gBattleTypeFlags & BATTLE_TYPE_BATTLE_TOWER)
+            //if (gBattleTypeFlags & BATTLE_TYPE_BATTLE_TOWER)
+            //    numPlayers = 2;
+            if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
                 numPlayers = 2;
             else
-                numPlayers = (gBattleTypeFlags & BATTLE_TYPE_MULTI) ? 4 : 2;
+                numPlayers = 4;
 
             if (GetLinkPlayerCount_2() >= numPlayers)
             {

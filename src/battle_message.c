@@ -2456,7 +2456,7 @@ void BufferStringBattle(enum StringID stringID, enum BattlerId battler)
         {
             if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
             {
-                if (gBattleTypeFlags & BATTLE_TYPE_TOWER_LINK_MULTI)
+                if (IsTowerLinkMulti())
                 {
                     stringPtr = sText_TwoTrainersWantToBattle;
                 }
@@ -2563,7 +2563,7 @@ void BufferStringBattle(enum StringID stringID, enum BattlerId battler)
                     stringPtr = sText_Trainer1SentOutTwoPkmn;
                 else if ((gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK && gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS) || (gBattleTypeFlags & BATTLE_TYPE_MULTI && (gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK || gBattleTypeFlags & BATTLE_TYPE_LINK)))
                     stringPtr = sText_TwoLinkTrainersIntroSendOutPkmn;
-                else if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS || gBattleTypeFlags & BATTLE_TYPE_TOWER_LINK_MULTI)
+                else if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS || IsTowerLinkMulti())
                     stringPtr = sText_TwoTrainersSentPkmn;
                 else if (BattlerIsLink(battler) || (BattlerIsRecorded(battler) && BattlerIsOpponent(battler))) // Link Opponent doubles and test opponent
                     stringPtr = sText_LinkTrainerSentOutTwoPkmn;
@@ -2754,7 +2754,7 @@ void BufferStringBattle(enum StringID stringID, enum BattlerId battler)
                 switch (gBattleTextBuff1[0])
                 {
                 case B_OUTCOME_WON:
-                    if (gBattleTypeFlags & BATTLE_TYPE_TOWER_LINK_MULTI)
+                    if (IsTowerLinkMulti())
                         stringPtr = sText_TwoInGameTrainersDefeated;
                     else
                         stringPtr = sText_TwoLinkTrainersDefeated;

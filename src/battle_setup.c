@@ -1091,6 +1091,7 @@ void InitTrainerBattleParameter(void)
 {
     memset(gTrainerBattleParameter.data, 0, sizeof(TrainerBattleParameter));
     sTrainerBattleEndScript = NULL;
+    gPartnerTrainerId = TRAINER_NONE;
 }
 
 void TrainerBattleLoadArgs(const u8 *data)

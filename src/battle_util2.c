@@ -2,6 +2,7 @@
 #include "battle.h"
 #include "battle_anim.h"
 #include "battle_controllers.h"
+#include "battle_setup.h"
 #include "malloc.h"
 #include "pokemon.h"
 #include "trainer_hill.h"
@@ -273,4 +274,17 @@ struct Pokemon* GetBattlerMon(enum BattlerId battler)
     enum PartyMon index = gBattlerPartyIndexes[battler];
 
     return &GetBattlerParty(battler)[index];
+}
+
+bool8 IsMultiBattle(void)
+{
+    if (gPartnerTrainerId != 0 && gMain.inBattle)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+bool8 IsTowerLinkMulti(void)
+{
+    return (BATTLE_TOWER_LINK_MULTI && gMain.inBattle);
 }

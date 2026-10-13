@@ -1417,14 +1417,6 @@ static void DrawCancelConfirmButtons(void)
     ScheduleBgCopyTilemapToVram(1);
 }
 
-bool8 IsMultiBattle(void)
-{
-    if (gBattleTypeFlags & BATTLE_TYPE_MULTI && IsDoubleBattle() && gMain.inBattle)
-        return TRUE;
-    else
-        return FALSE;
-}
-
 static void SwapPartyPokemon(struct Pokemon *mon1, struct Pokemon *mon2)
 {
     struct Pokemon *temp = Alloc(sizeof(struct Pokemon));
