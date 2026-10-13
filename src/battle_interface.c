@@ -3433,9 +3433,7 @@ void ShowWeatherIndicator(bool32 instant)
 {
     u32 weather = GetWeather();
     if (weather == B_WEATHER_NONE)
-    {
         return;
-    }
 
     u32 taskId = FindTaskIdByFunc(Task_WeatherIndicatorHandler);
     if (taskId == TASK_NONE)
@@ -3450,9 +3448,6 @@ void ShowWeatherIndicator(bool32 instant)
             gTasks[taskId].tState = INDICATOR_STATE_SLIDE_END;
             gTasks[taskId].func(taskId);
         }
-    }
-    else if (instant)
-    {
     }
 }
 
