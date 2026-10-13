@@ -161,10 +161,12 @@ static u16 GetBgControlAttribute(u32 bg, u32 attributeId)
     return 0xFF;
 }
 
-u8 LoadBgVram(u32 bg, const void *src, u16 size, u16 destOffset, u32 mode)
+u8 LoadBgVram(u32 bg, const void *src, u16 size, u16 destOffset, u32 mode, bool8 compressedFast, u8 frame)
 {
     u16 offset;
     s8 cursor;
+
+    assertf(frame == 0 || compressedFast == TRUE, "Loading uncompressed data with non-zero frame")
 
     if (IsInvalidBg(bg) || !sGpuBgConfigs.configs[bg].visible)
         return -1;
@@ -174,14 +176,14 @@ u8 LoadBgVram(u32 bg, const void *src, u16 size, u16 destOffset, u32 mode)
     case 0x1:
         offset = sGpuBgConfigs.configs[bg].charBaseIndex * BG_CHAR_SIZE;
         offset = destOffset + offset;
-        cursor = RequestDma3Copy(src, (void *)(offset + BG_VRAM), size, 0);
+        cursor = RequestDma3CopyComp(src, (void *)(offset + BG_VRAM), size, 0, compressedFast, frame);
         if (cursor == -1)
             return -1;
         break;
     case 0x2:
         offset = sGpuBgConfigs.configs[bg].mapBaseIndex * BG_SCREEN_SIZE;
         offset = destOffset + offset;
-        cursor = RequestDma3Copy(src, (void *)(offset + BG_VRAM), size, 0);
+        cursor = RequestDma3CopyComp(src, (void *)(offset + BG_VRAM), size, 0, compressedFast, frame);
         if (cursor == -1)
             return -1;
         break;
@@ -434,6 +436,11 @@ void SetBgMode(u32 bgMode)
 
 u16 LoadBgTiles(u32 bg, const void *src, u16 size, u16 destOffset)
 {
+    return LoadBgTilesComp(bg, src, size, destOffset, FALSE, 0);
+}
+
+u16 LoadBgTilesComp(u32 bg, const void *src, u16 size, u16 destOffset, bool8 compressedFast, u8 frame)
+{
     u16 tileOffset;
     u8 cursor;
 
@@ -449,7 +456,10 @@ u16 LoadBgTiles(u32 bg, const void *src, u16 size, u16 destOffset)
         tileOffset = (sGpuBgConfigs2[bg].baseTile + destOffset) * 0x40;
     }
 
-    cursor = LoadBgVram(bg, src, size, tileOffset, DISPCNT_MODE_1);
+    if (compressedFast)
+        cursor = LoadBgVram(bg, src, size, tileOffset, DISPCNT_MODE_1, TRUE, frame);
+    else
+        cursor = LoadBgVram(bg, src, size, tileOffset, DISPCNT_MODE_1, FALSE, frame);
 
     if (cursor == 0xFF)
     {
@@ -466,7 +476,7 @@ u16 LoadBgTiles(u32 bg, const void *src, u16 size, u16 destOffset)
 
 u16 LoadBgTilemap(u32 bg, const void *src, u16 size, u16 destOffset)
 {
-    u8 cursor = LoadBgVram(bg, src, size, destOffset * 2, DISPCNT_MODE_2);
+    u8 cursor = LoadBgVram(bg, src, size, destOffset * 2, DISPCNT_MODE_2, FALSE, 0);
 
     if (cursor == 0xFF)
     {
@@ -878,7 +888,7 @@ void CopyBgTilemapBufferToVram(u32 bg)
             sizeToLoad = 0;
             break;
         }
-        LoadBgVram(bg, sGpuBgConfigs2[bg].tilemap, sizeToLoad, 0, 2);
+        LoadBgVram(bg, sGpuBgConfigs2[bg].tilemap, sizeToLoad, 0, 2, FALSE, 0);
     }
 }
 
