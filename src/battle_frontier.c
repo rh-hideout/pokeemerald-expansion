@@ -7,6 +7,7 @@
 #include "battle_dome.h"
 #include "battle_factory.h"
 #include "battle_partner.h"
+#include "battle_tent.h"
 #include "battle_tower.h"
 #include "battle_transition.h"
 #include "event_data.h"
@@ -20,6 +21,7 @@
 #include "constants/abilities.h"
 #include "constants/battle_frontier.h"
 #include "constants/battle_frontier_mons.h"
+#include "constants/battle_tent_mons.h"
 
 static void FillTrainerParty(u16 trainerId, enum BattleTrainer trainer, u8 monCount);
 
@@ -107,9 +109,8 @@ static void DoFacilityTrainerBattleInternal(u8 facility)
     case FACILITY_BATTLE_DOME:
         gBattleTypeFlags = BATTLE_TYPE_TRAINER | BATTLE_TYPE_DOME;
         if (VarGet(VAR_FRONTIER_BATTLE_MODE) == FRONTIER_MODE_DOUBLES)
-        gBattleTypeFlags |= BATTLE_TYPE_DOUBLE;
-        if (TRAINER_BATTLE_PARAM.opponentA == TRAINER_FRONTIER_BRAIN)
-        FillFrontierTrainerParty(DOME_BATTLE_PARTY_SIZE);
+            gBattleTypeFlags |= BATTLE_TYPE_DOUBLE;
+        FillFrontierTrainerParty(FRONTIER_PARTY_SIZE);
         CreateTask(Task_StartBattleAfterTransition, 1);
         CreateTask_PlayMapChosenOrBattleBGM(0);
         BattleTransition_StartOnField(GetSpecialBattleTransition(B_TRANSITION_GROUP_B_DOME));
@@ -117,21 +118,15 @@ static void DoFacilityTrainerBattleInternal(u8 facility)
     case FACILITY_BATTLE_PALACE:
         gBattleTypeFlags = BATTLE_TYPE_TRAINER | BATTLE_TYPE_PALACE;
         if (VarGet(VAR_FRONTIER_BATTLE_MODE) == FRONTIER_MODE_DOUBLES)
-        gBattleTypeFlags |= BATTLE_TYPE_DOUBLE;
-        if (gSaveBlock2Ptr->frontier.lvlMode != FRONTIER_LVL_TENT)
+            gBattleTypeFlags |= BATTLE_TYPE_DOUBLE;
         FillFrontierTrainerParty(FRONTIER_PARTY_SIZE);
-        else
-        FillTentTrainerParty(FRONTIER_PARTY_SIZE);
         CreateTask(Task_StartBattleAfterTransition, 1);
         PlayMapChosenOrBattleBGM(0);
         BattleTransition_StartOnField(GetSpecialBattleTransition(B_TRANSITION_GROUP_B_PALACE));
         break;
     case FACILITY_BATTLE_ARENA:
         gBattleTypeFlags = BATTLE_TYPE_TRAINER | BATTLE_TYPE_ARENA;
-        if (gSaveBlock2Ptr->frontier.lvlMode != FRONTIER_LVL_TENT)
         FillFrontierTrainerParty(FRONTIER_PARTY_SIZE);
-        else
-        FillTentTrainerParty(FRONTIER_PARTY_SIZE);
         CreateTask(Task_StartBattleAfterTransition, 1);
         PlayMapChosenOrBattleBGM(0);
         BattleTransition_StartOnField(GetSpecialBattleTransition(B_TRANSITION_GROUP_B_ARENA));
@@ -139,8 +134,8 @@ static void DoFacilityTrainerBattleInternal(u8 facility)
     case FACILITY_BATTLE_FACTORY:
         gBattleTypeFlags = BATTLE_TYPE_TRAINER | BATTLE_TYPE_FACTORY;
         if (VarGet(VAR_FRONTIER_BATTLE_MODE) == FRONTIER_MODE_DOUBLES)
-        gBattleTypeFlags |= BATTLE_TYPE_DOUBLE;
-        FillFactoryTrainerParty();
+            gBattleTypeFlags |= BATTLE_TYPE_DOUBLE;
+        FillFrontierTrainerParty(FRONTIER_PARTY_SIZE);
         CreateTask(Task_StartBattleAfterTransition, 1);
         PlayMapChosenOrBattleBGM(0);
         BattleTransition_StartOnField(GetSpecialBattleTransition(B_TRANSITION_GROUP_B_FACTORY));
@@ -199,21 +194,83 @@ void FillFrontierTrainersParties(u8 monsCount)
     FillTrainerParty(TRAINER_BATTLE_PARAM.opponentB, B_TRAINER_OPPONENT_B, monsCount);
 }
 
+void PickRandomFacilityMons(struct FacilityMonGenerator *generator, u16 trainerId, u16 *dest)
+{
+    u16 bfMonCount;
+    const u16 *monSet = NULL;
+    s32 i = 0;
+    if (trainerId != 0xFFFF)
+    {
+        monSet = generator->frontierTrainerList[trainerId].monSet;
+        for (bfMonCount = 0; monSet[bfMonCount] != 0xFFFF; bfMonCount++)
+            ;
+    }
+
+    while (i != generator->partySize)
+    {
+        u16 monId;
+        if (monSet == NULL)
+        {
+            if (generator->lvlMode != FRONTIER_LVL_TENT)
+                monId = GetFactoryMonId(generator, i);
+            else
+                monId = RandomUniform(RNG_NONE, 0, NUM_SLATEPORT_TENT_MONS - 1);
+        }
+        else
+        {
+            monId = RandomUniform(RNG_NONE, 0, bfMonCount - 1);
+            monId = monSet[monId];
+        }
+
+        bool32 isMonValid = TRUE;
+        for (u32 j = 0; j < i; j++)
+        {
+            if (generator->facilityMonList[j].species == generator->facilityMonList[monId].species)
+            {
+                isMonValid = FALSE;
+                break;
+            }
+            if (generator->facilityMonList[j].heldItem == generator->facilityMonList[monId].heldItem)
+            {
+                isMonValid = FALSE;
+                break;
+            }
+        }
+        if (generator->facility == FRONTIER_FACILITY_FACTORY)
+        {
+            if (generator->facilityMonList[monId].species == SPECIES_UNOWN)
+                isMonValid = FALSE;
+            for (u32 j = 0; j < 2 * FRONTIER_PARTY_SIZE; j++)
+            {
+                if (generator->facilityMonList[monId].species == generator->facilityMonList[gSaveBlock2Ptr->frontier.rentalMons[j].monId].species)
+                {
+                    isMonValid = FALSE;
+                    break;
+                }
+            }
+
+        }
+        else
+        {
+            if (generator->lvlMode == FRONTIER_MAX_LEVEL_50 && monId > FRONTIER_MONS_HIGH_TIER)
+                isMonValid = FALSE;
+        }
+        if (isMonValid)
+        {
+            dest[i] = monId;
+            i++;
+        }
+    }
+}
+
 static void FillTrainerParty(u16 trainerId, enum BattleTrainer trainer, u8 monCount)
 {
     s32 i, j;
-    u16 chosenMonIndices[MAX_FRONTIER_PARTY_SIZE];
-    u8 level = SetFacilityPtrsGetLevel();
-    u8 fixedIV = 0;
-    u8 bfMonCount;
-    const u16 *monSet = NULL;
-    u32 otID = 0;
 
+    struct FacilityMonGenerator generator = GetFacilityMonGenerator(trainerId);
     if (trainerId < FRONTIER_TRAINERS_COUNT)
     {
-        // Normal battle frontier trainer.
-        fixedIV = GetFrontierTrainerFixedIvs(trainerId);
-        monSet = gFacilityTrainers[trainerId].monSet;
+        ;
     }
     else if (trainerId == TRAINER_EREADER)
     {
@@ -225,8 +282,11 @@ static void FillTrainerParty(u16 trainerId, enum BattleTrainer trainer, u8 monCo
     }
     else if (trainerId == TRAINER_FRONTIER_BRAIN)
     {
-        CreateFrontierBrainPokemon();
-        return;
+        if (generator.facility != FACILITY_BATTLE_FACTORY)
+        {
+            CreateFrontierBrainPokemon();
+            return;
+        }
     }
     else if (trainerId < TRAINER_RECORD_MIXING_APPRENTICE)
     {
@@ -234,7 +294,7 @@ static void FillTrainerParty(u16 trainerId, enum BattleTrainer trainer, u8 monCo
         for (j = 0, i = 0; i < monCount; j++, i++)
         {
             if (gSaveBlock2Ptr->frontier.towerRecords[trainerId - TRAINER_RECORD_MIXING_FRIEND].party[j].species != SPECIES_NONE
-                && gSaveBlock2Ptr->frontier.towerRecords[trainerId - TRAINER_RECORD_MIXING_FRIEND].party[j].level <= level)
+                && gSaveBlock2Ptr->frontier.towerRecords[trainerId - TRAINER_RECORD_MIXING_FRIEND].party[j].level <= generator.partyLevel)
             {
                 CreateBattleTowerMon_HandleLevel(&gParties[trainer][i], &gSaveBlock2Ptr->frontier.towerRecords[trainerId - TRAINER_RECORD_MIXING_FRIEND].party[j], FALSE);
             }
@@ -249,65 +309,30 @@ static void FillTrainerParty(u16 trainerId, enum BattleTrainer trainer, u8 monCo
         return;
     }
 
-    // Regular battle frontier trainer.
-    // Attempt to fill the trainer's party with random Pokémon until 3 have been
-    // successfully chosen. The trainer's party may not have duplicate Pokémon species
-    // or duplicate held items.
-    for (bfMonCount = 0; monSet[bfMonCount] != 0xFFFF; bfMonCount++)
-        ;
-    i = 0;
-    otID = Random32();
-    while (i != monCount)
+    generator.partySize = monCount;
+    if (generator.facility != FACILITY_BATTLE_FACTORY)
     {
-        u16 monId = monSet[Random() % bfMonCount];
+        PickRandomFacilityMons(&generator, trainerId, gFrontierTempParty);
+    }
 
-        // "High tier" Pokémon are only allowed on open level mode
-        // 20 is not a possible value for level here
-        if ((level == FRONTIER_MAX_LEVEL_50 || level == 20) && monId > FRONTIER_MONS_HIGH_TIER)
+    u32 selectedMonBits;
+    if (generator.facility == FRONTIER_FACILITY_DOME)
+        selectedMonBits = GetDomeTrainerSelectedMons(trainerId);
+    else
+        selectedMonBits = 0b00001111; // all mons selected
+
+    for (i = 0; i < generator.partySize; selectedMonBits >>= 1, i++)
+    {
+        if (!(selectedMonBits & 1))
             continue;
-
-        // Ensure this Pokémon species isn't a duplicate.
-        for (j = 0; j < i; j++)
-        {
-            if (GetMonData(&gParties[trainer][j], MON_DATA_SPECIES) == gFacilityTrainerMons[monId].species)
-                break;
-        }
-        if (j != i)
-            continue;
-
-        // Ensure this Pokemon's held item isn't a duplicate.
-        for (j = 0; j < i; j++)
-        {
-            if (GetMonData(&gParties[trainer][j], MON_DATA_HELD_ITEM) != ITEM_NONE
-             && GetMonData(&gParties[trainer][j], MON_DATA_HELD_ITEM) == gFacilityTrainerMons[monId].heldItem)
-                break;
-        }
-        if (j != i)
-            continue;
-
-        // Ensure this exact Pokémon index isn't a duplicate. This check doesn't seem necessary
-        // because the species and held items were already checked directly above.
-        for (j = 0; j < i; j++)
-        {
-            if (chosenMonIndices[j] == monId)
-                break;
-        }
-        if (j != i)
-            continue;
-
-        chosenMonIndices[i] = monId;
-
-        // Place the chosen Pokémon into the trainer's party.
-        CreateFacilityMon(&gFacilityTrainerMons[monId], level, fixedIV, otID, 0, &gParties[trainer][i]);
-
-        // The Pokémon was successfully added to the trainer's party, so it's safe to move on to
-        // the next party slot.
-        i++;
+        CreateFacilityMon(&gParties[trainer][i], &generator, gFrontierTempParty[i]);
     }
 }
 
-void CreateFacilityMon(const struct TrainerMon *fmon, u16 level, u8 fixedIV, u32 otID, u32 flags, struct Pokemon *dst)
+
+void CreateFacilityMon(struct Pokemon *dst, struct FacilityMonGenerator *generator, u16 monIndex)
 {
+    const struct TrainerMon *fmon = &generator->facilityMonList[monIndex];
     enum PokeBall ball = (fmon->ball == 0xFF) ? Random() % POKEBALL_COUNT : fmon->ball;
     enum Move move;
     u32 friendship, j;
@@ -323,14 +348,14 @@ void CreateFacilityMon(const struct TrainerMon *fmon, u16 level, u8 fixedIV, u32
     personality |= genderValue;
 
     ModifyPersonalityForNature(&personality, fmon->nature);
-    CreateMonWithIVs(dst, fmon->species, level, personality, OTID_STRUCT_PRESET(otID), fixedIV);
+    CreateMonWithIVs(dst, fmon->species, generator->partyLevel, personality, OTID_STRUCT_PRESET(generator->otId), generator->fixedIV);
 
     friendship = MAX_FRIENDSHIP;
     // Give the chosen Pokémon its specified moves.
     for (j = 0; j < MAX_MON_MOVES; j++)
     {
         move = fmon->moves[j];
-        if (flags & FLAG_FRONTIER_MON_FACTORY && move == MOVE_RETURN)
+        if (generator->facility == FRONTIER_FACILITY_FACTORY && move == MOVE_RETURN)
             move = MOVE_FRUSTRATION;
 
         SetMonMoveSlot(dst, move, j);

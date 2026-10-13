@@ -1222,6 +1222,20 @@ struct MapPosition
     s8 elevation;
 };
 
+struct FacilityMonGenerator
+{
+    const struct TrainerMon *facilityMonList;
+    const struct BattleFrontierTrainer *frontierTrainerList;
+    u32 otId;
+    u32 fixedIV:6;
+    u32 partyLevel:7;
+    u32 facility:4;
+    u32 partySize:3;
+    u32 battleMode:3;
+    enum FrontierLevelMode lvlMode:2;
+    u32 padding:7;
+};
+
 #if TESTING
 extern bool32 gLoadFail;
 extern bool32 gCountAllocs;
