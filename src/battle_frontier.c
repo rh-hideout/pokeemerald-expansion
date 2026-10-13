@@ -311,6 +311,7 @@ void CreateFacilityMon(const struct TrainerMon *fmon, u16 level, u8 fixedIV, u32
     enum PokeBall ball = (fmon->ball == 0xFF) ? Random() % POKEBALL_COUNT : fmon->ball;
     enum Move move;
     u32 personality = 0, friendship, j;
+    u32 data;
     enum Ability ability;
 
     if (fmon->gender == TRAINER_MON_MALE)
@@ -371,25 +372,33 @@ void CreateFacilityMon(const struct TrainerMon *fmon, u16 level, u8 fixedIV, u32
 
     if (fmon->isShiny)
     {
-        u32 data = TRUE;
+        data = TRUE;
         SetMonData(dst, MON_DATA_IS_SHINY, &data);
     }
-    if (fmon->dynamaxLevel > 0)
+    if (fmon->shouldUseDynamax)
     {
-        u32 data = fmon->dynamaxLevel;
-        SetMonData(dst, MON_DATA_DYNAMAX_LEVEL, &data);
+        data = fmon->dynamaxLevel;
     }
+    else
+    {
+        data = BLOCK_AI_DYNAMAX;
+    }
+    SetMonData(dst, MON_DATA_DYNAMAX_LEVEL, &data);
     if (fmon->gigantamaxFactor)
     {
-        u32 data = fmon->gigantamaxFactor;
+        data = fmon->gigantamaxFactor;
         SetMonData(dst, MON_DATA_GIGANTAMAX_FACTOR, &data);
     }
     if (fmon->teraType)
     {
-        u32 data = fmon->teraType;
+        data = fmon->teraType;
         SetMonData(dst, MON_DATA_TERA_TYPE, &data);
     }
-
+    else
+    {
+        data = TYPE_MYSTERY;
+        SetMonData(dst, MON_DATA_TERA_TYPE, &data);
+    }
 
     SetMonData(dst, MON_DATA_POKEBALL, &ball);
     CalculateMonStats(dst);
