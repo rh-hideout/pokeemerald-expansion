@@ -3834,18 +3834,15 @@ static void Cmd_statusanimation(void)
     }
 }
 
-#define DONE_TARGET_FAILURE (gBattleStruct->eventState.atkCanceler == CANCELER_END)
 static void Cmd_futuresighttargetfailure(void)
 {
     CMD_ARGS();
 
-    // Just do CancelerTargetFailure
-    if (!DONE_TARGET_FAILURE && DoAttackCanceler() != CANCELER_RESULT_SUCCESS)
+    if (DoAttackCanceler() != CANCELER_RESULT_SUCCESS)
         return;
 
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
-#undef DONE_TARGET_FAILURE
 
 static void Cmd_yesnobox(void)
 {

@@ -32,7 +32,6 @@ static bool32 TryActivatePowderStatus(enum Move move);
 static void CalculateMagnitudeDamage(void);
 static void UpdateStallMons(struct BattleCalcValues *cv);
 static void SetDamageContextValues(struct DamageContext *ctx, struct BattleCalcValues *cv);
-void SetTargetMoveFailureFlags(enum BattlerId battlerAtk, enum MoveTarget moveTarget);
 
 // Submoves
 static enum Move GetMirrorMoveMove(void);
