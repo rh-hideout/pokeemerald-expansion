@@ -185,26 +185,38 @@ static enum Item GetRockSmashRandomItem(void)
 {
     u32 itemTable = gMapHeader.events->objectEvents[(gSpecialVar_LastTalked - 1)].trainerRange_berryTreeId;
     itemTable >>= 8;// remove data that is being used for probability
-    if (itemTable == ROCK_SMASH_ITEM_TABLE_NONE)
+
+    assertf(itemTable < ROCK_SMASH_ITEM_TABLE_COUNT, "Unassigned or invalid rock smash item table %d", itemTable)
     {
-        return ITEM_NONE;
+        if ((gMapHeader.mapType == MAP_TYPE_OCEAN_ROUTE)
+            || (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_SEAFLOOR_CAVERN_ROOM1) &&
+            gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_SEAFLOOR_CAVERN_ROOM1)
+            gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_SEAFLOOR_CAVERN_ROOM2)
+            gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_SEAFLOOR_CAVERN_ROOM5)))
+            itemTable = ROCK_SMASH_ITEM_TABLE_CLIFF;
+        else if (gMapHeader.mapType == MAP_TYPE_INDOOR)
+            itemTable = ROCK_SMASH_ITEM_TABLE_NONE;
+        else
+            itemTable = ROCK_SMASH_ITEM_TABLE_DEFAULT;
     }
-    assertf(itemTable < ROCK_SMASH_ITEM_TABLE_COUNT, "Invalid rock smash item table %d", itemTable)
+    if (itemTable == ROCK_SMASH_ITEM_TABLE_NONE)
     {
         return ITEM_NONE;
     }
 
     u32 randomIndex;
-    if (sRockSmashTables[itemTable].weightsSum)
-        randomIndex = RandomWeightedArray(RNG_ROCK_SMASH_ITEM_DROP, sRockSmashTables[itemTable].weightsSum, sRockSmashTables[itemTable].size, sRockSmashTables[itemTable].weights);
-    else
-        randomIndex = RandomUniform(RNG_ROCK_SMASH_ITEM_DROP, 0, sRockSmashTables[itemTable].size - 1);
-    if (OW_ROCK_SMASH_RARER_ITEM_ABILIY && randomIndex < sRockSmashTables[itemTable].size - 1)
+    if (sRockSmashTables[itemTable].weightsSum)// I.e. if using Gen 4 mechanics
     {
-        u32 partySlot = VarGet(VAR_0x8006);
-        if (DoesRockSmashUserHaveIncreasedItemRarity(partySlot))
-            randomIndex++;
+        randomIndex = RandomWeightedArray(RNG_ROCK_SMASH_ITEM_DROP, sRockSmashTables[itemTable].weightsSum, sRockSmashTables[itemTable].size, sRockSmashTables[itemTable].weights);
+        if (randomIndex < sRockSmashTables[itemTable].size - 1)
+        {
+            u32 partySlot = VarGet(VAR_0x8006);
+            if (DoesRockSmashUserHaveIncreasedItemRarity(partySlot))// Check for serene grace and super luck's impact on a weighted table.
+                randomIndex++;
+        }
     }
+    else // Gen 6 mechanics
+        randomIndex = RandomUniform(RNG_ROCK_SMASH_ITEM_DROP, 0, sRockSmashTables[itemTable].size - 1);
 
     return sRockSmashTables[itemTable].table[randomIndex];
 }

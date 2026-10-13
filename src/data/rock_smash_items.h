@@ -28,8 +28,8 @@ static const enum Item sGen6FossilSmashTable[] = {
 #define ROCK_SMASH_TABLE_STRUCT(array)  {      \
     .table = array,                            \
     .size = ARRAY_COUNT(array),                \
-    .weigths = NULL,                           \
-    .weigthsSum = 0                            \
+    .weights = NULL,                           \
+    .weightsSum = 0                            \
 }
 
 static const struct RockSmashItemTable sRockSmashTables[ROCK_SMASH_ITEM_TABLE_COUNT] = {
@@ -88,8 +88,8 @@ static const u16 sGen4ItemTableWeights[] = {
 #define ROCK_SMASH_TABLE_STRUCT(array)  {      \
     .table = array,                            \
     .size = ARRAY_COUNT(array),                \
-    .weigths = sGen4ItemTableWeights,          \
-    .weigthsSum = 100                          \
+    .weights = sGen4ItemTableWeights,          \
+    .weightsSum = 100                          \
 }
 
 static const struct RockSmashItemTable sRockSmashTables[ROCK_SMASH_ITEM_TABLE_COUNT] = {
