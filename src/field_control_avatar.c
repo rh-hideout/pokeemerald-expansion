@@ -251,7 +251,8 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
     if (CanTriggerSpinEvolution())
     {
         ResetSpinTimer();
-        TrySpecialOverworldEvo(); // Special vars set in CanTriggerSpinEvolution.
+        if (CheckSpecialOverworldEvo())
+            TrySpecialOverworldEvo(); // Special vars set in CanTriggerSpinEvolution.
     }
 
     return FALSE;

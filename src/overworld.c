@@ -2599,7 +2599,6 @@ static void ResumeMap(bool32 a1)
     ResumePausedWeather();
     if (!a1)
         SetUpFieldTasks();
-    CheckSpecialOverworldEvo(a1);
     RunOnResumeMapScript();
     TryStartMirageTowerPulseBlendEffect();
 }

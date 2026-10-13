@@ -73,6 +73,5 @@ enum Direction GetLeftSideStairsDirection(enum Direction direction);
 void UpdateSpinData(void);
 void ResetSpinTimer(void);
 bool32 CanTriggerSpinEvolution();
-void ToggleSpinChecking(bool32 turnOn);
 
 #endif // GUARD_FIELD_PLAYER_AVATAR_H

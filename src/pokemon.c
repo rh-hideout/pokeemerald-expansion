@@ -4559,21 +4559,6 @@ enum Species GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode m
             }
         }
         break;
-    case EVO_MODE_OVERWORLD_SPIN_EVO_CHECK:
-        for (i = 0; evolutions[i].method != EVOLUTIONS_END; i++)
-        {
-            if (SanitizeSpeciesId(evolutions[i].targetSpecies) == SPECIES_NONE)
-                continue;
-            if (evolutions[i].method != EVO_SPIN)
-                continue;
-
-            if (DoesMonMeetAdditionalConditions(mon, evolutions[i].params, NULL, PARTY_SIZE, canStopEvo, evoState))
-            {
-                targetSpecies = evolutions[i].targetSpecies;
-                break;
-            }
-        }
-        break;
     case EVO_MODE_SCRIPT_TRIGGER:
         for (i = 0; evolutions[i].method != EVOLUTIONS_END; i++)
         {
@@ -4588,6 +4573,20 @@ enum Species GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode m
                 // All checks passed, so stop checking the rest of the evolutions.
                 // This is different from vanilla where the loop continues.
                 // If you have overlapping evolutions, put the ones you want to happen first on top of the list.
+                targetSpecies = evolutions[i].targetSpecies;
+                break;
+            }
+        }
+    case EVO_MODE_OVERWORLD_SPIN_EVO_CHECK://unused
+        for (i = 0; evolutions[i].method != EVOLUTIONS_END; i++)
+        {
+            if (SanitizeSpeciesId(evolutions[i].targetSpecies) == SPECIES_NONE)
+                continue;
+            if (evolutions[i].method != EVO_SPIN)
+                continue;
+
+            if (DoesMonMeetAdditionalConditions(mon, evolutions[i].params, NULL, PARTY_SIZE, canStopEvo, evoState))
+            {
                 targetSpecies = evolutions[i].targetSpecies;
                 break;
             }
@@ -6240,23 +6239,22 @@ void RemoveIVIndexFromList(u8 *ivs, u8 selectedIv)
     }
 }
 
-void CheckSpecialOverworldEvo(bool32 isLinkOrContest)
+bool32 CheckSpecialOverworldEvo(void)// unused
 {
-    if (!isLinkOrContest)
+    bool32 canStopEvo = FALSE;
+    for (u8 i = 0; i < PARTY_SIZE; i++)
     {
-        bool32 canStopEvo = FALSE;
-        for (u8 i = 0; i < PARTY_SIZE; i++)
-        {
-            enum Species targetSpecies = GetEvolutionTargetSpecies(&gParties[B_TRAINER_PLAYER][i], EVO_MODE_OVERWORLD_SPIN_EVO_CHECK, 0, NULL, &canStopEvo, CHECK_EVO);
+        enum Species targetSpecies = GetEvolutionTargetSpecies(&gParties[B_TRAINER_PLAYER][i], EVO_MODE_OVERWORLD_SPIN_EVO_CHECK, 0, NULL, &canStopEvo, CHECK_EVO);
 
-            if (targetSpecies != SPECIES_NONE)
-            {
-                ToggleSpinChecking(TRUE);
-                return;
-            }
-        }
+        if (targetSpecies != SPECIES_NONE)
+            return TRUE;
+        targetSpecies = GetEvolutionTargetSpecies(&gParties[B_TRAINER_PLAYER][i], EVO_MODE_OVERWORLD_SPECIAL, 0, NULL, &canStopEvo, CHECK_EVO);
+
+        if (targetSpecies != SPECIES_NONE)
+            return TRUE;
     }
-    ToggleSpinChecking(FALSE);
+
+    return FALSE;
 }
 
 
