@@ -50,19 +50,16 @@
 	ands r0, r4
 
 	@ Multiply by 0xF
-	movs r3, 0xF
-	muls r0, r3
+	lsls r3, r0, 4
+	subs r0, r3, r0
 
-	@ Apply mask to newIndex
+	@ tileData ^= ((new^old)*0x11111111u) & mask
+	@ Place new^old in r6
 	movs r6, r2
+	eors r6, r1
+	@ Apply mask
 	ands r6, r0
-
-	@ Invert mask and apply to row
-	mvns r0, r0
-	ands r7, r0
-
-	@ Combine to create the replaced row
-	orrs r7, r6
+	eors r7, r6
 
 	@ Writes new row back to memory
 	str  r7, [r5, \offset] 
