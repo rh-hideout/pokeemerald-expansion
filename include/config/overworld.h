@@ -13,9 +13,9 @@
 #define OW_DEFOG_FIELD_MOVE             FALSE      // If enabled, Defog can be used as a Field Move as seen in DPPt.
 #define OW_ROCK_CLIMB_FIELD_MOVE        FALSE      // If enabled, Rock Climb can be used as a Field Move as seen in DPPt.
 #define OW_CHOOSE_FROM_PC_AND_PARTY     TRUE       // If enabled, NPCs like move tutors or trainers asking for trade will let you pick a Pokémon from your PC or party instead of just your party
-#define OW_ROCK_SMASH_ITEMS             GEN_3 // From Gen4, using Rock Smash on rocks can yield items. From Gen6, using Rock Smash on rocks yields items with updated mechanics. 
-// Configure this in fldeff_rocksmash.c. By default, items depend on the player's current map if no specific item table is given for a rock. Override this by usign in trainerRange_berryTreeId 
-#define OW_ROCK_SMASH_ITEMS_MIN_ODDS    10         // Used when OW_ROCK_SMASH_ITEMS is GEN_4 to determine the minimum odds (out of 100) of an item appearing, if no specific odds are given for a rock (in movement_x)
+#define OW_ROCK_SMASH_ITEMS             GEN_3      // From Gen4, using Rock Smash on rocks can yield items. From Gen6, using Rock Smash on rocks yields items with updated mechanics. Configure loot tables in src/data/rock_smash_items.h
+#define OW_ROCK_SMASH_RARER_ITEM_ABILIY TRUE       // In Gen4, if the pokemon using rock smash has the ability Serene Grace or Super Luck, you will get a rarer item (lower in the loot table) from rock smash item drops
+#define OW_ROCK_SMASH_ITEMS_USE_DEFAULT_CHANCE    10   // Only used when OW_ROCK_SMASH_ITEMS is set to GEN_4, assume the default value for rock smash item chance (0) means this number instead. Setting this config to 0 means no rock will give items unless given an explicit item chance
 
 
 // Item Obtain Description Box

@@ -151,7 +151,7 @@ bool32 DoesPartyHaveIncubatorMon(void)
 
 bool32 DoesRockSmashUserHaveIncreasedItemRarity(u8 partySlot)
 {
-    return DoesPartySlotHaveAbilityEffect(sRockSmashItemLikelihoodAbilities, partySlot);
+    return DoesPartySlotHaveAbilityEffect(sRockSmashItemRarityAbilities, partySlot);
 }
 
 bool32 DoesRockSmashUserHaveIncreasedItemLikelihood(u8 partySlot)

@@ -50,15 +50,6 @@ enum __attribute__((__packed__)) Flavor
 // - BERRY_STAGE_FLOWERING
 #define NUM_WATER_STAGES 4
 
-
-// rock smash item tables are defined here as they need to be read by porymap but didn't need to be an extra file lol
-#define ROCK_SMASH_ITEM_TABLE_AUTOASSIGNED  1
-#define ROCK_SMASH_ITEM_TABLE_DEFAULT       2
-#define ROCK_SMASH_ITEM_TABLE_CLIFF         3
-#define ROCK_SMASH_ITEM_TABLE_FOSSIL        4
-#define ROCK_SMASH_ITEM_TABLE_NONE          5
-
-
 // IDs for berry tree objects, indexes into berryTrees in SaveBlock1
 // Named for whatever berry is initially planted there on a new game
 // Those with no initial berry are named "soil"

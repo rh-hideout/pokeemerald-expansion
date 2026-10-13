@@ -1,6 +1,7 @@
 // these are used in fldeff_rocksmash.c
+#if OW_ROCK_SMASH_ITEMS >= GEN_6
 
-static const enum Item Gen6DefaultSmashTable[] = {
+static const enum Item sGen6DefaultSmashTable[] = {
     ITEM_STAR_PIECE,
     ITEM_HARD_STONE,
     ITEM_SOFT_SAND,
@@ -14,7 +15,7 @@ static const enum Item Gen6DefaultSmashTable[] = {
     ITEM_NORMAL_GEM,
 };
 
-static const enum Item Gen6FossilSmashTable[] = {
+static const enum Item sGen6FossilSmashTable[] = {
     ITEM_DOME_FOSSIL,
     ITEM_ARMOR_FOSSIL,
     ITEM_PLUME_FOSSIL,
@@ -24,7 +25,23 @@ static const enum Item Gen6FossilSmashTable[] = {
     ITEM_COVER_FOSSIL,
 };
 
-static const enum Item Gen4DefaultSmashTable[] = {
+#define ROCK_SMASH_TABLE_STRUCT(array)  {      \
+    .table = array,                            \
+    .size = ARRAY_COUNT(array),                \
+    .weigths = NULL,                           \
+    .weigthsSum = 0                            \
+}
+
+static const struct RockSmashItemTable sRockSmashTables[ROCK_SMASH_ITEM_TABLE_COUNT] = {
+    [ROCK_SMASH_ITEM_TABLE_DEFAULT] = ROCK_SMASH_TABLE_STRUCT(sGen6DefaultSmashTable),
+    [ROCK_SMASH_ITEM_TABLE_CLIFF] = ROCK_SMASH_TABLE_STRUCT(sGen6DefaultSmashTable),
+    [ROCK_SMASH_ITEM_TABLE_RUINS] = ROCK_SMASH_TABLE_STRUCT(sGen6DefaultSmashTable),
+    [ROCK_SMASH_ITEM_TABLE_FOSSIL] = ROCK_SMASH_TABLE_STRUCT(sGen6FossilSmashTable),
+};
+
+#elif OW_ROCK_SMASH_ITEMS >= GEN_4
+
+static const enum Item sGen4DefaultSmashTable[] = {
     ITEM_MAX_ETHER,     //25
     ITEM_REVIVE,        //20
     ITEM_HEART_SCALE,   //10
@@ -35,7 +52,7 @@ static const enum Item Gen4DefaultSmashTable[] = {
     ITEM_STAR_PIECE,    //5
 };
 
-static const enum Item Gen4RuinsOfAlphSmashTable[] = {
+static const enum Item sGen4RuinsOfAlphSmashTable[] = {
     ITEM_RED_SHARD,     //25
     ITEM_YELLOW_SHARD,  //20
     ITEM_HELIX_FOSSIL,  //10
@@ -46,7 +63,7 @@ static const enum Item Gen4RuinsOfAlphSmashTable[] = {
     ITEM_MAX_REVIVE,    //5
 };
 
-static const enum Item Gen4CliffCaveSmashTable[] = {
+static const enum Item sGen4CliffCaveSmashTable[] = {
     ITEM_MAX_ETHER, //25
     ITEM_PEARL,     //20
     ITEM_BIG_PEARL, //10
@@ -56,3 +73,34 @@ static const enum Item Gen4CliffCaveSmashTable[] = {
     ITEM_CLAW_FOSSIL,
     ITEM_RARE_BONE, //5
 };
+
+static const u16 sGen4ItemTableWeights[] = {
+    25,
+    20,
+    10,
+    10,
+    10,
+    10,
+    10,
+    5,
+};
+
+#define ROCK_SMASH_TABLE_STRUCT(array)  {      \
+    .table = array,                            \
+    .size = ARRAY_COUNT(array),                \
+    .weigths = sGen4ItemTableWeights,          \
+    .weigthsSum = 100                          \
+}
+
+static const struct RockSmashItemTable sRockSmashTables[ROCK_SMASH_ITEM_TABLE_COUNT] = {
+    [ROCK_SMASH_ITEM_TABLE_DEFAULT] = ROCK_SMASH_TABLE_STRUCT(sGen4DefaultSmashTable),
+    [ROCK_SMASH_ITEM_TABLE_CLIFF] = ROCK_SMASH_TABLE_STRUCT(sGen4CliffCaveSmashTable),
+    [ROCK_SMASH_ITEM_TABLE_RUINS] = ROCK_SMASH_TABLE_STRUCT(sGen4RuinsOfAlphSmashTable),
+    [ROCK_SMASH_ITEM_TABLE_FOSSIL] = ROCK_SMASH_TABLE_STRUCT(sGen4DefaultSmashTable),
+};
+
+#else
+
+static const struct RockSmashItemTable sRockSmashTables[] = {};
+
+#endif

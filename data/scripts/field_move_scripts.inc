@@ -66,7 +66,7 @@ EventScript_RockSmash::
 	checkfieldmove FIELD_MOVE_ROCK_SMASH, TRUE
 	goto_if_eq VAR_RESULT, PARTY_SIZE, EventScript_CantSmashRock
 	setfieldeffectargument 0, VAR_RESULT
-    copyvar VAR_0x8006, VAR_RESULT
+	copyvar VAR_0x8006, VAR_RESULT
 	bufferpartymonnick STR_VAR_1, VAR_RESULT
 	buffermovename STR_VAR_2, MOVE_ROCK_SMASH
 	msgbox Text_WantToSmash, MSGBOX_YESNO
@@ -88,8 +88,8 @@ EventScript_SmashRock:: @ fallthrough
 	specialvar VAR_RESULT, TryUpdateRusturfTunnelState
 	goto_if_eq VAR_RESULT, TRUE, EventScript_EndSmash
 	callnative rockSmashRNG
-    goto_if_eq VAR_RESULT, 1, EventScript_RockSmashWildEncounter
-    goto_if_eq VAR_RESULT, 2, EventScript_RockSmashItem
+	goto_if_eq VAR_RESULT, 1, EventScript_RockSmashWildEncounter
+	goto_if_eq VAR_RESULT, 2, EventScript_RockSmashItem
 EventScript_EndSmash::
 	releaseall
 	end
@@ -102,11 +102,11 @@ EventScript_RockSmashWildEncounter::
 	end
 
 EventScript_RockSmashItem::
-    callnative rockSmashGenerateItem
+	callnative Scrcmd_rockSmashGenerateItem
 	goto_if_eq VAR_0x8005, ITEM_NONE, EventScript_EndSmash
-    checkitemspace VAR_0x8005
+	checkitemspace VAR_0x8005
 	goto_if_eq VAR_RESULT, FALSE, EventScript_EndSmash
-    giveitem VAR_0x8005
+	giveitem VAR_0x8005
 	releaseall
 	end
 
