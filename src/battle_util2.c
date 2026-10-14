@@ -294,11 +294,6 @@ bool8 IsTowerLinkMulti(void)
     return (HasAllBattleFlags(BATTLE_TYPE_TOWER_LINK_MULTI) && gMain.inBattle);
 }
 
-bool8 IsBattleRecordedMaster(void)
-{
-    return (HasAllBattleFlags(BATTLE_TYPE_RECORDED | BATTLE_TYPE_IS_MASTER) && gMain.inBattle);
-}
-
 bool8 IsLinkMultiBattle(void)
 {
     return HasAllBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_MULTI);
@@ -306,7 +301,7 @@ bool8 IsLinkMultiBattle(void)
 
 bool8 HasAnyBattleFlags(u32 flags)
 {
-    return gBattleTypeFlags & flags;
+    return (gBattleTypeFlags & flags) != 0;
 }
 
 bool8 HasAllBattleFlags(u32 flags)

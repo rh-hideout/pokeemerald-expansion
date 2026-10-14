@@ -205,7 +205,7 @@ static void InitBtlControllersInternal(void)
     bool32 isDouble = IsDoubleBattle();
     bool32 isMaster = HasAnyBattleFlags(BATTLE_TYPE_IS_MASTER);
     bool32 isRecorded = HasAnyBattleFlags(BATTLE_TYPE_RECORDED);
-    bool32 isRecordedMaster = HasAllBattleFlags(BATTLE_TYPE_RECORDED | BATTLE_TYPE_IS_MASTER);
+    bool32 isRecordedMaster = HasAnyBattleFlags(BATTLE_TYPE_RECORDED_IS_MASTER);
     bool32 isRecordedLink = HasAnyBattleFlags(BATTLE_TYPE_RECORDED_LINK);
     bool32 isMulti = HasAnyBattleFlags(BATTLE_TYPE_MULTI);
     bool32 isInGamePartner = HasAnyBattleFlags(BATTLE_TYPE_INGAME_PARTNER);

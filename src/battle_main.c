@@ -3279,7 +3279,7 @@ static void DoBattleIntro(void)
         }
         break;
     case BATTLE_INTRO_STATE_TRAINER_SEND_OUT_TEXT:
-        if (HasAnyBattleFlags(BATTLE_TYPE_RECORDED_LINK) && !IsBattleRecordedMaster())
+        if (HasAnyBattleFlags(BATTLE_TYPE_RECORDED_LINK) && HasNoneOfBattleFlags(BATTLE_TYPE_RECORDED_IS_MASTER))
             PrepareStringBattle(STRINGID_INTROSENDOUT, GetBattlerAtPosition(B_POSITION_PLAYER_LEFT));
         else
             PrepareStringBattle(STRINGID_INTROSENDOUT, GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT));
@@ -3290,7 +3290,7 @@ static void DoBattleIntro(void)
             gBattleStruct->eventState.battleIntro++;
         break;
     case BATTLE_INTRO_STATE_TRAINER_1_SEND_OUT_ANIM:
-        if (HasAnyBattleFlags(BATTLE_TYPE_RECORDED_LINK) && !IsBattleRecordedMaster())
+        if (HasAnyBattleFlags(BATTLE_TYPE_RECORDED_LINK) && HasNoneOfBattleFlags(BATTLE_TYPE_RECORDED_IS_MASTER))
             battler = GetBattlerAtPosition(B_POSITION_PLAYER_LEFT);
         else
             battler = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);

@@ -1133,7 +1133,6 @@ enum BattlerId GetDefaultSelectionTarget(enum BattlerId battler, enum MoveTarget
 bool8 IsTrainerBattle(void);
 bool8 IsMultiBattle(void);
 bool8 IsTowerLinkMulti(void);
-bool8 IsBattleRecordedMaster(void);
 bool8 HasAnyBattleFlags(u32 flags);
 bool8 HasAllBattleFlags(u32 flags);
 bool8 HasNoneOfBattleFlags(u32 flags);
