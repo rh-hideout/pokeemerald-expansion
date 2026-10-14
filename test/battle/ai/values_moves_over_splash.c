@@ -104,7 +104,6 @@ AI_DOUBLE_BATTLE_TEST("AI values moves above Splash, 101-200")
         //TODO: AI TESTS
         case EFFECT_RESTORE_HP:
         case EFFECT_MIMIC:
-        case EFFECT_SOFTBOILED:
         case EFFECT_DREAM_EATER:
         case EFFECT_CONVERSION:
         case EFFECT_PERISH_SONG:
@@ -185,7 +184,6 @@ AI_DOUBLE_BATTLE_TEST("AI values moves above Splash, 201-300")
 
         //TODO: AI TESTS
         case EFFECT_RESTORE_HP:
-        case EFFECT_SOFTBOILED:
         case EFFECT_ENDURE:
         case EFFECT_BATON_PASS:
         case EFFECT_ENCORE:

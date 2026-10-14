@@ -798,6 +798,10 @@ BattleScript_EffectHealingWishRestore:
 	return
 
 BattleScript_MoveEffectOverwriteAbility::
+	call BattleScript_AbilityPopUpOverwriteThenNormal
+	printsavedstring BS_EFFECT_BATTLER
+	waitmessage B_WAIT_TIME_LONG
+BattleScript_EffectsOnAbilityOverwrite:
 	tryillusionoff BS_EFFECT_BATTLER
 	tryendneutralizinggas BS_EFFECT_BATTLER
 	trytoclearprimalweather
@@ -808,7 +812,7 @@ BattleScript_MoveEffectOverwriteAbility::
 BattleScript_MoveEffectGastroAcid::
 	printstring STRINGID_PKMNSABILITYSUPPRESSED
 	waitmessage B_WAIT_TIME_LONG
-	call BattleScript_MoveEffectOverwriteAbility
+	call BattleScript_EffectsOnAbilityOverwrite
 	return
 
 BattleScript_TryRoomServiceLoop::
@@ -874,14 +878,12 @@ BattleScript_ElectricTerrainPrevents::
 	pause B_WAIT_TIME_SHORT
 	printstring STRINGID_ELECTRICTERRAINPREVENTS
 	waitmessage B_WAIT_TIME_LONG
-	setmoveresultflags MOVE_RESULT_FAILED
 	return
 
 BattleScript_MistyTerrainPrevents::
 	pause B_WAIT_TIME_SHORT
 	printstring STRINGID_MISTYTERRAINPREVENTS
 	waitmessage B_WAIT_TIME_LONG
-	setmoveresultflags MOVE_RESULT_FAILED
 	return
 
 BattleScript_FlowerVeilProtects::
@@ -900,7 +902,6 @@ BattleScript_SweetVeilProtectsRet::
 
 BattleScript_SweetVeilProtects:
 	call BattleScript_SweetVeilProtectsRet
-	setmoveresultflags MOVE_RESULT_FAILED
 	goto BattleScript_MoveEnd
 
 BattleScript_AromaVeilProtectsRet::
@@ -915,7 +916,6 @@ BattleScript_InsomniaProtects::
 	call BattleScript_AbilityPopUp
 	printstring STRINGID_PKMNSTAYEDAWAKEUSING
 	waitmessage B_WAIT_TIME_LONG
-	setmoveresultflags MOVE_RESULT_FAILED
 	goto BattleScript_MoveEnd
 
 BattleScript_AlreadyAsleep::
@@ -923,14 +923,12 @@ BattleScript_AlreadyAsleep::
 	pause B_WAIT_TIME_SHORT
 	printstring STRINGID_PKMNALREADYASLEEP
 	waitmessage B_WAIT_TIME_LONG
-	setmoveresultflags MOVE_RESULT_FAILED
 	return
 
 BattleScript_CantMakeAsleep::
 	pause B_WAIT_TIME_SHORT
 	printfromtable gUproarAwakeStringIds
 	waitmessage B_WAIT_TIME_LONG
-	setmoveresultflags MOVE_RESULT_FAILED
 	return
 
 BattleScript_EffectAbsorbLiquidOoze::
@@ -1134,7 +1132,6 @@ BattleScript_SkyDropFlyingType::
 
 BattleScript_SkyDropNoTarget::
 	pause B_WAIT_TIME_SHORT
-	setmoveresultflags MOVE_RESULT_FAILED
 	printstring STRINGID_BUTITFAILED
 	waitmessage B_WAIT_TIME_LONG
 	makevisible BS_ATTACKER
@@ -1360,7 +1357,6 @@ BattleScript_ButItFailed::
 	pause B_WAIT_TIME_SHORT
 	printstring STRINGID_BUTITFAILED
 	waitmessage B_WAIT_TIME_LONG
-	setmoveresultflags MOVE_RESULT_FAILED
 	goto BattleScript_MoveEnd
 
 BattleScript_NotAffectedAbilityPopUp::
@@ -1394,13 +1390,6 @@ BattleScript_FocusPunchLostFocus::
 	printstring STRINGID_PKMNLOSTFOCUS
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
-
-BattleScript_MoveEffectRolePlay::
-	call BattleScript_AbilityPopUpOverwriteThenNormal
-	printstring STRINGID_PKMNCOPIEDFOE
-	waitmessage B_WAIT_TIME_LONG
-	call BattleScript_MoveEffectOverwriteAbility
-	return
 
 @ TO-DO: The battle messages from this should come after the move has resolved
 BattleScript_BreakScreens::
@@ -2361,7 +2350,6 @@ BattleScript_MonTookFutureAttack::
 	moveendall
 	checkteamslost BattleScript_FutureAttackClearResults
 BattleScript_FutureAttackClearResults:
-	setmoveresultflags 0
 	clearspecialstatuses
 	return
 
@@ -2576,7 +2564,6 @@ BattleScript_MagicCoatPrankster::
 	waitmessage B_WAIT_TIME_LONG
 	printstring STRINGID_ITDOESNTAFFECT
 	waitmessage B_WAIT_TIME_LONG
-	setmoveresultflags MOVE_RESULT_NO_EFFECT
 	goto BattleScript_MoveEnd
 
 BattleScript_SnatchedMove::
@@ -3832,8 +3819,6 @@ BattleScript_ImposterActivates::
 	waitanimation
 	printstring STRINGID_IMPOSTERTRANSFORM
 	waitmessage B_WAIT_TIME_LONG
-	restoreattacker
-	restoretarget
 	return
 
 BattleScript_HurtAttacker:
@@ -3863,12 +3848,10 @@ BattleScript_RockyHelmetActivates::
 
 BattleScript_SpikyShieldEffect::
 	jumpifabsent BS_ATTACKER, BattleScript_SpikyShieldRet
-	clearmoveresultflags MOVE_RESULT_NO_EFFECT
 	healthbarupdate BS_ATTACKER
 	datahpupdate BS_ATTACKER, ASSURANCE_DOUBLE
 	printstring STRINGID_PKMNWASHURT
 	waitmessage B_WAIT_TIME_LONG
-	setmoveresultflags MOVE_RESULT_MISSED
 BattleScript_SpikyShieldRet::
 	return
 
@@ -3877,7 +3860,6 @@ BattleScript_KingsShieldEffect::
 	return
 
 BattleScript_BanefulBunkerEffect::
-	clearmoveresultflags MOVE_RESULT_NO_EFFECT
 	setnonvolatilestatus TRIGGER_ON_PROTECT
 	return
 
@@ -4920,7 +4902,6 @@ BattleScript_BoosterEnergy::
 
 BattleScript_SleepClauseBlocked::
 	pause B_WAIT_TIME_SHORT
-	setmoveresultflags MOVE_RESULT_FAILED
 	printstring STRINGID_BLOCKEDBYSLEEPCLAUSE
 	waitmessage B_WAIT_TIME_LONG
 	return

@@ -642,7 +642,7 @@ ContestHall_EventScript_AudienceMember3AlreadyEmoted::
 	return
 
 ContestHall_EventScript_TryDisplayHeartAudienceMember4::
-	goto_if_eq VAR_TEMP_4, 1, ContestHall_EventScript_Audience4MemberAlreadyEmoted
+	goto_if_eq VAR_TEMP_4, 1, ContestHall_EventScript_AudienceMember4AlreadyEmoted
 	applymovement LOCALID_CONTEST_AUDIENCE_4, ContestHall_Movement_Heart
 	playse SE_PIN
 	delay 14
@@ -650,7 +650,7 @@ ContestHall_EventScript_TryDisplayHeartAudienceMember4::
 	addvar VAR_TEMP_0, -1
 	return
 
-ContestHall_EventScript_Audience4MemberAlreadyEmoted::
+ContestHall_EventScript_AudienceMember4AlreadyEmoted::
 	return
 
 ContestHall_EventScript_TryDisplayHeartAudienceMember5::
