@@ -2163,9 +2163,6 @@ static void Detail_BuildActiveEffectsForBattler(void)
     struct SideTimer *sideStatus = &gSideTimers[side];
     struct Volatiles *vol = &gBattleMons[battler].volatiles;
 
-    bool32 critBoost = (vol->focusEnergy || vol->dragonCheer);
-    bool32 foresight = (vol->foresight || vol->miracleEye);
-
     TryAddActiveWeather(GetStatusEffectFromWeather(), side);
     TryAddActiveTerrain(GetStatusEffectFromTerrain(), side);
     TryAddActiveFieldStatus(INFO_TRICK_ROOM, STATUS_FIELD_TRICK_ROOM, fieldStatus->trickRoomTimer, 5, side);
@@ -2218,8 +2215,9 @@ static void Detail_BuildActiveEffectsForBattler(void)
     TryAddActiveStatus(INFO_RAMPAGING, vol->rampageTurns, side);
     TryAddActiveStatus(INFO_CONFUSION, vol->confusionTimer, side);
     TryAddActiveStatus(INFO_CANT_ESCAPE, vol->escapePrevention, side);
-    TryAddActiveStatus(INFO_CRITICAL_HIT_BOOST, critBoost, side);
-    TryAddActiveStatus(INFO_IDENTIFIED, foresight, side);
+    TryAddActiveStatus(INFO_CRITICAL_HIT_BOOST, vol->criticalHitBoost, side);
+    TryAddActiveStatus(INFO_IDENTIFIED, vol->foresight, side);
+    TryAddActiveStatus(INFO_IDENTIFIED, vol->miracleEye, side);
     TryAddActiveStatus(INFO_NO_ABILITY, vol->gastroAcid, side);
     TryAddActiveStatus(INFO_IMPRISON, vol->imprison, side);
     TryAddActiveStatus(INFO_LEECH_SEED, vol->leechSeed, side);

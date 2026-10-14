@@ -146,7 +146,7 @@ SINGLE_BATTLE_TEST("Healing berry animates on the correct battler at battle star
     } SCENE {
         NONE_OF {
             ITEM_POPUP(player, ITEM_ORAN_BERRY);
-            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
         }
         ITEM_POPUP(opponent, ITEM_ORAN_BERRY);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);

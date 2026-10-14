@@ -952,7 +952,7 @@ bool8 SetUpCopyrightScreenFrlg(void)
         SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_OBJ_1D_MAP | DISPCNT_BG0_ON);
         SetSerialCallback(SerialCB_CopyrightScreen);
         GameCubeMultiBoot_Init(&sGcmb);
-        // fallthrough
+        [[fallthrough]];
     default:
         UpdatePaletteFade();
         gMain.state++;
@@ -1004,7 +1004,7 @@ void CB2_SetUpIntroFrlg(void)
     {
     default:
         gMain.state = 0;
-        // fallthrough
+        [[fallthrough]];
     case 0:
         SetVBlankCallback(NULL);
         SetGpuReg(REG_OFFSET_DISPCNT, 0);
@@ -1688,7 +1688,7 @@ static void SpriteCB_Grass(struct Sprite *sprite)
         sBaseX = sprite->x << 5;
         sVeloc = 160;
         sState++;
-        // fallthrough
+        [[fallthrough]];
     case 1:
         sBaseX -= sVeloc;
         sprite->x = sBaseX >> 5;
@@ -2232,7 +2232,7 @@ static void Scene3_Task_GengarEnter(u8 taskId)
     case 0:
         tSpeed = 0x400;
         tState++;
-        // fallthrough
+        [[fallthrough]];
     case 1:
         // Don't decelerate for the first 40 movements
         if (++tMoves >= 40 && tSpeed > 16)
@@ -2609,7 +2609,7 @@ static void SpriteCB_RecoilDust(struct Sprite *sprite)
         sX = sprite->x << 4;
         sY = sprite->y << 4;
         sprite->sState++;
-        // fallthrough
+        [[fallthrough]];
     case 1:
         sX -= sSpeedX;
         sY += sSpeedY;

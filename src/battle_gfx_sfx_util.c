@@ -711,79 +711,80 @@ void FreeTrainerFrontPicPalette(enum TrainerPicID trainerPicId)
 
 bool8 BattleLoadAllHealthBoxesGfx(u8 state)
 {
-    bool8 retVal = FALSE;
-
-    if (state != 0)
+    if (state == 1)
     {
-        if (state == 1)
+        LoadSpritePalette(&sSpritePalettes_HealthBoxHealthBar[0]);
+        LoadSpritePalette(&sSpritePalettes_HealthBoxHealthBar[1]);
+        CategoryIcons_LoadSpritesGfx();
+    }
+
+    if (state < 2)
+    {
+        return FALSE;
+    }
+
+    const struct CompressedSpriteSheet *spriteSheet = NULL;
+
+    if (IsDoubleBattle())
+    {
+        switch (state)
         {
-            LoadSpritePalette(&sSpritePalettes_HealthBoxHealthBar[0]);
-            LoadSpritePalette(&sSpritePalettes_HealthBoxHealthBar[1]);
-            CategoryIcons_LoadSpritesGfx();
-        }
-        else if (!IsDoubleBattle())
-        {
-            if (state == 2)
+        case 2:
+            if (GetBattlerCoordsIndex(GetBattlerAtPosition(B_POSITION_PLAYER_LEFT)) == BATTLE_COORDS_SINGLES)
             {
-                if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
-                    LoadCompressedSpriteSheet(&sSpriteSheet_SafariHealthbox);
-                else
-                    LoadCompressedSpriteSheet(&sSpriteSheet_SinglesPlayerHealthbox);
-            }
-            else if (state == 3)
-            {
-                if (B_HP_PERCENTAGE_DISPLAY)
-                    LoadCompressedSpriteSheet(&sSpriteSheet_SinglesOpponentLargeHealthbox);
-                else
-                    LoadCompressedSpriteSheet(&sSpriteSheet_SinglesOpponentHealthbox);
-            }
-            else if (state == 4)
-            {
-                LoadCompressedSpriteSheet(&sSpriteSheets_HealthBar[GetBattlerPosition(B_BATTLER_0)]);
-            }
-            else if (state == 5)
-            {
-                LoadCompressedSpriteSheet(&sSpriteSheets_HealthBar[GetBattlerPosition(B_BATTLER_1)]);
+                spriteSheet = &sSpriteSheet_SinglesPlayerHealthbox;
             }
             else
             {
-                retVal = TRUE;
+                spriteSheet = &sSpriteSheets_DoublesPlayerHealthbox[0];
             }
-        }
-        else
-        {
-            if (state == 2)
+            break;
+        case 3:
+            spriteSheet = &sSpriteSheets_DoublesPlayerHealthbox[1];
+            break;
+        case 4:
+            if (GetBattlerCoordsIndex(GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT)) == BATTLE_COORDS_SINGLES)
             {
-                switch (GetBattlerCoordsIndex(GetBattlerAtPosition(B_POSITION_PLAYER_LEFT)))
-                {
-                default:
-                    LoadCompressedSpriteSheet(&sSpriteSheets_DoublesPlayerHealthbox[0]);
-                    break;
-                case BATTLE_COORDS_SINGLES:
-                    LoadCompressedSpriteSheet(&sSpriteSheet_SinglesPlayerHealthbox);
-                    break;
-                }
+                spriteSheet = B_HP_PERCENTAGE_DISPLAY ? &sSpriteSheet_SinglesOpponentLargeHealthbox : &sSpriteSheet_SinglesOpponentHealthbox;
             }
-            else if (state == 3)
-                LoadCompressedSpriteSheet(&sSpriteSheets_DoublesPlayerHealthbox[1]);
-            else if (state == 4)
-                LoadCompressedSpriteSheet(&sSpriteSheets_DoublesOpponentHealthbox[0]);
-            else if (state == 5)
-                LoadCompressedSpriteSheet(&sSpriteSheets_DoublesOpponentHealthbox[1]);
-            else if (state == 6)
-                LoadCompressedSpriteSheet(&sSpriteSheets_HealthBar[GetBattlerPosition(B_BATTLER_0)]);
-            else if (state == 7)
-                LoadCompressedSpriteSheet(&sSpriteSheets_HealthBar[GetBattlerPosition(B_BATTLER_1)]);
-            else if (state == 8)
-                LoadCompressedSpriteSheet(&sSpriteSheets_HealthBar[GetBattlerPosition(B_BATTLER_2)]);
-            else if (state == 9)
-                LoadCompressedSpriteSheet(&sSpriteSheets_HealthBar[GetBattlerPosition(B_BATTLER_3)]);
             else
-                retVal = TRUE;
+            {
+                spriteSheet = &sSpriteSheets_DoublesOpponentHealthbox[0];
+            }
+            break;
+        case 5:
+            spriteSheet = &sSpriteSheets_DoublesOpponentHealthbox[1];
+            break;
+        case 6 ... 9:
+            enum BattlerPosition position = GetBattlerPosition((enum BattlerId)(state - 6));
+            spriteSheet = &sSpriteSheets_HealthBar[position];
+            break;
+        default:
+            return TRUE;
+        }
+    }
+    else
+    {
+        switch (state)
+        {
+        case 2:
+            spriteSheet = (gBattleTypeFlags & BATTLE_TYPE_SAFARI) ? &sSpriteSheet_SafariHealthbox : &sSpriteSheet_SinglesPlayerHealthbox;
+            break;
+        case 3:
+            spriteSheet = B_HP_PERCENTAGE_DISPLAY ? &sSpriteSheet_SinglesOpponentLargeHealthbox : &sSpriteSheet_SinglesOpponentHealthbox;
+            break;
+        case 4:
+        case 5:
+            enum BattlerPosition position = GetBattlerPosition((enum BattlerId)(state - 4));
+            spriteSheet = &sSpriteSheets_HealthBar[position];
+            break;
+        default:
+            return TRUE;
         }
     }
 
-    return retVal;
+    LoadCompressedSpriteSheet(spriteSheet);
+    return FALSE;
 }
 
 void LoadBattleBarGfx(u8 unused)

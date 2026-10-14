@@ -3335,7 +3335,8 @@ static void Task_BounceBall(u8 taskId)
         {
             DestroyLastUsedBallGfx(sprite);
             task->sState++;
-        }  // Passthrough
+        }
+        [[fallthrough]];
     case 2: //Create New Icon
         if (!sprite->inUse)
         {
@@ -3346,7 +3347,8 @@ static void Task_BounceBall(u8 taskId)
                 gSprites[gBattleStruct->ballSpriteIds[0]].y = LAST_USED_BALL_Y_BNC;
             }
             task->sState++;
-        }  // Fallthrough
+        }
+        [[fallthrough]];
     case 3: // Bounce Down
         if (!sprite->sMoving)
         {
