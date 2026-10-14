@@ -35,7 +35,7 @@ void FillPartnerParty(u16 trainerId)
 
     if (trainerId > TRAINER_PARTNER(PARTNER_NONE))
     {
-        s32 lastIndex = AreMultiPartiesFullTeams() ? PARTY_SIZE : MULTI_PARTY_SIZE;
+        s32 lastIndex = AreMultiPartiesHalfTeams() ? MULTI_PARTY_SIZE : PARTY_SIZE;
 
         const struct Trainer *partner = GetTrainerStructFromId(trainerId);
         struct TrainerGenerator partnerGen;
