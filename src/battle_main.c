@@ -5863,3 +5863,10 @@ void BattleDebug_WonBattle(void)
     gBattleOutcome |= B_OUTCOME_WON;
     gBattleMainFunc = sEndTurnFuncsTable[gBattleOutcome & 0x7F];
 }
+
+// Loses the battle instantly. Used in the battle debug with LIST_ITEM_INSTANT_LOSE
+void BattleDebug_LostBattle(void)
+{
+    gBattleOutcome |= B_OUTCOME_LOST;
+    gBattleMainFunc = sEndTurnFuncsTable[gBattleOutcome & 0x7F];
+}
