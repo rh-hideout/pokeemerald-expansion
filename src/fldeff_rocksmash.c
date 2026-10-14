@@ -189,10 +189,10 @@ static enum Item GetRockSmashRandomItem(void)
     assertf(itemTable < ROCK_SMASH_ITEM_TABLE_COUNT, "Unassigned or invalid rock smash item table %d", itemTable)
     {
         if ((gMapHeader.mapType == MAP_TYPE_OCEAN_ROUTE)
-            || (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_SEAFLOOR_CAVERN_ROOM1) &&
-            gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_SEAFLOOR_CAVERN_ROOM1)
-            gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_SEAFLOOR_CAVERN_ROOM2)
-            gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_SEAFLOOR_CAVERN_ROOM5)))
+            || (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_SEAFLOOR_CAVERN_ROOM1)
+            && (gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_SEAFLOOR_CAVERN_ROOM1)
+             || gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_SEAFLOOR_CAVERN_ROOM2)
+             || gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_SEAFLOOR_CAVERN_ROOM5))))
             itemTable = ROCK_SMASH_ITEM_TABLE_CLIFF;
         else if (gMapHeader.mapType == MAP_TYPE_INDOOR)
             itemTable = ROCK_SMASH_ITEM_TABLE_NONE;
