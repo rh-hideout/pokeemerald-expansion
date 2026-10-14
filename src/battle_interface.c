@@ -599,9 +599,9 @@ static const union TextColor sHealthBoxTextColor =
 // The same goes for a 2 vs 1 where opponent has only one Pokémon.
 enum BattleCoordTypes GetBattlerCoordsIndex(enum BattlerId battler)
 {
-    if (GetBattlerPosition(battler) == B_POSITION_PLAYER_LEFT && gPartiesCount[B_TRAINER_PLAYER] == 1 && !(gBattleTypeFlags & BATTLE_TYPE_MULTI))
+    if (GetBattlerPosition(battler) == B_POSITION_PLAYER_LEFT && gPartiesCount[B_TRAINER_PLAYER] == 1 && HasNoneOfBattleFlags(BATTLE_TYPE_MULTI))
         return BATTLE_COORDS_SINGLES;
-    else if (GetBattlerPosition(battler) == B_POSITION_OPPONENT_LEFT && gPartiesCount[B_TRAINER_OPPONENT_A] == 1 && !(gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS))
+    else if (GetBattlerPosition(battler) == B_POSITION_OPPONENT_LEFT && gPartiesCount[B_TRAINER_OPPONENT_A] == 1 && HasNoneOfBattleFlags(BATTLE_TYPE_TWO_OPPONENTS))
         return BATTLE_COORDS_SINGLES;
     else if (IsDoubleBattle())
         return BATTLE_COORDS_DOUBLES;
@@ -1238,7 +1238,7 @@ void SwapHpBarsWithHpText(void)
             {
                 if (GetBattlerCoordsIndex(i) == BATTLE_COORDS_SINGLES)
                     continue;
-                if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
+                if (HasAnyBattleFlags(BATTLE_TYPE_SAFARI))
                     continue;
 
                 if (noBars == TRUE) // bars to text
@@ -1261,7 +1261,7 @@ void SwapHpBarsWithHpText(void)
             {
                 if (GetBattlerCoordsIndex(i) == BATTLE_COORDS_SINGLES)
                     continue;
-                if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
+                if (HasAnyBattleFlags(BATTLE_TYPE_SAFARI))
                     continue;
 
                 if (noBars == TRUE) // bars to text
@@ -1404,7 +1404,7 @@ u8 CreatePartyStatusSummarySprites(enum BattlerId battler, struct HpAndStatus *p
 
     if (IsOnPlayerSide(battler))
     {
-        if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
+        if (HasAnyBattleFlags(BATTLE_TYPE_MULTI))
         {
             for (i = 0; i < PARTY_SIZE; i++)
             {
@@ -1443,7 +1443,7 @@ u8 CreatePartyStatusSummarySprites(enum BattlerId battler, struct HpAndStatus *p
                     // fainted mon
                     gSprites[ballIconSpritesIds[i]].oam.tileNum += 3;
                 }
-                else if (gBattleTypeFlags & BATTLE_TYPE_ARENA && gBattleStruct->arenaLostPlayerMons & (1u << j))
+                else if (HasAnyBattleFlags(BATTLE_TYPE_ARENA) && gBattleStruct->arenaLostPlayerMons & (1u << j))
                 {
                     // fainted arena mon
                     gSprites[ballIconSpritesIds[i]].oam.tileNum += 3;
@@ -1459,7 +1459,7 @@ u8 CreatePartyStatusSummarySprites(enum BattlerId battler, struct HpAndStatus *p
     }
     else
     {
-        if (gBattleTypeFlags & (BATTLE_TYPE_MULTI | BATTLE_TYPE_TWO_OPPONENTS))
+        if (HasAnyBattleFlags(BATTLE_TYPE_MULTI | BATTLE_TYPE_TWO_OPPONENTS))
         {
             for (var = PARTY_SIZE - 1, i = 0; i < PARTY_SIZE; i++)
             {
@@ -1499,7 +1499,7 @@ u8 CreatePartyStatusSummarySprites(enum BattlerId battler, struct HpAndStatus *p
                      // fainted mon
                     gSprites[ballIconSpritesIds[PARTY_SIZE - 1 - var]].oam.tileNum += 3;
                 }
-                else if (gBattleTypeFlags & BATTLE_TYPE_ARENA && gBattleStruct->arenaLostOpponentMons & (1u << j))
+                else if (HasAnyBattleFlags(BATTLE_TYPE_ARENA) && gBattleStruct->arenaLostOpponentMons & (1u << j))
                 {
                      // fainted arena mon
                     gSprites[ballIconSpritesIds[PARTY_SIZE - 1 - var]].oam.tileNum += 3;
@@ -1840,9 +1840,9 @@ void TryAddPokeballIconToHealthbox(u8 healthboxSpriteId, bool8 noStatus)
     enum BattlerId battler;
     u8 healthBarSpriteId;
 
-    if (gBattleTypeFlags & BATTLE_TYPE_CATCH_TUTORIAL)
+    if (HasAnyBattleFlags(BATTLE_TYPE_CATCH_TUTORIAL))
         return;
-    if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
+    if (IsTrainerBattle())
         return;
 
     battler = gSprites[healthboxSpriteId].hMain_Battler;
@@ -2985,7 +2985,7 @@ bool32 CanThrowLastUsedBall(void)
         return FALSE;
     if (!CanThrowBall())
         return FALSE;
-    if (gBattleTypeFlags & (BATTLE_TYPE_TRAINER | BATTLE_TYPE_FRONTIER))
+    if (HasAnyBattleFlags(BATTLE_TYPE_TRAINER | BATTLE_TYPE_FRONTIER))
         return FALSE;
     if (!CheckBagHasItem(gBallToDisplay, 1))
         return FALSE;

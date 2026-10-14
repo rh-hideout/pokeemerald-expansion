@@ -1164,7 +1164,7 @@ void PutBattleUpdateOnTheAir(u8 opponentLinkPlayerId, enum Move move, enum Speci
             show->battleUpdate.active = TRUE;
             StringCopy(show->battleUpdate.playerName, gSaveBlock2Ptr->playerName);
 
-            if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
+            if (HasAnyBattleFlags(BATTLE_TYPE_MULTI))
                 show->battleUpdate.battleType = 2;
             else if (IsDoubleBattle())
                 show->battleUpdate.battleType = 1;

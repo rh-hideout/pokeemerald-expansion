@@ -35,9 +35,9 @@ void CloseMainBattleScreen(void)
 
 void AllocateBattleResources(void)
 {
-    if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_TOWER && gMapHeader.regionMapSectionId == MAPSEC_TRAINER_TOWER_2)
+    if (HasAnyBattleFlags(BATTLE_TYPE_TRAINER_TOWER) && gMapHeader.regionMapSectionId == MAPSEC_TRAINER_TOWER_2)
         InitTrainerTowerBattleStruct();
-    else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_HILL)
+    else if (HasAnyBattleFlags(BATTLE_TYPE_TRAINER_HILL))
         InitTrainerHillBattleStruct();
 
     gBattleStruct = AllocZeroed(sizeof(*gBattleStruct));
@@ -62,7 +62,7 @@ void AllocateBattleResources(void)
 
     AllocateBattleGfxResources();
 
-    if (gBattleTypeFlags & BATTLE_TYPE_SECRET_BASE)
+    if (HasAnyBattleFlags(BATTLE_TYPE_SECRET_BASE))
     {
         u16 currSecretBaseId = VarGet(VAR_CURRENT_SECRET_BASE);
         CreateSecretBaseEnemyParty(&gSaveBlock1Ptr->secretBases[currSecretBaseId]);
@@ -71,9 +71,9 @@ void AllocateBattleResources(void)
 
 void FreeBattleResources(void)
 {
-    if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_TOWER && gMapHeader.regionMapSectionId == MAPSEC_TRAINER_TOWER_2)
+    if (HasAnyBattleFlags(BATTLE_TYPE_TRAINER_TOWER) && gMapHeader.regionMapSectionId == MAPSEC_TRAINER_TOWER_2)
         FreeTrainerTowerBattleStruct();
-    else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_HILL)
+    else if (HasAnyBattleFlags(BATTLE_TYPE_TRAINER_HILL))
         FreeTrainerHillBattleStruct();
 
     memset(&gFieldTimers, 0, sizeof(struct FieldTimer));
@@ -276,6 +276,11 @@ struct Pokemon* GetBattlerMon(enum BattlerId battler)
     return &GetBattlerParty(battler)[index];
 }
 
+bool8 IsTrainerBattle(void)
+{
+    return HasAnyBattleFlags(BATTLE_TYPE_TRAINER);
+}
+
 bool8 IsMultiBattle(void)
 {
     if (gPartnerTrainerId != 0 && gMain.inBattle)
@@ -286,5 +291,30 @@ bool8 IsMultiBattle(void)
 
 bool8 IsTowerLinkMulti(void)
 {
-    return (BATTLE_TOWER_LINK_MULTI && gMain.inBattle);
+    return (HasAllBattleFlags(BATTLE_TYPE_TOWER_LINK_MULTI) && gMain.inBattle);
+}
+
+bool8 IsBattleRecordedMaster(void)
+{
+    return (HasAllBattleFlags(BATTLE_TYPE_RECORDED | BATTLE_TYPE_IS_MASTER) && gMain.inBattle);
+}
+
+bool8 IsLinkMultiBattle(void)
+{
+    return HasAllBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_MULTI);
+}
+
+bool8 HasAnyBattleFlags(u32 flags)
+{
+    return gBattleTypeFlags & flags;
+}
+
+bool8 HasAllBattleFlags(u32 flags)
+{
+    return (gBattleTypeFlags & flags) == flags;
+}
+
+bool8 HasNoneOfBattleFlags(u32 flags)
+{
+    return !HasAnyBattleFlags(flags);
 }
