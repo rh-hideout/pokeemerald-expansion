@@ -4545,7 +4545,7 @@ enum StringID GetStatus1String(u32 status1)
 
 static s32 GetMaxHpWithRounding(enum BattlerId battler)
 {
-    if (B_UPDATED_MOVE_DATA >= GEN_5)
+    if (B_HP_RESTORATION_ROUNDING >= GEN_5)
         return GetNonDynamaxMaxHP(battler) + 1;
     return GetNonDynamaxMaxHP(battler);
 }
