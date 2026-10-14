@@ -223,13 +223,23 @@ void PickRandomFacilityMons(struct FacilityMonGenerator *generator, u16 trainerI
         }
 
         bool32 isMonValid = TRUE;
+        enum Species pairSpecies = SPECIES_NONE;
         for (u32 j = 0; j < i; j++)
         {
             if (generator->facilityMonList[dest[j]].species == generator->facilityMonList[monId].species)
             {
-                isMonValid = FALSE;
-                break;
+                if (trainerId != 0xFFFF || pairSpecies)
+                {
+                    isMonValid = FALSE;
+                    break;
+                }
+                else
+                {
+                    pairSpecies = generator->facilityMonList[monId].species;
+                }
             }
+            if (!generator->facilityMonList[monId].heldItem)
+                break;
             if (generator->facilityMonList[dest[j]].heldItem == generator->facilityMonList[monId].heldItem)
             {
                 isMonValid = FALSE;
@@ -260,6 +270,11 @@ void PickRandomFacilityMons(struct FacilityMonGenerator *generator, u16 trainerI
             dest[i] = monId;
             i++;
         }
+        else if (pairSpecies == generator->facilityMonList[monId].species)
+        {
+            pairSpecies = SPECIES_NONE;
+        }
+
     }
 }
 

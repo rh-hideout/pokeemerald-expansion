@@ -1713,6 +1713,7 @@ static void CreateFrontierFactorySelectableMons()
         sFactorySelectScreen->mons[i].monId = monId;
         CreateFacilityMon(&sFactorySelectScreen->mons[i].monData, &generator, monId);
     }
+    gFacilityTrainerMons = generator.facilityMonList;
 }
 
 static void Select_CopyMonsToPlayerParty(void)
