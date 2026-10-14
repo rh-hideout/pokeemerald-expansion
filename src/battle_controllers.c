@@ -194,7 +194,10 @@ void InitBattleControllers(void)
 
 static void SetBattlerControllerFunc(enum BattlerPosition position, BattleControllerFunc func)
 {
-    assertf(position < MAX_POSITION_COUNT, "invalid battler position: %d", position);
+    assertf(position < MAX_POSITION_COUNT, "invalid battler position: %d", position)
+    {
+        return;
+    }
     gBattlerControllerFuncs[position] = func;
 }
 
@@ -687,12 +690,10 @@ static void Task_HandleSendLinkBuffersData(u8 taskId)
         }
         else
         {
-            //if (HasAnyBattleFlags(BATTLE_TYPE_BATTLE_TOWER))
-            //    numPlayers = 2;
-            if (HasAnyBattleFlags(BATTLE_TYPE_MULTI))
+            if (HasAnyBattleFlags(BATTLE_TYPE_BATTLE_TOWER))
                 numPlayers = 2;
             else
-                numPlayers = 4;
+                numPlayers = HasAnyBattleFlags(BATTLE_TYPE_MULTI) ? 4 : 2;
 
             if (GetLinkPlayerCount_2() >= numPlayers)
             {
