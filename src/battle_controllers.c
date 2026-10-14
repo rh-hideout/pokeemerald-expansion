@@ -194,10 +194,7 @@ void InitBattleControllers(void)
 
 static void SetBattlerControllerFunc(enum BattlerPosition position, BattleControllerFunc func)
 {
-    assertf(position < MAX_POSITION_COUNT, "invalid battler position: %d", position)
-    {
-        return;
-    }
+    assertf(position < MAX_POSITION_COUNT, "invalid battler position: %d", position);
     gBattlerControllerFuncs[position] = func;
 }
 
