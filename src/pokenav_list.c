@@ -502,7 +502,7 @@ static u32 LoopedTask_EraseListForCheckPage(s32 state)
     {
     case 0:
         ToggleListArrows(list, TRUE);
-        // fall-through
+        [[fallthrough]];
     case 1:
         if (list->eraseIndex != list->windowState.selectedIndexOffset)
             EraseListEntry(&list->listWindow, list->eraseIndex, 1);

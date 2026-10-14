@@ -1260,7 +1260,7 @@ u32 GetBattlerRawSpeedOrder(enum BattlerId battler)
 }
 
 // battlerStealer steals the item of itemBattler
-void StealTargetItem(enum BattlerId battlerStealer, enum BattlerId itemBattler, enum Item itemOverride)
+void StealTargetItem(enum BattlerId battlerStealer, enum BattlerId itemBattler, enum Item itemOverride, bool32 stealWildItem)
 {
     if (itemOverride)
     {
@@ -1272,14 +1272,7 @@ void StealTargetItem(enum BattlerId battlerStealer, enum BattlerId itemBattler, 
         gBattleMons[itemBattler].item = ITEM_NONE;
     }
 
-    if (GetConfig(B_STEAL_WILD_ITEMS) >= GEN_9
-     && HasNoneOfBattleFlags(BATTLE_TYPE_TRAINER | BATTLE_TYPE_PALACE)
-     && GetMoveEffect(gCurrentMove) == EFFECT_STEAL_ITEM
-     && battlerStealer == gBattlerAttacker) // ensure that Pickpocket isn't activating this
-    {
-        AddBagItem(gLastUsedItem, 1);
-    }
-    else
+    if (!stealWildItem)
     {
         RecordItemEffectBattle(battlerStealer, GetItemHoldEffect(gLastUsedItem));
         gBattleMons[battlerStealer].item = gLastUsedItem;
@@ -1844,7 +1837,7 @@ static void Cmd_getexp(void)
             *expMonId = gBattleStruct->expGettersOrder[0];
             gBattleStruct->expSentInMons = sentInBits;
         }
-        // fall through
+        [[fallthrough]];
     case 2: // set exp value to the poke in expgetter_id and print message
         if (gBattleControllerExecFlags == 0)
         {
@@ -3208,7 +3201,7 @@ static void Cmd_switchhandleorder(void)
             RecordedBattle_SetBattlerAction(battler, gBattleResources->bufferB[battler][1]);
             gBattleStruct->recordedActionSet |= 1u << battler;
         }
-        // fall through
+        [[fallthrough]];
     case 3:
         gBattleCommunication[0] = gBattleResources->bufferB[battler][1];
         gBattleStruct->monToSwitchIntoId[battler] = (enum PartyMon)gBattleResources->bufferB[battler][1];
@@ -5601,6 +5594,7 @@ static void FinalizeCapture(void)
     gBattlescriptCurrInstr = BattleScript_SuccessBallThrow;
     struct Pokemon *caughtMon = GetBattlerMon(gBattlerTarget);
     SetMonData(caughtMon, MON_DATA_POKEBALL, &ballId);
+    RestoreCaughtWildMonHeldItem(caughtMon, gBattlerTarget);
 
     if (CalculatePlayerPartyCount() == PARTY_SIZE)
         gBattleCommunication[MULTISTRING_CHOOSER] = 0;

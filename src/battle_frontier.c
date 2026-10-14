@@ -310,17 +310,18 @@ void CreateFacilityMon(const struct TrainerMon *fmon, u16 level, u8 fixedIV, u32
 {
     enum PokeBall ball = (fmon->ball == 0xFF) ? Random() % POKEBALL_COUNT : fmon->ball;
     enum Move move;
-    u32 personality = 0, friendship, j;
-    enum Ability ability;
+    u32 friendship, j;
+    u32 data;
 
+    u32 personality = (Random32() & 0xFFFFDF00) + 0x1000;
+    u32 genderValue = Random32();
     if (fmon->gender == TRAINER_MON_MALE)
-    {
-        personality = GeneratePersonalityForGender(MON_MALE, fmon->species) + 0x1000;
-    }
+        genderValue = GeneratePersonalityForGender(MON_MALE, fmon->species, genderValue);
     else if (fmon->gender == TRAINER_MON_FEMALE)
-    {
-        personality = GeneratePersonalityForGender(MON_FEMALE, fmon->species) + 0x1000;
-    }
+        genderValue = GeneratePersonalityForGender(MON_FEMALE, fmon->species, genderValue);
+    else
+        genderValue = genderValue & 0x000000FF;
+    personality |= genderValue;
 
     ModifyPersonalityForNature(&personality, fmon->nature);
     CreateMonWithIVs(dst, fmon->species, level, personality, OTID_STRUCT_PRESET(otID), fixedIV);
@@ -342,18 +343,9 @@ void CreateFacilityMon(const struct TrainerMon *fmon, u16 level, u8 fixedIV, u32
     SetMonData(dst, MON_DATA_HELD_ITEM, &fmon->heldItem);
 
     // try to set ability. Otherwise, random of non-hidden as per vanilla
-    if (fmon->ability != ABILITY_NONE)
+    if (fmon->ability)
     {
-        const struct SpeciesInfo *speciesInfo = &gSpeciesInfo[fmon->species];
-        u32 maxAbilities = ARRAY_COUNT(speciesInfo->abilities);
-        for (ability = 0; ability < maxAbilities; ++ability)
-        {
-            if (speciesInfo->abilities[ability] == fmon->ability)
-                break;
-        }
-        if (ability >= maxAbilities)
-            ability = 0;
-        SetMonData(dst, MON_DATA_ABILITY_NUM, &ability);
+        SetCorrectAbilityNum(dst, fmon->species, fmon->ability);
     }
 
     if (fmon->ev != NULL)
@@ -366,30 +358,35 @@ void CreateFacilityMon(const struct TrainerMon *fmon, u16 level, u8 fixedIV, u32
         SetMonData(dst, MON_DATA_SPEED_EV, &(fmon->ev[5]));
     }
 
-    if (fmon->iv)
-        SetMonData(dst, MON_DATA_IVS, &(fmon->iv));
-
     if (fmon->isShiny)
     {
-        u32 data = TRUE;
+        data = TRUE;
         SetMonData(dst, MON_DATA_IS_SHINY, &data);
     }
-    if (fmon->dynamaxLevel > 0)
+    if (fmon->shouldUseDynamax)
     {
-        u32 data = fmon->dynamaxLevel;
-        SetMonData(dst, MON_DATA_DYNAMAX_LEVEL, &data);
+        data = fmon->dynamaxLevel;
     }
+    else
+    {
+        data = BLOCK_AI_DYNAMAX;
+    }
+    SetMonData(dst, MON_DATA_DYNAMAX_LEVEL, &data);
     if (fmon->gigantamaxFactor)
     {
-        u32 data = fmon->gigantamaxFactor;
+        data = fmon->gigantamaxFactor;
         SetMonData(dst, MON_DATA_GIGANTAMAX_FACTOR, &data);
     }
     if (fmon->teraType)
     {
-        u32 data = fmon->teraType;
+        data = fmon->teraType;
         SetMonData(dst, MON_DATA_TERA_TYPE, &data);
     }
-
+    else
+    {
+        data = TYPE_MYSTERY;
+        SetMonData(dst, MON_DATA_TERA_TYPE, &data);
+    }
 
     SetMonData(dst, MON_DATA_POKEBALL, &ball);
     CalculateMonStats(dst);
