@@ -361,6 +361,7 @@ s32 LearnMove(const struct MoveLearnUI *ui, u8 taskId)
         return LEARN_MOVE_END;
     default:
         errorf("Unknown LearnMove state %d\nEnding move learning ...", state);
+        [[fallthrough]];
     case LEARN_MOVE_END:
         if (IsFanfareTaskInactive())
             ui->endTask(taskId);

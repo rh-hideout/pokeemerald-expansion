@@ -4430,6 +4430,7 @@ static void DoTVShowTheNameRaterShow(void)
     case 12:
         state = 18;
         sTVShowState = 18;
+        [[fallthrough]];
     case 18:
         TVShowConvertInternationalString(gStringVar1, show->nameRaterShow.pokemonName, show->nameRaterShow.pokemonNameLanguage);
         TVShowDone();
@@ -6548,6 +6549,7 @@ static void DoTVShowLilycoveContestLady(void)
     case CONTESTLADYLIVE_STATE_WON:
     case CONTESTLADYLIVE_STATE_LOST:
         TVShowConvertInternationalString(gStringVar3, show->contestLady.playerName, show->contestLady.language);
+        [[fallthrough]];
     case CONTESTLADYLIVE_STATE_LOST_BADLY:
         TVShowConvertInternationalString(gStringVar2, show->contestLady.nickname, show->contestLady.pokemonNameLanguage);
         TVShowDone();

@@ -75,7 +75,9 @@ void FreeBattleResources(void)
     else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_HILL)
         FreeTrainerHillBattleStruct();
 
-    gFieldTimers.terrain = 0;
+    memset(&gFieldTimers, 0, sizeof(struct FieldTimer));
+    memset(&gSideTimers, 0, sizeof(struct SideTimer));
+
     if (gBattleResources != NULL)
     {
         FREE_AND_SET_NULL(gBattleStruct);
