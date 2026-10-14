@@ -5146,7 +5146,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
             TRACKS_FOOT,                                                                        \
             sAnimTable_Following,                                                               \
             gOverworldPalette_AlcremieStrawberryVanillaCream, /*Alcremie ##sweet##cream*/       \
-            gShinyOverworldPalette_AlcremieStrawberryVanillaCream /*Alcremie ##sweet##cream*/   \
+            gShinyOverworldPalette_AlcremieStrawberry /*Alcremie ##sweet*/                      \
         )                                                                                       \
         .levelUpLearnset = sAlcremieLevelUpLearnset,                                            \
         .teachableLearnset = sAlcremieTeachableLearnset,                                        \
@@ -5779,6 +5779,17 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-1, 13, SHADOW_SIZE_S)
         FOOTPRINT(Eiscue)
+    #if OW_BATTLE_ONLY_FORMS
+        OVERWORLD(
+            sPicTable_EiscueNoice,
+            SIZE_32x32,
+            SHADOW_SIZE_M,
+            TRACKS_FOOT,
+            sAnimTable_Following,
+            gOverworldPalette_EiscueNoice,
+            gShinyOverworldPalette_EiscueNoice
+        )
+    #endif //OW_BATTLE_ONLY_FORMS
         .levelUpLearnset = sEiscueLevelUpLearnset,
         .teachableLearnset = sEiscueTeachableLearnset,
         .eggMoveLearnset = sEiscueEggMoveLearnset,
@@ -6035,6 +6046,17 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
         SHADOW(0, 0, SHADOW_SIZE_S)
         FOOTPRINT(Morpeko)
+    #if OW_BATTLE_ONLY_FORMS
+        OVERWORLD(
+            sPicTable_MorpekoHangry,
+            SIZE_32x32,
+            SHADOW_SIZE_M,
+            TRACKS_FOOT,
+            sAnimTable_Following,
+            gOverworldPalette_MorpekoHangry,
+            gShinyOverworldPalette_MorpekoHangry
+        )
+    #endif //OW_BATTLE_ONLY_FORMS
         .levelUpLearnset = sMorpekoLevelUpLearnset,
         .teachableLearnset = sMorpekoTeachableLearnset,
         .eggMoveLearnset = sMorpekoEggMoveLearnset,
@@ -7739,6 +7761,15 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(5, 11, SHADOW_SIZE_L)
         FOOTPRINT(Zarude)
+        OVERWORLD(
+            sPicTable_ZarudeDada,
+            SIZE_32x32,
+            SHADOW_SIZE_M,
+            TRACKS_FOOT,
+            sAnimTable_Following,
+            gOverworldPalette_ZarudeDada,
+            gShinyOverworldPalette_ZarudeDada
+        )
         .isMythical = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
