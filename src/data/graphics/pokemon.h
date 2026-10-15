@@ -23780,7 +23780,7 @@ const u32 gObjectEventPic_Substitute[] = INCGFX_COMP("graphics/pokemon/question_
 #endif //P_FAMILY_GOSSIFLEUR
 
 #if P_FAMILY_WOOLOO
-    const u32 gMonFrontPic_Wooloo[] = INCGFX_U32("graphics/pokemon/wooloo/front.png", ".4bpp.smol");
+    const u32 gMonFrontPic_Wooloo[] = INCGFX_U32("graphics/pokemon/wooloo/anim_front.png", ".4bpp.smol");
     const u16 gMonPalette_Wooloo[] = INCGFX_U16("graphics/pokemon/wooloo/normal.pal", ".gbapal");
     const u32 gMonBackPic_Wooloo[] = INCGFX_U32("graphics/pokemon/wooloo/back.png", ".4bpp.smol");
     const u16 gMonShinyPalette_Wooloo[] = INCGFX_U16("graphics/pokemon/wooloo/shiny.pal", ".gbapal");
