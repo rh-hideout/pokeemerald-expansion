@@ -25,8 +25,8 @@
 #include "constants/songs.h"
 
 struct RockSmashItemTable {
-    enum Item *table;
-    u16 *weights; //if NULL, there will be equal chance to roll any item on the table
+    const enum Item *table;
+    const u16 *weights; //if NULL, there will be equal chance to roll any item on the table
     u16 size;
     u16 weightsSum;
 };
