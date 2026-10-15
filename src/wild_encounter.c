@@ -22,6 +22,7 @@
 #include "script.h"
 #include "tv.h"
 #include "wild_encounter.h"
+#include "chaos_eclipse.h"
 #include "battle_debug.h"
 #include "battle_pike.h"
 #include "battle_pyramid.h"
@@ -578,7 +579,13 @@ bool8 TryGenerateWildMon(const struct WildPokemonInfo *wildMonInfo, enum WildPok
     if (gMapHeader.mapLayoutId != LAYOUT_BATTLE_FRONTIER_BATTLE_PIKE_ROOM_WILD_MONS && flags & WILD_CHECK_KEEN_EYE && !IsAbilityAllowingEncounter(level))
         return FALSE;
 
-    CreateWildMon(wildMonInfo->wildPokemon[wildMonIndex].species, level);
+    // Preserve special battle-facility encounters.
+    if (gMapHeader.mapLayoutId != LAYOUT_BATTLE_FRONTIER_BATTLE_PIKE_ROOM_WILD_MONS
+     && gMapHeader.mapLayoutId != LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR
+     && RandomUniform(RNG_NONE, 0, 99) < CHAOS_ECLIPSE_WILD_RANDOM_CHANCE)
+        CreateWildMon(ChaosEclipseRollSpecies(), level);
+    else
+        CreateWildMon(wildMonInfo->wildPokemon[wildMonIndex].species, level);
     return TRUE;
 }
 
@@ -589,6 +596,8 @@ static u16 GenerateFishingWildMon(const struct WildPokemonInfo *wildMonInfo, u8 
     u8 level = ChooseWildMonLevel(wildMonInfo->wildPokemon, wildMonIndex, WILD_AREA_FISHING);
 
     UpdateChainFishingStreak();
+    if (RandomUniform(RNG_NONE, 0, 99) < CHAOS_ECLIPSE_WILD_RANDOM_CHANCE)
+        wildMonSpecies = ChaosEclipseRollSpecies();
     CreateWildMon(wildMonSpecies, level);
     return wildMonSpecies;
 }
