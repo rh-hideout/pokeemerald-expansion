@@ -88,8 +88,8 @@ EventScript_SmashRock:: @ fallthrough
 	specialvar VAR_RESULT, TryUpdateRusturfTunnelState
 	goto_if_eq VAR_RESULT, TRUE, EventScript_EndSmash
 	callnative rockSmashRNG
-	goto_if_eq VAR_RESULT, 1, EventScript_RockSmashWildEncounter
-	goto_if_eq VAR_RESULT, 2, EventScript_RockSmashItem
+	goto_if_eq VAR_RESULT, ROCK_SMASH_ENCOUNTER, EventScript_RockSmashWildEncounter
+	goto_if_eq VAR_RESULT, ROCK_SMASH_ITEM, EventScript_RockSmashItem
 EventScript_EndSmash::
 	releaseall
 	end

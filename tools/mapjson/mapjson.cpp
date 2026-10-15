@@ -270,7 +270,7 @@ string generate_map_events_text(Json map_data) {
                 {
                     string rockSmashItemTable = json_to_string(obj_event, "rock_smash_item_table", true);
                     if (rockSmashItemTable == "")
-                        rockSmashItemTable = "ROCK_SMASH_ITEM_TABLE_UNASSIGNED";
+                        rockSmashItemTable = "ROCK_SMASH_ITEM_TABLE_COUNT";
                     trainerSightOr = trainerSightOr + " | (" + rockSmashItemTable + " << 8)";
                 }
 

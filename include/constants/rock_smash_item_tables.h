@@ -8,10 +8,7 @@ enum RockSmashTableId
     ROCK_SMASH_ITEM_TABLE_RUINS,
     ROCK_SMASH_ITEM_TABLE_FOSSIL,
     ROCK_SMASH_ITEM_TABLE_NONE,
-    ROCK_SMASH_ITEM_TABLE_COUNT,
-    ROCK_SMASH_ITEM_TABLE_UNASSIGNED
+    ROCK_SMASH_ITEM_TABLE_COUNT // Mapjson uses this to represent rocks without a rockSmashItemTable field. It has a default fallback behaviour.
 };
-
-#define ROCK_SMASH_ITEM_TABLE_NONE 0xFF
 
 #endif // GUARD_CONSTANTS_ROCK_SMASH_ITEM_TABLES_H
