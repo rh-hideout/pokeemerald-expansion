@@ -28,7 +28,7 @@
     > Note 2: If the path has spaces, then the path must be wrapped with quotations, e.5.  `cd     "/mnt/c/users/<user>/Downloads folder"`.
     > Note 3: Windows path names are case-insensitive so adhering to capitalization isn't needed
 
-6. Once the directory has been changed to the folder containing the devkitPro pacman package, run the following commands to install devkitARM.
+5. Once the directory has been changed to the folder containing the devkitPro pacman package, run the following commands to install devkitARM.
 
     ```bash
     sudo gdebi devkitpro-pacman.amd64.deb
@@ -40,7 +40,7 @@
 
     > Note: `devkitpro-pacman.amd64.deb` is the expected filename of the devkitPro package downloaded (for the first command). If the downloaded package filename differs, then use that filename instead.
 
-7. Run the following command to set devkitPro related environment variables (alternatively, close and re-open WSL):
+6. Run the following command to set devkitPro related environment variables (alternatively, close and re-open WSL):
     ```bash
     source /etc/profile.d/devkit-env.sh
     ```
