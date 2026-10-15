@@ -14,6 +14,7 @@
 #include "sound.h"
 #include "sprite.h"
 #include "starter_choose.h"
+#include "chaos_eclipse.h"
 #include "strings.h"
 #include "task.h"
 #include "text.h"
@@ -114,12 +115,44 @@ static const u8 sStarterLabelCoords[STARTER_MON_COUNT][2] =
 #define FIRE_STARTER  (IS_FRLG ? SPECIES_CHARMANDER : SPECIES_TORCHIC)
 #define WATER_STARTER (IS_FRLG ? SPECIES_SQUIRTLE   : SPECIES_MUDKIP )
 
-static const u16 sStarterMon[STARTER_MON_COUNT] =
+// National Dex IDs fit in save variables. These unused Emerald vars are
+// reserved for Chaos Eclipse; the ready marker is written last.
+#define VAR_CHAOS_STARTER_0 0x40F7
+#define VAR_CHAOS_STARTER_1 0x40F8
+#define VAR_CHAOS_STARTER_2 0x40F9
+#define VAR_CHAOS_STARTERS_READY 0x40FA
+#define CHAOS_STARTERS_READY_MAGIC 0xCE01
+
+static void ChaosEclipseInitStarters(void)
 {
-    GRASS_STARTER,
-    FIRE_STARTER,
-    WATER_STARTER,
-};
+    u16 chosen[STARTER_MON_COUNT];
+    u32 i, j;
+    bool8 duplicate;
+
+    if (VarGet(VAR_CHAOS_STARTERS_READY) == CHAOS_STARTERS_READY_MAGIC)
+        return;
+
+    for (i = 0; i < STARTER_MON_COUNT; i++)
+    {
+        do
+        {
+            chosen[i] = RandomUniform(RNG_NONE, 1, NATIONAL_DEX_COUNT);
+            duplicate = FALSE;
+            for (j = 0; j < i; j++)
+            {
+                if (chosen[i] == chosen[j])
+                {
+                    duplicate = TRUE;
+                    break;
+                }
+            }
+        } while (duplicate);
+    }
+    VarSet(VAR_CHAOS_STARTER_0, chosen[0]);
+    VarSet(VAR_CHAOS_STARTER_1, chosen[1]);
+    VarSet(VAR_CHAOS_STARTER_2, chosen[2]);
+    VarSet(VAR_CHAOS_STARTERS_READY, CHAOS_STARTERS_READY_MAGIC);
+}
 
 static const struct BgTemplate sBgTemplates[3] =
 {
@@ -349,9 +382,14 @@ static const struct SpriteTemplate sSpriteTemplate_StarterCircle =
 // .text
 u16 GetStarterPokemon(u16 chosenStarterId)
 {
-    if (chosenStarterId > STARTER_MON_COUNT)
+    static const u16 starterVars[STARTER_MON_COUNT] =
+    {
+        VAR_CHAOS_STARTER_0, VAR_CHAOS_STARTER_1, VAR_CHAOS_STARTER_2,
+    };
+    if (chosenStarterId >= STARTER_MON_COUNT)
         chosenStarterId = 0;
-    return sStarterMon[chosenStarterId];
+    ChaosEclipseInitStarters();
+    return NationalPokedexNumToSpecies(VarGet(starterVars[chosenStarterId]));
 }
 
 static void VblankCB_StarterChoose(void)
@@ -374,6 +412,8 @@ void CB2_ChooseStarter(void)
 {
     u8 taskId;
     u8 spriteId;
+
+    ChaosEclipseInitStarters();
 
     SetVBlankCallback(NULL);
 
