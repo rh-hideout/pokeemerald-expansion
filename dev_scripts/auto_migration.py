@@ -8,7 +8,7 @@ def check_repo_status():
     if not result.stdout:
         return
     print("Expansion can't be updated when you still have uncommited files")
-    exit()
+    exit(1)
 
 def split_migration_commits(message):
     result = subprocess.run(["git", "rev-parse", "--abbrev-ref", "HEAD"], capture_output=True, text=True)
@@ -17,7 +17,7 @@ def split_migration_commits(message):
     result = subprocess.run(["git", "checkout", "-b", "temporary_migration_branch_clean"], capture_output=True)
     if result.returncode:
         print("Error: temporary_migration_branch_clean already exists. Aborting")
-        exit()
+        exit(1)
     result = subprocess.run(["git", "checkout", "-b", "temporary_migration_branch_split"])
     print("Splitting migration commit into multiple commits")
     result = subprocess.run(["git", "show", "--pretty=format:%b", "-s", "HEAD"], capture_output=True, text=True)
@@ -55,7 +55,7 @@ def merge_commits_if_no_conflict(commit, message):
     if result.returncode:
         subprocess.run(["git", "merge", "--abort"])
         print(f"Could not merge without creating conflicts\nPlease manually run:\ngit merge {commit}")
-        exit()
+        exit(1)
     commit_message = f"Merge commit automated by auto_migration.py: {message}"
     result = subprocess.run(["git", "commit", "-m", commit_message])
 
@@ -69,7 +69,7 @@ def run_migration(message):
         print("Error when running migration file. Removing temporary branches and aborting")
         result = subprocess.run(["git", "branch", "-D", "temporary_migration_branch_clean"])
         result = subprocess.run(["git", "branch", "-D", "temporary_migration_branch_split"])
-        exit()
+        exit(1)
     subprocess.run(["touch", "migration_scripts/auto_migration_tag_data_was_migrated"])
     print(f"Migration succesful, commiting changes")
     for line in lines:
@@ -115,13 +115,13 @@ if not result.returncode:
         print("Can't continue automatic migration. You need to do some manual merging.")
         print("Please run the following command:")
         print("git merge temporary_migration_branch_split~2")
-        exit()
+        exit(1)
     elif remaining_commits == 2:
         if os.path.exists("migration_scripts/auto_migration_tag_data_was_migrated"):
             print("Can't continue automatic migration. You need to do some manual merging.")
             print("Please run the following command:")
             print("git merge temporary_migration_branch_split~1")
-            exit()
+            exit(1)
         else:
             continue_in_progress_migration()
     elif remaining_commits == 1:
@@ -147,3 +147,4 @@ for line in result.stdout.splitlines():
 if non_migration_commits > 0:
     print(f"No more migration needed: merging all remaining commits")
     merge_commits_if_no_conflict("FETCH_HEAD", f"merging until HEAD of {remote}/{main_branch}")
+exit(0)
