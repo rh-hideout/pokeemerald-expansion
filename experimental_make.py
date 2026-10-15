@@ -17,7 +17,6 @@ INITIAL_MEMORY = {
 def parse_configs():
     configs = {}
     for config_fname in glob.glob("./include/config/*.h"):
-        #print(config_fname)
         with open(config_fname, "r") as config_fp:
             lines = config_fp.readlines()
             for line in lines:
@@ -47,30 +46,26 @@ def write_memory():
         tmp = base64.b64encode(tmp.encode())
         memory_file.write(tmp)
 
-
-#print(json.dumps(parse_configs(), indent=4))
 def check_auto_update_timing():
     if memory["last_update"] == "IN_PROGRESS":
         return True
     frequency = configs["MAKE_AUTO_UPDATE_FREQUENCY"]
     now = datetime.now()
+    last_update = datetime.fromtimestamp(memory["last_update"])
     if frequency == "ALL":
         return True
-    elif frequency == "DAILY" and memory["last_update"] + timedelta(days=1) < now:
+    elif frequency == "DAILY" and last_update + timedelta(days=1) < now:
         return True
-    elif frequency == "WEEKLY" and memory["last_update"] + timedelta(days=7) < now:
+    elif frequency == "WEEKLY" and last_update + timedelta(days=7) < now:
         return True
-    elif frequency == "MONTHLY" and memory["last_update"] + timedelta(days=30) < now:
+    elif frequency == "MONTHLY" and last_update + timedelta(days=30) < now:
         return True
     return False
 
 def check_auto_update_local_branch():
     result = subprocess.run(["git", "rev-parse", "--abbrev-ref", "HEAD"], capture_output=True, text=True)
     current_branch = result.stdout.strip()
-    print(current_branch)
-    print(configs["MAKE_AUTO_UPDATE_LOCAL_BRANCHES"])
     match = re.search(configs["MAKE_AUTO_UPDATE_LOCAL_BRANCHES"], current_branch)
-    print(match)
     if match:
         return True
     return False
@@ -84,6 +79,7 @@ def try_auto_update():
         return
     memory["last_update"] = "IN_PROGRESS"
     write_memory()
+    print("Looking for updates")
     result = subprocess.run(["python3", "dev_scripts/auto_migration.py", configs["MAKE_AUTO_UPDATE_REMOTE_BRANCH"]])
     if result.returncode:
         exit(1)
@@ -103,5 +99,6 @@ configs = parse_configs()
 memory = parse_memory()
 
 try_auto_update()
-#nproc = get_max_processes()
-#subprocess.run(["make", "-j", nproc])
+print("Compiling")
+nproc = get_max_processes()
+subprocess.run(["make", "-j", nproc])
