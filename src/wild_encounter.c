@@ -864,12 +864,7 @@ void rockSmashRNG(struct ScriptContext *ctx)
     }
 
     gSpecialVar_Result = rockSmashResult;
-    return;
 }
-
-    
-
-
 void RockSmashWildEncounter(void)
 {
     u32 headerId = GetCurrentMapWildMonHeaderId();
