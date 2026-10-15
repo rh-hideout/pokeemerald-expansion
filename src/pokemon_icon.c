@@ -215,7 +215,7 @@ u8 CreateTaggedMonIcon(u32 tileTag, u32 paletteTag, enum Species species)
     spriteSheet.data = GetMonIconTilesIsEgg(species, 0, FALSE);
     spriteSheet.size = 2 * sSpriteImageSizes[sMonIconOamData.shape][sMonIconOamData.size];
     spriteSheet.tag = tileTag;
-    LoadSpriteSheet(&spriteSheet);
+    LoadSpriteSheetCompressedFast(&spriteSheet);
 
     struct SpriteTemplate spriteTemplate =
     {
@@ -417,7 +417,19 @@ u8 UpdateMonIconFrame(struct Sprite *sprite)
             sprite->animCmdIndex = 0;
             break;
         default:
-            if (sprite->usingSheet)
+            if (sprite->compressedFast)
+            {
+                RequestSpriteCopy(
+                    // pointer arithmetic is needed to get the correct pointer to perform the sprite copy on.
+                    // because sprite->images is a struct def, it has to be casted to (u8 *) before any
+                    // arithmetic can be performed.
+                    (u8 *)sprite->images,
+                    (u8 *)(OBJ_VRAM0 + sprite->oam.tileNum * TILE_SIZE_4BPP),
+                    sSpriteImageSizes[sprite->oam.shape][sprite->oam.size],
+                    TRUE,
+                    frame);
+            }   
+            else if (sprite->usingSheet)
             {
                 sprite->oam.tileNum = sprite->sheetTileStart + (sSpriteImageSizes[sprite->oam.shape][sprite->oam.size] * frame / TILE_SIZE_4BPP);
             }
@@ -429,7 +441,9 @@ u8 UpdateMonIconFrame(struct Sprite *sprite)
                     // arithmetic can be performed.
                     (u8 *)sprite->images + (sSpriteImageSizes[sprite->oam.shape][sprite->oam.size] * frame),
                     (u8 *)(OBJ_VRAM0 + sprite->oam.tileNum * TILE_SIZE_4BPP),
-                    sSpriteImageSizes[sprite->oam.shape][sprite->oam.size]);
+                    sSpriteImageSizes[sprite->oam.shape][sprite->oam.size],
+                    FALSE,
+                    frame);
             }
             sprite->animDelayCounter = sprite->anims[sprite->animNum][sprite->animCmdIndex].frame.duration & 0xFF;
             sprite->animCmdIndex++;
@@ -465,6 +479,7 @@ static u8 CreateMonIconSprite(struct MonIconSpriteTemplate *iconTemplate, s16 x,
     gSprites[spriteId].animPaused = TRUE;
     gSprites[spriteId].animBeginning = FALSE;
     gSprites[spriteId].images = (const struct SpriteFrameImage *)iconTemplate->image;
+    gSprites[spriteId].compressedFast = TRUE;
     return spriteId;
 }
 

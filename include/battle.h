@@ -485,8 +485,10 @@ struct BattleGimmickData
 
 struct LostItem
 {
-    enum Item originalItem:15;
+    enum Item originalItem;
     u16 stolen:1;
+    u16 restoreAfterBattle:1;
+    u16 wildItemPending:1;
 };
 
 struct BattleVideo {
@@ -517,8 +519,6 @@ struct SleepClause
 
 struct BattlerState
 {
-    u8 targetsDone[MAX_BATTLERS_COUNT];
-
     u32 commandingDondozo:1;
     u32 focusPunchBattlers:1;
     u32 multipleSwitchInBattlers:1;
@@ -582,9 +582,10 @@ struct EventStates
     u32 atkCancelerBattler:4;
     enum BattleIntroStates battleIntro:8;
     enum SwitchInEvents switchIn:8;
-    u32 battlerSwitchIn:8; // SwitchInFirstEventBlock, SwitchInSecondEventBlock
+    u32 battlerSwitchIn:4; // SwitchInFirstEventBlock, SwitchInSecondEventBlock
     u32 moveEndBlock:8;
     enum StatChangeResolution resolution:8;
+    enum FaintedEffectsBlock faintedEffects;
 };
 
 // Cleared at the beginning of the battle. Fields need to be cleared when needed manually otherwise.
@@ -645,7 +646,9 @@ struct BattleStruct
     u8 isSkyBattle:1;
     u8 unableToUseMove:1; // for the current action only, to check if the battler failed to act at end turn use the DisableStruct member
     u8 triAttackBurn:1;
-    u8 padding1:3;
+    u8 fickleBeamBoosted:1;
+    u8 battlersSorted:1; // To avoid unnessasery computation
+    u8 statusMoveFailed:1; // For status move effects that fail on all targets
     void (*savedCallback)(void);
     enum Item chosenItem[MAX_BATTLERS_COUNT];
     enum Move choicedMove[MAX_BATTLERS_COUNT];
@@ -656,9 +659,8 @@ struct BattleStruct
         struct BattleVideo battleVideo;
     } multiBuffer;
     u8 battlerKOAnimsRunning:3;
-    u8 fickleBeamBoosted:1;
-    u8 battlersSorted:1; // To avoid unnessasery computation
-    u8 unused1:3;
+    u8 messagePrinted:1; // To prevented repeated attackmessages (Perish Song)
+    u8 unused1:4;
     struct BattleTvMovePoints tvMovePoints;
     struct BattleTv tv;
     enum PartyMon AI_monToSwitchIntoId[MAX_BATTLERS_COUNT];
@@ -684,7 +686,8 @@ struct BattleStruct
     const u8 *trainerSlideMsg;
     enum Ability tracedAbility[MAX_BATTLERS_COUNT];
     struct Illusion illusion[MAX_BATTLERS_COUNT];
-    struct LostItem itemLost[MAX_BATTLE_TRAINERS][PARTY_SIZE];  // Pokemon that had items consumed or stolen (two bytes per party member per side)
+    enum BattlerId soulheartBattlerId;
+    struct LostItem itemLost[MAX_BATTLE_TRAINERS][PARTY_SIZE];
     u8 blunderPolicy:1; // should blunder policy activate
     u8 redCardActivated:1;
     u8 snatchedMoveIsUsed:1;
@@ -740,7 +743,8 @@ struct BattleStruct
     u32 dancerSavedTarget:3;
     u32 statChangeBattler:3;
     u32 overworldWeatherPresent:1;
-    u32 padding5:4;
+    u32 setEffectOnAlly:1;
+    u32 padding5:3;
     enum BattlerId statusedBattler:4; // For Synchronize/Poison Puppeteer
     enum BattlerId statusInflicterBattler:4; // For Synchronize/Poison Puppeteer
     enum MoveEffect synchronizeStatus;
@@ -835,13 +839,6 @@ static inline bool32 IsBattleMoveStatus(enum Move move)
 #define IS_BATTLER_ANY_BASE_TYPE(battler, ...) _IS_BATTLER_ANY_TYPE(battler, TRUE, __VA_ARGS__)
 #define IS_BATTLER_OF_BASE_TYPE IS_BATTLER_ANY_BASE_TYPE
 
-#define IS_BATTLER_TYPELESS(battlerId)                                                    \
-    ({                                                                                    \
-        enum Type types[3];                                                               \
-        GetBattlerTypes(battlerId, FALSE, types);                                         \
-        types[0] == TYPE_MYSTERY && types[1] == TYPE_MYSTERY && types[2] == TYPE_MYSTERY; \
-    })
-
 #define SET_BATTLER_TYPE(battler, type)              \
 {                                                    \
     gBattleMons[battler].types[0] = type;            \
@@ -875,7 +872,7 @@ struct BattleScripting
     u8 animTurn;
     u8 animTargetsHit;
     u8 unused_0x1a;
-    u8 unused_0x1b;
+    u8 savedBattlerTwo;
     u8 getexpState;
     u8 battleStyle;
     u8 drawlvlupboxState;
