@@ -2,27 +2,36 @@
 ## Choosing WSL version
 If you must store your project on the Windows file system (under /mnt/c/), you should use WSL1.
 If you want the best performance and least amount of issues with Windows interfering with compiling the project, use WSL2 and store the project on the Linux file system (under ~/).
-## Installing WSL
+## Installing WSL (Windows 11)
 1. Open [Windows Powershell **as Administrator**](https://i.imgur.com/QKmVbP9.png), and run the following commands (Right Click or Shift+Insert is paste in the Powershell).
 
+    *If you are using Windows 11:*
     ```powershell
-	wsl --install -d Debian --enable-wsl1
+	wsl --install -d Ubuntu
     ```
 
 2. Once the process finishes, restart your machine.
-
-### WSL2
-3. Open Windows Powershell **as Administrator** again (after restarting), and run the following command to configure Ubuntu to use WSL2.
-
-    ```powershell
-    wsl --set-version Debian 2
-    ```
 
     <details>
         <summary><i>Note...</i></summary>
 
     >   WSL may open automatically after restarting, but you can ignore it for now.
     </details>
+
+## Installing WSL (Windows 10)
+1. Due to being EOL, Windows 10 may require additional checks. To simply install WSL2 on Windows, open Powershell and run the following command:
+    ```powershell
+	wsl --install -d Ubuntu --enable-wsl1
+    ```
+
+2. Like before, once the project finishes, restart your machine.
+
+3. Open Windows Powershell **as Administrator** again (after restarting), and run the following command to configure Ubuntu to use WSL2.
+    ```powershell
+    wsl --set-version Ubuntu 2
+    ```
+
+4. If PowerShell informs you of updating WSL2's kernel component, ![as seen here](https://i.imgur.com/jCpNtPv.png), kindly follow the steps listed [here](https://learn.microsoft.com/en-us/windows/wsl/install-manual#step-4---download-the-linux-kernel-update-package) under `Step 4 - Download the Linux kernel update package`.
 
 ## Installing dependencies
 Some tips before proceeding:
