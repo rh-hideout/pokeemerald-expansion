@@ -1797,6 +1797,7 @@ static enum CancelerResult HandleSkyDropResult(struct BattleCalcValues *cv)
         gBattleScripting.animTurn = 1;
         gBattleScripting.animTargetsHit = 0;
         gBattleMons[cv->battlerAtk].volatiles.multipleTurns = FALSE;
+        gBattleMons[cv->battlerAtk].volatiles.chargeTurn = FALSE;
         gBattleMons[cv->battlerAtk].volatiles.semiInvulnerable = STATE_NONE;
 
         // Sky Drop fails if target already left the field
@@ -1812,17 +1813,11 @@ static enum CancelerResult HandleSkyDropResult(struct BattleCalcValues *cv)
         return CANCELER_RESULT_SUCCESS;
     }
 
-    if (IsBattlerAlly(cv->battlerAtk, cv->battlerDef))
-    {
-        gBattlescriptCurrInstr = BattleScript_ButItFailed;
-        return CANCELER_RESULT_FAILURE;
-    }
-    else if (gBattleMons[cv->battlerDef].volatiles.semiInvulnerable != STATE_NONE)
-    {
-        gBattlescriptCurrInstr = BattleScript_ButItFailed;
-        return CANCELER_RESULT_FAILURE;
-    }
-    else if (DoesSubstituteBlockMove(cv->battlerAtk, cv->battlerDef, cv->move))
+    bool32 isAlly = IsBattlerAlly(cv->battlerAtk, cv->battlerDef);
+    bool32 IsSemiInvulnerable = gBattleMons[cv->battlerDef].volatiles.semiInvulnerable != STATE_NONE;
+    bool32 isSubBlocked = DoesSubstituteBlockMove(cv->battlerAtk, cv->battlerDef, cv->move);
+
+    if (isAlly || IsSemiInvulnerable || isSubBlocked)
     {
         gBattlescriptCurrInstr = BattleScript_ButItFailed;
         return CANCELER_RESULT_FAILURE;
@@ -1866,6 +1861,7 @@ static enum CancelerResult CancelerCharging(struct BattleCalcValues *cv)
         gBattleScripting.animTurn = 1;
         gBattleScripting.animTargetsHit = 0;
         gBattleMons[cv->battlerAtk].volatiles.multipleTurns = FALSE;
+        gBattleMons[cv->battlerAtk].volatiles.chargeTurn = FALSE;
         if (gBattleMoveEffects[cv->moveEffect].semiInvulnerableEffect)
             gBattleMons[cv->battlerAtk].volatiles.semiInvulnerable = STATE_NONE;
         return CANCELER_RESULT_SUCCESS;
