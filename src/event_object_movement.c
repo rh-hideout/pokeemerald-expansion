@@ -576,9 +576,7 @@ static const struct SpritePalette sObjectEventSpritePalettes[] = {
     {gObjectEventPal_DreamBall,             OBJ_EVENT_PAL_TAG_BALL_DREAM},
     {gObjectEventPal_BeastBall,             OBJ_EVENT_PAL_TAG_BALL_BEAST},
     // Gen VIII
-    #ifdef ITEM_STRANGE_BALL
     {gObjectEventPal_StrangeBall,           OBJ_EVENT_PAL_TAG_BALL_STRANGE},
-    #endif //ITEM_STRANGE_BALL
 #endif //OW_FOLLOWERS_POKEBALLS
     {gObjectEventPal_Substitute,            OBJ_EVENT_PAL_TAG_SUBSTITUTE},
     {gObjectEventPaletteLight,              OBJ_EVENT_PAL_TAG_LIGHT},
@@ -1719,17 +1717,6 @@ static void RemoveObjectEventInternal(struct ObjectEvent *objectEvent)
     }
 }
 
-void RemoveAllObjectEventsExceptPlayer(void)
-{
-    u8 i;
-
-    for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
-    {
-        if (i != gPlayerAvatar.objectEventId)
-            RemoveObjectEvent(&gObjectEvents[i]);
-    }
-}
-
 // Free a sprite's current tiles and reallocate with a new size
 // Used when changing to a gfx info with a larger size
 static s16 ReallocSpriteTiles(struct Sprite *sprite, u32 byteSize)
@@ -1866,7 +1853,7 @@ static u8 TrySetupObjectEventSprite(const struct ObjectEventTemplate *objectEven
     if (objectEvent->graphicsId & OBJ_EVENT_MON && objectEvent->graphicsId & OBJ_EVENT_MON_SHINY)
         objectEvent->shiny = TRUE;
 
-    spriteId = CreateSprite(spriteTemplate, 0, 0, 0);
+    spriteId = CreateSpriteUnchecked(spriteTemplate, 0, 0, 0);
     if (spriteId == MAX_SPRITES)
     {
         gObjectEvents[objectEventId].active = FALSE;
@@ -2050,6 +2037,7 @@ u8 CreateObjectGraphicsSpriteWithTag(u16 graphicsId, void (*callback)(struct Spr
 u8 CreateObjectGraphicsSprite(u16 graphicsId, void (*callback)(struct Sprite *), s16 x, s16 y, u8 subpriority)
 {
     return CreateObjectGraphicsSpriteWithTag(graphicsId, callback, x, y, subpriority, TAG_NONE);
+//CreateObjectGraphicsSprite is used in a load of places that don't handle it returning max_sprites, so this will trigger a fatal_assertf. It should be refactored to not do that!
 }
 
 #define sVirtualObjId   data[0]
@@ -2083,7 +2071,7 @@ u8 CreateVirtualObject(u16 graphicsId, u8 virtualObjId, s16 x, s16 y, u8 elevati
         LoadObjectEventPalette(spriteTemplate.paletteTag);
     }
 
-    spriteId = CreateSpriteAtEnd(&spriteTemplate, x, y, 0);
+    spriteId = CreateSpriteAtEndUnchecked(&spriteTemplate, x, y, 0);
     if (spriteId != MAX_SPRITES)
     {
         sprite = &gSprites[spriteId];
@@ -2320,7 +2308,7 @@ enum Species GetOverworldWeatherSpecies(enum Species species)
     return species;
 }
 
-static bool8 GetMonInfo(struct Pokemon *mon, u32 *species, bool32 *shiny, bool32 *female)
+static bool8 GetMonInfo(struct Pokemon *mon, enum Species *species, bool32 *shiny, bool32 *female)
 {
     if (!mon)
     {
@@ -2345,7 +2333,7 @@ static bool8 GetMonInfo(struct Pokemon *mon, u32 *species, bool32 *shiny, bool32
 }
 
 // Retrieve graphic information about the following Pokémon, if any
-bool8 GetFollowerInfo(u32 *species, bool32 *shiny, bool32 *female)
+bool8 GetFollowerInfo(enum Species *species, bool32 *shiny, bool32 *female)
 {
     return GetMonInfo(GetFirstLiveMon(), species, shiny, female);
 }
@@ -2355,7 +2343,7 @@ void UpdateFollowingPokemon(void)
 {
     struct ObjectEvent *objEvent = GetFollowerObject();
     struct Sprite *sprite;
-    u32 species;
+    enum Species species;
     bool32 shiny;
     bool32 female;
     // Don't spawn follower if:
@@ -2572,7 +2560,7 @@ bool32 CheckMsgInfo(const struct FollowerMsgInfoExtended *info, struct Pokemon *
 // Call an applicable follower message script
 void GetFollowerAction(struct ScriptContext *ctx) // Essentially a big switch for follower messages
 {
-    u32 species;
+    enum Species species;
     s32 multi;
     struct SpecialEmote condEmotes[16] = {0};
     u32 condCount = 0;
@@ -3025,7 +3013,7 @@ static void SpawnObjectEventOnReturnToField(u8 objectEventId, s16 x, s16 y)
         LoadObjectEventPalette(spriteTemplate.paletteTag);
     }
 
-    i = CreateSprite(&spriteTemplate, 0, 0, 0);
+    i = CreateSpriteUnchecked(&spriteTemplate, 0, 0, 0);
     if (i != MAX_SPRITES)
     {
         sprite = &gSprites[i];
@@ -3146,14 +3134,6 @@ void ObjectEventSetGraphicsId(struct ObjectEvent *objectEvent, u16 graphicsId)
     objectEvent->graphicsId = graphicsId;
 }
 
-void ObjectEventSetGraphicsIdByLocalIdAndMap(u8 localId, u8 mapNum, u8 mapGroup, u16 graphicsId)
-{
-    u8 objectEventId;
-
-    if (!TryGetObjectEventIdByLocalIdAndMap(localId, mapNum, mapGroup, &objectEventId))
-        ObjectEventSetGraphicsId(&gObjectEvents[objectEventId], graphicsId);
-}
-
 void ObjectEventTurn(struct ObjectEvent *objectEvent, enum Direction direction)
 {
     SetObjectEventDirection(objectEvent, direction);
@@ -3170,11 +3150,6 @@ void ObjectEventTurnByLocalIdAndMap(u8 localId, u8 mapNum, u8 mapGroup, enum Dir
 
     if (!TryGetObjectEventIdByLocalIdAndMap(localId, mapNum, mapGroup, &objectEventId))
         ObjectEventTurn(&gObjectEvents[objectEventId], direction);
-}
-
-void PlayerObjectTurn(struct PlayerAvatar *playerAvatar, enum Direction direction)
-{
-    ObjectEventTurn(&gObjectEvents[playerAvatar->objectEventId], direction);
 }
 
 static void SetBerryTreeGraphicsById(struct ObjectEvent *objectEvent, u8 berryId, u8 berryStage)
@@ -3398,37 +3373,6 @@ static u8 FindObjectEventPaletteIndexByTag(u16 tag)
             return i;
     }
     return 0xFF;
-}
-
-void LoadPlayerObjectReflectionPalette(u16 tag, u8 slot)
-{
-    u8 i;
-
-    PatchObjectPalette(tag, slot);
-    for (i = 0; sPlayerReflectionPaletteSets[i].tag != OBJ_EVENT_PAL_TAG_NONE; i++)
-    {
-        if (sPlayerReflectionPaletteSets[i].tag == tag)
-        {
-            PatchObjectPalette(sPlayerReflectionPaletteSets[i].data[sCurrentReflectionType], gReflectionEffectPaletteMap[slot]);
-            return;
-        }
-    }
-}
-
-void LoadSpecialObjectReflectionPalette(u16 tag, u8 slot)
-{
-    u8 i;
-
-    sCurrentSpecialObjectPaletteTag = tag;
-    PatchObjectPalette(tag, slot);
-    for (i = 0; sSpecialObjectReflectionPaletteSets[i].tag != OBJ_EVENT_PAL_TAG_NONE; i++)
-    {
-        if (sSpecialObjectReflectionPaletteSets[i].tag == tag)
-        {
-            PatchObjectPalette(sSpecialObjectReflectionPaletteSets[i].data[sCurrentReflectionType], gReflectionEffectPaletteMap[slot]);
-            return;
-        }
-    }
 }
 
 static void UNUSED IncrementObjectEventCoords(struct ObjectEvent *objectEvent, s16 x, s16 y)
@@ -3685,12 +3629,24 @@ u8 CreateCopySpriteAt(struct Sprite *sprite, s16 x, s16 y, u8 subpriority)
 
 void SetObjectEventDirection(struct ObjectEvent *objectEvent, enum Direction direction)
 {
-    s8 d2;
     objectEvent->previousMovementDirection = objectEvent->facingDirection;
     if (!objectEvent->facingDirectionLocked)
     {
-        d2 = direction;
-        objectEvent->facingDirection = d2;
+        enum Direction facingDirection = direction;
+
+        // Player interactions require cardinal facing even while moving diagonally on stairs.
+        if (objectEvent->isPlayer)
+        {
+            if (direction == DIR_SOUTHWEST || direction == DIR_NORTHWEST)
+            {
+                facingDirection = DIR_WEST;
+            }
+            else if (direction == DIR_SOUTHEAST || direction == DIR_NORTHEAST)
+            {
+                facingDirection = DIR_EAST;
+            }
+        }
+        objectEvent->facingDirection = facingDirection;
     }
     objectEvent->movementDirection = direction;
 }
@@ -3734,17 +3690,6 @@ static u8 UNUSED GetObjectTrainerTypeByLocalIdAndMap(u8 localId, u8 mapNum, u8 m
 static u8 UNUSED GetObjectTrainerTypeByObjectEventId(u8 objectEventId)
 {
     return gObjectEvents[objectEventId].trainerType;
-}
-
-// Unused
-u8 GetObjectEventBerryTreeIdByLocalIdAndMap(u8 localId, u8 mapNum, u8 mapGroup)
-{
-    u8 objectEventId;
-
-    if (TryGetObjectEventIdByLocalIdAndMap(localId, mapNum, mapGroup, &objectEventId))
-        return 0xFF;
-
-    return gObjectEvents[objectEventId].trainerRange_berryTreeId;
 }
 
 u8 GetObjectEventBerryTreeId(u8 objectEventId)
@@ -3868,21 +3813,6 @@ void InitObjectEventPalettes(u8 reflectionType)
     {
         PatchObjectPaletteRange(sObjectPaletteTagSets[sCurrentReflectionType], PALSLOT_PLAYER, PALSLOT_NPC_4_REFLECTION + 1);
     }
-}
-
-u16 GetObjectPaletteTag(u8 palSlot)
-{
-    u8 i;
-
-    if (palSlot < PALSLOT_NPC_SPECIAL)
-        return sObjectPaletteTagSets[sCurrentReflectionType][palSlot];
-
-    for (i = 0; sSpecialObjectReflectionPaletteSets[i].tag != OBJ_EVENT_PAL_TAG_NONE; i++)
-    {
-        if (sSpecialObjectReflectionPaletteSets[i].tag == sCurrentSpecialObjectPaletteTag)
-            return sSpecialObjectReflectionPaletteSets[i].data[sCurrentReflectionType];
-    }
-    return OBJ_EVENT_PAL_TAG_NONE;
 }
 
 movement_type_empty_callback(MovementType_None)
@@ -6027,22 +5957,6 @@ bool8 FollowablePlayerMovement_GoSpeed4(struct ObjectEvent *objectEvent, struct 
     return TRUE;
 }
 
-bool8 FollowablePlayerMovement_Jump(struct ObjectEvent *objectEvent, struct Sprite *sprite, enum Direction playerDirection, bool8 tileCallback(u8))
-{
-    enum Direction direction;
-    s16 x;
-    s16 y;
-
-    direction = playerDirection;
-    x = objectEvent->currentCoords.x;
-    y = objectEvent->currentCoords.y;
-    MoveCoordsInDirection(direction, &x, &y, 2, 2);
-    ObjectEventSetSingleMovement(objectEvent, sprite, GetJump2MovementAction(direction));
-    objectEvent->singleMovementActive = TRUE;
-    sprite->sTypeFuncId = 2;
-    return TRUE;
-}
-
 movement_type_def(MovementType_CopyPlayerInGrass, gMovementTypeFuncs_CopyPlayerInGrass)
 
 bool8 MovementType_CopyPlayerInGrass_Step1(struct ObjectEvent *objectEvent, struct Sprite *sprite)
@@ -6234,11 +6148,6 @@ u8 GetJumpSpecialDirectionAnimNum(enum Direction direction)
 u8 GetAcroWheelieDirectionAnimNum(enum Direction direction)
 {
     return sAcroWheelieDirectionAnimNums[direction];
-}
-
-u8 GetAcroUnusedDirectionAnimNum(enum Direction direction)
-{
-    return sAcroUnusedDirectionAnimNums[direction];
 }
 
 u8 GetAcroEndWheelieDirectionAnimNum(enum Direction direction)
@@ -10087,12 +9996,10 @@ void ObjectEventUpdateElevation(struct ObjectEvent *objEvent, struct Sprite *spr
 
 void SetObjectSubpriorityByElevation(u8 elevation, struct Sprite *sprite, u8 subpriority)
 {
-    s32 tmp = sprite->centerToCornerVecY;
-    u32 tmpa = *(u16 *)&sprite->y;
-    u32 tmpb = *(u16 *)&gSpriteCoordOffsetY;
-    s32 tmp2 = (tmpa - tmp) + tmpb;
-    u16 tmp3 = (16 - ((((u32)tmp2 + 8) & 0xFF) >> 4)) * 2;
-    sprite->subpriority = tmp3 + sElevationToSubpriority[elevation] + subpriority;
+    u16 y = (sprite->y - sprite->centerToCornerVecY + gSpriteCoordOffsetY + 8) & 0xFF;
+    y = (16 - (y >> 4)) << 1;
+
+    sprite->subpriority = sElevationToSubpriority[elevation] + y + subpriority;
 }
 
 static void ObjectEventUpdateSubpriority(struct ObjectEvent *objEvent, struct Sprite *sprite)
@@ -10132,20 +10039,7 @@ void ScriptFaceEachOther(struct ScriptContext *ctx)
 
 enum Direction DetermineObjectEventDirectionFromObject(struct ObjectEvent *objectOne, struct ObjectEvent *objectTwo)
 {
-    s32 delta_x = objectTwo->currentCoords.x - objectOne->currentCoords.x;
-    s32 delta_y = objectTwo->currentCoords.y - objectOne->currentCoords.y;
-
-    if (delta_x < 0)
-        return DIR_EAST;
-    else if (delta_x > 0)
-        return DIR_WEST;
-
-    if (delta_y < 0)
-        return DIR_SOUTH;
-    else if (delta_y > 0)
-        return DIR_NORTH;
-
-    return DIR_NORTH;
+    return GetDirectionToFace(objectTwo->currentCoords.x, objectTwo->currentCoords.y, objectOne->currentCoords.x, objectOne->currentCoords.y);
 }
 
 void ObjectEventsTurnToEachOther(struct ObjectEvent *objectOne, struct ObjectEvent *objectTwo)
@@ -11472,26 +11366,12 @@ bool8 MovementAction_EmoteDoubleExclamationMark_Step0(struct ObjectEvent *object
     return TRUE;
 }
 
-bool8 PlayerIsUnderWaterfall(struct ObjectEvent *objectEvent)
-{
-    s16 x;
-    s16 y;
-
-    x = objectEvent->currentCoords.x;
-    y = objectEvent->currentCoords.y;
-    MoveCoordsInDirection(DIR_NORTH, &x, &y, 0, 1);
-    if (MetatileBehavior_IsWaterfall(MapGridGetMetatileBehaviorAt(x, y)))
-        return TRUE;
-
-    return FALSE;
-}
-
 // Get gfx data from daycare Pokémon and store it in vars
 void GetDaycareGraphics(struct ScriptContext *ctx)
 {
     u16 varGfx[] = {ScriptReadHalfword(ctx), ScriptReadHalfword(ctx)};
     u16 varForm[] = {ScriptReadHalfword(ctx), ScriptReadHalfword(ctx)};
-    u32 specGfx;
+    enum Species specGfx;
     bool32 shiny;
     bool32 female;
     s32 i;
@@ -11962,7 +11842,7 @@ bool8 MovementType_OverworldWildEncounter_ChasePlayer_Step10(struct ObjectEvent 
 
 bool8 MovementType_OverworldWildEncounter_ChasePlayer_Step11(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
-    u32 speciesId = OW_SPECIES(objectEvent);
+    enum Species speciesId = OW_SPECIES(objectEvent);
     u32 movementActionId = GetOWEWalkMovementActionInDirectionWithSpeed(objectEvent->movementDirection, OWE_GetActiveSpeedFromSpecies(speciesId));
     sprite->sTypeFuncId = 12;
 
@@ -12049,7 +11929,7 @@ bool8 MovementType_OverworldWildEncounter_FleePlayer_Step10(struct ObjectEvent *
 
 bool8 MovementType_OverworldWildEncounter_FleePlayer_Step11(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
-    u32 speciesId = OW_SPECIES(objectEvent);
+    enum Species speciesId = OW_SPECIES(objectEvent);
     u32 movementActionId = GetOWEWalkMovementActionInDirectionWithSpeed(objectEvent->movementDirection, OWE_GetActiveSpeedFromSpecies(speciesId));
     if (CheckRestrictedOWEMovement(objectEvent, objectEvent->movementDirection))
     {
@@ -12142,7 +12022,7 @@ bool8 MovementType_OverworldWildEncounter_ApproachPlayer_Step11(struct ObjectEve
 {
     bool32 equalDistances = FALSE;
     u32 distance = GetApproachingOWEDistanceToPlayer(objectEvent, &equalDistances);
-    u32 speciesId = OW_SPECIES(objectEvent);
+    enum Species speciesId = OW_SPECIES(objectEvent);
     u32 movementActionId;
     if (distance <= 1)
     {

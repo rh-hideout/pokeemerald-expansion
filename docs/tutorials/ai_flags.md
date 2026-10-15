@@ -145,7 +145,7 @@ Marks the last Pokemon in the party as the Ace Pokemon. It will not be used unle
 Marks the last two Pokémon in the party as Ace Pokémon, with the same behaviour as `AI_FLAG_ACE_POKEMON`. Intented for double battles where you battle one trainer id that represents two trainers, ie Twins, Couples. If you apply this flag to trainers outside of double battles or in cases where two trainers can challenge you at the same time, it has the same behaviour. For example vs two trainers with `AI_FLAG_DOUBLE_ACE_POKEMON` there will be a total of 4 Ace Pokémon.
 
 ## `AI_FLAG_OMNISCIENT`
-AI has full knowledge of player moves, abilities, and hold items, and can use this knowledge when making decisions.
+AI has full knowledge of player moves, abilities, and hold items, and can use this knowledge when making decisions. More modular omniscience settings are included in the flags `AI_FLAG_ABILITY_OMNISCIENCE`, `AI_FLAG_ITEM_OMNISCIENCE`, and `AI_FLAG_MOVE_OMNISCIENCE `.
 
 ## `AI_FLAG_KNOW_OPPONENT_PARTY`
 AI has full knowledge of the species in the player's party, as well as their fainted status; no other omniscient knowledge is included. Functions similarly to a team preview.

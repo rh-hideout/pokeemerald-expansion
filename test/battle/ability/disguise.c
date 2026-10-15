@@ -8,7 +8,7 @@ ASSUMPTIONS
 
 SINGLE_BATTLE_TEST("Disguised Mimikyu doesn't lose 1/8 of its max HP upon changing to its busted form (Gen7)")
 {
-    u32 species, newSpecies;
+    enum Species species, newSpecies;
     PARAMETRIZE { species = SPECIES_MIMIKYU_DISGUISED;       newSpecies = SPECIES_MIMIKYU_BUSTED; }
     PARAMETRIZE { species = SPECIES_MIMIKYU_TOTEM_DISGUISED; newSpecies = SPECIES_MIMIKYU_BUSTED_TOTEM; }
     GIVEN {
@@ -30,7 +30,7 @@ SINGLE_BATTLE_TEST("Disguised Mimikyu doesn't lose 1/8 of its max HP upon changi
 SINGLE_BATTLE_TEST("Disguised Mimikyu will lose 1/8 of its max HP upon changing to its busted form (Gen8+)")
 {
     s16 disguiseDamage;
-    u32 species, newSpecies;
+    enum Species species, newSpecies;
     PARAMETRIZE { species = SPECIES_MIMIKYU_DISGUISED;       newSpecies = SPECIES_MIMIKYU_BUSTED; }
     PARAMETRIZE { species = SPECIES_MIMIKYU_TOTEM_DISGUISED; newSpecies = SPECIES_MIMIKYU_BUSTED_TOTEM; }
     GIVEN {
@@ -51,7 +51,7 @@ SINGLE_BATTLE_TEST("Disguised Mimikyu will lose 1/8 of its max HP upon changing 
 
 SINGLE_BATTLE_TEST("Disguised Mimikyu takes no damage from a confusion hit and changes to its busted form")
 {
-    u32 species, newSpecies;
+    enum Species species, newSpecies;
     PARAMETRIZE { species = SPECIES_MIMIKYU_DISGUISED;       newSpecies = SPECIES_MIMIKYU_BUSTED; }
     PARAMETRIZE { species = SPECIES_MIMIKYU_TOTEM_DISGUISED; newSpecies = SPECIES_MIMIKYU_BUSTED_TOTEM; }
     GIVEN {
@@ -76,7 +76,7 @@ SINGLE_BATTLE_TEST("Disguised Mimikyu takes no damage from a confusion hit and c
 
 SINGLE_BATTLE_TEST("Disguised Mimikyu takes damage from secondary damage without breaking the disguise - Stealth Rock")
 {
-    u32 species;
+    enum Species species;
     PARAMETRIZE { species = SPECIES_MIMIKYU_DISGUISED; }
     PARAMETRIZE { species = SPECIES_MIMIKYU_TOTEM_DISGUISED; }
     GIVEN {
@@ -118,7 +118,7 @@ SINGLE_BATTLE_TEST("Disguised Mimikyu takes damage from secondary damage without
 
 SINGLE_BATTLE_TEST("Disguised Mimikyu takes damage from Rocky Helmet without breaking the disguise")
 {
-    u32 species;
+    enum Species species;
     PARAMETRIZE { species = SPECIES_MIMIKYU_DISGUISED; }
     PARAMETRIZE { species = SPECIES_MIMIKYU_TOTEM_DISGUISED; }
     GIVEN {
@@ -139,7 +139,7 @@ SINGLE_BATTLE_TEST("Disguised Mimikyu takes damage from Rocky Helmet without bre
 
 SINGLE_BATTLE_TEST("Disguised Mimikyu takes damage from Rough Skin without breaking the disguise")
 {
-    u32 species;
+    enum Species species;
     PARAMETRIZE { species = SPECIES_MIMIKYU_DISGUISED; }
     PARAMETRIZE { species = SPECIES_MIMIKYU_TOTEM_DISGUISED; }
     GIVEN {
@@ -152,7 +152,6 @@ SINGLE_BATTLE_TEST("Disguised Mimikyu takes damage from Rough Skin without break
         HP_BAR(opponent);
         ABILITY_POPUP(opponent, ABILITY_ROUGH_SKIN);
         HP_BAR(player);
-        MESSAGE("Mimikyu was hurt!");
     } THEN {
         EXPECT_EQ(player->species, species);
     }
@@ -160,7 +159,7 @@ SINGLE_BATTLE_TEST("Disguised Mimikyu takes damage from Rough Skin without break
 
 SINGLE_BATTLE_TEST("Disguised Mimikyu is ignored by Mold Breaker")
 {
-    u32 species;
+    enum Species species;
     PARAMETRIZE { species = SPECIES_MIMIKYU_DISGUISED; }
     PARAMETRIZE { species = SPECIES_MIMIKYU_TOTEM_DISGUISED; }
     GIVEN {
@@ -178,7 +177,7 @@ SINGLE_BATTLE_TEST("Disguised Mimikyu is ignored by Mold Breaker")
 
 SINGLE_BATTLE_TEST("Disguised Mimikyu's types revert back to Ghost/Fairy when Disguise is broken")
 {
-    u32 species;
+    enum Species species;
     PARAMETRIZE { species = SPECIES_MIMIKYU_DISGUISED; }
     PARAMETRIZE { species = SPECIES_MIMIKYU_TOTEM_DISGUISED; }
     GIVEN {
@@ -201,7 +200,7 @@ SINGLE_BATTLE_TEST("Disguised Mimikyu's types revert back to Ghost/Fairy when Di
 
 SINGLE_BATTLE_TEST("Disguised Mimikyu blocks a move after getting Gastro Acid Batton Passed")
 {
-    u32 species, newSpecies;
+    enum Species species, newSpecies;
     PARAMETRIZE { species = SPECIES_MIMIKYU_DISGUISED;       newSpecies = SPECIES_MIMIKYU_BUSTED; }
     PARAMETRIZE { species = SPECIES_MIMIKYU_TOTEM_DISGUISED; newSpecies = SPECIES_MIMIKYU_BUSTED_TOTEM; }
     GIVEN {
@@ -225,7 +224,7 @@ SINGLE_BATTLE_TEST("Disguised Mimikyu blocks a move after getting Gastro Acid Ba
 
 SINGLE_BATTLE_TEST("Disguise does not break from a teammate's Wish")
 {
-    u32 species;
+    enum Species species;
     PARAMETRIZE { species = SPECIES_MIMIKYU_DISGUISED; }
     PARAMETRIZE { species = SPECIES_MIMIKYU_TOTEM_DISGUISED; }
     GIVEN {

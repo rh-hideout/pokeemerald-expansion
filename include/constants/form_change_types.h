@@ -152,6 +152,9 @@ enum FormChanges
     // Form change that activates after using a move.
     // param1: move to check
     FORM_CHANGE_BATTLE_AFTER_MOVE,
+    // Form change that activates when Battle Bond is triggered.
+    // param1: ability to check
+    FORM_CHANGE_BATTLE_BOND,
     // Form change that activates before using a specific move category.
     // param1: move category to check
     // param2: ability to check, optional

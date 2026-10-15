@@ -1133,7 +1133,10 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .frontPic = gMonFrontPic_Grubbin,
         .frontPicSize = MON_COORDS_SIZE(48, 32),
         .frontPicYOffset = 17,
-        .frontAnimFrames = sAnims_Vikavolt,
+        .frontAnimFrames = ANIM_FRAMES(
+            ANIMCMD_FRAME(1, 15),
+            ANIMCMD_FRAME(0, 1),
+        ),
         .frontAnimId = ANIM_H_SLIDE,
         .backPic = gMonBackPic_Grubbin,
         .backPicSize = MON_COORDS_SIZE(64, 32),
@@ -1326,15 +1329,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .frontPic = gMonFrontPic_Vikavolt,
         .frontPicSize = MON_COORDS_SIZE(64, 56),
         .frontPicYOffset = 3,
-        .frontAnimFrames = ANIM_FRAMES(
-            ANIMCMD_FRAME(0, 10),
-            ANIMCMD_FRAME(1, 10),
-            ANIMCMD_FRAME(0, 10),
-            ANIMCMD_FRAME(1, 10),
-            ANIMCMD_FRAME(0, 10),
-            ANIMCMD_FRAME(1, 10),
-            ANIMCMD_FRAME(0, 1),
-        ),
+        .frontAnimFrames = sAnims_Vikavolt,
         .frontAnimId = ANIM_BOUNCE_ROTATE_TO_SIDES,
         .enemyMonElevation = 8,
         .backPic = gMonBackPic_Vikavolt,
@@ -1404,8 +1399,11 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .frontPic = gMonFrontPic_Crabrawler,
         .frontPicSize = MON_COORDS_SIZE(64, 56),
         .frontPicYOffset = 7,
-        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
-        .frontAnimId = ANIM_V_SHAKE,
+        .frontAnimFrames = ANIM_FRAMES(
+            ANIMCMD_FRAME(1, 30),
+            ANIMCMD_FRAME(0, 1),
+        ),
+        .frontAnimId = ANIM_TIP_MOVE_FORWARD,
         .backPic = gMonBackPic_Crabrawler,
         .backPicSize = MON_COORDS_SIZE(64, 48),
         .backPicYOffset = 9,
@@ -1471,8 +1469,13 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .frontPic = gMonFrontPic_Crabominable,
         .frontPicSize = MON_COORDS_SIZE(64, 64),
         .frontPicYOffset = 0,
-        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
-        .frontAnimId = ANIM_SHRINK_GROW_VIBRATE_FAST,
+        .frontAnimFrames = ANIM_FRAMES(
+            ANIMCMD_FRAME(1, 30),
+            ANIMCMD_FRAME(0, 15),
+            ANIMCMD_FRAME(1, 30),
+            ANIMCMD_FRAME(0, 1),
+        ),
+        .frontAnimId = ANIM_V_SHAKE_TWICE,
         .backPic = gMonBackPic_Crabominable,
         .backPicSize = MON_COORDS_SIZE(64, 64),
         .backPicYOffset = 3,
@@ -1598,8 +1601,13 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .frontPic = gMonFrontPic_OricorioBaile,
         .frontPicSize = MON_COORDS_SIZE(56, 64),
         .frontPicYOffset = 2,
-        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
-        .frontAnimId = ANIM_CONCAVE_ARC_SMALL,
+        .frontAnimFrames = ANIM_FRAMES(
+            ANIMCMD_FRAME(1, 30),
+            ANIMCMD_FRAME(0, 30),
+            ANIMCMD_FRAME(1, 30),
+            ANIMCMD_FRAME(0, 1),
+        ),
+        .frontAnimId = ANIM_GROW_IN_STAGES,
         .backPic = gMonBackPic_OricorioBaile,
         .backPicSize = MON_COORDS_SIZE(64, 64),
         .backPicYOffset = 0,
@@ -1665,8 +1673,15 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .frontPic = gMonFrontPic_OricorioPomPom,
         .frontPicSize = MON_COORDS_SIZE(56, 56),
         .frontPicYOffset = 5,
-        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
-        //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
+        .frontAnimFrames = ANIM_FRAMES(
+            ANIMCMD_FRAME(1, 15),
+            ANIMCMD_FRAME(0, 15),
+            ANIMCMD_FRAME(1, 15),
+            ANIMCMD_FRAME(0, 15),
+            ANIMCMD_FRAME(1, 15),
+            ANIMCMD_FRAME(0, 1),
+        ),
+        .frontAnimId = ANIM_BOUNCE_ROTATE_TO_SIDES_SMALL,
         .backPic = gMonBackPic_OricorioPomPom,
         .backPicSize = MON_COORDS_SIZE(64, 64),
         .backPicYOffset = 0,
@@ -1732,8 +1747,15 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .frontPic = gMonFrontPic_OricorioPau,
         .frontPicSize = MON_COORDS_SIZE(56, 64),
         .frontPicYOffset = 3,
-        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
-        //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
+        .frontAnimFrames = ANIM_FRAMES(
+            ANIMCMD_FRAME(1, 30),
+            ANIMCMD_FRAME(0, 30),
+            ANIMCMD_FRAME(1, 30),
+            ANIMCMD_FRAME(0, 15),
+            ANIMCMD_FRAME(1, 30),
+            ANIMCMD_FRAME(0, 1),
+        ),
+        .frontAnimId = ANIM_H_SLIDE_SLOW,
         .backPic = gMonBackPic_OricorioPau,
         .backPicSize = MON_COORDS_SIZE(64, 64),
         .backPicYOffset = 0,
@@ -1799,8 +1821,11 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .frontPic = gMonFrontPic_OricorioSensu,
         .frontPicSize = MON_COORDS_SIZE(64, 56),
         .frontPicYOffset = 4,
-        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
-        //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
+        .frontAnimFrames = ANIM_FRAMES(
+            ANIMCMD_FRAME(1, 30),
+            ANIMCMD_FRAME(0, 1),
+        ),
+        .frontAnimId = ANIM_H_STRETCH,
         .backPic = gMonBackPic_OricorioSensu,
         .backPicSize = MON_COORDS_SIZE(64, 64),
         .backPicYOffset = 0,
@@ -2498,8 +2523,11 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .frontPic = gMonFrontPic_WishiwashiSchool,
         .frontPicSize = MON_COORDS_SIZE(64, 64),
         .frontPicYOffset = 4,
-        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
-        //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
+        .frontAnimFrames = ANIM_FRAMES(
+            ANIMCMD_FRAME(1, 33),
+            ANIMCMD_FRAME(0, 1),
+		),
+        .frontAnimId = ANIM_GROW,
         .backPic = gMonBackPic_WishiwashiSchool,
         .backPicSize = MON_COORDS_SIZE(64, 56),
         .backPicYOffset = 5,
@@ -2511,6 +2539,17 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-4, 7, SHADOW_SIZE_L)
         FOOTPRINT(Wishiwashi)
+    #if OW_BATTLE_ONLY_FORMS
+        OVERWORLD(
+            sPicTable_WishiwashiSchool,
+            SIZE_32x32,
+            SHADOW_SIZE_M,
+            TRACKS_FOOT,
+            sAnimTable_Following,
+            gOverworldPalette_WishiwashiSchool,
+            gShinyOverworldPalette_WishiwashiSchool
+        )
+    #endif //OW_BATTLE_ONLY_FORMS
         .levelUpLearnset = sWishiwashiLevelUpLearnset,
         .teachableLearnset = sWishiwashiTeachableLearnset,
         .eggMoveLearnset = sWishiwashiEggMoveLearnset,
@@ -2697,8 +2736,11 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .frontPic = gMonFrontPic_Mudbray,
         .frontPicSize = MON_COORDS_SIZE(48, 56),
         .frontPicYOffset = 7,
-        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
-        .frontAnimId = ANIM_V_SHAKE,
+        .frontAnimFrames = ANIM_FRAMES(
+            ANIMCMD_FRAME(1, 47),
+            ANIMCMD_FRAME(0, 1),
+        ),
+        .frontAnimId = ANIM_V_STRETCH,
         .backPic = gMonBackPic_Mudbray,
         .backPicSize = MON_COORDS_SIZE(64, 56),
         .backPicYOffset = 8,
@@ -2763,7 +2805,12 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .frontPic = gMonFrontPic_Mudsdale,
         .frontPicSize = MON_COORDS_SIZE(64, 64),
         .frontPicYOffset = 0,
-        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
+        .frontAnimFrames = ANIM_FRAMES(
+            ANIMCMD_FRAME(1, 15),
+            ANIMCMD_FRAME(0, 15),
+            ANIMCMD_FRAME(1, 30),
+            ANIMCMD_FRAME(0, 1),
+        ),
         .frontAnimId = ANIM_V_SHAKE_TWICE,
         .backPic = gMonBackPic_Mudsdale,
         .backPicSize = MON_COORDS_SIZE(64, 56),
@@ -3099,11 +3146,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .frontPic = gMonFrontPic_Lurantis,
         .frontPicSize = MON_COORDS_SIZE(48, 64),
         .frontPicYOffset = 2,
-        .frontAnimFrames = ANIM_FRAMES(
-            ANIMCMD_FRAME(0, 5),
-            ANIMCMD_FRAME(1, 35),
-            ANIMCMD_FRAME(0, 1),
-        ),
+        .frontAnimFrames = sAnims_Lurantis,
         .frontAnimId = ANIM_GROW_VIBRATE,
         .backPic = gMonBackPic_Lurantis,
         .backPicSize = MON_COORDS_SIZE(56, 64),
@@ -3164,7 +3207,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .frontPic = gMonFrontPic_Lurantis,
         .frontPicSize = MON_COORDS_SIZE(48, 64),
         .frontPicYOffset = 2,
-        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
+        .frontAnimFrames = sAnims_Lurantis,
         .frontAnimId = ANIM_GROW_VIBRATE,
         .backPic = gMonBackPic_Lurantis,
         .backPicSize = MON_COORDS_SIZE(56, 64),
@@ -4249,7 +4292,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_MEDIUM_FAST,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_BUG, EGG_GROUP_WATER_3),
-        .abilities = { ABILITY_EMERGENCY_EXIT, ABILITY_NONE, ABILITY_NONE },
+        .abilities = { ABILITY_TOUGH_CLAWS, ABILITY_TOUGH_CLAWS, ABILITY_TOUGH_CLAWS },
         .bodyColor = BODY_COLOR_GRAY,
         .speciesName = _("Golisopod"),
     #if P_MODIFIED_MEGA_CRIES
@@ -4540,7 +4583,10 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .frontPic = gMonFrontPic_TypeNull,
         .frontPicSize = MON_COORDS_SIZE(64, 64),
         .frontPicYOffset = 2,
-        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
+        .frontAnimFrames = ANIM_FRAMES(
+            ANIMCMD_FRAME(1, 30),
+            ANIMCMD_FRAME(0, 1),
+		),
         .frontAnimId = ANIM_H_SHAKE,
         .backPic = gMonBackPic_TypeNull,
         .backPicSize = MON_COORDS_SIZE(56, 64),
@@ -4604,8 +4650,11 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .frontPic = gMonFrontPic_Silvally,                                          \
         .frontPicSize = MON_COORDS_SIZE(64, 64),                                    \
         .frontPicYOffset = 0,                                                       \
-        .frontAnimFrames = sAnims_SingleFramePlaceHolder,                           \
-        .frontAnimId = ANIM_V_SHAKE,                                                \
+        .frontAnimFrames = ANIM_FRAMES(                                             \
+            ANIMCMD_FRAME(1, 30),                                                   \
+            ANIMCMD_FRAME(0, 1),                                                    \
+        ),                                                                          \
+        .frontAnimId = ANIM_BACK_AND_LUNGE,                                         \
         .backPic = gMonBackPic_Silvally,                                            \
         .backPicSize = MON_COORDS_SIZE(56, 64),                                     \
         .backPicYOffset = 0,                                                        \
@@ -4623,8 +4672,8 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
             SHADOW_SIZE_M,                                                          \
             TRACKS_FOOT,                                                            \
             sAnimTable_Following,                                                   \
-            gOverworldPalette_Silvally,                                             \
-            gShinyOverworldPalette_Silvally                                         \
+            gOverworldPalette_Silvally##_palette,                                   \
+            gShinyOverworldPalette_Silvally##_palette                               \
         )                                                                           \
         .isSubLegendary = TRUE,                                                     \
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,                               \
@@ -4758,6 +4807,15 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .iconPalIndex = iconPal,                                \
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,                 \
         SHADOW(-2, 12, SHADOW_SIZE_S)                           \
+        OVERWORLD(                                              \
+            sPicTable_MiniorCore,                               \
+            SIZE_32x32,                                         \
+            SHADOW_SIZE_M,                                      \
+            TRACKS_FOOT,                                        \
+            sAnimTable_Following,                               \
+            gOverworldPalette_MiniorCore##Form,                 \
+            gShinyOverworldPalette_MiniorCore                   \
+        )                                                       \
         .formChangeTable = sMinior ##Form##FormChangeTable,     \
         MINIOR_MISC_INFO(color),                                \
     }
@@ -5100,8 +5158,8 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
             SHADOW_SIZE_M,
             TRACKS_FOOT,
             sAnimTable_Following_Asym,
-            gOverworldPalette_MimikyuDisguised,
-            gShinyOverworldPalette_MimikyuDisguised
+            gOverworldPalette_Mimikyu,
+            gShinyOverworldPalette_Mimikyu
         )
         .levelUpLearnset = sMimikyuLevelUpLearnset,
         .teachableLearnset = sMimikyuTeachableLearnset,
@@ -5157,6 +5215,17 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
         SHADOW(-3, 1, SHADOW_SIZE_S)
         FOOTPRINT(Mimikyu)
+    #if OW_BATTLE_ONLY_FORMS
+        OVERWORLD(
+            sPicTable_MimikyuBusted,
+            SIZE_32x32,
+            SHADOW_SIZE_M,
+            TRACKS_FOOT,
+            sAnimTable_Following_Asym,
+            gOverworldPalette_Mimikyu,
+            gShinyOverworldPalette_Mimikyu
+        )
+    #endif //OW_BATTLE_ONLY_FORMS
         .levelUpLearnset = sMimikyuLevelUpLearnset,
         .teachableLearnset = sMimikyuTeachableLearnset,
         .eggMoveLearnset = sMimikyuEggMoveLearnset,
@@ -5217,8 +5286,8 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
             SHADOW_SIZE_M,
             TRACKS_FOOT,
             sAnimTable_Following,
-            gOverworldPalette_MimikyuDisguised,
-            gShinyOverworldPalette_MimikyuDisguised
+            gOverworldPalette_Mimikyu,
+            gShinyOverworldPalette_Mimikyu
         )
         .isTotem = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
@@ -5276,6 +5345,17 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-3, 1, SHADOW_SIZE_S)
         FOOTPRINT(Mimikyu)
+    #if OW_BATTLE_ONLY_FORMS
+        OVERWORLD(
+            sPicTable_MimikyuBusted,
+            SIZE_32x32,
+            SHADOW_SIZE_M,
+            TRACKS_FOOT,
+            sAnimTable_Following_Asym,
+            gOverworldPalette_Mimikyu,
+            gShinyOverworldPalette_Mimikyu
+        )
+    #endif //OW_BATTLE_ONLY_FORMS
         .isTotem = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sMimikyuLevelUpLearnset,
@@ -5449,7 +5529,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .growthRate = GROWTH_MEDIUM_FAST,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_DRAGON),
         .abilities = { ABILITY_BERSERK, ABILITY_BERSERK, ABILITY_BERSERK },
-        .bodyColor = BODY_COLOR_WHITE,
+        .bodyColor = BODY_COLOR_BLACK,
         .speciesName = _("Drampa"),
     #if P_MODIFIED_MEGA_CRIES
         .cryId = CRY_DRAMPA_MEGA,
@@ -5801,13 +5881,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .frontPic = gMonFrontPic_KommoO,
         .frontPicSize = MON_COORDS_SIZE(63, 63),
         .frontPicYOffset = 0,
-        .frontAnimFrames = ANIM_FRAMES(
-            ANIMCMD_FRAME(0, 10),
-            ANIMCMD_FRAME(1, 20),
-            ANIMCMD_FRAME(0, 20),
-            ANIMCMD_FRAME(1, 20),
-            ANIMCMD_FRAME(0, 1),
-        ),
+        .frontAnimFrames = sAnims_Kommo_O,
         .frontAnimId = ANIM_SHRINK_GROW_VIBRATE_FAST,
         .backPic = gMonBackPic_KommoO,
         .backPicSize = MON_COORDS_SIZE(60, 60),
@@ -6243,8 +6317,12 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .frontPic = gMonFrontPic_Cosmoem,
         .frontPicSize = MON_COORDS_SIZE(48, 48),
         .frontPicYOffset = 9,
-        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
-        .frontAnimId = ANIM_RISING_WOBBLE,
+        .frontAnimFrames = ANIM_FRAMES(
+            ANIMCMD_FRAME(0, 40),
+            ANIMCMD_FRAME(1, 30),
+            ANIMCMD_FRAME(0, 1),
+        ),
+        .frontAnimId = ANIM_V_SLIDE_SLOW,
         .enemyMonElevation = 3,
         .backPic = gMonBackPic_Cosmoem,
         .backPicSize = MON_COORDS_SIZE(64, 40),
@@ -6313,8 +6391,11 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .frontPic = gMonFrontPic_Solgaleo,
         .frontPicSize = MON_COORDS_SIZE(64, 64),
         .frontPicYOffset = 0,
-        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
-        .frontAnimId = ANIM_GROW_VIBRATE,
+        .frontAnimFrames = ANIM_FRAMES(
+            ANIMCMD_FRAME(1, 57),
+            ANIMCMD_FRAME(0, 1),
+        ),
+        .frontAnimId = ANIM_SHRINK_GROW_VIBRATE_SLOW,
         .backPic = gMonBackPic_Solgaleo,
         .backPicSize = MON_COORDS_SIZE(64, 64),
         .backPicYOffset = 3,
@@ -6379,7 +6460,10 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .frontPic = gMonFrontPic_Lunala,
         .frontPicSize = MON_COORDS_SIZE(64, 64),
         .frontPicYOffset = 0,
-        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
+        .frontAnimFrames = ANIM_FRAMES(
+            ANIMCMD_FRAME(1, 45),
+            ANIMCMD_FRAME(0, 1),
+		),
         .frontAnimId = ANIM_CIRCULAR_VIBRATE,
         .enemyMonElevation = 6,
         .backPic = gMonBackPic_Lunala,
@@ -6448,8 +6532,11 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .frontPic = gMonFrontPic_Nihilego,
         .frontPicSize = MON_COORDS_SIZE(48, 64),
         .frontPicYOffset = 3,
-        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
-        .frontAnimId = ANIM_CIRCULAR_STRETCH_TWICE,
+        .frontAnimFrames = ANIM_FRAMES(
+            ANIMCMD_FRAME(1, 30),
+            ANIMCMD_FRAME(0, 1),
+		),
+        .frontAnimId = ANIM_V_SQUISH_AND_BOUNCE_SLOW,
         .enemyMonElevation = 6,
         .backPic = gMonBackPic_Nihilego,
         .backPicSize = MON_COORDS_SIZE(64, 48),
@@ -6517,8 +6604,11 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .frontPic = gMonFrontPic_Buzzwole,
         .frontPicSize = MON_COORDS_SIZE(64, 64),
         .frontPicYOffset = 0,
-        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
-        .frontAnimId = ANIM_SHRINK_GROW_VIBRATE_FAST,
+        .frontAnimFrames = ANIM_FRAMES(
+            ANIMCMD_FRAME(1, 30),
+            ANIMCMD_FRAME(0, 1),
+		),
+        .frontAnimId = ANIM_SHRINK_GROW_VIBRATE_SLOW,
         .backPic = gMonBackPic_Buzzwole,
         .backPicSize = MON_COORDS_SIZE(64, 56),
         .backPicYOffset = 14,
@@ -6584,8 +6674,11 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .frontPic = gMonFrontPic_Pheromosa,
         .frontPicSize = MON_COORDS_SIZE(56, 64),
         .frontPicYOffset = 1,
-        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
-        .frontAnimId = ANIM_SHRINK_GROW,
+        .frontAnimFrames = ANIM_FRAMES(
+            ANIMCMD_FRAME(1, 50),
+            ANIMCMD_FRAME(0, 1),
+		),
+        .frontAnimId = ANIM_H_STRETCH,
         .backPic = gMonBackPic_Pheromosa,
         .backPicSize = MON_COORDS_SIZE(64, 64),
         .backPicYOffset = 2,
@@ -6651,7 +6744,11 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .frontPic = gMonFrontPic_Xurkitree,
         .frontPicSize = MON_COORDS_SIZE(64, 64),
         .frontPicYOffset = 0,
-        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
+        .frontAnimFrames = ANIM_FRAMES(
+            ANIMCMD_FRAME(1, 50),
+            ANIMCMD_FRAME(1, 25),
+            ANIMCMD_FRAME(0, 1),
+		),
         .frontAnimId = ANIM_SHAKE_FLASH_YELLOW_FAST,
         .backPic = gMonBackPic_Xurkitree,
         .backPicSize = MON_COORDS_SIZE(64, 64),
@@ -6720,8 +6817,13 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .frontPic = gMonFrontPic_Celesteela,
         .frontPicSize = MON_COORDS_SIZE(64, 64),
         .frontPicYOffset = 0,
-        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
-        .frontAnimId = ANIM_GROW_STUTTER_SLOW,
+        .frontAnimFrames = ANIM_FRAMES(
+            ANIMCMD_FRAME(1, 30),
+            ANIMCMD_FRAME(0, 15),
+            ANIMCMD_FRAME(1, 15),
+            ANIMCMD_FRAME(0, 1),
+		),
+        .frontAnimId = ANIM_CIRCLE_INTO_BG,
         .backPic = gMonBackPic_Celesteela,
         .backPicSize = MON_COORDS_SIZE(64, 64),
         .backPicYOffset = 0,
@@ -6787,8 +6889,13 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .frontPic = gMonFrontPic_Kartana,
         .frontPicSize = MON_COORDS_SIZE(64, 64),
         .frontPicYOffset = 2,
-        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
-        .frontAnimId = ANIM_H_VIBRATE,
+        .frontAnimFrames = ANIM_FRAMES(
+            ANIMCMD_FRAME(1, 30),
+            ANIMCMD_FRAME(0, 30),
+            ANIMCMD_FRAME(1, 30),
+            ANIMCMD_FRAME(0, 1),
+        ),
+        .frontAnimId = ANIM_SWING_CONVEX_FAST,
         .enemyMonElevation = 3,
         .backPic = gMonBackPic_Kartana,
         .backPicSize = MON_COORDS_SIZE(64, 48),
@@ -6855,7 +6962,11 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .frontPic = gMonFrontPic_Guzzlord,
         .frontPicSize = MON_COORDS_SIZE(64, 64),
         .frontPicYOffset = 3,
-        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
+        .frontAnimFrames = ANIM_FRAMES(
+            ANIMCMD_FRAME(1, 50),
+            ANIMCMD_FRAME(1, 30),
+            ANIMCMD_FRAME(0, 1),
+		),
         .frontAnimId = ANIM_SHRINK_GROW_VIBRATE_FAST,
         .backPic = gMonBackPic_Guzzlord,
         .backPicSize = MON_COORDS_SIZE(64, 56),
@@ -6924,7 +7035,10 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .frontPic = gMonFrontPic_Necrozma,
         .frontPicSize = MON_COORDS_SIZE(64, 64),
         .frontPicYOffset = 2,
-        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
+        .frontAnimFrames = ANIM_FRAMES(
+            ANIMCMD_FRAME(1, 55),
+            ANIMCMD_FRAME(0, 1),
+		),
         .frontAnimId = ANIM_GROW_VIBRATE,
         .enemyMonElevation = 6,
         .backPic = gMonBackPic_Necrozma,
@@ -6994,8 +7108,11 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .frontPic = gMonFrontPic_NecrozmaDuskMane,
         .frontPicSize = MON_COORDS_SIZE(64, 64),
         .frontPicYOffset = 0,
-        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
-        //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
+        .frontAnimFrames = ANIM_FRAMES(
+            ANIMCMD_FRAME(1, 35),
+            ANIMCMD_FRAME(0, 1),
+		),
+        .frontAnimId = ANIM_GROW_STUTTER_SLOW,
         .backPic = gMonBackPic_NecrozmaDuskMane,
         .backPicSize = MON_COORDS_SIZE(64, 64),
         .backPicYOffset = 1,
@@ -7005,7 +7122,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .iconSprite = gMonIcon_NecrozmaDuskMane,
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
-        SHADOW(-3, 11, SHADOW_SIZE_XL_BATTLE_ONLY)
+        SHADOW(-1, 11, SHADOW_SIZE_XL_BATTLE_ONLY)
         FOOTPRINT(Necrozma)
         OVERWORLD(
             sPicTable_NecrozmaDuskMane,
@@ -7064,8 +7181,11 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .frontPic = gMonFrontPic_NecrozmaDawnWings,
         .frontPicSize = MON_COORDS_SIZE(64, 64),
         .frontPicYOffset = 0,
-        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
-        //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
+        .frontAnimFrames = ANIM_FRAMES(
+            ANIMCMD_FRAME(1, 30),
+            ANIMCMD_FRAME(0, 1),
+		),
+        .frontAnimId = ANIM_CIRCULAR_STRETCH_TWICE,
         .enemyMonElevation = 6,
         .backPic = gMonBackPic_NecrozmaDawnWings,
         .backPicSize = MON_COORDS_SIZE(64, 64),
@@ -7215,8 +7335,8 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .frontPic = gMonFrontPic_Magearna,
         .frontPicSize = MON_COORDS_SIZE(56, 64),
         .frontPicYOffset = 0,
-        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
-        .frontAnimId = ANIM_H_SLIDE_SLOW,
+        .frontAnimFrames = sAnims_Magearna,
+        .frontAnimId = ANIM_SWING_CONCAVE_FAST,
         .backPic = gMonBackPic_Magearna,
         .backPicSize = MON_COORDS_SIZE(64, 56),
         .backPicYOffset = 4,
@@ -7283,8 +7403,8 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .frontPic = gMonFrontPic_MagearnaOriginal,
         .frontPicSize = MON_COORDS_SIZE(56, 64),
         .frontPicYOffset = 0,
-        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
-        .frontAnimId = ANIM_H_SLIDE_SLOW,
+        .frontAnimFrames = sAnims_Magearna,
+        .frontAnimId = ANIM_SWING_CONCAVE_FAST,
         .backPic = gMonBackPic_MagearnaOriginal,
         .backPicSize = MON_COORDS_SIZE(64, 56),
         .backPicYOffset = 4,
@@ -7333,7 +7453,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .growthRate = GROWTH_SLOW,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED),
         .abilities = { ABILITY_SOUL_HEART, ABILITY_NONE, ABILITY_NONE },
-        .bodyColor = BODY_COLOR_GRAY,
+        .bodyColor = BODY_COLOR_RED,
         .speciesName = _("Magearna"),
     #if P_MODIFIED_MEGA_CRIES
         .cryId = CRY_MAGEARNA_MEGA,
@@ -7345,10 +7465,10 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .height = 13,
         .weight = 2481,
         .description = COMPOUND_STRING(
-            "This artificial Pokémon, constructed more\n"
-            "than 500 years ago, can understand human\n"
-            "speech but cannot itself speak. Its true\n"
-            "self is its Soul-Heart, an artificial soul."),
+            "This is Magearna once a previously hidden\n"
+            "mode activates. The emotions Magearna had\n"
+            "begun to feel now hide away as it fells\n"
+            "foe after foe."),
         .frontPic = gMonFrontPic_MagearnaMega,
         .frontPicSize = MON_COORDS_SIZE(64, 64),
         .frontPicYOffset = 0,
@@ -7393,7 +7513,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .growthRate = GROWTH_SLOW,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED),
         .abilities = { ABILITY_SOUL_HEART, ABILITY_NONE, ABILITY_NONE },
-        .bodyColor = BODY_COLOR_GRAY,
+        .bodyColor = BODY_COLOR_RED,
         .speciesName = _("Magearna"),
     #if P_MODIFIED_MEGA_CRIES
         .cryId = CRY_MAGEARNA_MEGA,
@@ -7548,8 +7668,11 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .frontPic = gMonFrontPic_Poipole,
         .frontPicSize = MON_COORDS_SIZE(40, 56),
         .frontPicYOffset = 8,
-        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
-        .frontAnimId = ANIM_SHAKE_GLOW_PURPLE_SLOW,
+        .frontAnimFrames = ANIM_FRAMES(
+            ANIMCMD_FRAME(1, 40),
+            ANIMCMD_FRAME(0, 1),
+        ),
+        .frontAnimId = ANIM_CIRCLE_C_CLOCKWISE_SLOW,
         .enemyMonElevation = 9,
         .backPic = gMonBackPic_Poipole,
         .backPicSize = MON_COORDS_SIZE(48, 56),
@@ -7614,8 +7737,12 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .frontPic = gMonFrontPic_Naganadel,
         .frontPicSize = MON_COORDS_SIZE(64, 64),
         .frontPicYOffset = 1,
-        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
-        .frontAnimId = ANIM_TRIANGLE_DOWN_TWICE,
+        .frontAnimFrames = ANIM_FRAMES(
+            ANIMCMD_FRAME(0, 5),
+            ANIMCMD_FRAME(1, 30),
+            ANIMCMD_FRAME(0, 1),
+        ),
+        .frontAnimId = ANIM_BACK_AND_LUNGE,
         .enemyMonElevation = 7,
         .backPic = gMonBackPic_Naganadel,
         .backPicSize = MON_COORDS_SIZE(64, 56),
@@ -7682,8 +7809,11 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .frontPic = gMonFrontPic_Stakataka,
         .frontPicSize = MON_COORDS_SIZE(64, 64),
         .frontPicYOffset = 0,
-        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
-        .frontAnimId = ANIM_GROW_VIBRATE,
+        .frontAnimFrames = ANIM_FRAMES(
+            ANIMCMD_FRAME(1, 50),
+            ANIMCMD_FRAME(0, 1),
+		),
+        .frontAnimId = ANIM_V_SHAKE_TWICE_SLOW,
         .backPic = gMonBackPic_Stakataka,
         .backPicSize = MON_COORDS_SIZE(64, 48),
         .backPicYOffset = 12,
@@ -7749,7 +7879,10 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .frontPic = gMonFrontPic_Blacephalon,
         .frontPicSize = MON_COORDS_SIZE(56, 64),
         .frontPicYOffset = 1,
-        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
+        .frontAnimFrames = ANIM_FRAMES(
+            ANIMCMD_FRAME(1, 50),
+            ANIMCMD_FRAME(0, 1),
+		),
         .frontAnimId = ANIM_SHAKE_GLOW_RED,
         .backPic = gMonBackPic_Blacephalon,
         .backPicSize = MON_COORDS_SIZE(64, 48),
@@ -7815,8 +7948,11 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .frontPic = gMonFrontPic_Zeraora,
         .frontPicSize = MON_COORDS_SIZE(64, 56),
         .frontPicYOffset = 4,
-        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
-        .frontAnimId = ANIM_V_STRETCH,
+        .frontAnimFrames = ANIM_FRAMES(
+            ANIMCMD_FRAME(1, 30),
+            ANIMCMD_FRAME(0, 1),
+		),
+        .frontAnimId = ANIM_PIVOT_SHAKE,
         .backPic = gMonBackPic_Zeraora,
         .backPicSize = MON_COORDS_SIZE(64, 56),
         .backPicYOffset = 11,
@@ -7866,7 +8002,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .growthRate = GROWTH_SLOW,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED),
         .abilities = { ABILITY_VOLT_ABSORB, ABILITY_NONE, ABILITY_NONE },
-        .bodyColor = BODY_COLOR_YELLOW,
+        .bodyColor = BODY_COLOR_BLACK,
         .speciesName = _("Zeraora"),
     #if P_MODIFIED_MEGA_CRIES
         .cryId = CRY_ZERAORA_MEGA,
@@ -7947,8 +8083,11 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .frontPic = gMonFrontPic_Meltan,
         .frontPicSize = MON_COORDS_SIZE(32, 48),
         .frontPicYOffset = 11,
-        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
-        .frontAnimId = ANIM_GROW_STUTTER_SLOW,
+        .frontAnimFrames = ANIM_FRAMES(
+            ANIMCMD_FRAME(1, 30),
+            ANIMCMD_FRAME(0, 1),
+        ),
+        .frontAnimId = ANIM_GROW_VIBRATE,
         .backPic = gMonBackPic_Meltan,
         .backPicSize = MON_COORDS_SIZE(40, 40),
         .backPicYOffset = 12,
@@ -8012,7 +8151,10 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .frontPic = gMonFrontPic_Melmetal,
         .frontPicSize = MON_COORDS_SIZE(64, 56),
         .frontPicYOffset = 4,
-        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
+        .frontAnimFrames = ANIM_FRAMES(
+            ANIMCMD_FRAME(1, 30),
+            ANIMCMD_FRAME(0, 1),
+        ),
         .frontAnimId = ANIM_GROW_VIBRATE,
         .backPic = gMonBackPic_Melmetal,
         .backPicSize = MON_COORDS_SIZE(64, 40),

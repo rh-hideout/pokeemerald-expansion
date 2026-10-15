@@ -134,7 +134,7 @@ static void Intro_WaitForHealthbox(enum BattlerId battler)
     else
     {
         if (gSprites[gHealthboxSpriteIds[battler]].callback == SpriteCallbackDummy
-            && gSprites[gHealthboxSpriteIds[BATTLE_PARTNER(battler)]].callback == SpriteCallbackDummy)
+            && gSprites[gHealthboxSpriteIds[GetPartnerBattler(battler)]].callback == SpriteCallbackDummy)
         {
             finished = TRUE;
         }
@@ -154,7 +154,7 @@ static void Intro_WaitForHealthbox(enum BattlerId battler)
 void Controller_PlayerPartnerShowIntroHealthbox(enum BattlerId battler)
 {
     if (!gBattleSpritesDataPtr->healthBoxesData[battler].ballAnimActive
-        && !gBattleSpritesDataPtr->healthBoxesData[BATTLE_PARTNER(battler)].ballAnimActive
+        && !gBattleSpritesDataPtr->healthBoxesData[GetPartnerBattler(battler)].ballAnimActive
         && gSprites[gBattleControllerData[battler]].callback == SpriteCallbackDummy
         && gSprites[gBattlerSpriteIds[battler]].callback == SpriteCallbackDummy
         && ++gBattleSpritesDataPtr->healthBoxesData[battler].introEndDelay != 1)
@@ -164,10 +164,10 @@ void Controller_PlayerPartnerShowIntroHealthbox(enum BattlerId battler)
 
         if (IsDoubleBattle() && !(gBattleTypeFlags & BATTLE_TYPE_MULTI))
         {
-            DestroySprite(&gSprites[gBattleControllerData[BATTLE_PARTNER(battler)]]);
-            UpdateHealthboxAttribute(gHealthboxSpriteIds[BATTLE_PARTNER(battler)], GetBattlerMon(BATTLE_PARTNER(battler)), HEALTHBOX_ALL);
-            StartHealthboxSlideIn(BATTLE_PARTNER(battler));
-            SetHealthboxSpriteVisible(gHealthboxSpriteIds[BATTLE_PARTNER(battler)]);
+            DestroySprite(&gSprites[gBattleControllerData[GetPartnerBattler(battler)]]);
+            UpdateHealthboxAttribute(gHealthboxSpriteIds[GetPartnerBattler(battler)], GetBattlerMon(GetPartnerBattler(battler)), HEALTHBOX_ALL);
+            StartHealthboxSlideIn(GetPartnerBattler(battler));
+            SetHealthboxSpriteVisible(gHealthboxSpriteIds[GetPartnerBattler(battler)]);
         }
 
         DestroySprite(&gSprites[gBattleControllerData[battler]]);
@@ -274,36 +274,7 @@ static void PlayerPartnerHandleChooseAction(enum BattlerId battler)
 
 static void PlayerPartnerHandleChooseMove(enum BattlerId battler)
 {
-    u32 chosenMoveIndex;
-    struct ChooseMoveStruct *moveInfo = (struct ChooseMoveStruct *)(&gBattleResources->bufferA[battler][4]);
-
-    chosenMoveIndex = gAiBattleData->chosenMoveIndex[battler];
-    gBattlerTarget = gAiBattleData->chosenTarget[battler];
-    enum MoveTarget moveTarget = GetBattlerMoveTargetType(battler, moveInfo->moves[chosenMoveIndex]);
-
-    if (moveTarget == TARGET_USER || moveTarget == TARGET_USER_OR_ALLY)
-    {
-        gBattlerTarget = battler;
-    }
-    else if (moveTarget == TARGET_BOTH)
-    {
-        gBattlerTarget = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
-        if (gAbsentBattlerFlags & (1u << gBattlerTarget))
-            gBattlerTarget = GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT);
-    }
-    // If partner can and should use a gimmick (considering trainer data), do it
-    enum Gimmick usableGimmick = gBattleStruct->gimmick.usableGimmick[battler];
-    if (usableGimmick != GIMMICK_NONE && IsAIUsingGimmick(battler) && !HasTrainerUsedGimmick(battler, usableGimmick))
-    {
-        gBattleStruct->gimmick.toActivate |= 1u << battler;
-        BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, (chosenMoveIndex) | (RET_GIMMICK) | (gBattlerTarget << 8));
-    }
-    else
-    {
-        SetAIUsingGimmick(battler, NO_GIMMICK);
-        BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, (chosenMoveIndex) | (gBattlerTarget << 8));
-    }
-
+    SetFinalChosenTarget(battler, TRUE);
     BtlController_Complete(battler);
 }
 

@@ -23,7 +23,7 @@ ASSUMPTIONS
     ASSUME(gTypesInfo[TYPE_DRAGON].isHiddenPowerType == TRUE);
     ASSUME(gTypesInfo[TYPE_DARK].isHiddenPowerType == TRUE);
     // Any type after Dark shouldn't be part of Hidden Power officially.
-    for (u32 j = TYPE_DARK + 1; j < NUMBER_OF_MON_TYPES; j++) {
+    for (enum Type j = TYPE_DARK + 1; j < NUMBER_OF_MON_TYPES; j++) {
         ASSUME(gTypesInfo[j].isHiddenPowerType == FALSE);
     }
 }
@@ -32,7 +32,8 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Hidden Power's type is determined by IVs")
 {
     enum Type type, foeType, j;
-    u32 foeSpecies, foeItem;
+    enum Species foeSpecies;
+    enum Item foeItem;
     u32 hp, atk, def, spAtk, spDef, speed;
     bool32 hidden;
 
@@ -126,7 +127,7 @@ SINGLE_BATTLE_TEST("Hidden Power's type is determined by IVs")
     } SCENE {
         // Only test valid Hidden Power types
         if (hidden) {
-            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent); // Check that the item is triggered
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent); // Check that the resist berry is triggered
             ANIMATION(ANIM_TYPE_MOVE, MOVE_HIDDEN_POWER, player);
             HP_BAR(opponent);
             MESSAGE("It's super effective!");
@@ -134,7 +135,36 @@ SINGLE_BATTLE_TEST("Hidden Power's type is determined by IVs")
     }
 }
 
-TO_DO_BATTLE_TEST("Hidden Power's power is determined by IVs before Gen6");
+SINGLE_BATTLE_TEST("Hidden Power's power is determined by IVs before Gen6", s16 damage)
+{
+    u32 powerBits;
+
+    PARAMETRIZE { powerBits = 0; }
+    PARAMETRIZE { powerBits = 32; }
+    PARAMETRIZE { powerBits = 63; }
+
+    GIVEN {
+        WITH_CONFIG(B_HIDDEN_POWER_DMG, GEN_5);
+        PLAYER(SPECIES_WOBBUFFET) {
+            Attack(100); Defense(100); SpAttack(100); SpDefense(100);
+            HPIV(powerBits & 1 ? 2 : 0);
+            AttackIV(powerBits & 2 ? 2 : 0);
+            DefenseIV(powerBits & 4 ? 2 : 0);
+            SpeedIV(powerBits & 8 ? 2 : 0);
+            SpAttackIV(powerBits & 16 ? 2 : 0);
+            SpDefenseIV(powerBits & 32 ? 2 : 0);
+        }
+        OPPONENT(SPECIES_WOBBUFFET) { Defense(100); SpDefense(100); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_HIDDEN_POWER); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_HIDDEN_POWER, player);
+        HP_BAR(opponent, captureDamage: &results[i].damage);
+    } FINALLY {
+        EXPECT_LT(results[0].damage, results[1].damage);
+        EXPECT_LT(results[1].damage, results[2].damage);
+    }
+}
 
 SINGLE_BATTLE_TEST("Hidden Power always triggers Counter instead of Mirror Coat (Gen 1-3)")
 {
@@ -156,7 +186,7 @@ SINGLE_BATTLE_TEST("Hidden Power always triggers Counter instead of Mirror Coat 
     PARAMETRIZE { hp = 31; atk = 31; def = 31; spa = 31; spd = 31; spe = 30; } // TYPE_ICE
     PARAMETRIZE { hp = 31; atk = 31; def = 30; spa = 31; spd = 31; spe = 31; } // TYPE_DRAGON
     PARAMETRIZE { hp = 31; atk = 31; def = 31; spa = 31; spd = 31; spe = 31; } // TYPE_DARK
- 
+
     GIVEN {
         WITH_CONFIG(B_HIDDEN_POWER_COUNTER, GEN_3);
         ASSUME(GetMoveEffect(MOVE_COUNTER) == EFFECT_REFLECT_DAMAGE );

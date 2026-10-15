@@ -16,7 +16,7 @@ SINGLE_BATTLE_TEST("Dragon Darts strikes twice")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, player);
-        MESSAGE("The Pokémon was hit 2 time(s)!");
+        NOT MESSAGE("The Pokémon was hit 2 time(s)!");
     }
 }
 
@@ -39,16 +39,16 @@ DOUBLE_BATTLE_TEST("Dragon Darts strikes each opponent once in a double battle")
         HP_BAR(chosenTarget);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
         HP_BAR(secondaryTarget);
-        MESSAGE("The Pokémon was hit 2 time(s)!");
     }
 }
 
-DOUBLE_BATTLE_TEST("Dragon Darts strikes the ally twice if the target protects")
+DOUBLE_BATTLE_TEST("Dragon Darts strikes the other opponent twice if one target protects")
 {
     struct BattlePokemon *chosenTarget = NULL;
     struct BattlePokemon *secondaryTarget = NULL;
     PARAMETRIZE { chosenTarget = opponentLeft; secondaryTarget = opponentRight; }
     PARAMETRIZE { chosenTarget = opponentRight; secondaryTarget = opponentLeft; }
+
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
@@ -62,7 +62,6 @@ DOUBLE_BATTLE_TEST("Dragon Darts strikes the ally twice if the target protects")
         HP_BAR(secondaryTarget);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
         HP_BAR(secondaryTarget);
-        MESSAGE("The Pokémon was hit 2 time(s)!");
     }
 }
 
@@ -70,14 +69,15 @@ DOUBLE_BATTLE_TEST("Dragon Darts strikes an opponent twice if the other one is F
 {
     struct BattlePokemon *chosenTarget = NULL;
     struct BattlePokemon *finalTarget = NULL;
-    u32 speciesLeft, speciesRight;
+    enum Species speciesLeft, speciesRight;
     PARAMETRIZE { chosenTarget = opponentLeft;  finalTarget = opponentRight; speciesLeft = SPECIES_FIDOUGH;   speciesRight = SPECIES_WOBBUFFET; }
     PARAMETRIZE { chosenTarget = opponentRight; finalTarget = opponentRight; speciesLeft = SPECIES_FIDOUGH;   speciesRight = SPECIES_WOBBUFFET; }
     PARAMETRIZE { chosenTarget = opponentLeft;  finalTarget = opponentLeft;  speciesLeft = SPECIES_WOBBUFFET; speciesRight = SPECIES_FIDOUGH; }
     PARAMETRIZE { chosenTarget = opponentRight; finalTarget = opponentLeft;  speciesLeft = SPECIES_WOBBUFFET; speciesRight = SPECIES_FIDOUGH; }
 
     GIVEN {
-        ASSUME(GetSpeciesType(SPECIES_FIDOUGH, 0) == TYPE_FAIRY || GetSpeciesType(SPECIES_FIDOUGH, 1) == TYPE_FAIRY);
+        ASSUME(IsSpeciesOfType(SPECIES_FIDOUGH, TYPE_FAIRY ));
+        ASSUME(GetMoveType(MOVE_DRAGON_DARTS) == TYPE_DRAGON);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(speciesLeft);
@@ -89,7 +89,6 @@ DOUBLE_BATTLE_TEST("Dragon Darts strikes an opponent twice if the other one is F
         HP_BAR(finalTarget);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
         HP_BAR(finalTarget);
-        MESSAGE("The Pokémon was hit 2 time(s)!");
     }
 }
 
@@ -102,6 +101,7 @@ DOUBLE_BATTLE_TEST("Dragon Darts strikes an opponent twice if electrified and th
     PARAMETRIZE { chosenTarget = opponentRight; finalTarget = opponentLeft;  abilityLeft = ABILITY_WATER_ABSORB; abilityRight = ABILITY_VOLT_ABSORB; }
     PARAMETRIZE { chosenTarget = opponentLeft;  finalTarget = opponentRight; abilityLeft = ABILITY_VOLT_ABSORB;  abilityRight = ABILITY_WATER_ABSORB; }
     PARAMETRIZE { chosenTarget = opponentRight; finalTarget = opponentRight; abilityLeft = ABILITY_VOLT_ABSORB;  abilityRight = ABILITY_WATER_ABSORB; }
+
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_ELECTRIFY) == EFFECT_ELECTRIFY);
         PLAYER(SPECIES_WOBBUFFET);
@@ -115,7 +115,6 @@ DOUBLE_BATTLE_TEST("Dragon Darts strikes an opponent twice if electrified and th
         HP_BAR(finalTarget);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
         HP_BAR(finalTarget);
-        MESSAGE("The Pokémon was hit 2 time(s)!");
     }
 }
 
@@ -128,6 +127,7 @@ DOUBLE_BATTLE_TEST("Dragon Darts strikes an opponent twice if electrified and th
     PARAMETRIZE { chosenTarget = opponentRight; finalTarget = opponentLeft;  abilityLeft = ABILITY_VITAL_SPIRIT; abilityRight = ABILITY_MOTOR_DRIVE; }
     PARAMETRIZE { chosenTarget = opponentLeft;  finalTarget = opponentRight; abilityLeft = ABILITY_MOTOR_DRIVE;  abilityRight = ABILITY_VITAL_SPIRIT; }
     PARAMETRIZE { chosenTarget = opponentRight; finalTarget = opponentRight; abilityLeft = ABILITY_MOTOR_DRIVE;  abilityRight = ABILITY_VITAL_SPIRIT; }
+
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_ELECTRIFY) == EFFECT_ELECTRIFY);
         PLAYER(SPECIES_WOBBUFFET);
@@ -141,7 +141,6 @@ DOUBLE_BATTLE_TEST("Dragon Darts strikes an opponent twice if electrified and th
         HP_BAR(finalTarget);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
         HP_BAR(finalTarget);
-        MESSAGE("The Pokémon was hit 2 time(s)!");
     }
 }
 
@@ -151,6 +150,7 @@ DOUBLE_BATTLE_TEST("Dragon Darts strikes an opponent twice if the other one is i
     struct BattlePokemon *finalTarget = NULL;
     PARAMETRIZE { chosenTarget = opponentLeft;  finalTarget = opponentRight; }
     PARAMETRIZE { chosenTarget = opponentRight; finalTarget = opponentLeft; }
+
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_FLY) == EFFECT_SEMI_INVULNERABLE);
         PLAYER(SPECIES_WOBBUFFET);
@@ -165,7 +165,6 @@ DOUBLE_BATTLE_TEST("Dragon Darts strikes an opponent twice if the other one is i
         HP_BAR(finalTarget);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
         HP_BAR(finalTarget);
-        MESSAGE("The Pokémon was hit 2 time(s)!");
     }
 }
 
@@ -184,7 +183,6 @@ DOUBLE_BATTLE_TEST("Dragon Darts is not effected by Wide Guard")
         HP_BAR(opponentLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
         HP_BAR(opponentRight);
-        MESSAGE("The Pokémon was hit 2 time(s)!");
     }
 }
 
@@ -195,6 +193,7 @@ DOUBLE_BATTLE_TEST("Dragon Darts strikes an opponent twice if the other one is f
     u32 hpLeft, hpRight;
     PARAMETRIZE { chosenTarget = opponentLeft;  finalTarget = opponentRight; hpLeft = 1; hpRight = 101; }
     PARAMETRIZE { chosenTarget = opponentRight; finalTarget = opponentLeft;  hpLeft = 101; hpRight = 1; }
+
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
@@ -208,18 +207,43 @@ DOUBLE_BATTLE_TEST("Dragon Darts strikes an opponent twice if the other one is f
         HP_BAR(finalTarget);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
         HP_BAR(finalTarget);
-        MESSAGE("The Pokémon was hit 2 time(s)!");
     }
 }
 
-DOUBLE_BATTLE_TEST("Dragon Darts strikes left ally twice if one strike misses")
+DOUBLE_BATTLE_TEST("Dragon Darts checks the unchosen target for accuracy")
+{
+    GIVEN {
+        ASSUME(GetMoveAccuracy(MOVE_DRAGON_DARTS) == 100);
+        ASSUME(GetItemHoldEffect(ITEM_BRIGHT_POWDER) == HOLD_EFFECT_EVASION_UP);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_MACHAMP) { Ability(ABILITY_NO_GUARD); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_BRIGHT_POWDER); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_DRAGON_DARTS, target: opponentLeft, hit: FALSE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
+        HP_BAR(opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
+        HP_BAR(opponentLeft);
+        NOT HP_BAR(opponentRight);
+    } THEN {
+        EXPECT_LT(opponentLeft->hp, opponentLeft->maxHP);
+        EXPECT_EQ(opponentRight->hp, opponentRight->maxHP);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Dragon Darts strikes the other opponent twice if the chosen target misses")
 {
     struct BattlePokemon *chosenTarget = NULL;
     struct BattlePokemon *finalTarget = NULL;
     enum Item itemLeft, itemRight;
     PARAMETRIZE { chosenTarget = opponentLeft;  finalTarget = opponentRight; itemLeft = ITEM_BRIGHT_POWDER;  itemRight = ITEM_NONE; }
     PARAMETRIZE { chosenTarget = opponentRight; finalTarget = opponentLeft;  itemLeft = ITEM_NONE;           itemRight = ITEM_BRIGHT_POWDER; }
+
     GIVEN {
+        ASSUME(GetMoveAccuracy(MOVE_DRAGON_DARTS) == 100);
+        ASSUME(GetItemHoldEffect(ITEM_BRIGHT_POWDER) == HOLD_EFFECT_EVASION_UP);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Item(itemLeft); }
@@ -231,31 +255,13 @@ DOUBLE_BATTLE_TEST("Dragon Darts strikes left ally twice if one strike misses")
         HP_BAR(finalTarget);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
         HP_BAR(finalTarget);
-        MESSAGE("The Pokémon was hit 2 time(s)!");
-    }
-}
-
-DOUBLE_BATTLE_TEST("Dragon Darts strikes right ally twice if one strike misses")
-{
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_BRIGHT_POWDER); }
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(playerLeft, MOVE_DRAGON_DARTS, target: opponentLeft, hit: FALSE); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
-        HP_BAR(opponentRight);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
-        HP_BAR(opponentRight);
-        MESSAGE("The Pokémon was hit 2 time(s)!");
     }
 }
 
 DOUBLE_BATTLE_TEST("Dragon Darts strikes will be both redirected to Follow Me user")
 {
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_FOLLOW_ME) == EFFECT_FOLLOW_ME);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -267,14 +273,15 @@ DOUBLE_BATTLE_TEST("Dragon Darts strikes will be both redirected to Follow Me us
         HP_BAR(opponentRight);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
         HP_BAR(opponentRight);
-        MESSAGE("The Pokémon was hit 2 time(s)!");
     }
 }
 
 DOUBLE_BATTLE_TEST("Dragon Darts fails to strike any target if under a Fairy-type follow me user")
 {
     GIVEN {
-        ASSUME(GetSpeciesType(SPECIES_FIDOUGH, 0) == TYPE_FAIRY || GetSpeciesType(SPECIES_FIDOUGH, 1) == TYPE_FAIRY);
+        ASSUME(IsSpeciesOfType(SPECIES_FIDOUGH, TYPE_FAIRY ));
+        ASSUME(GetMoveType(MOVE_DRAGON_DARTS) == TYPE_DRAGON);
+        ASSUME(GetMoveEffect(MOVE_FOLLOW_ME) == EFFECT_FOLLOW_ME);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -285,14 +292,14 @@ DOUBLE_BATTLE_TEST("Dragon Darts fails to strike any target if under a Fairy-typ
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
             ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
-            MESSAGE("The Pokémon was hit 2 time(s)!");
         }
     }
 }
 
-DOUBLE_BATTLE_TEST("Dragon Darts fails to strike the second target if first target fainted and follow me was active")
+DOUBLE_BATTLE_TEST("Dragon Darts fails to strike the second target if first target fainted and Follow Me was active")
 {
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_FOLLOW_ME) == EFFECT_FOLLOW_ME);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -302,10 +309,7 @@ DOUBLE_BATTLE_TEST("Dragon Darts fails to strike the second target if first targ
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
         HP_BAR(opponentRight);
-        NONE_OF {
-            ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
-            MESSAGE("The Pokémon was hit 2 time(s)!");
-        }
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
     }
 }
 
@@ -329,3 +333,22 @@ DOUBLE_BATTLE_TEST("Dragon Darts can be absorbed by both opponents and hit neith
     }
 }
 
+DOUBLE_BATTLE_TEST("Dragon Darts always prints effectiveness message after every hit")
+{
+    // The messages are possibly incorrect if they should print the target
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_CUFANT);
+        OPPONENT(SPECIES_DRATINI);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_DRAGON_DARTS, target: opponentLeft); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
+        HP_BAR(opponentLeft);
+        MESSAGE("It's not very effective…");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
+        HP_BAR(opponentRight);
+        MESSAGE("It's super effective!");
+    }
+}

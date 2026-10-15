@@ -188,7 +188,7 @@ static void CreateCloudSprites(void)
     LoadCustomWeatherSpritePalette(gCloudsWeatherPalette);
     for (i = 0; i < NUM_CLOUD_SPRITES; i++)
     {
-        spriteId = CreateSprite(&sCloudSpriteTemplate, 0, 0, 0xFF);
+        spriteId = CreateSpriteUnchecked(&sCloudSpriteTemplate, 0, 0, 0xFF);
         if (spriteId != MAX_SPRITES)
         {
             gWeatherPtr->sprites.s1.cloudSprites[i] = &gSprites[spriteId];
@@ -677,7 +677,7 @@ static bool8 CreateRainSprite(void)
         return FALSE;
 
     spriteIndex = gWeatherPtr->rainSpriteCount;
-    spriteId = CreateSpriteAtEnd(&sRainSpriteTemplate,
+    spriteId = CreateSpriteAtEndUnchecked(&sRainSpriteTemplate,
       sRainSpriteCoords[spriteIndex].x, sRainSpriteCoords[spriteIndex].y, 78);
 
     if (spriteId != MAX_SPRITES)
@@ -904,7 +904,7 @@ static const struct SpriteTemplate sSnowflakeSpriteTemplate =
 
 static bool8 CreateSnowflakeSprite(void)
 {
-    u8 spriteId = CreateSpriteAtEnd(&sSnowflakeSpriteTemplate, 0, 0, 78);
+    u8 spriteId = CreateSpriteAtEndUnchecked(&sSnowflakeSpriteTemplate, 0, 0, 78);
     if (spriteId == MAX_SPRITES)
         return FALSE;
 
@@ -1484,7 +1484,7 @@ static void CreateFogHorizontalSprites(void)
         LoadSpriteSheet(&fogHorizontalSpriteSheet);
         for (i = 0; i < NUM_FOG_HORIZONTAL_SPRITES; i++)
         {
-            spriteId = CreateSpriteAtEnd(&sFogHorizontalSpriteTemplate, 0, 0, 0xFF);
+            spriteId = CreateSpriteAtEndUnchecked(&sFogHorizontalSpriteTemplate, 0, 0, 0xFF);
             if (spriteId != MAX_SPRITES)
             {
                 sprite = &gSprites[spriteId];
@@ -1671,7 +1671,7 @@ static void CreateAshSprites(void)
     {
         for (i = 0; i < NUM_ASH_SPRITES; i++)
         {
-            spriteId = CreateSpriteAtEnd(&sAshSpriteTemplate, 0, 0, 0x4E);
+            spriteId = CreateSpriteAtEndUnchecked(&sAshSpriteTemplate, 0, 0, 0x4E);
             if (spriteId != MAX_SPRITES)
             {
                 sprite = &gSprites[spriteId];
@@ -1888,7 +1888,7 @@ static void CreateFogDiagonalSprites(void)
         LoadSpriteSheet(&fogDiagonalSpriteSheet);
         for (i = 0; i < NUM_FOG_DIAGONAL_SPRITES; i++)
         {
-            spriteId = CreateSpriteAtEnd(&sFogDiagonalSpriteTemplate, 0, (i / 5) * 64, 0xFF);
+            spriteId = CreateSpriteAtEndUnchecked(&sFogDiagonalSpriteTemplate, 0, (i / 5) * 64, 0xFF);
             if (spriteId != MAX_SPRITES)
             {
                 sprite = &gSprites[spriteId];
@@ -2150,7 +2150,7 @@ static void CreateSandstormSprites(void)
         LoadCustomWeatherSpritePalette(gSandstormWeatherPalette);
         for (i = 0; i < NUM_SANDSTORM_SPRITES; i++)
         {
-            spriteId = CreateSpriteAtEnd(&sSandstormSpriteTemplate, 0, (i / 5) * 64, 1);
+            spriteId = CreateSpriteAtEndUnchecked(&sSandstormSpriteTemplate, 0, (i / 5) * 64, 1);
             if (spriteId != MAX_SPRITES)
             {
                 gWeatherPtr->sprites.s2.sandstormSprites1[i] = &gSprites[spriteId];
@@ -2178,7 +2178,7 @@ static void CreateSwirlSandstormSprites(void)
     {
         for (i = 0; i < NUM_SWIRL_SANDSTORM_SPRITES; i++)
         {
-            spriteId = CreateSpriteAtEnd(&sSandstormSpriteTemplate, i * 48 + 24, 208, 1);
+            spriteId = CreateSpriteAtEndUnchecked(&sSandstormSpriteTemplate, i * 48 + 24, 208, 1);
             if (spriteId != MAX_SPRITES)
             {
                 gWeatherPtr->sprites.s2.sandstormSprites2[i] = &gSprites[spriteId];
@@ -2386,7 +2386,7 @@ static void CreateBubbleSprite(u16 coordsIndex)
 {
     s16 x = sBubbleStartCoords[coordsIndex][0];
     s16 y = sBubbleStartCoords[coordsIndex][1] - gSpriteCoordOffsetY;
-    u8 spriteId = CreateSpriteAtEnd(&sBubbleSpriteTemplate, x, y, 0);
+    u8 spriteId = CreateSpriteAtEndUnchecked(&sBubbleSpriteTemplate, x, y, 0);
     if (spriteId != MAX_SPRITES)
     {
         gSprites[spriteId].oam.priority = 1;
@@ -2508,11 +2508,11 @@ static void CreateAbnormalWeatherTask(void)
 #undef tWeatherB
 #undef tDelay
 
-static u8 TranslateWeatherNum(u8);
+static enum OverworldWeather TranslateWeatherNum(enum OverworldWeather weather);
 static void UpdateRainCounter(u8, u8);
 static u8 GetDynamicWeather(void);
 
-void SetSavedWeather(u32 weather)
+void SetSavedWeather(enum OverworldWeather weather)
 {
     u8 oldWeather = gSaveBlock1Ptr->weather;
     gSaveBlock1Ptr->weather = TranslateWeatherNum(weather);
@@ -2526,21 +2526,15 @@ u8 GetSavedWeather(void)
 
 void SetSavedWeatherFromCurrMapHeader(void)
 {
-    u8 oldWeather = gSaveBlock1Ptr->weather;
+    enum OverworldWeather oldWeather = gSaveBlock1Ptr->weather;
     gSaveBlock1Ptr->weather = TranslateWeatherNum(gMapHeader.weather);
     UpdateRainCounter(gSaveBlock1Ptr->weather, oldWeather);
 }
 
-void SetWeather(u32 weather)
+void SetWeather(enum OverworldWeather weather)
 {
     SetSavedWeather(weather);
     SetNextWeather(GetSavedWeather());
-}
-
-void SetWeather_Unused(u32 weather)
-{
-    SetSavedWeather(weather);
-    SetCurrentAndNextWeather(GetSavedWeather());
 }
 
 void DoCurrentWeather(void)
@@ -2668,16 +2662,18 @@ static u8 GetDynamicWeather(void)
     return weathers[LocalRandom32(&localRngState) % count];
 }
 
-static u8 TranslateWeatherNum(u8 weather)
+static enum OverworldWeather TranslateWeatherNum(enum OverworldWeather weather)
 {
     switch (weather)
     {
     case WEATHER_NONE:               return WEATHER_NONE;
+    case WEATHER_COUNT:              return WEATHER_NONE;
     case WEATHER_SUNNY_CLOUDS:       return WEATHER_SUNNY_CLOUDS;
     case WEATHER_SUNNY:              return WEATHER_SUNNY;
     case WEATHER_RAIN:               return WEATHER_RAIN;
     case WEATHER_SNOW:               return WEATHER_SNOW;
     case WEATHER_RAIN_THUNDERSTORM:  return WEATHER_RAIN_THUNDERSTORM;
+    case WEATHER_FOG:                return WEATHER_FOG;
     case WEATHER_FOG_HORIZONTAL:     return WEATHER_FOG_HORIZONTAL;
     case WEATHER_VOLCANIC_ASH:       return WEATHER_VOLCANIC_ASH;
     case WEATHER_SANDSTORM:          return WEATHER_SANDSTORM;
@@ -2691,8 +2687,9 @@ static u8 TranslateWeatherNum(u8 weather)
     case WEATHER_ROUTE119_CYCLE:     return sWeatherCycleRoute119[gSaveBlock1Ptr->weatherCycleStage];
     case WEATHER_ROUTE123_CYCLE:     return sWeatherCycleRoute123[gSaveBlock1Ptr->weatherCycleStage];
     case WEATHER_DYNAMIC:            return GetDynamicWeather();
-    default:                         return WEATHER_NONE;
     }
+
+    return WEATHER_NONE;
 }
 
 void UpdateWeatherPerDay(u16 increment)

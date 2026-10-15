@@ -58,7 +58,7 @@ struct PlayerRecordRS
     struct DewfordTrend dewfordTrends[SAVED_TRENDS_COUNT];
     struct RecordMixingDaycareMail daycareMail;
     struct RSBattleTowerRecord battleTowerRecord;
-    u16 giftItem;
+    enum Item giftItem;
     u16 filler[50];
 };
 
@@ -71,7 +71,7 @@ struct PlayerRecordEmerald
     /* 0x1084 */ struct DewfordTrend dewfordTrends[SAVED_TRENDS_COUNT];
     /* 0x10AC */ struct RecordMixingDaycareMail daycareMail;
     /* 0x1124 */ struct EmeraldBattleTowerRecord battleTowerRecord;
-    /* 0x1210 */ u16 giftItem;
+    /* 0x1210 */ enum Item giftItem;
     /* 0x1214 */ LilycoveLady lilycoveLady;
     /* 0x1254 */ struct Apprentice apprentices[2];
     /* 0x12DC */ struct PlayerHallRecords hallRecords;
@@ -119,7 +119,7 @@ static void ReceiveBattleTowerData(void *, size_t, u8);
 static void ReceiveLilycoveLadyData(LilycoveLady *, size_t, u8);
 static void CalculateDaycareMailRandSum(const u8 *);
 static void ReceiveDaycareMailData(struct RecordMixingDaycareMail *, size_t, u8, TVShow *);
-static void ReceiveGiftItem(u16 *, u8 );
+static void ReceiveGiftItem(enum Item *, u8 );
 static void Task_DoRecordMixing(u8);
 static void GetSavedApprentices(struct Apprentice *, struct Apprentice *);
 static void ReceiveApprenticeData(struct Apprentice *, size_t, u32);
@@ -711,7 +711,7 @@ static void ReceiveLilycoveLadyData(LilycoveLady *records, size_t recordSize, u8
     }
 }
 
-static u8 GetDaycareMailItemId(struct DaycareMail *mail)
+static enum Item GetDaycareMailItemId(struct DaycareMail *mail)
 {
     return mail->message.itemId;
 }
@@ -960,7 +960,7 @@ static void ReceiveDaycareMailData(struct RecordMixingDaycareMail *records, size
 }
 
 
-static void ReceiveGiftItem(u16 *item, u8 multiplayerId)
+static void ReceiveGiftItem(enum Item *item, u8 multiplayerId)
 {
     if (multiplayerId != 0 && *item != ITEM_NONE && GetItemPocket(*item) == POCKET_KEY_ITEMS)
     {

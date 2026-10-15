@@ -268,11 +268,39 @@ static bool32 Test_BattlersShareParty(enum BattlerId battlerId1, enum BattlerId 
     return Test_GetBattlerTrainer(battlerId1) == Test_GetBattlerTrainer(battlerId2);
 }
 
+static void InitTestBattlers(const struct BattleTest *test)
+{
+    switch (test->type)
+    {
+    case BATTLE_TEST_SINGLES:
+    case BATTLE_TEST_WILD:
+    case BATTLE_TEST_GHOST:
+    case BATTLE_TEST_AI_SINGLES:
+        STATE->battlersCount = 2;
+        break;
+    case BATTLE_TEST_DOUBLES:
+    case BATTLE_TEST_AI_DOUBLES:
+    case BATTLE_TEST_MULTI:
+    case BATTLE_TEST_AI_MULTI:
+    case BATTLE_TEST_TWO_VS_ONE:
+    case BATTLE_TEST_AI_TWO_VS_ONE:
+    case BATTLE_TEST_ONE_VS_TWO:
+    case BATTLE_TEST_AI_ONE_VS_TWO:
+        STATE->battlersCount = MAX_BATTLERS_COUNT;
+        break;
+    }
+
+    gBattlersCount = STATE->battlersCount;
+    for (enum BattlerId battler = 0; battler < MAX_BATTLERS_COUNT; battler++)
+        gBattlerPositions[battler] = battler < gBattlersCount ? battler : B_POSITION_ABSENT;
+}
+
 static u32 BattleTest_EstimateCost(void *data)
 {
     u32 cost;
     const struct BattleTest *test = data;
     memset(STATE, 0, sizeof(*STATE));
+    InitTestBattlers(test);
     STATE->runRandomly = TRUE;
     ResetStartingStatuses();
     InvokeTestFunction(test);
@@ -290,6 +318,7 @@ static void BattleTest_SetUp(void *data)
 {
     const struct BattleTest *test = data;
     memset(STATE, 0, sizeof(*STATE));
+    InitTestBattlers(test);
     InvokeTestFunction(test);
     STATE->parameters = STATE->parametersCount;
     if (STATE->parametersCount == 0 && test->resultsSize > 0)
@@ -298,25 +327,6 @@ static void BattleTest_SetUp(void *data)
         Test_ExitWithResult(TEST_RESULT_ERROR, SourceLine(0), "OOM: STATE (%d) + STATE->results (%d) too big for sBackupMapData (%d)", sizeof(*STATE), test->resultsSize * STATE->parameters, sizeof(sBackupMapData));
     STATE->results = (void *)((char *)sBackupMapData + sizeof(struct BattleTestRunnerState));
     memset(STATE->results, 0, test->resultsSize * STATE->parameters);
-    switch (test->type)
-    {
-    case BATTLE_TEST_SINGLES:
-    case BATTLE_TEST_WILD:
-    case BATTLE_TEST_GHOST:
-    case BATTLE_TEST_AI_SINGLES:
-        STATE->battlersCount = 2;
-        break;
-    case BATTLE_TEST_DOUBLES:
-    case BATTLE_TEST_AI_DOUBLES:
-    case BATTLE_TEST_MULTI:
-    case BATTLE_TEST_AI_MULTI:
-    case BATTLE_TEST_TWO_VS_ONE:
-    case BATTLE_TEST_AI_TWO_VS_ONE:
-    case BATTLE_TEST_ONE_VS_TWO:
-    case BATTLE_TEST_AI_ONE_VS_TWO:
-        STATE->battlersCount = 4;
-        break;
-    }
     STATE->hasTornDownBattle = FALSE;
 }
 
@@ -373,6 +383,16 @@ static void SetImplicitSpeeds(void)
     }
 }
 
+static void ResetTestInventory()
+{
+    ClearBag();
+    for (u32 i = 0; i < TEST_ITEM_SLOTS; i++)
+    {
+        if (DATA.inventory[i].itemId != ITEM_NONE)
+            AddBagItem(DATA.inventory[i].itemId, DATA.inventory[i].quantity);
+    }
+}
+
 static void StartBattle(void)
 {
     memset(&DATA.trial, 0, sizeof(DATA.trial));
@@ -384,6 +404,7 @@ static void StartBattle(void)
         gMain.savedCallback = CB2_BattleTest_NextParameter;
     else
         gMain.savedCallback = CB2_TestRunner;
+    ResetTestInventory();
     SetMainCallback2(CB2_InitBattle);
 
     STATE->checkProgressParameter = 0;
@@ -401,6 +422,7 @@ static void BattleTest_Run(void *data)
     const struct BattleTest *test = data;
 
     memset(&DATA, 0, sizeof(DATA));
+    InitTestBattlers(test);
     TestInitConfigData();
 
     DATA.queuedEventsFailIndex = MAX_QUEUED_EVENTS;
@@ -563,7 +585,7 @@ static void BattleTest_Run(void *data)
     }
 
     for (i = 0; i < STATE->battlersCount; i++)
-        PushBattlerAction(0, i, RECORDED_BYTE, 0xFF);
+        PushBattlerAction(0, i, RECORDED_BYTE, B_ACTION_NONE);
 
     if (DATA.hasExplicitSpeeds)
     {
@@ -877,7 +899,7 @@ void TestRunner_Battle_RecordAbilityPopUp(enum BattlerId battlerId, enum Ability
             if (DATA.queuedEvents[DATA.queuedEventsFailIndex].as.ability.ability == ABILITY_NONE)
                 Test_MgbaPrintf("%s:%d: Did you mean: ABILITY_POPUP(%s)", filename, line, BattlerIdentifier(battlerId));
             else
-                Test_MgbaPrintf("%s:%d: Did you mean: ABILITY_POPUP(%s, ABILITY_%C)", filename, line, BattlerIdentifier(battlerId), gAbilitiesInfo[ability].name);
+                Test_MgbaPrintf("%s:%d: Did you mean: ABILITY_POPUP(%s, ABILITY_%U)", filename, line, BattlerIdentifier(battlerId), gAbilitiesInfo[ability].name);
         }
         break;
     case QUEUE_GROUP_NONE_OF:
@@ -902,6 +924,81 @@ void TestRunner_Battle_RecordAbilityPopUp(enum BattlerId battlerId, enum Ability
                 continue;
 
             if (TryAbilityPopUp(queuedEvent, event->groupSize, battlerId, ability) != -1)
+                DATA.trial.queuedEvent = queuedEvent + event->groupSize;
+        } while (FALSE);
+        break;
+    }
+}
+
+static s32 TryItemPopUp(s32 i, s32 n, enum BattlerId battlerId, enum Item item)
+{
+    struct QueuedItemEvent *event;
+    s32 iMax = i + n;
+    for (; i < iMax; i++)
+    {
+        if (DATA.queuedEvents[i].type != QUEUED_ITEM_POPUP_EVENT)
+            continue;
+
+        event = &DATA.queuedEvents[i].as.item;
+
+        if (event->battlerId == battlerId
+         && (event->item == ITEM_NONE || event->item == item))
+            return i;
+    }
+    return -1;
+}
+
+void TestRunner_Battle_RecordItemPopUp(enum BattlerId battlerId, enum Item item)
+{
+    s32 queuedEvent;
+    s32 match;
+    struct QueuedEvent *event;
+
+    if (DATA.trial.queuedEvent == DATA.queuedEventsCount)
+        return;
+
+    event = &DATA.queuedEvents[DATA.trial.queuedEvent];
+    switch (event->groupType)
+    {
+    case QUEUE_GROUP_NONE:
+    case QUEUE_GROUP_ONE_OF:
+        if (TryItemPopUp(DATA.trial.queuedEvent, event->groupSize, battlerId, item) != -1)
+        {
+            DATA.trial.queuedEvent += event->groupSize;
+        }
+        else if (DATA.trial.queuedEvent == DATA.queuedEventsFailIndex
+              && DATA.queuedEvents[DATA.queuedEventsFailIndex].type == QUEUED_ITEM_POPUP_EVENT)
+        {
+            const char *filename = gTestRunnerState.test->filename;
+            u32 line = SourceLine(DATA.queuedEvents[DATA.queuedEventsFailIndex].sourceLineOffset);
+            if (DATA.queuedEvents[DATA.queuedEventsFailIndex].as.item.item == ITEM_NONE)
+                Test_MgbaPrintf("%s:%d: Did you mean: ITEM_POPUP(%s)", filename, line, BattlerIdentifier(battlerId));
+            else
+                Test_MgbaPrintf("%s:%d: Did you mean: ITEM_POPUP(%s, ITEM_%C)", filename, line, BattlerIdentifier(battlerId), gAbilitiesInfo[item].name);
+        }
+        break;
+    case QUEUE_GROUP_NONE_OF:
+        queuedEvent = DATA.trial.queuedEvent;
+        do
+        {
+            if ((match = TryItemPopUp(queuedEvent, event->groupSize, battlerId, item)) != -1)
+            {
+                const char *filename = gTestRunnerState.test->filename;
+                u32 line = SourceLine(DATA.queuedEvents[match].sourceLineOffset);
+                if (gTestRunnerState.expectedFailState == EXPECT_FAIL_SCENE_OPEN)
+                    gTestRunnerState.expectedFailState = EXPECT_FAIL_SUCCESS;
+                Test_ExitWithResult(TEST_RESULT_FAIL, line, "%s:%d: Matched ITEM_POPUP", filename, line);
+            }
+
+            queuedEvent += event->groupSize;
+            if (queuedEvent == DATA.queuedEventsCount)
+                break;
+
+            event = &DATA.queuedEvents[queuedEvent];
+            if (event->groupType == QUEUE_GROUP_NONE_OF)
+                continue;
+
+            if (TryItemPopUp(queuedEvent, event->groupSize, battlerId, item) != -1)
                 DATA.trial.queuedEvent = queuedEvent + event->groupSize;
         } while (FALSE);
         break;
@@ -967,11 +1064,11 @@ void TestRunner_Battle_RecordAnimation(u32 animType, u32 animId)
                 if (animId == MOVE_CELEBRATE)
                     ; // TODO: Only if implicit. Difficult to know if it's an action or, e.g. Mirror Move.
                 else if (checkAttacker && checkTarget)
-                    Test_MgbaPrintf("%s:%d: Did you mean: ANIMATION(%s, MOVE_%C, %s, target: %s)", filename, line, sAnimTypeNames[animType], gMovesInfo[animId].name, BattlerIdentifier(gBattleAnimAttacker), BattlerIdentifier(gBattleAnimTarget));
+                    Test_MgbaPrintf("%s:%d: Did you mean: ANIMATION(%s, MOVE_%U, %s, target: %s)", filename, line, sAnimTypeNames[animType], gMovesInfo[animId].name, BattlerIdentifier(gBattleAnimAttacker), BattlerIdentifier(gBattleAnimTarget));
                 else if (checkAttacker)
-                    Test_MgbaPrintf("%s:%d: Did you mean: ANIMATION(%s, MOVE_%C, %s)", filename, line, sAnimTypeNames[animType], gMovesInfo[animId].name, BattlerIdentifier(gBattleAnimAttacker));
+                    Test_MgbaPrintf("%s:%d: Did you mean: ANIMATION(%s, MOVE_%U, %s)", filename, line, sAnimTypeNames[animType], gMovesInfo[animId].name, BattlerIdentifier(gBattleAnimAttacker));
                 else
-                    Test_MgbaPrintf("%s:%d: Did you mean: ANIMATION(%s, MOVE_%C)", filename, line, sAnimTypeNames[animType], gMovesInfo[animId].name);
+                    Test_MgbaPrintf("%s:%d: Did you mean: ANIMATION(%s, MOVE_%U)", filename, line, sAnimTypeNames[animType], gMovesInfo[animId].name);
             }
             else if (animType < ARRAY_COUNT(sAnimTypeNames))
             {
@@ -1962,19 +2059,29 @@ static const char *const sEventTypeMacros[] =
     [QUEUED_STATUS_EVENT] = "STATUS_ICON",
     [QUEUED_CATCH_CHANCE_EVENT] = "CATCH_CHANCE",
     [QUEUED_EFFECTIVENESS_EVENT] = "EFFECTIVENESS_SE",
+    [QUEUED_ITEM_POPUP_EVENT] = "ITEM_POPUP",
 };
 
 static void TearDownBattle(void)
 {
     // Zero out the parties, data in them could potentially carry over
     for (enum BattleTrainer trainer = B_TRAINER_PLAYER; trainer < MAX_BATTLE_TRAINERS; trainer++)
+    {
         ZeroPartyMons(gParties[trainer]);
+        gPartiesCount[trainer] = 0;
+    }
     SetCurrentDifficultyLevel(DIFFICULTY_NORMAL);
 
     // Set Battle Controllers to BATTLE_CONTROLLER_NONE
     for (u32 i = 0; i < MAX_BATTLERS_COUNT; i++)
     {
         gBattlerBattleController[i] = BATTLE_CONTROLLER_NONE;
+    }
+
+    // Set battler party indexes to zero
+    for (u32 i = 0; i < MAX_BATTLERS_COUNT; i++)
+    {
+        gBattlerPartyIndexes[i] = 0; // make PARTY_SLOT_0 in upcoming
     }
 
     FreeMonSpritesGfx();
@@ -2075,16 +2182,6 @@ static inline rng_value_t MakeRngValue(const u16 seed)
             _SFC32_Next(&result);
     }
     return result;
-}
-
-static void ResetTestInventory()
-{
-    ClearBag();
-    for (u32 i = 0; i < TEST_ITEM_SLOTS; i++)
-    {
-        if (DATA.inventory[i].itemId != ITEM_NONE)
-            AddBagItem(DATA.inventory[i].itemId, DATA.inventory[i].quantity);
-    }
 }
 
 static void CB2_BattleTest_NextTrial(void)
@@ -2420,7 +2517,7 @@ void Nature_(u32 sourceLine, u32 nature)
 void Ability_(u32 sourceLine, enum Ability ability)
 {
     s32 i;
-    u32 species;
+    enum Species species;
     const struct SpeciesInfo *info;
     INVALID_IF(!DATA.currentMon, "Ability outside of PLAYER/OPPONENT");
     INVALID_IF(ability >= ABILITIES_COUNT, "Illegal ability id: %d", ability);
@@ -2444,7 +2541,7 @@ void Ability_(u32 sourceLine, enum Ability ability)
 void Level_(u32 sourceLine, u32 level)
 {
     // TODO: Preserve any explicitly-set stats.
-    u32 species = GetMonData(DATA.currentMon, MON_DATA_SPECIES);
+    enum Species species = GetMonData(DATA.currentMon, MON_DATA_SPECIES);
     INVALID_IF(!DATA.currentMon, "Level outside of PLAYER/OPPONENT");
     INVALID_IF(level == 0 || level > MAX_LEVEL, "Illegal level: %d", level);
     SetMonData(DATA.currentMon, MON_DATA_LEVEL, &level);
@@ -2869,43 +2966,38 @@ s32 MoveGetTarget(enum BattlerId battlerId, enum Move moveId, struct MoveContext
     else
     {
         enum MoveTarget moveTarget = GetMoveTarget(moveId);
-        if (moveTarget == TARGET_RANDOM
-         || moveTarget == TARGET_BOTH
-         || moveTarget == TARGET_DEPENDS
-         || moveTarget == TARGET_FOES_AND_ALLY
-         || moveTarget == TARGET_OPPONENTS_FIELD)
+        switch (moveTarget)
         {
-            target = BATTLE_OPPOSITE(battlerId);
-        }
-        else if (moveTarget == TARGET_SELECTED || moveTarget == TARGET_SMART || moveTarget == TARGET_OPPONENT)
-        {
+        case TARGET_RANDOM:
+        case TARGET_BOTH:
+        case TARGET_DEPENDS:
+        case TARGET_FOES_AND_ALLY:
+        case TARGET_OPPONENTS_FIELD:
+        case TARGET_USER:
+        case TARGET_ALL_BATTLERS:
+        case TARGET_FIELD:
+        case TARGET_USER_AND_ALLY:
+        case TARGET_ALLY:
+            break;
+        case TARGET_SELECTED:
+        case TARGET_SMART:
+        case TARGET_OPPONENT:
             // In AI Doubles not specified target allows any target for EXPECT_MOVE.
             if (!IsAIDoublesTest())
             {
                 INVALID_IF(STATE->battlersCount > 2, "%S requires explicit target", GetMoveName(moveId));
             }
-
-            target = BATTLE_OPPOSITE(battlerId);
-        }
-        else if (moveTarget == TARGET_USER
-              || moveTarget == TARGET_ALL_BATTLERS
-              || moveTarget == TARGET_FIELD
-              || moveTarget == TARGET_USER_AND_ALLY)
-        {
-            target = battlerId;
-        }
-        else if (moveTarget == TARGET_ALLY)
-        {
-            target = BATTLE_PARTNER(battlerId);
-        }
-        else
-        {
+            break;
+        default:
             // In AI Doubles not specified target allows any target for EXPECT_MOVE.
             if (!IsAIDoublesTest())
             {
                 INVALID("%S requires explicit target", GetMoveName(moveId));
             }
+            break;
         }
+
+        target = GetDefaultSelectionTarget(battlerId, moveTarget);
     }
     return target;
 }
@@ -2958,7 +3050,7 @@ void MoveGetIdAndSlot(enum BattlerId battlerId, struct MoveContext *ctx, u32 *mo
     {
         enum Item item = GetMonData(mon, MON_DATA_HELD_ITEM);
         enum HoldEffect holdEffect = GetItemHoldEffect(item);
-        u32 species = GetMonData(mon, MON_DATA_SPECIES);
+        enum Species species = GetMonData(mon, MON_DATA_SPECIES);
 
         // Check invalid item usage.
         INVALID_IF(ctx->gimmick == GIMMICK_MEGA && holdEffect != HOLD_EFFECT_MEGA_STONE && species != SPECIES_RAYQUAZA, "Cannot Mega Evolve without a Mega Stone");
@@ -2986,7 +3078,7 @@ u32 MoveGetFirstFainted(enum BattlerId battlerId)
     // Loop through to find fainted battler.
     for (i = 0; i < partySize; ++i)
     {
-        u32 species = GetMonData(&party[i], MON_DATA_SPECIES_OR_EGG);
+        enum Species species = GetMonData(&party[i], MON_DATA_SPECIES_OR_EGG);
         if (species != SPECIES_NONE
             && species != SPECIES_EGG
             && GetMonData(&party[i], MON_DATA_HP) == 0)
@@ -3049,7 +3141,8 @@ void Move(u32 sourceLine, struct BattlePokemon *battler, struct MoveContext ctx)
     if (!ctx.explicitAllowed || ctx.allowed)
     {
         PushBattlerAction(sourceLine, battlerId, RECORDED_MOVE_SLOT, moveSlot);
-        PushBattlerAction(sourceLine, battlerId, RECORDED_MOVE_TARGET, target);
+        PushBattlerAction(sourceLine, battlerId, RECORDED_MOVE_TARGET,
+                          ctx.explicitTarget ? target : RECORDED_TARGET_DEFAULT);
     }
 
     if (ctx.explicitPartyIndex)
@@ -3163,7 +3256,7 @@ s32 GetAiMoveTargetForScoreCompare(enum BattlerId battlerId, enum Move moveId, s
     // In Single Battles ai always targets the opposing mon.
     if (GetBattleTest()->type == BATTLE_TEST_AI_SINGLES)
     {
-        target = BATTLE_OPPOSITE(battlerId);
+        target = (battlerId ^ BIT_SIDE);
     }
     else
     {
@@ -3464,6 +3557,28 @@ void QueueAbility(u32 sourceLine, struct BattlePokemon *battler, struct AbilityE
         .as = { .ability = {
             .battlerId = battlerId,
             .ability = ctx.ability,
+        }},
+    };
+}
+
+void QueueItem(u32 sourceLine, struct BattlePokemon *battler, struct ItemEventContext ctx)
+{
+    enum BattlerId battlerId = battler - gBattleMons;
+
+    if (gTestRunnerState.expectedFailState == EXPECT_FAIL_OPEN)
+        gTestRunnerState.expectedFailState = EXPECT_FAIL_SCENE_OPEN;
+
+    INVALID_IF(!STATE->runScene, "ITEMN_POPUP outside of SCENE");
+    if (DATA.queuedEventsCount == MAX_QUEUED_EVENTS)
+        Test_ExitWithResult(TEST_RESULT_ERROR, sourceLine, "%s:%d: ITEM exceeds MAX_QUEUED_EVENTS", gTestRunnerState.test->filename, sourceLine);
+    DATA.queuedEvents[DATA.queuedEventsCount++] = (struct QueuedEvent) {
+        .type = QUEUED_ITEM_POPUP_EVENT,
+        .sourceLineOffset = SourceLineOffset(sourceLine),
+        .groupType = QUEUE_GROUP_NONE,
+        .groupSize = 1,
+        .as = { .item = {
+            .battlerId = battlerId,
+            .item = ctx.item,
         }},
     };
 }

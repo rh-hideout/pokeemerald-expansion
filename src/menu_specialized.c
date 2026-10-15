@@ -716,7 +716,7 @@ void InitMoveRelearnerWindows(bool32 useContestWindow)
     for (i = 0; i < ARRAY_COUNT(sMoveRelearnerWindowTemplates) - 1; i++)
         FillWindowPixelBuffer(i, PIXEL_FILL(1));
 
-    if (!useContestWindow)
+    if (C_HIDE_CONTEST_DATA || !useContestWindow)
         DrawStdFrameWithCustomTileAndPalette(RELEARNERWIN_DESC_BATTLE, FALSE, 0x1, 0xE);
     else
         DrawStdFrameWithCustomTileAndPalette(RELEARNERWIN_DESC_CONTEST, FALSE, 1, 0xE);
@@ -806,7 +806,10 @@ static void MoveRelearnerLoadBattleMoveDescription(u32 chosenMove)
         str = buffer;
     }
     AddTextPrinterParameterized(RELEARNERWIN_DESC_BATTLE, FONT_NORMAL, str, 106, 41, TEXT_SKIP_DRAW, NULL);
-    AddTextPrinterParameterized(RELEARNERWIN_DESC_BATTLE, FONT_NARROW, GetMoveDescription(chosenMove), 0, 65, 0, NULL);
+
+    const u8 *moveDescription = GetMoveDescription(chosenMove);
+    u32 fontId = GetFontIdToFit(moveDescription, FONT_NARROW, 0, WindowWidthPx(RELEARNERWIN_DESC_BATTLE));
+    AddTextPrinterParameterized(RELEARNERWIN_DESC_BATTLE, fontId, moveDescription, 0, 65, 0, NULL);
 }
 
 static void MoveRelearnerMenuLoadContestMoveDescription(u32 chosenMove)
@@ -895,7 +898,8 @@ s32 GetBoxOrPartyMonData(u16 boxId, u16 monId, s32 request, u8 *dst)
 // Gets the name/gender/level string for the condition menu
 static u8 *GetConditionMenuMonString(u8 *dst, u16 boxId, u16 monId)
 {
-    u16 box, mon, species, level, gender;
+    u16 box, mon, level, gender;
+    enum Species species;
     struct BoxPokemon *boxMon;
     u8 *str;
 
@@ -1384,7 +1388,7 @@ void CreateConditionSparkleSprites(struct Sprite **sprites, u8 monSpriteId, u8 _
 
     for (i = 0; i < count + 1; i++)
     {
-        spriteId = CreateSprite(&sSpriteTemplate_ConditionSparkle, 0, 0, 0);
+        spriteId = CreateSpriteUnchecked(&sSpriteTemplate_ConditionSparkle, 0, 0, 0);
         if (spriteId != MAX_SPRITES)
         {
             sprites[i] = &gSprites[spriteId];

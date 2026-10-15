@@ -369,41 +369,45 @@ static void PrunePool(const struct Trainer *trainer, u8 *poolIndexArray, const s
 
 void DoTrainerPartyPool(const struct Trainer *trainer, u32 *monIndices, u8 monsCount, u32 battleTypeFlags)
 {
-        bool32 usingPool = FALSE;
-        struct PoolRules rules = defaultPoolRules;
-        struct Trainer tempTrainer;
-        if (trainer->poolSize == 0 && (trainer->aiFlags & AI_FLAG_RANDOMIZE_PARTY_INDICES))
+    bool32 usingPool = FALSE;
+    struct PoolRules rules = defaultPoolRules;
+    struct Trainer tempTrainer;
+    if (trainer->poolSize == 0 && (trainer->aiFlags & AI_FLAG_RANDOMIZE_PARTY_INDICES))
+    {
+        tempTrainer = *trainer;
+        tempTrainer.poolSize = tempTrainer.partySize;
+        trainer = &tempTrainer;
+    }
+
+    if (trainer->poolSize != 0)
+    {
+        usingPool = TRUE;
+        rules = gPoolRulesetsList[trainer->poolRuleIndex];
+        u8 *poolIndexArray = Alloc(trainer->poolSize);
+        RandomizePoolIndices(trainer, poolIndexArray);
+
+        struct PickFunctions pickFunctions = GetPickFunctions(trainer);
+
+        PrunePool(trainer, poolIndexArray, &rules);
+
+        for (u32 i = 0; i < monsCount; i++)
         {
-            tempTrainer = *trainer;
-            tempTrainer.poolSize = tempTrainer.partySize;
-            trainer = &tempTrainer;
-        }
-
-        if (trainer->poolSize != 0)
-        {
-            usingPool = TRUE;
-            rules = gPoolRulesetsList[trainer->poolRuleIndex];
-            u8 *poolIndexArray = Alloc(trainer->poolSize);
-            RandomizePoolIndices(trainer, poolIndexArray);
-
-            struct PickFunctions pickFunctions = GetPickFunctions(trainer);
-
-            PrunePool(trainer, poolIndexArray, &rules);
-
-            for (u32 i = 0; i < monsCount; i++)
+            monIndices[i] = PickMonFromPool(trainer, poolIndexArray, i, monsCount, battleTypeFlags, &rules, pickFunctions);
+            //  If the slot doesn't have a proper value, the pool creation failed, fall back to normal mon pick process
+            if (monIndices[i] == POOL_SLOT_DISABLED)
             {
-                monIndices[i] = PickMonFromPool(trainer, poolIndexArray, i, monsCount, battleTypeFlags, &rules, pickFunctions);
-                //  If the slot doesn't have a proper value, the pool creation failed, fall back to normal mon pick process
-                if (monIndices[i] == POOL_SLOT_DISABLED)
-                {
-                    usingPool = FALSE;
-                    break;
-                }
+                usingPool = FALSE;
+                break;
             }
-            Free(poolIndexArray);
         }
+        Free(poolIndexArray);
+    }
 
-        if (!usingPool)
-            for (u32 i = 0; i < monsCount; i++)
+    if (!usingPool)
+    {
+        for (u32 i = 0; i < monsCount; i++)
+        {
                 monIndices[i] = i;
+        }
+    }
 }

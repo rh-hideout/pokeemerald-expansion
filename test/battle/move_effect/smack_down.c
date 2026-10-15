@@ -66,7 +66,7 @@ SINGLE_BATTLE_TEST("Smack Down hits airborne pokemon and grounds them")
     GIVEN {
         ASSUME(IsSpeciesOfType(SPECIES_PIDGEY, TYPE_FLYING));
         ASSUME(GetMoveEffect(MOVE_FLY) == EFFECT_SEMI_INVULNERABLE);
-        ASSUME(GetMoveTwoTurnAttackStatus(MOVE_FLY) == STATE_ON_AIR);
+        ASSUME(GetTwoTurnMoveSemiInvulnerability(MOVE_FLY) == STATE_ON_AIR);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_PIDGEY);
     } WHEN {
@@ -116,5 +116,27 @@ SINGLE_BATTLE_TEST("Smack Down hitting into an underground pokemon with No Guard
         MESSAGE("The opposing Flygon fell straight down!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DIG, opponent);
         HP_BAR(player);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Thousand Arrows will ground both targets")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_THOUSAND_ARROWS) == EFFECT_SMACK_DOWN);
+        ASSUME(IsSpeciesOfType(SPECIES_PIDGEY, TYPE_FLYING));
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_PIDGEY);
+        OPPONENT(SPECIES_FLYGON) { Ability(ABILITY_LEVITATE); }
+    } WHEN {
+        TURN {
+            MOVE(opponentRight, MOVE_CELEBRATE);
+            MOVE(opponentLeft, MOVE_CELEBRATE);
+            MOVE(playerLeft, MOVE_THOUSAND_ARROWS);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_THOUSAND_ARROWS, playerLeft);
+        MESSAGE("The opposing Pidgey fell straight down!");
+        MESSAGE("The opposing Flygon fell straight down!");
     }
 }

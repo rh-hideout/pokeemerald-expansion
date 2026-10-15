@@ -7,6 +7,7 @@
 #include "malloc.h"
 #include "random.h"
 #include "task.h"
+#include "union_room_chat.h"
 #include "constants/characters.h"
 #include "test_runner.h"
 #include "test/test.h"
@@ -15,6 +16,8 @@
 #define TIMEOUT_SECONDS 60
 
 void CB2_TestRunner(void);
+static void ReinitCallbacks(void);
+static void ResetGlobalVariables(void);
 
 EWRAM_DATA struct TestRunnerState gTestRunnerState;
 EWRAM_DATA struct FunctionTestRunnerState *gFunctionTestRunnerState;
@@ -194,6 +197,8 @@ static void ClearSaveBlocks(void)
     ClearSav1();
     ClearSav2();
     ClearSav3();
+    // Game strings use EOS, so a zeroed player name is not terminated.
+    gSaveBlock2Ptr->playerName[0] = EOS;
 }
 
 void CB2_TestRunner(void)
@@ -330,6 +335,7 @@ top:
         gTestRunnerState.state = STATE_REPORT_RESULT;
         gPersistentTestRunnerState.state = CURRENT_TEST_STATE_RUN;
         gPersistentTestRunnerState.expectCrash = FALSE;
+        ResetGlobalVariables();
         SeedRng(0);
         SeedRng2(0);
         if (gTestRunnerState.test->runner->setUp)
@@ -561,6 +567,12 @@ void Test_ExpectFail(u32 failLine)
     }
 }
 
+static void ResetGlobalVariables(void)
+{
+    ReinitCallbacks();
+    gBattleTypeFlags = 0;
+}
+
 static void FunctionTest_SetUp(void *data)
 {
     (void)data;
@@ -708,7 +720,7 @@ static NAKED void JumpToAgbMainLoop(void)
          .pool");
 }
 
-void ReinitCallbacks(void)
+static void ReinitCallbacks(void)
 {
     gMain.callback1 = NULL;
     SetMainCallback2(CB2_TestRunner);
@@ -826,14 +838,19 @@ static s32 MgbaPutchar_(s32 i, s32 c)
 }
 
 // Bare-bones, supports:
+// - %c: print an ASCII character.
+// - %C: print a GF-encoded character.
 // - %s, %.*s: print an ASCII string.
 // - %S, %.*S: print a GF-encoded string.
+// - %U: print a GF-encoded upper-case string.
 // - %d: print a signed integer.
 // - %q: print a Q20.12 fixed-point number.
 // - %p: print a pointer (which mgba-rom-test-hydra will convert into a
 //   symbol, if possible).
 static s32 MgbaVPrintf_(const char *fmt, va_list va)
 {
+    extern char mini_pchar_decode(u8);
+
     s32 i = 0;
     s32 n;
     s32 c, d;
@@ -859,6 +876,14 @@ static s32 MgbaVPrintf_(const char *fmt, va_list va)
             {
             case '%':
                 i = MgbaPutchar_(i, '%');
+                break;
+            case 'c':
+                c = va_arg(va, int);
+                i = MgbaPutchar_(i, c);
+                break;
+            case 'C':
+                c = va_arg(va, unsigned);
+                i = MgbaPutchar_(i, mini_pchar_decode(c));
                 break;
             case 'd':
                 d = va_arg(va, int);
@@ -960,9 +985,31 @@ static s32 MgbaVPrintf_(const char *fmt, va_list va)
                 }
                 else
                 {
-                    extern char mini_pchar_decode(u8);
                     while ((c = *pokeS++) != EOS && n-- > 0)
                         i = MgbaPutchar_(i, mini_pchar_decode(c));
+                }
+                break;
+            case 'U':
+                pokeS = va_arg(va, const u8 *);
+                bool32 wasUnderscore = FALSE;
+                while (*pokeS != EOS)
+                {
+                    u8 c = *pokeS++;
+                    if (CHAR_a <= c && c <= CHAR_z)
+                    {
+                        i = MgbaPutchar_(i, mini_pchar_decode(gCaseToggleTable[c]));
+                        wasUnderscore = FALSE;
+                    }
+                    else if (CHAR_A <= c && c <= CHAR_Z)
+                    {
+                        i = MgbaPutchar_(i, mini_pchar_decode(c));
+                        wasUnderscore = FALSE;
+                    }
+                    else if (!wasUnderscore)
+                    {
+                        i = MgbaPutchar_(i, '_');
+                        wasUnderscore = TRUE;
+                    }
                 }
                 break;
             }

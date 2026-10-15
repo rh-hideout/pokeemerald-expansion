@@ -236,7 +236,7 @@ static void GenerateOpponentMons(void)
 {
     int i, j, k;
     enum Species species[FRONTIER_PARTY_SIZE];
-    u16 heldItems[FRONTIER_PARTY_SIZE];
+    enum Item heldItems[FRONTIER_PARTY_SIZE];
     int firstMonId = 0;
     u16 trainerId = 0;
     enum FrontierLevelMode lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
@@ -332,13 +332,70 @@ static void SetRentalsToOpponentParty(void)
     }
 }
 
+static void CreateRentalMon(struct Pokemon *dst, struct RentalMon *rentalMon, u32 level)
+{
+    u32 data;
+    const struct TrainerMon *fmon = &gFacilityTrainerMons[rentalMon->monId];
+    CreateMonWithIVs(dst, fmon->species, level, rentalMon->personality, OTID_STRUCT_PLAYER_ID, rentalMon->ivs);
+    SetMonData(dst, MON_DATA_ABILITY_NUM, &rentalMon->abilityNum);
+
+    u32 friendship = MAX_FRIENDSHIP;
+    for (u32 i = 0; i < MAX_MON_MOVES; i++)
+    {
+        enum Move move = fmon->moves[i];
+        if (move == MOVE_RETURN)
+            move = MOVE_FRUSTRATION;
+
+        SetMonMoveSlot(dst, move, i);
+        if (GetMoveEffect(move) == EFFECT_FRUSTRATION)
+            friendship = 0;
+    }
+
+    SetMonData(dst, MON_DATA_FRIENDSHIP, &friendship);
+    SetMonData(dst, MON_DATA_HELD_ITEM, &fmon->heldItem);
+
+    if (fmon->ev != NULL)
+    {
+        SetMonData(dst, MON_DATA_HP_EV, &(fmon->ev[0]));
+        SetMonData(dst, MON_DATA_ATK_EV, &(fmon->ev[1]));
+        SetMonData(dst, MON_DATA_DEF_EV, &(fmon->ev[2]));
+        SetMonData(dst, MON_DATA_SPATK_EV, &(fmon->ev[3]));
+        SetMonData(dst, MON_DATA_SPDEF_EV, &(fmon->ev[4]));
+        SetMonData(dst, MON_DATA_SPEED_EV, &(fmon->ev[5]));
+    }
+
+    if (fmon->isShiny)
+    {
+        data = TRUE;
+        SetMonData(dst, MON_DATA_IS_SHINY, &data);
+    }
+    if (fmon->dynamaxLevel > 0)
+    {
+        data = fmon->dynamaxLevel;
+        SetMonData(dst, MON_DATA_DYNAMAX_LEVEL, &data);
+    }
+    if (fmon->gigantamaxFactor)
+    {
+        data = fmon->gigantamaxFactor;
+        SetMonData(dst, MON_DATA_GIGANTAMAX_FACTOR, &data);
+    }
+    if (fmon->teraType)
+    {
+        data = fmon->teraType;
+        SetMonData(dst, MON_DATA_TERA_TYPE, &data);
+    }
+
+    if (fmon->ball < POKEBALL_COUNT)
+    {
+        data = fmon->ball;
+        SetMonData(dst, MON_DATA_POKEBALL, &data);
+    }
+    CalculateMonStats(dst);
+}
+
 static void SetPlayerAndOpponentParties(void)
 {
-    int i;
-    u8 monLevel;
-    u16 monId;
-    u8 ivs;
-
+    u32 monLevel;
     if (gSaveBlock2Ptr->frontier.lvlMode == FRONTIER_LVL_TENT)
     {
         gFacilityTrainerMons = gSlateportBattleTentMons;
@@ -353,29 +410,16 @@ static void SetPlayerAndOpponentParties(void)
             monLevel = FRONTIER_MAX_LEVEL_50;
     }
 
-    if (gSpecialVar_0x8005 < 2)
+    ZeroPlayerPartyMons();
+    for (u32 i = 0; i < FRONTIER_PARTY_SIZE; i++)
     {
-        ZeroPlayerPartyMons();
-        for (i = 0; i < FRONTIER_PARTY_SIZE; i++)
-        {
-            monId = gSaveBlock2Ptr->frontier.rentalMons[i].monId;
-            ivs = gSaveBlock2Ptr->frontier.rentalMons[i].ivs;
-
-            CreateFacilityMon(&gFacilityTrainerMons[monId], monLevel, ivs, READ_OTID_FROM_SAVE, FLAG_FRONTIER_MON_FACTORY, &gParties[B_TRAINER_PLAYER][i]);
-        }
+        CreateRentalMon(&gParties[B_TRAINER_PLAYER][i], &gSaveBlock2Ptr->frontier.rentalMons[i], monLevel);
     }
 
-    switch (gSpecialVar_0x8005)
+    ZeroEnemyPartyMons();
+    for (u32 i = 0; i < FRONTIER_PARTY_SIZE; i++)
     {
-    case 0:
-    case 2:
-        for (i = 0; i < FRONTIER_PARTY_SIZE; i++)
-        {
-            monId = gSaveBlock2Ptr->frontier.rentalMons[i + FRONTIER_PARTY_SIZE].monId;
-            ivs = gSaveBlock2Ptr->frontier.rentalMons[i + FRONTIER_PARTY_SIZE].ivs;
-            CreateFacilityMon(&gFacilityTrainerMons[monId], monLevel, ivs, READ_OTID_FROM_SAVE, FLAG_FRONTIER_MON_FACTORY, &gParties[B_TRAINER_OPPONENT_A][i]);
-        }
-        break;
+        CreateRentalMon(&gParties[B_TRAINER_OPPONENT_A][i], &gSaveBlock2Ptr->frontier.rentalMons[i + FRONTIER_PARTY_SIZE], monLevel);
     }
 }
 
@@ -393,7 +437,7 @@ static void GenerateInitialRentalMons(void)
     enum Species currSpecies;
     enum Species species[PARTY_SIZE];
     u16 monIds[PARTY_SIZE];
-    u16 heldItems[PARTY_SIZE];
+    enum Item heldItems[PARTY_SIZE];
 
     gFacilityTrainers = gBattleFrontierTrainers;
     for (i = 0; i < PARTY_SIZE; i++)
@@ -595,7 +639,7 @@ static enum FactoryStyle GetMoveBattleStyle(enum Move move)
         return FACTORY_STYLE_SLOW_STEADY;
 
     if (IsExplosionMove(move))
-        return FACTORY_STYLE_SLOW_STEADY;
+        return FACTORY_STYLE_HIGH_RISK;
 
     return FACTORY_STYLE_NONE;
 }
@@ -794,14 +838,6 @@ u64 GetAiScriptsInBattleFactory(void)
     }
 }
 
-void SetMonMoveAvoidReturn(struct Pokemon *mon, enum Move moveArg, u8 moveSlot)
-{
-    enum Move move = moveArg;
-    if (moveArg == MOVE_RETURN)
-        move = MOVE_FRUSTRATION;
-    SetMonMoveSlot(mon, move, moveSlot);
-}
-
 static void FillFactoryFrontierTrainerParty(u16 trainerId, u8 firstMonId)
 {
     u8 i;
@@ -817,7 +853,6 @@ static void FillFactoryFrontierTrainerParty(u16 trainerId, u8 firstMonId)
         u8 battleMode = VarGet(VAR_FRONTIER_BATTLE_MODE);
         u8 challengeNum = gSaveBlock2Ptr->frontier.factoryWinStreaks[battleMode][lvlMode] / FRONTIER_STAGES_PER_CHALLENGE;
     #else
-        enum FrontierLevelMode UNUSED lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
         u8 battleMode = VarGet(VAR_FRONTIER_BATTLE_MODE);
         u8 challengeNum = gSaveBlock2Ptr->frontier.towerWinStreaks[battleMode][FRONTIER_LVL_50] / FRONTIER_STAGES_PER_CHALLENGE;
     #endif

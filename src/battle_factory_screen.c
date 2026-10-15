@@ -1715,7 +1715,7 @@ static void CreateFrontierFactorySelectableMons(u8 firstMonId)
     u32 otId = 0;
     u8 battleMode = VarGet(VAR_FRONTIER_BATTLE_MODE);
     enum FrontierLevelMode lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
-    u8 challengeNum = gSaveBlock2Ptr->frontier.factoryWinStreaks[battleMode][lvlMode] / 7;
+    u8 challengeNum = gSaveBlock2Ptr->frontier.factoryWinStreaks[battleMode][lvlMode] / FRONTIER_STAGES_PER_CHALLENGE;
     u8 rentalRank = 0;
 
     gFacilityTrainerMons = gBattleFrontierMons;
@@ -2747,9 +2747,10 @@ static void Swap_Task_SlideCycleBalls(u8 taskId)
     switch (gTasks[taskId].tState)
     {
     case 0:
-        gTasks[taskId].tBallCycled(0) = FALSE;
-        gTasks[taskId].tBallCycled(1) = FALSE;
-        gTasks[taskId].tBallCycled(2) = FALSE;
+        for (i = 0; i < FRONTIER_PARTY_SIZE; i++)
+        {
+            gTasks[taskId].tBallCycled(i) = FALSE;
+        }
         gTasks[taskId].tState = 1;
         break;
     case 1:

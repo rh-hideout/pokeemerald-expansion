@@ -27,7 +27,8 @@ SINGLE_BATTLE_TEST("Parting Shot: Passes Substitute and switches the user out")
 
 SINGLE_BATTLE_TEST("Parting Shot: Soundproof and Good as Gold block Parting Shot")
 {
-    u16 species, ability;
+    enum Species species;
+    enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_EXPLOUD;   ability = ABILITY_SOUNDPROOF; }
     PARAMETRIZE { species = SPECIES_GHOLDENGO; ability = ABILITY_GOOD_AS_GOLD; }
@@ -69,41 +70,45 @@ SINGLE_BATTLE_TEST("Parting Shot: Hyper Cutter blocks Attack drop but still swit
     }
 }
 
-// SINGLE_BATTLE_TEST("Parting Shot: Magic Coat bounces it and switches the target out")
-// {
-//     GIVEN {
-//         PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_PARTING_SHOT); }
-//         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_MAGIC_COAT); }
-//         OPPONENT(SPECIES_WYNAUT);
-//     } WHEN {
-//         TURN { MOVE(opponent, MOVE_MAGIC_COAT); MOVE(player, MOVE_PARTING_SHOT); SEND_OUT(opponent, 1); }
-//     } THEN {
-//         EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE - 1);
-//         EXPECT_EQ(player->statStages[STAT_SPATK], DEFAULT_STAT_STAGE - 1);
-//         EXPECT_EQ(opponent->species, SPECIES_WYNAUT);
-//     }
-// }
+SINGLE_BATTLE_TEST("Parting Shot: Magic Coat bounces it and switches the target out and original user doesn't switch out")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_PARTING_SHOT); }
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_MAGIC_COAT); }
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_MAGIC_COAT); MOVE(player, MOVE_PARTING_SHOT); SEND_OUT(opponent, 1); }
+    } THEN {
+        EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE - 1);
+        EXPECT_EQ(player->statStages[STAT_SPATK], DEFAULT_STAT_STAGE - 1);
+        EXPECT_EQ(opponent->species, SPECIES_WYNAUT);
+    }
+}
 
-// SINGLE_BATTLE_TEST("Parting Shot: Magic Bounce bounces it and switches the target out")
-// {
-//     GIVEN {
-//         PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_PARTING_SHOT); }
-//         OPPONENT(SPECIES_ESPEON) { Ability(ABILITY_MAGIC_BOUNCE); }
-//         OPPONENT(SPECIES_WYNAUT);
-//     } WHEN {
-//         TURN { MOVE(player, MOVE_PARTING_SHOT); SEND_OUT(opponent, 1); }
-//     } SCENE {
-//         ABILITY_POPUP(opponent, ABILITY_MAGIC_BOUNCE);
-//     } THEN {
-//         EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE - 1);
-//         EXPECT_EQ(player->statStages[STAT_SPATK], DEFAULT_STAT_STAGE - 1);
-//         EXPECT_EQ(opponent->species, SPECIES_WYNAUT);
-//     }
-// }
+SINGLE_BATTLE_TEST("Parting Shot: Magic Bounce bounces it and switches the target out and original user doesn't switch out")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_PARTING_SHOT); }
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_ESPEON) { Ability(ABILITY_MAGIC_BOUNCE); }
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(player, MOVE_PARTING_SHOT); SEND_OUT(opponent, 1); }
+    } SCENE {
+        ABILITY_POPUP(opponent, ABILITY_MAGIC_BOUNCE);
+    } THEN {
+        EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE - 1);
+        EXPECT_EQ(player->statStages[STAT_SPATK], DEFAULT_STAT_STAGE - 1);
+        EXPECT_EQ(opponent->species, SPECIES_WYNAUT);
+    }
+}
 
 SINGLE_BATTLE_TEST("Parting Shot: Mirror Armor switches the user even if reflected drops fail")
 {
-    u16 species, ability, item;
+    enum Species species;
+    enum Ability ability;
+    enum Item item;
 
     PARAMETRIZE { species = SPECIES_METAGROSS; ability = ABILITY_CLEAR_BODY;      item = ITEM_NONE; }
     PARAMETRIZE { species = SPECIES_TORKOAL;   ability = ABILITY_WHITE_SMOKE;     item = ITEM_NONE; }
@@ -207,7 +212,9 @@ SINGLE_BATTLE_TEST("Parting Shot: Does not switch if Contrary is at maximum stat
 
 SINGLE_BATTLE_TEST("Parting Shot: Stat drop prevention by abilities/items does not switch (Gen7+)")
 {
-    u16 species, ability, item;
+    enum Species species;
+    enum Ability ability;
+    enum Item item;
 
     PARAMETRIZE { species = SPECIES_METAGROSS; ability = ABILITY_CLEAR_BODY;      item = ITEM_NONE; }
     PARAMETRIZE { species = SPECIES_TORKOAL;   ability = ABILITY_WHITE_SMOKE;     item = ITEM_NONE; }
@@ -322,7 +329,9 @@ SINGLE_BATTLE_TEST("Parting Shot: Switches if Contrary is at maximum stats (Gen6
 
 SINGLE_BATTLE_TEST("Parting Shot: Stat drop prevention by abilities/items switches (Gen6)")
 {
-    u16 species, ability, item;
+    enum Species species;
+    enum Ability ability;
+    enum Item item;
 
     PARAMETRIZE { species = SPECIES_METAGROSS; ability = ABILITY_CLEAR_BODY;      item = ITEM_NONE; }
     PARAMETRIZE { species = SPECIES_TORKOAL;   ability = ABILITY_WHITE_SMOKE;     item = ITEM_NONE; }

@@ -103,7 +103,6 @@ BattlePyramid_WarpToTop::
 	waitstate
 	end
 
-@ TRAINER_PHILLIP is used as a placeholder
 BattlePyramid_TrainerBattle::
 	facilitytrainerbattle FACILITY_BATTLE_PYRAMID
 	pyramid_showhint

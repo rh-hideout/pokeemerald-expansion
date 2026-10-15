@@ -4159,7 +4159,7 @@ static void CreateDeoxysRockFragments(struct Sprite *sprite)
 
     for (i = 0; i < 4; i++)
     {
-        u8 spriteId = CreateSprite(&sSpriteTemplate_DeoxysRockFragment, xPos, yPos, 0);
+        u8 spriteId = CreateSpriteUnchecked(&sSpriteTemplate_DeoxysRockFragment, xPos, yPos, 0);
         if (spriteId != MAX_SPRITES)
         {
             StartSpriteAnim(&gSprites[spriteId], i);
@@ -4272,7 +4272,7 @@ u8 FldEff_CaveDust(void)
     u8 spriteId;
 
     SetSpritePosToOffsetMapCoords((s16 *)&gFieldEffectArguments[0], (s16 *)&gFieldEffectArguments[1], 8, 8);
-    spriteId = CreateSpriteAtEnd(gFieldEffectObjectTemplatePointers[FLDEFFOBJ_CAVE_DUST], gFieldEffectArguments[0], gFieldEffectArguments[1], 0xFF);
+    spriteId = CreateSpriteAtEndUnchecked(gFieldEffectObjectTemplatePointers[FLDEFFOBJ_CAVE_DUST], gFieldEffectArguments[0], gFieldEffectArguments[1], 0xFF);
     if (spriteId != MAX_SPRITES)
     {
         gSprites[spriteId].coordOffsetEnabled = TRUE;
@@ -4307,7 +4307,7 @@ static u8 CreateRockClimbBlob(void)
     struct Sprite *sprite;
 
     SetSpritePosToOffsetMapCoords((s16 *)&gFieldEffectArguments[0], (s16 *)&gFieldEffectArguments[1], 8, 8);
-    spriteId = CreateSpriteAtEnd(gFieldEffectObjectTemplatePointers[FLDEFFOBJ_ROCK_CLIMB_BLOB], gFieldEffectArguments[0], gFieldEffectArguments[1], 0x96);
+    spriteId = CreateSpriteAtEndUnchecked(gFieldEffectObjectTemplatePointers[FLDEFFOBJ_ROCK_CLIMB_BLOB], gFieldEffectArguments[0], gFieldEffectArguments[1], 0x96);
     if (spriteId != MAX_SPRITES)
     {
         sprite = &gSprites[spriteId];

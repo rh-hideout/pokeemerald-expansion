@@ -167,7 +167,7 @@ u16 RunTextPrintersAndIsPrinter0Active(void)
     return IsTextPrinterActiveOnWindow(0);
 }
 
-u16 AddTextPrinterParameterized2(u8 windowId, u8 fontId, const u8 *str, u8 speed, void (*callback)(struct TextPrinterTemplate *, u16), u8 fgColor, u8 bgColor, u8 shadowColor)
+bool16 AddTextPrinterParameterized2(u8 windowId, u8 fontId, const u8 *str, u8 speed, TextPrinterCallback callback, u8 fgColor, u8 bgColor, u8 shadowColor)
 {
     struct TextPrinterTemplate printer;
 
@@ -361,7 +361,7 @@ void Menu_LoadStdPalAt(u16 offset)
     LoadPalette(gStandardMenuPalette, offset, STD_WINDOW_PALETTE_SIZE);
 }
 
-static UNUSED const u16* Menu_GetStdPal(void)
+static UNUSED const u16 *Menu_GetStdPal(void)
 {
     return gStandardMenuPalette;
 }
@@ -411,16 +411,6 @@ void RemoveStartMenuWindow(void)
     }
 }
 
-static u16 UNUSED GetDialogFrameBaseTileNum(void)
-{
-    return DLG_WINDOW_BASE_TILE_NUM;
-}
-
-static u16 UNUSED GetStandardFrameBaseTileNum(void)
-{
-    return STD_WINDOW_BASE_TILE_NUM;
-}
-
 u8 AddMapNamePopUpWindow(void)
 {
     if (sMapNamePopupWindowId == WINDOW_NONE)
@@ -447,7 +437,7 @@ void RemoveMapNamePopUpWindow(void)
     }
 }
 
-void AddTextPrinterWithCallbackForMessage(bool8 canSpeedUp, void (*callback)(struct TextPrinterTemplate *, u16))
+void AddTextPrinterWithCallbackForMessage(bool8 canSpeedUp, TextPrinterCallback callback)
 {
     gTextFlags.canABSpeedUpPrint = canSpeedUp;
     AddTextPrinterParameterized2(0, FONT_NORMAL, gStringVar4, GetPlayerTextSpeedDelay(), callback, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
@@ -501,18 +491,6 @@ void DrawStdFrameWithCustomTileAndPalette(u8 windowId, bool8 copyToVram, u16 bas
 {
     sTileNum = baseTileNum;
     sPaletteNum = paletteNum;
-    CallWindowFunction(windowId, WindowFunc_DrawStandardFrame);
-    FillWindowPixelBuffer(windowId, PIXEL_FILL(1));
-    PutWindowTilemap(windowId);
-    if (copyToVram == TRUE)
-        CopyWindowToVram(windowId, COPYWIN_FULL);
-}
-
-// Never used.
-void DrawStdFrameWithCustomTile(u8 windowId, bool8 copyToVram, u16 baseTileNum)
-{
-    sTileNum = baseTileNum;
-    sPaletteNum = GetWindowAttribute(windowId, WINDOW_PALETTE_NUM);
     CallWindowFunction(windowId, WindowFunc_DrawStandardFrame);
     FillWindowPixelBuffer(windowId, PIXEL_FILL(1));
     PutWindowTilemap(windowId);
@@ -1635,25 +1613,6 @@ void CopyToBufferFromBgTilemap(u8 bgId, u16 *dest, u8 left, u8 top, u8 width, u8
     }
 }
 
-void AddValToTilemapBuffer(void *ptr, int delta, int width, int height, bool32 isAffine)
-{
-    int i;
-    int area = width * height;
-    if (isAffine == TRUE)
-    {
-        u8 *as8BPP = ptr;
-        for (i = 0; i < area; i++)
-            as8BPP[i] += delta;
-    }
-    else
-    {
-        // Limit add to first 10 bits
-        u16 *as4BPP = ptr;
-        for (i = 0; i < area; i++)
-            as4BPP[i] = (as4BPP[i] & 0xFC00) | ((as4BPP[i] + delta) & 0x3FF);
-    }
-}
-
 void ResetBgPositions(void)
 {
     ChangeBgX(0, 0, BG_COORD_SET);
@@ -1717,7 +1676,7 @@ void AddTextPrinterParameterized4(u8 windowId, u8 fontId, u8 left, u8 top, u8 le
     AddTextPrinter(&printer, speed, NULL);
 }
 
-void AddTextPrinterParameterized5(u8 windowId, u8 fontId, const u8 *str, u8 left, u8 top, u8 speed, void (*callback)(struct TextPrinterTemplate *, u16), u8 letterSpacing, u8 lineSpacing)
+void AddTextPrinterParameterized5(u8 windowId, u8 fontId, const u8 *str, u8 left, u8 top, u8 speed, TextPrinterCallback callback, u8 letterSpacing, u8 lineSpacing)
 {
     struct TextPrinterTemplate printer;
 
@@ -1738,25 +1697,6 @@ void AddTextPrinterParameterized5(u8 windowId, u8 fontId, const u8 *str, u8 left
     printer.color.accent = GetFontAttribute(fontId, FONTATTR_COLOR_ACCENT);
 
     AddTextPrinter(&printer, speed, callback);
-}
-
-void AddTextPrinterParameterized6(u8 windowId, u8 fontId, u8 left, u8 top, u8 letterSpacing, u8 lineSpacing, const union TextColor color, s8 speed, const u8 *str)
-{
-    struct TextPrinterTemplate printer;
-
-    printer.currentChar = str;
-    printer.type = WINDOW_TEXT_PRINTER;
-    printer.windowId = windowId;
-    printer.fontId = fontId;
-    printer.x = left;
-    printer.y = top;
-    printer.currentX = printer.x;
-    printer.currentY = printer.y;
-    printer.letterSpacing = letterSpacing;
-    printer.lineSpacing = lineSpacing;
-    printer.color = color;
-
-    AddTextPrinter(&printer, speed, NULL);
 }
 
 void PrintPlayerNameOnWindow(u8 windowId, const u8 *src, u16 x, u16 y)

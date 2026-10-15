@@ -110,3 +110,40 @@ SINGLE_BATTLE_TEST("Attract fails if both the user and the target are genderless
         EXPECT(!(opponent->volatiles.infatuation));
     }
 }
+
+DOUBLE_BATTLE_TEST("Captivate decreases the target's Sp. Attack if they're opposite gender from the user - Doubles")
+{
+    enum Species species;
+
+    PARAMETRIZE { species = SPECIES_NIDOKING; }
+    PARAMETRIZE { species = SPECIES_NIDOQUEEN; }
+
+    GIVEN {
+        PLAYER(SPECIES_NIDOQUEEN);
+        PLAYER(SPECIES_NIDOQUEEN);
+        OPPONENT(species);
+        OPPONENT(SPECIES_NIDOKING);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_CAPTIVATE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CAPTIVATE, playerLeft);
+        if (species == SPECIES_NIDOKING) {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
+        MESSAGE("The opposing Nidoking's Sp. Atk harshly fell!");
+        } else {
+            NONE_OF {
+                ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
+                MESSAGE("The opposing Nidoqueen's Sp. Atk harshly fell!");
+            }
+        }
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
+        MESSAGE("The opposing Nidoking's Sp. Atk harshly fell!");
+    } THEN {
+        if (species == SPECIES_NIDOKING) {
+            EXPECT(opponentLeft->statStages[STAT_SPATK] == DEFAULT_STAT_STAGE - 2);
+        } else {
+            EXPECT(opponentLeft->statStages[STAT_SPATK] == DEFAULT_STAT_STAGE);
+        }
+        EXPECT(opponentRight->statStages[STAT_SPATK] == DEFAULT_STAT_STAGE - 2);
+    }
+}

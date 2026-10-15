@@ -419,9 +419,7 @@ const u32 gObjectEventPic_MoonBall[] = INCGFX_U32("graphics/object_events/pics/m
 const u32 gObjectEventPic_SportBall[] = INCGFX_U32("graphics/object_events/pics/misc/ball_sport.png", ".4bpp", "-mwidth 2 -mheight 4");
 const u32 gObjectEventPic_DreamBall[] = INCGFX_U32("graphics/object_events/pics/misc/ball_dream.png", ".4bpp", "-mwidth 2 -mheight 4");
 const u32 gObjectEventPic_BeastBall[] = INCGFX_U32("graphics/object_events/pics/misc/ball_beast.png", ".4bpp", "-mwidth 2 -mheight 4");
-#ifdef ITEM_STRANGE_BALL
 const u32 gObjectEventPic_StrangeBall[] = INCGFX_U32("graphics/object_events/pics/misc/ball_strange.png", ".4bpp", "-mwidth 2 -mheight 4");
-#endif //ITEM_STRANGE_BALL
 #endif //OW_FOLLOWERS_POKEBALLS
 
 #if OW_FOLLOWERS_POKEBALLS
@@ -458,9 +456,7 @@ const u16 gObjectEventPal_DreamBall[] = INCGFX_U16("graphics/object_events/pics/
 // Gen VII
 const u16 gObjectEventPal_BeastBall[] = INCGFX_U16("graphics/object_events/pics/misc/ball_beast.png", ".gbapal");
 // Gen VIII
-#ifdef ITEM_STRANGE_BALL
 const u16 gObjectEventPal_StrangeBall[] = INCGFX_U16("graphics/object_events/pics/misc/ball_strange.png", ".gbapal");
-#endif //ITEM_STRANGE_BALL
 #endif //OW_FOLLOWERS_POKEBALLS
 
 const u32 gFieldEffectObjectPic_CaveDust[] = INCGFX_U32("graphics/field_effects/pics/cave_dust.png", ".4bpp");
@@ -535,7 +531,7 @@ const u16 gObjectEventPic_CamperFrlg[] = INCGFX_U16("graphics/object_events/pics
 const u16 gObjectEventPic_PicnickerFrlg[] = INCGFX_U16("graphics/object_events/pics/people/picnicker_frlg.png", ".4bpp", "-mwidth 2 -mheight 4");
 const u16 gObjectEventPic_CooltrainerM[] = INCGFX_U16("graphics/object_events/pics/people/cooltrainer_m.png", ".4bpp", "-mwidth 2 -mheight 4");
 const u16 gObjectEventPic_CooltrainerF[] = INCGFX_U16("graphics/object_events/pics/people/cooltrainer_f.png", ".4bpp", "-mwidth 2 -mheight 4");
-const u16 gObjectEventPic_PokeManiacFrlg[] = INCGFX_U16("graphics/object_events/pics/people/poke_maniac_frlg.png", ".4bpp");
+const u16 gObjectEventPic_PokeManiacFrlg[] = INCGFX_U16("graphics/object_events/pics/people/poke_maniac_frlg.png", ".4bpp", "-mwidth 2 -mheight 4");
 const u16 gObjectEventPic_Channeler[] = INCGFX_U16("graphics/object_events/pics/people/channeler.png", ".4bpp", "-mwidth 2 -mheight 4");
 const u16 gObjectEventPic_RocketF[] = INCGFX_U16("graphics/object_events/pics/people/rocket_f.png", ".4bpp", "-mwidth 2 -mheight 4");
 const u16 gObjectEventPic_SwimmerMWater[] = INCGFX_U16("graphics/object_events/pics/people/swimmer_m_water.png", ".4bpp", "-mwidth 2 -mheight 4");

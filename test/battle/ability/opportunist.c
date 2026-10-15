@@ -316,4 +316,102 @@ DOUBLE_BATTLE_TEST("Opportunist and Mirror Herb resolve correctly")
     }
 }
 
-TO_DO_BATTLE_TEST("Opportunist copies stat changes from the opponent's X Attack and other stat-boosting items.")
+DOUBLE_BATTLE_TEST("Opportunist activates after a Mega Evolution")
+{
+    GIVEN {
+        PLAYER(SPECIES_MANECTRIC) { Item(ITEM_MANECTITE); }
+        PLAYER(SPECIES_ESPATHRA) { Ability(ABILITY_OPPORTUNIST); }
+        OPPONENT(SPECIES_MANKEY) { Ability(ABILITY_DEFIANT); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, playerLeft);
+        ABILITY_POPUP(playerLeft, ABILITY_INTIMIDATE);
+        ABILITY_POPUP(opponentLeft, ABILITY_DEFIANT);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
+        ABILITY_POPUP(playerRight, ABILITY_OPPORTUNIST);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
+    } THEN {
+        EXPECT_EQ(playerRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 2);
+        EXPECT_EQ(opponentLeft->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 1);
+    }
+}
+
+SINGLE_BATTLE_TEST("Opportunist copies the stats boosted by Speed Boost")
+{
+    GIVEN {
+        PLAYER(SPECIES_ESPATHRA) { Ability(ABILITY_OPPORTUNIST); }
+        OPPONENT(SPECIES_TORCHIC) { Ability(ABILITY_SPEED_BOOST); }
+    } WHEN {
+        TURN {}
+    } SCENE {
+        ABILITY_POPUP(opponent, ABILITY_SPEED_BOOST);
+        ABILITY_POPUP(player, ABILITY_OPPORTUNIST);
+    } THEN {
+        EXPECT_EQ(opponent->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + 1);
+        EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + 1);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Opportunist activates before Mirror Herb during the end turn")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Speed(10); Item(ITEM_MIRROR_HERB); }
+        PLAYER(SPECIES_ESPATHRA) { Speed(2); Ability(ABILITY_OPPORTUNIST); }
+        OPPONENT(SPECIES_TORCHIC) { Speed(3); Ability(ABILITY_SPEED_BOOST); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(4); }
+    } WHEN {
+        TURN {}
+    } SCENE {
+        ABILITY_POPUP(opponentLeft, ABILITY_SPEED_BOOST);
+        ABILITY_POPUP(playerRight, ABILITY_OPPORTUNIST);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
+    } THEN {
+        EXPECT_EQ(opponentLeft->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + 1);
+        EXPECT_EQ(playerLeft->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + 1);
+        EXPECT_EQ(playerRight->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + 1);
+    }
+}
+
+SINGLE_BATTLE_TEST("Opportunist copies stat changes from the opponent's X items")
+{
+    enum Item item;
+    enum Stat stat;
+
+    PARAMETRIZE { item = ITEM_X_ATTACK;   stat = STAT_ATK; }
+    PARAMETRIZE { item = ITEM_X_DEFENSE;  stat = STAT_DEF; }
+    PARAMETRIZE { item = ITEM_X_SP_ATK;   stat = STAT_SPATK; }
+    PARAMETRIZE { item = ITEM_X_SP_DEF;   stat = STAT_SPDEF; }
+    PARAMETRIZE { item = ITEM_X_SPEED;    stat = STAT_SPEED; }
+    PARAMETRIZE { item = ITEM_X_ACCURACY; stat = STAT_ACC; }
+
+    GIVEN {
+        WITH_CONFIG(B_X_ITEMS_BUFF, GEN_7);
+        ASSUME(gItemsInfo[item].battleUsage == EFFECT_ITEM_INCREASE_STAT);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_ESPATHRA) { Ability(ABILITY_OPPORTUNIST); }
+    } WHEN {
+        TURN { USE_ITEM(player, item); }
+    } THEN {
+        EXPECT_EQ(player->statStages[stat], DEFAULT_STAT_STAGE + 2);
+        EXPECT_EQ(opponent->statStages[stat], DEFAULT_STAT_STAGE + 2);
+    }
+}
+
+SINGLE_BATTLE_TEST("Opportunist copies stat changes from the opponent's Max Mushrooms")
+{
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_MAX_MUSHROOMS].battleUsage == EFFECT_ITEM_INCREASE_ALL_STATS);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_ESPATHRA) { Ability(ABILITY_OPPORTUNIST); }
+    } WHEN {
+        TURN { USE_ITEM(player, ITEM_MAX_MUSHROOMS); }
+    } THEN {
+        for (enum Stat stat = STAT_ATK; stat < NUM_STATS; stat++)
+        {
+            EXPECT_EQ(player->statStages[stat], DEFAULT_STAT_STAGE + 1);
+            EXPECT_EQ(opponent->statStages[stat], DEFAULT_STAT_STAGE + 1);
+        }
+    }
+}

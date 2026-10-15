@@ -45,7 +45,26 @@ SINGLE_BATTLE_TEST("Anger Point does not trigger when already at maximum Attack 
     }
 }
 
-TO_DO_BATTLE_TEST("Anger Point triggers when a substitute takes the hit (Gen4)");
+SINGLE_BATTLE_TEST("Anger Point triggers when a substitute takes the hit (Gen4)")
+{
+    GIVEN {
+        WITH_CONFIG(B_UPDATED_ABILITY_DATA, GEN_4);
+        ASSUME(GetMoveEffect(MOVE_SUBSTITUTE) == EFFECT_SUBSTITUTE);
+        PLAYER(SPECIES_PRIMEAPE) { Ability(ABILITY_ANGER_POINT); Speed(2); }
+        OPPONENT(SPECIES_SNORUNT) { Speed(1); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SUBSTITUTE); MOVE(opponent, MOVE_SCRATCH, criticalHit: TRUE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
+        MESSAGE("A critical hit!");
+        ABILITY_POPUP(player, ABILITY_ANGER_POINT);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        MESSAGE("Primeape maxed its Attack!");
+    } THEN {
+        EXPECT_EQ(player->statStages[STAT_ATK], MAX_STAT_STAGE);
+    }
+}
 
 SINGLE_BATTLE_TEST("Anger Point does not trigger when a substitute takes the hit (Gen5+)")
 {
