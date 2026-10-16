@@ -2875,76 +2875,78 @@ static void BattleStartClearSetData(void)
 
 #define UNPACK_VOLATILE_BATON_PASSABLES(_enum, _fieldName, _typeMaxValue, ...) __VA_OPT__(if ((FIRST(__VA_ARGS__)) & V_BATON_PASSABLE) gBattleMons[battler].volatiles._fieldName = volatilesCopy->_fieldName;)
 
-static void ClearSetDataOnLeave(enum BattlerId battler)
+static void ClearSetDataOnLeave(enum BattlerId battlerLeavingField)
 {
     // Clear Rage Fist stacks
     if (GetConfig(B_RAGE_FIST) >= GEN_CHAMPIONS)
-        GetBattlerPartyState(battler)->timesGotHit = 0;
+        GetBattlerPartyState(battlerLeavingField)->timesGotHit = 0;
 
-    if (GetProtectType(gProtectStructs[battler].protected) == PROTECT_TYPE_SINGLE) // Side type protects expire at the end of the turn
-        gProtectStructs[battler].protected = PROTECT_NONE;
+    if (GetProtectType(gProtectStructs[battlerLeavingField].protected) == PROTECT_TYPE_SINGLE) // Side type protects expire at the end of the turn
+        gProtectStructs[battlerLeavingField].protected = PROTECT_NONE;
 
-    if (battler == gBattlerAttacker)
+    if (battlerLeavingField == gBattlerAttacker)
         gBattleStruct->moldBreakerActive = FALSE;
 
-    gActionSelectionCursor[battler] = 0;
-    gMoveSelectionCursor[battler] = 0;
+    gActionSelectionCursor[battlerLeavingField] = 0;
+    gMoveSelectionCursor[battlerLeavingField] = 0;
 
-    gProtectStructs[battler].quash = FALSE;
-    gProtectStructs[battler].noValidMoves = FALSE;
-    gProtectStructs[battler].helpingHand = 0;
-    gProtectStructs[battler].bounceMove = FALSE;
-    gProtectStructs[battler].stealMove = FALSE;
-    gProtectStructs[battler].chargingTurn = FALSE;
-    gProtectStructs[battler].fleeType = 0;
-    gProtectStructs[battler].statRaised = FALSE;
-    gProtectStructs[battler].pranksterElevated = FALSE;
-    gSpecialStatuses[battler].queuedSwitch = NO_QUEUED_SWITCH;
-    gSpecialStatuses[battler].shellBellEmergencyExit = FALSE;
-    gBattleStruct->battlerState[battler].isFirstTurn = 2;
-    gBattleStruct->battlerState[battler].stompingTantrumTimer = 0;
-    gBattleStruct->battlerState[battler].canPickupItem = FALSE;
-    gBattleStruct->battlerState[battler].wasAboveHalfHp = gBattleMons[battler].hp > gBattleMons[battler].maxHP / 2;
-    gBattleStruct->choicedMove[battler] = MOVE_NONE;
-    gBattleStruct->palaceFlags &= ~(1u << battler);
+    gProtectStructs[battlerLeavingField].quash = FALSE;
+    gProtectStructs[battlerLeavingField].noValidMoves = FALSE;
+    gProtectStructs[battlerLeavingField].helpingHand = 0;
+    gProtectStructs[battlerLeavingField].bounceMove = FALSE;
+    gProtectStructs[battlerLeavingField].stealMove = FALSE;
+    gProtectStructs[battlerLeavingField].chargingTurn = FALSE;
+    gProtectStructs[battlerLeavingField].fleeType = 0;
+    gProtectStructs[battlerLeavingField].statRaised = FALSE;
+    gProtectStructs[battlerLeavingField].pranksterElevated = FALSE;
+    gSpecialStatuses[battlerLeavingField].queuedSwitch = NO_QUEUED_SWITCH;
+    gSpecialStatuses[battlerLeavingField].shellBellEmergencyExit = FALSE;
+    gBattleStruct->battlerState[battlerLeavingField].isFirstTurn = 2;
+    gBattleStruct->battlerState[battlerLeavingField].stompingTantrumTimer = 0;
+    gBattleStruct->battlerState[battlerLeavingField].canPickupItem = FALSE;
+    gBattleStruct->battlerState[battlerLeavingField].wasAboveHalfHp = gBattleMons[battlerLeavingField].hp > gBattleMons[battlerLeavingField].maxHP / 2;
+    gBattleStruct->choicedMove[battlerLeavingField] = MOVE_NONE;
+    gBattleStruct->palaceFlags &= ~(1u << battlerLeavingField);
 
-    gLastMoves[battler] = MOVE_NONE;
-    gLastLandedMoves[battler] = MOVE_NONE;
-    gLastHitByType[battler] = 0;
-    gLastUsedMoveType[battler] = 0;
-    gLastResultingMoves[battler] = MOVE_NONE;
-    gLastPrintedMoves[battler] = MOVE_NONE;
-    gLastHitBy[battler] = 0xFF;
+    gLastMoves[battlerLeavingField] = MOVE_NONE;
+    gLastLandedMoves[battlerLeavingField] = MOVE_NONE;
+    gLastHitByType[battlerLeavingField] = 0;
+    gLastUsedMoveType[battlerLeavingField] = 0;
+    gLastResultingMoves[battlerLeavingField] = MOVE_NONE;
+    gLastPrintedMoves[battlerLeavingField] = MOVE_NONE;
+    gLastHitBy[battlerLeavingField] = 0xFF;
 
-    for (u32 i = 0; i < NUM_BATTLE_SIDES; i++)
+    for (u32 side = 0; side < NUM_BATTLE_SIDES; side++)
     {
         // User of sticky web fainted, so reset the stored battler ID
-        if (gSideTimers[i].stickyWebBattlerId == battler)
-            gSideTimers[i].stickyWebBattlerId = 0xFF;
+        if (gSideTimers[side].stickyWebBattlerId == battlerLeavingField)
+            gSideTimers[side].stickyWebBattlerId = 0xFF;
     }
 
-    gBattleStruct->lastTakenMove[battler] = 0;
-    for (enum BattlerId i = 0; i < gBattlersCount; i++)
+    gBattleStruct->lastTakenMove[battlerLeavingField] = 0;
+    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
     {
-        if (i != battler && !IsBattlerAlly(i, battler))
-            gBattleStruct->lastTakenMove[i] = MOVE_NONE;
+        if (battler != battlerLeavingField && !IsBattlerAlly(battler, battlerLeavingField))
+            gBattleStruct->lastTakenMove[battler] = MOVE_NONE;
 
-        gBattleStruct->lastTakenMoveFrom[i][battler] = 0;
-        gBattleStruct->lastTakenMoveFrom[battler][i] = 0;
+        gBattleStruct->lastTakenMoveFrom[battler][battlerLeavingField] = 0;
+        gBattleStruct->lastTakenMoveFrom[battlerLeavingField][battler] = 0;
 
-        if (gBattleMons[i].volatiles.infatuation == INFATUATED_WITH(battler))
-            gBattleMons[i].volatiles.infatuation = 0;
-        if (gBattleMons[i].volatiles.wrapped && gBattleMons[i].volatiles.wrappedBy == battler)
-            gBattleMons[i].volatiles.wrapped = FALSE;
-        if (gBattleMons[i].volatiles.syrupBomb && gBattleMons[i].volatiles.stickySyrupedBy == battler)
-            gBattleMons[i].volatiles.syrupBomb = FALSE;
-        if (gBattleMons[i].volatiles.octolock && gBattleMons[i].volatiles.octolockedBy == battler)
-            gBattleMons[i].volatiles.octolock = FALSE;
-        if (gBattleMons[i].volatiles.skyDropTarget == battler + 1)
-            gBattleMons[i].volatiles.skyDropTarget = 0;
+        if (gBattleMons[battler].volatiles.infatuation == INFATUATED_WITH(battlerLeavingField))
+            gBattleMons[battler].volatiles.infatuation = 0;
+        if (gBattleMons[battler].volatiles.wrapped && gBattleMons[battler].volatiles.wrappedBy == battlerLeavingField)
+            gBattleMons[battler].volatiles.wrapped = FALSE;
+        if (gBattleMons[battler].volatiles.syrupBomb && gBattleMons[battler].volatiles.stickySyrupedBy == battlerLeavingField)
+            gBattleMons[battler].volatiles.syrupBomb = FALSE;
+        if (gBattleMons[battler].volatiles.octolock && gBattleMons[battler].volatiles.octolockedBy == battlerLeavingField)
+            gBattleMons[battler].volatiles.octolock = FALSE;
+        if (gBattleMons[battler].volatiles.skyDropTarget == battlerLeavingField + 1)
+            gBattleMons[battler].volatiles.skyDropTarget = 0;
+        if (gBattleMons[battler].volatiles.jawLock & (1u << battlerLeavingField))
+            gBattleMons[battler].volatiles.jawLock &= ~(1u << battlerLeavingField);
     }
 
-    ClearPursuitValuesIfSet(battler);
+    ClearPursuitValuesIfSet(battlerLeavingField);
 
     // Reset Eject Button / Eject Pack switch detection
     gAiLogicData->ejectButtonSwitch = FALSE;

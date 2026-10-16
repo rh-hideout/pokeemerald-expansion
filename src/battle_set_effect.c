@@ -665,19 +665,28 @@ static void HandleSetEffectRecoilHp25(struct BattleCalcValues *cv, struct SetEff
     gBattlescriptCurrInstr = BattleScript_MoveEffectRecoilHP25;
 }
 
-static void HandleSetEffectTrapBoth(struct BattleCalcValues *cv, struct SetEffect *se)
+static bool32 IsOneBattlerPreventedFromSwitching(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
-    if (!(gBattleMons[se->effectBattler].volatiles.escapePrevention || gBattleMons[cv->battlerAtk].volatiles.escapePrevention))
+    if (gBattleMons[battlerAtk].volatiles.escapePrevention)
+        return TRUE;
+    if (gBattleMons[battlerDef].volatiles.escapePrevention)
+        return TRUE;
+
+    if (IsBattlerJawLocked(battlerAtk) || IsBattlerJawLocked(battlerDef))
+        return TRUE;
+
+    return FALSE;
+}
+
+static void HandleSetEffectJawLock(struct BattleCalcValues *cv, struct SetEffect *se)
+{
+    if (IsOneBattlerPreventedFromSwitching(cv->battlerAtk, se->effectBattler))
     {
-        if (!gBattleMons[se->effectBattler].volatiles.escapePrevention)
-            gBattleMons[se->effectBattler].volatiles.battlerPreventingEscape = cv->battlerAtk;
-
-        if (!gBattleMons[cv->battlerAtk].volatiles.escapePrevention)
-            gBattleMons[cv->battlerAtk].volatiles.battlerPreventingEscape = se->effectBattler;
-
-        gBattleMons[se->effectBattler].volatiles.escapePrevention = TRUE;
-        gBattleMons[cv->battlerAtk].volatiles.escapePrevention = TRUE;
-
+        SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
+    }
+    else if (!cv->onlyChecking)
+    {
+        gBattleMons[cv->battlerAtk].volatiles.jawLock |= 1u << se->effectBattler;
         BattleScriptPush(se->script);
         gBattlescriptCurrInstr = BattleScript_BothCanNoLongerEscape;
     }
@@ -4194,7 +4203,7 @@ static void (*const sSetEffectHandlers[])(struct BattleCalcValues *cv, struct Se
     [MOVE_EFFECT_INCINERATE] = HandleSetEffectIncinerate,
     [MOVE_EFFECT_BUG_BITE] = HandleSetEffectBugBite,
     [MOVE_EFFECT_RECOIL_HP_25] = HandleSetEffectRecoilHp25,
-    [MOVE_EFFECT_TRAP_BOTH] = HandleSetEffectTrapBoth,
+    [MOVE_EFFECT_JAW_LOCK] = HandleSetEffectJawLock,
     [MOVE_EFFECT_ROUND] = HandleSetEffectRound,
     [MOVE_EFFECT_SYRUP_BOMB] = HandleSetEffectSyrupBomb,
     [MOVE_EFFECT_SECRET_POWER] = HandleSetEffectSecretPower,
