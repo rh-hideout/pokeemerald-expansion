@@ -2375,7 +2375,7 @@ static void HandleSetEffectSubstitute(struct BattleCalcValues *cv, struct SetEff
 
 static void HandleSetEffectShedTail(struct BattleCalcValues *cv, struct SetEffect *se)
 {
-    if (gBattleTypeFlags & BATTLE_TYPE_ARENA
+    if (HasAnyBattleFlags(BATTLE_TYPE_ARENA)
      || gBattleStruct->battlerState[se->effectBattler].commanderSpecies != SPECIES_NONE
      || gBattleMons[se->effectBattler].volatiles.semiInvulnerable == STATE_COMMANDER
      || !CanBattlerSwitch(se->effectBattler))
@@ -3273,11 +3273,11 @@ static void HandleSetEffectTrick(struct BattleCalcValues *cv, struct SetEffect *
     bool32 notRegularBattleType = (BATTLE_TYPE_LINK | BATTLE_TYPE_EREADER_TRAINER | BATTLE_TYPE_FRONTIER | BATTLE_TYPE_SECRET_BASE | BATTLE_TYPE_RECORDED_LINK);
     bool32 battleTypeTrainer = (B_TRAINERS_KNOCK_OFF_ITEMS == TRUE ? BATTLE_TYPE_TRAINER : 0);
 
-    bool32 opponentCantSwapItems = (gBattleTypeFlags & BATTLE_TYPE_TRAINER_HILL)
-                                || (!IsOnPlayerSide(cv->battlerAtk) && !(gBattleTypeFlags & (notRegularBattleType | battleTypeTrainer)));
+    bool32 opponentCantSwapItems = (HasAnyBattleFlags(BATTLE_TYPE_TRAINER_HILL))
+                                || (!IsOnPlayerSide(cv->battlerAtk) && HasNoneOfBattleFlags(notRegularBattleType | battleTypeTrainer));
 
     bool32 isKnockedOff = (GetBattlerPartyState(cv->battlerAtk)->isKnockedOff || GetBattlerPartyState(se->effectBattler)->isKnockedOff);
-    bool32 cantSwapIfKnockedOff = !(gBattleTypeFlags & (notRegularBattleType | battleTypeTrainer)) && isKnockedOff;
+    bool32 cantSwapIfKnockedOff = HasNoneOfBattleFlags(notRegularBattleType | battleTypeTrainer) && isKnockedOff;
 
     if (opponentCantSwapItems || cantSwapIfKnockedOff)
     {
@@ -3655,7 +3655,7 @@ static void HandleSetEffectStickyWeb(struct BattleCalcValues *cv, struct SetEffe
 
 static bool32 DoesRoarFail(enum BattlerId battlerAtk, enum BattlerId effectBattler)
 {
-    if (gBattleTypeFlags & BATTLE_TYPE_ARENA)
+    if (HasAnyBattleFlags(BATTLE_TYPE_ARENA))
         return TRUE;
 
     if (WILD_DOUBLE_BATTLE

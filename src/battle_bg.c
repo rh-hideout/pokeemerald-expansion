@@ -902,9 +902,9 @@ static u8 GetBattleEnvironmentOverride(void)
     {
         return gBattleEnvironment;
     }
-    else if (gBattleTypeFlags & (BATTLE_TYPE_FRONTIER | BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_EREADER_TRAINER))
+    else if (HasAnyBattleFlags(BATTLE_TYPE_FRONTIER | BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_EREADER_TRAINER))
         return BATTLE_ENVIRONMENT_FRONTIER;
-    else if (gBattleTypeFlags & BATTLE_TYPE_LEGENDARY)
+    else if (HasAnyBattleFlags(BATTLE_TYPE_LEGENDARY))
     {
         switch (GetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_SPECIES))
         {
@@ -918,7 +918,7 @@ static u8 GetBattleEnvironmentOverride(void)
             return gBattleEnvironment;
         }
     }
-    else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
+    else if (IsTrainerBattle())
     {
         u32 trainerClass = GetTrainerClassFromId(TRAINER_BATTLE_PARAM.opponentA);
         if (trainerClass == TRAINER_CLASS_LEADER)
@@ -938,13 +938,13 @@ void BattleInitBgsAndWindows(void)
     ResetBgsAndClearDma3BusyFlags(0);
     InitBgsFromTemplates(0, gBattleBgTemplates, ARRAY_COUNT(gBattleBgTemplates));
 
-    if (gBattleTypeFlags & BATTLE_TYPE_ARENA)
+    if (HasAnyBattleFlags(BATTLE_TYPE_ARENA))
     {
         gBattleScripting.windowsType = B_WIN_TYPE_ARENA;
         SetBgTilemapBuffer(1, gBattleAnimBgTilemapBuffer);
         SetBgTilemapBuffer(2, gBattleAnimBgTilemapBuffer);
     }
-    else if (IS_FRLG && (gBattleTypeFlags & (BATTLE_TYPE_FIRST_BATTLE | BATTLE_TYPE_CATCH_TUTORIAL)))
+    else if (IS_FRLG && (HasAnyBattleFlags(BATTLE_TYPE_FIRST_BATTLE | BATTLE_TYPE_CATCH_TUTORIAL)))
     {
         gBattleScripting.windowsType = B_WIN_TYPE_KANTO_TUTORIAL;
     }
@@ -974,8 +974,8 @@ void LoadBattleMenuWindowGfx(void)
     LoadUserWindowBorderGfx(2, 0x22, BG_PLTT_ID(1));
     LoadPalette(gBattleWindowTextPalette, BG_PLTT_ID(5), PLTT_SIZE_4BPP);
 
-    if ((gBattleTypeFlags & (BATTLE_TYPE_ARENA | BATTLE_TYPE_POKEDUDE))
-    || (IS_FRLG && (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE)))
+    if ((HasAnyBattleFlags(BATTLE_TYPE_ARENA | BATTLE_TYPE_POKEDUDE))
+    || (IS_FRLG && (HasAnyBattleFlags(BATTLE_TYPE_FIRST_BATTLE))))
     {
         // Load graphics for the Battle Arena referee's mid-battle messages.
         Menu_LoadStdPalAt(BG_PLTT_ID(7));
@@ -1009,7 +1009,7 @@ static void DrawLinkBattleParticipantPokeballs(u8 taskId, u8 multiplayerId, u8 b
     u16 pokeballStatuses = 0;
     u16 tiles[6];
 
-    if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
+    if (HasAnyBattleFlags(BATTLE_TYPE_MULTI))
     {
         if (gTasks[taskId].data[5] != 0)
         {
@@ -1075,7 +1075,7 @@ static void DrawLinkBattleVsScreenOutcomeText(void)
     {
         BattlePutTextOnWindow(gText_Draw, B_WIN_VS_OUTCOME_DRAW);
     }
-    else if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
+    else if (HasAnyBattleFlags(BATTLE_TYPE_MULTI))
     {
         if (gBattleOutcome == B_OUTCOME_WON)
         {
@@ -1159,7 +1159,7 @@ void InitLinkBattleVsScreen(u8 taskId)
     switch (gTasks[taskId].data[0])
     {
     case 0:
-        if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
+        if (HasAnyBattleFlags(BATTLE_TYPE_MULTI))
         {
             for (i = 0; i < MAX_LINK_PLAYERS; i++)
             {
@@ -1260,7 +1260,7 @@ void InitLinkBattleVsScreen(u8 taskId)
 
 void DrawBattleEntryBackground(void)
 {
-    if (gBattleTypeFlags & BATTLE_TYPE_LINK)
+    if (HasAnyBattleFlags(BATTLE_TYPE_LINK))
     {
         DecompressDataWithHeaderVram(gBattleVSFrame_Gfx, (void *)(BG_CHAR_ADDR(1)));
         DecompressDataWithHeaderVram(gVsLettersGfx, (void *)OBJ_VRAM0);
@@ -1277,7 +1277,7 @@ void DrawBattleEntryBackground(void)
         gBattle_BG2_Y = 0xFF5C;
         LoadCompressedSpriteSheetUsingHeap(&sVsLettersSpriteSheet);
     }
-    else if (gBattleTypeFlags & (BATTLE_TYPE_FRONTIER | BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_EREADER_TRAINER))
+    else if (HasAnyBattleFlags(BATTLE_TYPE_FRONTIER | BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_EREADER_TRAINER))
     {
         if (TestRunner_Battle_GetForcedEnvironment()
          && gBattleEnvironmentInfo[gBattleEnvironment].background.tilemap
@@ -1285,7 +1285,7 @@ void DrawBattleEntryBackground(void)
         {
             LoadBattleEnvironmentEntryGfx(gBattleEnvironment);
         }
-        else if (!(gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER) || gPartnerTrainerId > TRAINER_PARTNER(PARTNER_NONE))
+        else if (HasNoneOfBattleFlags(BATTLE_TYPE_INGAME_PARTNER) || gPartnerTrainerId > TRAINER_PARTNER(PARTNER_NONE))
         {
             LoadBattleEnvironmentEntryGfx(BATTLE_ENVIRONMENT_BUILDING);
         }
@@ -1301,13 +1301,13 @@ void DrawBattleEntryBackground(void)
             CopyBgTilemapBufferToVram(2);
         }
     }
-    else if (gBattleTypeFlags & BATTLE_TYPE_LEGENDARY)
+    else if (HasAnyBattleFlags(BATTLE_TYPE_LEGENDARY))
     {
         LoadBattleEnvironmentEntryGfx(GetBattleEnvironmentOverride());
     }
     else
     {
-        if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
+        if (IsTrainerBattle())
         {
             enum TrainerClassID trainerClass = GetTrainerClassFromId(TRAINER_BATTLE_PARAM.opponentA);
             if (trainerClass == TRAINER_CLASS_LEADER || trainerClass == TRAINER_CLASS_CHAMPION)

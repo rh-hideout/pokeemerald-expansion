@@ -1877,14 +1877,14 @@ void GetBattleTowerTrainerLanguage(u8 *dst, u16 trainerId)
     }
     else if (trainerId < TRAINER_RECORD_MIXING_APPRENTICE)
     {
-        if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
+        if (HasAnyBattleFlags(BATTLE_TYPE_RECORDED))
             *dst = GetRecordedBattleRecordMixFriendLanguage();
         else
             *dst = gSaveBlock2Ptr->frontier.towerRecords[trainerId - TRAINER_RECORD_MIXING_FRIEND].language;
     }
     else
     {
-        if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
+        if (HasAnyBattleFlags(BATTLE_TYPE_RECORDED))
             *dst = GetRecordedBattleApprenticeLanguage();
         else
             *dst = gSaveBlock2Ptr->apprentices[trainerId - TRAINER_RECORD_MIXING_APPRENTICE].language;
@@ -2034,7 +2034,7 @@ void TrySetLinkBattleTowerEnemyPartyLevel(void)
 {
     if (!TESTING)
     {
-        if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
+        if (HasAnyBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
         {
             u32 i;
             u8 enemyLevel = SetFacilityPtrsGetLevel();

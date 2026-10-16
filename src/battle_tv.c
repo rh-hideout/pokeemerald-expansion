@@ -157,7 +157,7 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
     u8 *perishCount;
     u16 *statStringId, *finishedMoveId;
 
-    if (!(gBattleTypeFlags & BATTLE_TYPE_LINK)
+    if (HasNoneOfBattleFlags(BATTLE_TYPE_LINK)
      && stringId != STRINGID_ITDOESNTAFFECT
      && stringId != STRINGID_NOTVERYEFFECTIVE
      && stringId != STRINGID_MOSTLYINEFFECTIVE)
@@ -191,7 +191,7 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
     {
     case STRINGID_ITDOESNTAFFECT:
         AddMovePoints(PTS_EFFECTIVENESS, moveSlot, 2, 0);
-        if (!(gBattleTypeFlags & BATTLE_TYPE_LINK))
+        if (HasNoneOfBattleFlags(BATTLE_TYPE_LINK))
             TrySetBattleSeminarShow();
         break;
     case STRINGID_NOTVERYEFFECTIVE:
@@ -199,7 +199,7 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
     case STRINGID_MOSTLYINEFFECTIVE:
     case STRINGID_MOSTLYINEFFECTIVETWOFOES:
         AddMovePoints(PTS_EFFECTIVENESS, moveSlot, 1, 0);
-        if (!(gBattleTypeFlags & BATTLE_TYPE_LINK) && GetMonData(defMon, MON_DATA_HP) != 0)
+        if (HasNoneOfBattleFlags(BATTLE_TYPE_LINK) && GetMonData(defMon, MON_DATA_HP) != 0)
             TrySetBattleSeminarShow();
         break;
     case STRINGID_SUPEREFFECTIVE:
@@ -585,7 +585,7 @@ void BattleTv_SetDataBasedOnMove(enum Move move, u16 weatherFlags)
     u32 atkSide, defSide;
     u8 moveSlot;
 
-    if (!(gBattleTypeFlags & BATTLE_TYPE_LINK))
+    if (HasNoneOfBattleFlags(BATTLE_TYPE_LINK))
         return;
 
     tvPtr = &gBattleStruct->tv;
@@ -634,7 +634,7 @@ void BattleTv_SetDataBasedOnAnimation(u8 animationId)
     struct BattleTv *tvPtr;
     u32 atkSide;
 
-    if (!(gBattleTypeFlags & BATTLE_TYPE_LINK))
+    if (HasNoneOfBattleFlags(BATTLE_TYPE_LINK))
         return;
 
     tvPtr = &gBattleStruct->tv;
@@ -662,7 +662,7 @@ void BattleTv_SetDataBasedOnAnimation(u8 animationId)
 // Helper following 4-party split in link multis
 static struct Pokemon *GetTvPartyMon(u32 scoreIndex, u32 side)
 {
-    if ((gBattleTypeFlags & BATTLE_TYPE_MULTI) && scoreIndex >= MULTI_PARTY_SIZE)
+    if ((HasAnyBattleFlags(BATTLE_TYPE_MULTI)) && scoreIndex >= MULTI_PARTY_SIZE)
     {
         enum BattleTrainer trainer = (side == B_SIDE_PLAYER) ? B_TRAINER_PARTNER : B_TRAINER_OPPONENT_B;
         return &gParties[trainer][scoreIndex - MULTI_PARTY_SIZE];
@@ -697,7 +697,7 @@ void TryPutLinkBattleTvShowOnAir(void)
             countPlayer++;
         if (GetMonData(&gParties[B_TRAINER_OPPONENT_A][i], MON_DATA_SPECIES) != SPECIES_NONE)
             countOpponent++;
-        if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
+        if (HasAnyBattleFlags(BATTLE_TYPE_MULTI))
         {
             if (GetMonData(&gParties[B_TRAINER_PARTNER][i], MON_DATA_SPECIES) != SPECIES_NONE)
                 countPlayer++;
@@ -706,7 +706,7 @@ void TryPutLinkBattleTvShowOnAir(void)
         }
     }
 
-    if (!(gBattleTypeFlags & BATTLE_TYPE_LINK) || countPlayer != countOpponent)
+    if (HasNoneOfBattleFlags(BATTLE_TYPE_LINK) || countPlayer != countOpponent)
         return;
 
     // Find the best mon on each side by total move points.
@@ -769,7 +769,7 @@ void TryPutLinkBattleTvShowOnAir(void)
     if (playerBestSum == 0 || move == MOVE_NONE)
         return;
 
-    if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
+    if (HasAnyBattleFlags(BATTLE_TYPE_MULTI))
     {
         // Only put on air if the best player-side mon was the local player's.
         // Score indices 0-2 belong to the front battler, 3-5 to the flank battler.
@@ -1268,7 +1268,7 @@ static void TrySetBattleSeminarShow(void)
     u16 powerOverride;
     u16 currMoveSaved;
 
-    if (gBattleTypeFlags & (BATTLE_TYPE_DOUBLE | BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
+    if (HasAnyBattleFlags(BATTLE_TYPE_DOUBLE | BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
         return;
     else if (!IsOnPlayerSide(gBattlerAttacker))
         return;
@@ -1278,7 +1278,7 @@ static void TrySetBattleSeminarShow(void)
         return;
     else if (gCurrentMove == MOVE_HIDDEN_POWER || gCurrentMove == MOVE_WEATHER_BALL)
         return;
-    else if (gBattleTypeFlags & (BATTLE_TYPE_PALACE | BATTLE_TYPE_PIKE | BATTLE_TYPE_PYRAMID))
+    else if (HasAnyBattleFlags(BATTLE_TYPE_PALACE | BATTLE_TYPE_PIKE | BATTLE_TYPE_PYRAMID))
         return;
     else if (IsBattleMoveStatus(gBattleMons[gBattlerAttacker].moves[gMoveSelectionCursor[gBattlerAttacker]]))
         return;
@@ -1397,7 +1397,7 @@ static bool8 ShouldCalculateDamage(enum Move move, s32 *dmg, u16 *powerOverride)
 
 void BattleTv_ClearExplosionFaintCause(void)
 {
-    if (gBattleTypeFlags & BATTLE_TYPE_LINK)
+    if (HasAnyBattleFlags(BATTLE_TYPE_LINK))
     {
         struct BattleTv *tvPtr = &gBattleStruct->tv;
 
@@ -1451,7 +1451,7 @@ static void AddPointsBasedOnWeather(u16 weatherFlags, enum Move move, enum MoveS
 static u32 GetTvPartyIndex(u32 battler)
 {
     u32 index = (u32)gBattlerPartyIndexes[battler];
-    if ((gBattleTypeFlags & BATTLE_TYPE_MULTI) && (GetBattlerPosition(battler) & BIT_FLANK))
+    if ((HasAnyBattleFlags(BATTLE_TYPE_MULTI)) && (GetBattlerPosition(battler) & BIT_FLANK))
         index += MULTI_PARTY_SIZE;
     return index;
 }

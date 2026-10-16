@@ -2,6 +2,7 @@
 #include "battle.h"
 #include "battle_anim.h"
 #include "battle_controllers.h"
+#include "battle_setup.h"
 #include "malloc.h"
 #include "pokemon.h"
 #include "trainer_hill.h"
@@ -34,9 +35,9 @@ void CloseMainBattleScreen(void)
 
 void AllocateBattleResources(void)
 {
-    if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_TOWER && gMapHeader.regionMapSectionId == MAPSEC_TRAINER_TOWER_2)
+    if (HasAnyBattleFlags(BATTLE_TYPE_TRAINER_TOWER) && gMapHeader.regionMapSectionId == MAPSEC_TRAINER_TOWER_2)
         InitTrainerTowerBattleStruct();
-    else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_HILL)
+    else if (HasAnyBattleFlags(BATTLE_TYPE_TRAINER_HILL))
         InitTrainerHillBattleStruct();
 
     gBattleStruct = AllocZeroed(sizeof(*gBattleStruct));
@@ -61,7 +62,7 @@ void AllocateBattleResources(void)
 
     AllocateBattleGfxResources();
 
-    if (gBattleTypeFlags & BATTLE_TYPE_SECRET_BASE)
+    if (HasAnyBattleFlags(BATTLE_TYPE_SECRET_BASE))
     {
         u16 currSecretBaseId = VarGet(VAR_CURRENT_SECRET_BASE);
         CreateSecretBaseEnemyParty(&gSaveBlock1Ptr->secretBases[currSecretBaseId]);
@@ -70,9 +71,9 @@ void AllocateBattleResources(void)
 
 void FreeBattleResources(void)
 {
-    if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_TOWER && gMapHeader.regionMapSectionId == MAPSEC_TRAINER_TOWER_2)
+    if (HasAnyBattleFlags(BATTLE_TYPE_TRAINER_TOWER) && gMapHeader.regionMapSectionId == MAPSEC_TRAINER_TOWER_2)
         FreeTrainerTowerBattleStruct();
-    else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_HILL)
+    else if (HasAnyBattleFlags(BATTLE_TYPE_TRAINER_HILL))
         FreeTrainerHillBattleStruct();
 
     memset(&gFieldTimers, 0, sizeof(struct FieldTimer));
@@ -273,4 +274,42 @@ struct Pokemon* GetBattlerMon(enum BattlerId battler)
     enum PartyMon index = gBattlerPartyIndexes[battler];
 
     return &GetBattlerParty(battler)[index];
+}
+
+bool8 IsTrainerBattle(void)
+{
+    return HasAnyBattleFlags(BATTLE_TYPE_TRAINER);
+}
+
+bool8 IsMultiBattle(void)
+{
+    if (gPartnerTrainerId != 0 && gMain.inBattle)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+bool8 IsTowerLinkMulti(void)
+{
+    return (HasAllBattleFlags(BATTLE_TYPE_TOWER_LINK_MULTI) && gMain.inBattle);
+}
+
+bool8 IsLinkMultiBattle(void)
+{
+    return HasAllBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_MULTI);
+}
+
+bool8 HasAnyBattleFlags(u32 flags)
+{
+    return (gBattleTypeFlags & flags) != 0;
+}
+
+bool8 HasAllBattleFlags(u32 flags)
+{
+    return (gBattleTypeFlags & flags) == flags;
+}
+
+bool8 HasNoneOfBattleFlags(u32 flags)
+{
+    return !HasAnyBattleFlags(flags);
 }

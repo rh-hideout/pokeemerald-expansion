@@ -1278,7 +1278,7 @@ static enum CancelerResult CancelerMoveFailure(struct BattleCalcValues *cv)
             battleScript = BattleScript_ButItFailed;
         break;
     case EFFECT_FOLLOW_ME:
-        if (B_UPDATED_MOVE_DATA >= GEN_8 && !(gBattleTypeFlags & BATTLE_TYPE_DOUBLE))
+        if (B_UPDATED_MOVE_DATA >= GEN_8 && HasNoneOfBattleFlags(BATTLE_TYPE_DOUBLE))
             battleScript = BattleScript_ButItFailed;
         break;
     case EFFECT_LAST_RESORT:
@@ -1341,12 +1341,12 @@ static enum CancelerResult CancelerMoveFailure(struct BattleCalcValues *cv)
             battleScript = BattleScript_ButItFailed;
         break;
     case EFFECT_TELEPORT:
-        if ((!(gBattleTypeFlags & BATTLE_TYPE_TRAINER) && !IsOnPlayerSide(cv->battlerAtk))
+        if ((!(IsTrainerBattle()) && !IsOnPlayerSide(cv->battlerAtk))
          || GetConfig(B_TELEPORT_BEHAVIOR) <= GEN_7)
         {
             bool32 canRun = IsRunningFromBattleImpossible(cv->battlerAtk);
 
-            if (gBattleTypeFlags & BATTLE_TYPE_TRAINER
+            if (IsTrainerBattle()
              || canRun == BATTLE_RUN_FORBIDDEN
              || IsCommanderActive(cv->battlerAtk)
              || IsOnPlayerSide(cv->battlerAtk))
@@ -2496,7 +2496,7 @@ static bool32 ShouldSkipFRLGAccuracyCheck(void)
     if (!IS_FRLG)
         return FALSE;
 
-    if ((gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE
+    if ((HasAnyBattleFlags(BATTLE_TYPE_FIRST_BATTLE)
      && (!BtlCtrl_OakOldMan_TestState2Flag(1) || !BtlCtrl_OakOldMan_TestState2Flag(2))
      && GetMovePower(gCurrentMove) != 0
      && GetBattlerSide(gBattlerAttacker) == B_SIDE_PLAYER))
@@ -2504,7 +2504,7 @@ static bool32 ShouldSkipFRLGAccuracyCheck(void)
         return TRUE;
     }
 
-    if (gBattleTypeFlags & BATTLE_TYPE_POKEDUDE)
+    if (HasAnyBattleFlags(BATTLE_TYPE_POKEDUDE))
         return TRUE;
 
     return FALSE;
@@ -4973,7 +4973,7 @@ static enum MoveEndResult MoveEndMoveBlock(struct BattleCalcValues *cv)
         case EFFECT_KNOCK_OFF:
             if (gBattleMons[battlerDef].item != ITEM_NONE
              && IsBattlerTurnDamaged(battlerDef, EXCLUDING_SUBSTITUTES)
-             && !(B_KNOCK_OFF_REMOVAL >= GEN_5 && side == B_SIDE_PLAYER && !(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
+             && !(B_KNOCK_OFF_REMOVAL >= GEN_5 && side == B_SIDE_PLAYER && !(IsTrainerBattle()))
              && CanBattlerGetOrLoseItem(battlerDef, cv->battlerAtk, gBattleMons[battlerDef].item)
              && !NoAliveMonsForEitherParty())
             {
@@ -5058,7 +5058,7 @@ static enum MoveEndResult MoveEndMoveBlock(struct BattleCalcValues *cv)
             }
             else
             {
-                bool32 addStolenWildItemToBag = GetConfig(B_STEAL_WILD_ITEMS) >= GEN_9 && !(gBattleTypeFlags & (BATTLE_TYPE_TRAINER | BATTLE_TYPE_PALACE));
+                bool32 addStolenWildItemToBag = GetConfig(B_STEAL_WILD_ITEMS) >= GEN_9 && HasNoneOfBattleFlags(BATTLE_TYPE_TRAINER | BATTLE_TYPE_PALACE);
                 StealTargetItem(cv->battlerAtk, battlerDef, ITEM_NONE, addStolenWildItemToBag);  // Attacker steals target item
 
                 struct LostItem *lostItem = GetLostItemState(GetBattlerTrainer(battlerDef), gBattlerPartyIndexes[battlerDef]);
@@ -5072,7 +5072,7 @@ static enum MoveEndResult MoveEndMoveBlock(struct BattleCalcValues *cv)
                     gBattleMons[cv->battlerAtk].item = gLastUsedItem;
                 }
 
-                if (B_RETURN_STOLEN_NPC_ITEMS >= GEN_5 && gBattleTypeFlags & BATTLE_TYPE_TRAINER)
+                if (B_RETURN_STOLEN_NPC_ITEMS >= GEN_5 && IsTrainerBattle())
                 {
                     lostItem->stolen = TRUE;
                 }
@@ -5361,7 +5361,7 @@ static bool32 TryRedCard(enum BattlerId battlerAtk, enum BattlerId redCardBattle
      || gBattleStruct->redCardActivated
      || !IsBattlerTurnDamaged(redCardBattler, EXCLUDING_SUBSTITUTES)
      || moveEffect == EFFECT_FUTURE_SIGHT
-     || gBattleTypeFlags & BATTLE_TYPE_ARENA
+     || HasAnyBattleFlags(BATTLE_TYPE_ARENA)
      || !HasBattlerViablePartyMonsForSwitch(battlerAtk))
         return FALSE;
 
@@ -5588,7 +5588,7 @@ static enum MoveEndResult MoveEndMoveSwitchUser(struct BattleCalcValues *cv)
         }
         break;
     case EFFECT_TELEPORT:
-        if (!(gBattleTypeFlags & BATTLE_TYPE_TRAINER) && !IsOnPlayerSide(cv->battlerAtk))
+        if (!(IsTrainerBattle()) && !IsOnPlayerSide(cv->battlerAtk))
         {
             result = MOVEEND_RESULT_RUN_SCRIPT;
             BattleScriptCall(BattleScript_Teleport);
@@ -5697,8 +5697,8 @@ static enum MoveEndResult MoveEndPickpocket(struct BattleCalcValues *cv)
                         PREPARE_MON_NICK_WITH_PREFIX_LOWER_BUFFER(gBattleTextBuff2, cv->battlerAtk, originalAttackerPartyId);
 
                         if (B_TRAINERS_KNOCK_OFF_ITEMS == TRUE
-                         && gBattleTypeFlags & BATTLE_TYPE_TRAINER
-                         && !(gBattleTypeFlags & BATTLE_TYPE_FRONTIER)
+                         && IsTrainerBattle()
+                         && HasNoneOfBattleFlags(BATTLE_TYPE_FRONTIER)
                          && IsOnPlayerSide(cv->battlerAtk)
                          && itemToSteal == gBattleStruct->itemLost[GetBattlerTrainer(cv->battlerAtk)][originalAttackerPartyId].originalItem)
                             gBattleStruct->itemLost[GetBattlerTrainer(cv->battlerAtk)][originalAttackerPartyId].stolen = TRUE;
@@ -6004,7 +6004,7 @@ static enum MoveEndResult MoveEndClearBits(struct BattleCalcValues *cv)
     if (cv->move == MOVE_STRUGGLE)
         IncrementGameStat(GAME_STAT_USED_STRUGGLE);
 
-    if (gBattleTypeFlags & BATTLE_TYPE_ARENA)
+    if (HasAnyBattleFlags(BATTLE_TYPE_ARENA))
         BattleArena_AddSkillPoints(cv->battlerAtk);
 
     if (ShouldSetStompingTantrumTimer())

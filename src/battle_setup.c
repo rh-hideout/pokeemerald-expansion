@@ -492,7 +492,7 @@ static void DoBattlePikeWildBattle(void)
 static void DoTrainerBattle(void)
 {
     CreateNPCTrainerParty(&gParties[B_TRAINER_OPPONENT_A][0], TRAINER_BATTLE_PARAM.opponentA);
-    if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS && !BATTLE_TWO_VS_ONE_OPPONENT)
+    if (HasAnyBattleFlags(BATTLE_TYPE_TWO_OPPONENTS) && !BATTLE_TWO_VS_ONE_OPPONENT)
         CreateNPCTrainerParty(&gParties[B_TRAINER_OPPONENT_B][0], TRAINER_BATTLE_PARAM.opponentB);
     CreateBattleStartTask(GetTrainerBattleTransition(), 0);
     IncrementGameStat(GAME_STAT_TOTAL_BATTLES);
@@ -1091,6 +1091,7 @@ void InitTrainerBattleParameter(void)
 {
     memset(gTrainerBattleParameter.data, 0, sizeof(TrainerBattleParameter));
     sTrainerBattleEndScript = NULL;
+    gPartnerTrainerId = TRAINER_NONE;
 }
 
 void TrainerBattleLoadArgs(const u8 *data)
@@ -1522,7 +1523,7 @@ void BattleSetup_StartTrainerBattle(void)
 
 static void CB2_EndDebugBattle(void)
 {
-    if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
+    if (HasAnyBattleFlags(BATTLE_TYPE_INGAME_PARTNER))
     {
         for (u32 i = 0; i < 3; i++)
         {
@@ -2004,7 +2005,7 @@ static void ClearTrainerWantRematchState(const struct RematchTrainer *table, u16
 void ClearCurrentTrainerWantRematchVsSeeker(void)
 {
 #if FREE_MATCH_CALL == FALSE
-    if ((gBattleTypeFlags & BATTLE_TYPE_TRAINER) && FlagGet(I_VS_SEEKER_CHARGING) && (I_VS_SEEKER_CHARGING != 0))
+    if ((IsTrainerBattle()) && FlagGet(I_VS_SEEKER_CHARGING) && (I_VS_SEEKER_CHARGING != 0))
     {
         for (u32 i = 0; i < REMATCH_TABLE_ENTRIES; i++)
         {
@@ -2143,7 +2144,7 @@ bool8 IsTrainerReadyForRematch(void)
 
 static void HandleRematchVarsOnBattleEnd(void)
 {
-    if ((gBattleTypeFlags & BATTLE_TYPE_TRAINER) && (I_VS_SEEKER_CHARGING != 0))
+    if ((IsTrainerBattle()) && (I_VS_SEEKER_CHARGING != 0))
         ClearRematchMovementByTrainerId();
 
     ClearTrainerWantRematchState(gRematchTable, TRAINER_BATTLE_PARAM.opponentA);
@@ -2224,7 +2225,7 @@ void CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Traine
     ZeroPartyMons(party);
 
     monsCount = trainer->partySize;
-    if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS && (B_MULTI_HALF_TEAMS || trainer->multiTeamSize == MULTI_TEAM_SIZE_HALF))
+    if (HasAnyBattleFlags(BATTLE_TYPE_TWO_OPPONENTS) && (B_MULTI_HALF_TEAMS || trainer->multiTeamSize == MULTI_TEAM_SIZE_HALF))
     {
         if (monsCount > PARTY_SIZE / 2)
             monsCount = PARTY_SIZE / 2;

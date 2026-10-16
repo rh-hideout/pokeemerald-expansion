@@ -123,7 +123,7 @@ static void Intro_WaitForShinyAnimAndHealthbox(enum BattlerId battler)
 
     if (GetBattlerPosition(battler) == B_POSITION_PLAYER_LEFT)
     {
-        if (!IsDoubleBattle() || (IsDoubleBattle() && (gBattleTypeFlags & BATTLE_TYPE_MULTI)))
+        if (!IsDoubleBattle() || (IsDoubleBattle() && (HasAnyBattleFlags(BATTLE_TYPE_MULTI))))
         {
             if (gSprites[gHealthboxSpriteIds[battler]].callback == SpriteCallbackDummy)
                 healthboxAnimDone = TRUE;
@@ -158,7 +158,7 @@ static void Intro_WaitForShinyAnimAndHealthbox(enum BattlerId battler)
     }
     else
     {
-        if (!IsDoubleBattle() || (IsDoubleBattle() && (gBattleTypeFlags & BATTLE_TYPE_MULTI)))
+        if (!IsDoubleBattle() || (IsDoubleBattle() && (HasAnyBattleFlags(BATTLE_TYPE_MULTI))))
         {
             if (gSprites[gHealthboxSpriteIds[battler]].callback == SpriteCallbackDummy)
                 healthboxAnimDone = TRUE;
@@ -203,7 +203,7 @@ static void Intro_TryShinyAnimShowHealthbox(enum BattlerId battler)
     {
         if (!gBattleSpritesDataPtr->healthBoxesData[battler].healthboxSlideInStarted)
         {
-            if (IsDoubleBattle() && !(gBattleTypeFlags & BATTLE_TYPE_MULTI))
+            if (IsDoubleBattle() && HasNoneOfBattleFlags(BATTLE_TYPE_MULTI))
             {
                 UpdateHealthboxAttribute(gHealthboxSpriteIds[GetPartnerBattler(battler)], GetBattlerMon(GetPartnerBattler(battler)), HEALTHBOX_ALL);
                 StartHealthboxSlideIn(GetPartnerBattler(battler));
@@ -223,7 +223,7 @@ static void Intro_TryShinyAnimShowHealthbox(enum BattlerId battler)
     {
         if (!gBattleSpritesDataPtr->healthBoxesData[battler].bgmRestored)
         {
-            if ((gBattleTypeFlags & BATTLE_TYPE_LINK) && (gBattleTypeFlags & BATTLE_TYPE_MULTI))
+            if ((HasAnyBattleFlags(BATTLE_TYPE_LINK)) && (HasAnyBattleFlags(BATTLE_TYPE_MULTI)))
             {
                 if (GetBattlerPosition(battler) == B_POSITION_PLAYER_LEFT)
                     m4aMPlayContinue(&gMPlayInfo_BGM);
@@ -241,7 +241,7 @@ static void Intro_TryShinyAnimShowHealthbox(enum BattlerId battler)
     if (bgmRestored && gSprites[gBattleControllerData[battler]].callback == SpriteCallbackDummy
         && gSprites[gBattlerSpriteIds[battler]].callback == SpriteCallbackDummy)
     {
-        if (IsDoubleBattle() && !(gBattleTypeFlags & BATTLE_TYPE_MULTI))
+        if (IsDoubleBattle() && HasNoneOfBattleFlags(BATTLE_TYPE_MULTI))
             DestroySprite(&gSprites[gBattleControllerData[GetPartnerBattler(battler)]]);
 
         DestroySprite(&gSprites[gBattleControllerData[battler]]);
@@ -255,7 +255,7 @@ static void Intro_TryShinyAnimShowHealthbox(enum BattlerId battler)
 void RecordedPlayerBufferExecCompleted(enum BattlerId battler)
 {
     gBattlerControllerFuncs[battler] = RecordedPlayerBufferRunCommand;
-    if (gBattleTypeFlags & BATTLE_TYPE_LINK)
+    if (HasAnyBattleFlags(BATTLE_TYPE_LINK))
     {
         u8 playerId = GetMultiplayerId();
 
@@ -277,7 +277,7 @@ static void RecordedPlayerHandleDrawTrainerPic(enum BattlerId battler)
     if (TESTING)
     {
         trainerPicId = TRAINER_PIC_BRENDAN;
-        if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
+        if (HasAnyBattleFlags(BATTLE_TYPE_INGAME_PARTNER))
             xPos = 32;
         else
             xPos = 80;
@@ -286,9 +286,9 @@ static void RecordedPlayerHandleDrawTrainerPic(enum BattlerId battler)
     else
     {
         enum Gender gender;
-        if (gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK)
+        if (HasAnyBattleFlags(BATTLE_TYPE_RECORDED_LINK))
         {
-            if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
+            if (HasAnyBattleFlags(BATTLE_TYPE_MULTI))
                 gender = GetBattlerLinkPlayerGender(battler);
             else
                 gender = gLinkPlayers[gRecordedBattleMultiplayerId].gender;
@@ -297,7 +297,7 @@ static void RecordedPlayerHandleDrawTrainerPic(enum BattlerId battler)
             gender = gLinkPlayers[0].gender;
 
         trainerPicId = GetPlayerTrainerPic(gender, GAME_VERSION);
-        if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
+        if (HasAnyBattleFlags(BATTLE_TYPE_MULTI))
         {
             if ((GetBattlerPosition(battler) & BIT_FLANK) != 0) // second mon
                 xPos = 90;
@@ -305,7 +305,7 @@ static void RecordedPlayerHandleDrawTrainerPic(enum BattlerId battler)
                 xPos = 32;
 
             // !TESTING added as otherwise first test battle sprite is positioned incorrectly
-            if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER && !TESTING)
+            if (HasAnyBattleFlags(BATTLE_TYPE_INGAME_PARTNER) && !TESTING)
             {
                 xPos = 90;
                 yPos = 80;
@@ -322,7 +322,7 @@ static void RecordedPlayerHandleDrawTrainerPic(enum BattlerId battler)
         }
     }
 
-    if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER && !TESTING)
+    if (HasAnyBattleFlags(BATTLE_TYPE_INGAME_PARTNER) && !TESTING)
         isFrontPic = TRUE;
     else
         isFrontPic = FALSE;
@@ -346,7 +346,7 @@ static void ChooseActionInBattlePalace(enum BattlerId battler)
 
 static void RecordedPlayerHandleChooseAction(enum BattlerId battler)
 {
-    if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
+    if (HasAnyBattleFlags(BATTLE_TYPE_PALACE))
     {
         gBattlerControllerFuncs[battler] = ChooseActionInBattlePalace;
     }
@@ -359,7 +359,7 @@ static void RecordedPlayerHandleChooseAction(enum BattlerId battler)
 
 static void RecordedPlayerHandleChooseMove(enum BattlerId battler)
 {
-    if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
+    if (HasAnyBattleFlags(BATTLE_TYPE_PALACE))
     {
         BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, ChooseMoveAndTargetInBattlePalace(battler));
     }
@@ -416,7 +416,7 @@ static void RecordedPlayerHandleIntroTrainerBallThrow(enum BattlerId battler)
     const u16 *trainerPal;
     enum Gender gender;
 
-    if (gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK)
+    if (HasAnyBattleFlags(BATTLE_TYPE_RECORDED_LINK))
         gender = gLinkPlayers[GetBattlerMultiplayerId(battler)].gender;
     else
         gender = gSaveBlock2Ptr->playerGender;

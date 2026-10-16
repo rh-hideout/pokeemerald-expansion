@@ -566,7 +566,7 @@ void HandleAction_UseMove(void)
     gMultiHitCounter = 0;
     gBattlerTarget = gBattleStruct->moveTarget[gBattlerAttacker];
 
-    if (gBattleTypeFlags & BATTLE_TYPE_PALACE && gProtectStructs[gBattlerAttacker].palaceUnableToUseMove)
+    if (HasAnyBattleFlags(BATTLE_TYPE_PALACE) && gProtectStructs[gBattlerAttacker].palaceUnableToUseMove)
     {
         // Battle Palace, select battle script for failure to use move
         if (!IsBattlerAlive(gBattlerAttacker))
@@ -591,7 +591,7 @@ void HandleAction_UseMove(void)
         gBattlescriptCurrInstr = BattleScript_MoveResolution;
     }
 
-    if (gBattleTypeFlags & BATTLE_TYPE_ARENA)
+    if (HasAnyBattleFlags(BATTLE_TYPE_ARENA))
         BattleArena_AddMindPoints(gBattlerAttacker);
 
     for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
@@ -706,7 +706,7 @@ bool32 TryRunFromBattle(enum BattlerId battler)
         if (GetBattlerSide(battler) == B_SIDE_PLAYER)
             effect = TRUE;
     }
-    else if (gBattleTypeFlags & (BATTLE_TYPE_FRONTIER | BATTLE_TYPE_TRAINER_HILL) && gBattleTypeFlags & BATTLE_TYPE_TRAINER)
+    else if (HasAnyBattleFlags(BATTLE_TYPE_FRONTIER | BATTLE_TYPE_TRAINER_HILL) && IsTrainerBattle())
     {
         effect = TRUE;
     }
@@ -753,7 +753,7 @@ bool32 TryRunFromBattle(enum BattlerId battler)
 void HandleAction_Run(void)
 {
     gBattlerAttacker = gBattlerByTurnOrder[gCurrentTurnActionNumber];
-    if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
+    if (HasAnyBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
     {
         gCurrentTurnActionNumber = gBattlersCount;
 
@@ -1150,7 +1150,7 @@ static void UNUSED MarkAllBattlersForControllerExec(void)
 {
     enum BattlerId i;
 
-    if (gBattleTypeFlags & BATTLE_TYPE_LINK)
+    if (HasAnyBattleFlags(BATTLE_TYPE_LINK))
     {
         for (i = 0; i < gBattlersCount; i++)
             MarkBattleControllerMessageOutboundOverLink(i);
@@ -1164,7 +1164,7 @@ static void UNUSED MarkAllBattlersForControllerExec(void)
 
 bool32 IsBattlerMarkedForControllerExec(enum BattlerId battler)
 {
-    if (gBattleTypeFlags & BATTLE_TYPE_LINK)
+    if (HasAnyBattleFlags(BATTLE_TYPE_LINK))
         return IsBattleControllerMessageSynchronizedOverLink(battler);
     else
         return IsBattleControllerActiveOnLocal(battler);
@@ -1172,7 +1172,7 @@ bool32 IsBattlerMarkedForControllerExec(enum BattlerId battler)
 
 void MarkBattlerForControllerExec(enum BattlerId battler)
 {
-    if (gBattleTypeFlags & BATTLE_TYPE_LINK)
+    if (HasAnyBattleFlags(BATTLE_TYPE_LINK))
         MarkBattleControllerMessageOutboundOverLink(battler);
     else
         MarkBattleControllerActiveOnLocal(battler);
@@ -1409,7 +1409,7 @@ static bool32 SetCantSelectScript(enum BattlerId battler, enum Move move, const 
 {
     gCurrentMove = move;
 
-    if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
+    if (HasAnyBattleFlags(BATTLE_TYPE_PALACE))
     {
         gPalaceSelectionBattleScripts[battler] = palaceScript;
         gProtectStructs[battler].palaceUnableToUseMove = TRUE;
@@ -1460,7 +1460,7 @@ u32 TrySetCantSelectMoveBattleScript(enum BattlerId battler)
     if (dynamaxBypassCheck && zMoveBypassCheck && move == gLastMoves[battler] && move != MOVE_STRUGGLE && (gBattleMons[battler].volatiles.torment == TRUE))
     {
         CancelMultiTurnMoves(battler);
-        if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
+        if (HasAnyBattleFlags(BATTLE_TYPE_PALACE))
         {
             gPalaceSelectionBattleScripts[battler] = BattleScript_SelectingTormentedMoveInPalace;
             gProtectStructs[battler].palaceUnableToUseMove = TRUE;
@@ -1593,7 +1593,7 @@ u32 TrySetCantSelectMoveBattleScript(enum BattlerId battler)
 
     if (gBattleMons[battler].pp[moveId] == 0)
     {
-        if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
+        if (HasAnyBattleFlags(BATTLE_TYPE_PALACE))
         {
             gProtectStructs[battler].palaceUnableToUseMove = TRUE;
         }
@@ -1606,7 +1606,7 @@ u32 TrySetCantSelectMoveBattleScript(enum BattlerId battler)
 
     if (moveEffect == EFFECT_PLACEHOLDER)
     {
-        if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
+        if (HasAnyBattleFlags(BATTLE_TYPE_PALACE))
         {
             gPalaceSelectionBattleScripts[battler] = BattleScript_SelectingNotAllowedPlaceholderInPalace;
             gProtectStructs[battler].palaceUnableToUseMove = TRUE;
@@ -1771,7 +1771,7 @@ u32 GetBattlerAffectionHearts(enum BattlerId battler)
         return AFFECTION_NO_HEARTS;
 
     if (gSpeciesInfo[gBattleMons[battler].species].isMegaEvolution
-          || (gBattleTypeFlags & (BATTLE_TYPE_EREADER_TRAINER
+          || (HasAnyBattleFlags(BATTLE_TYPE_EREADER_TRAINER
                                 | BATTLE_TYPE_FRONTIER
                                 | BATTLE_TYPE_LINK
                                 | BATTLE_TYPE_RECORDED_LINK
@@ -1828,7 +1828,7 @@ bool32 IsAbilityAndRecord(enum BattlerId battler, enum Ability battlerAbility, e
 
 bool32 HandleFaintedMonActions(void)
 {
-    if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
+    if (HasAnyBattleFlags(BATTLE_TYPE_SAFARI))
         return FALSE;
 
     do
@@ -1962,7 +1962,7 @@ bool32 HasNoMonsToSwitch(enum BattlerId battler, enum PartyMon partyIdBattlerOn1
         }
         return (i == lastId);
     }
-    else if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
+    else if (HasAnyBattleFlags(BATTLE_TYPE_INGAME_PARTNER))
     {
         if (!isPlayerSide && WILD_DOUBLE_BATTLE)
         {
@@ -1993,7 +1993,7 @@ bool32 HasNoMonsToSwitch(enum BattlerId battler, enum PartyMon partyIdBattlerOn1
             return (i == lastId);
         }
     }
-    else if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
+    else if (HasAnyBattleFlags(BATTLE_TYPE_MULTI))
     {
         for (i = 0; i < lastId; i++)
         {
@@ -2002,7 +2002,7 @@ bool32 HasNoMonsToSwitch(enum BattlerId battler, enum PartyMon partyIdBattlerOn1
         }
         return (i == lastId);
     }
-    else if ((gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS) && !isPlayerSide)
+    else if ((HasAnyBattleFlags(BATTLE_TYPE_TWO_OPPONENTS)) && !isPlayerSide)
     {
         for (i = 0; i < lastId; i++)
         {
@@ -2609,7 +2609,7 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
 {
     bool32 effect = FALSE;
 
-    if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
+    if (HasAnyBattleFlags(BATTLE_TYPE_SAFARI))
         return FALSE;
 
     switch (caseId)
@@ -2925,7 +2925,7 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
         }
         break;
     case FIELD_EFFECT_OVERWORLD_WEATHER:
-        if (!(gBattleTypeFlags & BATTLE_TYPE_RECORDED))
+        if (HasNoneOfBattleFlags(BATTLE_TYPE_RECORDED))
         {
             switch (GetCurrentWeather())
             {
@@ -3066,7 +3066,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
     u32 partner = 0;
     enum Species speciesForm = SPECIES_NONE;
 
-    if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
+    if (HasAnyBattleFlags(BATTLE_TYPE_SAFARI))
         return 0;
 
     if (gBattlerAttacker >= gBattlersCount)
@@ -3780,7 +3780,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                 }
                 break;
             case ABILITY_BALL_FETCH:
-                if (!(gBattleTypeFlags & BATTLE_TYPE_RAID)
+                if (HasNoneOfBattleFlags(BATTLE_TYPE_RAID)
                  && gBattleMons[battler].item == ITEM_NONE
                  && gBattleResults.catchAttempts[ItemIdToBallId(gLastUsedBall)] >= 1
                  && !gHasFetchedBall)
@@ -5874,16 +5874,16 @@ enum Obedience GetAttackerObedienceForAction(void)
     u8 obedienceLevel = 0;
     u8 levelReferenced;
 
-    if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
+    if (HasAnyBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
         return OBEYS;
     if (BattlerHasAi(gBattlerAttacker))
         return OBEYS;
 
-    if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER && GetBattlerPosition(gBattlerAttacker) == B_POSITION_PLAYER_RIGHT)
+    if (HasAnyBattleFlags(BATTLE_TYPE_INGAME_PARTNER) && GetBattlerPosition(gBattlerAttacker) == B_POSITION_PLAYER_RIGHT)
         return OBEYS;
-    if (gBattleTypeFlags & BATTLE_TYPE_FRONTIER)
+    if (HasAnyBattleFlags(BATTLE_TYPE_FRONTIER))
         return OBEYS;
-    if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
+    if (HasAnyBattleFlags(BATTLE_TYPE_RECORDED))
         return OBEYS;
     if (B_OBEDIENCE_MECHANICS < GEN_8 && !IsOtherTrainer(gBattleMons[gBattlerAttacker].otId, gBattleMons[gBattlerAttacker].otName))
         return OBEYS;
@@ -6990,7 +6990,7 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
     case HOLD_EFFECT_SOUL_DEW:
         if ((gBattleMons[battlerAtk].species == SPECIES_LATIAS || gBattleMons[battlerAtk].species == SPECIES_LATIOS)
             && ((B_SOUL_DEW_BOOST >= GEN_7 && (moveType == TYPE_PSYCHIC || moveType == TYPE_DRAGON))
-             || (B_SOUL_DEW_BOOST < GEN_7 && !(gBattleTypeFlags & BATTLE_TYPE_FRONTIER) && IsBattleMoveSpecial(move))))
+             || (B_SOUL_DEW_BOOST < GEN_7 && HasNoneOfBattleFlags(BATTLE_TYPE_FRONTIER) && IsBattleMoveSpecial(move))))
             modifier = uq4_12_multiply(modifier, holdEffectModifier);
         break;
     case HOLD_EFFECT_TYPE_POWER:
@@ -7512,7 +7512,7 @@ static inline u32 CalcDefenseStat(struct DamageContext *ctx)
     case HOLD_EFFECT_SOUL_DEW:
         if (B_SOUL_DEW_BOOST < GEN_7
          && (gBattleMons[battlerDef].species == SPECIES_LATIAS || gBattleMons[battlerDef].species == SPECIES_LATIOS)
-         && !(gBattleTypeFlags & BATTLE_TYPE_FRONTIER)
+         && HasNoneOfBattleFlags(BATTLE_TYPE_FRONTIER)
          && !usesDefStat)
             modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
         break;
@@ -8273,8 +8273,8 @@ s32 CalcCritChanceStageGen1(struct DamageContext *ctx)
 static bool32 IsCriticalHit(struct DamageContext *ctx)
 {
 
-    if ((gBattleTypeFlags & (BATTLE_TYPE_CATCH_TUTORIAL | BATTLE_TYPE_POKEDUDE))
-    || ((gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE) && (!IS_FRLG || !BtlCtrl_OakOldMan_TestState2Flag(1))))
+    if ((HasAnyBattleFlags(BATTLE_TYPE_CATCH_TUTORIAL | BATTLE_TYPE_POKEDUDE))
+    || ((HasAnyBattleFlags(BATTLE_TYPE_FIRST_BATTLE)) && (!IS_FRLG || !BtlCtrl_OakOldMan_TestState2Flag(1))))
         return FALSE;
     if (ctx->isSelfInflicted)
         return FALSE;
@@ -8302,7 +8302,7 @@ static bool32 IsCriticalHit(struct DamageContext *ctx)
 
     // Counter for IF_CRITICAL_HITS_GE evolution condition.
     if (isCrit && IsOnPlayerSide(ctx->battlerAtk)
-     && !(gBattleTypeFlags & BATTLE_TYPE_MULTI && GetBattlerPosition(ctx->battlerAtk) == B_POSITION_PLAYER_LEFT))
+     && HasNoneOfBattleFlags(BATTLE_TYPE_MULTI) && GetBattlerPosition(ctx->battlerAtk) == B_POSITION_PLAYER_LEFT)
         gPartyCriticalHits[gBattlerPartyIndexes[ctx->battlerAtk]]++;
 
     gSpecialStatuses[ctx->battlerDef].criticalHit = isCrit;
@@ -8758,9 +8758,9 @@ s32 GetStealthHazardDamage(enum TypeSideHazard hazardType, enum BattlerId battle
 bool32 IsPartnerMonFromSameTrainer(enum BattlerId battler)
 {
     if (!IsOnPlayerSide(battler))
-        return !(gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS);
+        return HasNoneOfBattleFlags(BATTLE_TYPE_TWO_OPPONENTS);
     else
-        return !(gBattleTypeFlags & BATTLE_TYPE_MULTI);
+        return HasNoneOfBattleFlags(BATTLE_TYPE_MULTI);
 }
 
 bool32 DoesSpeciesUseHoldItemToChangeForm(enum Species species, enum Item heldItemId)
@@ -8798,7 +8798,7 @@ bool32 CanMegaEvolve(enum BattlerId battler)
 
     // Check if Player has a Mega Ring.
     if (!TESTING
-        && (position == B_POSITION_PLAYER_LEFT || (!(gBattleTypeFlags & BATTLE_TYPE_MULTI) && position == B_POSITION_PLAYER_RIGHT))
+        && (position == B_POSITION_PLAYER_LEFT || (HasNoneOfBattleFlags(BATTLE_TYPE_MULTI) && position == B_POSITION_PLAYER_RIGHT))
         && !CheckBagHasItem(ITEM_MEGA_RING, 1))
         return FALSE;
 
@@ -8839,7 +8839,7 @@ bool32 CanUltraBurst(enum BattlerId battler)
 
     // Check if Player has a Z-Ring
     if (!TESTING && (position == B_POSITION_PLAYER_LEFT
-        || (!(gBattleTypeFlags & BATTLE_TYPE_MULTI) && position == B_POSITION_PLAYER_RIGHT))
+        || (HasNoneOfBattleFlags(BATTLE_TYPE_MULTI) && position == B_POSITION_PLAYER_RIGHT))
         && !CheckBagHasItem(ITEM_Z_POWER_RING, 1))
         return FALSE;
 
@@ -9318,11 +9318,11 @@ bool32 ShouldGetStatBadgeBoost(u16 badgeFlag, enum BattlerId battler)
 {
     if (GetConfig(B_BADGE_BOOST) <= GEN_3 && badgeFlag != 0)
     {
-        if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_EREADER_TRAINER | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_FRONTIER))
+        if (HasAnyBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_EREADER_TRAINER | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_FRONTIER))
             return FALSE;
         else if (!IsOnPlayerSide(battler))
             return FALSE;
-        else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER && TRAINER_BATTLE_PARAM.opponentA == TRAINER_SECRET_BASE)
+        else if (IsTrainerBattle() && TRAINER_BATTLE_PARAM.opponentA == TRAINER_SECRET_BASE)
             return FALSE;
         else if (FlagGet(badgeFlag))
             return TRUE;
@@ -9615,28 +9615,26 @@ bool32 CanStealItem(enum BattlerId battlerStealing, enum BattlerId battlerItem, 
 {
     enum BattleSide stealerSide = GetBattlerSide(battlerStealing);
 
-    if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_HILL)
+    if (HasAnyBattleFlags(BATTLE_TYPE_TRAINER_HILL))
         return FALSE;
 
     // Check if the battler trying to steal should be able to
     if (stealerSide == B_SIDE_OPPONENT
-        && !(gBattleTypeFlags &
-             (BATTLE_TYPE_EREADER_TRAINER
+        && HasNoneOfBattleFlags(BATTLE_TYPE_EREADER_TRAINER
               | BATTLE_TYPE_FRONTIER
               | BATTLE_TYPE_LINK
               | BATTLE_TYPE_RECORDED_LINK
               | BATTLE_TYPE_SECRET_BASE
               | (B_TRAINERS_KNOCK_OFF_ITEMS == TRUE ? BATTLE_TYPE_TRAINER : 0)
-              )))
+              ))
     {
         return FALSE;
     }
-    else if (!(gBattleTypeFlags &
-          (BATTLE_TYPE_EREADER_TRAINER
+    else if (HasNoneOfBattleFlags(BATTLE_TYPE_EREADER_TRAINER
            | BATTLE_TYPE_FRONTIER
            | BATTLE_TYPE_LINK
            | BATTLE_TYPE_RECORDED_LINK
-           | BATTLE_TYPE_SECRET_BASE))
+           | BATTLE_TYPE_SECRET_BASE)
         && GetBattlerPartyState(battlerStealing)->isKnockedOff)
     {
         return FALSE;
@@ -9656,7 +9654,7 @@ void TrySaveExchangedItem(enum BattlerId battler, enum Item stolenItem)
     if (B_TRAINERS_KNOCK_OFF_ITEMS == FALSE)
         return;
 
-    if (!(gBattleTypeFlags & BATTLE_TYPE_TRAINER) || gBattleTypeFlags & BATTLE_TYPE_FRONTIER)
+    if (!(IsTrainerBattle()) || HasAnyBattleFlags(BATTLE_TYPE_FRONTIER))
         return;
 
     if (GetBattlerTrainer(battler) != B_TRAINER_PLAYER)
@@ -9717,7 +9715,7 @@ bool32 CantPickupItem(u32 _battler)
 {
     enum BattlerId battler = _battler;
     // Used by RandomUniformExcept() for RNG_PICKUP
-    if (battler == gBattlerAttacker && (GetConfig(B_PICKUP_WILD) < GEN_9 || gBattleTypeFlags & (BATTLE_TYPE_TRAINER | BATTLE_TYPE_LINK)))
+    if (battler == gBattlerAttacker && (GetConfig(B_PICKUP_WILD) < GEN_9 || HasAnyBattleFlags(BATTLE_TYPE_TRAINER | BATTLE_TYPE_LINK)))
         return TRUE;
     return !(IsBattlerAlive(battler) && GetBattlerPartyState(battler)->usedHeldItem && gBattleStruct->battlerState[battler].canPickupItem);
 }
@@ -10077,7 +10075,7 @@ void SetShellSideArmCategory(void)
     u32 power = GetMovePower(MOVE_SHELL_SIDE_ARM);
 
     // Don't run this check for Safari Battles. Because player's stats are zeroed out, this performs division by zero which previously would crash on certain emulators in Safari Zone.
-    if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
+    if (HasAnyBattleFlags(BATTLE_TYPE_SAFARI))
         return;
 
     for (battlerAtk = 0; battlerAtk < gBattlersCount; battlerAtk++)
@@ -10240,14 +10238,14 @@ bool32 AreMultiPartiesFullTeams(void)
         return FALSE;
     }
 
-    if (!(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
+    if (!(IsTrainerBattle()))
     {
         gSpecialVar_Result = TRUE;
         return TRUE;
     }
 
     if (TRAINER_BATTLE_PARAM.opponentA == TRAINER_LINK_OPPONENT
-     || gBattleTypeFlags & BATTLE_TYPE_TOWER_LINK_MULTI
+     || IsTowerLinkMulti()
      || (gTrainers[difficulty][TRAINER_BATTLE_PARAM.opponentA].multiTeamSize == MULTI_TEAM_SIZE_HALF)
      || (gTrainers[difficulty][TRAINER_BATTLE_PARAM.opponentB].multiTeamSize == MULTI_TEAM_SIZE_HALF))
     {
@@ -10437,8 +10435,8 @@ bool32 EmergencyExitCanBeTriggered(enum BattlerId battler, enum Ability ability)
 
     if (IsBattlerAlive(battler)
      && !IsPursuitTargetSet()
-     && !(gBattleTypeFlags & BATTLE_TYPE_ARENA)
-     && (CanBattlerSwitch(battler) || !(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
+     && HasNoneOfBattleFlags(BATTLE_TYPE_ARENA)
+     && (CanBattlerSwitch(battler) || !(IsTrainerBattle()))
      && (HadMoreThanHalfHpNowDoesnt(battler) || gSpecialStatuses[battler].shellBellEmergencyExit)
      && gBattleMons[battler].volatiles.semiInvulnerable != STATE_SKY_DROP_TARGET)
         return TRUE;
@@ -11035,8 +11033,8 @@ bool32 IsBattlerOnAir(enum BattlerId battler)
 
 bool32 HasPartnerTrainer(enum BattlerId battler)
 {
-    if ((GetBattlerSide(battler) == B_SIDE_PLAYER && gBattleTypeFlags & BATTLE_TYPE_PLAYER_HAS_PARTNER)
-     || (GetBattlerSide(battler) == B_SIDE_OPPONENT && gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS))
+    if ((GetBattlerSide(battler) == B_SIDE_PLAYER && IsMultiBattle())
+     || (GetBattlerSide(battler) == B_SIDE_OPPONENT && HasAnyBattleFlags(BATTLE_TYPE_TWO_OPPONENTS)))
         return TRUE;
     else
         return FALSE;
@@ -11176,7 +11174,7 @@ bool32 IsAllowedToUseBag(void)
     case NO_BAG_RESTRICTION:
         return TRUE;
     case NO_BAG_AGAINST_TRAINER: //True in wild battle; False in trainer battle
-        return (!(gBattleTypeFlags & BATTLE_TYPE_TRAINER));
+        return (!(IsTrainerBattle()));
     case NO_BAG_IN_BATTLE:
         return FALSE;
     default:
@@ -11270,11 +11268,11 @@ void TryUpdateEvolutionTracker(enum EvolutionConditions evolutionCondition, u32 
 
     if (IsOnPlayerSide(gBattlerAttacker)
      && ((TESTING && IsDoubleBattle()) // To be removed when Wild Double Battles are added to tests
-     || !(gBattleTypeFlags & (BATTLE_TYPE_LINK
+     || HasNoneOfBattleFlags(BATTLE_TYPE_LINK
                              | BATTLE_TYPE_EREADER_TRAINER
                              | BATTLE_TYPE_RECORDED_LINK
                              | BATTLE_TYPE_TRAINER_HILL
-                             | BATTLE_TYPE_FRONTIER))))
+                             | BATTLE_TYPE_FRONTIER)))
     {
         const struct Evolution *evolutions = GetSpeciesEvolutions(gBattleMons[gBattlerAttacker].species);
         if (evolutions == NULL)
@@ -11514,14 +11512,14 @@ void SetValuesOnFaint(enum BattlerId battler)
 
 bool32 IsVictoryCatch(void)
 {
-    return gBattleTypeFlags & BATTLE_TYPE_RAID
+    return HasAnyBattleFlags(BATTLE_TYPE_RAID)
         || FlagGet(B_FLAG_VICTORY_CATCH_RANDOM)
         || FlagGet(B_FLAG_VICTORY_CATCH_GUARANTEED);
 }
 
 bool32 IsVictoryCatchGuaranteed(void)
 {
-    return gBattleTypeFlags & BATTLE_TYPE_RAID
+    return HasAnyBattleFlags(BATTLE_TYPE_RAID)
         || FlagGet(B_FLAG_VICTORY_CATCH_GUARANTEED);
 }
 

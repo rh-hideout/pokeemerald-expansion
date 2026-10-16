@@ -1404,7 +1404,7 @@ static bool8 PartyBoxPal_ParnterOrDisqualifiedInArena(u8 slot)
     if (gPartyMenu.layout == PARTY_LAYOUT_MULTI && (slot == 1 || slot == 4 || slot == 5))
         return TRUE;
 
-    if (slot < MULTI_PARTY_SIZE && (gBattleTypeFlags & BATTLE_TYPE_ARENA) && gMain.inBattle && (gBattleStruct->arenaLostPlayerMons >> GetPartyIdFromBattleSlot(slot) & 1))
+    if (slot < MULTI_PARTY_SIZE && (HasAnyBattleFlags(BATTLE_TYPE_ARENA)) && gMain.inBattle && (gBattleStruct->arenaLostPlayerMons >> GetPartyIdFromBattleSlot(slot) & 1))
         return TRUE;
 
     return FALSE;
@@ -1415,14 +1415,6 @@ static void DrawCancelConfirmButtons(void)
     CopyToBgTilemapBufferRect_ChangePalette(1, sConfirmButton_Tilemap, 23, 16, 7, 2, 17);
     CopyToBgTilemapBufferRect_ChangePalette(1, sCancelButton_Tilemap, 23, 18, 7, 2, 17);
     ScheduleBgCopyTilemapToVram(1);
-}
-
-bool8 IsMultiBattle(void)
-{
-    if (gBattleTypeFlags & BATTLE_TYPE_MULTI && IsDoubleBattle() && gMain.inBattle)
-        return TRUE;
-    else
-        return FALSE;
 }
 
 static void SwapPartyPokemon(struct Pokemon *mon1, struct Pokemon *mon2)
@@ -1594,7 +1586,7 @@ static void HandleChooseMonSelection(u8 taskId, s8 *slotPtr)
 
             if (GetMonData(&party[partySlot], MON_DATA_HP) > 0
              || GetMonData(&party[partySlot], MON_DATA_SPECIES_OR_EGG) == SPECIES_EGG
-             || ((gBattleTypeFlags & BATTLE_TYPE_MULTI) && !AreMultiPartiesFullTeams() && partyId >= (PARTY_SIZE / 2)))
+             || ((HasAnyBattleFlags(BATTLE_TYPE_MULTI)) && !AreMultiPartiesFullTeams() && partyId >= (PARTY_SIZE / 2)))
             {
                 // Can't select if egg, alive, or doesn't belong to you
                 PlaySE(SE_FAILURE);
@@ -1610,7 +1602,7 @@ static void HandleChooseMonSelection(u8 taskId, s8 *slotPtr)
         case PARTY_ACTION_SEND_MON_TO_BOX:
         {
             u8 slot = (u8)*slotPtr;
-            if ((gBattleTypeFlags & BATTLE_TYPE_MULTI) && !AreMultiPartiesFullTeams() && slot >= (PARTY_SIZE / 2))
+            if ((HasAnyBattleFlags(BATTLE_TYPE_MULTI)) && !AreMultiPartiesFullTeams() && slot >= (PARTY_SIZE / 2))
             {
                 // Can't select if mon doesn't belong to you
                 PlaySE(SE_FAILURE);
@@ -3134,12 +3126,12 @@ static void CB2_ShowPokemonSummaryScreen(void)
 {
     if (gPartyMenu.menuType == PARTY_MENU_TYPE_IN_BATTLE)
     {
-        if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
+        if (HasAnyBattleFlags(BATTLE_TYPE_MULTI))
             LoadBattlePartyCurrentOrderForLayout();
 
         UpdatePartyToBattleOrder();
 
-        if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
+        if (HasAnyBattleFlags(BATTLE_TYPE_MULTI))
         {
             if (!AreMultiPartiesFullTeams())
                 GetMultiPartyForSummaryScreen();
@@ -3164,7 +3156,7 @@ static void CB2_ShowPokemonSummaryScreen(void)
 
 void CB2_ReturnToPartyMenuFromSummaryScreen(void)
 {
-    if (gBattleTypeFlags & BATTLE_TYPE_MULTI && !AreMultiPartiesFullTeams() && gPartyMenu.menuType == PARTY_MENU_TYPE_IN_BATTLE)
+    if (HasAnyBattleFlags(BATTLE_TYPE_MULTI) && !AreMultiPartiesFullTeams() && gPartyMenu.menuType == PARTY_MENU_TYPE_IN_BATTLE)
         RestoreMultiPartyFromSummaryScreen();
     gPaletteFade.bufferTransferDisabled = TRUE;
     gPartyMenu.slotId = gLastViewedMonIndex;
@@ -7492,7 +7484,7 @@ static u8 GetPartyLayoutFromBattleType(void)
 
 void OpenPartyMenuInBattle(u8 partyAction)
 {
-    if (IS_FRLG && !BtlCtrl_OakOldMan_TestState2Flag(FIRST_BATTLE_MSG_FLAG_PARTY_MENU) && (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE))
+    if (IS_FRLG && !BtlCtrl_OakOldMan_TestState2Flag(FIRST_BATTLE_MSG_FLAG_PARTY_MENU) && (HasAnyBattleFlags(BATTLE_TYPE_FIRST_BATTLE)))
     {
         InitPartyMenu(PARTY_MENU_TYPE_IN_BATTLE, GetPartyLayoutFromBattleType(), partyAction, FALSE, PARTY_MSG_NONE, Task_FirstBattleEnterParty_WaitFadeIn, CB2_SetUpReshowBattleScreenAfterMenu);
         BtlCtrl_OakOldMan_SetState2Flag(FIRST_BATTLE_MSG_FLAG_PARTY_MENU);
@@ -7523,7 +7515,7 @@ static u8 GetPartyMenuActionsTypeInBattle(struct Pokemon *mon)
     {
         if (gPartyMenu.action == PARTY_ACTION_SEND_OUT)
             return ACTIONS_SEND_OUT;
-        if (!(gBattleTypeFlags & BATTLE_TYPE_ARENA))
+        if (HasNoneOfBattleFlags(BATTLE_TYPE_ARENA))
             return ACTIONS_SHIFT;
     }
     return ACTIONS_SUMMARY_ONLY;
@@ -7840,7 +7832,7 @@ static void UpdatePartyToBattleOrder(void)
     u8 i;
     const u8 *multiBattlePartyIdToMenuId = sMultiBattlePartyIdToMenuId_Left;
 
-    if ((gBattleTypeFlags & BATTLE_TYPE_LINK) && ((gBattlerInMenuId & BIT_FLANK) != B_FLANK_LEFT))
+    if ((HasAnyBattleFlags(BATTLE_TYPE_LINK)) && ((gBattlerInMenuId & BIT_FLANK) != B_FLANK_LEFT))
         multiBattlePartyIdToMenuId = sMultiBattlePartyIdToMenuId_Right;
 
 
@@ -7874,7 +7866,7 @@ static void UpdatePartyToFieldOrder(void)
 
     const u8 *multiBattlePartyIdToMenuId = sMultiBattlePartyIdToMenuId_Left;
 
-    if ((gBattleTypeFlags & BATTLE_TYPE_LINK)
+    if ((HasAnyBattleFlags(BATTLE_TYPE_LINK))
      && ((gBattlerInMenuId & BIT_FLANK) != B_FLANK_LEFT))
     {
         multiBattlePartyIdToMenuId = sMultiBattlePartyIdToMenuId_Right;

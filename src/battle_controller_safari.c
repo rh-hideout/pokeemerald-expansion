@@ -246,7 +246,7 @@ static void WaitForMonSelection(enum BattlerId battler)
 
         if ((gBattleResources->bufferA[battler][1] & 0xF) == 1)
         {
-            if (gBattleTypeFlags & BATTLE_TYPE_LINK)
+            if (HasAnyBattleFlags(BATTLE_TYPE_LINK))
             {
                 gBattle_BG0_X = 0;
                 gBattle_BG0_Y = 0;
@@ -261,7 +261,7 @@ static void WaitForMonSelection(enum BattlerId battler)
 void SafariBufferExecCompleted(enum BattlerId battler)
 {
     gBattlerControllerFuncs[battler] = SafariBufferRunCommand;
-    if (gBattleTypeFlags & BATTLE_TYPE_LINK)
+    if (HasAnyBattleFlags(BATTLE_TYPE_LINK))
     {
         u8 playerId = GetMultiplayerId();
 
@@ -320,7 +320,7 @@ static void SafariHandleChoosePokemon(enum BattlerId battler)
     for (s32 i = 0; i < ARRAY_COUNT(gBattlePartyCurrentOrder); i++)
         gBattlePartyCurrentOrder[i] = gBattleResources->bufferA[battler][4 + i];
 
-    if (gBattleTypeFlags & BATTLE_TYPE_ARENA && (gBattleResources->bufferA[battler][1] & 0xF) != PARTY_ACTION_CANT_SWITCH
+    if (HasAnyBattleFlags(BATTLE_TYPE_ARENA) && (gBattleResources->bufferA[battler][1] & 0xF) != PARTY_ACTION_CANT_SWITCH
         && (gBattleResources->bufferA[battler][1] & 0xF) != PARTY_ACTION_CHOOSE_FAINTED_MON
         && (gBattleResources->bufferA[battler][1] & 0xF) != PARTY_ACTION_SEND_MON_TO_BOX)
     {
@@ -365,6 +365,6 @@ static void SafariHandleEndLinkBattle(enum BattlerId battler)
     FadeOutMapMusic(5);
     BeginFastPaletteFade(3);
     BtlController_Complete(battler);
-    if ((gBattleTypeFlags & BATTLE_TYPE_LINK) && !(gBattleTypeFlags & BATTLE_TYPE_IS_MASTER))
+    if ((HasAnyBattleFlags(BATTLE_TYPE_LINK)) && HasNoneOfBattleFlags(BATTLE_TYPE_IS_MASTER))
         gBattlerControllerFuncs[battler] = SafariSetBattleEndCallbacks;
 }
