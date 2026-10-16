@@ -3431,6 +3431,9 @@ static void Task_WeatherIndicatorHandler(u8 taskId)
 
 void ShowWeatherIndicator(bool32 instant)
 {
+    if (TESTING || !B_SHOW_WEATHER_INDICATOR)
+        return;
+
     u32 weather = GetWeather();
     if (weather == B_WEATHER_NONE)
         return;
@@ -3453,6 +3456,9 @@ void ShowWeatherIndicator(bool32 instant)
 
 void HideWeatherIndicator(bool32 instant)
 {
+    if (TESTING || !B_SHOW_WEATHER_INDICATOR)
+        return;
+
     u32 taskId = FindTaskIdByFunc(Task_WeatherIndicatorHandler);
 
     if (taskId != TASK_NONE)
