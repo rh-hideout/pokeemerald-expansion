@@ -918,7 +918,7 @@ static void Cmd_setchargingturn(void)
     {
         gBattleMons[gBattlerAttacker].volatiles.multipleTurns = TRUE;
         gLockedMoves[gBattlerAttacker] = gCurrentMove;
-        gProtectStructs[gBattlerAttacker].chargingTurn = TRUE;
+        gBattleMons[gBattlerAttacker].volatiles.chargeTurn = TRUE;
     }
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
@@ -1418,7 +1418,7 @@ static void Cmd_setadditionaleffects(void)
              && !(additionalEffect->pledgeCombo && gBattleStruct->pledgeState != PLEDGE_COMBO_ATTACK)
              && !(additionalEffect->onlyIfTargetRaisedStats && !gProtectStructs[effectBattler].statRaised)
              && (effectBattler == gBattlerAttacker) == additionalEffect->self
-             && gProtectStructs[gBattlerAttacker].chargingTurn
+             && gBattleMons[gBattlerAttacker].volatiles.chargeTurn
              && additionalEffect->onChargeTurnOnly)
             {
                 percentChance = CalcSecondaryEffectChance(gBattlerAttacker, cv.abilities[cv.battlerAtk], additionalEffect, gCurrentMove);
@@ -1465,7 +1465,7 @@ static void Cmd_clearvolatile(void)
 
     SetMonVolatile(battler, cmd->_volatile, 0);
     if (cmd->_volatile == VOLATILE_MULTIPLETURNS)
-        gProtectStructs[battler].chargingTurn = FALSE;
+        gBattleMons[battler].volatiles.chargeTurn = FALSE;
 
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
@@ -4390,6 +4390,7 @@ bool32 CanUseLastResort(enum BattlerId battler)
 static void RemoveAllWeather(void)
 {
     gBattleStruct->weatherDuration = 0;
+    gBattleStruct->weatherDurationTotal = 0;
 
     if (gBattleWeather & B_WEATHER_RAIN_PRIMAL)
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_WEATHER_END_HEAVY_RAIN;

@@ -957,9 +957,15 @@ static void HandleSetEffectReflect(struct BattleCalcValues *cv, struct SetEffect
         gSideStatuses[side] |= SIDE_STATUS_REFLECT;
 
         if (cv->holdEffects[se->effectBattler] == HOLD_EFFECT_LIGHT_CLAY)
+        {
             gSideTimers[side].reflectTimer = 8;
+            gSideTimers[side].reflectTimerTotal = 8;
+        }
         else
+        {
             gSideTimers[side].reflectTimer = 5;
+            gSideTimers[side].reflectTimerTotal = 5;
+        }
 
         PrepareStringBattleWithWait(STRINGID_PKMNRAISEDDEF, se->effectBattler);
         BattleScriptPushAndSet(se->script, BattleScript_WaitMessage);
@@ -979,9 +985,15 @@ static void HandleSetEffectLightScreen(struct BattleCalcValues *cv, struct SetEf
         gSideStatuses[side] |= SIDE_STATUS_LIGHTSCREEN;
 
         if (cv->holdEffects[se->effectBattler] == HOLD_EFFECT_LIGHT_CLAY)
+        {
             gSideTimers[side].lightscreenTimer = 8;
+            gSideTimers[side].lightscreenTimerTotal = 8;
+        }
         else
+        {
             gSideTimers[side].lightscreenTimer = 5;
+            gSideTimers[side].lightscreenTimerTotal = 5;
+        }
 
         PrepareStringBattleWithWait(STRINGID_PKMNRAISEDSPDEF, se->effectBattler);
         BattleScriptPushAndSet(se->script, BattleScript_WaitMessage);
@@ -1544,9 +1556,15 @@ static void HandleSetEffectAuroraVeil(struct BattleCalcValues *cv, struct SetEff
         gSideStatuses[side] |= SIDE_STATUS_AURORA_VEIL;
 
         if (cv->holdEffects[se->effectBattler] == HOLD_EFFECT_LIGHT_CLAY)
+        {
             gSideTimers[side].auroraVeilTimer = 8;
+            gSideTimers[side].auroraVeilTimerTotal = 8;
+        }
         else
+        {
             gSideTimers[side].auroraVeilTimer = 5;
+            gSideTimers[side].auroraVeilTimerTotal = 5;
+        }
 
         PrepareStringBattleWithWait(STRINGID_PKMNAURORAVEIL, se->effectBattler);
         BattleScriptPushAndSet(se->script, BattleScript_WaitMessage);
@@ -3819,6 +3837,9 @@ static void HandleSetEffectCourtChange(struct BattleCalcValues *cv, struct SetEf
     COURTCHANGE_SWAP(SIDE_STATUS_SAFEGUARD, safeguardTimer, temp);
     COURTCHANGE_SWAP(SIDE_STATUS_AURORA_VEIL, auroraVeilTimer, temp);
     COURTCHANGE_SWAP(SIDE_STATUS_TAILWIND, tailwindTimer, temp);
+    SWAP(sideTimerPlayer->reflectTimerTotal, sideTimerOpp->reflectTimerTotal, temp);
+    SWAP(sideTimerPlayer->lightscreenTimerTotal, sideTimerOpp->lightscreenTimerTotal, temp);
+    SWAP(sideTimerPlayer->auroraVeilTimerTotal, sideTimerOpp->auroraVeilTimerTotal, temp);
     // Lucky Chant doesn't exist in gen 8, but seems like it should be affected by Court Change
     COURTCHANGE_SWAP(SIDE_STATUS_LUCKY_CHANT, luckyChantTimer, temp);
     COURTCHANGE_SWAP(SIDE_STATUS_DAMAGE_NON_TYPES, damageNonTypesTimer, temp);
