@@ -178,7 +178,7 @@ ALIGNED(4) static const u8 sText_HiDoSomethingFemale[] = _("Hello!\nWould you li
 ALIGNED(4) static const u8 sText_HiDoSomethingAgainMale[] = _("{STR_VAR_1}: Hiya, we meet again!\nWhat are you up for this time?");
 ALIGNED(4) static const u8 sText_HiDoSomethingAgainFemale[] = _("{STR_VAR_1}: Oh! {PLAYER}, hello!\nWould you like to do something?");
 
-static const u8 *const sHiDoSomethingTexts[][GENDER_COUNT] = {
+static const u8 *const sHiDoSomethingTexts[][TRAINER_GENDER_COUNT] = {
     {
         sText_HiDoSomethingMale,
         sText_HiDoSomethingFemale
@@ -194,7 +194,7 @@ ALIGNED(4) static const u8 sText_DoSomethingAgainMale[] = _("{STR_VAR_1}: What w
 ALIGNED(4) static const u8 sText_DoSomethingAgainFemale[] = _("{STR_VAR_1}: Want to do anything else?"); // Unused
 
 // Unused
-static const u8 *const sDoSomethingTexts[][GENDER_COUNT] = {
+static const u8 *const sDoSomethingTexts[][TRAINER_GENDER_COUNT] = {
     {
         sText_DoSomethingMale,
         sText_DoSomethingFemale
@@ -243,7 +243,7 @@ ALIGNED(4) static const u8 sText_PlayerJoinChatMale[] = _("{STR_VAR_1}: Hey, {PL
 ALIGNED(4) static const u8 sText_JoinChatFemale[] = _("Oh, hi! We're having a chat now.\nWould you like to join us?");
 ALIGNED(4) static const u8 sText_PlayerJoinChatFemale[] = _("{STR_VAR_1}: Oh, hi, {PLAYER}!\nWe're having a chat now.\lWould you like to join us?");
 
-static const u8 *const sJoinChatTexts[][GENDER_COUNT] = {
+static const u8 *const sJoinChatTexts[][TRAINER_GENDER_COUNT] = {
     {
         sText_JoinChatMale,
         sText_JoinChatFemale
@@ -261,7 +261,7 @@ ALIGNED(4) static const u8 sText_WaitForBattleFemale[] = _("A battle? Of course,
 ALIGNED(4) static const u8 sText_WaitForChatFemale[] = _("Did you want to chat?\nOkay, but please wait a moment.");
 ALIGNED(4) static const u8 sText_ShowTrainerCardFemale[] = _("As my introduction, I'll show you\nmy TRAINER CARD.");
 
-static const u8 *const sText_WaitOrShowCardTexts[GENDER_COUNT][4] = {
+static const u8 *const sText_WaitOrShowCardTexts[TRAINER_GENDER_COUNT][4] = {
     {
         sText_WaitForBattleMale,
         sText_WaitForChatMale,
@@ -284,7 +284,7 @@ ALIGNED(4) static const u8 sText_TradeWillBeStarted[] = _("The trade will be sta
 ALIGNED(4) static const u8 sText_BattleWillBeStarted[] = _("The battle will be started.{PAUSE 60}");
 ALIGNED(4) static const u8 sText_EnteringChat[] = _("Entering the chat…{PAUSE 60}");
 
-static const u8 *const sStartActivityTexts[][GENDER_COUNT][3] = {
+static const u8 *const sStartActivityTexts[][TRAINER_GENDER_COUNT][3] = {
     {
         {
             sText_BattleWillBeStarted,
@@ -311,7 +311,7 @@ static const u8 *const sStartActivityTexts[][GENDER_COUNT][3] = {
 ALIGNED(4) static const u8 sText_BattleDeclinedMale[] = _("Sorry! My POKéMON don't seem to\nbe feeling too well right now.\lLet me battle you another time.\p");
 ALIGNED(4) static const u8 sText_BattleDeclinedFemale[] = _("I'm terribly sorry, but my POKéMON\naren't feeling well…\pLet's battle another time.\p");
 
-static const u8 *const sBattleDeclinedTexts[GENDER_COUNT] = {
+static const u8 *const sBattleDeclinedTexts[TRAINER_GENDER_COUNT] = {
     sText_BattleDeclinedMale,
     sText_BattleDeclinedFemale
 };
@@ -319,7 +319,7 @@ static const u8 *const sBattleDeclinedTexts[GENDER_COUNT] = {
 ALIGNED(4) static const u8 sText_ShowTrainerCardDeclinedMale[] = _("Huh? My TRAINER CARD…\nWhere'd it go now?\lSorry! I'll show you another time!\p");
 ALIGNED(4) static const u8 sText_ShowTrainerCardDeclinedFemale[] = _("Oh? Now where did I put my\nTRAINER CARD?…\lSorry! I'll show you later!\p");
 
-static const u8 *const sShowTrainerCardDeclinedTexts[GENDER_COUNT] = {
+static const u8 *const sShowTrainerCardDeclinedTexts[TRAINER_GENDER_COUNT] = {
     sText_ShowTrainerCardDeclinedMale,
     sText_ShowTrainerCardDeclinedFemale
 };
@@ -327,7 +327,7 @@ static const u8 *const sShowTrainerCardDeclinedTexts[GENDER_COUNT] = {
 ALIGNED(4) static const u8 sText_IfYouWantToDoSomethingMale[] = _("If you want to do something with\nme, just give me a shout!\p");
 ALIGNED(4) static const u8 sText_IfYouWantToDoSomethingFemale[] = _("If you want to do something with\nme, don't be shy.\p");
 
-static const u8 *const sIfYouWantToDoSomethingTexts[GENDER_COUNT] = {
+static const u8 *const sIfYouWantToDoSomethingTexts[TRAINER_GENDER_COUNT] = {
     sText_IfYouWantToDoSomethingMale,
     sText_IfYouWantToDoSomethingFemale
 };
@@ -340,7 +340,7 @@ ALIGNED(4) static const u8 sText_DeclineChatMale[] = _("Oh, all right.\nCome see
 ALIGNED(4) static const u8 stext_DeclineChatFemale[] = _("Oh…\nPlease come by anytime.\p");
 
 // Response from partner when player declines chat
-static const u8 *const sDeclineChatTexts[GENDER_COUNT] = {
+static const u8 *const sDeclineChatTexts[TRAINER_GENDER_COUNT] = {
     sText_DeclineChatMale,
     stext_DeclineChatFemale
 };
@@ -349,7 +349,7 @@ ALIGNED(4) static const u8 sText_ChatDeclinedMale[] = _("Oh, sorry!\nI just can'
 ALIGNED(4) static const u8 sText_ChatDeclinedFemale[] = _("Oh, I'm sorry.\nI have too much to do right now.\lLet's chat some other time.\p");
 
 // Response from partner when they decline chat
-static const u8 *const sChatDeclinedTexts[GENDER_COUNT] = {
+static const u8 *const sChatDeclinedTexts[TRAINER_GENDER_COUNT] = {
     sText_ChatDeclinedMale,
     sText_ChatDeclinedFemale
 };
@@ -363,7 +363,7 @@ ALIGNED(4) static const u8 sText_UsedGoodMoveFemale[] = _("That's it!\nThis is t
 ALIGNED(4) static const u8 sText_BattleSurpriseFemale[] = _("That's awesome!\nYou can battle that way?\p");
 ALIGNED(4) static const u8 sText_SwitchedMonsFemale[] = _("You have exquisite timing for\nswitching POKéMON!\p");
 
-static const u8 *const sBattleReactionTexts[GENDER_COUNT][4] = {
+static const u8 *const sBattleReactionTexts[TRAINER_GENDER_COUNT][4] = {
     {
         sText_YoureToughMale,
         sText_UsedGoodMoveMale,
@@ -387,7 +387,7 @@ ALIGNED(4) static const u8 sText_ThatsFunnyFemale[] = _("Ahaha!\nWhat is that ab
 ALIGNED(4) static const u8 sText_RandomChatFemale1[] = _("Yes, that's exactly it!\nThat's what I meant.\p");
 ALIGNED(4) static const u8 sText_RandomChatFemale2[] = _("In other words…\nYes! That's right!\p");
 
-static const u8 *const sChatReactionTexts[GENDER_COUNT][4] = {
+static const u8 *const sChatReactionTexts[TRAINER_GENDER_COUNT][4] = {
     {
         sText_LearnedSomethingMale,
         sText_ThatsFunnyMale,
@@ -407,7 +407,7 @@ ALIGNED(4) static const u8 sText_ShowedTrainerCardMale2[] = _("I hope I get to k
 ALIGNED(4) static const u8 sText_ShowedTrainerCardFemale1[] = _("We're showing each other our\nTRAINER CARDS to get acquainted.\p");
 ALIGNED(4) static const u8 sText_ShowedTrainerCardFemale2[] = _("Glad to meet you.\nPlease don't be a stranger!\p");
 
-static const u8 *const sTrainerCardReactionTexts[GENDER_COUNT][2] = {
+static const u8 *const sTrainerCardReactionTexts[TRAINER_GENDER_COUNT][2] = {
     {
         sText_ShowedTrainerCardMale1,
         sText_ShowedTrainerCardMale2
@@ -423,7 +423,7 @@ ALIGNED(4) static const u8 sText_MaleTraded2[] = _("Finally, a trade got me that
 ALIGNED(4) static const u8 sText_FemaleTraded1[] = _("I'm trading POKéMON right now.\p");
 ALIGNED(4) static const u8 sText_FemaleTraded2[] = _("I finally got that POKéMON I\nwanted in a trade!\p");
 
-static const u8 *const sTradeReactionTexts[GENDER_COUNT][4] = {
+static const u8 *const sTradeReactionTexts[TRAINER_GENDER_COUNT][4] = {
     {
         sText_MaleTraded1,
         sText_MaleTraded2
@@ -582,7 +582,7 @@ ALIGNED(4) static const u8 sText_TrainerCardInfoPage2[] = _("BATTLES: WINS: {DYN
 ALIGNED(4) static const u8 sText_GladToMeetYouMale[] = _("{DYNAMIC 1}: Glad to have met you!{PAUSE 60}");
 ALIGNED(4) static const u8 sText_GladToMeetYouFemale[] = _("{DYNAMIC 1}: Glad to meet you!{PAUSE 60}");
 
-static const u8 *const sGladToMeetYouTexts[GENDER_COUNT] = {
+static const u8 *const sGladToMeetYouTexts[TRAINER_GENDER_COUNT] = {
     sText_GladToMeetYouMale,
     sText_GladToMeetYouFemale
 };

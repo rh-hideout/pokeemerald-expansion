@@ -349,11 +349,11 @@ u16 CreateTrainerCardTrainerPicSprite(u16 species, bool8 isFrontPic, u16 destX, 
     return CreateTrainerCardSprite(species, FALSE, 0, isFrontPic, destX, destY, paletteSlot, windowId, TRUE);
 }
 
-u16 PlayerGenderToFrontTrainerPicId_Debug(enum Gender gender, bool8 getClass)
+u16 PlayerGenderToFrontTrainerPicId_Debug(enum TrainerGender gender, bool8 getClass)
 {
     if (getClass == TRUE)
     {
-        if (gender != MALE)
+        if (gender != TRAINER_GENDER_MALE)
             return gFacilityClassToPicIndex[FACILITY_CLASS_MAY];
         else
             return gFacilityClassToPicIndex[FACILITY_CLASS_BRENDAN];

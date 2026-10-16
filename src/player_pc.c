@@ -493,7 +493,7 @@ static void PlayerPC_TurnOff(u8 taskId)
     {
         if (gMapHeader.mapLayoutId == LAYOUT_PALLET_TOWN_PLAYERS_HOUSE_2F_FRLG)
             ScriptContext_SetupScript(EventScript_PalletTown_PlayersHouse_2F_ShutDownPC);
-        else if (gSaveBlock2Ptr->playerGender == MALE)
+        else if (gSaveBlock2Ptr->playerGender == TRAINER_GENDER_MALE)
             ScriptContext_SetupScript(LittlerootTown_BrendansHouse_2F_EventScript_TurnOffPlayerPC);
         else
             ScriptContext_SetupScript(LittlerootTown_MaysHouse_2F_EventScript_TurnOffPlayerPC);

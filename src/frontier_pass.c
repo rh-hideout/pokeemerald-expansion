@@ -1698,7 +1698,7 @@ static void InitFrontierMapSprites(void)
 
         sMapData->playerHeadSprite = &gSprites[spriteId];
         sMapData->playerHeadSprite->oam.priority = 0;
-        if (gSaveBlock2Ptr->playerGender != MALE)
+        if (gSaveBlock2Ptr->playerGender != TRAINER_GENDER_MALE)
             StartSpriteAnim(sMapData->playerHeadSprite, 1);
     }
 }
