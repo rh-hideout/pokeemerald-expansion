@@ -2874,7 +2874,7 @@ static void BattleStartClearSetData(void)
     }
 }
 
-#define UNPACK_VOLATILE_BATON_PASSABLES(_enum, _fieldName, _typeMaxValue, ...) __VA_OPT__(if ((FIRST(__VA_ARGS__)) & V_BATON_PASSABLE) gBattleMons[battler].volatiles._fieldName = volatilesCopy->_fieldName;)
+#define UNPACK_VOLATILE_BATON_PASSABLES(_enum, _fieldName, _typeMaxValue, ...) __VA_OPT__(if ((FIRST(__VA_ARGS__)) & V_BATON_PASSABLE) gBattleMons[battlerLeavingField].volatiles._fieldName = volatilesCopy->_fieldName;)
 
 static void ClearSetDataOnLeave(enum BattlerId battlerLeavingField)
 {
@@ -2953,84 +2953,86 @@ static void ClearSetDataOnLeave(enum BattlerId battlerLeavingField)
     gAiLogicData->ejectPackSwitch = FALSE;
 }
 
-void SwitchInClearSetData(enum BattlerId battler, struct Volatiles *volatilesCopy)
+void SwitchInClearSetData(enum BattlerId battlerLeavingField, struct Volatiles *volatilesCopy)
 {
     enum BattleMoveEffects effect = GetMoveEffect(gCurrentMove);
 
     // Data cleared both on switch and faint
-    ClearSetDataOnLeave(battler);
+    ClearSetDataOnLeave(battlerLeavingField);
 
-    ClearIllusionMon(battler);
+    ClearIllusionMon(battlerLeavingField);
     if (effect != EFFECT_BATON_PASS)
     {
-        for (enum Stat i = 0; i < NUM_BATTLE_STATS; i++)
-            gBattleMons[battler].statStages[i] = DEFAULT_STAT_STAGE;
-        for (enum BattlerId i = 0; i < gBattlersCount; i++)
+        for (enum Stat stat = 0; stat < NUM_BATTLE_STATS; stat++)
         {
-            if (gBattleMons[i].volatiles.escapePrevention && gBattleMons[i].volatiles.battlerPreventingEscape == battler)
-                gBattleMons[i].volatiles.escapePrevention = FALSE;
+            gBattleMons[battlerLeavingField].statStages[stat] = DEFAULT_STAT_STAGE;
+        }
+        for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
+        {
+            if (gBattleMons[battler].volatiles.escapePrevention && gBattleMons[battler].volatiles.battlerPreventingEscape == battlerLeavingField)
+                gBattleMons[battler].volatiles.escapePrevention = FALSE;
 
-            if (gBattleMons[i].volatiles.battlerWithSureHit == battler + 1)
-                gBattleMons[i].volatiles.battlerWithSureHit = 0;
+            if (gBattleMons[battler].volatiles.battlerWithSureHit == battlerLeavingField + 1)
+                gBattleMons[battler].volatiles.battlerWithSureHit = 0;
         }
     }
     if (effect != EFFECT_BATON_PASS || GetConfig(B_BATON_PASS_TRAPPING) >= GEN_5)
     {
-        for (enum BattlerId i = 0; i < gBattlersCount; i++)
+        for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
         {
-            if (gBattleMons[i].volatiles.escapePrevention && gBattleMons[i].volatiles.battlerPreventingEscape == battler)
-                gBattleMons[i].volatiles.escapePrevention = FALSE;
+            if (gBattleMons[battler].volatiles.escapePrevention && gBattleMons[battler].volatiles.battlerPreventingEscape == battlerLeavingField)
+                gBattleMons[battler].volatiles.escapePrevention = FALSE;
         }
     }
 
     // Clear volatiles - reapply some if Baton Pass was used
-    memset(&gBattleMons[battler].volatiles, 0, sizeof(struct Volatiles));
+    memset(&gBattleMons[battlerLeavingField].volatiles, 0, sizeof(struct Volatiles));
     if (effect == EFFECT_BATON_PASS)
     {
         // Transfer Baton Passable volatile statuses
         VOLATILE_DEFINITIONS(UNPACK_VOLATILE_BATON_PASSABLES)
         /* Expands to the following (compiler removes `if` statements):
-         * gBattleMons[battler].volatiles.confusionTimer = volatilesCopy->confusionTimer;
-         * gBattleMons[battler].volatiles.substitute = volatilesCopy->substitute;
-         * gBattleMons[battler].volatiles.escapePrevention = volatilesCopy->escapePrevention;
+         * gBattleMons[battlerLeavingField].volatiles.confusionTimer = volatilesCopy->confusionTimer;
+         * gBattleMons[battlerLeavingField].volatiles.substitute = volatilesCopy->substitute;
+         * gBattleMons[battlerLeavingField].volatiles.escapePrevention = volatilesCopy->escapePrevention;
          * ...etc
          */
 
         enum BattlerId i;
-        if (gBattleMons[battler].volatiles.powerTrick)
-            SWAP(gBattleMons[battler].attack, gBattleMons[battler].defense, i);
+        if (gBattleMons[battlerLeavingField].volatiles.powerTrick)
+            SWAP(gBattleMons[battlerLeavingField].attack, gBattleMons[battlerLeavingField].defense, i);
 
-        if (gBattleMons[battler].volatiles.gastroAcid && gAbilitiesInfo[gBattleMons[battler].ability].cantBeSuppressed)
-            gBattleMons[battler].volatiles.gastroAcid = FALSE;
+        if (gBattleMons[battlerLeavingField].volatiles.gastroAcid && gAbilitiesInfo[gBattleMons[battlerLeavingField].ability].cantBeSuppressed)
+            gBattleMons[battlerLeavingField].volatiles.gastroAcid = FALSE;
     }
 
     if (effect == EFFECT_BATON_PASS)
     {
-        gBattleMons[battler].volatiles.substituteHP = volatilesCopy->substituteHP;
-        gBattleMons[battler].volatiles.perishSongTimer = volatilesCopy->perishSongTimer;
-        gBattleMons[battler].volatiles.battlerPreventingEscape = volatilesCopy->battlerPreventingEscape;
-        gBattleMons[battler].volatiles.embargoTimer = volatilesCopy->embargoTimer;
-        gBattleMons[battler].volatiles.healBlockTimer = volatilesCopy->healBlockTimer;
-        if (IsTelekinesisBannedSpecies(gBattleMons[battler].species))
-            gBattleMons[battler].volatiles.telekinesis = FALSE;
+        gBattleMons[battlerLeavingField].volatiles.substituteHP = volatilesCopy->substituteHP;
+        gBattleMons[battlerLeavingField].volatiles.perishSongTimer = volatilesCopy->perishSongTimer;
+        gBattleMons[battlerLeavingField].volatiles.battlerPreventingEscape = volatilesCopy->battlerPreventingEscape;
+        gBattleMons[battlerLeavingField].volatiles.embargoTimer = volatilesCopy->embargoTimer;
+        gBattleMons[battlerLeavingField].volatiles.healBlockTimer = volatilesCopy->healBlockTimer;
+        if (IsTelekinesisBannedSpecies(gBattleMons[battlerLeavingField].species))
+            gBattleMons[battlerLeavingField].volatiles.telekinesis = FALSE;
         else
-            gBattleMons[battler].volatiles.telekinesisTimer = volatilesCopy->telekinesisTimer;
+            gBattleMons[battlerLeavingField].volatiles.telekinesisTimer = volatilesCopy->telekinesisTimer;
     }
     else if (effect == EFFECT_SHED_TAIL)
     {
-        gBattleMons[battler].volatiles.substitute = TRUE;
-        gBattleMons[battler].volatiles.substituteHP = volatilesCopy->substituteHP;
+        gBattleMons[battlerLeavingField].volatiles.substitute = TRUE;
+        gBattleMons[battlerLeavingField].volatiles.substituteHP = volatilesCopy->substituteHP;
     }
 
-    gBattleStruct->battlerState[battler].notOnField = FALSE;
-    gBattleMons[battler].volatiles.truantSwitchInHack = volatilesCopy->truantSwitchInHack;
+    gBattleStruct->battlerState[battlerLeavingField].notOnField = FALSE;
+    gBattleMons[battlerLeavingField].volatiles.truantSwitchInHack = volatilesCopy->truantSwitchInHack;
 
     gBattleStruct->hazardsCounter = 0;
-    gSpecialStatuses[battler].queuedSwitch = NO_QUEUED_SWITCH;
+    gSpecialStatuses[battlerLeavingField].queuedSwitch = NO_QUEUED_SWITCH;
     gBattleStruct->eventState.arenaTurn = 0xFF;
 
     // Reset damage to prevent things like red card activating if the switched-in mon is holding it
-    gSpecialStatuses[battler].damagedByAttack = FALSE;
+    gSpecialStatuses[battlerLeavingField].damagedByAttack = FALSE;
 
     // Clear selected party ID so Revival Blessing doesn't get confused.
     gSelectedMonPartyId = PARTY_MON_NONE;
@@ -3039,43 +3041,45 @@ void SwitchInClearSetData(enum BattlerId battler, struct Volatiles *volatilesCop
     #if TESTING
     if (gTestRunnerEnabled)
     {
-        enum BattleTrainer trainer = GetBattlerTrainer(battler);
-        enum PartyMon partyIndex = gBattlerPartyIndexes[battler];
+        enum BattleTrainer trainer = GetBattlerTrainer(battlerLeavingField);
+        enum PartyMon partyIndex = gBattlerPartyIndexes[battlerLeavingField];
         if (TestRunner_Battle_GetForcedAbility(trainer, partyIndex))
-            gBattleMons[battler].ability = TestRunner_Battle_GetForcedAbility(trainer, partyIndex);
+            gBattleMons[battlerLeavingField].ability = TestRunner_Battle_GetForcedAbility(trainer, partyIndex);
     }
     #endif // TESTING
 
-    Ai_UpdateSwitchInData(battler);
+    Ai_UpdateSwitchInData(battlerLeavingField);
 }
 
-void FaintClearSetData(enum BattlerId battler)
+void FaintClearSetData(enum BattlerId battlerLeavingField)
 {
     // Data cleared both on switch and faint
-    ClearSetDataOnLeave(battler);
+    ClearSetDataOnLeave(battlerLeavingField);
 
-    for (enum Stat i = 0; i < NUM_BATTLE_STATS; i++)
-        gBattleMons[battler].statStages[i] = DEFAULT_STAT_STAGE;
-
-    bool32 keepTransformed = gBattleMons[battler].volatiles.transformed;
-    enum Species originalSpecies = gBattleMons[battler].volatiles.transformedMonSpecies;
-    memset(&gBattleMons[battler].volatiles, 0, sizeof(struct Volatiles));
-    gBattleMons[battler].volatiles.transformed = keepTransformed; // Edge case: Keep Transformed status to prevent triggering FORM_CHANGE_FAINT on transformed mons.
-    gBattleMons[battler].volatiles.transformedMonSpecies = originalSpecies; // Also keep transformed species for ev and exp calculation
-
-    for (enum BattlerId i = 0; i < gBattlersCount; i++)
+    for (enum Stat stat = 0; stat < NUM_BATTLE_STATS; stat++)
     {
-        if (gBattleMons[i].volatiles.battlerWithSureHit == battler + 1)
-            gBattleMons[i].volatiles.battlerWithSureHit = 0;
-        if (gBattleMons[i].volatiles.escapePrevention && gBattleMons[i].volatiles.battlerPreventingEscape == battler)
-            gBattleMons[i].volatiles.escapePrevention = FALSE;
+        gBattleMons[battlerLeavingField].statStages[stat] = DEFAULT_STAT_STAGE;
     }
 
-    if (gBattleStruct->battlerState[battler].commanderSpecies != SPECIES_NONE)
+    bool32 keepTransformed = gBattleMons[battlerLeavingField].volatiles.transformed;
+    enum Species originalSpecies = gBattleMons[battlerLeavingField].volatiles.transformedMonSpecies;
+    memset(&gBattleMons[battlerLeavingField].volatiles, 0, sizeof(struct Volatiles));
+    gBattleMons[battlerLeavingField].volatiles.transformed = keepTransformed; // Edge case: Keep Transformed status to prevent triggering FORM_CHANGE_FAINT on transformed mons.
+    gBattleMons[battlerLeavingField].volatiles.transformedMonSpecies = originalSpecies; // Also keep transformed species for ev and exp calculation
+
+    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
     {
-        enum BattlerId partner = GetPartnerBattler(battler);
+        if (gBattleMons[battler].volatiles.battlerWithSureHit == battlerLeavingField + 1)
+            gBattleMons[battler].volatiles.battlerWithSureHit = 0;
+        if (gBattleMons[battler].volatiles.escapePrevention && gBattleMons[battler].volatiles.battlerPreventingEscape == battlerLeavingField)
+            gBattleMons[battler].volatiles.escapePrevention = FALSE;
+    }
+
+    if (gBattleStruct->battlerState[battlerLeavingField].commanderSpecies != SPECIES_NONE)
+    {
+        enum BattlerId partner = GetPartnerBattler(battlerLeavingField);
         // Clear commander state immediately so a replacement doesn't inherit it.
-        gBattleStruct->battlerState[battler].commanderSpecies = SPECIES_NONE;
+        gBattleStruct->battlerState[battlerLeavingField].commanderSpecies = SPECIES_NONE;
         if (gBattleMons[partner].volatiles.semiInvulnerable == STATE_COMMANDER)
         {
             gBattleMons[partner].volatiles.semiInvulnerable = STATE_NONE;
@@ -3087,8 +3091,8 @@ void FaintClearSetData(enum BattlerId battler)
         }
     }
 
-    Ai_UpdateFaintData(battler);
-    TryBattleFormChange(battler, FORM_CHANGE_FAINT, GetBattlerAbility(battler));
+    Ai_UpdateFaintData(battlerLeavingField);
+    TryBattleFormChange(battlerLeavingField, FORM_CHANGE_FAINT, GetBattlerAbility(battlerLeavingField));
 }
 
 static void DoBattleIntro(void)
