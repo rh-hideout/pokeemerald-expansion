@@ -665,22 +665,12 @@ static void HandleSetEffectRecoilHp25(struct BattleCalcValues *cv, struct SetEff
     gBattlescriptCurrInstr = BattleScript_MoveEffectRecoilHP25;
 }
 
-static bool32 IsOneBattlerPreventedFromSwitching(enum BattlerId battlerAtk, enum BattlerId battlerDef)
-{
-    if (gBattleMons[battlerAtk].volatiles.escapePrevention)
-        return TRUE;
-    if (gBattleMons[battlerDef].volatiles.escapePrevention)
-        return TRUE;
-
-    if (IsBattlerJawLocked(battlerAtk) || IsBattlerJawLocked(battlerDef))
-        return TRUE;
-
-    return FALSE;
-}
-
 static void HandleSetEffectJawLock(struct BattleCalcValues *cv, struct SetEffect *se)
 {
-    if (IsOneBattlerPreventedFromSwitching(cv->battlerAtk, se->effectBattler))
+    if (gBattleMons[cv->battlerAtk].volatiles.escapePrevention
+     || gBattleMons[se->effectBattler].volatiles.escapePrevention
+     || IsBattlerJawLocked(cv->battlerAtk)
+     || IsBattlerJawLocked(se->effectBattler))
     {
         SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
     }
