@@ -31,8 +31,7 @@ void CloseMainBattleScreen(void)
 {
     FreeBattleGfxResources();
     FreeAllWindowBuffers();
-    if(!TESTING && B_SHOW_WEATHER_INDICATOR)
-        HideWeatherIndicator(TRUE);
+    HideWeatherIndicator(TRUE);
 }
 
 void AllocateBattleResources(void)
