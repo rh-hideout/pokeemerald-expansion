@@ -477,8 +477,6 @@ gSpecials::
 	def_special GiveFrontierBattlePoints
 	def_special TakeFrontierBattlePoints
 	def_special GetFrontierBattlePoints
-	def_special ShowFrontierExchangeCornerItemIconWindow
-	def_special CloseFrontierExchangeCornerItemIconWindow
 	def_special DisplayBerryPowderVendorMenu
 	def_special RemoveBerryPowderVendorMenu
 	def_special HasEnoughBerryPowder

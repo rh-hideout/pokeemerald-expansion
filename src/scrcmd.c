@@ -2509,22 +2509,26 @@ bool8 ScrCmd_dowildbattle(struct ScriptContext *ctx)
 
 bool8 ScrCmd_pokemart(struct ScriptContext *ctx)
 {
+    enum MartCurrency currency = ScriptReadByte(ctx);
+    enum MartMenu menu = ScriptReadByte(ctx);
     const void *ptr = (void *)ScriptReadWord(ctx);
 
     Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);
 
-    CreatePokemartMenu(ptr);
+    CreatePokemartMenu(ptr, currency, menu);
     ScriptContext_Stop();
     return TRUE;
 }
 
 bool8 ScrCmd_pokemartdecoration(struct ScriptContext *ctx)
 {
+    enum MartCurrency currency = ScriptReadByte(ctx);
+    enum MartMenu menu = ScriptReadByte(ctx);
     const void *ptr = (void *)ScriptReadWord(ctx);
 
     Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);
 
-    CreateDecorationShop1Menu(ptr);
+    CreateDecorationShop1Menu(ptr, currency, menu);
     ScriptContext_Stop();
     return TRUE;
 }
@@ -2532,11 +2536,13 @@ bool8 ScrCmd_pokemartdecoration(struct ScriptContext *ctx)
 // Changes clerk dialogue slightly from above. See MART_TYPE_DECOR2
 bool8 ScrCmd_pokemartdecoration2(struct ScriptContext *ctx)
 {
+    enum MartCurrency currency = ScriptReadByte(ctx);
+    enum MartMenu menu = ScriptReadByte(ctx);
     const void *ptr = (void *)ScriptReadWord(ctx);
 
     Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);
 
-    CreateDecorationShop2Menu(ptr);
+    CreateDecorationShop2Menu(ptr, currency, menu);
     ScriptContext_Stop();
     return TRUE;
 }
