@@ -487,25 +487,9 @@ enum TimeOfDay GetTimeOfDayForEncounters(u32 headerId, enum WildPokemonArea area
 
 static u8 PickWildMonNature(enum Species species)
 {
-    u8 i;
-    struct Pokeblock *safariPokeblock;
-    u8 natures[NUM_NATURES];
-
-    if (GetSafariZoneFlag() == TRUE && Random() % 100 < 80)
-    {
-        safariPokeblock = SafariZoneGetActivePokeblock();
-        if (safariPokeblock != NULL)
-        {
-            for (i = 0; i < NUM_NATURES; i++)
-                natures[i] = i;
-            Shuffle(natures, NUM_NATURES, sizeof(natures[0]));
-            for (i = 0; i < NUM_NATURES; i++)
-            {
-                if (PokeblockGetGain(natures[i], safariPokeblock) > 0)
-                    return natures[i];
-            }
-        }
-    }
+    u32 nature = GetPokeblockFeederNature();
+    if (nature < NUM_NATURES)
+        return nature;
 
     return GetSynchronizedNature(WILDMON_ORIGIN, species);
 }
