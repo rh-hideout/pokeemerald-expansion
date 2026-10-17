@@ -551,7 +551,7 @@ DOUBLE_BATTLE_TEST("Future Sight doesn't print an erroneous failure message in d
     }
 }
 
-DOUBLE_BATTLE_TEST("Future Sight is redirected to partner if target is not on the field anymore")
+DOUBLE_BATTLE_TEST("Future Sight is redirected to partner if target slot is empty")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -569,7 +569,7 @@ DOUBLE_BATTLE_TEST("Future Sight is redirected to partner if target is not on th
     }
 }
 
-DOUBLE_BATTLE_TEST("Future Sight can't be redirected")
+DOUBLE_BATTLE_TEST("Future Sight can't be redirected by Abilities")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
