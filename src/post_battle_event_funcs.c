@@ -56,7 +56,7 @@ int GameClear(void)
         {
             u8 val[1] = {TRUE};
             SetMonData(mon, MON_DATA_CHAMPION_RIBBON, val);
-            ribbonCounts[i].count = GetRibbonCount(mon);
+            ribbonCounts[i].count = GetMonData(mon, MON_DATA_RIBBON_COUNT);
             ribbonGet = TRUE;
         }
     }

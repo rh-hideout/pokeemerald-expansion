@@ -1694,7 +1694,7 @@ static void AwardBattleTowerRibbons(void)
             {
                 gSpecialVar_Result = TRUE;
                 SetMonData(GetSavedPlayerPartyMon(partyIndex), ribbonType, &gSpecialVar_Result);
-                ribbons[i].count = GetRibbonCount(GetSavedPlayerPartyMon(partyIndex));
+                ribbons[i].count = GetMonData(GetSavedPlayerPartyMon(partyIndex), MON_DATA_RIBBON_COUNT);
             }
         }
     }

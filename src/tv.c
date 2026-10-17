@@ -2081,7 +2081,7 @@ void TryPutSpotTheCutiesOnAir(struct Pokemon *pokemon, u8 ribbonMonDataIdx)
         StringCopy(show->cuties.playerName, gSaveBlock2Ptr->playerName);
         GetMonData(pokemon, MON_DATA_NICKNAME10, show->cuties.nickname);
         StripExtCtrlCodes(show->cuties.nickname);
-        show->cuties.nRibbons = GetRibbonCount(pokemon);
+        show->cuties.nRibbons = GetMonData(pokemon, MON_DATA_RIBBON_COUNT);
         show->cuties.selectedRibbon = MonDataIdxToRibbon(ribbonMonDataIdx);
         StorePlayerIdInRecordMixShow(show);
         show->cuties.language = gGameLanguage;
@@ -2090,31 +2090,6 @@ void TryPutSpotTheCutiesOnAir(struct Pokemon *pokemon, u8 ribbonMonDataIdx)
         else
             show->cuties.pokemonNameLanguage = GetMonData(pokemon, MON_DATA_LANGUAGE);
     }
-}
-
-u8 GetRibbonCount(struct Pokemon *pokemon)
-{
-    u8 nRibbons;
-
-    nRibbons = 0;
-    nRibbons += GetMonData(pokemon, MON_DATA_COOL_RIBBON);
-    nRibbons += GetMonData(pokemon, MON_DATA_BEAUTY_RIBBON);
-    nRibbons += GetMonData(pokemon, MON_DATA_CUTE_RIBBON);
-    nRibbons += GetMonData(pokemon, MON_DATA_SMART_RIBBON);
-    nRibbons += GetMonData(pokemon, MON_DATA_TOUGH_RIBBON);
-    nRibbons += GetMonData(pokemon, MON_DATA_CHAMPION_RIBBON);
-    nRibbons += GetMonData(pokemon, MON_DATA_WINNING_RIBBON);
-    nRibbons += GetMonData(pokemon, MON_DATA_VICTORY_RIBBON);
-    nRibbons += GetMonData(pokemon, MON_DATA_ARTIST_RIBBON);
-    nRibbons += GetMonData(pokemon, MON_DATA_EFFORT_RIBBON);
-    nRibbons += GetMonData(pokemon, MON_DATA_MARINE_RIBBON);
-    nRibbons += GetMonData(pokemon, MON_DATA_LAND_RIBBON);
-    nRibbons += GetMonData(pokemon, MON_DATA_SKY_RIBBON);
-    nRibbons += GetMonData(pokemon, MON_DATA_COUNTRY_RIBBON);
-    nRibbons += GetMonData(pokemon, MON_DATA_NATIONAL_RIBBON);
-    nRibbons += GetMonData(pokemon, MON_DATA_EARTH_RIBBON);
-    nRibbons += GetMonData(pokemon, MON_DATA_WORLD_RIBBON);
-    return nRibbons;
 }
 
 static u8 MonDataIdxToRibbon(u8 monDataIdx)
