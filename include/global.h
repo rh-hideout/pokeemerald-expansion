@@ -25,6 +25,7 @@
 #include "constants/trainer_tower.h"
 #include "constants/items.h"
 #include "constants/moves.h"
+#include "constants/wild_encounter_ow.h"
 #include "config/save.h"
 
 // Prevent cross-jump optimization.
@@ -271,6 +272,9 @@ struct SaveBlock3
     u8 dexNavChain;
 #if APRICORN_TREE_COUNT > 0
     u8 apricornTrees[NUM_APRICORN_TREE_BYTES];
+#endif
+#if WE_OW_ENCOUNTERS && (WE_OWE_BATTLE_PIKE || WE_OWE_BATTLE_PYRAMID)
+    u8 frontierOweLevels[OWE_SPAWNS_MAX];
 #endif
 }; /* max size 1624 bytes */
 
