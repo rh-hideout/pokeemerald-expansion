@@ -16,11 +16,12 @@
 #include "string_util.h"
 #include "task.h"
 #include "text.h"
+#include "trainer_util.h"
 #include "constants/abilities.h"
 #include "constants/battle_frontier.h"
 #include "constants/battle_frontier_mons.h"
 
-static void FillTrainerParty(u16 trainerId, u8 firstMonId, u8 monCount);
+static void FillTrainerParty(u16 trainerId, enum BattleTrainer trainer, u8 monCount);
 
 // EWRAM vars.
 EWRAM_DATA const struct BattleFrontierTrainer *gFacilityTrainers = NULL;
@@ -32,7 +33,7 @@ COMMON_DATA u16 gFrontierTempParty[MAX_FRONTIER_PARTY_SIZE] = {0};
 static void HandleFacilityTrainerBattleEnd(void)
 {
     u8 facility = gBattleScripting.specialTrainerBattleType;
-    switch (facility) 
+    switch (facility)
     {
     case FACILITY_BATTLE_TOWER:
     case FACILITY_BATTLE_DOME:
@@ -74,7 +75,7 @@ static void Task_StartBattleAfterTransition(u8 taskId)
 static void DoFacilityTrainerBattleInternal(u8 facility)
 {
     gBattleScripting.specialTrainerBattleType = facility;
-    
+
     switch (facility)
     {
     case FACILITY_BATTLE_TOWER:
@@ -180,26 +181,25 @@ void DoFacilityTrainerBattle(struct ScriptContext *ctx)
 
 void FacilityTrainerBattle(struct ScriptContext *ctx)
 {
-    InitTrainerBattleParameter();
-
     u8 facility = ScriptReadByte(ctx);
-    ctx->scriptPtr = BattleSetup_ConfigureFacilityTrainerBattle(facility, ctx->scriptPtr);
+
+    ConfigureFacilityTrainerBattle(facility, ctx->scriptPtr);
 }
 
 void FillFrontierTrainerParty(u8 monsCount)
 {
     ZeroEnemyPartyMons();
-    FillTrainerParty(TRAINER_BATTLE_PARAM.opponentA, 0, monsCount);
+    FillTrainerParty(TRAINER_BATTLE_PARAM.opponentA, B_TRAINER_OPPONENT_A, monsCount);
 }
 
 void FillFrontierTrainersParties(u8 monsCount)
 {
     ZeroEnemyPartyMons();
-    FillTrainerParty(TRAINER_BATTLE_PARAM.opponentA, 0, monsCount);
-    FillTrainerParty(TRAINER_BATTLE_PARAM.opponentB, 3, monsCount);
+    FillTrainerParty(TRAINER_BATTLE_PARAM.opponentA, B_TRAINER_OPPONENT_A, monsCount);
+    FillTrainerParty(TRAINER_BATTLE_PARAM.opponentB, B_TRAINER_OPPONENT_B, monsCount);
 }
 
-static void FillTrainerParty(u16 trainerId, u8 firstMonId, u8 monCount)
+static void FillTrainerParty(u16 trainerId, enum BattleTrainer trainer, u8 monCount)
 {
     s32 i, j;
     u16 chosenMonIndices[MAX_FRONTIER_PARTY_SIZE];
@@ -213,13 +213,13 @@ static void FillTrainerParty(u16 trainerId, u8 firstMonId, u8 monCount)
     {
         // Normal battle frontier trainer.
         fixedIV = GetFrontierTrainerFixedIvs(trainerId);
-        monSet = gFacilityTrainers[TRAINER_BATTLE_PARAM.opponentA].monSet;
+        monSet = gFacilityTrainers[trainerId].monSet;
     }
     else if (trainerId == TRAINER_EREADER)
     {
     #if FREE_BATTLE_TOWER_E_READER == FALSE
-        for (i = firstMonId; i < firstMonId + FRONTIER_PARTY_SIZE; i++)
-            CreateBattleTowerMon(&gEnemyParty[i], &gSaveBlock2Ptr->frontier.ereaderTrainer.party[i - firstMonId]);
+        for (i = 0; i < FRONTIER_PARTY_SIZE; i++)
+            CreateBattleTowerMon(&gParties[trainer][i], &gSaveBlock2Ptr->frontier.ereaderTrainer.party[i]);
     #endif //FREE_BATTLE_TOWER_E_READER
         return;
     }
@@ -231,12 +231,12 @@ static void FillTrainerParty(u16 trainerId, u8 firstMonId, u8 monCount)
     else if (trainerId < TRAINER_RECORD_MIXING_APPRENTICE)
     {
         // Record mixed player.
-        for (j = 0, i = firstMonId; i < firstMonId + monCount; j++, i++)
+        for (j = 0, i = 0; i < monCount; j++, i++)
         {
             if (gSaveBlock2Ptr->frontier.towerRecords[trainerId - TRAINER_RECORD_MIXING_FRIEND].party[j].species != SPECIES_NONE
                 && gSaveBlock2Ptr->frontier.towerRecords[trainerId - TRAINER_RECORD_MIXING_FRIEND].party[j].level <= level)
             {
-                CreateBattleTowerMon_HandleLevel(&gEnemyParty[i], &gSaveBlock2Ptr->frontier.towerRecords[trainerId - TRAINER_RECORD_MIXING_FRIEND].party[j], FALSE);
+                CreateBattleTowerMon_HandleLevel(&gParties[trainer][i], &gSaveBlock2Ptr->frontier.towerRecords[trainerId - TRAINER_RECORD_MIXING_FRIEND].party[j], FALSE);
             }
         }
         return;
@@ -244,8 +244,8 @@ static void FillTrainerParty(u16 trainerId, u8 firstMonId, u8 monCount)
     else
     {
         // Apprentice.
-        for (i = firstMonId; i < firstMonId + FRONTIER_PARTY_SIZE; i++)
-            CreateApprenticeMon(&gEnemyParty[i], &gSaveBlock2Ptr->apprentices[trainerId - TRAINER_RECORD_MIXING_APPRENTICE], i - firstMonId);
+        for (i = 0; i < FRONTIER_PARTY_SIZE; i++)
+            CreateApprenticeMon(&gParties[trainer][i], &gSaveBlock2Ptr->apprentices[trainerId - TRAINER_RECORD_MIXING_APPRENTICE], i);
         return;
     }
 
@@ -267,22 +267,22 @@ static void FillTrainerParty(u16 trainerId, u8 firstMonId, u8 monCount)
             continue;
 
         // Ensure this Pokémon species isn't a duplicate.
-        for (j = 0; j < i + firstMonId; j++)
+        for (j = 0; j < i; j++)
         {
-            if (GetMonData(&gEnemyParty[j], MON_DATA_SPECIES) == gFacilityTrainerMons[monId].species)
+            if (GetMonData(&gParties[trainer][j], MON_DATA_SPECIES) == gFacilityTrainerMons[monId].species)
                 break;
         }
-        if (j != i + firstMonId)
+        if (j != i)
             continue;
 
         // Ensure this Pokemon's held item isn't a duplicate.
-        for (j = 0; j < i + firstMonId; j++)
+        for (j = 0; j < i; j++)
         {
-            if (GetMonData(&gEnemyParty[j], MON_DATA_HELD_ITEM) != ITEM_NONE
-             && GetMonData(&gEnemyParty[j], MON_DATA_HELD_ITEM) == gFacilityTrainerMons[monId].heldItem)
+            if (GetMonData(&gParties[trainer][j], MON_DATA_HELD_ITEM) != ITEM_NONE
+             && GetMonData(&gParties[trainer][j], MON_DATA_HELD_ITEM) == gFacilityTrainerMons[monId].heldItem)
                 break;
         }
-        if (j != i + firstMonId)
+        if (j != i)
             continue;
 
         // Ensure this exact Pokémon index isn't a duplicate. This check doesn't seem necessary
@@ -298,7 +298,7 @@ static void FillTrainerParty(u16 trainerId, u8 firstMonId, u8 monCount)
         chosenMonIndices[i] = monId;
 
         // Place the chosen Pokémon into the trainer's party.
-        CreateFacilityMon(&gFacilityTrainerMons[monId], level, fixedIV, otID, 0, &gEnemyParty[i + firstMonId]);
+        CreateFacilityMon(&gFacilityTrainerMons[monId], level, fixedIV, otID, 0, &gParties[trainer][i]);
 
         // The Pokémon was successfully added to the trainer's party, so it's safe to move on to
         // the next party slot.
@@ -308,18 +308,20 @@ static void FillTrainerParty(u16 trainerId, u8 firstMonId, u8 monCount)
 
 void CreateFacilityMon(const struct TrainerMon *fmon, u16 level, u8 fixedIV, u32 otID, u32 flags, struct Pokemon *dst)
 {
-    u8 ball = (fmon->ball == 0xFF) ? Random() % POKEBALL_COUNT : fmon->ball;
+    enum PokeBall ball = (fmon->ball == 0xFF) ? Random() % POKEBALL_COUNT : fmon->ball;
     enum Move move;
-    u32 personality = 0, ability, friendship, j;
+    u32 friendship, j;
+    u32 data;
 
+    u32 personality = (Random32() & 0xFFFFDF00) + 0x1000;
+    u32 genderValue = Random32();
     if (fmon->gender == TRAINER_MON_MALE)
-    {
-        personality = GeneratePersonalityForGender(MON_MALE, fmon->species);
-    }
+        genderValue = GeneratePersonalityForGender(MON_MALE, fmon->species, genderValue);
     else if (fmon->gender == TRAINER_MON_FEMALE)
-    {
-        personality = GeneratePersonalityForGender(MON_FEMALE, fmon->species);
-    }
+        genderValue = GeneratePersonalityForGender(MON_FEMALE, fmon->species, genderValue);
+    else
+        genderValue = genderValue & 0x000000FF;
+    personality |= genderValue;
 
     ModifyPersonalityForNature(&personality, fmon->nature);
     CreateMonWithIVs(dst, fmon->species, level, personality, OTID_STRUCT_PRESET(otID), fixedIV);
@@ -334,25 +336,16 @@ void CreateFacilityMon(const struct TrainerMon *fmon, u16 level, u8 fixedIV, u32
 
         SetMonMoveSlot(dst, move, j);
         if (GetMoveEffect(move) == EFFECT_FRUSTRATION)
-            friendship = 0;  // Frustration is more powerful the lower the pokemon's friendship is.
+            friendship = 0;  // Frustration is more powerful the lower the Pokémon's friendship is.
     }
 
     SetMonData(dst, MON_DATA_FRIENDSHIP, &friendship);
     SetMonData(dst, MON_DATA_HELD_ITEM, &fmon->heldItem);
 
     // try to set ability. Otherwise, random of non-hidden as per vanilla
-    if (fmon->ability != ABILITY_NONE)
+    if (fmon->ability)
     {
-        const struct SpeciesInfo *speciesInfo = &gSpeciesInfo[fmon->species];
-        u32 maxAbilities = ARRAY_COUNT(speciesInfo->abilities);
-        for (ability = 0; ability < maxAbilities; ++ability)
-        {
-            if (speciesInfo->abilities[ability] == fmon->ability)
-                break;
-        }
-        if (ability >= maxAbilities)
-            ability = 0;
-        SetMonData(dst, MON_DATA_ABILITY_NUM, &ability);
+        SetCorrectAbilityNum(dst, fmon->species, fmon->ability);
     }
 
     if (fmon->ev != NULL)
@@ -365,30 +358,35 @@ void CreateFacilityMon(const struct TrainerMon *fmon, u16 level, u8 fixedIV, u32
         SetMonData(dst, MON_DATA_SPEED_EV, &(fmon->ev[5]));
     }
 
-    if (fmon->iv)
-        SetMonData(dst, MON_DATA_IVS, &(fmon->iv));
-
     if (fmon->isShiny)
     {
-        u32 data = TRUE;
+        data = TRUE;
         SetMonData(dst, MON_DATA_IS_SHINY, &data);
     }
-    if (fmon->dynamaxLevel > 0)
+    if (fmon->shouldUseDynamax)
     {
-        u32 data = fmon->dynamaxLevel;
-        SetMonData(dst, MON_DATA_DYNAMAX_LEVEL, &data);
+        data = fmon->dynamaxLevel;
     }
+    else
+    {
+        data = BLOCK_AI_DYNAMAX;
+    }
+    SetMonData(dst, MON_DATA_DYNAMAX_LEVEL, &data);
     if (fmon->gigantamaxFactor)
     {
-        u32 data = fmon->gigantamaxFactor;
+        data = fmon->gigantamaxFactor;
         SetMonData(dst, MON_DATA_GIGANTAMAX_FACTOR, &data);
     }
     if (fmon->teraType)
     {
-        u32 data = fmon->teraType;
+        data = fmon->teraType;
         SetMonData(dst, MON_DATA_TERA_TYPE, &data);
     }
-
+    else
+    {
+        data = TYPE_MYSTERY;
+        SetMonData(dst, MON_DATA_TERA_TYPE, &data);
+    }
 
     SetMonData(dst, MON_DATA_POKEBALL, &ball);
     CalculateMonStats(dst);

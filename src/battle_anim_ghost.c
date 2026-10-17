@@ -827,6 +827,24 @@ static void AnimDestinyBondWhiteShadow_Step(struct Sprite *sprite)
 
 void AnimTask_DestinyBondWhiteShadow(u8 taskId)
 {
+    if (gAnimMoveIndex == MOVE_DARK_VOID
+     || gAnimMoveIndex == MOVE_POLTERGEIST)
+    {
+        if (!TryLoadSpriteAssets(&gDarkVoidBlackHoleTemplate))
+        {
+            DestroyAnimVisualTask(taskId);
+            return;
+        }
+    }
+    else
+    {
+        if (!TryLoadSpriteAssets(&gDestinyBondWhiteShadowSpriteTemplate))
+        {
+            DestroyAnimVisualTask(taskId);
+            return;
+        }
+    }
+
     struct Task *task;
     enum BattlerId battler;
     u8 spriteId;
@@ -850,14 +868,17 @@ void AnimTask_DestinyBondWhiteShadow(u8 taskId)
         for (battler = 0; battler < MAX_BATTLERS_COUNT; battler++)
         {
             if (battler != gBattleAnimAttacker
-             && battler != BATTLE_PARTNER(gBattleAnimAttacker)
-             && IsBattlerSpriteVisible(battler))
+             && battler != GetPartnerBattler(gBattleAnimAttacker)
+             && IsBattlerSpriteVisible(battler)
+             && (GetMoveTarget(gAnimMoveIndex) == TARGET_BOTH // Move hits both foes on purpose, e.g. Dark Void
+              || GetMoveTarget(gAnimMoveIndex) == TARGET_USER // Real target isn't known yet at animation time, e.g. Destiny Bond
+              || battler == gBattleAnimTarget)) // Otherwise only send the shadow to the actual move target
             {
                 if (gAnimMoveIndex == MOVE_DARK_VOID
                  || gAnimMoveIndex == MOVE_POLTERGEIST)
-                    spriteId = CreateSprite(&gDarkVoidBlackHoleTemplate, baseX, baseY, 55);   //dark void
+                    spriteId = CreateSpriteUnchecked(&gDarkVoidBlackHoleTemplate, baseX, baseY, 55);   //dark void
                 else
-                    spriteId = CreateSprite(&gDestinyBondWhiteShadowSpriteTemplate, baseX, baseY, 55);   //destiny bond
+                    spriteId = CreateSpriteUnchecked(&gDestinyBondWhiteShadowSpriteTemplate, baseX, baseY, 55);   //destiny bond
 
                 if (spriteId != MAX_SPRITES)
                 {
@@ -881,9 +902,9 @@ void AnimTask_DestinyBondWhiteShadow(u8 taskId)
     else
     {
         if (gAnimMoveIndex == MOVE_DARK_VOID)
-            spriteId = CreateSprite(&gDarkVoidBlackHoleTemplate, baseX, baseY, 55);   //dark void
+            spriteId = CreateSpriteUnchecked(&gDarkVoidBlackHoleTemplate, baseX, baseY, 55);   //dark void
         else
-            spriteId = CreateSprite(&gDestinyBondWhiteShadowSpriteTemplate, baseX, baseY, 55);   //destiny bond
+            spriteId = CreateSpriteUnchecked(&gDestinyBondWhiteShadowSpriteTemplate, baseX, baseY, 55);   //destiny bond
 
         if (spriteId != MAX_SPRITES)
         {
@@ -1216,6 +1237,12 @@ static void AnimGhostStatusSprite_Step(struct Sprite *sprite)
 
 void AnimTask_GrudgeFlames(u8 taskId)
 {
+    if (!TryLoadSpriteAssets(&gGrudgeFlameSpriteTemplate))
+    {
+        DestroyAnimVisualTask(taskId);
+        return;
+    }
+
     struct Task *task = &gTasks[taskId];
 
     task->data[0] = 0;
@@ -1245,7 +1272,7 @@ void AnimTask_GrudgeFlames_Step(u8 taskId)
     case 0:
         for (i = 0; i < 6; i++)
         {
-            spriteId = CreateSprite(&gGrudgeFlameSpriteTemplate, task->data[9], task->data[10], task->data[6]);
+            spriteId = CreateSpriteUnchecked(&gGrudgeFlameSpriteTemplate, task->data[9], task->data[10], task->data[6]);
             if (spriteId != MAX_SPRITES)
             {
                 gSprites[spriteId].data[0] = taskId;
@@ -1382,22 +1409,35 @@ static void AnimMonMoveCircular_Step(struct Sprite *sprite)
 
 void AnimTask_PoltergeistItem(u8 taskId)
 {
+    if (!TryLoadSpriteAssets(&gPoltergeistEffectTemplate))
+    {
+        DestroyAnimVisualTask(taskId);
+        return;
+    }
+
     struct Task *task = &gTasks[taskId];
     u8 x = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X);
     u8 y = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y) + (GetBattlerSpriteCoordAttr(gBattleAnimTarget, BATTLER_COORD_ATTR_HEIGHT) / 2);
 
-    task->data[0] = AddItemIconSprite(ANIM_TAG_ITEM_BAG, ANIM_TAG_ITEM_BAG, gLastUsedItem);
-    gSprites[task->data[0]].x = x + 4;
-    gSprites[task->data[0]].y = y + 4;
-    gSprites[task->data[0]].data[0] = x + 4;
-    gSprites[task->data[0]].data[1] = y + 4;
-    gSprites[task->data[0]].callback = AnimPoltergeistItem;
+    //  Only need to store the tags, the assets are loaded by AddIconSprite
+    StoreGfxTag(ANIM_TAG_ITEM_BAG);
+    StorePalTag(ANIM_TAG_ITEM_BAG);
 
+    task->data[0] = AddItemIconSprite(ANIM_TAG_ITEM_BAG, ANIM_TAG_ITEM_BAG, gLastUsedItem);
+    if (task->data[0] != MAX_SPRITES)
+    {
+        gSprites[task->data[0]].x = x + 4;
+        gSprites[task->data[0]].y = y + 4;
+        gSprites[task->data[0]].data[0] = x + 4;
+        gSprites[task->data[0]].data[1] = y + 4;
+        gSprites[task->data[0]].callback = AnimPoltergeistItem;
+        gAnimVisualTaskCount += 1;
+    }
     task->data[1] = CreateSprite(&gPoltergeistEffectTemplate, x, y, 1);
     gSprites[task->data[1]].data[0] = x;
     gSprites[task->data[1]].data[1] = y;
 
-    gAnimVisualTaskCount += 2;
+    gAnimVisualTaskCount += 1;
 
     DestroyAnimVisualTask(taskId);
 }
@@ -1416,6 +1456,12 @@ static void AnimPoltergeistItem(struct Sprite *sprite)
 //pulverizing pancake - destiny bond shadow from attacker to target
 void AnimTask_PulverizingPancakeWhiteShadow(u8 taskId)
 {
+    if (!TryLoadSpriteAssets(&gDestinyBondWhiteShadowSpriteTemplate))
+    {
+        DestroyAnimVisualTask(taskId);
+        return;
+    }
+
     struct Task *task;
     u8 spriteId;
     s16 baseX, baseY;
@@ -1435,7 +1481,7 @@ void AnimTask_PulverizingPancakeWhiteShadow(u8 taskId)
     baseY = GetBattlerSpriteCoordAttr(gBattleAnimAttacker, BATTLER_COORD_ATTR_BOTTOM);
     if (!IsContest())
     {
-        spriteId = CreateSprite(&gDestinyBondWhiteShadowSpriteTemplate, baseX, baseY, 55);
+        spriteId = CreateSpriteUnchecked(&gDestinyBondWhiteShadowSpriteTemplate, baseX, baseY, 55);
         if (spriteId != MAX_SPRITES)
         {
             x = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
@@ -1455,7 +1501,7 @@ void AnimTask_PulverizingPancakeWhiteShadow(u8 taskId)
     }
     else
     {
-        spriteId = CreateSprite(&gDestinyBondWhiteShadowSpriteTemplate, baseX, baseY, 55);
+        spriteId = CreateSpriteUnchecked(&gDestinyBondWhiteShadowSpriteTemplate, baseX, baseY, 55);
         if (spriteId != MAX_SPRITES)
         {
             x = 48;

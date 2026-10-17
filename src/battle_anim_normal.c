@@ -660,6 +660,12 @@ void AnimTask_BlendColorCycleByTag(u8 taskId)
 {
     CMD_ARGS(tag, delay, numBlends, initialBlendY, targetBlendY, color);
 
+    if (!TryLoadPal(cmd->tag))
+    {
+        DestroyAnimVisualTask(taskId);
+        return;
+    }
+
     gTasks[taskId].tPalTag = cmd->tag;
     gTasks[taskId].tDelay = cmd->delay;
     gTasks[taskId].tNumBlends = cmd->numBlends;
@@ -741,6 +747,13 @@ static void AnimTask_BlendColorCycleByTagLoop(u8 taskId)
 void AnimTask_FlashAnimTagWithColor(u8 taskId)
 {
     CMD_ARGS(tag, delay, numBlends, color1, blendY1, color2, blendY2);
+
+    //  This function probably doesn't need to load a the target palette, but it doesn't hurt to check
+    if (!TryLoadPal(cmd->tag))
+    {
+        DestroyAnimVisualTask(taskId);
+        return;
+    }
 
     u8 paletteIndex;
 
@@ -842,10 +855,10 @@ void AnimTask_InvertScreenColor(u8 taskId)
         selectedPalettes |= (0x10000 << gBattleAnimAttacker);
     if (cmd->flagsScenery & 0x4)
         selectedPalettes |= (0x10000 << gBattleAnimTarget);
-    if (cmd->flagsScenery & 0x8 && IsBattlerAlive(BATTLE_PARTNER(gBattleAnimTarget)))
-        selectedPalettes |= (0x10000 << BATTLE_PARTNER(gBattleAnimTarget));
-    if (cmd->flagsScenery & 0x10 && IsBattlerAlive(BATTLE_PARTNER(gBattleAnimAttacker)))
-        selectedPalettes |= (0x10000 << BATTLE_PARTNER(gBattleAnimAttacker));
+    if (cmd->flagsScenery & 0x8 && IsBattlerAlive(GetPartnerBattler(gBattleAnimTarget)))
+        selectedPalettes |= (0x10000 << GetPartnerBattler(gBattleAnimTarget));
+    if (cmd->flagsScenery & 0x10 && IsBattlerAlive(GetPartnerBattler(gBattleAnimAttacker)))
+        selectedPalettes |= (0x10000 << GetPartnerBattler(gBattleAnimAttacker));
 
     InvertPlttBuffer(selectedPalettes);
     DestroyAnimVisualTask(taskId);
@@ -1025,7 +1038,7 @@ static void AnimShakeMonOrBattlePlatforms_UpdateCoordOffsetEnabled(void)
 #define tTimer       data[3]
 #define tShakeDelay  data[8]
 
-// Can shake battle platforms back and forth on the X or down and back to original pos on Y (cant shake up from orig pos)
+// Can shake battle platforms back and forth on the X or down and back to original pos on Y (can't shake up from orig pos)
 void AnimTask_ShakeBattlePlatforms(u8 taskId)
 {
     CMD_ARGS(xOffset, yOffset, shakes, delay);

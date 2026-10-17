@@ -43,7 +43,7 @@ const struct HoldEffectInfo gHoldEffectsInfo[HOLD_EFFECT_COUNT] =
     [HOLD_EFFECT_RESTORE_PP] =
     {
         .onSwitchIn = TRUE,
-        .onAttackerAfterHit = TRUE,
+        .sprayLeppaBlunder = TRUE,
     },
 
     [HOLD_EFFECT_CURE_CONFUSION] =
@@ -58,31 +58,7 @@ const struct HoldEffectInfo gHoldEffectsInfo[HOLD_EFFECT_COUNT] =
         .onStatusChange = TRUE,
     },
 
-    [HOLD_EFFECT_CONFUSE_SPICY] =
-    {
-        .onSwitchIn = TRUE,
-        .onHpThreshold = TRUE,
-    },
-
-    [HOLD_EFFECT_CONFUSE_DRY] =
-    {
-        .onSwitchIn = TRUE,
-        .onHpThreshold = TRUE,
-    },
-
-    [HOLD_EFFECT_CONFUSE_SWEET] =
-    {
-        .onSwitchIn = TRUE,
-        .onHpThreshold = TRUE,
-    },
-
-    [HOLD_EFFECT_CONFUSE_BITTER] =
-    {
-        .onSwitchIn = TRUE,
-        .onHpThreshold = TRUE,
-    },
-
-    [HOLD_EFFECT_CONFUSE_SOUR] =
+    [HOLD_EFFECT_CONFUSE_FLAVOR] =
     {
         .onSwitchIn = TRUE,
         .onHpThreshold = TRUE,
@@ -139,8 +115,8 @@ const struct HoldEffectInfo gHoldEffectsInfo[HOLD_EFFECT_COUNT] =
     [HOLD_EFFECT_WHITE_HERB] =
     {
         .whiteHerb = TRUE,
-        .whiteHerbEndTurn = TRUE,
         .onFling = TRUE,
+        .orbsWhiteHerbActivation = TRUE,
     },
 
     [HOLD_EFFECT_MACHO_BRACE] =
@@ -162,7 +138,7 @@ const struct HoldEffectInfo gHoldEffectsInfo[HOLD_EFFECT_COUNT] =
     [HOLD_EFFECT_MENTAL_HERB] =
     {
         .onTargetAfterHit = TRUE,
-        .onAttackerAfterHit = TRUE,
+        .mentalHerb = TRUE,
         .onFling = TRUE,
     },
 
@@ -330,17 +306,20 @@ const struct HoldEffectInfo gHoldEffectsInfo[HOLD_EFFECT_COUNT] =
     [HOLD_EFFECT_FLAME_ORB] =
     {
         .orbs = TRUE,
+        .orbsWhiteHerbActivation = TRUE,
     },
 
     [HOLD_EFFECT_TOXIC_ORB] =
     {
         .orbs = TRUE,
+        .orbsWhiteHerbActivation = TRUE,
     },
 
     [HOLD_EFFECT_STICKY_BARB] =
     {
         .onTargetAfterHit = TRUE,
         .orbs = TRUE,
+        .orbsWhiteHerbActivation = TRUE,
     },
 
     [HOLD_EFFECT_IRON_BALL] =
@@ -407,12 +386,12 @@ const struct HoldEffectInfo gHoldEffectsInfo[HOLD_EFFECT_COUNT] =
 
     [HOLD_EFFECT_JABOCA_BERRY] =
     {
-        .onTargetAfterHit = TRUE,
+        .jabocaRowap = TRUE,
     },
 
     [HOLD_EFFECT_ROWAP_BERRY] =
     {
-        .onTargetAfterHit = TRUE,
+        .jabocaRowap = TRUE,
     },
 
     [HOLD_EFFECT_KEE_BERRY] =
@@ -555,7 +534,7 @@ const struct HoldEffectInfo gHoldEffectsInfo[HOLD_EFFECT_COUNT] =
 
     [HOLD_EFFECT_BLUNDER_POLICY] =
     {
-        .onAttackerAfterHit = TRUE,
+        .sprayLeppaBlunder = TRUE,
     },
 
     [HOLD_EFFECT_HEAVY_DUTY_BOOTS] =
@@ -564,7 +543,7 @@ const struct HoldEffectInfo gHoldEffectsInfo[HOLD_EFFECT_COUNT] =
 
     [HOLD_EFFECT_THROAT_SPRAY] =
     {
-        .onAttackerAfterHit = TRUE,
+        .sprayLeppaBlunder = TRUE,
     },
 
     [HOLD_EFFECT_ABILITY_SHIELD] =

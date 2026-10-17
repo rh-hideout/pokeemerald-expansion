@@ -88,10 +88,8 @@ struct GFRomHeader
     u8 pcItemsCount;
     u32 pcItemsOffset;
     u32 giftRibbonsOffset;
-#if FREE_ENIGMA_BERRY == FALSE
     u32 enigmaBerryOffset;
     u32 enigmaBerrySize;
-#endif //FREE_ENIGMA_BERRY
     const u8 *moveDescriptions;
     u32 unk20;
 };

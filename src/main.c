@@ -338,11 +338,6 @@ void SetHBlankCallback(IntrCallback callback)
     gMain.hblankCallback = callback;
 }
 
-void SetVCountCallback(IntrCallback callback)
-{
-    gMain.vcountCallback = callback;
-}
-
 void RestoreSerialTimer3IntrHandlers(void)
 {
     gIntrTable[1] = SerialIntr;

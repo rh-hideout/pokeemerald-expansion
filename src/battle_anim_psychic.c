@@ -502,6 +502,14 @@ static void AnimateZenHeadbutt(struct Sprite *sprite)
 // For the rectangular wall sprite used by Reflect, Mirror Coat, etc
 static void AnimDefensiveWall(struct Sprite *sprite)
 {
+
+    //  It's possible for this anim tag to be different from the already loaded tag
+    if (!TryLoadPal(gBattleAnimArgs[2]))
+    {
+        sprite->callback = DestroyAnimSprite;
+        return;
+    }
+
     u8 isContest = IsContest();
 
     if (IsOnPlayerSide(gBattleAnimAttacker) || isContest)
@@ -521,7 +529,7 @@ static void AnimDefensiveWall(struct Sprite *sprite)
         if (IsBattlerSpriteVisible(battler))
             MoveBattlerSpriteToBG(battler, toBG_2, FALSE);
 
-        battler = BATTLE_PARTNER(battlerCopy);
+        battler = GetPartnerBattler(battlerCopy);
         if (IsBattlerSpriteVisible(battler))
             MoveBattlerSpriteToBG(battler, toBG_2 ^ var0, FALSE);
     }
@@ -574,7 +582,7 @@ static void AnimDefensiveWall_Step1(struct Sprite *sprite)
     if (IsBattlerSpriteVisible(battler))
         gSprites[gBattlerSpriteIds[battler]].invisible = TRUE;
 
-    battler = BATTLE_PARTNER(battler);
+    battler = GetPartnerBattler(battler);
     if (IsBattlerSpriteVisible(battler))
         gSprites[gBattlerSpriteIds[battler]].invisible = TRUE;
 
@@ -627,7 +635,7 @@ static void AnimDefensiveWall_Step4(struct Sprite *sprite)
             if (IsBattlerSpriteVisible(battler))
                 gSprites[gBattlerSpriteIds[battler]].invisible = FALSE;
 
-            battler = BATTLE_PARTNER(battlerCopy);
+            battler = GetPartnerBattler(battlerCopy);
             if (IsBattlerSpriteVisible(battler))
                 gSprites[gBattlerSpriteIds[battler]].invisible = FALSE;
         }
@@ -650,7 +658,7 @@ static void AnimDefensiveWall_Step5(struct Sprite *sprite)
         if (IsBattlerSpriteVisible(battler))
             ResetBattleAnimBg(toBG2);
 
-        battler = BATTLE_PARTNER(battlerCopy);
+        battler = GetPartnerBattler(battlerCopy);
         if (IsBattlerSpriteVisible(battler))
             ResetBattleAnimBg(toBG2 ^ var0);
     }
@@ -827,7 +835,11 @@ static void AnimTask_Teleport_Step(u8 taskId)
 
 void AnimTask_ImprisonOrbs(u8 taskId)
 {
-    u16 var0, var1;
+    if (!TryLoadSpriteAssets(&gImprisonOrbSpriteTemplate))
+    {
+        DestroyAnimVisualTask(taskId);
+        return;
+    }
 
     struct Task *task = &gTasks[taskId];
 
@@ -836,8 +848,8 @@ void AnimTask_ImprisonOrbs(u8 taskId)
     task->data[13] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2);
     task->data[14] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET);
 
-    var0 = GetBattlerSpriteCoordAttr(gBattleAnimAttacker, BATTLER_COORD_ATTR_WIDTH) / 3;
-    var1 = GetBattlerSpriteCoordAttr(gBattleAnimAttacker, BATTLER_COORD_ATTR_HEIGHT) / 3;
+    u32 var0 = GetBattlerSpriteCoordAttr(gBattleAnimAttacker, BATTLER_COORD_ATTR_WIDTH) / 3;
+    u32 var1 = GetBattlerSpriteCoordAttr(gBattleAnimAttacker, BATTLER_COORD_ATTR_HEIGHT) / 3;
     task->data[12] = var0 > var1 ? var0 : var1;
 
     SetGpuReg(REG_OFFSET_BLDCNT, BLDCNT_TGT2_ALL | BLDCNT_EFFECT_BLEND);
@@ -858,7 +870,7 @@ static void AnimTask_ImprisonOrbs_Step(u8 taskId)
         if (++task->data[1] > 8)
         {
             task->data[1] = 0;
-            spriteId = CreateSprite(&gImprisonOrbSpriteTemplate, task->data[13], task->data[14], 0);
+            spriteId = CreateSpriteUnchecked(&gImprisonOrbSpriteTemplate, task->data[13], task->data[14], 0);
             task->data[task->data[2] + 8] = spriteId;
             if (spriteId != MAX_SPRITES)
             {
@@ -941,6 +953,12 @@ static void AnimRedX(struct Sprite *sprite)
 
 void AnimTask_SkillSwap(u8 taskId)
 {
+    if (!TryLoadSpriteAssets(&gSkillSwapOrbSpriteTemplate))
+    {
+        DestroyAnimVisualTask(taskId);
+        return;
+    }
+
     struct Task *task = &gTasks[taskId];
 
     if (IsContest())
@@ -990,6 +1008,12 @@ void AnimTask_SkillSwap(u8 taskId)
 // arg 0: move target
 void AnimTask_HeartSwap(u8 taskId)
 {
+    if (!TryLoadSpriteAssets(&gHeartSwapOrbSpriteTemplate))
+    {
+        DestroyAnimVisualTask(taskId);
+        return;
+    }
+
     struct Task *task = &gTasks[taskId];
 
     if (IsContest())
@@ -1046,7 +1070,7 @@ static void AnimTask_SkillSwap_Step(u8 taskId)
         if (++task->data[1] > 6)
         {
             task->data[1] = 0;
-            spriteId = CreateSprite(&gSkillSwapOrbSpriteTemplate, task->data[11], task->data[12], 0);
+            spriteId = CreateSpriteUnchecked(&gSkillSwapOrbSpriteTemplate, task->data[11], task->data[12], 0);
             if (spriteId != MAX_SPRITES)
             {
                 gSprites[spriteId].data[0] = 16;
@@ -1082,7 +1106,7 @@ static void AnimTask_HeartSwap_Step(u8 taskId)
         if (++task->data[1] > 6)
         {
             task->data[1] = 0;
-            spriteId = CreateSprite(&gHeartSwapOrbSpriteTemplate, task->data[11], task->data[12], 0);
+            spriteId = CreateSpriteUnchecked(&gHeartSwapOrbSpriteTemplate, task->data[11], task->data[12], 0);
             if (spriteId != MAX_SPRITES)
             {
                 gSprites[spriteId].data[0] = 16;

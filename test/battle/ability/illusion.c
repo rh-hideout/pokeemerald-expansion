@@ -39,7 +39,7 @@ SINGLE_BATTLE_TEST("Illusion breaks if the target faints")
     }
 }
 
-SINGLE_BATTLE_TEST("Illusion breaks if the attacker faints")
+SINGLE_BATTLE_TEST("Illusion does not break if the attacker faints without taking damage")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_FINAL_GAMBIT) == EFFECT_FINAL_GAMBIT);
@@ -51,8 +51,10 @@ SINGLE_BATTLE_TEST("Illusion breaks if the attacker faints")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FINAL_GAMBIT, player);
         HP_BAR(player);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ILLUSION_OFF, player);
-        MESSAGE("Zoroark's illusion wore off!");
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ILLUSION_OFF, player);
+            MESSAGE("Zoroark's illusion wore off!");
+        }
     }
 }
 
@@ -70,6 +72,42 @@ SINGLE_BATTLE_TEST("Illusion cannot imitate if the user is on the last slot")
     }
 }
 
+ONE_VS_TWO_BATTLE_TEST("Illusion works for the second opponent trainer in a battle with two opponent trainers")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT_A(SPECIES_WYNAUT);
+        OPPONENT_B(SPECIES_ZOROARK) { Ability(ABILITY_ILLUSION); }
+        OPPONENT_B(SPECIES_WYNAUT);
+    } WHEN {
+        TURN {}
+    } THEN {
+        EXPECT_EQ(gBattleStruct->illusion[B_POSITION_OPPONENT_RIGHT].state, ILLUSION_ON);
+        EXPECT(&gParties[B_TRAINER_OPPONENT_B][1] == gBattleStruct->illusion[B_POSITION_OPPONENT_RIGHT].mon);
+    }
+}
+
+MULTI_BATTLE_TEST("Illusion works when the user's partner and disguise are in the same party slot")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_ZOROARK) { Ability(ABILITY_ILLUSION); }
+        PLAYER(SPECIES_WYNAUT);
+        PARTNER(SPECIES_WOBBUFFET);
+        PARTNER(SPECIES_WOBBUFFET);
+        PARTNER(SPECIES_WOBBUFFET);
+        OPPONENT_A(SPECIES_WOBBUFFET);
+        OPPONENT_B(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { SWITCH(playerRight, 2); }
+        TURN { SWITCH(playerLeft, 1); }
+    } THEN {
+        EXPECT_EQ(gBattleStruct->illusion[B_POSITION_PLAYER_LEFT].state, ILLUSION_ON);
+        EXPECT(&gParties[B_TRAINER_PLAYER][2] == gBattleStruct->illusion[B_POSITION_PLAYER_LEFT].mon);
+    }
+}
+
 SINGLE_BATTLE_TEST("Illusion breaks in Neutralizing Gas")
 {
     GIVEN {
@@ -81,6 +119,25 @@ SINGLE_BATTLE_TEST("Illusion breaks in Neutralizing Gas")
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_NEUTRALIZING_GAS);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ILLUSION_OFF, player);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Illusion breaks in Neutralizing Gas by speed")
+{
+    GIVEN {
+        PLAYER(SPECIES_ZOROARK) { Speed(1); }
+        PLAYER(SPECIES_ZOROARK) { Speed(3); }
+        PLAYER(SPECIES_WYNAUT) { Speed(10); }
+        OPPONENT(SPECIES_ZOROARK) { Speed(2); }
+        OPPONENT(SPECIES_WEEZING) { Speed(5); Ability(ABILITY_NEUTRALIZING_GAS); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(15); }
+    } WHEN {
+        TURN {}
+    } SCENE {
+        ABILITY_POPUP(opponentRight, ABILITY_NEUTRALIZING_GAS);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ILLUSION_OFF, playerRight);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ILLUSION_OFF, opponentLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ILLUSION_OFF, playerLeft);
     }
 }
 
@@ -114,7 +171,7 @@ SINGLE_BATTLE_TEST("Illusion breaks if user loses Illusion due to Worry Seed")
     }
 }
 
-SINGLE_BATTLE_TEST("Illusion breaks when attacked behind a substitute")
+SINGLE_BATTLE_TEST("Illusion breaks when hit through a substitute")
 {
     GIVEN {
         WITH_CONFIG(B_INFILTRATOR_SUBSTITUTE, GEN_6);
@@ -129,5 +186,22 @@ SINGLE_BATTLE_TEST("Illusion breaks when attacked behind a substitute")
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ILLUSION_OFF, opponent);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SWAP_TO_SUBSTITUTE, opponent);
         MESSAGE("The opposing Zoroark's illusion wore off!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Illusion does not break if indirect damage causes the user to faint")
+{
+    GIVEN {
+        PLAYER(SPECIES_ZOROARK) { HP(1); Status1(STATUS1_POISON); }
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { SEND_OUT(player, 1); }
+    } SCENE {
+        HP_BAR(player);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ILLUSION_OFF, player);
+            MESSAGE("Zoroark's illusion wore off!");
+        }
     }
 }

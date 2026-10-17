@@ -284,7 +284,7 @@ enum
     OBJ_EVENT_GFX_GREEN_VS_SEEKER,
     OBJ_EVENT_GFX_GREEN_VS_SEEKER_BIKE,
     OBJ_EVENT_GFX_BOY,
-    OBJ_EVENT_GFX_BATTLE_GIRL,
+    OBJ_EVENT_GFX_CRUSH_GIRL,
     OBJ_EVENT_GFX_MAN,
     OBJ_EVENT_GFX_ROCKER,
     OBJ_EVENT_GFX_BALDING_MAN,
@@ -304,9 +304,9 @@ enum
     OBJ_EVENT_GFX_ROCKET_M,
     OBJ_EVENT_GFX_ROCKET_F,
     OBJ_EVENT_GFX_GBA_KID,
-    OBJ_EVENT_GFX_SUPER_NERD,
+    OBJ_EVENT_GFX_POKE_MANIAC_FRLG,
     OBJ_EVENT_GFX_BIKER,
-    OBJ_EVENT_GFX_BLACKBELT,
+    OBJ_EVENT_GFX_BLACK_BELT_FRLG,
     OBJ_EVENT_GFX_SCIENTIST,
     OBJ_EVENT_GFX_FISHER,
     OBJ_EVENT_GFX_CHANNELER,
@@ -462,7 +462,7 @@ enum
 #define OW_SHINY(x) ((x)->graphicsId & OBJ_EVENT_MON_SHINY)
 #define OW_FEMALE(x) ((x)->graphicsId & OBJ_EVENT_MON_FEMALE)
 
-// Whether Object Event is an OW pokemon
+// Whether Object Event is an OW Pokémon
 #define IS_OW_MON_OBJ(obj) ((obj)->graphicsId & OBJ_EVENT_MON)
 
 #define SHADOW_SIZE_S       0
@@ -491,28 +491,29 @@ enum
 #define OBJ_KIND_NORMAL 0
 #define OBJ_KIND_CLONE  255 // Exclusive to FRLG
 
-// Special object event local ids
-// Used for link player OWs in CreateLinkPlayerSprite
-#define OBJ_EVENT_ID_DYNAMIC_BASE 0xF0
 
 // Each object event template gets an ID that can be used to refer to it in scripts and elsewhere.
 // This is referred to as the "local id" (and it's really just 1 + its index in the templates array).
 // There are a few special IDs reserved for objects that don't have templates in the map data -- one for the player
 // in regular offline play, five for linked players while playing Berry Blender, and one for an invisible object that
 // can be spawned for the camera to track instead of the player. Additionally, the value 0 is reserved as an "empty" indicator.
-#define LOCALID_NONE                         0
-#define LOCALID_CAMERA                     127
-#define LOCALID_BERRY_BLENDER_PLAYER_END   240 // This will use 5 (MAX_RFU_PLAYERS) IDs ending at 240, i.e. 236-240
-#define LOCALID_FOLLOWING_POKEMON          254
-#define LOCALID_PLAYER                     255
-#define OBJ_EVENT_ID_FOLLOWER              0xFE
-#define OBJ_EVENT_ID_NPC_FOLLOWER          0xFD
+#define LOCALID_NONE                              0
+#define LOCALID_CAMERA                          127
+#define LOCALID_BERRY_BLENDER_PLAYER_END        240 // This will use 5 (MAX_RFU_PLAYERS) IDs ending at 240, i.e. 236-240
+#define LOCALID_OW_ENCOUNTER_END                252 // This will use 4 (OWE_SPAWNS_MAX) IDs ending at 252, i.e. 249-252
+#define LOCALID_FOLLOWING_POKEMON               254
+#define LOCALID_PLAYER                          255
+#define OBJ_EVENT_ID_FOLLOWER                   0xFE
+#define OBJ_EVENT_ID_NPC_FOLLOWER               0xFD
+
+#define IS_LOCALID_GENERATED_OWE(localId)       (localId <= LOCALID_OW_ENCOUNTER_END \
+                                                 && localId > (LOCALID_OW_ENCOUNTER_END - OWE_SPAWNS_MAX))
 
 // Aliases for old names. "object event id" normally refers to an index into gObjectEvents, which these are not.
 // Used for link player OWs in CreateLinkPlayerSprite
-#define OBJ_EVENT_ID_DYNAMIC_BASE 0xF0
 #define OBJ_EVENT_ID_CAMERA LOCALID_CAMERA
 #define OBJ_EVENT_ID_PLAYER LOCALID_PLAYER
+#define OBJ_EVENT_ID_DYNAMIC_BASE 0xF0
 
 // Moved from src/event_object_movement.c so that they're accesible from other files.
 #define OBJ_EVENT_PAL_TAG_BRENDAN                 0x1100
@@ -557,16 +558,16 @@ enum
 #define OBJ_EVENT_PAL_TAG_PLAYER_GREEN            0x1127
 #define OBJ_EVENT_PAL_TAG_PLAYER_GREEN_REFLECTION 0x1128
 #define OBJ_EVENT_PAL_TAG_NPC_BLUE                0x1129
-#define OBJ_EVENT_PAL_TAG_NPC_PINK                0x1130
-#define OBJ_EVENT_PAL_TAG_NPC_GREEN               0x1131
-#define OBJ_EVENT_PAL_TAG_NPC_WHITE               0x1132
-#define OBJ_EVENT_PAL_TAG_NPC_BLUE_REFLECTION     0x1133
-#define OBJ_EVENT_PAL_TAG_NPC_PINK_REFLECTION     0x1134
-#define OBJ_EVENT_PAL_TAG_NPC_GREEN_REFLECTION    0x1135
-#define OBJ_EVENT_PAL_TAG_NPC_WHITE_REFLECTION    0x1136
-#define OBJ_EVENT_PAL_TAG_METEORITE               0x1137
-#define OBJ_EVENT_PAL_TAG_SEAGALLOP               0x1138
-#define OBJ_EVENT_PAL_TAG_SS_ANNE                 0x1139
+#define OBJ_EVENT_PAL_TAG_NPC_PINK                0x112A
+#define OBJ_EVENT_PAL_TAG_NPC_GREEN               0x112B
+#define OBJ_EVENT_PAL_TAG_NPC_WHITE               0x112C
+#define OBJ_EVENT_PAL_TAG_NPC_BLUE_REFLECTION     0x112D
+#define OBJ_EVENT_PAL_TAG_NPC_PINK_REFLECTION     0x112E
+#define OBJ_EVENT_PAL_TAG_NPC_GREEN_REFLECTION    0x112F
+#define OBJ_EVENT_PAL_TAG_NPC_WHITE_REFLECTION    0x1130
+#define OBJ_EVENT_PAL_TAG_METEORITE               0x1131
+#define OBJ_EVENT_PAL_TAG_SEAGALLOP               0x1132
+#define OBJ_EVENT_PAL_TAG_SS_ANNE                 0x1133
 
 #if OW_FOLLOWERS_POKEBALLS
 // Vanilla

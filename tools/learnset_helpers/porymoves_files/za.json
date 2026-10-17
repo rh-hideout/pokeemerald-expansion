@@ -3968,7 +3968,7 @@
     "TutorMoves": [],
     "EggMoves": []
   },
-  "FARFETCH\u00c2\u20ac\u2122D": {
+  "FARFETCHD": {
     "LevelMoves": [
       {
         "Level": "1",
@@ -26565,7 +26565,7 @@
       "MOVE_HYPER_BEAM",
       "MOVE_IRON_DEFENSE",
       "MOVE_IRON_HEAD",
-      "MOVE_KING\u00c2\u20ac\u2122S_SHIELD",
+      "MOVE_KINGS_SHIELD",
       "MOVE_METAL_SOUND",
       "MOVE_NIGHT_SLASH",
       "MOVE_OMINOUS_WIND",
@@ -26588,7 +26588,7 @@
       "MOVE_ZEN_HEADBUTT"
     ],
     "TutorMoves": [
-      "MOVE_KING\u00c2\u20ac\u2122S_SHIELD",
+      "MOVE_KINGS_SHIELD",
       "MOVE_SACRED_SWORD"
     ],
     "EggMoves": []
@@ -29125,7 +29125,7 @@
       },
       {
         "Level": "32",
-        "Move": "MOVE_FOREST\u00c2\u20ac\u2122S_CURSE"
+        "Move": "MOVE_FORESTS_CURSE"
       },
       {
         "Level": "36",
@@ -29148,7 +29148,7 @@
       "MOVE_ENDURE",
       "MOVE_ENERGY_BALL",
       "MOVE_FACADE",
-      "MOVE_FOREST\u00c2\u20ac\u2122S_CURSE",
+      "MOVE_FORESTS_CURSE",
       "MOVE_GIGA_DRAIN",
       "MOVE_GROWTH",
       "MOVE_HEAL_BLOCK",
@@ -29207,7 +29207,7 @@
       },
       {
         "Level": "32",
-        "Move": "MOVE_FOREST\u00c2\u20ac\u2122S_CURSE"
+        "Move": "MOVE_FORESTS_CURSE"
       },
       {
         "Level": "36",
@@ -29235,7 +29235,7 @@
       "MOVE_ENERGY_BALL",
       "MOVE_FACADE",
       "MOVE_FOCUS_BLAST",
-      "MOVE_FOREST\u00c2\u20ac\u2122S_CURSE",
+      "MOVE_FORESTS_CURSE",
       "MOVE_GIGA_DRAIN",
       "MOVE_GIGA_IMPACT",
       "MOVE_GROWTH",
@@ -30090,7 +30090,7 @@
       },
       {
         "Level": "1",
-        "Move": "MOVE_LAND\u00c2\u20ac\u2122S_WRATH"
+        "Move": "MOVE_LANDS_WRATH"
       },
       {
         "Level": "1",
@@ -30166,7 +30166,7 @@
       "MOVE_HYPER_BEAM",
       "MOVE_HYPER_VOICE",
       "MOVE_IRON_HEAD",
-      "MOVE_LAND\u00c2\u20ac\u2122S_WRATH",
+      "MOVE_LANDS_WRATH",
       "MOVE_MAGNET_BOMB",
       "MOVE_OUTRAGE",
       "MOVE_POISON_FANG",
@@ -32679,7 +32679,7 @@
     ],
     "EggMoves": []
   },
-  "SIRFETCH\u00c2\u20ac\u2122D": {
+  "SIRFETCHD": {
     "LevelMoves": [
       {
         "Level": "1",

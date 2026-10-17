@@ -4,6 +4,7 @@
 ASSUMPTIONS
 {
     ASSUME(GetMoveEffect(MOVE_ROTOTILLER) == EFFECT_ROTOTILLER);
+    ASSUME_STAT_CHANGE(MOVE_ROTOTILLER, attack: +1, spAtk: +1);
 }
 
 DOUBLE_BATTLE_TEST("Rototiller boosts Attack and Special Attack of all Grass types on the field")
@@ -35,19 +36,42 @@ DOUBLE_BATTLE_TEST("Rototiller boosts Attack and Special Attack of all Grass typ
     }
 }
 
+// Apperantly the failure is still processed even if there are no valid targets
 SINGLE_BATTLE_TEST("Rototiller fails if there are no valid targets")
 {
     GIVEN {
         ASSUME(GetSpeciesType(SPECIES_WOBBUFFET, 0) != TYPE_GRASS);
         ASSUME(GetSpeciesType(SPECIES_WOBBUFFET, 1) != TYPE_GRASS);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_ROTOTILLER); }
     } SCENE {
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_ROTOTILLER, player);
+        MESSAGE("Wynaut used Rototiller!");
+        MESSAGE("It doesn't affect Wynaut…");
+        MESSAGE("It doesn't affect the opposing Wobbuffet…");
+    }
+}
+
+DOUBLE_BATTLE_TEST("Rototiller fails if there are no valid targets (Double Battle)")
+{
+    GIVEN {
+        ASSUME(GetSpeciesType(SPECIES_WOBBUFFET, 0) != TYPE_GRASS);
+        ASSUME(GetSpeciesType(SPECIES_WOBBUFFET, 1) != TYPE_GRASS);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_FLYGON) { Ability(ABILITY_LEVITATE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_FLYGON) { Ability(ABILITY_LEVITATE); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_ROTOTILLER); }
+    } SCENE {
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_ROTOTILLER, playerLeft);
         MESSAGE("Wobbuffet used Rototiller!");
-        MESSAGE("But it failed!");
+        MESSAGE("It doesn't affect Wobbuffet…");
+        MESSAGE("It doesn't affect Flygon…");
+        MESSAGE("It doesn't affect the opposing Wobbuffet…");
+        MESSAGE("It doesn't affect the opposing Flygon…");
     }
 }
 

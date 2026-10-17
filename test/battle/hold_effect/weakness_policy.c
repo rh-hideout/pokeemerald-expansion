@@ -8,7 +8,7 @@ ASSUMPTIONS
 
 SINGLE_BATTLE_TEST("Weakness Policy does not activate if Disguise blocks the damage")
 {
-    u32 species;
+    enum Species species;
 
     PARAMETRIZE { species = SPECIES_MIMIKYU_BUSTED; }
     PARAMETRIZE { species = SPECIES_MIMIKYU_DISGUISED; }
@@ -22,9 +22,17 @@ SINGLE_BATTLE_TEST("Weakness Policy does not activate if Disguise blocks the dam
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_METAL_CLAW, player);
         if (species == SPECIES_MIMIKYU_BUSTED)
+        {
+            ITEM_POPUP(opponent, ITEM_WEAKNESS_POLICY);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        }
         else
-            NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        {
+            NONE_OF {
+                ITEM_POPUP(opponent, ITEM_WEAKNESS_POLICY);
+                ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+            }
+        }
     }
 }
 

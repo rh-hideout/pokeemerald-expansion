@@ -48,7 +48,7 @@ SINGLE_BATTLE_TEST("Pastel Veil immediately cures Mold Breaker poison")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TOXIC, player);
         STATUS_ICON(opponent, badPoison: TRUE);
         ABILITY_POPUP(opponent, ABILITY_PASTEL_VEIL);
-        MESSAGE("The opposing Ponyta's Pastel Veil cured its poison problem!");
+        MESSAGE("The opposing Ponyta was cured of its poisoning!");
         STATUS_ICON(opponent, none: TRUE);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
     }

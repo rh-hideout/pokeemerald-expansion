@@ -99,14 +99,14 @@ static void InitMenuOptionGlow(void);
 static void Task_CurrentMenuOptionGlow(u8);
 static void SetMenuOptionGlow(void);
 
-static const u16 sPokenavBgDotsPal[] = INCBIN_U16("graphics/pokenav/bg_dots.gbapal");
-static const u32 sPokenavBgDotsTiles[] = INCBIN_U32("graphics/pokenav/bg_dots.4bpp.smol");
-static const u32 sPokenavBgDotsTilemap[] = INCBIN_U32("graphics/pokenav/bg_dots.bin.smolTM");
-static const u16 sPokenavDeviceBgPal[] = INCBIN_U16("graphics/pokenav/device_outline.gbapal");
-static const u32 sPokenavDeviceBgTiles[] = INCBIN_U32("graphics/pokenav/device_outline.4bpp.smol");
-static const u32 sPokenavDeviceBgTilemap[] = INCBIN_U32("graphics/pokenav/device_outline_map.bin.smolTM");
-static const u16 sMatchCallBlueLightPal[] = INCBIN_U16("graphics/pokenav/blue_light.gbapal");
-static const u32 sMatchCallBlueLightTiles[] = INCBIN_U32("graphics/pokenav/blue_light.4bpp.smol");
+static const u16 sPokenavBgDotsPal[] = INCGFX_U16("graphics/pokenav/bg_dots.png", ".gbapal");
+static const u32 sPokenavBgDotsTiles[] = INCGFX_U32("graphics/pokenav/bg_dots.png", ".4bpp.smol");
+static const u32 sPokenavBgDotsTilemap[] = INCGFX_U32("graphics/pokenav/bg_dots.bin", ".smolTM");
+static const u16 sPokenavDeviceBgPal[] = INCGFX_U16("graphics/pokenav/device_outline.png", ".gbapal");
+static const u32 sPokenavDeviceBgTiles[] = INCGFX_U32("graphics/pokenav/device_outline.png", ".4bpp.smol", "-num_tiles 53 -Wnum_tiles");
+static const u32 sPokenavDeviceBgTilemap[] = INCGFX_U32("graphics/pokenav/device_outline_map.bin", ".smolTM");
+static const u16 sMatchCallBlueLightPal[] = INCGFX_U16("graphics/pokenav/blue_light.png", ".gbapal");
+static const u32 sMatchCallBlueLightTiles[] = INCGFX_U32("graphics/pokenav/blue_light.png", ".4bpp.smol");
 
 static const u8 gText_NoRibbonWinners[] = _("There are no RIBBON winners.");
 
@@ -205,6 +205,17 @@ struct
         .gfx = {
             sOptionsLabelGfx_RegionMap,
             sOptionsLabelGfx_Condition,
+            sOptionsLabelGfx_SwitchOff
+        }
+    },
+    [POKENAV_MENU_TYPE_UNLOCK_RIBBONS] =
+    {
+        .yStart = 42,
+        .deltaY = 20,
+        .gfx = {
+            sOptionsLabelGfx_RegionMap,
+            sOptionsLabelGfx_Condition,
+            sOptionsLabelGfx_Ribbons,
             sOptionsLabelGfx_SwitchOff
         }
     },
@@ -514,7 +525,7 @@ static u32 LoopedTask_OpenMenu(s32 state)
         {
         case POKENAV_MENU_TYPE_CONDITION_SEARCH:
             LoadLeftHeaderGfxForIndex(7);
-            // fallthrough
+            [[fallthrough]];
         case POKENAV_MENU_TYPE_CONDITION:
             LoadLeftHeaderGfxForIndex(1);
             break;
@@ -530,7 +541,7 @@ static u32 LoopedTask_OpenMenu(s32 state)
         {
         case POKENAV_MENU_TYPE_CONDITION_SEARCH:
             ShowLeftHeaderGfx(7, FALSE, FALSE);
-            // fallthrough
+            [[fallthrough]];
         case POKENAV_MENU_TYPE_CONDITION:
             ShowLeftHeaderGfx(1, FALSE, FALSE);
             break;
@@ -763,7 +774,7 @@ static u32 LoopedTask_OpenPokenavFeature(s32 state)
         {
         case POKENAV_MENU_TYPE_CONDITION_SEARCH:
             HideMainOrSubMenuLeftHeader(POKENAV_GFX_SEARCH_MENU, FALSE);
-            // fallthrough
+            [[fallthrough]];
         case POKENAV_MENU_TYPE_CONDITION:
             HideMainOrSubMenuLeftHeader(POKENAV_GFX_CONDITION_MENU, FALSE);
             break;

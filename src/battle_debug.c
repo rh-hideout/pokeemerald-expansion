@@ -112,6 +112,7 @@ enum
     LIST_ITEM_AI_PARTY,
     LIST_ITEM_VARIOUS,
     LIST_ITEM_INSTANT_WIN,
+    LIST_ITEM_INSTANT_LOSE,
     LIST_ITEM_COUNT
 };
 
@@ -327,7 +328,8 @@ static const struct ListMenuItem sMainListItems[] =
     {COMPOUND_STRING("AI Info"),      LIST_ITEM_AI_INFO},
     {COMPOUND_STRING("AI Party"),     LIST_ITEM_AI_PARTY},
     {COMPOUND_STRING("Various"),      LIST_ITEM_VARIOUS},
-    {COMPOUND_STRING("Instant Win"),  LIST_ITEM_INSTANT_WIN},
+    {COMPOUND_STRING("Lose Battle"),  LIST_ITEM_INSTANT_LOSE},
+    {COMPOUND_STRING("Win Battle"),   LIST_ITEM_INSTANT_WIN},
 };
 
 static const struct ListMenuItem sStatsListItems[] =
@@ -365,12 +367,10 @@ static const struct ListMenuItem sVolatileStatusListItems[] =
     {COMPOUND_STRING("EscapePrevention"),   VOLATILE_ESCAPE_PREVENTION},
     {COMPOUND_STRING("Cursed"),             VOLATILE_CURSED},
     {COMPOUND_STRING("Foresight"),          VOLATILE_FORESIGHT},
-    {COMPOUND_STRING("DragonCheer"),        VOLATILE_DRAGON_CHEER},
-    {COMPOUND_STRING("FocusEnergy"),        VOLATILE_FOCUS_ENERGY},
+    {COMPOUND_STRING("CriticalHitBoost"),   VOLATILE_CRITICAL_HIT_BOOST},
     {COMPOUND_STRING("Electrified"),        VOLATILE_ELECTRIFIED},
     {COMPOUND_STRING("MudSport"),           VOLATILE_MUD_SPORT},
     {COMPOUND_STRING("WaterSport"),         VOLATILE_WATER_SPORT},
-    {COMPOUND_STRING("Infinite Confusion"), VOLATILE_INFINITE_CONFUSION},
     {COMPOUND_STRING("Salt Cure"),          VOLATILE_SALT_CURE},
     {COMPOUND_STRING("Syrup Bomb"),         VOLATILE_SYRUP_BOMB},
     {COMPOUND_STRING("Glaive Rush"),        VOLATILE_GLAIVE_RUSH},
@@ -384,14 +384,12 @@ static const struct ListMenuItem sVolatileStatusListItems[] =
     {COMPOUND_STRING("Imprison"),           VOLATILE_IMPRISON},
     {COMPOUND_STRING("Grudge"),             VOLATILE_GRUDGE},
     {COMPOUND_STRING("Gastro Acid"),        VOLATILE_GASTRO_ACID},
-    {COMPOUND_STRING("Embargo"),            VOLATILE_EMBARGO},
+    {COMPOUND_STRING("Embargo"),            VOLATILE_EMBARGO_TIMER},
     {COMPOUND_STRING("Smack Down"),         VOLATILE_SMACK_DOWN},
     {COMPOUND_STRING("Telekinesis"),        VOLATILE_TELEKINESIS},
     {COMPOUND_STRING("Miracle Eye"),        VOLATILE_MIRACLE_EYE},
-    {COMPOUND_STRING("Magnet Rise"),        VOLATILE_MAGNET_RISE},
-    {COMPOUND_STRING("Heal Block"),         VOLATILE_HEAL_BLOCK},
+    {COMPOUND_STRING("Heal Block"),         VOLATILE_HEAL_BLOCK_TIMER},
     {COMPOUND_STRING("Aqua Ring"),          VOLATILE_AQUA_RING},
-    {COMPOUND_STRING("Laser Focus"),        VOLATILE_LASER_FOCUS},
     {COMPOUND_STRING("Power Trick"),        VOLATILE_POWER_TRICK},
 };
 
@@ -669,7 +667,7 @@ void CB2_BattleDebugMenu(void)
         ResetBgsAndClearDma3BusyFlags(0);
         InitBgsFromTemplates(0, sBgTemplates, ARRAY_COUNT(sBgTemplates));
         ResetAllBgsCoordinates();
-        FreeAllWindowBuffers();
+        CloseMainBattleScreen();
         DeactivateAllTextPrinters();
         SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_OBJ_ON | DISPCNT_OBJ_1D_MAP);
         ShowBg(0);
@@ -729,42 +727,42 @@ static const u8 sTextColorTable[][3] =
 
 static void PutMovesPointsText(struct BattleDebugMenu *data)
 {
-    u32 i, j, count, battlerDef, chosenMoveIndex = gAiBattleData->chosenMoveIndex[data->aiBattlerId];
+    enum MoveSlot chosenMoveIndex = gAiBattleData->chosenMoveIndex[data->aiBattlerId];
     u8 *text = Alloc(0x50);
 
     FillWindowPixelBuffer(data->aiMovesWindowId, 0x11);
     AddTextPrinterParameterized(data->aiMovesWindowId, FONT_NORMAL, COMPOUND_STRING("Score/Dmg"), 3, 0, 0, NULL);
-    for (i = 0; i < MAX_MON_MOVES; i++)
+    for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
         text[0] = CHAR_SPACE;
-        StringCopy(text + 1, GetMoveName(gBattleMons[data->aiBattlerId].moves[i]));
-        AddTextPrinterParameterized(data->aiMovesWindowId, FONT_NORMAL, text, 0, (i * 15) + 15, 0, NULL);
-        for (count = 0, j = 0; j < MAX_BATTLERS_COUNT; j++)
+        StringCopy(text + 1, GetMoveName(gBattleMons[data->aiBattlerId].moves[moveIndex]));
+        AddTextPrinterParameterized(data->aiMovesWindowId, FONT_NORMAL, text, 0, (moveIndex * 15) + 15, 0, NULL);
+        for (u32 count = 0, battler = 0; battler < MAX_BATTLERS_COUNT; battler++)
         {
-            if (data->spriteIds.aiIconSpriteIds[j] == 0xFF)
+            if (data->spriteIds.aiIconSpriteIds[battler] == 0xFF)
                 continue;
-            battlerDef = gSprites[data->spriteIds.aiIconSpriteIds[j]].data[0];
+            u32 battlerDef = gSprites[data->spriteIds.aiIconSpriteIds[battler]].data[0];
             ConvertIntToDecimalStringN(text,
-                                       gAiBattleData->finalScore[data->aiBattlerId][battlerDef][i],
+                                       gAiBattleData->finalScore[data->aiBattlerId][battlerDef][moveIndex],
                                        STR_CONV_MODE_RIGHT_ALIGN, 3);
             // If chosen move and chosen target
-            if ((chosenMoveIndex == i) && (gAiBattleData->chosenTarget[data->aiBattlerId] == j) && !(gAiLogicData->shouldSwitch & (1u << data->aiBattlerId)))
-                AddTextPrinterParameterized3(data->aiMovesWindowId, FONT_NORMAL, 84 + count * 54, (i * 15) + 15, sTextColorTable[COLORID_RED], 0, text);
+            if ((chosenMoveIndex == moveIndex) && (gAiBattleData->chosenTarget[data->aiBattlerId] == battlerDef) && !(gAiLogicData->shouldSwitch & (1u << data->aiBattlerId)))
+                AddTextPrinterParameterized3(data->aiMovesWindowId, FONT_NORMAL, 84 + count * 54, (moveIndex * 15) + 15, sTextColorTable[COLORID_RED], 0, text);
             else
-                AddTextPrinterParameterized(data->aiMovesWindowId, FONT_NORMAL, text, 84 + count * 54, (i * 15) + 15, 0, NULL);
+                AddTextPrinterParameterized(data->aiMovesWindowId, FONT_NORMAL, text, 84 + count * 54, (moveIndex * 15) + 15, 0, NULL);
 
-            if ((chosenMoveIndex == i) && (gAiBattleData->chosenTarget[data->aiBattlerId] == j) && !(gAiLogicData->shouldSwitch & (1u << data->aiBattlerId)))
-                AddTextPrinterParameterized3(data->aiMovesWindowId, FONT_NORMAL, 103 + count * 54, (i * 15) + 15, sTextColorTable[COLORID_RED], 0, COMPOUND_STRING("/"));
+            if ((chosenMoveIndex == moveIndex) && (gAiBattleData->chosenTarget[data->aiBattlerId] == battlerDef) && !(gAiLogicData->shouldSwitch & (1u << data->aiBattlerId)))
+                AddTextPrinterParameterized3(data->aiMovesWindowId, FONT_NORMAL, 103 + count * 54, (moveIndex * 15) + 15, sTextColorTable[COLORID_RED], 0, COMPOUND_STRING("/"));
             else
-                AddTextPrinterParameterized(data->aiMovesWindowId, FONT_NORMAL, COMPOUND_STRING("/"), 103 + count * 54, (i * 15) + 15, 0, NULL);
+                AddTextPrinterParameterized(data->aiMovesWindowId, FONT_NORMAL, COMPOUND_STRING("/"), 103 + count * 54, (moveIndex * 15) + 15, 0, NULL);
 
             ConvertIntToDecimalStringN(text,
-                                       AI_GetDamage(data->aiBattlerId, battlerDef, i, AI_ATTACKING, gAiLogicData),
+                                       AI_GetDamage(data->aiBattlerId, battlerDef, moveIndex, AI_ATTACKING, gAiLogicData),
                                        STR_CONV_MODE_LEADING_ZEROS, 3);
-            if ((chosenMoveIndex == i) && (gAiBattleData->chosenTarget[data->aiBattlerId] == j) && !(gAiLogicData->shouldSwitch & (1u << data->aiBattlerId)))
-                AddTextPrinterParameterized3(data->aiMovesWindowId, FONT_NORMAL, 110 + count * 54, (i * 15) + 15, sTextColorTable[COLORID_RED], 0, text);
+            if ((chosenMoveIndex == moveIndex) && (gAiBattleData->chosenTarget[data->aiBattlerId] == battlerDef) && !(gAiLogicData->shouldSwitch & (1u << data->aiBattlerId)))
+                AddTextPrinterParameterized3(data->aiMovesWindowId, FONT_NORMAL, 110 + count * 54, (moveIndex * 15) + 15, sTextColorTable[COLORID_RED], 0, text);
             else
-                AddTextPrinterParameterized(data->aiMovesWindowId, FONT_NORMAL, text, 110 + count * 54, (i * 15) + 15, 0, NULL);
+                AddTextPrinterParameterized(data->aiMovesWindowId, FONT_NORMAL, text, 110 + count * 54, (moveIndex * 15) + 15, 0, NULL);
 
             count++;
         }
@@ -773,7 +771,7 @@ static void PutMovesPointsText(struct BattleDebugMenu *data)
     if (gAiLogicData->shouldSwitch & (1u << data->aiBattlerId))
     {
         struct Pokemon *party = GetBattlerParty(data->aiBattlerId);
-        u32 switchMon = GetMonData(&party[gAiLogicData->mostSuitableMonId[data->aiBattlerId]], MON_DATA_SPECIES);
+        enum Species switchMon = GetMonData(&party[gAiLogicData->mostSuitableMonId[data->aiBattlerId]], MON_DATA_SPECIES);
         AddTextPrinterParameterized3(data->aiMovesWindowId, FONT_NORMAL, 74, 79, sTextColorTable[COLORID_RED], 0, COMPOUND_STRING("Switching to "));
         AddTextPrinterParameterized3(data->aiMovesWindowId, FONT_NORMAL, 74 + 68, 79, sTextColorTable[COLORID_RED], 0, gSpeciesInfo[switchMon].speciesName);
     }
@@ -1068,7 +1066,7 @@ static void Task_ShowAiParty(u8 taskId)
         aiMons = gAiPartyData->mons[GetBattlerSide(data->aiBattlerId)];
         for (i = 0; i < gAiPartyData->count[GetBattlerSide(data->aiBattlerId)]; i++)
         {
-            u16 species = SPECIES_NONE; // Question mark
+            enum Species species = SPECIES_NONE; // Question mark
             if (aiMons[i].wasSentInBattle && aiMons[i].species)
                 species = aiMons[i].species;
             data->spriteIds.aiPartyIcons[i] = CreateMonIcon(species, SpriteCallbackDummy, (i * 41) + 15, 7, 1, 0);
@@ -1208,6 +1206,13 @@ static void Task_DebugMenuProcessInput(u8 taskId)
             else if (listItemId == LIST_ITEM_INSTANT_WIN && JOY_NEW(A_BUTTON))
             {
                 BattleDebug_WonBattle();
+                BeginNormalPaletteFade(-1, 0, 0, 0x10, 0);
+                gTasks[taskId].func = Task_DebugMenuFadeOut;
+                return;
+            }
+            else if (listItemId == LIST_ITEM_INSTANT_LOSE && JOY_NEW(A_BUTTON))
+            {
+                BattleDebug_LostBattle();
                 BeginNormalPaletteFade(-1, 0, 0, 0x10, 0);
                 gTasks[taskId].func = Task_DebugMenuFadeOut;
                 return;
@@ -1405,6 +1410,7 @@ static void CreateSecondaryListMenu(struct BattleDebugMenu *data)
         itemsCount = ARRAY_COUNT(sSideStatusListItems);
         break;
     case LIST_ITEM_INSTANT_WIN:
+    case LIST_ITEM_INSTANT_LOSE:
     case LIST_ITEM_AI_MOVES_PTS:
     case LIST_ITEM_AI_INFO:
         return;
@@ -1628,10 +1634,10 @@ static void UpdateBattlerValue(struct BattleDebugMenu *data)
     case VAR_IN_LOVE:
         if (data->modifyArrows.currValue)
         {
-            if (IsBattlerAlive(BATTLE_OPPOSITE(data->battlerId)))
-                gBattleMons[data->battlerId].volatiles.infatuation = INFATUATED_WITH(BATTLE_OPPOSITE(data->battlerId));
+            if (IsBattlerAlive(GetOppositeBattler(data->battlerId)))
+                gBattleMons[data->battlerId].volatiles.infatuation = INFATUATED_WITH(GetOppositeBattler(data->battlerId));
             else
-                gBattleMons[data->battlerId].volatiles.infatuation = INFATUATED_WITH(BATTLE_PARTNER(BATTLE_OPPOSITE(data->battlerId)));
+                gBattleMons[data->battlerId].volatiles.infatuation = INFATUATED_WITH(GetPartnerBattler(GetOppositeBattler(data->battlerId)));
         }
         else
         {
@@ -1692,8 +1698,7 @@ static void ChangeHazardsValue(struct BattleDebugMenu *data)
     case LIST_SIDE_SPIKES:
         if (data->modifyArrows.currValue > 0)
         {
-            if (gSideTimers[side].spikesAmount == 0)
-                PushHazardTypeToQueue(side, HAZARDS_SPIKES);
+            SetSpikesLayer(side, data->modifyArrows.currValue);
             gSideTimers[side].spikesAmount = data->modifyArrows.currValue;
         }
         else if (data->modifyArrows.currValue == 0)
@@ -1705,8 +1710,7 @@ static void ChangeHazardsValue(struct BattleDebugMenu *data)
     case LIST_SIDE_TOXIC_SPIKES:
         if (data->modifyArrows.currValue > 0)
         {
-            if (gSideTimers[side].toxicSpikesAmount == 0)
-                PushHazardTypeToQueue(side, HAZARDS_TOXIC_SPIKES);
+            SetToxicSpikesLayer(side, data->modifyArrows.currValue);
             gSideTimers[side].toxicSpikesAmount = data->modifyArrows.currValue;
         }
         else if (data->modifyArrows.currValue == 0)
@@ -2170,11 +2174,7 @@ static const u8 *const sHoldEffectNames[HOLD_EFFECT_COUNT] =
     [HOLD_EFFECT_RESTORE_PP]       = COMPOUND_STRING("Restore Pp"),
     [HOLD_EFFECT_CURE_CONFUSION]   = COMPOUND_STRING("Cure Confusion"),
     [HOLD_EFFECT_CURE_STATUS]      = COMPOUND_STRING("Cure Status"),
-    [HOLD_EFFECT_CONFUSE_SPICY]    = COMPOUND_STRING("Confuse Spicy"),
-    [HOLD_EFFECT_CONFUSE_DRY]      = COMPOUND_STRING("Confuse Dry"),
-    [HOLD_EFFECT_CONFUSE_SWEET]    = COMPOUND_STRING("Confuse Sweet"),
-    [HOLD_EFFECT_CONFUSE_BITTER]   = COMPOUND_STRING("Confuse Bitter"),
-    [HOLD_EFFECT_CONFUSE_SOUR]     = COMPOUND_STRING("Confuse Sour"),
+    [HOLD_EFFECT_CONFUSE_FLAVOR]   = COMPOUND_STRING("Confuse Flavor"),
     [HOLD_EFFECT_ATTACK_UP]        = COMPOUND_STRING("Attack Up"),
     [HOLD_EFFECT_DEFENSE_UP]       = COMPOUND_STRING("Defense Up"),
     [HOLD_EFFECT_SPEED_UP]         = COMPOUND_STRING("Speed Up"),

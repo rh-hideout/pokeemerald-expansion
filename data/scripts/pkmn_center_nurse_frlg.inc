@@ -1,3 +1,16 @@
+EventScript_AfterWhiteOutHeal_Frlg::
+	lockall
+	textcolor NPC_TEXT_COLOR_FEMALE
+	msgbox gText_FirstShouldRestoreMonsHealth
+	call EventScript_PkmnCenterNurse_TakeAndHealPkmn_Frlg
+	call_if_unset FLAG_DEFEATED_BROCK, EventScript_AfterWhiteOutHealMsgPreFirstBoss
+	call_if_set FLAG_DEFEATED_BROCK, EventScript_AfterWhiteOutHealMsg
+	applymovement VAR_LAST_TALKED, Movement_Bow
+	waitmovement 0
+	fadedefaultbgm
+	releaseall
+	end
+
 EventScript_PkmnCenterNurse_Frlg::
 	message Text_WelcomeWantToHealPkmn_Frlg
 	waitmessage

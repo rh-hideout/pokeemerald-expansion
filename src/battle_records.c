@@ -35,8 +35,8 @@ static void CB2_ShowTrainerHillRecords(void);
 EWRAM_DATA u8 gRecordsWindowId = 0;
 EWRAM_DATA static u8 *sTilemapBuffer = NULL;
 
-static const u32 sTrainerHillWindowTileset[] = INCBIN_U32("graphics/trainer_hill/records_window.4bpp");
-static const u16 sTrainerHillWindowPalette[] = INCBIN_U16("graphics/trainer_hill/records_window.gbapal");
+static const u32 sTrainerHillWindowTileset[] = INCGFX_U32("graphics/trainer_hill/records_window.png", ".4bpp");
+static const u16 sTrainerHillWindowPalette[] = INCGFX_U16("graphics/trainer_hill/records_window.png", ".gbapal");
 static const u32 sTrainerHillWindowTilemap[] = INCBIN_U32("graphics/trainer_hill/records_window.bin");
 
 static const struct BgTemplate sTrainerHillRecordsBgTemplates[] =
@@ -253,11 +253,11 @@ static void UpdateTrainerCardWinsLosses(s32 battler)
     switch (gBattleOutcome)
     {
     case B_OUTCOME_WON:
-        IncTrainerCardWins(BATTLE_OPPOSITE(battler));
+        IncTrainerCardWins(GetOppositeBattler(battler));
         IncTrainerCardLosses(battler);
         break;
     case B_OUTCOME_LOST:
-        IncTrainerCardLosses(BATTLE_OPPOSITE(battler));
+        IncTrainerCardLosses(GetOppositeBattler(battler));
         IncTrainerCardWins(battler);
         break;
     }

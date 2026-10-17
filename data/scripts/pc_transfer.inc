@@ -9,7 +9,6 @@ Common_EventScript_NameReceivedBoxMon::
 	fadescreen FADE_TO_BLACK
 	setvar VAR_0x8004, PC_MON_CHOSEN
 	special ChangePokemonNickname
-	waitstate
 	lock
 	faceplayer
 	return

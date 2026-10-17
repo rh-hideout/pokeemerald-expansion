@@ -1078,7 +1078,7 @@ static void RfuHandleReceiveCommand(u8 unused)
         case RFUCMD_SEND_PLAYER_IDS_NEW:
             if (gRfu.parentChild == MODE_CHILD && gReceivedRemoteLinkPlayers)
                 return;
-            // fallthrough
+            [[fallthrough]];
         case RFUCMD_SEND_PLAYER_IDS:
             if (gRfuLinkStatus->parentChild == MODE_CHILD)
             {
@@ -1911,7 +1911,7 @@ static void Task_PlayerExchangeUpdate(u8 taskId)
             sio->linkPlayerIdx[i] = gRfu.linkPlayerIdx[i];
         memcpy(sio->linkPlayers, gLinkPlayers, sizeof gLinkPlayers);
         gTasks[taskId].tState++;
-        // fallthrough
+        [[fallthrough]];
     case 4:
         sio = (struct SioInfo *)gBlockSendBuffer;
         sio->playerCount = gRfu.playerCount;
@@ -2068,7 +2068,7 @@ void SetHostRfuWonderFlags(bool32 hasNews, bool32 hasCard)
     gHostRfuGameData.compatibility.hasCard = hasCard;
 }
 
-void SetTradeBoardRegisteredMonInfo(u32 type, u32 species, u32 level)
+void SetTradeBoardRegisteredMonInfo(u32 type, enum Species species, u32 level)
 {
     gHostRfuGameData.tradeType = type;
     gHostRfuGameData.tradeSpecies = species;
@@ -2228,7 +2228,7 @@ static void LinkManagerCB_Parent(u8 msg, u8 paramCount)
     case LMAN_MSG_LINK_RECOVERY_FAILED_AND_DISCONNECTED:
         gRfu.linkLossRecoveryState = 4;
         gRfu.parentSlots &= ~lman.param[0];
-        if (gReceivedRemoteLinkPlayers == 1)
+        if (gReceivedRemoteLinkPlayers)
         {
             if (gRfu.parentSlots == 0)
                 RfuSetErrorParams(msg);
@@ -2290,13 +2290,14 @@ static void LinkManagerCB_Child(u8 msg, u8 unused1)
         gRfu.linkLossRecoveryState = 2;
         if (gRfu.childRecvStatus == RFU_STATUS_JOIN_GROUP_NO)
             break;
+        [[fallthrough]];
     case LMAN_MSG_LINK_RECOVERY_FAILED_AND_DISCONNECTED:
         if (gRfu.linkLossRecoveryState != 2)
             gRfu.linkLossRecoveryState = 4;
         if (gRfu.childRecvStatus != RFU_STATUS_LEAVE_GROUP)
             RfuSetStatus(RFU_STATUS_CONNECTION_ERROR, msg);
         Debug_PrintString(sASCII_LinkLossDisconnect, 5, 5);
-        if (gReceivedRemoteLinkPlayers == 1)
+        if (gReceivedRemoteLinkPlayers)
             RfuSetErrorParams(msg);
         break;
     case LMAN_MSG_LINK_LOSS_DETECTED_AND_START_RECOVERY:
@@ -2458,12 +2459,13 @@ static void LinkManagerCB_UnionRoom(u8 msg, u8 paramCount)
         break;
     case LMAN_MSG_LINK_LOSS_DETECTED_AND_DISCONNECTED:
         gRfu.linkLossRecoveryState = 2;
+        [[fallthrough]];
     case LMAN_MSG_LINK_RECOVERY_FAILED_AND_DISCONNECTED:
         if (gRfu.linkLossRecoveryState != 2)
             gRfu.linkLossRecoveryState = 4;
         if (gRfu.parentChild == MODE_PARENT)
         {
-            if (gReceivedRemoteLinkPlayers == 1)
+            if (gReceivedRemoteLinkPlayers)
             {
                 gRfu.parentSlots &= ~(lman.param[0]);
                 if (gRfu.parentSlots == 0)
@@ -2472,7 +2474,7 @@ static void LinkManagerCB_UnionRoom(u8 msg, u8 paramCount)
                     StartDisconnectNewChild();
             }
         }
-        else if (gRfu.disconnectMode != RFU_DISCONNECT_NORMAL && gReceivedRemoteLinkPlayers == 1)
+        else if (gRfu.disconnectMode != RFU_DISCONNECT_NORMAL && gReceivedRemoteLinkPlayers)
         {
             RfuSetErrorParams(msg);
             rfu_LMAN_stopManager(FALSE);

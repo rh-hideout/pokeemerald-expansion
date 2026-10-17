@@ -24,13 +24,13 @@ We will start with a graphic that we want to use for our new trainer pic. Unlike
 ### 2. Register the sprites
 Sadly, just putting the image files into the graphics folder is not enough. To use the sprites we have to register them by linking the graphic files in [`src/data/graphics/trainers.h`](./src/data/graphics/trainers.h):
 ```diff
- const u8 gTrainerBackPic_Wally[] = INCBIN_U8("graphics/trainers/back_pics/wally.4bpp");
- const u8 gTrainerBackPic_Steven[] = INCBIN_U8("graphics/trainers/back_pics/steven.4bpp");
-+const u8 gTrainerBackPic_NewOne[] = INCBIN_U8("graphics/trainers/back_pics/new_one.4bpp");
+ const u8 gTrainerBackPic_Wally[] = INCGFX_U8("graphics/trainers/back_pics/wally.png", ".4bpp");
+ const u8 gTrainerBackPic_Steven[] = INCGFX_U8("graphics/trainers/back_pics/steven.png", ".4bpp");
++const u8 gTrainerBackPic_NewOne[] = INCGFX_U8("graphics/trainers/back_pics/new_one.png", ".4bpp");
 
- const u16 gTrainerBackPicPalette_Red[] = INCBIN_U16("graphics/trainers/back_pics/red.gbapal");
- const u16 gTrainerBackPicPalette_Leaf[] = INCBIN_U16("graphics/trainers/back_pics/leaf.gbapal");
-+const u16 gTrainerBackPicPalette_NewOne[] = INCBIN_U16("graphics/trainers/back_pics/new_one.gbapal");
+ const u16 gTrainerBackPicPalette_Red[] = INCGFX_U16("graphics/trainers/back_pics/red.pal", ".gbapal");
+ const u16 gTrainerBackPicPalette_Leaf[] = INCGFX_U16("graphics/trainers/back_pics/leaf.pal", ".gbapal");
++const u16 gTrainerBackPicPalette_NewOne[] = INCGFX_U16("graphics/trainers/back_pics/new_one.pal", ".gbapal");
 ```
 
 ### 3. Connecting the Pictures to the Data

@@ -13,7 +13,8 @@
 #define METATILE_BattleFrontier_CorridorOpenDoor_Bottom  0x20F
 #define METATILE_BattleFrontier_CorridorOpenDoor_Top     0x207
 #define METATILE_BattleFrontier_Door_Elevator            0x20E
-#define METATILE_BattleFrontier_Door_MultiCorridor       0x2AD
+#define METATILE_BattleFrontier_Door_MultiCorridor_Left  0x2AD
+#define METATILE_BattleFrontier_Door_MultiCorridor_Right 0x2AE
 #define METATILE_BattleFrontier_Elevator_Bottom0         0x339
 #define METATILE_BattleFrontier_Elevator_Bottom1         0x33A
 #define METATILE_BattleFrontier_Elevator_Bottom2         0x33B

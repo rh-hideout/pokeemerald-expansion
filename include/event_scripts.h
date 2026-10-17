@@ -37,6 +37,25 @@ extern const u8 EventScript_TryDoNormalTrainerBattle[];
 extern const u8 EventScript_TryDoDoubleRematchBattle[];
 extern const u8 EventScript_TryDoRematchBattle[];
 extern const u8 EventScript_ObjectApproachPlayer[];
+extern const u8 EventScript_ShowTrainerIntroMsg[];
+extern const u8 EventScript_NotEnoughMonsForDoubleBattle[];
+
+extern const u8 EventSnippet_Lock[];
+extern const u8 EventSnippet_FacePlayer[];
+extern const u8 EventSnippet_StartTrainerApproach[];
+extern const u8 EventSnippet_TryDoNormalTrainerBattle[];
+extern const u8 EventSnippet_RevealTrainer[];
+extern const u8 EventSnippet_GetTrainerFlag[];
+extern const u8 EventSnippet_PlayTrainerEncounterMusic[];
+extern const u8 EventSnippet_SetTrainerFacingDirection[];
+extern const u8 EventSnippet_TrainerApproach[];
+extern const u8 EventSnippet_PrepareSecondTrainerApproach[];
+extern const u8 EventSnippet_ShowTrainerIntroMsg[];
+extern const u8 EventSnippet_GotoPostBattleScript[];
+extern const u8 EventSnippet_DoTrainerBattle[];
+extern const u8 EventSnippet_DoRematchTrainerBattle[];
+extern const u8 EventSnippet_EndTrainerBattle[];
+extern const u8 EventSnippet_NotEnoughMonsForDoubleBattle[];
 
 extern const u8 BerryTreeScript[];
 
@@ -630,6 +649,8 @@ extern const u8 EventScript_SelectWithoutRegisteredItem[];
 extern const u8 EventScript_WhiteOut[];
 extern const u8 EventScript_AfterWhiteOutMomHeal[];
 extern const u8 EventScript_AfterWhiteOutHeal[];
+extern const u8 EventScript_AfterWhiteOutHeal_Frlg[];
+extern const u8 EventScript_AfterWhiteOutHealMsgPreFirstBoss[];
 extern const u8 EventScript_ResetMrBriney[];
 extern const u8 EventScript_DoLinkRoomExit[];
 extern const u8 CableClub_EventScript_TooBusyToNotice[];

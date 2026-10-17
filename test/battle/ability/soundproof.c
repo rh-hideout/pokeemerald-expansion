@@ -11,7 +11,7 @@ SINGLE_BATTLE_TEST("Soundproof makes sound moves fail against the ability user")
         TURN { MOVE(player, MOVE_BOOMBURST); }
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_SOUNDPROOF);
-        MESSAGE("The opposing Exploud's Soundproof blocks Boomburst!");
+        MESSAGE("It doesn't affect the opposing Exploud…");
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_BOOMBURST, player);
             HP_BAR(opponent);

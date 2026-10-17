@@ -126,6 +126,7 @@ void UpdateHealthboxAttribute(u8 healthboxSpriteId, struct Pokemon *mon, u8 elem
 s32 MoveBattleBar(enum BattlerId battler, u8 healthboxSpriteId, u8 whichBar, u8 unused);
 u8 GetScaledHPFraction(s16 hp, s16 maxhp, u8 scale);
 u8 GetHPBarLevel(s16 hp, s16 maxhp);
+bool32 IsAnyAbilityPopUpActive(void);
 void CreateAbilityPopUp(enum BattlerId battlerId, enum Ability ability, bool32 isDoubleBattle);
 void DestroyAbilityPopUp(enum BattlerId battlerId);
 bool32 CanThrowLastUsedBall(void);
@@ -138,7 +139,13 @@ void UpdateAbilityPopup(enum BattlerId battlerId);
 void CategoryIcons_LoadSpritesGfx(void);
 void TryToAddMoveInfoWindow(void);
 void TryToHideMoveInfoWindow(void);
+void TryToAddBattleStatusHint(void);
+void TryToHideBattleStatusHint(void);
 void TryAddPokeballIconToHealthbox(u8 healthboxSpriteId, bool8 noStatus);
 void UpdateNickInHealthbox(u8 healthboxSpriteId, struct Pokemon *mon);
+void CreateItemPopUp(enum BattlerId battlerId);
+void FreeAbilityPopUpGfx(void);
+void ShowWeatherIndicator(bool32 instant);
+void HideWeatherIndicator(bool32 instant);
 
 #endif // GUARD_BATTLE_INTERFACE_H

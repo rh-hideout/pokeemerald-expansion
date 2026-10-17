@@ -4,8 +4,6 @@
 #include "difficulty.h"
 #include "constants/battle_partner.h"
 
-extern const struct Trainer gBattlePartners[DIFFICULTY_COUNT][PARTNER_COUNT];
-
 void FillPartnerParty(u16 trainerId);
 
 #endif // BATTLE_PARTNER_H

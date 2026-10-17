@@ -64,11 +64,9 @@ Route111_EventScript_SetFallingPlayerGfxFemale::
 
 Route111_EventScript_CheckSetSandstorm::
 	getplayerxy VAR_TEMP_0, VAR_TEMP_1
-	goto_if_lt VAR_TEMP_1, 34, Route111_EventScript_EndCheckSetSandstorm
-	goto_if_gt VAR_TEMP_1, 107, Route111_EventScript_EndCheckSetSandstorm
+	goto_if_notbetween VAR_TEMP_1, 34, 107, Route111_EventScript_EndCheckSetSandstorm
 	goto_if_gt VAR_TEMP_1, 72, Route111_EventScript_SetSandstorm
-	goto_if_gt VAR_TEMP_0, 2000, Route111_EventScript_EndCheckSetSandstorm
-	goto_if_lt VAR_TEMP_0, 8, Route111_EventScript_EndCheckSetSandstorm
+	goto_if_notbetween VAR_TEMP_0, 8, 2000, Route111_EventScript_EndCheckSetSandstorm
 Route111_EventScript_SetSandstorm::
 	setweather WEATHER_SANDSTORM
 Route111_EventScript_EndCheckSetSandstorm::
@@ -107,21 +105,17 @@ Route111_OnFrame:
 Route111_EventScript_MirageTowerDisappear::
 	lockall
 	special StartMirageTowerShake
-	waitstate
 	delay 24
 	playse SE_FALL
 	addobject LOCALID_ROUTE111_PLAYER_FALLING
 	special StartPlayerDescendMirageTower
-	waitstate
 	showobjectat LOCALID_PLAYER, MAP_LITTLEROOT_TOWN
 	removeobject LOCALID_ROUTE111_PLAYER_FALLING
 	delay 16
 	turnobject LOCALID_PLAYER, DIR_NORTH
 	delay 16
 	special StartMirageTowerDisintegration
-	waitstate
 	special StartMirageTowerFossilFallAndSink
-	waitstate
 	setvar VAR_MIRAGE_TOWER_STATE, 2
 	clearflag FLAG_HIDE_DESERT_UNDERPASS_FOSSIL
 	goto_if_set FLAG_CHOSE_CLAW_FOSSIL, Route111_EventScript_RootFossilDisappeared

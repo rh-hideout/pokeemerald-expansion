@@ -163,7 +163,7 @@ bool32 SetUpFieldMove_Cut(void)
     else
     {
         PlayerGetDestCoords(&gPlayerFacingPosition.x, &gPlayerFacingPosition.y);
-        userAbility = GetMonAbility(&gPlayerParty[GetCursorSelectionMonId()]);
+        userAbility = GetMonAbility(&gParties[B_TRAINER_PLAYER][GetCursorSelectionMonId()]);
         if (userAbility == ABILITY_HYPER_CUTTER)
         {
             sCutSquareSide = CUT_HYPER_SIDE;
@@ -365,9 +365,7 @@ bool8 FldEff_CutGrass(void)
 // set map grid metatile depending on x, y
 static void SetCutGrassMetatile(s16 x, s16 y)
 {
-    s32 metatileId = MapGridGetMetatileIdAt(x, y);
-
-    switch (metatileId)
+    switch (MapGridGetMetatileIdAt(x, y))
     {
     case METATILE_Fortree_LongGrass_Root:
     case METATILE_General_LongGrass:

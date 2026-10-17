@@ -4742,7 +4742,7 @@ static void SpriteCB_DigitalDisplay_ReelTimeNumber(struct Sprite *sprite)
     case 0:
         StartSpriteAnim(sprite, sSlotMachine->reelTimeSpinsLeft - 1);
         sprite->sState++;
-        // fallthrough
+        [[fallthrough]];
     case 1:
         if (++sprite->sCounter >= 4)
         {
@@ -4780,7 +4780,7 @@ static void SpriteCB_DigitalDisplay_PokeballRocking(struct Sprite *sprite)
     case 0:
         sprite->animPaused = TRUE;
         sprite->sState++;
-        // fallthrough
+        [[fallthrough]];
     case 1:
         sprite->y += 8;
         if (sprite->y >= 0x70)
@@ -4905,7 +4905,7 @@ static void SpriteCB_DigitalDisplay_RegBonus(struct Sprite *sprite)
         sprite->y2 = letterYOffset[sprite->sSpriteId];
         sprite->sCounter = letterDelay[sprite->sSpriteId];
         sprite->sState++;
-        // fallthrough
+        [[fallthrough]];
     case 1:
         if (sprite->sCounter-- == 0)
             sprite->sState++;
@@ -4954,7 +4954,7 @@ static void SpriteCB_DigitalDisplay_AButtonStart(struct Sprite *sprite)
         sSlotMachine->win0v = WIN_RANGE(32, 136);
         sprite->invisible = TRUE;
         sprite->sState++;
-        // fallthrough
+        [[fallthrough]];
     case 1:
         sprite->sCounter += 2;
         sprite->data[2] = sprite->sCounter + 176;
@@ -4979,7 +4979,7 @@ static void SpriteCB_DigitalDisplay_AButtonStart(struct Sprite *sprite)
         sSlotMachine->winIn = WININ_WIN0_BG_ALL | WININ_WIN0_CLR;
         sprite->sState++;
         sprite->sCounter = 0;
-        // fallthrough
+        [[fallthrough]];
     case 3:
         sprite->sCounter += 2;
         sprite->data[2] = sprite->sCounter + 192;
@@ -7845,9 +7845,9 @@ static const u8 sBetToMatchLineIds[MAX_BET][2] =
 static const u8 sMatchLinesPerBet[MAX_BET] = { 1, 2, 2 };
 
 // Flashing lights at top of slot machine, brightest point inside light goes from toward center of machine, to middle, to toward edges
-static const u16 sFlashingLightsInside_Pal[] = INCBIN_U16("graphics/slot_machine/flashing_lights_inside.gbapal");
-static const u16 sFlashingLightsMiddle_Pal[] = INCBIN_U16("graphics/slot_machine/flashing_lights_middle.gbapal");
-static const u16 sFlashingLightsOutside_Pal[] = INCBIN_U16("graphics/slot_machine/flashing_lights_outside.gbapal");
+static const u16 sFlashingLightsInside_Pal[] = INCGFX_U16("graphics/slot_machine/flashing_lights_inside.pal", ".gbapal");
+static const u16 sFlashingLightsMiddle_Pal[] = INCGFX_U16("graphics/slot_machine/flashing_lights_middle.pal", ".gbapal");
+static const u16 sFlashingLightsOutside_Pal[] = INCGFX_U16("graphics/slot_machine/flashing_lights_outside.pal", ".gbapal");
 static const u16 *const sFlashingLightsPalTable[] =
 {
     sFlashingLightsInside_Pal,
@@ -7857,9 +7857,9 @@ static const u16 *const sFlashingLightsPalTable[] =
 
 static const u16 *const sSlotMachineMenu_Pal = {gSlotMachineMenu_Pal + 16};
 
-static const u16 sPokeballShining0_Pal[] = INCBIN_U16("graphics/slot_machine/pokeball_shining_0.gbapal");
-static const u16 sPokeballShining1_Pal[] = INCBIN_U16("graphics/slot_machine/pokeball_shining_1.gbapal");
-static const u16 sPokeballShining2_Pal[] = INCBIN_U16("graphics/slot_machine/pokeball_shining_2.gbapal");
+static const u16 sPokeballShining0_Pal[] = INCGFX_U16("graphics/slot_machine/pokeball_shining_0.pal", ".gbapal");
+static const u16 sPokeballShining1_Pal[] = INCGFX_U16("graphics/slot_machine/pokeball_shining_1.pal", ".gbapal");
+static const u16 sPokeballShining2_Pal[] = INCGFX_U16("graphics/slot_machine/pokeball_shining_2.pal", ".gbapal");
 static const u16 *const sPokeballShiningPalTable[] =
 {
     sPokeballShining0_Pal,          // Streak on left side of ball
@@ -7887,6 +7887,6 @@ static const struct SpritePalette sSlotMachineSpritePalettes[] =
     {}
 };
 
-static const u32 sReelTimeGfx[] = INCBIN_U32("graphics/slot_machine/reel_time_gfx.4bpp.smol"); // reel_time_machine and reel_time_pikachu
+static const u32 sReelTimeGfx[] = INCGFX_U32("graphics/slot_machine/reel_time_gfx.4bpp", ".smol"); // reel_time_machine and reel_time_pikachu
 static const u16 sReelTimeWindow_Tilemap[] = INCBIN_U16("graphics/slot_machine/reel_time_window.bin");
 static const u16 sEmptyTilemap[] =  {0};

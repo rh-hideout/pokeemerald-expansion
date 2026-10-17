@@ -14,7 +14,8 @@ SINGLE_BATTLE_TEST("Custap Berry allows the holder to move first in its priority
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        ITEM_POPUP(player, ITEM_CUSTAP_BERRY);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
         MESSAGE("Wobbuffet can act faster than normal, thanks to its Custap Berry!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
@@ -29,7 +30,8 @@ SINGLE_BATTLE_TEST("Custap Berry allows the holder to move first in its priority
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        ITEM_POPUP(player, ITEM_CUSTAP_BERRY);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
         MESSAGE("Bellsprout can act faster than normal, thanks to its Custap Berry!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
@@ -45,7 +47,8 @@ SINGLE_BATTLE_TEST("Custap Berry activates even if the opposing mon switches out
     } WHEN {
         TURN { SWITCH(opponent, 1); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        ITEM_POPUP(player, ITEM_CUSTAP_BERRY);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
         MESSAGE("Regirock can act faster than normal, thanks to its Custap Berry!");
     }
 }

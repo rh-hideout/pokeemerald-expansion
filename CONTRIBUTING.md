@@ -125,15 +125,15 @@ Once all items on the merge checklist are true, the branch will be merged in.
 
 ## Maintainers
 
-This list was last updated 2025 Dec 23.
+This list was last updated 2026 May 2.
 
 | Name | Discord | Currently Active | Areas of Expertise |
 | --- | --- | --- | --- |
 | [Alex](https://github.com/AlexOn1ine) | rainonline | ✅ | Battle Engine, Battle AI
-| [Egg](https://github.com/DizzyEggg) | egg9255 | ✅ | Battle Engine, Battle AI
+| [PhallenTree](https://github.com/PhallenTree) | phallentree | ✅ | Battle Engine
 | [Jasper](https://github.com/Bassoonian) | bassoonian | ✅ | Berries, Day / Night System, Followers, Feature Branches
 | [MGriffin](https://github.com/mrgriffin) | mgriffin | ✅ | Tests, Trainer Control
-| [psf](https://github.com/pkmnsnfrn) | pkmnsnfrn | ✅ | Rematches, Difficulty, Trainer Slides, Fake RTC, Fishing Minigames, Imperial / Metric, OW Item Balls, Sky Battles
+| [psf](https://github.com/pkmnsnfrn) | pkmnsnfrn | ✅ | Rematches, Difficulty, Trainer Slides, Fake RTC, Fishing Minigames, Imperial / Metric, OW Item Balls, Sky Battles, Defog
 | [Hedara](https://github.com/hedara90) | hedara | ✅ | Compression, Sprites
 | [Pawkkie](https://github.com/Pawkkie) | pawkkie | ✅ | Battle AI
 | [SBird](https://github.com/SBird1337) | karathan | ✅ | Dynamic Multichoice, Damage Calculation, Animations, Trainer Control, Tests

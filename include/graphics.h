@@ -1525,6 +1525,7 @@ extern const u16 gItemIconPalette_GhostTMHM[];
 extern const u16 gItemIconPalette_DragonTMHM[];
 extern const u16 gItemIconPalette_DarkTMHM[];
 extern const u16 gItemIconPalette_SteelTMHM[];
+extern const u16 gItemIconPalette_MysteryTMHM[];
 extern const u16 gItemIconPalette_FairyTMHM[];
 // Charms
 extern const u32 gItemIcon_OvalCharm[];
@@ -2063,6 +2064,7 @@ extern const u32 gBattleAnimSpriteGfx_SubstituteBack[];
 extern const u16 gBattleAnimSpritePal_Substitute[];
 extern const u32 gHealthboxSinglesPlayerGfx[];
 extern const u32 gHealthboxSinglesOpponentGfx[];
+extern const u32 gHealthboxSinglesOpponentLargeGfx[];
 extern const u32 gHealthboxDoublesPlayerGfx[];
 extern const u32 gHealthboxDoublesOpponentGfx[];
 extern const u32 gHealthboxSafariGfx[];
@@ -2112,6 +2114,7 @@ extern const u32 gBattleArenaJudgmentSymbolsGfx[];
 extern const u16 gBattleArenaJudgmentSymbolsPalette[];
 
 extern const u16 gBattleWindowTextPalette[];
+extern const u16 gBattleInfoTextPalette[];
 
 extern const u16 gContest2Pal[];
 

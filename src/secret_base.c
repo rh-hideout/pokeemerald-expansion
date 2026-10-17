@@ -789,17 +789,17 @@ void SetPlayerSecretBaseParty(void)
             party->personality[i] = 0;
             party->EVs[i] = 0;
 
-            if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES) != SPECIES_NONE
-            && !GetMonData(&gPlayerParty[i], MON_DATA_IS_EGG))
+            if (GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES) != SPECIES_NONE
+            && !GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_IS_EGG))
             {
                 for (moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
-                    party->moves[partyId * MAX_MON_MOVES + moveIndex] = GetMonData(&gPlayerParty[i], MON_DATA_MOVE1 + moveIndex);
+                    party->moves[partyId * MAX_MON_MOVES + moveIndex] = GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_MOVE1 + moveIndex);
 
-                party->species[partyId] = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES);
-                party->heldItems[partyId] = GetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM);
-                party->levels[partyId] = GetMonData(&gPlayerParty[i], MON_DATA_LEVEL);
-                party->personality[partyId] = GetMonData(&gPlayerParty[i], MON_DATA_PERSONALITY);
-                party->EVs[partyId] = GetAverageEVs(&gPlayerParty[i]);
+                party->species[partyId] = GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES);
+                party->heldItems[partyId] = GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_HELD_ITEM);
+                party->levels[partyId] = GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_LEVEL);
+                party->personality[partyId] = GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_PERSONALITY);
+                party->EVs[partyId] = GetAverageEVs(&gParties[B_TRAINER_PLAYER][i]);
                 partyId++;
             }
         }
@@ -1283,7 +1283,7 @@ void SecretBasePerStepCallback(u8 taskId)
             PopSecretBaseBalloon(MapGridGetMetatileIdAt(x, y), x, y);
             if (sInFriendSecretBase == TRUE)
             {
-                switch ((int)MapGridGetMetatileIdAt(x, y))
+                switch (MapGridGetMetatileIdAt(x, y))
                 {
                 case METATILE_SecretBase_RedBalloon:
                 case METATILE_SecretBase_BlueBalloon:
@@ -2065,7 +2065,7 @@ void CheckInteractedWithFriendsSandOrnament(void)
     s16 x, y;
 
     GetXYCoordsOneStepInFrontOfPlayer(&x, &y);
-    switch ((int)MapGridGetMetatileIdAt(x, y))
+    switch (MapGridGetMetatileIdAt(x, y))
     {
     case METATILE_SecretBase_SandOrnament_Base1:
     case METATILE_SecretBase_SandOrnament_Base2:

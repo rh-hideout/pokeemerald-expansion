@@ -56,7 +56,7 @@ SINGLE_BATTLE_TEST("Relic Song transforms Meloetta twice if used successfully")
     }
 }
 
-SINGLE_BATTLE_TEST("Relic Song transformation is the last thing that happens after it hits")
+SINGLE_BATTLE_TEST("Relic Song transformation activates after target faints")
 {
     GIVEN {
         PLAYER(SPECIES_MELOETTA_ARIA);
@@ -125,6 +125,24 @@ SINGLE_BATTLE_TEST("Relic Song transforms Meloetta after Magician was activated"
         ABILITY_POPUP(player, ABILITY_MAGICIAN);
         MESSAGE("Meloetta stole the opposing Delphox's Potion!");
         MESSAGE("Meloetta transformed!");
+    } THEN {
+        EXPECT_EQ(player->species, SPECIES_MELOETTA_PIROUETTE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Relic Song transforms Meloetta before taking Life Orb damage")
+{
+    GIVEN {
+        ASSUME(GetItemHoldEffect(ITEM_LIFE_ORB) == HOLD_EFFECT_LIFE_ORB);
+        PLAYER(SPECIES_MELOETTA_ARIA) { Item(ITEM_LIFE_ORB); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_RELIC_SONG); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_RELIC_SONG, player);
+        HP_BAR(opponent);
+        MESSAGE("Meloetta transformed!");
+        HP_BAR(player);
     } THEN {
         EXPECT_EQ(player->species, SPECIES_MELOETTA_PIROUETTE);
     }

@@ -1,16 +1,12 @@
 #include "global.h"
 #include "test/battle.h"
 
-ASSUMPTIONS
-{
-    ASSUME(GetMoveEffect(MOVE_ABSORB) == EFFECT_ABSORB);
-}
-
 SINGLE_BATTLE_TEST("Absorb recovers 50% of the damage dealt")
 {
     s16 damage;
     s16 healed;
     GIVEN {
+        ASSUME(MoveHasAdditionalEffect(MOVE_ABSORB, MOVE_EFFECT_ABSORB));
         PLAYER(SPECIES_WOBBUFFET) { HP(1); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -43,6 +39,24 @@ SINGLE_BATTLE_TEST("Absorb fails if Heal Block applies")
     }
 }
 
+SINGLE_BATTLE_TEST("Matcha Gatcha restores HP before applying burn to target")
+{
+    GIVEN {
+        ASSUME(MoveHasAdditionalEffect(MOVE_MATCHA_GOTCHA, MOVE_EFFECT_ABSORB));
+        ASSUME(MoveHasAdditionalEffect(MOVE_MATCHA_GOTCHA, MOVE_EFFECT_BURN));
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_MATCHA_GOTCHA); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_MATCHA_GOTCHA, player);
+        HP_BAR(opponent);
+        HP_BAR(player); // recovery
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_BRN, opponent);
+        STATUS_ICON(opponent, burn: TRUE);
+    }
+}
+
 DOUBLE_BATTLE_TEST("Matcha Gatcha recovers 50% of the damage dealt from both targets")
 {
     s16 damageLeft;
@@ -51,7 +65,7 @@ DOUBLE_BATTLE_TEST("Matcha Gatcha recovers 50% of the damage dealt from both tar
     s16 healedRight;
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_MATCHA_GOTCHA) == EFFECT_ABSORB);
+        ASSUME(MoveHasAdditionalEffect(MOVE_MATCHA_GOTCHA, MOVE_EFFECT_ABSORB));
         PLAYER(SPECIES_PIKACHU) { HP(1); }
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_STARYU);
@@ -75,6 +89,7 @@ SINGLE_BATTLE_TEST("Draining Kiss recovers 75% of the damage dealt")
     s16 damage;
     s16 healed;
     GIVEN {
+        ASSUME(MoveHasAdditionalEffect(MOVE_DRAINING_KISS, MOVE_EFFECT_ABSORB));
         PLAYER(SPECIES_WOBBUFFET) { HP(1); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -91,6 +106,7 @@ SINGLE_BATTLE_TEST("Draining Kiss recovers 75% of the damage dealt")
 SINGLE_BATTLE_TEST("Absorb does not drain any HP if user flinched")
 {
     GIVEN {
+        ASSUME(MoveHasAdditionalEffect(MOVE_ABSORB, MOVE_EFFECT_ABSORB));
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -104,11 +120,30 @@ SINGLE_BATTLE_TEST("Absorb does not drain any HP if user flinched")
     }
 }
 
-TO_DO_BATTLE_TEST("Absorb recovers 50% of the damage dealt to a Substitute");
+SINGLE_BATTLE_TEST("Absorb recovers 50% of the damage dealt to a Substitute")
+{
+    u16 damage;
+    s16 healing;
+    GIVEN {
+        ASSUME(MoveHasAdditionalEffect(MOVE_ABSORB, MOVE_EFFECT_ABSORB));
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SUBSTITUTE); MOVE(opponent, MOVE_ABSORB); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ABSORB, opponent);
+        SUB_HIT(player, captureDamage: &damage);
+        HP_BAR(opponent, captureDamage: &healing);
+    } THEN {
+        EXPECT_MUL_EQ(damage, Q_4_12(-0.5), healing);
+    }
+}
 
 SINGLE_BATTLE_TEST("Absorb does not drain any HP if user does 0 damage")
 {
     GIVEN {
+        ASSUME(MoveHasAdditionalEffect(MOVE_ABSORB, MOVE_EFFECT_ABSORB));
         PLAYER(SPECIES_WOBBUFFET) { HP(1); }
         OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
     } WHEN {
@@ -123,6 +158,7 @@ SINGLE_BATTLE_TEST("Absorb does not drain any HP if user does 0 damage")
 SINGLE_BATTLE_TEST("Absorb does not drain any HP if the move is blocked by Disguise")
 {
     GIVEN {
+        ASSUME(MoveHasAdditionalEffect(MOVE_ABSORB, MOVE_EFFECT_ABSORB));
         PLAYER(SPECIES_WOBBUFFET) { HP(1); }
         OPPONENT(SPECIES_MIMIKYU) { Ability(ABILITY_DISGUISE); }
     } WHEN {
@@ -140,7 +176,7 @@ DOUBLE_BATTLE_TEST("Spread Move: Heals the correct amount from all Pokemon")
     s16 healed[3];
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_PARABOLIC_CHARGE) == EFFECT_ABSORB);
+        ASSUME(MoveHasAdditionalEffect(MOVE_PARABOLIC_CHARGE, MOVE_EFFECT_ABSORB));
         PLAYER(SPECIES_RAICHU) { HP(1); }
         PLAYER(SPECIES_SQUIRTLE);
         OPPONENT(SPECIES_SQUIRTLE);
@@ -173,6 +209,7 @@ SINGLE_BATTLE_TEST("Absorb does not play the draining message at full HP in Gen5
     PARAMETRIZE { genConfig = GEN_5; }
 
     GIVEN {
+        ASSUME(MoveHasAdditionalEffect(MOVE_ABSORB, MOVE_EFFECT_ABSORB));
         WITH_CONFIG(B_ABSORB_MESSAGE, genConfig);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);

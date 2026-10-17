@@ -24,7 +24,7 @@ AI_DOUBLE_BATTLE_TEST("AI uses Purify")
 
 AI_SINGLE_BATTLE_TEST("AI uses Purify to heal an enemy with Guts")
 {
-    u32 ability;
+    enum Ability ability;
 
     PARAMETRIZE { ability = ABILITY_GUTS; }
     PARAMETRIZE { ability = ABILITY_BULLETPROOF; }
@@ -43,7 +43,7 @@ AI_SINGLE_BATTLE_TEST("AI uses Purify to heal an enemy with Guts")
 
 AI_DOUBLE_BATTLE_TEST("AI does not use Purify to heal an ally with Guts")
 {
-    u32 ability;
+    enum Ability ability;
 
     PARAMETRIZE { ability = ABILITY_GUTS; }
     PARAMETRIZE { ability = ABILITY_BULLETPROOF; }
@@ -94,5 +94,44 @@ SINGLE_BATTLE_TEST("Purify doesn't heal HP if the target has Comatose")
         NOT HP_BAR(player);
     } THEN {
         EXPECT_EQ(player->hp, 50);
+    }
+}
+
+SINGLE_BATTLE_TEST("Purify cures the target's status even if user is at max HP")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_PURIFY) == EFFECT_PURIFY);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Status1(STATUS1_BURN); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_PURIFY); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PURIFY, player);
+        STATUS_ICON(opponent, none: TRUE);
+        NOT HP_BAR(player);
+    } THEN {
+        EXPECT_EQ(opponent->status1, STATUS1_NONE);
+    }
+}
+
+
+SINGLE_BATTLE_TEST("Purify cures the target's status and heals the user")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_PURIFY) == EFFECT_PURIFY);
+        PLAYER(SPECIES_WOBBUFFET) { HP(50); MaxHP(100); }
+        OPPONENT(SPECIES_WOBBUFFET) { Status1(STATUS1_BURN); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_HEAL_BLOCK); MOVE(player, MOVE_PURIFY); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_HEAL_BLOCK, opponent);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_PURIFY, player);
+            STATUS_ICON(opponent, none: TRUE);
+            HP_BAR(player);
+        }
+    } THEN {
+        EXPECT_EQ(player->hp, player->maxHP / 2);
+        EXPECT_EQ(opponent->status1, STATUS1_BURN);
     }
 }

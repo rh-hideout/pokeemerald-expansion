@@ -2,6 +2,29 @@
 #include "test/battle.h"
 #include "test/test.h"
 #include "test/battle.h"
+#include "constants/characters.h"
+
+TEST("Tests initialize a terminated player name")
+{
+    EXPECT(memchr(gSaveBlock2Ptr->playerName, EOS, sizeof(gSaveBlock2Ptr->playerName)) != NULL);
+}
+
+WILD_BATTLE_TEST("Shiny wild battle tests preserve adjacent TV shows")
+{
+    GIVEN {
+        gSaveBlock1Ptr->tvShows[NUM_NORMAL_TVSHOW_SLOTS + 1].common.kind = TVSHOW_FISHING_ADVICE;
+        gSaveBlock1Ptr->tvShows[NUM_NORMAL_TVSHOW_SLOTS + 1].common.active = TRUE;
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Shiny(TRUE); }
+    } WHEN {
+        TURN { }
+    } THEN {
+        EXPECT_EQ(gSaveBlock1Ptr->tvShows[NUM_NORMAL_TVSHOW_SLOTS].common.kind, TVSHOW_BREAKING_NEWS);
+        EXPECT_EQ(gSaveBlock1Ptr->tvShows[NUM_NORMAL_TVSHOW_SLOTS].breakingNews.playerName[0], gSaveBlock2Ptr->playerName[0]);
+        EXPECT_EQ(gSaveBlock1Ptr->tvShows[NUM_NORMAL_TVSHOW_SLOTS + 1].common.kind, TVSHOW_FISHING_ADVICE);
+        EXPECT_EQ(gSaveBlock1Ptr->tvShows[NUM_NORMAL_TVSHOW_SLOTS + 1].common.active, TRUE);
+    }
+}
 
 TEST("Tests resume after CRASH")
 {
@@ -10,18 +33,24 @@ TEST("Tests resume after CRASH")
     f();
 }
 
+TEST("fatalf counts as CRASH")
+{
+    KNOWN_CRASHING;
+    fatalf("should CRASH");
+}
+
 MULTI_BATTLE_TEST("Forced Abilities are set correctly in multi battle tests")
 {
     GIVEN {
-        MULTI_PLAYER(SPECIES_WOBBUFFET);
-        MULTI_PARTNER(SPECIES_WOBBUFFET);
-        MULTI_PARTNER(SPECIES_NINETALES_ALOLA) { Ability(ABILITY_DRIZZLE); }
-        MULTI_OPPONENT_A(SPECIES_WOBBUFFET);
-        MULTI_OPPONENT_A(SPECIES_NINETALES_ALOLA) { Ability(ABILITY_SAND_STREAM); }
-        MULTI_OPPONENT_B(SPECIES_WYNAUT);
-        MULTI_OPPONENT_B(SPECIES_NINETALES_ALOLA) { Ability(ABILITY_DROUGHT); }
+        PLAYER(SPECIES_WOBBUFFET);
+        PARTNER(SPECIES_WOBBUFFET);
+        PARTNER(SPECIES_NINETALES_ALOLA) { Ability(ABILITY_DRIZZLE); }
+        OPPONENT_A(SPECIES_WOBBUFFET);
+        OPPONENT_A(SPECIES_NINETALES_ALOLA) { Ability(ABILITY_SAND_STREAM); }
+        OPPONENT_B(SPECIES_WYNAUT);
+        OPPONENT_B(SPECIES_NINETALES_ALOLA) { Ability(ABILITY_DROUGHT); }
     } WHEN {
-        TURN { SWITCH(opponentLeft, 1); SWITCH(playerRight, 4); SWITCH(opponentRight, 4); }
+        TURN { SWITCH(opponentLeft, 1); SWITCH(playerRight, 1); SWITCH(opponentRight, 1); }
     } SCENE {
         ABILITY_POPUP(opponentLeft, ABILITY_SAND_STREAM);
         ABILITY_POPUP(playerRight, ABILITY_DRIZZLE);
@@ -121,6 +150,7 @@ TEST("EXPECT_FAIL allows expected failing tests to pass")
 AI_SINGLE_BATTLE_TEST("EXPECT_FAIL detects failures caused by EXPECT_MOVE")
 {
     GIVEN {
+        WITH_CONFIG(B_FIRST_TURN_MOVE, GEN_9);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_CHOICE_SCARF); Moves(MOVE_FAKE_OUT, MOVE_BODY_SLAM); }
     } WHEN {
@@ -134,6 +164,7 @@ AI_SINGLE_BATTLE_TEST("EXPECT_FAIL detects failures caused by EXPECT_MOVE")
 AI_SINGLE_BATTLE_TEST("EXPECT_FAIL detects failures caused by EXPECT_SWITCH")
 {
     GIVEN {
+        WITH_CONFIG(B_FIRST_TURN_MOVE, GEN_9);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_CHOICE_SCARF); Moves(MOVE_FAKE_OUT, MOVE_BODY_SLAM); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -169,6 +200,103 @@ SINGLE_BATTLE_TEST("EXPECT_FAIL: Incorrect use of SUB_HIT results in test failur
     } EXPECT_FAIL {
         SCENE {
             SUB_HIT(player, subBreak: FALSE);
+        }
+    }
+}
+
+SINGLE_BATTLE_TEST("USE_ITEM will add item to bag if GIVE_PLAYER_ITEM was not used")
+{
+    GIVEN {
+        ASSUME(GetItemImportance(ITEM_POKE_FLUTE));
+        PLAYER(SPECIES_WOBBUFFET) { Level(1); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { USE_ITEM(player, ITEM_POKE_FLUTE); }
+    } THEN {
+        EXPECT_EQ(TRUE, CheckBagHasItem(ITEM_POKE_FLUTE, 1));
+    }
+}
+
+SINGLE_BATTLE_TEST("USE_ITEM for opponent does not add item to bag")
+{
+    GIVEN {
+        ASSUME(GetItemImportance(ITEM_POKE_FLUTE));
+        PLAYER(SPECIES_WOBBUFFET) { Level(1); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { USE_ITEM(opponent, ITEM_POKE_FLUTE); }
+    } THEN {
+        EXPECT_EQ(FALSE, CheckBagHasItem(ITEM_POKE_FLUTE, 1));
+    }
+}
+
+SINGLE_BATTLE_TEST("GIVE_PLAYER_ITEM adds an item to bag")
+{
+    GIVEN {
+        ASSUME(GetItemImportance(ITEM_POKE_FLUTE));
+        PLAYER(SPECIES_WOBBUFFET) { Level(1); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        GIVE_PLAYER_ITEM(ITEM_POTION, 1);
+    } WHEN {
+        TURN { }
+    } THEN {
+        EXPECT_EQ(TRUE, CheckBagHasItem(ITEM_POTION, 1));
+    }
+}
+
+SINGLE_BATTLE_TEST("Failing MESSAGE check doesn't cause FLAKY tests when player uses an item")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); MaxHP(400); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { USE_ITEM(player, ITEM_POTION, partyIndex: 0); }
+    } EXPECT_FAIL {
+        SCENE {
+            MESSAGE("Lorem Ipsum");
+        }
+    }
+}
+
+MULTI_BATTLE_TEST("Celebrate does not need to be explicitly set in a non-AI test")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
+        PARTNER(SPECIES_WOBBUFFET) { Speed(2); }
+        OPPONENT_A(SPECIES_WOBBUFFET) { Speed(3); }
+        OPPONENT_B(SPECIES_WOBBUFFET) { Speed(1); }
+    } WHEN {
+        TURN {}
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, playerRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentRight);
+    }
+}
+
+SINGLE_BATTLE_TEST("ITEM_POPUP correctly detects popups")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { MaxHP(100); HP(1); Item(ITEM_LEFTOVERS); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {}
+    } SCENE {
+        ITEM_POPUP(player, ITEM_LEFTOVERS);
+    }
+}
+
+SINGLE_BATTLE_TEST("ITEM_POPUP fails when specifying the wrong item")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { MaxHP(100); HP(1); Item(ITEM_LEFTOVERS); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {}
+    } SCENE {
+        EXPECT_FAIL {
+            ITEM_POPUP(player, ITEM_BLACK_SLUDGE);
         }
     }
 }

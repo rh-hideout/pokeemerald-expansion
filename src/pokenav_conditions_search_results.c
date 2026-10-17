@@ -79,10 +79,10 @@ static const LoopedTask sConditionSearchLoopedTaskFuncs[] =
     ConvertConditionsToListRanks
 };
 
-static const u16 sConditionSearchResultFramePal[] = INCBIN_U16("graphics/pokenav/condition/search_results.gbapal");
-static const u32 sConditionSearchResultTiles[] = INCBIN_U32("graphics/pokenav/condition/search_results.4bpp.smol");
-static const u32 sConditionSearchResultTilemap[] = INCBIN_U32("graphics/pokenav/condition/search_results.bin.smolTM");
-static const u16 sListBg_Pal[] = INCBIN_U16("graphics/pokenav/condition/search_results_list.gbapal");
+static const u16 sConditionSearchResultFramePal[] = INCGFX_U16("graphics/pokenav/condition/search_results.png", ".gbapal");
+static const u32 sConditionSearchResultTiles[] = INCGFX_U32("graphics/pokenav/condition/search_results.png", ".4bpp.smol");
+static const u32 sConditionSearchResultTilemap[] = INCGFX_U32("graphics/pokenav/condition/search_results.bin", ".smolTM");
+static const u16 sListBg_Pal[] = INCGFX_U16("graphics/pokenav/condition/search_results_list.pal", ".gbapal");
 
 static const struct BgTemplate sConditionSearchResultBgTemplates[] =
 {
@@ -280,7 +280,7 @@ static u32 BuildPartyMonSearchResults(s32 state)
     item.boxId = TOTAL_BOXES_COUNT;
     for (i = 0; i < PARTY_SIZE; i++)
     {
-        struct Pokemon *pokemon = &gPlayerParty[i];
+        struct Pokemon *pokemon = &gParties[B_TRAINER_PLAYER][i];
         if (!GetMonData(pokemon, MON_DATA_SANITY_HAS_SPECIES))
             return LT_INC_AND_CONTINUE;
         if (!GetMonData(pokemon, MON_DATA_SANITY_IS_EGG))
@@ -513,7 +513,7 @@ static u32 LoopedTask_MoveSearchListCursorUp(s32 state)
     case 1:
         if (PokenavList_IsMoveWindowTaskActive())
             return LT_PAUSE;
-        // fallthrough
+        [[fallthrough]];
     case 2:
         PrintSearchResultListMenuItems(gfx);
         return LT_INC_AND_PAUSE;
@@ -546,7 +546,7 @@ static u32 LoopedTask_MoveSearchListCursorDown(s32 state)
     case 1:
         if (PokenavList_IsMoveWindowTaskActive())
             return LT_PAUSE;
-        // fallthrough
+        [[fallthrough]];
     case 2:
         PrintSearchResultListMenuItems(gfx);
         return LT_INC_AND_PAUSE;
@@ -579,7 +579,7 @@ static u32 LoopedTask_MoveSearchListPageUp(s32 state)
     case 1:
         if (PokenavList_IsMoveWindowTaskActive())
             return LT_PAUSE;
-        // fallthrough
+        [[fallthrough]];
     case 2:
         PrintSearchResultListMenuItems(gfx);
         return LT_INC_AND_PAUSE;
@@ -612,7 +612,7 @@ static u32 LoopedTask_MoveSearchListPageDown(s32 state)
     case 1:
         if (PokenavList_IsMoveWindowTaskActive())
             return LT_PAUSE;
-        // fallthrough
+        [[fallthrough]];
     case 2:
         PrintSearchResultListMenuItems(gfx);
         return LT_INC_AND_PAUSE;
@@ -711,7 +711,7 @@ static void BufferSearchMonListItem(struct PokenavMonListItem *item, u8 *dest)
     // Mon is in party
     if (item->boxId == TOTAL_BOXES_COUNT)
     {
-        struct Pokemon *mon = &gPlayerParty[item->monId];
+        struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][item->monId];
         gender = GetMonGender(mon);
         level = GetLevelFromMonExp(mon);
         GetMonData(mon, MON_DATA_NICKNAME, gStringVar3);

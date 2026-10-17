@@ -4,6 +4,7 @@
 ASSUMPTIONS
 {
     ASSUME(GetMoveEffect(MOVE_FLOWER_SHIELD) == EFFECT_FLOWER_SHIELD);
+    ASSUME_STAT_CHANGE(MOVE_FLOWER_SHIELD, defense: +1);
 }
 
 DOUBLE_BATTLE_TEST("Flower Shield raises the defense of all Grass-type Pokémon")
@@ -24,10 +25,10 @@ DOUBLE_BATTLE_TEST("Flower Shield raises the defense of all Grass-type Pokémon"
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FLOWER_SHIELD, playerLeft);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
         MESSAGE("Tangela's Defense rose!");
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
-        MESSAGE("The opposing Sunkern's Defense rose!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
         MESSAGE("Tangrowth's Defense rose!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
+        MESSAGE("The opposing Sunkern's Defense rose!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
         MESSAGE("The opposing Sunflora's Defense rose!");
     }

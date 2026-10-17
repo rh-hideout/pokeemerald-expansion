@@ -71,6 +71,7 @@ static void npc_clear_strange_bits(struct ObjectEvent *);
 static void MovePlayerAvatarUsingKeypadInput(enum Direction, u16, u16);
 static void PlayerAllowForcedMovementIfMovingSameDirection(void);
 static u8 GetForcedMovementByMetatileBehavior(void);
+static void PlayerSetCopyableMovement(enum CopyMovement movement);
 
 static bool8 ForcedMovement_None(void);
 static bool8 ForcedMovement_Slip(void);
@@ -512,6 +513,7 @@ static bool8 ForcedMovement_None(void)
         playerObjEvent->enableAnim = TRUE;
         SetObjectEventDirection(playerObjEvent, playerObjEvent->facingDirection);
         gPlayerAvatar.flags &= ~PLAYER_AVATAR_FLAG_FORCED_MOVE;
+        PlayerSetCopyableMovement(COPY_MOVE_NONE);
     }
     return FALSE;
 }
@@ -804,7 +806,6 @@ static void WindUpSpinTimer(enum Direction direction)
 bool32 CanTriggerSpinEvolution()
 {
     gSpecialVar_0x8000 = EVO_NONE;
-    bool32 canStopEvo = TRUE;
     if (gPlayerSpinData.triggerEvo)
     {
         u32 seconds = gPlayerSpinData.VBlanksSpinning / 60;
@@ -828,22 +829,10 @@ bool32 CanTriggerSpinEvolution()
             else if (direction == SPIN_DIRECTION_COUNTER_CLOCKWISE)
                 gSpecialVar_0x8000 = SPIN_CCW_SHORT;
         }
-        gSpecialVar_0x8001 = FALSE; //canStopEvo
-        canStopEvo = FALSE;
-        gSpecialVar_0x8002 = TRUE; //tryMultiple
         gPlayerSpinData.triggerEvo = FALSE;
     }
     if (gSpecialVar_0x8000 != EVO_NONE)
-    {
-        for (u32 i = 0; i < PARTY_SIZE; i++)
-        {
-            u16 species = GetEvolutionTargetSpecies(&gPlayerParty[i], EVO_MODE_OVERWORLD_SPECIAL, 0, NULL, &canStopEvo, CHECK_EVO);
-            if (species != SPECIES_NONE)
-            {
-                return TRUE;
-            }
-        }
-    }
+        return TRUE;
 
     return FALSE;
 }
@@ -1538,12 +1527,6 @@ u8 PlayerGetElevation(void)
     return gObjectEvents[gPlayerAvatar.objectEventId].previousElevation;
 }
 
-// unused
-void MovePlayerToMapCoords(s16 x, s16 y)
-{
-    MoveObjectEventToMapCoords(&gObjectEvents[gPlayerAvatar.objectEventId], x, y);
-}
-
 u8 TestPlayerAvatarFlags(u8 flag)
 {
     return gPlayerAvatar.flags & flag;
@@ -1638,9 +1621,9 @@ bool8 PartyHasMonWithSurf(void)
     {
         for (i = 0; i < PARTY_SIZE; i++)
         {
-            if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES) == SPECIES_NONE)
+            if (GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES) == SPECIES_NONE)
                 break;
-            if (MonKnowsMove(&gPlayerParty[i], MOVE_SURF))
+            if (MonKnowsMove(&gParties[B_TRAINER_PLAYER][i], MOVE_SURF))
                 return TRUE;
         }
     }
@@ -1720,6 +1703,7 @@ void InitPlayerAvatar(s16 x, s16 y, enum Direction direction, enum Gender gender
     u8 objectEventId;
     struct ObjectEvent *objectEvent;
 
+    playerObjEventTemplate.kind = OBJ_KIND_NORMAL;
     playerObjEventTemplate.localId = LOCALID_PLAYER;
     playerObjEventTemplate.graphicsId = GetPlayerAvatarGraphicsIdByStateIdAndGender(PLAYER_AVATAR_STATE_NORMAL, gender);
     playerObjEventTemplate.x = x - MAP_OFFSET;
@@ -2087,6 +2071,7 @@ static void Task_DoPlayerSpinExit(u8 taskId)
         sprite->subpriority = 0;
         sprite->subspriteMode = SUBSPRITES_OFF;
         tState++;
+        [[fallthrough]];
     case 1: // Spin while rising
         TrySpinPlayerForWarp(object, &tSpinDelayTimer);
 
@@ -2156,6 +2141,7 @@ static void Task_DoPlayerSpinEntrance(u8 taskId)
         sprite->subpriority = 0;
         sprite->subspriteMode = SUBSPRITES_OFF;
         tState++;
+        [[fallthrough]];
     case 1: // Spin while descending
         TrySpinPlayerForWarp(object, &tSpinDelayTimer);
 

@@ -41,10 +41,10 @@ AI_TWO_VS_ONE_BATTLE_TEST("AI only Dynamaxes once per trainer in 2v1 multi battl
 {
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
-        MULTI_PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_SPLASH); }
-        MULTI_PARTNER(SPECIES_WOBBUFFET) { Moves(MOVE_SPLASH); }
-        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { Moves(MOVE_SPLASH); DynamaxLevel(10); }
-        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { Moves(MOVE_SPLASH); DynamaxLevel(10); }
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_SPLASH); }
+        PARTNER(SPECIES_WOBBUFFET) { Moves(MOVE_SPLASH); }
+        OPPONENT_A(SPECIES_WOBBUFFET) { Moves(MOVE_SPLASH); DynamaxLevel(10); }
+        OPPONENT_A(SPECIES_WOBBUFFET) { Moves(MOVE_SPLASH); DynamaxLevel(10); }
     } WHEN {
         TURN {
             MOVE(playerLeft, MOVE_SPLASH);
@@ -58,6 +58,17 @@ AI_TWO_VS_ONE_BATTLE_TEST("AI only Dynamaxes once per trainer in 2v1 multi battl
             EXPECT_MOVE(opponentLeft, MOVE_SPLASH, gimmick: GIMMICK_NONE);
             EXPECT_MOVE(opponentRight, MOVE_SPLASH, gimmick: GIMMICK_NONE);
         }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI uses the best Max Move")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT );
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_SCRATCH, MOVE_HEADBUTT); DynamaxLevel(10); }
+    } WHEN {
+        TURN { EXPECT_MOVE(opponent, MOVE_HEADBUTT, gimmick: GIMMICK_DYNAMAX); }
     }
 }
 

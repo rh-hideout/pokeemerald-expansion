@@ -72,10 +72,10 @@ static const LoopedTask sMonRibbonListLoopTaskFuncs[] =
     BuildBoxMonRibbonList
 };
 
-static const u16 sMonRibbonListFramePal[] = INCBIN_U16("graphics/pokenav/ribbons/list_bg.gbapal");
-static const u32 sMonRibbonListFrameTiles[] = INCBIN_U32("graphics/pokenav/ribbons/list_bg.4bpp.smol");
-static const u32 sMonRibbonListFrameTilemap[] = INCBIN_U32("graphics/pokenav/ribbons/list_bg.bin.smolTM");
-static const u16 sMonRibbonListUi_Pal[] = INCBIN_U16("graphics/pokenav/ribbons/list_ui.gbapal");
+static const u16 sMonRibbonListFramePal[] = INCGFX_U16("graphics/pokenav/ribbons/list_bg.png", ".gbapal");
+static const u32 sMonRibbonListFrameTiles[] = INCGFX_U32("graphics/pokenav/ribbons/list_bg.png", ".4bpp.smol");
+static const u32 sMonRibbonListFrameTilemap[] = INCGFX_U32("graphics/pokenav/ribbons/list_bg.bin", ".smolTM");
+static const u16 sMonRibbonListUi_Pal[] = INCGFX_U16("graphics/pokenav/ribbons/list_ui.pal", ".gbapal");
 
 static const struct BgTemplate sMonRibbonListBgTemplates[] =
 {
@@ -256,7 +256,7 @@ static u32 BuildPartyMonRibbonList(s32 state)
     item.boxId = TOTAL_BOXES_COUNT;
     for (i = 0; i < PARTY_SIZE; i++)
     {
-        struct Pokemon *pokemon = &gPlayerParty[i];
+        struct Pokemon *pokemon = &gParties[B_TRAINER_PLAYER][i];
         if (!GetMonData(pokemon, MON_DATA_SANITY_HAS_SPECIES))
             return LT_INC_AND_CONTINUE;
         if (!GetMonData(pokemon, MON_DATA_SANITY_IS_EGG) && !GetMonData(pokemon, MON_DATA_SANITY_IS_BAD_EGG))
@@ -348,7 +348,7 @@ static bool32 UNUSED PlayerHasRibbonsMon(void)
 
     for (i = 0; i < PARTY_SIZE; i++)
     {
-        struct Pokemon *mon = &gPlayerParty[i];
+        struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][i];
         if (!GetMonData(mon, MON_DATA_SANITY_HAS_SPECIES))
             continue;
         if (GetMonData(mon, MON_DATA_SANITY_IS_EGG))
@@ -497,7 +497,7 @@ static u32 LoopedTask_RibbonsListMoveCursorUp(s32 state)
     case 1:
         if (PokenavList_IsMoveWindowTaskActive())
             return LT_PAUSE;
-        // fallthrough
+        [[fallthrough]];
     case 2:
         UpdateIndexNumberDisplay(menu);
         return LT_INC_AND_PAUSE;
@@ -530,7 +530,7 @@ static u32 LoopedTask_RibbonsListMoveCursorDown(s32 state)
     case 1:
         if (PokenavList_IsMoveWindowTaskActive())
             return LT_PAUSE;
-        // fallthrough
+        [[fallthrough]];
     case 2:
         UpdateIndexNumberDisplay(menu);
         return LT_INC_AND_PAUSE;
@@ -563,7 +563,7 @@ static u32 LoopedTask_RibbonsListMovePageUp(s32 state)
     case 1:
         if (PokenavList_IsMoveWindowTaskActive())
             return LT_PAUSE;
-        // fallthrough
+        [[fallthrough]];
     case 2:
         UpdateIndexNumberDisplay(menu);
         return LT_INC_AND_PAUSE;
@@ -596,7 +596,7 @@ static u32 LoopedTask_RibbonsListMovePageDown(s32 state)
     case 1:
         if (PokenavList_IsMoveWindowTaskActive())
             return LT_PAUSE;
-        // fallthrough
+        [[fallthrough]];
     case 2:
         UpdateIndexNumberDisplay(menu);
         return LT_INC_AND_PAUSE;
@@ -707,7 +707,7 @@ static void BufferRibbonMonInfoText(struct PokenavListItem *listItem, u8 *dest)
     // Mon is in party
     if (item->boxId == TOTAL_BOXES_COUNT)
     {
-        struct Pokemon *mon = &gPlayerParty[item->monId];
+        struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][item->monId];
         gender = GetMonGender(mon);
         level = GetLevelFromMonExp(mon);
         GetMonData(mon, MON_DATA_NICKNAME, gStringVar3);

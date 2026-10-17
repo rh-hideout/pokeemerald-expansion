@@ -1,6 +1,12 @@
 #include "global.h"
 #include "test/battle.h"
 
+ASSUMPTIONS
+{
+    ASSUME(GetMoveEffect(MOVE_THUNDER_WAVE) == EFFECT_NON_VOLATILE_STATUS);
+    ASSUME(GetMoveNonVolatileStatus(MOVE_THUNDER_WAVE) == MOVE_EFFECT_PARALYSIS);
+}
+
 SINGLE_BATTLE_TEST("Paralysis reduces Speed by 50% (Gen 7+) or 75% (Gen 1-6)")
 {
     u32 playerSpeed, genConfig;
@@ -19,23 +25,24 @@ SINGLE_BATTLE_TEST("Paralysis reduces Speed by 50% (Gen 7+) or 75% (Gen 1-6)")
         if (playerFirst) {
             ONE_OF {
                 MESSAGE("Wobbuffet used Celebrate!");
-                MESSAGE("Wobbuffet is paralyzed, so it may be unable to move!");
+                MESSAGE("Wobbuffet couldn't move because it's paralyzed!");
             }
             MESSAGE("The opposing Wobbuffet used Celebrate!");
         } else {
             MESSAGE("The opposing Wobbuffet used Celebrate!");
             ONE_OF {
                 MESSAGE("Wobbuffet used Celebrate!");
-                MESSAGE("Wobbuffet is paralyzed, so it may be unable to move!");
+                MESSAGE("Wobbuffet couldn't move because it's paralyzed!");
             }
         }
     }
 }
 
-SINGLE_BATTLE_TEST("Paralysis has a 25% chance of skipping the turn")
+SINGLE_BATTLE_TEST("Paralysis has a 1/4 chance of skipping the turn (Gen9-)")
 {
-    PASSES_RANDOMLY(25, 100, RNG_PARALYSIS);
+    PASSES_RANDOMLY(1, 4, RNG_PARALYSIS);
     GIVEN {
+        WITH_CONFIG(B_PARALYSIS_CHANCE, GEN_9);
         PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_PARALYSIS); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -45,23 +52,17 @@ SINGLE_BATTLE_TEST("Paralysis has a 25% chance of skipping the turn")
     }
 }
 
-AI_SINGLE_BATTLE_TEST("AI avoids Thunder Wave when it can not paralyse target")
+SINGLE_BATTLE_TEST("Paralysis has a 1/8 chance of skipping the turn (Champions)")
 {
-    u32 species;
-    enum Ability ability;
-
-    PARAMETRIZE { species = SPECIES_HITMONLEE; ability = ABILITY_LIMBER; }
-    PARAMETRIZE { species = SPECIES_KOMALA; ability = ABILITY_COMATOSE; }
-    PARAMETRIZE { species = SPECIES_NACLI; ability = ABILITY_PURIFYING_SALT; }
-    PARAMETRIZE { species = SPECIES_PIKACHU; ability = ABILITY_STATIC; }
-
+    PASSES_RANDOMLY(1, 8, RNG_PARALYSIS);
     GIVEN {
-        WITH_CONFIG(B_PARALYZE_ELECTRIC, GEN_6);
-        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
-        PLAYER(species) { Ability(ability); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE, MOVE_THUNDER_WAVE); }
+        WITH_CONFIG(B_PARALYSIS_CHANCE, GEN_CHAMPIONS);
+        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_PARALYSIS); }
+        OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { SCORE_EQ(opponent, MOVE_CELEBRATE, MOVE_THUNDER_WAVE); } // Both get -10
+        TURN { MOVE(player, MOVE_CELEBRATE); }
+    } SCENE {
+        MESSAGE("Wobbuffet couldn't move because it's paralyzed!");
     }
 }
 
@@ -103,5 +104,46 @@ SINGLE_BATTLE_TEST("Thunder Wave doesn't print an effectiveness message")
     } SCENE {
         MESSAGE("The opposing Wobbuffet used Thunder Wave!");
         NOT MESSAGE("It's super effective!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Thunder Wave prints an avoided attack message when it misses")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_THUNDER_WAVE, hit: FALSE); }
+    } SCENE {
+        MESSAGE("Wobbuffet used Thunder Wave!");
+        MESSAGE("The opposing Wobbuffet avoided the attack!");
+        NOT MESSAGE("But it failed!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Thunder Wave prints failure when the target already has a different non-volatile status")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_ZIGZAGOON) { Status1(STATUS1_POISON); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_THUNDER_WAVE); }
+    } SCENE {
+        MESSAGE("Wobbuffet used Thunder Wave!");
+        MESSAGE("But it failed!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Thunder Wave prints already paralyzed message with the right target")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_ZIGZAGOON) { Status1(STATUS1_PARALYSIS); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_THUNDER_WAVE); }
+    } SCENE {
+        MESSAGE("Wobbuffet used Thunder Wave!");
+        MESSAGE("The opposing Zigzagoon is already paralyzed!");
+        NOT MESSAGE("Wobbuffet is already paralyzed!");
     }
 }

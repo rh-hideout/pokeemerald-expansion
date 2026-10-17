@@ -116,3 +116,22 @@ SINGLE_BATTLE_TEST("Plasma Fists turns normal type dynamax-moves into electric t
         MESSAGE("It's super effective!");
     }
 }
+
+SINGLE_BATTLE_TEST("Plasma Fists turns normal moves into electric moves even if it hits a substitute")
+{
+    GIVEN {
+        PLAYER(SPECIES_JOLTEON) { Ability(ABILITY_VOLT_ABSORB); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SUBSTITUTE); }
+        TURN { MOVE(player, MOVE_PLASMA_FISTS); MOVE(opponent, MOVE_SCRATCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PLASMA_FISTS, player);
+        SUB_HIT(opponent);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
+            HP_BAR(player);
+        }
+    }
+}

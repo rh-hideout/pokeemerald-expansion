@@ -526,8 +526,8 @@ static const u8 *const sUnionRoomKeyboardText[UNION_ROOM_KB_PAGE_COUNT - 1][UNIO
     }
 };
 
-static const u16 sUnusedPalette[] = INCBIN_U16("graphics/union_room_chat/unused.gbapal"); // Loaded but never apparently used
-static const u16 sChatMessagesWindow_Pal[] = INCBIN_U16("graphics/union_room_chat/chat_messages_window.gbapal");
+static const u16 sUnusedPalette[] = INCGFX_U16("graphics/union_room_chat/unused.pal", ".gbapal"); // Loaded but never apparently used
+static const u16 sChatMessagesWindow_Pal[] = INCGFX_U16("graphics/union_room_chat/chat_messages_window.pal", ".gbapal");
 
 static const struct BgTemplate sBgTemplates[] = {
     {
@@ -751,11 +751,11 @@ static const struct MenuAction sKeyboardPageTitleTexts[UNION_ROOM_KB_PAGE_COUNT 
     [UNION_ROOM_KB_PAGE_COUNT]    = {gText_Exit2, {NULL}},
 };
 
-static const u16 sUnionRoomChatInterfacePal[] = INCBIN_U16("graphics/union_room_chat/interface.gbapal");
-static const u32 sKeyboardCursorTiles[] = INCBIN_U32("graphics/union_room_chat/keyboard_cursor.4bpp.smol");
-static const u32 sTextEntryCursorTiles[] = INCBIN_U32("graphics/union_room_chat/text_entry_cursor.4bpp.smol");
-static const u32 sTextEntryArrowTiles[] = INCBIN_U32("graphics/union_room_chat/text_entry_arrow.4bpp.smol");
-static const u32 sRButtonGfxTiles[] = INCBIN_U32("graphics/union_room_chat/r_button.4bpp.smol");
+static const u16 sUnionRoomChatInterfacePal[] = INCGFX_U16("graphics/union_room_chat/interface.pal", ".gbapal");
+static const u32 sKeyboardCursorTiles[] = INCGFX_U32("graphics/union_room_chat/keyboard_cursor.png", ".4bpp.smol");
+static const u32 sTextEntryCursorTiles[] = INCGFX_U32("graphics/union_room_chat/text_entry_cursor.png", ".4bpp.smol");
+static const u32 sTextEntryArrowTiles[] = INCGFX_U32("graphics/union_room_chat/text_entry_arrow.png", ".4bpp.smol");
+static const u32 sRButtonGfxTiles[] = INCGFX_U32("graphics/union_room_chat/r_button.png", ".4bpp.smol");
 
 static const struct CompressedSpriteSheet sSpriteSheets[] = {
     {.data = sKeyboardCursorTiles,         .size = 0x1000, .tag = GFXTAG_KEYBOARD_CURSOR},
@@ -1010,7 +1010,7 @@ static void Chat_Join(void)
     case 0:
         PrepareSendBuffer_Join(sChat->sendMessageBuffer);
         sChat->funcState++;
-        // fall through
+        [[fallthrough]];
     case 1:
         if (IsLinkTaskFinished() && !Rfu_IsPlayerExchangeActive())
         {
@@ -1397,7 +1397,7 @@ static void Chat_SendMessage(void)
 
         PrepareSendBuffer_Chat(sChat->sendMessageBuffer);
         sChat->funcState++;
-        // fall through
+        [[fallthrough]];
     case 1:
         if (IsLinkTaskFinished() == TRUE && !Rfu_IsPlayerExchangeActive() && SendBlock(0, sChat->sendMessageBuffer, sizeof(sChat->sendMessageBuffer)))
             sChat->funcState++;
@@ -1882,7 +1882,7 @@ static bool32 ProcessReceivedChatMessage(u8 *dest, u8 *recvMessage)
         return TRUE;
     case CHAT_MESSAGE_DISBAND:
         StringCopy(sChat->hostName, name);
-        // fall through
+        [[fallthrough]];
     case CHAT_MESSAGE_LEAVE:
         if (sChat->multiplayerId != *recvMessage)
         {
@@ -2036,7 +2036,7 @@ static void Task_ReceiveChatMessage(u8 taskId)
         }
 
         tState = 1;
-        // fall through
+        [[fallthrough]];
     case 1:
         tLinkPlayerCount = GetLinkPlayerCount();
         if (sChat->linkPlayerCount != tLinkPlayerCount)
@@ -2545,13 +2545,13 @@ static bool32 Display_ScrollChat(u8 *state)
             sDisplay->scrollCount = 0;
             (*state)++;
         }
-        // fall through
+        [[fallthrough]];
     case 2:
         ScrollWindow(WIN_CHAT_HISTORY, 0, 5, PIXEL_FILL(1));
         CopyWindowToVram(WIN_CHAT_HISTORY, COPYWIN_GFX);
         sDisplay->scrollCount++;
         (*state)++;
-        // fall through
+        [[fallthrough]];
     case 3:
         if (IsDma3ManagerBusyWithBgCopy())
             return TRUE;

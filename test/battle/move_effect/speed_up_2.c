@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_AGILITY) == EFFECT_SPEED_UP_2);
+    ASSUME_STAT_CHANGE(MOVE_AGILITY, speed: +2);
 }
 
 SINGLE_BATTLE_TEST("Agility increases the user's Speed by 2 stages")

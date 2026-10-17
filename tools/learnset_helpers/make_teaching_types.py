@@ -1,3 +1,12 @@
+#!/usr/bin/env python3
+
+"""
+Usage: python3 make_teaching_types.py OUTPUT_FILE
+
+Build a primary store of "teaching-types" for each enabled species in the repository as an
+input for make_teachables.py.
+"""
+
 import json
 import pathlib
 import re

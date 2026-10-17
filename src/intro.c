@@ -28,6 +28,7 @@
 #include "intro_frlg.h"
 #include "constants/rgb.h"
 #include "constants/battle_anim.h"
+#include "pokemon.h"
 
 /*
     The intro is grouped into the following scenes
@@ -182,26 +183,26 @@ static EWRAM_DATA u16 sFlygonYOffset = 0;
 COMMON_DATA u32 gIntroFrameCounter = 0;
 COMMON_DATA struct GcmbStruct gMultibootProgramStruct = {0};
 
-static const u16 sIntroDrops_Pal[]            = INCBIN_U16("graphics/intro/scene_1/drops.gbapal");
-static const u16 sIntroLogo_Pal[]             = INCBIN_U16("graphics/intro/scene_1/logo.gbapal");
-static const u32 sIntroDropsLogo_Gfx[]        = INCBIN_U32("graphics/intro/scene_1/drops_logo.4bpp.smol");
-static const u16 sIntro1Bg_Pal[]              = INCBIN_U16("graphics/intro/scene_1/bg.gbapal"); // 16 x 16
-static const u32 sIntro1Bg0_Tilemap[]         = INCBIN_U32("graphics/intro/scene_1/bg0_map.bin.smolTM");
-static const u32 sIntro1Bg1_Tilemap[]         = INCBIN_U32("graphics/intro/scene_1/bg1_map.bin.smolTM");
-static const u32 sIntro1Bg2_Tilemap[]         = INCBIN_U32("graphics/intro/scene_1/bg2_map.bin.smolTM");
-static const u32 sIntro1Bg3_Tilemap[]         = INCBIN_U32("graphics/intro/scene_1/bg3_map.bin.smolTM");
-static const u32 sIntro1Bg_Gfx[]              = INCBIN_U32("graphics/intro/scene_1/bg.4bpp.smol");
-static const u16 sIntroPokeball_Pal[]         = INCBIN_U16("graphics/intro/scene_3/pokeball.gbapal");
-static const u32 sIntroPokeball_Tilemap[]     = INCBIN_U32("graphics/intro/scene_3/pokeball_map.bin.smolTM");
-static const u32 sIntroPokeball_Gfx[]         = INCBIN_U32("graphics/intro/scene_3/pokeball.8bpp.smol");
-static const u16 sIntroStreaks_Pal[]          = INCBIN_U16("graphics/intro/scene_3/streaks.gbapal"); // Unused
-static const u32 sIntroStreaks_Gfx[]          = INCBIN_U32("graphics/intro/scene_3/streaks.4bpp.smol"); // Unused
-static const u32 sIntroStreaks_Tilemap[]      = INCBIN_U32("graphics/intro/scene_3/streaks_map.bin.smolTM"); // Unused
-static const u16 sIntroRayquzaOrb_Pal[]       = INCBIN_U16("graphics/intro/scene_3/rayquaza_orb.gbapal");
-static const u16 sIntroMisc_Pal[]             = INCBIN_U16("graphics/intro/scene_3/misc.gbapal"); // Unused
-static const u32 sIntroMisc_Gfx[]             = INCBIN_U32("graphics/intro/scene_3/misc.4bpp.smol"); // Rayquza orb, and misc unused gfx
-static const u16 sIntroFlygonSilhouette_Pal[] = INCBIN_U16("graphics/intro/scene_1/flygon.gbapal");
-static const u32 sIntroLati_Gfx[]             = INCBIN_U32("graphics/intro/scene_1/lati.4bpp.smol"); // Unused
+static const u16 sIntroDrops_Pal[]            = INCGFX_U16("graphics/intro/scene_1/drops.pal", ".gbapal");
+static const u16 sIntroLogo_Pal[]             = INCGFX_U16("graphics/intro/scene_1/logo.pal", ".gbapal");
+static const u32 sIntroDropsLogo_Gfx[]        = INCGFX_U32("graphics/intro/scene_1/drops_logo.png", ".4bpp.smol");
+static const u16 sIntro1Bg_Pal[]              = INCGFX_U16("graphics/intro/scene_1/bg.png", ".gbapal"); // 16 x 16
+static const u32 sIntro1Bg0_Tilemap[]         = INCGFX_U32("graphics/intro/scene_1/bg0_map.bin", ".smolTM");
+static const u32 sIntro1Bg1_Tilemap[]         = INCGFX_U32("graphics/intro/scene_1/bg1_map.bin", ".smolTM");
+static const u32 sIntro1Bg2_Tilemap[]         = INCGFX_U32("graphics/intro/scene_1/bg2_map.bin", ".smolTM");
+static const u32 sIntro1Bg3_Tilemap[]         = INCGFX_U32("graphics/intro/scene_1/bg3_map.bin", ".smolTM");
+static const u32 sIntro1Bg_Gfx[]              = INCGFX_U32("graphics/intro/scene_1/bg.png", ".4bpp.smol");
+static const u16 sIntroPokeball_Pal[]         = INCGFX_U16("graphics/intro/scene_3/pokeball.png", ".gbapal");
+static const u32 sIntroPokeball_Tilemap[]     = INCGFX_U32("graphics/intro/scene_3/pokeball_map.bin", ".smolTM");
+static const u32 sIntroPokeball_Gfx[]         = INCGFX_U32("graphics/intro/scene_3/pokeball.png", ".8bpp.smol");
+static const u16 sIntroStreaks_Pal[]          = INCGFX_U16("graphics/intro/scene_3/streaks.png", ".gbapal"); // Unused
+static const u32 sIntroStreaks_Gfx[]          = INCGFX_U32("graphics/intro/scene_3/streaks.png", ".4bpp.smol"); // Unused
+static const u32 sIntroStreaks_Tilemap[]      = INCGFX_U32("graphics/intro/scene_3/streaks_map.bin", ".smolTM"); // Unused
+static const u16 sIntroRayquzaOrb_Pal[]       = INCGFX_U16("graphics/intro/scene_3/rayquaza_orb.pal", ".gbapal");
+static const u16 sIntroMisc_Pal[]             = INCGFX_U16("graphics/intro/scene_3/misc.pal", ".gbapal"); // Unused
+static const u32 sIntroMisc_Gfx[]             = INCGFX_U32("graphics/intro/scene_3/misc.png", ".4bpp.smol"); // Rayquza orb, and misc unused gfx
+static const u16 sIntroFlygonSilhouette_Pal[] = INCGFX_U16("graphics/intro/scene_1/flygon.png", ".gbapal");
+static const u32 sIntroLati_Gfx[]             = INCGFX_U32("graphics/intro/scene_1/lati.png", ".4bpp.smol"); // Unused
 static const u8 sUnusedData[] = {
     0x02, 0x03, 0x04, 0x05, 0x01, 0x01, 0x01, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x02, 0x0D,
     0x0E, 0x0F, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x02, 0x0D, 0x0E, 0x0F,
@@ -1086,8 +1087,10 @@ static u8 SetUpCopyrightScreen(void)
         GameCubeMultiBoot_Init(&gMultibootProgramStruct);
     // REG_DISPCNT needs to be overwritten the second time, because otherwise the intro won't show up on VBA 1.7.2 and John GBA Lite emulators.
     // The REG_DISPCNT overwrite is NOT needed in m-GBA, No$GBA, VBA 1.8.0, My Boy and Pizza Boy GBA emulators.
+        [[fallthrough]];
     case COPYRIGHT_EMULATOR_BLEND:
         REG_DISPCNT = DISPCNT_MODE_0 | DISPCNT_OBJ_1D_MAP | DISPCNT_BG0_ON;
+        [[fallthrough]];
     default:
         UpdatePaletteFade();
         gMain.state++;
@@ -1485,7 +1488,7 @@ static void SpriteCB_Volbeat(struct Sprite *sprite)
         if (++sprite->sStateDelay < 180)
             break;
         sprite->sState++;
-        // fallthrough
+        [[fallthrough]];
     case VOLBEAT_ENTER:
         sprite->x -= 4;
         if (sprite->x == 60)
@@ -1530,7 +1533,7 @@ static void SpriteCB_Volbeat(struct Sprite *sprite)
         sprite->sSinYIdx = 0x80;
         sprite->sFig8Loops = 3;
         sprite->sState++;
-        // fallthrough
+        [[fallthrough]];
     case VOLBEAT_FIGURE_8:
         sprite->x2 = Sin((u8)sprite->sSinXIdx, 0x3C);
         sprite->y2 = Sin((u8)sprite->sSinYIdx, 0x14);
@@ -1674,7 +1677,7 @@ static void SpriteCB_Manectric(struct Sprite *sprite)
         sprite->sSinIdx = 0x80;
         sprite->sCosIdx = 0;
         sprite->sState++;
-        // fallthrough
+        [[fallthrough]];
     case 2:
         if (sprite->x + sprite->x2 <= -32)
         {
@@ -1925,7 +1928,8 @@ static void Task_Scene3_Groudon(u8 taskId)
             tScreenX = 80;
             tScreenY = 41;
             tDelay = 16;
-            PlayCryInternal(SPECIES_GROUDON, 0, 100, CRY_PRIORITY_NORMAL, CRY_MODE_NORMAL);
+            if (IsSpeciesEnabled(SPECIES_GROUDON))
+                PlayCryInternal(SPECIES_GROUDON, 0, 100, CRY_PRIORITY_NORMAL, CRY_MODE_NORMAL);
             tState++;
         }
         break;
@@ -2073,6 +2077,7 @@ static void Task_Scene3_Kyogre(u8 taskId)
         if (--tDelay != 0)
             break;
         tState++;
+        [[fallthrough]];
     case 1:
         tTrigIdx += 4;
         gTasks[taskId].tScreenX = 344 - Sin(tTrigIdx, 0x100);
@@ -2127,7 +2132,8 @@ static void Task_Scene3_Kyogre(u8 taskId)
             {
                 tDelay = 1;
                 tState++;
-                PlayCryInternal(SPECIES_KYOGRE, 0, 120, CRY_PRIORITY_NORMAL, CRY_MODE_NORMAL);
+                if (IsSpeciesEnabled(SPECIES_KYOGRE))
+                    PlayCryInternal(SPECIES_KYOGRE, 0, 120, CRY_PRIORITY_NORMAL, CRY_MODE_NORMAL);
             }
         }
         break;
@@ -2491,6 +2497,7 @@ static void SpriteCB_Lightning(struct Sprite *sprite)
     case 0:
         sprite->sPalIdx = 0x1C2;
         sprite->sState++;
+        [[fallthrough]];
     case 1:
         CpuCopy16(INTRO3_RAW_PTR(sprite->sPalIdx), &gPlttBufferFaded[BG_PLTT_ID(5) + 13], PLTT_SIZEOF(1));
         sprite->sPalIdx += 2;
@@ -2499,6 +2506,7 @@ static void SpriteCB_Lightning(struct Sprite *sprite)
         sprite->sPalIdx = 0x1CC;
         sprite->sDelay = 4;
         sprite->sState++;
+        [[fallthrough]];
     case 2:
         if (--sprite->sDelay == 0)
         {
@@ -3406,7 +3414,7 @@ static void SpriteCB_RayquazaOrb(struct Sprite *sprite)
         CalcCenterToCornerVec(sprite, SPRITE_SHAPE(64x64), SPRITE_SIZE(64x64), ST_OAM_AFFINE_DOUBLE);
         sprite->data[1] = 0;
         sprite->sState = 1;
-        //fall through
+        [[fallthrough]];
     case 1:
         sprite->data[7]++;
         if (sprite->data[7] & 1)

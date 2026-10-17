@@ -1,11 +1,12 @@
 #include "constants/event_objects.h"
 #include "constants/items.h"
 #include "constants/moves.h"
+#include "constants/species.h"
 
 struct LilycoveContestLadyValues
 {
     u16 monGfxId;
-    u16 monSpecies;
+    enum Species monSpecies;
     const u8 *monName;
     const u8 *categoryName;
     const u8 *contestName;
@@ -21,7 +22,7 @@ struct LilycoveQuizLadyQuestions
 struct LilycoveFavorLady
 {
     const u8 *request;
-    const u16 *acceptedItems;
+    const enum Item *acceptedItems;
     u16 prize;
 };
 
@@ -302,7 +303,7 @@ static const struct LilycoveQuizLadyQuestions sQuizLadyQuestions[] =
 };
 
 // Favor Lady data
-static const u16 sFavorLadyAcceptedItems_Slippery[] =
+static const enum Item sFavorLadyAcceptedItems_Slippery[] =
 {
     ITEM_REPEL,
     ITEM_SUPER_REPEL,
@@ -319,7 +320,7 @@ static const u16 sFavorLadyAcceptedItems_Slippery[] =
     ITEM_NONE
 };
 
-static const u16 sFavorLadyAcceptedItems_Roundish[] =
+static const enum Item sFavorLadyAcceptedItems_Roundish[] =
 {
     ITEM_FLUFFY_TAIL,
     ITEM_PEARL,
@@ -340,7 +341,7 @@ static const u16 sFavorLadyAcceptedItems_Roundish[] =
     ITEM_NONE
 };
 
-static const u16 sFavorLadyAcceptedItems_Whamish[] =
+static const enum Item sFavorLadyAcceptedItems_Whamish[] =
 {
     ITEM_REVIVAL_HERB,
     ITEM_POTION,
@@ -359,7 +360,7 @@ static const u16 sFavorLadyAcceptedItems_Whamish[] =
     ITEM_NONE
 };
 
-static const u16 sFavorLadyAcceptedItems_Shiny[] =
+static const enum Item sFavorLadyAcceptedItems_Shiny[] =
 {
     ITEM_HEAL_POWDER,
     ITEM_X_SPEED,
@@ -384,7 +385,7 @@ static const u16 sFavorLadyAcceptedItems_Shiny[] =
     ITEM_NONE
 };
 
-static const u16 sFavorLadyAcceptedItems_Sticky[] =
+static const enum Item sFavorLadyAcceptedItems_Sticky[] =
 {
     ITEM_ENERGY_ROOT,
     ITEM_FULL_RESTORE,
@@ -399,7 +400,7 @@ static const u16 sFavorLadyAcceptedItems_Sticky[] =
     ITEM_NONE
 };
 
-static const u16 sFavorLadyAcceptedItems_Pointy[] =
+static const enum Item sFavorLadyAcceptedItems_Pointy[] =
 {
     ITEM_QUICK_CLAW,
     ITEM_POISON_BARB,

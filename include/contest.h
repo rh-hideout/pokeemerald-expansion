@@ -87,7 +87,7 @@ enum {
 
 struct ContestPokemon
 {
-    u16 species;
+    enum Species species;
     u8 nickname[POKEMON_NAME_LENGTH + 1];
     u8 trainerName[PLAYER_NAME_LENGTH + 1];
     u8 trainerGfxId;
@@ -124,8 +124,8 @@ struct ContestTempSave
 
 struct ContestMoveAnimData
 {
-    u16 species;
-    u16 targetSpecies;
+    enum Species species;
+    enum Species targetSpecies;
     bool8 hasTargetAnim:1;
     u8 isShiny:1;
     u8 targetIsShiny:1;
@@ -137,7 +137,7 @@ struct ContestMoveAnimData
 
 struct Contest
 {
-    u8 playerMoveChoice;
+    enum MoveSlot playerMoveChoice;
     u8 appealNumber;
     u8 unk[CONTESTANT_COUNT]; // never read
     bool16 unused1:1;
@@ -232,7 +232,7 @@ struct ContestAIInfo
 {
     /*0x00*/ u8 aiState;
     /*0x02*/ u16 nextMove;
-    /*0x04*/ u8 nextMoveIndex;
+    /*0x04*/ enum MoveSlot nextMoveIndex;
     /*0x05*/ u8 moveScores[MAX_MON_MOVES];
     /*0x09*/ u8 aiAction;
     /*0x0A*/ u8 filler[6];
@@ -308,8 +308,17 @@ struct ContestCategory
     const u8 *condition;
     const u8 *generic;
     const u8 *negativeTrait;
+    u8 ribbon;
+    u8 imageEffect;
+    const u32 *paintingTiles;
+    const u32 *paintingTilemap;
     u8 palette;
     u16 tile;
+    const u16 *resultsTilemap;
+    u8 stdString;
+    const u8 *text;
+    u8 tvShowState;
+    u8 tvShowStateExciting;
 };
 
 extern const struct ContestCategory gContestCategoryInfo[CONTEST_CATEGORIES_COUNT + 1];
@@ -355,7 +364,7 @@ void SetContestants(enum ContestCategories contestType, u8 rank);
 void SetLinkAIContestants(enum ContestCategories contestType, u8 rank, bool32 isPostgame);
 u8 GetContestEntryEligibility(struct Pokemon *pkmn);
 void CalculateRound1Points(enum ContestCategories contestCategory);
-bool8 IsSpeciesNotUnown(u16 species);
+bool8 IsSpeciesNotUnown(enum Species species);
 bool8 Contest_IsMonsTurnDisabled(u8 contestant);
 void SaveLinkContestResults(void);
 void SortContestants(bool8 useRanking);

@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_EERIE_IMPULSE) == EFFECT_SPECIAL_ATTACK_DOWN_2);
+    ASSUME_STAT_CHANGE(MOVE_EERIE_IMPULSE, spAtk: -2);
 }
 
 SINGLE_BATTLE_TEST("Eerie Impulse reduces the target's Sp. Attack by 2 stages")

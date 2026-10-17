@@ -46,7 +46,7 @@ SINGLE_BATTLE_TEST("Purifying Salt makes Rest fail")
         TURN { MOVE(player, MOVE_REST); }
     } SCENE {
         NONE_OF {
-            MESSAGE("Garganacl went to sleep!");
+            MESSAGE("Garganacl slept and restored its HP!");
         }
     }
 }

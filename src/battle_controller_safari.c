@@ -19,6 +19,7 @@
 #include "sound.h"
 #include "task.h"
 #include "text.h"
+#include "trainer.h"
 #include "util.h"
 #include "window.h"
 #include "line_break.h"
@@ -208,7 +209,7 @@ static void SafariOpenPokeblockCase(enum BattlerId battler)
     if (!gPaletteFade.active)
     {
         gBattlerControllerFuncs[battler] = CompleteWhenChosePokeblock;
-        FreeAllWindowBuffers();
+        CloseMainBattleScreen();
         OpenPokeblockCaseInBattle();
     }
 }
@@ -229,7 +230,7 @@ static void OpenPartyMenuToChooseMon(enum BattlerId battler)
         gBattlerControllerFuncs[battler] = WaitForMonSelection;
         u8 caseId = gTasks[gBattleControllerData[battler]].data[0];
         DestroyTask(gBattleControllerData[battler]);
-        FreeAllWindowBuffers();
+        CloseMainBattleScreen();
         OpenPartyMenuInBattle(caseId);
     }
 }
@@ -241,7 +242,7 @@ static void WaitForMonSelection(enum BattlerId battler)
         if (gPartyMenuUseExitCallback == TRUE)
             BtlController_EmitChosenMonReturnValue(battler, B_COMM_TO_ENGINE, gSelectedMonPartyId, gBattlePartyCurrentOrder);
         else
-            BtlController_EmitChosenMonReturnValue(battler, B_COMM_TO_ENGINE, PARTY_SIZE, NULL);
+            BtlController_EmitChosenMonReturnValue(battler, B_COMM_TO_ENGINE, PARTY_MON_NONE, NULL);
 
         if ((gBattleResources->bufferA[battler][1] & 0xF) == 1)
         {
@@ -275,10 +276,10 @@ void SafariBufferExecCompleted(enum BattlerId battler)
 
 static void SafariHandleDrawTrainerPic(enum BattlerId battler)
 {
-    enum TrainerPicID trainerPicId = gSaveBlock2Ptr->playerGender == FEMALE ? TRAINER_BACK_PIC_PLAYER_FEMALE : TRAINER_BACK_PIC_PLAYER_MALE;
+    enum TrainerPicID trainerPicId = GetPlayerTrainerPic(gSaveBlock2Ptr->playerGender, GAME_VERSION);
 
     BtlController_HandleDrawTrainerPic(battler, trainerPicId, FALSE,
-                                       80, 80 + 4 * (8 - gTrainerBacksprites[trainerPicId].coordinates.size),
+                                       80, 80 + 4 * (8 - GetTrainerBackPicCoords(trainerPicId)->size),
                                        30);
 }
 
@@ -323,7 +324,7 @@ static void SafariHandleChoosePokemon(enum BattlerId battler)
         && (gBattleResources->bufferA[battler][1] & 0xF) != PARTY_ACTION_CHOOSE_FAINTED_MON
         && (gBattleResources->bufferA[battler][1] & 0xF) != PARTY_ACTION_SEND_MON_TO_BOX)
     {
-        BtlController_EmitChosenMonReturnValue(battler, B_COMM_TO_ENGINE, gBattlerPartyIndexes[battler] + 1, gBattlePartyCurrentOrder);
+        BtlController_EmitChosenMonReturnValue(battler, B_COMM_TO_ENGINE, (enum PartyMon)(gBattlerPartyIndexes[battler] + 1), gBattlePartyCurrentOrder);
         SafariBufferExecCompleted(battler);
     }
     else
@@ -331,7 +332,7 @@ static void SafariHandleChoosePokemon(enum BattlerId battler)
         gBattleControllerData[battler] = CreateTask(TaskDummy, 0xFF);
         gTasks[gBattleControllerData[battler]].data[0] = gBattleResources->bufferA[battler][1] & 0xF;
         *(&gBattleStruct->battlerPreventingSwitchout) = gBattleResources->bufferA[battler][1] >> 4;
-        *(&gBattleStruct->prevSelectedPartySlot) = gBattleResources->bufferA[battler][2];
+        gBattleStruct->prevSelectedPartySlot = (enum PartyMon)gBattleResources->bufferA[battler][2];
         *(&gBattleStruct->abilityPreventingSwitchout) = (gBattleResources->bufferA[battler][3] & 0xFF) | (gBattleResources->bufferA[battler][7] << 8);
         BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 0x10, RGB_BLACK);
         gBattlerControllerFuncs[battler] = OpenPartyMenuToChooseMon;
@@ -340,10 +341,10 @@ static void SafariHandleChoosePokemon(enum BattlerId battler)
 }
 
 // All of the other controllers(except Wally's) use CRY_MODE_FAINT.
-// Player is not a pokemon, so it can't really faint in the Safari anyway.
+// Player is not a Pokémon, so it can't really faint in the Safari anyway.
 static void SafariHandleFaintingCry(enum BattlerId battler)
 {
-    u16 species = GetMonData(GetBattlerMon(battler), MON_DATA_SPECIES);
+    enum Species species = GetMonData(GetBattlerMon(battler), MON_DATA_SPECIES);
 
     PlayCry_Normal(species, 25);
     BtlController_Complete(battler);
