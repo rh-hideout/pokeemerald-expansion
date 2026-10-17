@@ -6268,12 +6268,12 @@ void TrySpecialOverworldEvo(void)
     {
         if (gTriedEvolving & (1u << i))
             continue;
+        gTriedEvolving |= 1u << i;
 
         enum Species targetSpecies = GetEvolutionTargetSpecies(&gParties[B_TRAINER_PLAYER][i], EVO_MODE_OVERWORLD_SPECIAL, 0, NULL, &canStopEvo, CHECK_EVO);
 
         if (targetSpecies != SPECIES_NONE)
         {
-            gTriedEvolving |= 1u << i;
             GetEvolutionTargetSpecies(&gParties[B_TRAINER_PLAYER][i], EVO_MODE_OVERWORLD_SPECIAL, 0, NULL, &canStopEvo, DO_EVO);
 
             if (gMain.callback2 == TrySpecialOverworldEvo) // This fixes small graphics glitches.

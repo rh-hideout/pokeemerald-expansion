@@ -3295,7 +3295,7 @@ static void TriggerMultipleEvolutions_Repeatable(void)
     }
 
     gSpecialVar_Result = gSpecialVar_0x8006;
-    if (triedEvolvingCopy != 0) // i.e. if the script previously returned some evolutions. Credit to Foster
+    if (triedEvolvingCopy != 0)
         SetMainCallback2(CB2_ReturnToFieldContinueScript);
 
     gTriedEvolving = 0;
