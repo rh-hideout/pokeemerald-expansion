@@ -493,7 +493,8 @@ struct SpeciesInfo /*0xC4*/
     u32 isFrontierBanned:1; // This species is not allowed to participate in Battle Frontier facilities.
     u32 isSkyBattleBanned:1;
     u32 isTelekinesisBanned:1;
-    u32 padding4:8;
+    u32 isDynamaxBanned:1; // This species cannot Dynamax
+    u32 padding4:7;
     // Shadow settings
     s8 enemyShadowXOffset; // This determines the X-offset for an enemy Pokémon's shadow during battle; negative values point left, positive values point right.
     s8 enemyShadowYOffset; // This determines the Y-offset for an enemy Pokémon's shadow during battle; negative values point up, positive values point down.
