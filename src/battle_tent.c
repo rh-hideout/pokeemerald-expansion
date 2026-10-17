@@ -8,6 +8,7 @@
 #include "battle_tower.h"
 #include "random.h"
 #include "item.h"
+#include "battle_factory.h"
 #include "battle_factory_screen.h"
 #include "frontier_util.h"
 #include "string_util.h"
@@ -44,7 +45,6 @@ static void GiveSlateportTentPrize(void);
 static void SelectInitialRentalMons(void);
 static void SwapRentalMons(void);
 static void GenerateOpponentMons(void);
-static void GenerateInitialRentalMons(void);
 
 /*
  * Battle Tents are mini versions of particular Battle Frontier facilities
@@ -55,8 +55,6 @@ static void GenerateInitialRentalMons(void);
  * Slateport Battle Tent:  Battle Factory
  *
  */
-
-static u16 sRandMonId;
 
 void static (*const sVerdanturfTentFuncs[])(void) =
 {
@@ -96,7 +94,7 @@ void static (*const sSlateportTentFuncs[])(void) =
     [SLATEPORT_TENT_FUNC_SELECT_RENT_MONS]       = SelectInitialRentalMons,
     [SLATEPORT_TENT_FUNC_SWAP_RENT_MONS]         = SwapRentalMons,
     [SLATEPORT_TENT_FUNC_GENERATE_OPPONENT_MONS] = GenerateOpponentMons,
-    [SLATEPORT_TENT_FUNC_GENERATE_RENTAL_MONS]   = GenerateInitialRentalMons
+    [SLATEPORT_TENT_FUNC_GENERATE_RENTAL_MONS]   = FactoryGenerateInitialRentalMons
 };
 
 static const u16 sSlateportTentRewards[] = {ITEM_FULL_HEAL};
@@ -289,141 +287,27 @@ bool8 InSlateportBattleTent(void)
            && (gMapHeader.mapLayoutId == LAYOUT_BATTLE_TENT_CORRIDOR || gMapHeader.mapLayoutId == LAYOUT_BATTLE_TENT_BATTLE_ROOM);
 }
 
-static void GenerateInitialRentalMons(void)
-{
-    s32 i, j;
-    u8 firstMonId;
-    u16 monSetId;
-    enum Species currSpecies;
-    enum Species species[PARTY_SIZE];
-    u16 monIds[PARTY_SIZE];
-    enum Item heldItems[PARTY_SIZE];
-
-    firstMonId = 0;
-    gFacilityTrainers = gSlateportBattleTentTrainers;
-    for (i = 0; i < PARTY_SIZE; i++)
-    {
-        species[i] = 0;
-        monIds[i] = 0;
-        heldItems[i] = 0;
-    }
-    gFacilityTrainerMons = gSlateportBattleTentMons;
-    currSpecies = SPECIES_NONE;
-    i = 0;
-    while (i != PARTY_SIZE)
-    {
-        // Cannot have two Pokémon of the same species.
-        monSetId = Random() % NUM_SLATEPORT_TENT_MONS;
-        for (j = firstMonId; j < firstMonId + i; j++)
-        {
-            if (monIds[j] == monSetId)
-                break;
-            if (species[j] == gFacilityTrainerMons[monSetId].species)
-            {
-                if (currSpecies == SPECIES_NONE)
-                    currSpecies = gFacilityTrainerMons[monSetId].species;
-                else
-                    break;
-            }
-        }
-        if (j != i + firstMonId)
-            continue;
-
-        // Cannot have two same held items.
-        for (j = firstMonId; j < i + firstMonId; j++)
-        {
-            if (heldItems[j] != 0 && heldItems[j] == gFacilityTrainerMons[monSetId].heldItem)
-            {
-                if (gFacilityTrainerMons[monSetId].species == currSpecies)
-                    currSpecies = SPECIES_NONE;
-                break;
-            }
-        }
-        if (j != i + firstMonId)
-            continue;
-
-        gSaveBlock2Ptr->frontier.rentalMons[i].monId = monSetId;
-        species[i] = gFacilityTrainerMons[monSetId].species;
-        heldItems[i] = gFacilityTrainerMons[monSetId].heldItem;
-        monIds[i] = monSetId;
-        i++;
-    }
-}
-
 static void GenerateOpponentMons(void)
 {
     u16 trainerId;
-    s32 i, j, k;
-    const u16 *monSet;
-    enum Species species[FRONTIER_PARTY_SIZE];
-    enum Item heldItems[FRONTIER_PARTY_SIZE];
-    s32 numMons = 0;
+    s32 i;
 
-    gFacilityTrainers = gSlateportBattleTentTrainers;
-    gFacilityTrainerMons = gSlateportBattleTentMons;
-
-    while (1)
+    do
     {
-        do
+        // Choose a random trainer, ensuring no repeats in this challenge
+        trainerId = Random() % NUM_BATTLE_TENT_TRAINERS;
+        for (i = 0; i < gSaveBlock2Ptr->frontier.curChallengeBattleNum; i++)
         {
-            // Choose a random trainer, ensuring no repeats in this challenge
-            trainerId = Random() % NUM_BATTLE_TENT_TRAINERS;
-            for (i = 0; i < gSaveBlock2Ptr->frontier.curChallengeBattleNum; i++)
-            {
-                if (gSaveBlock2Ptr->frontier.trainerIds[i] == trainerId)
-                    break;
-            }
-        } while (i != gSaveBlock2Ptr->frontier.curChallengeBattleNum);
-
-        TRAINER_BATTLE_PARAM.opponentA = trainerId;
-        monSet = gFacilityTrainers[TRAINER_BATTLE_PARAM.opponentA].monSet;
-        while (monSet[numMons] != 0xFFFF)
-            numMons++;
-        if (numMons > 8)
-            break;
-        numMons = 0;
-    }
+            if (gSaveBlock2Ptr->frontier.trainerIds[i] == trainerId)
+                break;
+        }
+    } while (i != gSaveBlock2Ptr->frontier.curChallengeBattleNum);
 
     if (gSaveBlock2Ptr->frontier.curChallengeBattleNum < TENT_STAGES_PER_CHALLENGE - 1)
-        gSaveBlock2Ptr->frontier.trainerIds[gSaveBlock2Ptr->frontier.curChallengeBattleNum] = TRAINER_BATTLE_PARAM.opponentA;
+        gSaveBlock2Ptr->frontier.trainerIds[gSaveBlock2Ptr->frontier.curChallengeBattleNum] = trainerId;
+    TRAINER_BATTLE_PARAM.opponentA = trainerId;
 
-    monSet = gFacilityTrainers[TRAINER_BATTLE_PARAM.opponentA].monSet;
-    i = 0;
-    while (i != FRONTIER_PARTY_SIZE)
-    {
-        sRandMonId = monSet[Random() % numMons];
-
-        // Ensure none of the opponent's Pokémon are the same as the potential rental Pokémon for the player
-        for (j = 0; j < (int)ARRAY_COUNT(gSaveBlock2Ptr->frontier.rentalMons); j++)
-        {
-            if (gFacilityTrainerMons[sRandMonId].species == gFacilityTrainerMons[gSaveBlock2Ptr->frontier.rentalMons[j].monId].species)
-                break;
-        }
-        if (j != (int)ARRAY_COUNT(gSaveBlock2Ptr->frontier.rentalMons))
-            continue;
-
-        // Ensure this species hasn't already been chosen for the opponent
-        for (k = 0; k < i; k++)
-        {
-            if (species[k] == gFacilityTrainerMons[sRandMonId].species)
-                break;
-        }
-        if (k != i)
-            continue;
-
-        // Ensure held items don't repeat on the opponent's team
-        for (k = 0; k < i; k++)
-        {
-            if (heldItems[k] != ITEM_NONE && heldItems[k] == gFacilityTrainerMons[sRandMonId].heldItem)
-                break;
-        }
-        if (k != i)
-            continue;
-
-        // Successful selection
-        species[i] = gFacilityTrainerMons[sRandMonId].species;
-        heldItems[i] = gFacilityTrainerMons[sRandMonId].heldItem;
-        gFrontierTempParty[i] = sRandMonId;
-        i++;
-    }
+    struct FacilityMonGenerator generator = GetFacilityMonGenerator(trainerId);
+    generator.partySize = FRONTIER_PARTY_SIZE;
+    PickRandomFacilityMons(&generator, trainerId, gFrontierTempParty);
 }

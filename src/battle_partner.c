@@ -3,6 +3,7 @@
 #include "battle.h"
 #include "battle_partner.h"
 #include "battle_frontier.h"
+#include "battle_tower.h"
 #include "data.h"
 #include "frontier_util.h"
 #include "difficulty.h"
@@ -26,8 +27,6 @@ const struct Trainer gBattlePartners[DIFFICULTY_COUNT][PARTNER_COUNT] =
 void FillPartnerParty(u16 trainerId)
 {
     s32 i, j;
-    u32 ivs, level;
-    u16 monId;
 
     u8 trainerName[(PLAYER_NAME_LENGTH * 3) + 1];
     SetFacilityPtrsGetLevel();
@@ -54,13 +53,11 @@ void FillPartnerParty(u16 trainerId)
     }
     else if (trainerId < FRONTIER_TRAINERS_COUNT)
     {
-        level = SetFacilityPtrsGetLevel();
-        ivs = GetFrontierTrainerFixedIvs(trainerId);
-        u32 otID = Random32();
+        struct FacilityMonGenerator generator = GetFacilityMonGenerator(trainerId);
+        generator.partySize = FRONTIER_MULTI_PARTY_SIZE;
         for (i = 0; i < FRONTIER_MULTI_PARTY_SIZE; i++)
         {
-            monId = gSaveBlock2Ptr->frontier.trainerIds[i + 18];
-            CreateFacilityMon(&gFacilityTrainerMons[monId], level, ivs, otID, 0, &gParties[B_TRAINER_PARTNER][i]);
+            CreateFacilityMon(&gParties[B_TRAINER_PARTNER][i], &generator, gSaveBlock2Ptr->frontier.trainerIds[i + 18]);
             for (j = 0; j < PLAYER_NAME_LENGTH + 1; j++)
                 trainerName[j] = gFacilityTrainers[trainerId].trainerName[j];
             SetMonData(&gParties[B_TRAINER_PARTNER][i], MON_DATA_OT_NAME, &trainerName);
