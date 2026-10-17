@@ -461,6 +461,7 @@ bool8 ScrCmd_setvar(struct ScriptContext *ctx)
 bool8 ScrCmd_copyvar(struct ScriptContext *ctx)
 {
     u32 varId = ScriptReadHalfword(ctx);
+    assertf(varId != 0, "variable %d set to 0", varId);
     u16 *ptr = GetVarPointer(varId);
 
     Script_RequestEffects(SCREFF_V1);
