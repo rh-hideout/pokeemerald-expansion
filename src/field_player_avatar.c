@@ -805,9 +805,9 @@ static void WindUpSpinTimer(enum Direction direction)
 
 bool32 CanTriggerSpinEvolution()
 {
-    gSpecialVar_0x8000 = EVO_NONE;
     if (gPlayerSpinData.triggerEvo)
     {
+        gSpecialVar_0x8000 = SPIN_NONE;
         u32 seconds = gPlayerSpinData.VBlanksSpinning / 60;
         u32 direction = gPlayerSpinData.spinDirection;
         if (seconds >= 10)
@@ -830,9 +830,10 @@ bool32 CanTriggerSpinEvolution()
                 gSpecialVar_0x8000 = SPIN_CCW_SHORT;
         }
         gPlayerSpinData.triggerEvo = FALSE;
+
+        if (gSpecialVar_0x8000 != SPIN_NONE)
+            return TRUE;
     }
-    if (gSpecialVar_0x8000 != EVO_NONE)
-        return TRUE;
 
     return FALSE;
 }
