@@ -250,6 +250,7 @@ void PickRandomFacilityMons(struct FacilityMonGenerator *generator, u16 trainerI
         {
             if (generator->facilityMonList[monId].species == SPECIES_UNOWN)
                 isMonValid = FALSE;
+
             for (u32 j = 0; j < 2 * FRONTIER_PARTY_SIZE; j++)
             {
                 if (generator->facilityMonList[monId].species == generator->facilityMonList[gSaveBlock2Ptr->frontier.rentalMons[j].monId].species)
@@ -258,7 +259,6 @@ void PickRandomFacilityMons(struct FacilityMonGenerator *generator, u16 trainerI
                     break;
                 }
             }
-
         }
         else
         {
@@ -274,7 +274,6 @@ void PickRandomFacilityMons(struct FacilityMonGenerator *generator, u16 trainerI
         {
             pairSpecies = SPECIES_NONE;
         }
-
     }
 }
 
@@ -371,7 +370,6 @@ static void FillTrainerParty(u16 trainerId, enum BattleTrainer trainer, u8 monCo
         CreateFacilityMon(&gParties[trainer][i], &generator, gFrontierTempParty[i]);
     }
 }
-
 
 void CreateFacilityMon(struct Pokemon *dst, struct FacilityMonGenerator *generator, u16 monIndex)
 {
