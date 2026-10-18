@@ -201,7 +201,11 @@ static void HandleSetEffectAbsorb(struct BattleCalcValues *cv, struct SetEffect 
             return;
         }
 
-        s32 healAmount = (gBattleStruct->moveDamage[cv->battlerDef] * absorbPercentage / 100);
+        s32 rounding = GetConfig(B_HP_RESTORATION_ROUNDING) >= GEN_5 ? 1 : 0;
+        s32 damage = gBattleStruct->moveDamage[cv->battlerDef];
+
+        s32 healAmount = (damage + rounding) * absorbPercentage / 100;
+
         healAmount = GetDrainedBigRootHp(cv->battlerAtk, healAmount);
         gEffectBattler = cv->battlerAtk;
         gBattlerAbility = gBattleScripting.battler = cv->battlerDef;
@@ -4545,7 +4549,7 @@ enum StringID GetStatus1String(u32 status1)
 
 static s32 GetMaxHpWithRounding(enum BattlerId battler)
 {
-    if (B_HP_RESTORATION_ROUNDING >= GEN_5)
+    if (GetConfig(B_HP_RESTORATION_ROUNDING) >= GEN_5)
         return GetNonDynamaxMaxHP(battler) + 1;
     return GetNonDynamaxMaxHP(battler);
 }
