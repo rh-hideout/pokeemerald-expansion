@@ -6114,15 +6114,8 @@ static void Cmd_givecaughtmon(void)
         }
         break;
     case GIVECAUGHTMON_HANDLE_CHOSEN_MON:
-        if (gSelectedMonPartyId == PARTY_MON_CANCEL)
+        if (gSelectedMonPartyId != PARTY_MON_CANCEL)
         {
-            // Choosing Pokemon was cancelled
-            gSelectedMonPartyId = PARTY_MON_NONE;
-            gBattleCommunication[MULTIUSE_STATE] = GIVECAUGHTMON_GIVE_AND_SHOW_MSG;
-        }
-        else
-        {
-            //Before sending to PC, we revert battle form
             TryRevertPartyMonFormChange(gSelectedMonPartyId);
             // Mon chosen, try to put it in the PC
             if (CopyMonToPC(&gParties[B_TRAINER_PLAYER][gSelectedMonPartyId]) == MON_GIVEN_TO_PC)
@@ -6132,15 +6125,9 @@ static void Cmd_givecaughtmon(void)
                 ZeroMonData(&gParties[B_TRAINER_PLAYER][gSelectedMonPartyId]);
                 gBattleStruct->itemLost[B_TRAINER_PLAYER][gSelectedMonPartyId].originalItem = ITEM_NONE;
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SWAPPED_INTO_PARTY;
-                gSelectedMonPartyId = PARTY_MON_NONE;
-                gBattleCommunication[MULTIUSE_STATE] = GIVECAUGHTMON_GIVE_AND_SHOW_MSG;
-            }
-            else
-            {
-                gSelectedMonPartyId = PARTY_MON_NONE;
-                gBattleCommunication[MULTIUSE_STATE] = GIVECAUGHTMON_GIVE_AND_SHOW_MSG;
             }
         }
+        gBattleCommunication[MULTIUSE_STATE] = GIVECAUGHTMON_GIVE_AND_SHOW_MSG;
         break;
     case GIVECAUGHTMON_GIVE_AND_SHOW_MSG:
     {
