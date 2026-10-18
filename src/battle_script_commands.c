@@ -1393,56 +1393,8 @@ static void Cmd_setadditionaleffects(void)
 {
     CMD_ARGS();
 
-    // Only onChargingTurnOnly additional effects are handled here
-    // TODO: Refactor CancelerCharging to include this
-    if (!IsBattlerUnaffectedByMove(gBattlerTarget))
-    {
-        struct BattleCalcValues cv = {0};
-        cv.battlerAtk = gBattlerAttacker;
-        cv.battlerDef = gBattlerTarget;
-        cv.move = gCurrentMove;
-        cv.abilities[cv.battlerAtk] = GetBattlerAbility(cv.battlerAtk);
-        cv.abilities[cv.battlerDef] = GetBattlerAbility(cv.battlerDef);
+    // To be removed at some point
 
-        struct SetEffect se = {0};
-
-        u32 numAdditionalEffects = GetMoveAdditionalEffectCount(gCurrentMove);
-        if (numAdditionalEffects > gBattleStruct->additionalEffectsCounter)
-        {
-            u32 percentChance;
-            const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(gCurrentMove, gBattleStruct->additionalEffectsCounter);
-            enum BattlerId effectBattler = additionalEffect->self ? gBattlerAttacker : gBattlerTarget;
-
-            // Various checks for if this move effect can be applied this turn
-            if (!additionalEffect->preAttackEffect
-             && !(additionalEffect->pledgeCombo && gBattleStruct->pledgeState != PLEDGE_COMBO_ATTACK)
-             && !(additionalEffect->onlyIfTargetRaisedStats && !gProtectStructs[effectBattler].statRaised)
-             && (effectBattler == gBattlerAttacker) == additionalEffect->self
-             && gBattleMons[gBattlerAttacker].volatiles.chargeTurn
-             && additionalEffect->onChargeTurnOnly)
-            {
-                percentChance = CalcSecondaryEffectChance(gBattlerAttacker, cv.abilities[cv.battlerAtk], additionalEffect, gCurrentMove);
-
-                // Activate effect if it's primary (chance == 0) or if RNGesus says so
-                if ((percentChance == 0) || RandomPercentage(RNG_SECONDARY_EFFECT + gBattleStruct->additionalEffectsCounter, percentChance))
-                {
-                    se.additionalEffect = additionalEffect;
-                    se.moveEffect = additionalEffect->moveEffect;
-                    se.script = gBattlescriptCurrInstr;
-                    se.effectBattler = effectBattler;
-                    se.primary = percentChance == 0;
-                    se.certain = percentChance >= 100;
-                    SetMoveEffect(&cv, &se);
-                }
-            }
-
-            gBattleStruct->additionalEffectsCounter++;
-            return;
-        }
-    }
-
-    gBattleStruct->additionalEffectsCounter = 0;
-    gBattleScripting.moveEffect = 0;
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 

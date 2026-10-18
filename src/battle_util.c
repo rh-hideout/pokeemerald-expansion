@@ -10659,6 +10659,9 @@ enum TwoTurnMoveActivation GetTwoTurnMoveActivation(struct BattleCalcValues *cv,
 {
     u32 attackerWeather = GetAttackerWeather(cv->holdEffects[cv->battlerAtk], cv->abilities[cv->battlerAtk], weather);
 
+    if (cv->moveEffect == EFFECT_SKY_DROP)
+        return ACTIVATION_NEXT_TURN;
+
     if (attackerWeather != B_WEATHER_NONE)
     {
         enum BattleWeather moveAffectedByWeather = GetTwoTurnMoveWeather(cv->move);
