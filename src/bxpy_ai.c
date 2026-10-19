@@ -52,7 +52,7 @@ void BXPY_SetupBattlers()
     else
         gBattlersCount = MAX_BATTLERS_COUNT;
 
-    if ((HasAnyBattleFlags(BATTLE_TYPE_BATTLE_TOWER))
+    if (HasAnyBattleFlags(BATTLE_TYPE_BATTLE_TOWER)
         || !isMulti
         || (!isLink && !isRecorded)
         || (isLink && !isDouble))

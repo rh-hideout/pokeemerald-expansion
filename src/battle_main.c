@@ -599,7 +599,7 @@ static void CB2_InitBattleInternal(void)
             TryFormChange(&gParties[trainer][i], FORM_CHANGE_BEGIN_BATTLE, trainer);
     }
 
-    if (!(IsTrainerBattle()))
+    if (!IsTrainerBattle())
     {
         if (HasNoneOfBattleFlags(BATTLE_TYPE_LEGENDARY | BATTLE_TYPE_PYRAMID | BATTLE_TYPE_PIKE))
             SetWildMonHeldItem();
@@ -3129,7 +3129,7 @@ static void DoBattleIntro(void)
     case BATTLE_INTRO_STATE_DRAW_SPRITES:
         for (battler = 0; battler < gBattlersCount; battler++)
         {
-            if ((HasAnyBattleFlags(BATTLE_TYPE_SAFARI)) && IsOnPlayerSide(battler))
+            if (HasAnyBattleFlags(BATTLE_TYPE_SAFARI) && IsOnPlayerSide(battler))
             {
                 memset(&gBattleMons[battler], 0, sizeof(struct BattlePokemon));
             }

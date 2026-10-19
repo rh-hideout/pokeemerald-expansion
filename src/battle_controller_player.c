@@ -382,7 +382,7 @@ static void HandleInputChooseAction(enum BattlerId battler)
         }
         else if (B_QUICK_MOVE_CURSOR_TO_RUN)
         {
-            if (!(IsTrainerBattle())) // If wild battle, pressing B moves cursor to "Run".
+            if (!IsTrainerBattle()) // If wild battle, pressing B moves cursor to "Run".
             {
                 PlaySE(SE_SELECT);
                 ActionSelectionDestroyCursorAt(gActionSelectionCursor[battler]);

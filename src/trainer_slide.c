@@ -342,7 +342,7 @@ enum TrainerSlideTargets ShouldDoTrainerSlide(enum BattlerId battler, enum Train
     u32 retValue = TRAINER_SLIDE_TARGET_TRAINER_A;
     bool32 shouldRun = FALSE;
 
-    if (!(IsTrainerBattle()))
+    if (!IsTrainerBattle())
         return TRAINER_SLIDE_TARGET_NONE;
 
     if (!IsDoubleBattle() && (battler > B_BATTLER_1))

@@ -141,7 +141,7 @@ static void Intro_WaitForShinyAnimAndHealthbox(enum BattlerId battler)
 {
     bool8 healthboxAnimDone = FALSE;
 
-    if (!IsDoubleBattle() || (IsDoubleBattle() && (HasAnyBattleFlags(BATTLE_TYPE_MULTI))))
+    if (!IsDoubleBattle() || HasAnyBattleFlags(BATTLE_TYPE_MULTI))
     {
         if (gSprites[gHealthboxSpriteIds[battler]].callback == SpriteCallbackDummy
          && gSprites[gBattlerSpriteIds[battler]].animEnded)

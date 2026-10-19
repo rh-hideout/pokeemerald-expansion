@@ -283,15 +283,12 @@ bool8 IsTrainerBattle(void)
 
 bool8 IsMultiBattle(void)
 {
-    if (gPartnerTrainerId != 0 && gMain.inBattle)
-        return TRUE;
-    else
-        return FALSE;
+    return HasAnyBattleFlags(BATTLE_TYPE_MULTI);
 }
 
 bool8 IsTowerLinkMulti(void)
 {
-    return (HasAllBattleFlags(BATTLE_TYPE_TOWER_LINK_MULTI) && gMain.inBattle);
+    return HasAllBattleFlags(BATTLE_TYPE_TOWER_LINK_MULTI);
 }
 
 bool8 IsLinkMultiBattle(void)

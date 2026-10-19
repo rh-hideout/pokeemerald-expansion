@@ -123,7 +123,7 @@ static void Intro_WaitForShinyAnimAndHealthbox(enum BattlerId battler)
 
     if (GetBattlerPosition(battler) == B_POSITION_PLAYER_LEFT)
     {
-        if (!IsDoubleBattle() || (IsDoubleBattle() && (HasAnyBattleFlags(BATTLE_TYPE_MULTI))))
+        if (!IsDoubleBattle() || HasAnyBattleFlags(BATTLE_TYPE_MULTI))
         {
             if (gSprites[gHealthboxSpriteIds[battler]].callback == SpriteCallbackDummy)
                 healthboxAnimDone = TRUE;
@@ -158,7 +158,7 @@ static void Intro_WaitForShinyAnimAndHealthbox(enum BattlerId battler)
     }
     else
     {
-        if (!IsDoubleBattle() || (IsDoubleBattle() && (HasAnyBattleFlags(BATTLE_TYPE_MULTI))))
+        if (!IsDoubleBattle() || HasAnyBattleFlags(BATTLE_TYPE_MULTI))
         {
             if (gSprites[gHealthboxSpriteIds[battler]].callback == SpriteCallbackDummy)
                 healthboxAnimDone = TRUE;
@@ -223,7 +223,7 @@ static void Intro_TryShinyAnimShowHealthbox(enum BattlerId battler)
     {
         if (!gBattleSpritesDataPtr->healthBoxesData[battler].bgmRestored)
         {
-            if ((HasAnyBattleFlags(BATTLE_TYPE_LINK)) && (HasAnyBattleFlags(BATTLE_TYPE_MULTI)))
+            if (HasAllBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_MULTI))
             {
                 if (GetBattlerPosition(battler) == B_POSITION_PLAYER_LEFT)
                     m4aMPlayContinue(&gMPlayInfo_BGM);

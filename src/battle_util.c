@@ -9647,7 +9647,7 @@ void TrySaveExchangedItem(enum BattlerId battler, enum Item stolenItem)
     if (B_TRAINERS_KNOCK_OFF_ITEMS == FALSE)
         return;
 
-    if (!(IsTrainerBattle()) || HasAnyBattleFlags(BATTLE_TYPE_FRONTIER))
+    if (!IsTrainerBattle() || HasAnyBattleFlags(BATTLE_TYPE_FRONTIER))
         return;
 
     if (GetBattlerTrainer(battler) != B_TRAINER_PLAYER)
@@ -10231,7 +10231,7 @@ bool32 AreMultiPartiesFullTeams(void)
         return FALSE;
     }
 
-    if (!(IsTrainerBattle()))
+    if (!IsTrainerBattle())
     {
         gSpecialVar_Result = TRUE;
         return TRUE;
@@ -10429,7 +10429,7 @@ bool32 EmergencyExitCanBeTriggered(enum BattlerId battler, enum Ability ability)
     if (IsBattlerAlive(battler)
      && !IsPursuitTargetSet()
      && HasNoneOfBattleFlags(BATTLE_TYPE_ARENA)
-     && (CanBattlerSwitch(battler) || !(IsTrainerBattle()))
+     && (CanBattlerSwitch(battler) || !IsTrainerBattle())
      && (HadMoreThanHalfHpNowDoesnt(battler) || gSpecialStatuses[battler].shellBellEmergencyExit)
      && gBattleMons[battler].volatiles.semiInvulnerable != STATE_SKY_DROP_TARGET)
         return TRUE;
@@ -11167,7 +11167,7 @@ bool32 IsAllowedToUseBag(void)
     case NO_BAG_RESTRICTION:
         return TRUE;
     case NO_BAG_AGAINST_TRAINER: //True in wild battle; False in trainer battle
-        return (!(IsTrainerBattle()));
+        return (!IsTrainerBattle());
     case NO_BAG_IN_BATTLE:
         return FALSE;
     default:

@@ -1341,7 +1341,7 @@ static enum CancelerResult CancelerMoveFailure(struct BattleCalcValues *cv)
             battleScript = BattleScript_ButItFailed;
         break;
     case EFFECT_TELEPORT:
-        if ((!(IsTrainerBattle()) && !IsOnPlayerSide(cv->battlerAtk))
+        if ((!IsTrainerBattle() && !IsOnPlayerSide(cv->battlerAtk))
          || GetConfig(B_TELEPORT_BEHAVIOR) <= GEN_7)
         {
             bool32 canRun = IsRunningFromBattleImpossible(cv->battlerAtk);
@@ -4977,7 +4977,7 @@ static enum MoveEndResult MoveEndMoveBlock(struct BattleCalcValues *cv)
         case EFFECT_KNOCK_OFF:
             if (gBattleMons[battlerDef].item != ITEM_NONE
              && IsBattlerTurnDamaged(battlerDef, EXCLUDING_SUBSTITUTES)
-             && !(B_KNOCK_OFF_REMOVAL >= GEN_5 && side == B_SIDE_PLAYER && !(IsTrainerBattle()))
+             && !(B_KNOCK_OFF_REMOVAL >= GEN_5 && side == B_SIDE_PLAYER && !IsTrainerBattle())
              && CanBattlerGetOrLoseItem(battlerDef, cv->battlerAtk, gBattleMons[battlerDef].item)
              && !NoAliveMonsForEitherParty())
             {
@@ -5592,7 +5592,7 @@ static enum MoveEndResult MoveEndMoveSwitchUser(struct BattleCalcValues *cv)
         }
         break;
     case EFFECT_TELEPORT:
-        if (!(IsTrainerBattle()) && !IsOnPlayerSide(cv->battlerAtk))
+        if (!IsTrainerBattle() && !IsOnPlayerSide(cv->battlerAtk))
         {
             result = MOVEEND_RESULT_RUN_SCRIPT;
             BattleScriptCall(BattleScript_Teleport);

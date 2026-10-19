@@ -115,8 +115,7 @@ bool32 BattlerHasAi(enum BattlerId battlerId)
     if (IsAiVsAiBattle())
         return TRUE;
 
-    if (HasAnyBattleFlags(BATTLE_TYPE_RECORDED)
-     && HasAnyBattleFlags(BATTLE_TYPE_INGAME_PARTNER)
+    if (HasAllBattleFlags(BATTLE_TYPE_RECORDED | BATTLE_TYPE_INGAME_PARTNER)
      && HasNoneOfBattleFlags(BATTLE_TYPE_RECORDED_LINK)
      && battlerId == B_BATTLER_2)
     {
@@ -194,8 +193,9 @@ void InitBattleControllers(void)
 
 static void SetBattlerControllerFunc(enum BattlerPosition position, BattleControllerFunc func)
 {
+    DebugPrintf("position %d battler %d controller %d", position, GetBattlerAtPosition(position), gBattlerBattleController[GetBattlerAtPosition(position)]);
     assertf(position < MAX_POSITION_COUNT, "invalid battler position: %d", position);
-    gBattlerControllerFuncs[position] = func;
+    gBattlerControllerFuncs[GetBattlerAtPosition(position)] = func;
 }
 
 static void InitBtlControllersInternal(void)
@@ -219,7 +219,7 @@ static void InitBtlControllersInternal(void)
     else
         gBattlersCount = MAX_BATTLERS_COUNT;
 
-    if ((HasAnyBattleFlags(BATTLE_TYPE_BATTLE_TOWER))
+    if (HasAnyBattleFlags(BATTLE_TYPE_BATTLE_TOWER)
         || !isMulti
         || (TESTING && isMulti)
         || (!isLink && !isRecorded)
@@ -291,7 +291,7 @@ static void InitBtlControllersInternal(void)
                 SetBattlerControllerFunc(GetBattlerPosition(B_BATTLER_0), SetControllerToSafari);
             else if (HasAnyBattleFlags(BATTLE_TYPE_CATCH_TUTORIAL))
                 SetBattlerControllerFunc(GetBattlerPosition(B_BATTLER_0), IS_FRLG ? SetControllerToOakOrOldMan : SetControllerToWally);
-            else if (IS_FRLG && (HasAnyBattleFlags(BATTLE_TYPE_FIRST_BATTLE)))
+            else if (IS_FRLG && HasAnyBattleFlags(BATTLE_TYPE_FIRST_BATTLE))
                 SetBattlerControllerFunc(GetBattlerPosition(B_BATTLER_0), SetControllerToOakOrOldMan);
             else if (isAIvsAI)
                 SetBattlerControllerFunc(GetBattlerPosition(B_BATTLER_0), SetControllerToPlayerPartner);
@@ -2206,7 +2206,7 @@ void Controller_WaitForHealthBar(enum BattlerId battler)
         if (IsOnPlayerSide(battler))
             HandleLowHpMusicChange(GetBattlerMon(battler), battler);
 
-        if (IS_FRLG && GetBattlerSide(battler) == B_SIDE_OPPONENT && !BtlCtrl_OakOldMan_TestState2Flag(1) && (HasAnyBattleFlags(BATTLE_TYPE_FIRST_BATTLE)))
+        if (IS_FRLG && GetBattlerSide(battler) == B_SIDE_OPPONENT && !BtlCtrl_OakOldMan_TestState2Flag(1) && HasAnyBattleFlags(BATTLE_TYPE_FIRST_BATTLE))
         {
             BtlCtrl_OakOldMan_SetState2Flag(1);
             gBattlerControllerFuncs[battler] = PrintOakText_InflictingDamageIsKey;
@@ -2501,7 +2501,7 @@ void BtlController_HandleDrawTrainerPic(enum BattlerId battler, enum TrainerPicI
                                                              xPos,
                                                              yPos,
                                                              subpriority);
-            if ((HasAnyBattleFlags(BATTLE_TYPE_SAFARI)) && GetBattlerPosition(battler) == B_POSITION_PLAYER_LEFT)
+            if (HasAnyBattleFlags(BATTLE_TYPE_SAFARI) && GetBattlerPosition(battler) == B_POSITION_PLAYER_LEFT)
                 gBattlerSpriteIds[battler] = gBattleStruct->trainerSlideSpriteIds[battler];
 
             // Sets sprite priority to 1 so mons don't remain in foreground
@@ -2529,7 +2529,7 @@ void BtlController_HandleTrainerSlide(enum BattlerId battler, enum TrainerPicID 
                                                          80,
                                                          (8 - GetTrainerBackPicCoords(trainerPicId)->size) * 4 + 80,
                                                          30);
-        if ((HasAnyBattleFlags(BATTLE_TYPE_SAFARI)) && GetBattlerPosition(battler) == B_POSITION_PLAYER_LEFT)
+        if (HasAnyBattleFlags(BATTLE_TYPE_SAFARI) && GetBattlerPosition(battler) == B_POSITION_PLAYER_LEFT)
             gBattlerSpriteIds[battler] = gBattleStruct->trainerSlideSpriteIds[battler];
         // Sets sprite priority to 1 so mons don't remain in foreground
         gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].oam.priority = 1;
@@ -2936,7 +2936,7 @@ static bool32 TwoMonsAtSendOut(enum BattlerId battler)
     {
         if ((!TwoOpponentIntroMons(battler) || (HasAnyBattleFlags(BATTLE_TYPE_MULTI))) && !BATTLE_TWO_VS_ONE_OPPONENT)
             return FALSE;
-        else if ((HasAnyBattleFlags(BATTLE_TYPE_TWO_OPPONENTS)) || (BATTLE_TWO_VS_ONE_OPPONENT && !TwoOpponentIntroMons(battler)))
+        else if (HasAnyBattleFlags(BATTLE_TYPE_TWO_OPPONENTS) || (BATTLE_TWO_VS_ONE_OPPONENT && !TwoOpponentIntroMons(battler)))
             return FALSE;
         else
             return TRUE;
@@ -3361,7 +3361,7 @@ bool32 BattleSideHasTwoTrainers(enum BattleSide side)
     if (side == B_SIDE_PLAYER)
         return HasAnyBattleFlags(BATTLE_TYPE_MULTI);
     else
-        return ((HasAnyBattleFlags(BATTLE_TYPE_TWO_OPPONENTS) && TRAINER_BATTLE_PARAM.opponentB != 0xFFFF) || (HasAllBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_MULTI)));
+        return ((HasAnyBattleFlags(BATTLE_TYPE_TWO_OPPONENTS) && TRAINER_BATTLE_PARAM.opponentB != 0xFFFF) || HasAllBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_MULTI));
 }
 
 bool32 BattlersShareParty(enum BattlerId battler1, enum BattlerId battler2)

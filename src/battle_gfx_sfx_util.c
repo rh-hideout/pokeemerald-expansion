@@ -817,7 +817,7 @@ bool8 BattleInitAllSprites(u8 *state1, u8 *battler)
         (*state1)++;
         break;
     case 3:
-        if ((HasAnyBattleFlags(BATTLE_TYPE_SAFARI)) && *battler == 0)
+        if (HasAnyBattleFlags(BATTLE_TYPE_SAFARI) && *battler == 0)
             gHealthboxSpriteIds[*battler] = CreateSafariPlayerHealthboxSprites();
         else
             gHealthboxSpriteIds[*battler] = CreateBattlerHealthboxSprites(*battler);

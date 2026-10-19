@@ -1654,7 +1654,7 @@ BattleScript_LocalBattleLostPrintTrainersWinText::
 	trainerslidein BS_OPPONENT1
 	waitstate
 	printstring STRINGID_TRAINER1WINTEXT
-	jumpifbattletype BATTLE_TYPE_TOWER_LINK_MULTI, BattleScript_LocalBattleLostDoTrainer2WinText
+	jumpifnotbattletype BATTLE_TYPE_TOWER_LINK_MULTI, BattleScript_LocalBattleLostEnd_
 	jumpifnotbattletype BATTLE_TYPE_TWO_OPPONENTS, BattleScript_LocalBattleLostEnd_
 BattleScript_LocalBattleLostDoTrainer2WinText::
 	trainerslideout BS_OPPONENT1

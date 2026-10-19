@@ -4849,7 +4849,7 @@ void AdjustFriendship(struct Pokemon *mon, u8 event)
         if (event == FRIENDSHIP_EVENT_LEAGUE_BATTLE)
         {
             // Only if it's a trainer battle with league progression significance
-            if (!(IsTrainerBattle()))
+            if (!IsTrainerBattle())
                 return;
 
             if (IsSpecialTrainer(TRAINER_BATTLE_PARAM.opponentA))

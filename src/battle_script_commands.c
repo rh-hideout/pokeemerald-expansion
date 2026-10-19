@@ -1860,7 +1860,7 @@ static void Cmd_getexp(void)
             else
             {
                 // Music change in a wild battle after fainting opposing Pokémon.
-                if (!(IsTrainerBattle())
+                if (!IsTrainerBattle()
                     && (gBattleMons[0].hp || (IsDoubleBattle() && gBattleMons[2].hp))
                     && !IsBattlerAlive(GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT))
                     && (!IsDoubleBattle() || !IsBattlerAlive(GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT)))
@@ -4731,7 +4731,7 @@ static void Cmd_forcerandomswitch(void)
     // Red card checks against wild Pokémon. If we have reached here, the player has a mon to switch into
     // Red card swaps attacker with target to get the animation correct, so here we check attacker which is really the target. Thanks GF...
     if (gBattleScripting.switchCase == B_SWITCH_RED_CARD
-      && !(IsTrainerBattle())
+      && !IsTrainerBattle()
       && !IsOnPlayerSide(gBattlerAttacker))   // Check opponent's red card activating
     {
         if (!WILD_DOUBLE_BATTLE)

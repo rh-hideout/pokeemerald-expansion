@@ -126,7 +126,7 @@ static void Intro_WaitForHealthbox(enum BattlerId battler)
 {
     bool32 finished = FALSE;
 
-    if (!IsDoubleBattle() || (IsDoubleBattle() && (HasAnyBattleFlags(BATTLE_TYPE_MULTI))))
+    if (!IsDoubleBattle() || HasAnyBattleFlags(BATTLE_TYPE_MULTI))
     {
         if (gSprites[gHealthboxSpriteIds[battler]].callback == SpriteCallbackDummy)
             finished = TRUE;
