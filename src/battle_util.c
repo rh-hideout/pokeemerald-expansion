@@ -9554,10 +9554,6 @@ void SortBattlersBySpeed(enum BattlerId *battlers, bool32 slowToFast)
 
 struct LostItem *GetLostItemState(enum BattleTrainer trainer, u32 slot)
 {
-    assertf(trainer < MAX_BATTLE_TRAINERS && slot < PARTY_SIZE, "Invalid parameters for GetLostItemState trainer %d slot %d", trainer, slot)
-    {
-        return NULL;
-    }
     return &gBattleStruct->itemLost[trainer][slot];
 }
 
