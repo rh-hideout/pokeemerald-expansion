@@ -478,12 +478,17 @@ struct BattleGimmickData
     bool8 activated[MAX_BATTLERS_COUNT][GIMMICKS_COUNT]; // stores whether a trainer has used gimmick
 };
 
-struct LostItem
-{
+struct LostItem{
     enum Item originalItem;
-    u16 stolen:1;
-    u16 restoreAfterBattle:1;
-    u16 wildItemPending:1;
+    union {
+        u16 bitfield;
+        struct {
+            u16 stolen:1;
+            u16 restoreAfterBattle:1;
+            u16 wildItemPending:1;
+            u16 padding:13;
+        };
+    };
 };
 
 struct BattleVideo {

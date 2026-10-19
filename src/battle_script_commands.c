@@ -8363,9 +8363,28 @@ static void Cmd_givecaughtmon(void)
         struct Pokemon *caughtMon = GetBattlerMon(GetCatchingBattler());
         if (B_RESTORE_HELD_BATTLE_ITEMS >= GEN_9)
         {
-            enum Item lostItem = gBattleStruct->itemLost[B_TRAINER_OPPONENT_A][gBattlerPartyIndexes[GetCatchingBattler()]].originalItem;
-            if (lostItem != ITEM_NONE && GetItemPocket(lostItem) != POCKET_BERRIES)
-                SetMonData(caughtMon, MON_DATA_HELD_ITEM, &lostItem);  // Restore non-berry items
+            struct LostItem *lostItem = GetLostItemState(B_TRAINER_OPPONENT_A, gBattlerPartyIndexes[GetCatchingBattler()]);
+            assertf(lostItem->originalItem < ITEMS_COUNT, "Unresolved bug detected:\n"
+                "please report the following\n"
+                "with as much detail as you can"
+                "to the RHH discord server\n"
+                "enemy party size %d\n"
+                "lost item data %d %d\n"
+                "caughtBattler %d %d\n"
+                "caughtBattlerIndex %d\n",
+                gPartiesCount[B_TRAINER_OPPONENT_A],
+                lostItem->originalItem, lostItem->bitfield,
+                GetCatchingBattler(), gBattlerTarget,
+                gBattlerPartyIndexes[GetCatchingBattler()]
+            ) {
+                lostItem->originalItem = ITEM_NONE;
+            }
+
+            if (lostItem->originalItem != ITEM_NONE && GetItemPocket(lostItem->originalItem) != POCKET_BERRIES)
+            {
+                u32 data = lostItem->originalItem;
+                SetMonData(caughtMon, MON_DATA_HELD_ITEM, &data);  // Restore non-berry items
+            }
         }
 
         u32 emptySlot;
