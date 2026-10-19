@@ -56,22 +56,66 @@ class GenerateTest(unittest.TestCase):
         self.assertIn("gItemsInfo[ITEM_POTION].name", keys)
         self.assertTrue(any(k.startswith("Foo@") for k in keys))
 
-    def test_extract_marks_stale_and_obsolete(self):
-        self.fx.set_translation("src/test.c", "gText_Hello", "es", "¡Hola, {PLAYER}!")
-        self.fx.set_translation("src/test.c", "gText_Twin1", "es", "Igual")
+    def edit_source(self, *pairs, extract=True):
         src = self.project.path("src/test.c")
         with open(src, encoding="utf-8") as f:
             text = f.read()
-        text = text.replace("Hello, {PLAYER}!", "Hello again, {PLAYER}!").replace("gText_Twin1", "gText_Renamed")
+        for old, new in pairs:
+            self.assertIn(old, text)
+            text = text.replace(old, new)
         with open(src, "w", encoding="utf-8") as f:
             f.write(text)
-        self.extract()
+        if extract:
+            self.extract()
         _, rows = csvstore.read_csv(self.project.path("localization/text/src/test.c.csv"))
-        by_key = {r["key"]: r for r in rows}
+        return {r["key"]: r for r in rows}
+
+    def function_key(self, by_key=None):
+        if by_key is None:
+            _, rows = csvstore.read_csv(self.project.path("localization/text/src/test.c.csv"))
+            by_key = {r["key"]: r for r in rows}
+        return next(k for k in by_key if k.startswith("Foo@"))
+
+    def test_extract_marks_changed_text_stale(self):
+        self.fx.set_translation("src/test.c", "gText_Hello", "es", "¡Hola, {PLAYER}!")
+        by_key = self.edit_source(("Hello, {PLAYER}!", "Hello again, {PLAYER}!"))
         self.assertEqual(by_key["gText_Hello"]["status"], "stale:es")
         self.assertEqual(by_key["gText_Hello"]["es"], "¡Hola, {PLAYER}!")
-        self.assertEqual(by_key["gText_Twin1"]["status"], "obsolete")
-        self.assertIn("gText_Renamed", by_key)
+
+    def test_renamed_key_keeps_translation(self):
+        self.fx.set_translation("src/test.c", "gText_Twin1", "es", "Igual")
+        by_key = self.edit_source(("gText_Twin1", "gText_Renamed"))
+        self.assertNotIn("gText_Twin1", by_key)
+        self.assertEqual(by_key["gText_Renamed"]["es"], "Igual")
+        self.assertEqual(by_key["gText_Renamed"]["status"], "")
+
+    def test_edited_function_string_carries_translation(self):
+        old_key = self.function_key()
+        self.fx.set_translation("src/test.c", old_key, "es", "Dentro de una función")
+        by_key = self.edit_source(("Inside a function", "Inside the function"))
+        new_key = self.function_key(by_key)
+        self.assertNotEqual(new_key, old_key)
+        self.assertNotIn(old_key, by_key)
+        self.assertEqual(by_key[new_key]["es"], "Dentro de una función")
+        self.assertEqual(by_key[new_key]["status"], "stale:es")
+
+    def test_unrelated_string_does_not_take_translation(self):
+        old_key = self.function_key()
+        self.fx.set_translation("src/test.c", old_key, "es", "Dentro de una función")
+        by_key = self.edit_source(("Inside a function", "Completely different words"))
+        new_key = self.function_key(by_key)
+        self.assertEqual(by_key[new_key]["es"], "")
+        self.assertEqual(by_key[old_key]["status"], "obsolete")
+        self.assertEqual(by_key[old_key]["es"], "Dentro de una función")
+
+    def test_prune_removes_unpaired_obsolete_rows(self):
+        old_key = self.function_key()
+        self.fx.set_translation("src/test.c", old_key, "es", "Dentro de una función")
+        self.edit_source(("Inside a function", "Completely different words"), extract=False)
+        for rel, scan in extract.scan_all(self.project).items():
+            extract.update_csv(self.project, rel, scan.units, prune=True)
+        _, rows = csvstore.read_csv(self.project.path("localization/text/src/test.c.csv"))
+        self.assertNotIn(old_key, {r["key"] for r in rows})
 
     # -- generation -------------------------------------------------------
     def test_missing_translations_fall_back(self):

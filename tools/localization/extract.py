@@ -1,5 +1,6 @@
 """Scans the game's sources for text units and keeps the CSV files in sync."""
 
+import difflib
 import os
 import pickle
 import re
@@ -152,9 +153,10 @@ def update_csv(project, rel, units, prune=False):
     header = csvstore.ensure_languages(header or csvstore.default_header(langs), langs)
     src = project.source_language
     old = {r["key"]: r for r in rows}
-    stats = {"added": 0, "changed": 0, "obsolete": 0, "removed": 0}
+    stats = {"added": 0, "changed": 0, "carried": 0, "obsolete": 0, "removed": 0}
     out = []
     seen = set()
+    added = []
     for u in units:
         seen.add(u.key)
         row = old.get(u.key)
@@ -163,6 +165,7 @@ def update_csv(project, rel, units, prune=False):
             row["key"] = u.key
             row[src] = u.text
             stats["added"] += 1
+            added.append(row)
         else:
             row = dict(row)
             status = csvstore.parse_status(row.get("status"))
@@ -175,8 +178,12 @@ def update_csv(project, rel, units, prune=False):
                 stats["changed"] += 1
             row["status"] = csvstore.format_status(status)
         out.append(row)
+    leftovers = [r for r in rows if r["key"] not in seen
+                 and any(r.get(l) for l in project.target_languages)]
+    carried = carry_translations(project, added, leftovers)
+    stats["carried"] = len(carried)
     for row in rows:
-        if row["key"] in seen:
+        if row["key"] in seen or row["key"] in carried:
             continue
         has_translation = any(row.get(l) for l in project.target_languages)
         if prune or not has_translation:
@@ -196,6 +203,53 @@ def update_csv(project, rel, units, prune=False):
         return stats, False
     changed = csvstore.write_if_changed(path, csvstore.render_csv(header, out))
     return stats, changed
+
+
+_KEY_STEM_RE = re.compile(r"(@|/alt|~|#).*$")
+
+
+def carry_translations(project, added, leftovers):
+    """Moves translations from rows whose key disappeared onto new rows that
+    are evidently the same string (renamed key, or edited text in the same
+    function/field). Edited text is marked stale. Returns the keys of the
+    leftover rows that were used."""
+    src = project.source_language
+    langs = project.target_languages
+    candidates = []
+    for new in added:
+        for old in leftovers:
+            new_text, old_text = new.get(src, ""), old.get(src, "")
+            if new_text == old_text:
+                score = 3.0
+            else:
+                ratio = difflib.SequenceMatcher(None, old_text, new_text).ratio()
+                same_stem = _KEY_STEM_RE.sub("", new["key"]) == _KEY_STEM_RE.sub("", old["key"])
+                if same_stem and ratio >= 0.5:
+                    score = 2.0 + ratio
+                elif ratio >= 0.8:
+                    score = 1.0 + ratio
+                else:
+                    continue
+            candidates.append((score, new["key"], old["key"], new, old))
+    candidates.sort(key=lambda c: (-c[0], c[1], c[2]))
+    used_new, used_old = set(), set()
+    for score, new_key, old_key, new, old in candidates:
+        if new_key in used_new or old_key in used_old:
+            continue
+        used_new.add(new_key)
+        used_old.add(old_key)
+        for col in ["context", "max_width"] + langs:
+            if old.get(col):
+                new[col] = old[col]
+        if new.get(src, "") != old.get(src, ""):
+            status = csvstore.parse_status(new.get("status"))
+            status.setdefault("stale", set()).update(l for l in langs if old.get(l))
+            new["status"] = csvstore.format_status(status)
+        else:
+            status = csvstore.parse_status(old.get("status"))
+            status.pop("obsolete", None)
+            new["status"] = csvstore.format_status(status)
+    return used_old
 
 
 def remove_orphan_csvs(project, scans):

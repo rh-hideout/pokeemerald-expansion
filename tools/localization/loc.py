@@ -53,7 +53,7 @@ def cmd_extract(project, args):
         print("loc extract: error: generated sources are missing (run 'make generated' first): "
               + ", ".join(project.missing_generated), file=sys.stderr)
         return 1
-    totals = {"added": 0, "changed": 0, "obsolete": 0, "removed": 0}
+    totals = {"added": 0, "changed": 0, "carried": 0, "obsolete": 0, "removed": 0}
     files_changed = 0
     units = 0
     skipped = []
@@ -72,6 +72,7 @@ def cmd_extract(project, args):
     csvstore.write_if_changed(report, "".join(lines))
     print(f"loc extract: {units} units in {len(scans)} files; "
           f"{totals['added']} added, {totals['changed']} changed (marked stale where translated), "
+          f"{totals['carried']} translations carried over to renamed keys, "
           f"{totals['obsolete']} newly obsolete, {totals['removed']} removed; "
           f"{files_changed} CSV files written, {len(removed)} orphan CSVs deleted; "
           f"{len(skipped)} strings skipped (see {project.rel(report)})")

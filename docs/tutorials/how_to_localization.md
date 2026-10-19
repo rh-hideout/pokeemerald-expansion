@@ -122,6 +122,28 @@ Translations use exactly the same syntax as the code:
 
 `make loc-stats` shows coverage per language.
 
+### Are my translations safe?
+
+Only you write the translation columns. The build and `loc-validate` only
+read the CSVs, and `loc-extract` only updates `en` and `status`.
+
+* **English text changed:** the translation is kept and marked `stale`.
+* **Key renamed or text edited:** this happens when a label or array index
+  changes, or when a string inside a function is edited (its key is a hash of
+  the text). `loc-extract` moves the translation to the new key when the rows
+  are clearly the same string: same English text, the same function or field
+  with similar text, or very similar text in the same file. Edited text is
+  marked `stale` for review.
+* **Anything it can't pair** stays as an `obsolete` row with its translation,
+  so you can copy it by hand.
+
+Only two commands remove or overwrite translations:
+
+* `make loc-extract PRUNE=1` deletes obsolete rows.
+* `loc.py seed --force` overwrites filled cells. `make loc-seed` never does.
+
+Commit the CSVs before running either of them.
+
 `make loc-seed LANG=xx SEED=pseudo` fills empty cells with accented
 pseudo-text. This is handy for spotting untranslated or hard-coded text in a
 test ROM. Only accents that are no wider than their base letter are used, so
