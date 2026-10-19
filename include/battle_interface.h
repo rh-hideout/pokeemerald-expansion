@@ -152,5 +152,6 @@ void CreateItemPopUp(enum BattlerId battlerId);
 void FreeAbilityPopUpGfx(void);
 void ShowWeatherIndicator(bool32 instant);
 void HideWeatherIndicator(bool32 instant);
+u32 GetHealthBarColour(s32 maxValue, s32 currValue);
 
 #endif // GUARD_BATTLE_INTERFACE_H

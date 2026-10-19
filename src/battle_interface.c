@@ -103,7 +103,6 @@ static s32 CalcNewBarValue(struct BattleBarInfo* bar, u8, u16);
 static u32 GetScaledExpDeltaRatio(const struct BattleBarInfo* bar, u8 scale);
 static void DrawHealthBarTiles(enum BattlerId);
 static void DrawExpBarTiles(enum BattlerId);
-static u32 GetHealthBarColour(s32, s32);
 static u8 CalcBarFilledPixels(const struct BattleBarInfo*, u8 *, u8);
 static bool32 ShouldShowHealthbar(enum BattlerId battler);
 
@@ -1804,7 +1803,7 @@ s32 MoveBattleBar(enum BattlerId battler, u8 healthboxSpriteId, u8 whichBar)
     return currentBarValue;
 }
 
-static u32 GetHealthBarColour(s32 maxValue, s32 currValue)
+u32 GetHealthBarColour(s32 maxValue, s32 currValue)
 {
     switch (GetHPBarLevel(currValue, maxValue))
     {
