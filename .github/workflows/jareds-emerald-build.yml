@@ -1,0 +1,65 @@
+name: JARED'S EMERALD cloud build
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - jareds-emerald-dev
+    paths:
+      - '.github/workflows/jareds-emerald-build.yml'
+      - 'Makefile'
+      - 'config.mk'
+      - 'src/**'
+      - 'include/**'
+      - 'data/**'
+      - 'graphics/**'
+      - 'sound/**'
+      - 'asm/**'
+      - 'data/**'
+      - 'tools/**'
+      - 'ld_script_modern.ld'
+      - 'libagbsyscall/**'
+
+permissions:
+  contents: read
+
+jobs:
+  build-emerald:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install GBA toolchain and asset dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            binutils-arm-none-eabi \
+            gcc-arm-none-eabi \
+            libnewlib-arm-none-eabi \
+            libpng-dev \
+            python3 \
+            make \
+            git
+
+      - name: Build Emerald release ROM
+        env:
+          GAME_VERSION: EMERALD
+        run: make -j"$(nproc)" release
+
+      - name: Check output exists and is non-empty
+        run: |
+          test -s pokeemerald-release.gba
+          ls -lh pokeemerald-release.gba
+          sha256sum pokeemerald-release.gba
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: jareds-emerald-build-candidate
+          path: pokeemerald-release.gba
+          if-no-files-found: error
+          retention-days: 14
