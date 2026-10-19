@@ -2667,7 +2667,7 @@ static u8 CalcBerryYieldInternal(u16 max, u16 min, u8 water)
     u32 rand;
     u32 extraYield;
 
-    if (water == 0 || OW_BERRY_MOISTURE)
+    if (water == 0 && OW_BERRY_MOISTURE)
     {
         return min;
     }
