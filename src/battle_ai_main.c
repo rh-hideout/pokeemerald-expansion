@@ -2022,7 +2022,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
             ADJUST_SCORE(-10);
             break;
         }
-        // fallthrough
+        [[fallthrough]];
     case EFFECT_WEATHER:
         switch (GetMoveWeatherType(move))
         {
@@ -2147,6 +2147,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
           || !CanBattlerGetOrLoseItem(battlerDef, battlerAtk, gBattleMons[battlerAtk].item)
           || DoesSubstituteBlockMove(battlerAtk, battlerDef, move))
             ADJUST_SCORE(-10);
+        [[fallthrough]];
     case EFFECT_KNOCK_OFF:
     case EFFECT_CORROSIVE_GAS:
         if (aiData->abilities[battlerDef] == ABILITY_STICKY_HOLD)
@@ -2236,9 +2237,8 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
     case EFFECT_REST:
         if (!CanBeSlept(battlerAtk, battlerAtk, aiData->abilities[battlerAtk], NOT_BLOCKED_BY_SLEEP_CLAUSE))
             ADJUST_SCORE(-10);
-        //fallthrough
+        [[fallthrough]];
     case EFFECT_RESTORE_HP:
-    case EFFECT_SOFTBOILED:
     case EFFECT_ROOST:
         if (IsBattlerAtMaxHp(battlerAtk))
             ADJUST_SCORE(-10);
@@ -2815,7 +2815,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
             ADJUST_SCORE(-10);
             break;
         }
-        // fallthrough
+        [[fallthrough]];
     case EFFECT_HIT_ENEMY_HEAL_ALLY:    // pollen puff
         if (IsTargetingPartner(battlerAtk, battlerDef))
         {
@@ -3319,6 +3319,7 @@ static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         {
             ADJUST_SCORE(BEST_EFFECT);
         }
+        break;
     case EFFECT_ROUND:
         if (ShouldUseRound(battlerAtk, EFFECT_ROUND))
         {
@@ -4033,6 +4034,7 @@ static bool32 DoesAbilityBenefitFromSunOrRain(enum BattlerId battler, enum Abili
         {
             return FALSE;
         }
+        [[fallthrough]];
     case ABILITY_CHLOROPHYLL:
     case ABILITY_FLOWER_GIFT:
     case ABILITY_LEAF_GUARD:
@@ -4687,7 +4689,6 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
         }
         break;
     case EFFECT_RESTORE_HP:
-    case EFFECT_SOFTBOILED:
     case EFFECT_ROOST:
     case EFFECT_MORNING_SUN:
     case EFFECT_SYNTHESIS:
@@ -4749,10 +4750,11 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
         if (aiData->abilities[battlerAtk] == ABILITY_SUPER_LUCK
          || aiData->holdEffects[battlerAtk] == HOLD_EFFECT_SCOPE_LENS
          || HasMoveWithFlag(battlerAtk, GetMoveCriticalHitStage))
-            ADJUST_SCORE(GOOD_EFFECT); // fall through
+            ADJUST_SCORE(GOOD_EFFECT);
+        [[fallthrough]];
     case EFFECT_LASER_FOCUS:
         if (aiData->abilities[battlerAtk] == ABILITY_SNIPER)
-            ADJUST_SCORE(GOOD_EFFECT); // fall through
+            ADJUST_SCORE(GOOD_EFFECT);
         if (ShouldBoostCritRate(battlerAtk, battlerDef))
             ADJUST_SCORE(GOOD_EFFECT);
         break;
@@ -4795,7 +4797,7 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
     case EFFECT_TELEPORT:
         if (!(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
             break;
-        //fallthrough
+        [[fallthrough]];
     case EFFECT_HIT_ESCAPE:
     case EFFECT_PARTING_SHOT:
     case EFFECT_WEATHER_AND_SWITCH:
@@ -4932,7 +4934,7 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
                 ADJUST_SCORE(GOOD_EFFECT);
                 break;
             }
-            //fallthrough
+            [[fallthrough]];
         default: // protect
             ADJUST_SCORE(ProtectChecks(battlerAtk, battlerDef, move, incomingMove));
             break;
@@ -5824,7 +5826,7 @@ static s32 AI_CalcAdditionalEffectScore(enum BattlerId battlerAtk, enum BattlerI
         const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(move, effectId);
 
         // Only consider effects with a guaranteed chance to happen
-        if (!MoveEffectIsGuaranteed(battlerAtk, aiData->abilities[battlerAtk], additionalEffect))
+        if (!MoveEffectIsGuaranteed(battlerAtk, aiData->abilities[battlerAtk], additionalEffect, move))
             continue;
 
         // Consider move effects that target self
@@ -5853,7 +5855,7 @@ static s32 AI_CalcAdditionalEffectScore(enum BattlerId battlerAtk, enum BattlerI
                     ADJUST_SCORE(IncreaseStatUpScore(battlerAtk, battlerDef, stat, stage));
                 }
                 break;
-            case MOVE_EFFECT_CRIT_PLUS_SIDE:
+            case MOVE_EFFECT_CRIT_PLUS:
             {
                 if (ShouldBoostCritRate(battlerAtk, battlerDef) && gBattleMons[battlerAtk].volatiles.bonusCritStages < 3)
                     score +=10;
@@ -6422,7 +6424,6 @@ static s32 AI_HPAware(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum
             case EFFECT_SYNTHESIS:
             case EFFECT_MOONLIGHT:
             case EFFECT_SHORE_UP:
-            case EFFECT_SOFTBOILED:
             case EFFECT_ROOST:
             case EFFECT_MEMENTO:
             case EFFECT_GRUDGE:

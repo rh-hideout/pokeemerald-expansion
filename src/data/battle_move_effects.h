@@ -569,13 +569,6 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .semiInvulnerableEffect = TRUE,
     },
 
-    [EFFECT_SOFTBOILED] =
-    {
-        .battleTvScore = 1,
-        .battleFactoryStyle = FACTORY_STYLE_ENDURANCE,
-        .encourageEncore = TRUE,
-    },
-
     [EFFECT_FIRST_TURN_ONLY] =
     {
         .battleTvScore = 4,

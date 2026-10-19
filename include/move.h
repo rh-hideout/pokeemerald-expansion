@@ -57,7 +57,7 @@ struct AdditionalEffect
     u8 onChargeTurnOnly:1;
     u8 sheerForceOverride:1; // Handles edge cases for Sheer Force - if TRUE, boosts when it shouldn't, or doesn't boost when it should
     u8 preAttackEffect:1;
-    u8 onSide:1; // Refers to moves that have an effect on both opposing targets on a single target (see dmax stat drops moves). Works on stat drop moves only
+    u8 onSide:1; // Refers to moves that have an effect on both opposing targets on a single target (see dmax stat drops moves).
     u8 pledgeCombo:1; // If set the move effect only applies during a pledge combo attack
     u8 padding:1;
 

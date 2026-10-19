@@ -378,6 +378,10 @@ static void DoublesWhen(enum Move move, struct BattlePokemon *attacker, struct B
             else if (variation == 1)
                 MOVE(attacker, move, target: target, WITH_RNG(RNG_SHELL_SIDE_ARM, TRUE));
         }
+        else if (GetMoveTarget(move) == TARGET_USER_OR_ALLY)
+        {
+            MOVE(attacker, move, target: attacker);
+        }
         else
         { // All other moves
             MOVE(target, MOVE_LAST_RESORT, target: attacker); // Last Resort, so there's no anim on the opponent's side.

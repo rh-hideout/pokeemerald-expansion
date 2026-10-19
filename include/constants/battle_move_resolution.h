@@ -150,8 +150,6 @@ enum FaintBlockStates
 {
     FAINT_BLOCK_FINAL_GAMBIT,
     FAINT_BLOCK_CHECK_TARGET_FAINTED, // Exits if target is not fainted
-    FAINT_BLOCK_VICTORY_CATCH,
-    FAINT_BLOCK_END_NEUTRALIZING_GAS,
     // Destiny Bond is tested and called first, but Faint Target's script plays first
     FAINT_BLOCK_TRY_DESTINY_BOND,
     FAINT_BLOCK_FAINT_TARGET,
@@ -275,4 +273,10 @@ enum ProtectBypass
     PROTECT_BYPASS_OTHER,
 };
 
+enum FailureCheck
+{
+    SKIP_MOVE_FAILURE_CHECK,
+    CHECK_MOVE_FAILURE,
+    IGNORE_USER_MOVE_FAILURE,
+};
 #endif // GUARD_CONSTANTS_BATTLE_MOVE_RESOLUTION_H

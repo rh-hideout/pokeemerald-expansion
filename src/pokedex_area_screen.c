@@ -859,7 +859,7 @@ static void Task_HandlePokedexAreaScreenInput(u8 taskId)
     {
     default:
         gTasks[taskId].tState = 0;
-        // fall through
+        [[fallthrough]];
     case 0:
         if (gPaletteFade.active)
             return;

@@ -1801,8 +1801,9 @@ enum Ability AI_DecideKnownAbilityForTurn(enum BattlerId battlerId)
     if (knownAbility == ABILITY_NONE)
         return knownAbility;
 
-    if (gAiPartyData->mons[GetBattlerSide(battlerId)][gBattlerPartyIndexes[battlerId]].ability != ABILITY_NONE)
-        return gAiPartyData->mons[GetBattlerSide(battlerId)][gBattlerPartyIndexes[battlerId]].ability;
+    enum Ability partyMonAbility = gAiPartyData->mons[GetBattlerSide(battlerId)][gBattlerPartyIndexes[battlerId]].ability;
+    if (partyMonAbility != ABILITY_NONE)
+        return partyMonAbility;
 
     // Abilities that prevent fleeing - treat as always known
     if (knownAbility == ABILITY_SHADOW_TAG || knownAbility == ABILITY_MAGNET_PULL || knownAbility == ABILITY_ARENA_TRAP)
@@ -3217,8 +3218,17 @@ static inline bool32 IsMoveSleepClauseTrigger(enum Move move)
         switch (additionalEffect->moveEffect)
         {
         // Skip MOVE_EFFECT_SLEEP as moves with a secondary chance of applying sleep are allowed by Smogon's rules (ie. Relic Song)
-        case MOVE_EFFECT_EFFECT_SPORE_SIDE:
-        case MOVE_EFFECT_YAWN_FOE:
+        case MOVE_EFFECT_RANDOM_FROM_LIST:
+            for (u32 index = 0; index < MAX_RANDOM_ADDITIONAL_EFFECTS; index++)
+            {
+                if (additionalEffect->argument.randomMoveEffects[index] == MOVE_EFFECT_NONE)
+                    break;
+                
+                if (additionalEffect->argument.randomMoveEffects[index] == MOVE_EFFECT_SLEEP)
+                    return TRUE;
+            }
+            break;
+        case MOVE_EFFECT_YAWN:
             return TRUE;
         default:
             break;
@@ -3855,7 +3865,7 @@ bool32 IsFlinchGuaranteed(enum BattlerId battlerAtk, enum BattlerId battlerDef, 
     {
         const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(move, effectIndex);
         // Only consider effects with a guaranteed chance to happen
-        if (!MoveEffectIsGuaranteed(battlerAtk, gAiLogicData->abilities[battlerAtk], additionalEffect))
+        if (!MoveEffectIsGuaranteed(battlerAtk, gAiLogicData->abilities[battlerAtk], additionalEffect, move))
             continue;
 
         if (additionalEffect->moveEffect == MOVE_EFFECT_FLINCH)
@@ -4338,7 +4348,7 @@ static u32 GetAIEffectGroupFromMove(enum BattlerId battler, enum Move move)
         case MOVE_EFFECT_HAZE:
             aiEffect |= AI_EFFECT_RESET_STATS;
             break;
-        case MOVE_EFFECT_TORMENT_SIDE:
+        case MOVE_EFFECT_TORMENT:
             aiEffect |= AI_EFFECT_TORMENT;
             break;
         case MOVE_EFFECT_LIGHT_SCREEN:
@@ -6564,6 +6574,7 @@ static bool32 AI_CanStatChangeBePrevented(struct BattleCalcValues *cv)
     case TARGET_ALL_BATTLERS:
         if (cv->battlerAtk == cv->battlerDef)
             return FALSE;
+        [[fallthrough]];
     default:
         if (IsSubstituteProtected(cv->battlerAtk, cv->battlerDef, cv->abilities[cv->battlerAtk], cv->move)
          || cv->abilities[cv->battlerDef] == ABILITY_GOOD_AS_GOLD)

@@ -52,7 +52,6 @@ BattleScript_UseItemMessage:
 	return
 
 BattleScript_ItemRestoreHPRet:
-	clearmoveresultflags MOVE_RESULT_NO_EFFECT
 	healthbarupdate BS_SCRIPTING
 	datahpupdate BS_SCRIPTING, ASSURANCE_DOUBLE
 	printstring STRINGID_ITEMRESTOREDSPECIESHEALTH
@@ -72,7 +71,6 @@ BattleScript_ItemRestoreHPEnd:
 
 BattleScript_ItemRestoreHP_Party::
 	jumpifbyte CMP_EQUAL, gBattleCommunication, TRUE, BattleScript_ItemRestoreHP_SendOutRevivedBattler
-	clearmoveresultflags MOVE_RESULT_NO_EFFECT
 	printstring STRINGID_ITEMRESTOREDSPECIESHEALTH
 	waitmessage B_WAIT_TIME_LONG
 	return

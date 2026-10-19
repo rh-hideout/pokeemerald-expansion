@@ -114,6 +114,7 @@ void CustomTrainerPartyAssignMoves(struct Pokemon *mon, const struct TrainerMon 
 bool32 CanPlayerForfeitNormalTrainerBattle(void);
 bool32 DidPlayerForfeitNormalTrainerBattle(void);
 void BattleDebug_WonBattle(void);
+void BattleDebug_LostBattle(void);
 s32 Factorial(s32 n);
 void InitializeStartingStatus(void);
 

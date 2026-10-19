@@ -12,6 +12,7 @@
     F(B_WHITEOUT_MONEY,            whiteoutMoney,           (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_LIGHT_BALL_ATTACK_BOOST,   lightBallAttackBoost,    (u32, GEN_COUNT - 1)) \
     F(B_PARALYSIS_CHANCE,          paralysisChance,         (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
+    F(B_HP_RESTORATION_ROUNDING,   hpRestorationRounding,   (u32, GEN_COUNT - 1)) \
     /* Experience settings */ \
     F(B_EXP_CATCH,                 expCatch,                (u32, GEN_COUNT - 1)) \
     F(B_TRAINER_EXP_MULTIPLIER,    trainerExpMultiplier,    (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
