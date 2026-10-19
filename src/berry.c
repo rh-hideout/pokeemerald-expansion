@@ -2386,11 +2386,9 @@ bool32 ObjectEventInteractionWaterBerryTree(void)
     if (OW_BERRY_MOISTURE)
     {
         tree->moistureLevel = 100;
-        if (OW_BERRY_ALWAYS_WATERABLE)
-        {
-            return TRUE;
-        }
-        AddTreeBonus(tree, GetWaterBonusByBerryType(tree->berry));
+        if (!OW_BERRY_ALWAYS_WATERABLE)
+            AddTreeBonus(tree, GetWaterBonusByBerryType(tree->berry));
+        return TRUE;
     }
 
     switch (tree->stage)
@@ -3114,23 +3112,21 @@ static void TryForPests(struct BerryTree *tree)
 
 static void AddTreeBonus(struct BerryTree *tree, u8 bonus)
 {
-    if (OW_BERRY_MOISTURE) // use watered field to save track of intermediate bonuses
+    if (OW_BERRY_MOISTURE)
     {
-        tree->watered += bonus;
-        while (tree->watered > 10)
-        {
-            tree->watered -= 10;
-            bonus = tree->berryYield + 1;
-            if (bonus > GetBerryInfo(tree->berry)->maxYield)
-                bonus = GetBerryInfo(tree->berry)->maxYield;
-            tree->berryYield = bonus;
-        }
+        if (tree->watered < 10) // use watered field to save track of intermediate bonuses
+            bonus += tree->watered;
+        tree->watered = bonus % 10;
     }
     else
     {
-        bonus = tree->berryYield + bonus / 10;
-        if (bonus > GetBerryInfo(tree->berry)->maxYield)
-            bonus = GetBerryInfo(tree->berry)->maxYield;
-        tree->berryYield = bonus;
+        if (tree->moistureLevel < 10)
+            bonus += tree->moistureLevel; // use moistureLevel field to save track of intermediate bonuses
+        tree->moistureLevel = bonus % 10;
     }
+    bonus /= 10;
+    if (bonus + tree->berryYield > GetBerryInfo(tree->berry)->maxYield)
+        tree->berryYield = GetBerryInfo(tree->berry)->maxYield;
+    else
+        tree->berryYield += bonus;
 }
