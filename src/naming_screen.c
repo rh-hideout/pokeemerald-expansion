@@ -344,7 +344,6 @@ static bool8 MainState_MoveToOKButton(void);
 static bool8 MainState_PressedOKButton(void);
 static bool8 MainState_FadeOut(void);
 static bool8 MainState_Exit(void);
-static void DisplaySentToPCMessage(void);
 static bool8 MainState_WaitSentToPCMessage(void);
 static bool8 MainState_StartPageSwap(void);
 static bool8 MainState_WaitPageSwap(void);
