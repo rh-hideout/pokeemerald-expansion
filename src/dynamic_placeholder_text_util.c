@@ -42,6 +42,14 @@ u8 *DynamicPlaceholderTextUtil_ExpandPlaceholders(u8 *dest, const u8 *src)
     return dest;
 }
 
+u8 *DynamicPlaceholderTextUtil_AppendExpandedPlaceholders(u8 *dest, const u8 *src)
+{
+    while (*dest != EOS)
+        dest++;
+
+    return DynamicPlaceholderTextUtil_ExpandPlaceholders(dest, src);
+}
+
 const u8 *DynamicPlaceholderTextUtil_GetPlaceholderPtr(u8 idx)
 {
     return sStringPointers[idx];
