@@ -358,7 +358,6 @@ static void Cmd_printstring(void);
 static void Cmd_printselectionstring(void);
 static void Cmd_waitmessage(void);
 static void Cmd_printfromtable(void);
-static void Cmd_setadditionaleffects(void);
 static void Cmd_seteffectprimary(void);
 static void Cmd_clearvolatile(void);
 static void Cmd_tryfaintmon(void);
@@ -511,7 +510,6 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_PRINTSELECTIONSTRING]                  = Cmd_printselectionstring,
     [B_SCR_OP_WAITMESSAGE]                           = Cmd_waitmessage,
     [B_SCR_OP_PRINTFROMTABLE]                        = Cmd_printfromtable,
-    [B_SCR_OP_SETADDITIONALEFFECTS]                  = Cmd_setadditionaleffects,
     [B_SCR_OP_SETEFFECTPRIMARY]                      = Cmd_seteffectprimary,
     [B_SCR_OP_CLEARVOLATILE]                         = Cmd_clearvolatile,
     [B_SCR_OP_TRYFAINTMON]                           = Cmd_tryfaintmon,
@@ -742,6 +740,7 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_UNUSED_94]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_95]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_96]                             = Cmd_dummy,
+    [B_SCR_OP_UNUSED_97]                             = Cmd_dummy,
 
     [B_SCR_OP_CALLNATIVE]                            = Cmd_callnative,
 };
@@ -1388,16 +1387,6 @@ void SetNonVolatileStatus(enum BattlerId battlerAtk, enum BattlerId effectBattle
     if ((effect == MOVE_EFFECT_POISON || effect == MOVE_EFFECT_TOXIC) && trigger == TRIGGER_ON_MOVE)
         gSpecialStatuses[effectBattler].poisonPuppeteer = TRUE;
 }
-
-static void Cmd_setadditionaleffects(void)
-{
-    CMD_ARGS();
-
-    // To be removed at some point
-
-    gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
 
 static void Cmd_seteffectprimary(void)
 {
