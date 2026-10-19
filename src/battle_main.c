@@ -2858,7 +2858,7 @@ static void BattleStartClearSetData(void)
             SetItemsToRestoreAfterBattle(trainer, partySlot);
         }
     }
-    memset(0, gPartyCriticalHits, sizeof(u8) * PARTY_SIZE);
+    memset(gPartyCriticalHits, 0, sizeof(u8) * PARTY_SIZE);
 
     ClearPursuitValues();
     gSelectedMonPartyId = PARTY_MON_NONE; // Revival Blessing
