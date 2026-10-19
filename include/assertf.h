@@ -59,6 +59,18 @@
  * Alloc and AllocUnchecked). */
 #define fatal_assertf(cond, ...) CAT(_FATALASSERTF, FIRST(__VA_OPT__(_FMT,) _COND))(cond __VA_OPT__(,) __VA_ARGS__)
 
+/* report_assertf
+* Similar to assertf but include a message encouraging to report the issue to RHH
+*/
+#define report_assertf(cond, str, ...) assertf(cond,                               \
+                                                "Unresolved bug detected:\n"       \
+                                                "please report the following\n"    \
+                                                "with as much detail as you can"   \
+                                                "to the RHH discord server\n"      \
+                                                str,                               \
+                                                __VA_ARGS__)
+// missing \n is intentional to fit into one line on screen
+
 /* errorf(fmt, ...);
  *
  * Equivalent to assertf(FALSE, fmt, ...);

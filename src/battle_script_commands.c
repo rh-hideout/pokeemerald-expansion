@@ -8364,10 +8364,7 @@ static void Cmd_givecaughtmon(void)
         if (B_RESTORE_HELD_BATTLE_ITEMS >= GEN_9)
         {
             struct LostItem *lostItem = GetLostItemState(B_TRAINER_OPPONENT_A, gBattlerPartyIndexes[GetCatchingBattler()]);
-            assertf(lostItem->originalItem < ITEMS_COUNT, "Unresolved bug detected:\n"
-                "please report the following\n"
-                "with as much detail as you can"
-                "to the RHH discord server\n"
+            report_assertf(lostItem->originalItem < ITEMS_COUNT,
                 "enemy party size %d\n"
                 "lost item data %d %d\n"
                 "caughtBattler %d %d\n"
