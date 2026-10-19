@@ -642,7 +642,7 @@ void UpdateChainFishingStreak()
 
 u32 CalculateChainFishingShinyRolls(void)
 {
-    if (!I_FISHING_CHAIN || !gIsFishingEncounter)
+    if (!I_FISHING_CHAIN || ENCOUNTER_AREA(gEncounterType) != WILD_AREA_FISHING)
         return 0;
     u32 a = 2 * min(gChainFishingDexNavStreak, FISHING_CHAIN_SHINY_STREAK_MAX);
     return a;
@@ -650,5 +650,5 @@ u32 CalculateChainFishingShinyRolls(void)
 
 bool32 ShouldUseFishingEnvironmentInBattle()
 {
-    return (I_FISHING_ENVIRONMENT >= GEN_4 && gIsFishingEncounter);
+    return (I_FISHING_ENVIRONMENT >= GEN_4 && ENCOUNTER_AREA(gEncounterType) == WILD_AREA_FISHING);
 }

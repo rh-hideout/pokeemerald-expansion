@@ -378,6 +378,11 @@ void StartWildBattleWithOWE(struct ScriptContext *ctx)
         return;
     }
 
+    enum WildPokemonArea wildArea = WILD_AREA_LAND;
+    u32 metatileBehavior = MapGridGetMetatileBehaviorAt(owe->currentCoords.x, owe->currentCoords.y);
+
+    if (MetatileBehavior_IsWaterWildEncounter(metatileBehavior))
+        wildArea = WILD_AREA_WATER;
     if (category < ROAMER_COUNT && StartWildBattleWithOWE_CheckRoamer(category))
         return;
 
@@ -394,6 +399,7 @@ void StartWildBattleWithOWE(struct ScriptContext *ctx)
 
     ZeroEnemyPartyMons();
     personality = GetMonPersonality(speciesId, gender, NATURE_RANDOM, RANDOM_UNOWN_LETTER);
+    SET_ENCOUNTER_ORIGIN(gEncounterType, WILDMON_ORIGIN);
     CreateMonWithIVs(&gParties[B_TRAINER_OPPONENT_A][0], speciesId, level, personality, OTID_STRUCT_PLAYER_ID, USE_RANDOM_IVS);
     GiveMonInitialMoveset(&gParties[B_TRAINER_OPPONENT_A][0]);
     SetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_IS_SHINY, &shiny);
@@ -404,6 +410,7 @@ void StartWildBattleWithOWE(struct ScriptContext *ctx)
     if (StartWildBattleWithOWE_CheckMassOutbreak(category, speciesId, level))
         return;
 
+    SET_ENCOUNTER_AREA(gEncounterType, wildArea);
     if (StartWildBattleWithOWE_CheckDoubleBattle(owe, headerId))
         return;
 
@@ -842,8 +849,10 @@ static bool32 TrySelectTileForOWE(s32* outX, s32* outY)
 static void SetSpeciesInfoForOWE(struct InfoOWE *info, u32 x, u32 y)
 {
     u32 personality;
+    bool32 created = CreateEnemyPartyOWE(info, x, y);
 
-    if (!CreateEnemyPartyOWE(info, x, y))
+    SET_ENCOUNTER_ORIGIN(gEncounterType, UNDEFINED_MON_ORIGIN);
+    if (!created)
     {
         ZeroEnemyPartyMons();
         info->speciesId = SPECIES_NONE;
@@ -857,7 +866,7 @@ static void SetSpeciesInfoForOWE(struct InfoOWE *info, u32 x, u32 y)
     if (info->speciesId == SPECIES_UNOWN)
         info->speciesId = GetUnownSpeciesId(personality);
 
-    info->isShiny = ComputePlayerShinyOdds(personality, READ_OTID_FROM_SAVE);
+    info->isShiny = GetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_IS_SHINY);
     if (GetGenderFromSpeciesAndPersonality(info->speciesId, personality) == MON_FEMALE)
         info->isFemale = TRUE;
     else

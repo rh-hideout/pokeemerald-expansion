@@ -1,13 +1,19 @@
 #include "global.h"
 #include "battle.h"
+#include "config_changes.h"
+#include "wild_encounter.h"
 #include "egg_hatch.h"
 #include "event_data.h"
+#include "item.h"
 #include "new_game.h"
 #include "pokemon.h"
+#include "random.h"
+#include "script_pokemon_util.h"
 #include "test/overworld_script.h"
 #include "test/test.h"
 #include "constants/characters.h"
 #include "constants/daycare.h"
+#include "constants/item.h"
 #include "constants/move_relearner.h"
 
 TEST("Nature independent from Hidden Nature")
@@ -109,6 +115,61 @@ TEST("Shininess set on an Egg persists after hatching")
 
     EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_IS_EGG), FALSE);
     EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_IS_SHINY), TRUE);
+}
+
+TEST("P_NO_SHINIES_WITHOUT_POKEBALLS does not block Shiny gift Pokémon")
+{
+    bool32 useScript = FALSE;
+    bool32 blockWildShinies = FALSE;
+    PARAMETRIZE { useScript = FALSE; blockWildShinies = FALSE; }
+    PARAMETRIZE { useScript = FALSE; blockWildShinies = TRUE; }
+    PARAMETRIZE { useScript = TRUE; blockWildShinies = FALSE; }
+    PARAMETRIZE { useScript = TRUE; blockWildShinies = TRUE; }
+
+    ASSUME(SHINY_ODDS > 1 && SHINY_ODDS <= MAX_u16);
+
+    ZeroPlayerPartyMons();
+    ClearBag();
+    SetConfig(CONFIG_NO_SHINIES_WITHOUT_POKEBALLS, blockWildShinies);
+    SetTrainerId(0, gSaveBlock2Ptr->playerTrainerId);
+    FlagClear(P_FLAG_FORCE_SHINY);
+    FlagClear(P_FLAG_FORCE_NO_SHINY);
+    VarSet(VAR_REPEL_STEP_COUNT, REPEL_LURE_MASK | 1);
+    SET_RNG(RNG_SHINY_REROLL, 1);
+
+    SET_ENCOUNTER_ORIGIN(gEncounterType, WILDMON_ORIGIN);
+    EXPECT_EQ(ComputePlayerShinyOdds(SHINY_ODDS, 0), !blockWildShinies);
+    gEncounterType = ENCOUNTER_TYPE_NONE;
+
+    if (useScript)
+    {
+        RUN_OVERWORLD_SCRIPT(
+            givemon SPECIES_CASTFORM_NORMAL, 25, nature=NATURE_RANDOM, gender=MON_GENDER_RANDOM, hpIv=0, atkIv=0, defIv=0, speedIv=0, spAtkIv=0, spDefIv=0;
+        );
+    }
+    else
+    {
+        EXPECT_EQ(ScriptGiveMon(SPECIES_CASTFORM_NORMAL, 25, ITEM_NONE), MON_GIVEN_TO_PARTY);
+    }
+
+    EXPECT_EQ(ENCOUNTER_ORIGIN(gEncounterType), UNDEFINED_MON_ORIGIN);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_OT_ID), 0);
+    EXPECT_EQ(IsMonShiny(&gParties[B_TRAINER_PLAYER][0]), TRUE);
+    VarSet(VAR_REPEL_STEP_COUNT, 0);
+}
+
+TEST("Gift and roamer origins are reset after Pokémon generation")
+{
+    enum GeneratedMonOrigin origin;
+    struct Pokemon mon;
+
+    PARAMETRIZE { origin = GIFTMON_ORIGIN; }
+    PARAMETRIZE { origin = ROAMER_ORIGIN; }
+
+    SET_ENCOUNTER_ORIGIN(gEncounterType, origin);
+    CreateMon(&mon, SPECIES_WOBBUFFET, 50, 0, OTID_STRUCT_PLAYER_ID);
+
+    EXPECT_EQ(ENCOUNTER_ORIGIN(gEncounterType), UNDEFINED_MON_ORIGIN);
 }
 
 TEST("Hyper Training increases stats without affecting IVs")
