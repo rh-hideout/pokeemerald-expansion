@@ -5691,16 +5691,16 @@ static enum MoveEndResult MoveEndPickpocket(struct BattleCalcValues *cv)
                     }
                     else
                     {
+                        struct LostItem *lostItem = GetLostItemState(GetBattlerTrainer(cv->battlerAtk), originalAttackerPartyId);
                         StealTargetItem(battlerDef, cv->battlerAtk, itemToSteal, FALSE); // Don't change cv->battlerAtk's item
-
                         PREPARE_MON_NICK_WITH_PREFIX_LOWER_BUFFER(gBattleTextBuff2, cv->battlerAtk, originalAttackerPartyId);
 
                         if (B_TRAINERS_KNOCK_OFF_ITEMS == TRUE
                          && gBattleTypeFlags & BATTLE_TYPE_TRAINER
                          && !(gBattleTypeFlags & BATTLE_TYPE_FRONTIER)
                          && IsOnPlayerSide(cv->battlerAtk)
-                         && itemToSteal == gBattleStruct->itemLost[GetBattlerTrainer(cv->battlerAtk)][originalAttackerPartyId].originalItem)
-                            gBattleStruct->itemLost[GetBattlerTrainer(cv->battlerAtk)][originalAttackerPartyId].stolen = TRUE;
+                         && itemToSteal == lostItem->originalItem)
+                            lostItem->stolen = TRUE;
                         itemToSteal = ITEM_NONE;
                         BtlController_EmitSetMonData(
                             cv->battlerAtk,

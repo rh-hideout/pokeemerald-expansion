@@ -9554,6 +9554,10 @@ void SortBattlersBySpeed(enum BattlerId *battlers, bool32 slowToFast)
 
 struct LostItem *GetLostItemState(enum BattleTrainer trainer, u32 slot)
 {
+    assertf(trainer < MAX_BATTLE_TRAINERS && slot < PARTY_SIZE, "Invalid parameters for GetLostItemState trainer %d slot %d", trainer, slot)
+    {
+        return NULL;
+    }
     return &gBattleStruct->itemLost[trainer][slot];
 }
 
@@ -9570,7 +9574,7 @@ void TryRestoreHeldItems(void)
 {
     for (enum BattleTrainer trainer = 0; trainer < gBattlersCount; trainer++)
     {
-        for (enum PartyMon i = PARTY_MON_0; i < PARTY_MON_NONE; i++)
+        for (enum PartyMon i = PARTY_MON_0; i < gPartiesCount[trainer]; i++)
         {
             struct LostItem *lostItem = GetLostItemState(trainer, i);
             enum Item originaItem = lostItem->originalItem;
@@ -9664,9 +9668,10 @@ void TrySaveExchangedItem(enum BattlerId battler, enum Item stolenItem)
     if (GetBattlerTrainer(battler) != B_TRAINER_PLAYER)
         return;
 
+    struct LostItem *lostItem = GetLostItemState(B_TRAINER_PLAYER, gBattlerPartyIndexes[battler]);
     // If regular trainer battle and mon's original item matches what is being stolen, save it to be restored at end of battle
-    if (stolenItem == gBattleStruct->itemLost[B_TRAINER_PLAYER][gBattlerPartyIndexes[battler]].originalItem)
-        gBattleStruct->itemLost[B_TRAINER_PLAYER][gBattlerPartyIndexes[battler]].stolen = TRUE;
+    if (stolenItem == lostItem->originalItem)
+        lostItem->stolen = TRUE;
 }
 
 bool32 IsBattlerAffectedByHazards(enum BattlerId battler, enum HoldEffect holdEffect, bool32 toxicSpikes)

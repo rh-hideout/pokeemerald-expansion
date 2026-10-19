@@ -2851,14 +2851,14 @@ static void BattleStartClearSetData(void)
     }
     gBattleStruct->beatUpSlot = 0;
 
-    for (u32 partySlot = 0; partySlot < PARTY_SIZE; partySlot++)
+    for (enum BattleTrainer trainer = B_TRAINER_PLAYER; trainer < MAX_BATTLE_TRAINERS; trainer++)
     {
-        for (enum BattleTrainer trainer = B_TRAINER_PLAYER; trainer < MAX_BATTLE_TRAINERS; trainer++)
+        for (enum PartyMon partySlot = 0; partySlot < gPartiesCount[trainer]; partySlot++)
         {
             SetItemsToRestoreAfterBattle(trainer, partySlot);
         }
-        gPartyCriticalHits[partySlot] = 0;
     }
+    memset(0, gPartyCriticalHits, sizeof(u8) * PARTY_SIZE);
 
     ClearPursuitValues();
     gSelectedMonPartyId = PARTY_MON_NONE; // Revival Blessing

@@ -6123,7 +6123,8 @@ static void Cmd_givecaughtmon(void)
                 GetMonNickname(&gParties[B_TRAINER_PLAYER][gSelectedMonPartyId], gStringVar2);
                 StringCopy(gStringVar1, GetBoxNamePtr(GetPCBoxToSendMon()));
                 ZeroMonData(&gParties[B_TRAINER_PLAYER][gSelectedMonPartyId]);
-                gBattleStruct->itemLost[B_TRAINER_PLAYER][gSelectedMonPartyId].originalItem = ITEM_NONE;
+                struct LostItem *lostItem = GetLostItemState(B_TRAINER_PLAYER, gSelectedMonPartyId);
+                lostItem->originalItem = ITEM_NONE;
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SWAPPED_INTO_PARTY;
             }
         }
@@ -6173,7 +6174,6 @@ static void Cmd_givecaughtmon(void)
             gBattleStruct->partyState[B_SIDE_PLAYER][emptySlot].changedSpecies = GetBattlerPartyState(GetCatchingBattler())->changedSpecies;
 
         gBattleResults.caughtMonSpecies = GetMonData(caughtMon, MON_DATA_SPECIES);
-        GetMonData(caughtMon, MON_DATA_NICKNAME, gBattleResults.caughtMonNick);
         gBattleResults.caughtMonBall = GetMonData(caughtMon, MON_DATA_POKEBALL);
 
         gSelectedMonPartyId = PARTY_MON_NONE;
@@ -6386,11 +6386,11 @@ static void Cmd_trygivecaughtmonnick(void)
         if (!gPaletteFade.active)
         {
             struct Pokemon *caughtMon = GetBattlerMon(gBattlerTarget);
-            GetMonData(caughtMon, MON_DATA_NICKNAME, gBattleStruct->caughtMonNick);
+            GetMonData(caughtMon, MON_DATA_NICKNAME, gBattleResults.caughtMonNick);
             CloseMainBattleScreen();
             MainCallback callback = CalculatePlayerPartyCount() == PARTY_SIZE ? ReshowBlankBattleScreenAfterMenu : BattleMainCB2;
 
-            DoNamingScreen(NAMING_SCREEN_CAUGHT_MON, gBattleStruct->caughtMonNick,
+            DoNamingScreen(NAMING_SCREEN_CAUGHT_MON, gBattleResults.caughtMonNick,
                            GetMonData(caughtMon, MON_DATA_SPECIES),
                            GetMonGender(caughtMon),
                            GetMonData(caughtMon, MON_DATA_PERSONALITY),
@@ -6402,7 +6402,7 @@ static void Cmd_trygivecaughtmonnick(void)
     case 3:
         if (gMain.callback2 == BattleMainCB2 && !gPaletteFade.active)
         {
-            SetMonData(GetBattlerMon(gBattlerTarget), MON_DATA_NICKNAME, gBattleStruct->caughtMonNick);
+            SetMonData(GetBattlerMon(gBattlerTarget), MON_DATA_NICKNAME, gBattleResults.caughtMonNick);
             gBattleCommunication[MULTIUSE_STATE]++;
         }
         break;

@@ -348,8 +348,7 @@ struct BattleResults
     enum Species playerMon2Species;    // 0x26
     enum Species caughtMonSpecies;     // 0x28
     u8 caughtMonNick[POKEMON_NAME_LENGTH + 1];     // 0x2A
-    u8 filler35;           // 0x35
-    u8 catchAttempts[POKEBALL_COUNT];     // 0x36
+    u8 catchAttempts[POKEBALL_COUNT];     // 0x35
 };
 
 struct BattleTv_Side
@@ -626,7 +625,6 @@ struct BattleStruct
     enum PartyMon monToSwitchIntoId[MAX_BATTLERS_COUNT];
     u8 battlerPartyOrders[MAX_BATTLERS_COUNT][PARTY_SIZE / 2];
     u8 runTries;
-    u8 caughtMonNick[POKEMON_NAME_LENGTH + 1];
     u8 safariGoNearCounter;
     u8 safariPkblThrowCounter;
     u8 safariEscapeFactor;
