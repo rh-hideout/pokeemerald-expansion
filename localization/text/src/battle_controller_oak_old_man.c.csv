@@ -1,0 +1,11 @@
+key,context,max_width,en,es,pt,fr,status
+sText_ForPetesSake,,,"OAK: Oh, for Pete's sake…\nSo pushy, as always.\p{B_PLAYER_NAME}.\pYou've never had a POKéMON battle\nbefore, have you?\pA POKéMON battle is when TRAINERS\npit their POKéMON against each\lother.\p",,,,
+sText_HowDissapointing,,,"OAK: Hm…\nHow disappointing…\pIf you win, you earn prize money,\nand your POKéMON grow.\pBut if you lose, {B_PLAYER_NAME}, you end\nup paying prize money…\pHowever, since you had no warning\nthis time, I'll pay for you.\pBut things won't be this way once\nyou step outside these doors.\pThat's why you must strengthen your\nPOKéMON by battling wild POKéMON.\p",,,,
+sText_InflictingDamageIsKey,,,OAK: Inflicting damage on the foe\nis the key to any battle.\p,,,,
+sText_KeepAnEyeOnHP,,,OAK: Keep your eyes on your\nPOKéMON's HP.\pIt will faint if the HP drops to\n“0.”\p,,,,
+sText_LoweringStats,,,OAK: Lowering the foe's stats\nwill put you at an advantage.\p,,,,
+sText_OakNoRunningFromATrainer,,,OAK: No! There's no running away\nfrom a TRAINER POKéMON battle!\p,,,,
+sText_TheTrainerThat,,,"The TRAINER that makes the other\nTRAINER's POKéMON faint by lowering\ltheir HP to “0,” wins.\p",,,,
+sText_TryBattling,,,"But rather than talking about it,\nyou'll learn more from experience.\pTry battling and see for yourself.\p",,,,
+sText_WinEarnsPrizeMoney,,,"OAK: Hm! Excellent!\pIf you win, you earn prize money,\nand your POKéMON will grow!\pBattle other TRAINERS and make\nyour POKéMON strong!\p",,,,
+gText_WhatWillOldManDo,,,What will the\nold man do?,,,,

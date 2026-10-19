@@ -1,0 +1,12 @@
+key,context,max_width,en,es,pt,fr,status
+SaffronCity_CopycatsHouse_2F_Text_MimickingFavoriteHobbyMale,,,"{PLAYER}: Hi!\nDo you like POKéMON?\p{PLAYER}: Uh, no, I just asked you.\p{PLAYER}: Huh?\nYou're strange!\pCOPYCAT: Hmm? Quit mimicking?\nBut, that's my favorite hobby!",,,,
+SaffronCity_CopycatsHouse_2F_Text_MimickingFavoriteHobbyFemale,,,"{PLAYER}: Hi.\nYou must like POKéMON.\p{PLAYER}: No, not me.\nI asked you.\p{PLAYER}: Pardon?\nYou're weird!\l \lCOPYCAT: Hmm? Quit mimicking?\lBut that's my favorite hobby!",,,,
+Text_MimicTeach,,,Oh wow!\nA POKé DOLL!\pFor me?\nThank you!\pYou know what?\nI can teach the move MIMIC.,,,,
+Text_MimicDeclined,,,Don't you like MIMIC?,,,,
+Text_MimicWhichMon,,,I really love MIMIC!\nWho's going to learn it?,,,,
+Text_MimicTaughtMale,,,{PLAYER}: Hi!\nThanks for earlier!\p{PLAYER}: Pardon?\p{PLAYER}: Is it that fun to mimic my\nevery move?\pCOPYCAT: You bet!\nIt's a scream!,,,,
+Text_MimicTaughtFemale,,,{PLAYER}: Hi!\nThanks for what you did for us.\p{PLAYER}: Pardon?\p{PLAYER}: Is it really that fun to\ncopy what I say and do?\pCOPYCAT: You bet!\nIt's a scream!,,,,
+SaffronCity_CopycatsHouse_2F_Text_Doduo,,,"DODUO: Giiih!\pPRETTY MIRROR LOOK AT ME,\nSEE HOW PRETTY I CAN BE?",,,,
+SaffronCity_CopycatsHouse_2F_Text_RareMonOnlyDoll,,,This is a rare POKéMON!\nHuh? It's only a doll!,,,,
+SaffronCity_CopycatsHouse_2F_Text_MarioWearingABucket,,,A game with MARIO wearing a bucket\non his head!,,,,
+SaffronCity_CopycatsHouse_2F_Text_MySecrets,,,…\pMy Secrets!\pSkill: Mimicry!\nHobby: Collecting dolls!\lFavorite POKéMON: CLEFAIRY!,,,,

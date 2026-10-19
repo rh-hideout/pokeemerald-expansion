@@ -1,0 +1,8 @@
+key,context,max_width,en,es,pt,fr,status
+VermilionCity_House1_Text_ImFishingGuruDoYouLikeToFish,,,"I'm the FISHING GURU!\pI simply looove fishing!\nI can't bear to go without.\pTell me, do you like to fish?",,,,
+VermilionCity_House1_Text_TakeThisAndFish,,,"Grand! I like your style.\nI think we can be friends.\pTake this and fish, young friend!",,,,
+VermilionCity_House1_Text_ReceivedOldRodFromFishingGuru,,,{PLAYER} received an OLD ROD from\nthe FISHING GURU.,,,,
+VermilionCity_House1_Text_FishingIsAWayOfLife,,,"Fishing is a way of life!\nIt is like the finest poetry.\pFrom the seas to rivers, go out\nand land the big one, my friend.",,,,
+VermilionCity_House1_Text_OhThatsSoDisappointing,,,Oh…\nThat's so disappointing…,,,,
+VermilionCity_House1_Text_HowAreTheFishBiting,,,"Hello there, {PLAYER}!\pHow are the fish biting?",,,,
+VermilionCity_House1_Text_NoRoomForNiceGift,,,"Oh, no!\pI had a nice gift for you, but you\nhave no room for it!",,,,

@@ -37,6 +37,7 @@
 #include "caps.h"
 #include "link.h"
 #include "link_rfu.h"
+#include "localization.h"
 #include "mail.h"
 #include "main.h"
 #include "menu.h"
@@ -8333,12 +8334,9 @@ void CursorCb_MoveItemCallback(u8 taskId)
         {
             GetMonNickname(&gParties[B_TRAINER_PLAYER][gPartyMenu.slotId], gStringVar1);
             CopyItemName(item1, gStringVar2);
-            StringExpandPlaceholders(buffer, gText_XsYAnd);
-
-            StringAppend(buffer, gText_XsYWereSwapped);
-            GetMonNickname(&gParties[B_TRAINER_PLAYER][gPartyMenu.slotId2], gStringVar1);
-            CopyItemName(item2, gStringVar2);
-            StringExpandPlaceholders(gStringVar4, buffer);
+            GetMonNickname(&gParties[B_TRAINER_PLAYER][gPartyMenu.slotId2], gStringVar3);
+            CopyItemName(item2, buffer);
+            StringFormat(gStringVar4, gText_XsYAndXsYWereSwapped, gStringVar1, gStringVar2, gStringVar3, buffer);
         }
 
         // display the string

@@ -1,0 +1,11 @@
+key,context,max_width,en,es,pt,fr,status
+TwoIsland_House_Text_TeachMonMoveForMushroom,,,"I'm the POKéMON MOVE MANIAC.\pI know every single move that\nPOKéMON learn growing up.\pI'm also a mushroom maniac.\pBring me two TINYMUSHROOMS,\nor one BIG MUSHROOM.\pIf you do that for me, I'll teach\na move to one POKéMON.",,,,
+TwoIsland_House_Text_WantMeToTeachMove,,,"Sniff, sniff…\nHm! You smell of MUSHROOMS!\pDo you want me to teach a move\nto a POKéMON of yours?",,,,
+TwoIsland_House_Text_TutorWhichMon,,,Which POKéMON needs tutoring?,,,,
+TwoIsland_House_Text_TeachWhichMove,,,Which move should I teach?,,,,
+TwoIsland_House_Text_NoMoveICanTeachThatMon,,,Sorry…\pIt doesn't appear as if I have a\nmove I can teach that POKéMON.,,,,
+TwoIsland_House_Text_IllNeedMushroomOrTwo,,,"Then, I'll need a MUSHROOM or two.\nWhat are you going to give me?",,,,
+TwoIsland_House_Text_HandedOverTwoTinyMushrooms,,,{PLAYER} handed over two\nTINYMUSHROOMS in exchange.,,,,
+TwoIsland_House_Text_HandedOverOneBigMushroom,,,{PLAYER} handed over one\nBIG MUSHROOM in exchange.,,,,
+TwoIsland_House_Text_NeedMushroomOrTwoToLearnMove,,,"If your POKéMON need to learn a\nmove, I need a MUSHROOM or two.",,,,
+TwoIsland_House_Text_CantTeachAnEgg,,,Hunh? There isn't a single move\nthat I can teach an EGG.,,,,

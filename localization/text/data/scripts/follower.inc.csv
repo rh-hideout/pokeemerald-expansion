@@ -1,0 +1,5 @@
+key,context,max_width,en,es,pt,fr,status
+gText_FollowerLovesYou,,,{STR_VAR_1} is regarding you with\nadoration!,,,,
+gText_FollowerLostInThought,,,{STR_VAR_1} seems lost in thought.,,,,
+gText_FollowerDefault,,,ERROR 404: Script not found.,,,,
+gText_WantsToFly,,,{STR_VAR_1} looks up at the\nsky restlessly.\pWould you like to use FLY?,,,,

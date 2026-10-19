@@ -5,6 +5,7 @@
 #include "battle_message.h"
 #include "battle_setup.h"
 #include "item.h"
+#include "localization.h"
 #include "main_menu.h"
 #include "malloc.h"
 #include "map_name_popup.h"
@@ -574,6 +575,23 @@ TEST("Type names fit on Pokedex Search Screen")
     EXPECT_LE(GetStringWidth(fontId, gTypesInfo[type].name, 0), widthPx);
 }
 
+
+TEST("StringFormat fills dynamic placeholders in any order")
+{
+    u8 out[32];
+    StringFormat2(out, COMPOUND_STRING("{DYNAMIC 1} and {DYNAMIC 0}!"), COMPOUND_STRING("A"), COMPOUND_STRING("B"));
+    EXPECT_EQ(StringCompare(out, COMPOUND_STRING("B and A!")), 0);
+}
+
+TEST("StringFormat matches the old fragment-appending output")
+{
+    u8 formatted[64], appended[64];
+    const u8 *name = COMPOUND_STRING("MAY");
+    StringFormat1(formatted, COMPOUND_STRING("{DYNAMIC 0} has no BERRIES."), name);
+    StringCopy(appended, name);
+    StringAppend(appended, COMPOUND_STRING(" has no BERRIES."));
+    EXPECT_EQ(StringCompare(formatted, appended), 0);
+}
 
 TEST("Map names fit in popup")
 {

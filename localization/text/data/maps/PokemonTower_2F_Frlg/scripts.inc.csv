@@ -1,0 +1,5 @@
+key,context,max_width,en,es,pt,fr,status
+PokemonTower_2F_Text_RivalIntro,,,"{RIVAL}: Hey, {PLAYER}!\nWhat brings you here?\lIs your POKéMON dead?\pHey! It's alive!\pI can at least make them faint!\nLet's go!",,,,
+PokemonTower_2F_Text_RivalDefeat,,,"What?\nYou stinker!\pI took it easy on you, too!",,,,
+PokemonTower_2F_Text_RivalPostBattle,,,"How's your POKéDEX coming?\nI just caught a CUBONE!\pI can't find the bigger MAROWAK.\nWhere could they be?\pI bet there aren't any left!\pWell, I better get going.\nI've got a lot to accomplish,\lunlike you.\pSmell ya later!",,,,
+PokemonTower_2F_Text_SilphScopeCouldUnmaskGhosts,,,Even we could not identify the\nwayward ghosts.\pA SILPH SCOPE might be able to\nunmask them.,,,,

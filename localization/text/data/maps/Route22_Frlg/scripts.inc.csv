@@ -1,0 +1,8 @@
+key,context,max_width,en,es,pt,fr,status
+Route22_Text_EarlyRivalIntro,,,"{RIVAL}: Hey! {PLAYER}!\pYou're off to the POKéMON LEAGUE?\nForget about it!\pYou probably don't have any\nBADGES, do you?\pThe guard won't let you through\nwithout them.\pBy the way, did your POKéMON get\nany stronger?",,,,
+Route22_Text_EarlyRivalDefeat,,,Awww!\nYou just lucked out!,,,,
+Route22_Text_EarlyRivalPostBattle,,,I heard the POKéMON LEAGUE is\ncrawling with tough TRAINERS.\pI have to figure out how to get\npast them.\pYou should quit dawdling and get a\nmove on!,,,,
+Route22_Text_LateRivalIntro,,,"{RIVAL}: What? {PLAYER}!\nWhat a surprise to see you here!\pSo you're going to the POKéMON\nLEAGUE?\pYou collected all the BADGES, too?\nThat's cool!\pThen I'll whip you, {PLAYER}, as a\nwarm-up for the POKéMON LEAGUE!\pCome on!",,,,
+Route22_Text_LateRivalDefeat,,,"What!?\pI was just careless, you!",,,,
+Route22_Text_LateRivalPostBattle,,,"That loosened me up.\nI'm ready for the POKéMON LEAGUE!\p{PLAYER}, you need more practice.\pBut hey, you know that!\nI'm out of here. Smell ya!",,,,
+Route22_Text_LeagueGateSign,,,POKéMON LEAGUE\nFront Gate,,,,

@@ -1,0 +1,7 @@
+key,context,max_width,en,es,pt,fr,status
+sText_PlayerScurriedToCenter,,,"{PLAYER} scurried to a POKéMON CENTER,\nprotecting the exhausted and fainted\nPOKéMON from further harm…\p",,,,
+sText_PlayerScurriedBackHome,,,"{PLAYER} scurried back home, protecting\nthe exhausted and fainted POKéMON from\nfurther harm…\p",,,,
+sText_PlayerRegroupCenter,,,"{PLAYER} scurried to a POKéMON CENTER,\nto regroup and reconsider the battle\nstrategy…\p",,,,
+sText_PlayerRegroupHome,,,"{PLAYER} scurried back home, to regroup\nand reconsider the battle strategy…\p",,,,
+Task_RushInjuredPokemonToCenter@56cc91,,,PROF. OAK,,,,
+Task_RushInjuredPokemonToCenter@9b8ed2,,,PROF. BIRCH,,,,

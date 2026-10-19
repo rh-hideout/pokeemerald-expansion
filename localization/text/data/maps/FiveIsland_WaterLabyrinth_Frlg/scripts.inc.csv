@@ -1,0 +1,11 @@
+key,context,max_width,en,es,pt,fr,status
+FiveIsland_WaterLabyrinth_Text_LetMeTakeLookAtMons,,,"You travel all over the place,\ndon't you?\pYou're not driving your POKéMON\ntoo harshly, are you?\pLet me take a look.\n… … …   … … …",,,,
+FiveIsland_WaterLabyrinth_Text_HmmISeeIsee,,,"Ah, hmm…\nI see, I see…",,,,
+FiveIsland_WaterLabyrinth_Text_TreatMonRightHaveThis,,,"Oh, impressive.\nYou treat your POKéMON right.\pI think you can be entrusted with\nthis.\pPlease, I'd like you to have this.",,,,
+FiveIsland_WaterLabyrinth_Text_ReceivedEggFromMan,,,{PLAYER} received an EGG\nfrom the man!,,,,
+FiveIsland_WaterLabyrinth_Text_DontHaveSpaceInYourParty,,,"…Unfortunately, you don't have\nspace for this in your party.\pYou'd better come back for it\nanother time.",,,,
+FiveIsland_WaterLabyrinth_Text_GladIMetSomeoneLikeYou,,,I received that EGG while I was\ntraveling.\pI'm glad I met someone like you.,,,,
+FiveIsland_WaterLabyrinth_Text_CuteMonRemindsMeOfDaisy,,,"Oh, hello.\nThat's a cute {STR_VAR_2}.\pSeeing it reminds me of a sweet \nlittle girl I met while traveling.\pShe was gently grooming POKéMON…\nShe was a little angel.\pThat little girl's name…\nI think it was DAISY.",,,,
+FiveIsland_WaterLabyrinth_Text_AlizeIntro,,,This is an excellent environment\nfor raising POKéMON.,,,,
+FiveIsland_WaterLabyrinth_Text_AlizeDefeat,,,Your POKéMON are growing up\nadmirably well!,,,,
+FiveIsland_WaterLabyrinth_Text_AlizePostBattle,,,"You know, I think you have the\ntalent to be a good BREEDER.",,,,

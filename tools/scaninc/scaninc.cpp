@@ -32,6 +32,7 @@
 #include <fstream>
 #include "scaninc.h"
 #include "source_file.h"
+#include "localization.h"
 
 bool CanOpenFile(std::string path)
 {
@@ -44,7 +45,7 @@ bool CanOpenFile(std::string path)
     return true;
 }
 
-const char *const USAGE = "Usage: scaninc [-I INCLUDE_PATH] [-M DEPENDENCY_OUT_PATH] [-g PATH] FILE_PATH\n";
+const char *const USAGE = "Usage: scaninc [-I INCLUDE_PATH] [-M DEPENDENCY_OUT_PATH] [-g PATH] [-t LOC_TABLE_DIR] [-L LOC_OVERLAY_DIR] FILE_PATH\n";
 
 int main(int argc, char **argv)
 {
@@ -58,6 +59,8 @@ int main(int argc, char **argv)
     bool makeformat = false;
     std::string make_outfile;
     std::string gfx_root;
+    std::string loc_table_dir;
+    std::string loc_overlay_dir;
 
     argc--;
     argv++;
@@ -93,6 +96,20 @@ int main(int argc, char **argv)
             argv++;
             gfx_root = std::string(argv[0]);
         }
+        else if (arg.substr(0, 2) == "-t")
+        {
+            argc--;
+            argv++;
+            loc_table_dir = std::string(argv[0]);
+            if (!loc_table_dir.empty() && loc_table_dir.back() != '/')
+                loc_table_dir += '/';
+        }
+        else if (arg.substr(0, 2) == "-L")
+        {
+            argc--;
+            argv++;
+            loc_overlay_dir = std::string(argv[0]);
+        }
         else
         {
             FATAL_ERROR(USAGE);
@@ -121,12 +138,26 @@ int main(int argc, char **argv)
         filesToProcess.pop();
 
         includeDirs.push_back(file.GetSrcDir());
+
+        // A localization table for this file makes it a dependency too.
+        if (!loc_table_dir.empty())
+        {
+            std::string normalized = NormalizeSourcePath(filePath);
+            if (!normalized.empty() && CanOpenFile(loc_table_dir + normalized + ".tbl"))
+                dependencies.insert(loc_table_dir + normalized + ".tbl");
+        }
+
+        bool isCSource = file.FileType() == SourceFileType::Cpp || file.FileType() == SourceFileType::Header;
         for (auto incbin : file.GetIncbins())
         {
-            dependencies.insert(incbin);
+            dependencies.insert(isCSource ? LocalizedGraphicsPath(loc_overlay_dir, incbin, true) : incbin);
         }
         for (auto incgfx : file.GetIncgfxs())
         {
+            // WARNING: This must stay in-sync with 'tools/preproc/c_file.cpp'.
+            if (isCSource)
+                incgfx.source = LocalizedGraphicsPath(loc_overlay_dir, incgfx.source, false);
+
             // WARNING: This must stay in-sync with 'tools/preproc/c_file.cpp'.
             std::string arguments_as_path;
             for (auto c : incgfx.arguments)

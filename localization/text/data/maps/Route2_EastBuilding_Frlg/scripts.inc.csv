@@ -1,0 +1,6 @@
+key,context,max_width,en,es,pt,fr,status
+Route2_EastBuilding_Text_GiveHM05IfSeen10Mons,,,"Hi! Remember me?\nI'm one of PROF. OAK's AIDES.\pIf your POKéDEX has complete data\non ten species, I'm supposed to\lgive you a reward.\pPROF. OAK entrusted me with\nHM05 for you.\pSo, {PLAYER}, let me ask you.\pHave you gathered data on at least\nten kinds of POKéMON?",,,,
+Route2_EastBuilding_Text_GreatHereYouGo,,,Great! You have caught or owned\n{STR_VAR_3} kinds of POKéMON!\pCongratulations!\nHere you go!,,,,
+Route2_EastBuilding_Text_ReceivedHM05FromAide,,,{PLAYER} received HM05\nfrom the AIDE.,,,,
+Route2_EastBuilding_Text_ExplainHM05,,,HM05 contains the hidden move\nFLASH.\pFLASH lights up even the darkest\nof caves and dungeons.,,,,
+Route2_EastBuilding_Text_CanGetThroughRockTunnel,,,"Once a POKéMON learns FLASH, you\ncan get through ROCK TUNNEL.",,,,

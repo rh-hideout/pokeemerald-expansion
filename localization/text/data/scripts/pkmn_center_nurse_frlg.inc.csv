@@ -1,0 +1,5 @@
+key,context,max_width,en,es,pt,fr,status
+Text_WelcomeWantToHealPkmn_Frlg,,,Welcome to our POKéMON CENTER!\pWould you like me to heal your\nPOKéMON back to perfect health?,,,,
+Text_TakeYourPkmnForFewSeconds_Frlg,,,"Okay, I'll take your POKéMON for a\nfew seconds.",,,,
+Text_WeHopeToSeeYouAgain_Frlg,,,We hope to see you again!,,,,
+Text_RestoredPkmnToFullHealth_Frlg,,,Thank you for waiting.\nWe've restored your POKéMON to\lfull health.,,,,

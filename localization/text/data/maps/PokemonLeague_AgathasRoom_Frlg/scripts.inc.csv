@@ -1,0 +1,5 @@
+key,context,max_width,en,es,pt,fr,status
+PokemonLeague_AgathasRoom_Text_Intro,,,"I am AGATHA of the ELITE FOUR.\pI hear OAK's taken a lot of\ninterest in you, child.\pThat old duff was once tough and\nhandsome.\pBut that was decades ago.\nHe's a shadow of his former self.\pNow he just wants to fiddle with\nhis POKéDEX.\pHe's wrong.\nPOKéMON are for battling!\p{PLAYER}! I'll show you how a real\nTRAINER battles!{PLAY_BGM}{MUS_RG_ENCOUNTER_GYM_LEADER}",,,,
+PokemonLeague_AgathasRoom_Text_RematchIntro,,,"I am AGATHA of the ELITE FOUR.\pYou're the child that OAK's taken\nunder his wing, aren't you?\pThat old duff was once tough and\nhandsome.\pBut that was decades ago.\nHe's a shadow of his former self.\pNow he just wants to fiddle with\nhis POKéDEX.\pHe's wrong.\nPOKéMON are for battling!\p{PLAYER}! I'll show you how a real\nTRAINER battles!{PLAY_BGM}{MUS_RG_ENCOUNTER_GYM_LEADER}",,,,
+PokemonLeague_AgathasRoom_Text_Defeat,,,"Oh, my!\nYou're something special, child!",,,,
+PokemonLeague_AgathasRoom_Text_PostBattle,,,"You win!\pI see what the old duff sees in\nyou now.\pI have nothing else to say.\nRun along now, child!",,,,

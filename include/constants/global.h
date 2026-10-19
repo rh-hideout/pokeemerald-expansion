@@ -59,10 +59,12 @@ enum Language
     LANGUAGE_FRENCH = 3,
     LANGUAGE_ITALIAN = 4,
     LANGUAGE_GERMAN = 5,
-    LANGUAGE_KOREAN = 6, // 6 goes unused but the theory is it was meant to be Korean,
+    LANGUAGE_PORTUGUESE = 6, // Unused by the official games (thought to be meant for Korean). Reused so it fits BoxPokemon.language:3.
     LANGUAGE_SPANISH = 7,
     NUM_LANGUAGES = LANGUAGE_SPANISH,
 };
+
+#define LANGUAGE_KOREAN LANGUAGE_PORTUGUESE
 
 #ifdef FIRERED
     #define GAME_VERSION (VERSION_FIRE_RED)
@@ -76,7 +78,10 @@ enum Language
     #define IS_FRLG 0
     #endif
 #endif
+// Set by the build from LANG (see localization.mk).
+#ifndef GAME_LANGUAGE
 #define GAME_LANGUAGE (LANGUAGE_ENGLISH)
+#endif
 
 // party sizes
 #define PARTY_SIZE 6

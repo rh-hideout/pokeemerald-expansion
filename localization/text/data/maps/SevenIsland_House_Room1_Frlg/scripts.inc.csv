@@ -1,0 +1,12 @@
+key,context,max_width,en,es,pt,fr,status
+SevenIsland_House_Room1_Text_OnlyEnjoymentWatchingBattles,,,"I may not look like much now,\nbut when I was younger…\pI flew everywhere, challenging\nTRAINERS wherever I found them.\pNow, my only source of enjoyment\nis reminiscing about the past while\lwatching battles.",,,,
+SevenIsland_House_Room1_Text_SlightBreezeAroundBox,,,There is a slight breeze blowing\naround the box.,,,,
+SevenIsland_House_Room1_Text_ChallengeVisitingTrainer,,,"Ah!\nWelcome, my friend!\pLet me tell you something. There's\na hidden room in the basement.\pA TRAINER named {STR_VAR_1} is\nwaiting there now.\pTell me, you did come to challenge\n{STR_VAR_1}, am I right?",,,,
+SevenIsland_House_Room1_Text_OhYouWontBattle,,,"Oh…\nYou won't battle…\pI see, I see.\n… …\pWell, perhaps if you change your\nmind, do come back.",,,,
+SevenIsland_House_Room1_Text_LimitThreeMonsPerSide,,,"Ah!\nYou will battle for me?\pIt was worth my time moving the\nbox aside, then.\p… …\nBut there is one slight problem.\pThis hidden room is not built very\nsturdy.\pCan I get you to limit it to\nbattles of three POKéMON per side?",,,,
+SevenIsland_House_Room1_Text_SaveProgressBeforeBattle,,,"Fine! Before your battle, would\nyou like to save your game?",,,,
+SevenIsland_House_Room1_Text_DontHoldAnythingBack,,,All right.\nDon't hold anything back!,,,,
+SevenIsland_House_Room2_Text_MatchEndedUpDraw,,,The match ended up a draw.,,,,
+SevenIsland_House_Room1_Text_DrawWasIt,,,"A draw, was it?\pHowever, let me say that it was\na worthy spectacle.\pI'd say it was a wonderful battle\nwith a real sense of depth!",,,,
+SevenIsland_House_Room1_Text_AstoundingBattle,,,"Bravo!\pBravo, indeed!\nWhat an astounding battle!\pIt was so astounding, why, it keeps\nfilling my eyes with tears!\pThe thrust and parry of expertly\nused techniques!\pThe clash of power upon power!\pYes!\nIt was sheer magnificence!",,,,
+SevenIsland_House_Room1_Text_FeelYourDisappointment,,,"Too bad!\nI feel your disappointment.\pHowever, that disappointment is\nwhat will make you better.\pUse it, learn from it, and make it\nmotivate you to seek greatness.\pForget not this disappointment\nand redouble your training!",,,,

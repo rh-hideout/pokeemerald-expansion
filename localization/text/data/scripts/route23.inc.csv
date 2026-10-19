@@ -1,0 +1,6 @@
+key,context,max_width,en,es,pt,fr,status
+Text_OnlySkilledTrainersAllowedThrough,,,Only truly skilled TRAINERS are\nallowed through.\pYou don't have the {STR_VAR_1}\nyet!,,,,
+Text_CantLetYouPass,,,Rules are rules.\nI can't let you pass.,,,,
+Text_OhThatsBadgeGoRightAhead,,,Oh! That is the {STR_VAR_1}!\nGo right ahead.,,,,
+Text_OnlyPassWithBadgeDontHaveYet,,,You can pass here only if you have\nthe {STR_VAR_1}.\pYou don't have the {STR_VAR_1}\nyet.\pYou have to have it to get to\nthe POKéMON LEAGUE.,,,,
+Text_OnlyPassWithBadgeOhGoAhead,,,"You can pass here only if you have\nthe {STR_VAR_1}.\pOh! That is the {STR_VAR_1}!{PAUSE_MUSIC}{PLAY_BGM}{MUS_LEVEL_UP}{PAUSE 0x60}{RESUME_MUSIC}\pOkay, then.\nPlease, go right ahead.",,,,

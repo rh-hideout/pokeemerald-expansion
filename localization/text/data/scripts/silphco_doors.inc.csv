@@ -1,0 +1,4 @@
+key,context,max_width,en,es,pt,fr,status
+Text_CardKeyOpenedDoor,,,Bingo!\nThe CARD KEY opened the door!,,,,
+Text_ItNeedsCardKey,,,No!\nIt needs a CARD KEY!,,,,
+Text_TheDoorIsOpen,,,The door is open…,,,,

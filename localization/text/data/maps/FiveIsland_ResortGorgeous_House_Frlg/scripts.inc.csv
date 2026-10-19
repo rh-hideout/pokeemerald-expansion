@@ -1,0 +1,13 @@
+key,context,max_width,en,es,pt,fr,status
+FiveIsland_ResortGorgeous_House_Text_PleaseHearMyWish,,,"SELPHY: Oh?\nDo I know you from somewhere?\pOh, but that doesn't matter.\pI am exquisitely bored.\nPlease, hear my wish.",,,,
+FiveIsland_ResortGorgeous_House_Text_WishToSeeMonPlease,,,"I wish to see a POKéMON.\nA darling {STR_VAR_1}.\pI want to see one right away.\nPlease, make my wish come true.",,,,
+FiveIsland_ResortGorgeous_House_Text_OhImTiredOfWaiting,,,"SELPHY: Oh, I'm tired of this.\nI'm tired of waiting for you.\pI'll forgive you this time, but\nplease don't fail me next time.",,,,
+FiveIsland_ResortGorgeous_House_Text_MonYouCaughtForMeThankYou,,,"SELPHY: Oh, hello, there.\pOh, my gracious. That must be the\n{STR_VAR_1} you caught for me.\pGiggle…\nI see a resemblance to you.\pThank you so kindly.\p… …  … …  … …\nIs something the matter?\pYou may leave.\p… …  … …  … …\nOh, fine. I understand now.\pSEBASTIAN!\nI need you here this instant!",,,,
+FiveIsland_ResortGorgeous_House_Text_ButlerYesMyLady,,,"Butler: Yes, my lady.",,,,
+FiveIsland_ResortGorgeous_House_Text_SelphyGiveTokenOfAppreciation,,,SELPHY: See to it that this person\nis given a token of appreciation.,,,,
+FiveIsland_ResortGorgeous_House_Text_ButlerIShallDoAsYouBid,,,"Butler: I shall do as you bid,\nmy lady.",,,,
+FiveIsland_ResortGorgeous_House_Text_ButlerPleaseAcceptThisAsHerThanks,,,Butler: I sincerely thank you for\npleasing Lady SELPHY.\pPlease accept this as her thanks…,,,,
+FiveIsland_ResortGorgeous_House_Text_ButlerBagAppearsToBeFull,,,Butler: Your BAG appears to be\nunfortunately full.,,,,
+FiveIsland_ResortGorgeous_House_Text_OhHowDisappointing,,,Oh…\nHow disappointing.,,,,
+FiveIsland_ResortGorgeous_House_Text_SelphyWishYouBestOfLuck,,,SELPHY: I wish you the best of\nluck.,,,,
+FiveIsland_ResortGorgeous_House_Text_LadySelphySmileHasBrillianceOfSun,,,"Butler: The smile of Lady SELPHY\nhas the brilliance of the sun.\pPlease, I beg you to bring joy\nto Lady SELPHY.",,,,

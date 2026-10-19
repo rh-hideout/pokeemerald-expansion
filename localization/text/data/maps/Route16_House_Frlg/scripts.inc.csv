@@ -1,0 +1,6 @@
+key,context,max_width,en,es,pt,fr,status
+Route16_House_Text_FoundMySecretRetreat,,,"Oh, dear.\nYou've found my secret retreat.\pPlease don't tell anyone I'm here.\nI'll make it up to you with this!",,,,
+Route16_House_Text_ReceivedHM02FromGirl,,,{PLAYER} received HM02\nfrom the girl.,,,,
+Route16_House_Text_ExplainHM02,,,"HM02 is FLY.\nIt's a wonderfully convenient move.\pPlease, put it to good use.",,,,
+Route16_House_Text_DontHaveAnyRoomForThis,,,You don't have any room for this.,,,,
+Route16_House_Text_Fearow,,,FEAROW: Kyueen!,,,,

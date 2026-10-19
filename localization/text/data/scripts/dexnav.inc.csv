@@ -1,0 +1,6 @@
+key,context,max_width,en,es,pt,fr,status
+sText_NotFoundNearby,,,It couldn't be found nearby.\nTry looking in a different area!,,,,
+sText_TryMovingSlower,,,The Pokémon got away!\nTry moving more slowly.,,,,
+sText_PokemonGotAway,,,The Pokémon got away!,,,,
+sText_LostSignal,,,There is no reaction.\nThe signal was lost!,,,,
+sText_TooDark,,,It's too dark to search\nfor a Pokémon!,,,,

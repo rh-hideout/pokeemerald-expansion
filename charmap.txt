@@ -39,6 +39,11 @@
 'ñ'         = 29
 'º'         = 2A
 'ª'         = 2B
+@ Composed for Portuguese by tools/localization/compose_glyphs.py
+'Ã'         = 0A
+'ã'         = 18
+'Õ'         = 1F
+'õ'         = 2F
 SUPER_ER    = 2C
 '&'         = 2D
 '+'         = 2E

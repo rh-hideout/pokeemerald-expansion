@@ -1,0 +1,8 @@
+key,context,max_width,en,es,pt,fr,status
+Route11_EastEntrance_2F_Text_GiveItemfinderIfCaught30,,,"Hi! Remember me?\nI'm one of PROF. OAK's AIDES.\pIf your POKéDEX has complete data\non {STR_VAR_1} species, I'm supposed to\lgive you a reward.\pPROF. OAK entrusted me with the\n{STR_VAR_2} for you.\pSo, {PLAYER}, let me ask you.\pHave you gathered data on at least\n{STR_VAR_1} kinds of POKéMON?",,,,
+Route11_EastEntrance_2F_Text_GreatHereYouGo,,,Great! You have caught or owned\n{STR_VAR_3} kinds of POKéMON!\pCongratulations!\nHere you go!,,,,
+Route11_EastEntrance_2F_Text_ReceivedItemfinderFromAide,,,{PLAYER} received the {STR_VAR_2}\nfrom the AIDE.,,,,
+Route11_EastEntrance_2F_Text_ExplainItemfinder,,,"There are items on the ground that\nmay be hidden from view.\pUse the ITEMFINDER to detect any\nhidden items close to you.\pThe machine is a bit limited.\nIt can't pinpoint item locations.\pWhat it does is show the direction\nwhere the item is.\pUse it to get your bearings, then\nsearch the suspect area by hand.",,,,
+Route11_EastEntrance_2F_Text_BigMonAsleepOnRoad,,,Let's see what the binoculars have\nto show…\pA big POKéMON is asleep on a road!,,,,
+Route11_EastEntrance_2F_Text_WhatABreathtakingView,,,Let's see what the binoculars have\nto show…\pWhat a breathtaking view!,,,,
+Route11_EastEntrance_2F_Text_RockTunnelGoodRouteToLavender,,,Let's see what the binoculars have\nto show…\pTo get to LAVENDER TOWN from\nCERULEAN CITY…\pROCK TUNNEL appears to be a good\nroute to take.,,,,

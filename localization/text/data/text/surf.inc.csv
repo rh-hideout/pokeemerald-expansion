@@ -1,0 +1,4 @@
+key,context,max_width,en,es,pt,fr,status
+gText_WantToUseSurf,,,The water is dyed a deep blue…\nWould you like to SURF?,,,,
+gText_PlayerUsedSurf,,,{STR_VAR_1} used SURF!,,,,
+Text_CurrentTooFast,,,The current is much too fast!\nSURF can't be used here…,,,,

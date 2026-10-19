@@ -1,0 +1,5 @@
+key,context,max_width,en,es,pt,fr,status
+SSAnne_2F_Corridor_Text_ThisShipIsLuxuryLiner,,,"This ship, she is a luxury liner for\nTRAINERS of the world!\pAt every port, we hold parties with\ninvited TRAINERS.",,,,
+SSAnne_2F_Corridor_Text_RivalIntro,,,"{RIVAL}: Bonjour!\n{PLAYER}!\pImagine seeing you here!\n{PLAYER}, were you really invited?\pSo how's your POKéDEX coming?\pI already caught 40 kinds, pal.\nDifferent kinds are everywhere.\pCrawl around in grassy areas, and\nlook hard for them.",,,,
+SSAnne_2F_Corridor_Text_RivalDefeat,,,Humph!\pAt least you're raising your\nPOKéMON!,,,,
+SSAnne_2F_Corridor_Text_RivalPostBattle,,,"{RIVAL}: I heard there was a CUT\nmaster on board.\pBut he was just a seasick old man!\pCUT itself is really useful.\nYup, it'll be handy.\pYou should go see him, too.\nSmell ya!",,,,

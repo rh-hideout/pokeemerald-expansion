@@ -1,0 +1,285 @@
+{
+    "comment": "Localization rules. See localization/README.md for every field.",
+    "source_language": "en",
+    "languages": {
+        "en": {
+            "name": "English",
+            "game_language": "LANGUAGE_ENGLISH"
+        },
+        "es": {
+            "name": "Español",
+            "game_language": "LANGUAGE_SPANISH"
+        },
+        "pt": {
+            "name": "Português",
+            "game_language": "LANGUAGE_PORTUGUESE"
+        },
+        "fr": {
+            "name": "Français",
+            "game_language": "LANGUAGE_FRENCH"
+        }
+    },
+    "sources": {
+        "c": [
+            "src/**/*.c",
+            "src/**/*.h",
+            "include/**/*.h"
+        ],
+        "asm": [
+            "data/**/*.s",
+            "data/**/*.inc"
+        ],
+        "generated": [
+            "src/data/region_map/region_map_entries.h",
+            "src/data/trainers.h",
+            "src/data/trainers_frlg.h",
+            "src/data/battle_partners.h"
+        ],
+        "exclude": [
+            "src/debug.c",
+            "src/data/debug_*",
+            "data/scripts/debug.inc",
+            "include/config/test.h"
+        ]
+    },
+    "string_macros": {
+        "ITEM_NAME": {
+            "max_bytes": "ITEM_NAME_LENGTH"
+        },
+        "ITEM_PLURAL_NAME": {
+            "max_bytes": "ITEM_NAME_PLURAL_LENGTH"
+        }
+    },
+    "buffers": [
+        {
+            "keys": [
+                "gMovesInfo[*].name"
+            ],
+            "max_bytes": "MOVE_NAME_LENGTH + 1"
+        },
+        {
+            "keys": [
+                "gAbilitiesInfo[*].name"
+            ],
+            "max_bytes": "ABILITY_NAME_LENGTH + 1"
+        },
+        {
+            "keys": [
+                "*.speciesName"
+            ],
+            "max_bytes": "POKEMON_NAME_LENGTH + 1"
+        },
+        {
+            "files": [
+                "src/data/*.party"
+            ],
+            "keys": [
+                "*.trainerName"
+            ],
+            "max_bytes": "TRAINER_NAME_LENGTH + 1"
+        }
+    ],
+    "placeholder_chars": {
+        "comment": "Worst-case length, in characters, used to measure placeholders.",
+        "default": 10,
+        "PLAYER": 7,
+        "RIVAL": 7,
+        "KUN": 0,
+        "VERSION": 8,
+        "AQUA": 9,
+        "MAGMA": 10,
+        "ARCHIE": 6,
+        "MAXIE": 5,
+        "KYOGRE": 6,
+        "GROUDON": 7,
+        "REGION": 6
+    },
+    "text_rules": [
+        {
+            "comment": "Field message box: two lines of 208px per page.",
+            "files": [
+                "data/maps/**",
+                "data/scripts/**",
+                "data/text/**",
+                "data/event_scripts.s"
+            ],
+            "font": "FONT_NORMAL",
+            "max_width": 208,
+            "max_lines": 2
+        },
+        {
+            "comment": "The limits below mirror the UI checks in test/text.c.",
+            "files": [
+                "src/data/moves_info.h"
+            ],
+            "keys": [
+                "gMovesInfo[*].name"
+            ],
+            "checks": [
+                {
+                    "font": "FONT_NARROWER",
+                    "max_width": 59
+                }
+            ]
+        },
+        {
+            "files": [
+                "src/data/moves_info.h"
+            ],
+            "keys": [
+                "gMovesInfo[*].description*"
+            ],
+            "checks": [
+                {
+                    "font": "FONT_NARROWER",
+                    "max_width": 144
+                }
+            ]
+        },
+        {
+            "files": [
+                "src/data/items.h"
+            ],
+            "keys": [
+                "gItemsInfo[*].name"
+            ],
+            "checks": [
+                {
+                    "font": "FONT_NARROWER",
+                    "max_width": 72
+                },
+                {
+                    "font": "FONT_SMALL_NARROWER",
+                    "max_width": 66
+                }
+            ]
+        },
+        {
+            "files": [
+                "src/data/items.h"
+            ],
+            "keys": [
+                "gItemsInfo[*].pluralName"
+            ],
+            "checks": [
+                {
+                    "font": "FONT_NARROWER",
+                    "max_width": 95
+                }
+            ]
+        },
+        {
+            "files": [
+                "src/data/items.h"
+            ],
+            "keys": [
+                "gItemsInfo[*].description*"
+            ],
+            "checks": [
+                {
+                    "font": "FONT_NORMAL",
+                    "max_width": 102
+                }
+            ]
+        },
+        {
+            "files": [
+                "src/data/pokemon/species_info/**"
+            ],
+            "keys": [
+                "*.speciesName"
+            ],
+            "checks": [
+                {
+                    "font": "FONT_NARROWER",
+                    "max_width": 49
+                },
+                {
+                    "font": "FONT_SMALL_NARROWER",
+                    "max_width": 50
+                },
+                {
+                    "font": "FONT_SHORT_NARROWER",
+                    "max_width": 60
+                }
+            ]
+        },
+        {
+            "files": [
+                "src/data/pokemon/species_info/**"
+            ],
+            "keys": [
+                "*.description*"
+            ],
+            "checks": [
+                {
+                    "font": "FONT_NORMAL",
+                    "max_width": 224
+                }
+            ]
+        },
+        {
+            "files": [
+                "src/data/abilities.h"
+            ],
+            "keys": [
+                "gAbilitiesInfo[*].name"
+            ],
+            "checks": [
+                {
+                    "font": "FONT_NORMAL",
+                    "max_width": 144
+                },
+                {
+                    "font": "FONT_SMALL_NARROWER",
+                    "max_width": 76
+                }
+            ]
+        },
+        {
+            "files": [
+                "src/data/abilities.h"
+            ],
+            "keys": [
+                "gAbilitiesInfo[*].description*"
+            ],
+            "checks": [
+                {
+                    "font": "FONT_NARROWER",
+                    "max_width": 146
+                }
+            ]
+        },
+        {
+            "files": [
+                "src/data/types_info.h"
+            ],
+            "keys": [
+                "gTypesInfo[*].name"
+            ],
+            "checks": [
+                {
+                    "font": "FONT_NARROWER",
+                    "max_width": 38
+                }
+            ]
+        },
+        {
+            "files": [
+                "src/data/region_map/region_map_entries.h"
+            ],
+            "keys": [
+                "*.name"
+            ],
+            "checks": [
+                {
+                    "font": "FONT_NARROWER",
+                    "max_width": 80
+                }
+            ]
+        }
+    ],
+    "skip": {
+        "keys": []
+    }
+}

@@ -1,0 +1,13 @@
+key,context,max_width,en,es,pt,fr,status
+FiveIsland_Meadow_Text_EnteredPasswordAnotherNeeded,,,{PLAYER} entered a password.\p“GOLDEEN need log.”\p… …  … …  … …\pAnother password is needed to\nopen the door…,,,,
+FiveIsland_Meadow_Text_EnteredPasswordDoorOpened,,,"{PLAYER} entered two passwords.\p“GOLDEEN need log.”\n“Yes, nah, CHANSEY.”\p… …  … …  … …\pThe WAREHOUSE's door opened!",,,,
+FiveIsland_Meadow_Text_WarehouseDoorAlreadyOpen,,,The WAREHOUSE's door is already\nopen.,,,,
+FiveIsland_Meadow_Text_Rocket1Intro,,,"This area's strictly off-limits!\nOut, out!",,,,
+FiveIsland_Meadow_Text_Rocket1Defeat,,,Is this for real?,,,,
+FiveIsland_Meadow_Text_Rocket1PostBattle,,,You don't have any business here!\nGo home!,,,,
+FiveIsland_Meadow_Text_Rocket2Intro,,,There's nothing past here except\nour WAREHOUSE.\pSo what brings you here?,,,,
+FiveIsland_Meadow_Text_Rocket2Defeat,,,That wasn't supposed to happen…,,,,
+FiveIsland_Meadow_Text_Rocket2PostBattle,,,"You're wanting to know what's inside\nthis WAREHOUSE?\pIt's better you didn't know.\nFor your own sake, I mean.",,,,
+FiveIsland_Meadow_Text_Rocket3Intro,,,You'd be wasting time even if you\nwere to get by me.,,,,
+FiveIsland_Meadow_Text_Rocket3Defeat,,,"Oh, that makes me furious!",,,,
+FiveIsland_Meadow_Text_Rocket3PostBattle,,,You won't be able to get in without\nthe passwords anyway.,,,,

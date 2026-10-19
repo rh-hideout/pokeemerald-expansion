@@ -1,0 +1,6 @@
+key,context,max_width,en,es,pt,fr,status
+Route1_Text_WorkAtPokeMartTakeSample,,,"Hi!\nI work at a POKéMON MART.\pIt's part of a convenient chain\nselling all sorts of items.\pPlease, visit us in VIRIDIAN CITY.\pI know, I'll give you a sample.\nHere you go!",,,,
+Route1_Text_ComeSeeUsIfYouNeedPokeBalls,,,Please come see us if you need\nPOKé BALLS for catching POKéMON.,,,,
+Route1_Text_PutPotionAway,,,{PLAYER} put the POTION away in\nthe BAG's ITEMS POCKET.,,,,
+Route1_Text_CanJumpFromLedges,,,"See those ledges along the road?\pIt's a bit scary, but you can jump\nfrom them.\pYou can get back to PALLET TOWN\nquicker that way.",,,,
+Route1_Text_RouteSign,,,ROUTE 1\nPALLET TOWN - VIRIDIAN CITY,,,,

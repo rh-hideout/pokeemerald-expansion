@@ -1,0 +1,5 @@
+key,context,max_width,en,es,pt,fr,status
+SafariZone_SecretHouse_Text_CongratsYouveWon,,,"Ah! Finally!\pYou're the first person to reach\nthe SECRET HOUSE!\pAlthough I made a campaign\nfor our grand opening,\pI was getting worried that no one\nwould win our campaign prize.\pCongratulations!\nYou have won!",,,,
+SafariZone_SecretHouse_Text_ReceivedHM03FromAttendant,,,{PLAYER} received HM03\nfrom the attendant!,,,,
+SafariZone_SecretHouse_Text_ExplainSurf,,,"HM03 is SURF.\pPOKéMON will be able to ferry you\nacross water using it.\pAnd, this HM isn't disposable, so\nyou can use it over and over.\pYou're super lucky for winning this\nfabulous prize!",,,,
+SafariZone_SecretHouse_Text_DontHaveRoomForPrize,,,You don't have room for this\nfabulous prize!,,,,

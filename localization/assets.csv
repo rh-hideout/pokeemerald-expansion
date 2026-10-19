@@ -1,1 +1,2 @@
-key,context,max_width,en,es,pt,fr
+key,context,max_width,en,es,pt,fr,status
+SUMMARY_PAGE_INFO_TITLE,Summary screen: title of the Pokémon info page (see localization/graphics.json),,PROFILE,PRÓFILÉ,PERFIL,PROFIL,

@@ -1,0 +1,15 @@
+{
+    "comment": "Areas of images that are redrawn with localized text from localization/assets.csv. See localization/README.md.",
+    "regions": [
+        {
+            "key": "SUMMARY_PAGE_INFO_TITLE",
+            "image": "graphics/summary_screen/tiles.png",
+            "tilemap": "graphics/summary_screen/page_info.bin",
+            "rect": { "x": 12, "y": 3, "w": 8, "h": 1 },
+            "font": "FONT_SMALL",
+            "colors": { "fg": 2, "shadow": 6, "bg": 7 },
+            "x_offset": 2,
+            "y_offset": -4
+        }
+    ]
+}

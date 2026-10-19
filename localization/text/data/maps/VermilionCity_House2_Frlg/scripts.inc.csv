@@ -1,0 +1,6 @@
+key,context,max_width,en,es,pt,fr,status
+VermilionCity_House2_Text_DoYouHaveMonWantToTradeForMyMon,,,Hi!\nDo you have a {STR_VAR_1}?\pWant to trade it for my\n{STR_VAR_2}?,,,,
+VermilionCity_House2_Text_ThatsTooBad,,,That's too bad.,,,,
+VermilionCity_House2_Text_ThisIsNoMon,,,"…This is no {STR_VAR_1}.\pIf you get one, please trade it\nto me!",,,,
+VermilionCity_House2_Text_ThankYou,,,Thank you!,,,,
+VermilionCity_House2_Text_HowIsMyOldMon,,,How is my old {STR_VAR_2}?\pMy {STR_VAR_1} is doing great!,,,,

@@ -32,8 +32,9 @@
 #include "utf8.h"
 #include "string_parser.h"
 #include "io.h"
+#include "localization.h"
 
-CFile::CFile(const char * filenameCStr, bool isStdin, const char * graphicsRootCStr)
+CFile::CFile(const char * filenameCStr, bool isStdin, const char * graphicsRootCStr, const char * overlayDirCStr)
 {
     if (isStdin)
         m_location.filename = std::string{"<stdin>/"}.append(filenameCStr);
@@ -47,6 +48,7 @@ CFile::CFile(const char * filenameCStr, bool isStdin, const char * graphicsRootC
     m_pos = 0;
     m_isStdin = isStdin;
     m_graphicsRoot = graphicsRootCStr;
+    m_overlayDir = overlayDirCStr;
     if (m_graphicsRoot.empty()) m_graphicsRoot = "./";
     if (m_graphicsRoot[m_graphicsRoot.length() - 1] != '/') m_graphicsRoot.push_back('/');
 }
@@ -57,6 +59,8 @@ CFile::CFile(CFile&& other) : m_location(std::move(other.m_location))
     m_pos = other.m_pos;
     m_size = other.m_size;
     m_isStdin = other.m_isStdin;
+    m_graphicsRoot = std::move(other.m_graphicsRoot);
+    m_overlayDir = std::move(other.m_overlayDir);
 
     other.m_buffer = NULL;
 }
@@ -339,6 +343,7 @@ void CFile::TryConvertString()
     printf("{ ");
 
     std::vector<unsigned char> converted = ConvertString();
+    Localize(converted, oldLocation);
     for (std::size_t i = 0; i < converted.size(); i++)
         printf("0x%02X, ", converted[i]);
 
@@ -378,6 +383,7 @@ void CFile::TryConvertCompoundString()
 
     m_pos++;
     std::vector<unsigned char> converted = ConvertString();
+    Localize(converted, oldLocation);
     converted.push_back(0xFF);
 
     std::uint64_t hash = fnv1a(converted);
@@ -385,6 +391,17 @@ void CFile::TryConvertCompoundString()
     // WARNING: Assumes no collisions.
     // TODO: Incorporate filename to prevent cross-TU collisions.
     printf("sCompoundString_%016" PRIx64, hash);
+}
+
+// Replaces a converted string with its translation, if there is one.
+void CFile::Localize(std::vector<unsigned char>& converted, const LogicalLocation& location)
+{
+    if (g_locTables == nullptr)
+        return;
+
+    std::vector<unsigned char> translated;
+    if (g_locTables->LookupC(location.filename, location.lineNum, converted, translated))
+        converted = translated;
 }
 
 bool CFile::CheckIdentifier(const std::string& ident)
@@ -512,7 +529,7 @@ void CFile::TryConvertIncbin()
     {
         SkipWhitespace();
 
-        auto path = ReadString();
+        auto path = LocalizedGraphicsPath(m_overlayDir, ReadString(), true);
 
         // INCBIN_COMP; include *compressed* version of file
         if (incbinType == 3)
@@ -587,7 +604,7 @@ void CFile::TryConvertIncgfx()
     m_pos++;
 
     SkipWhitespace();
-    auto source = ReadString();
+    auto source = LocalizedGraphicsPath(m_overlayDir, ReadString(), false);
 
     SkipWhitespace();
     if (m_buffer[m_pos] != ',')

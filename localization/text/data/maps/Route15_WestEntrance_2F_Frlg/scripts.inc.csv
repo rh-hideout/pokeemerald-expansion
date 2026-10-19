@@ -1,0 +1,7 @@
+key,context,max_width,en,es,pt,fr,status
+Route15_WestEntrance_2F_Text_GiveItemIfCaughtEnough,,,"Hi! Remember me?\nI'm one of PROF. OAK's AIDES.\pIf your POKéDEX has complete data\non {STR_VAR_1} species, I'm supposed to\lgive you a reward.\pPROF. OAK entrusted me with the\n{STR_VAR_2} for you.\pSo, {PLAYER}, let me ask you.\pHave you gathered data on at least\n{STR_VAR_1} kinds of POKéMON?",,,,
+Route15_WestEntrance_2F_Text_GreatHereYouGo,,,Great! You have caught or owned\n{STR_VAR_3} kinds of POKéMON!\pCongratulations!\nHere you go!,,,,
+Route15_WestEntrance_2F_Text_ReceivedItemFromAide,,,{PLAYER} received the {STR_VAR_2}\nfrom the AIDE.,,,,
+Route15_WestEntrance_2F_Text_ExplainExpShare,,,EXP. SHARE is an item to be held\nby a POKéMON.\pThe POKéMON will receive a share\nof the EXP. Points without having\lto battle.,,,,
+Route15_WestEntrance_2F_Text_LargeShiningBird,,,"Let's see what the binoculars have\nto show…\pA large, shining bird is flying\ntoward the sea.",,,,
+Route15_WestEntrance_2F_Text_SmallIslandOnHorizon,,,Let's see what the binoculars have\nto show…\pIt looks like a small island on\nthe horizon!,,,,

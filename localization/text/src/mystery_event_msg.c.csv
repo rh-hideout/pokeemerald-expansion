@@ -1,0 +1,12 @@
+key,context,max_width,en,es,pt,fr,status
+gText_MysteryEventBerry,,,Obtained a {STR_VAR_2} BERRY!\nDad has it at PETALBURG GYM.,,,,
+gText_MysteryEventBerryTransform,,,The {STR_VAR_1} BERRY transformed into\none {STR_VAR_2} BERRY.,,,,
+gText_MysteryEventBerryObtained,,,The {STR_VAR_1} BERRY has already been\nobtained.,,,,
+gText_MysteryEventSpecialRibbon,,,A special RIBBON was awarded to\nyour party POKéMON.,,,,
+gText_MysteryEventNationalDex,,,The POKéDEX has been upgraded\nwith the NATIONAL MODE.,,,,
+gText_MysteryEventRareWord,,,A rare word has been added.,,,,
+gText_MysteryEventSentOver,,,{STR_VAR_1} was sent over!,,,,
+gText_MysteryEventFullParty,,,Your party is full.\n{STR_VAR_1} could not be sent over.,,,,
+gText_MysteryEventNewTrainer,,,A new TRAINER has arrived in\nHOENN.,,,,
+gText_MysteryEventNewAdversaryInBattleTower,,,A new adversary has arrived in the\nBATTLE TOWER.,,,,
+gText_MysteryEventCantBeUsed,,,This data can't be used in\nthis version.,,,,

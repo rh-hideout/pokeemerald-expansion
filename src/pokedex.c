@@ -8,6 +8,7 @@
 #include "gpu_regs.h"
 #include "graphics.h"
 #include "international_string_util.h"
+#include "localization.h"
 #include "main.h"
 #include "malloc.h"
 #include "menu.h"
@@ -3789,8 +3790,7 @@ void Task_LoadSizeScreen(u8 taskId)
         {
             u8 string[64];
 
-            StringCopy(string, gText_SizeComparedTo);
-            StringAppend(string, gSaveBlock2Ptr->playerName);
+            StringFormat1(string, gText_SizeComparedTo, gSaveBlock2Ptr->playerName);
             PrintInfoScreenText(string, GetStringCenterAlignXOffset(FONT_NORMAL, string, DISPLAY_WIDTH), 121);
             gMain.state++;
         }

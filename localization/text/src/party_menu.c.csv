@@ -1,0 +1,9 @@
+key,context,max_width,en,es,pt,fr,status
+sText_askText,,,Would you like to change {STR_VAR_1}'s\nability to {STR_VAR_2}?,,,,
+sText_doneText,,,{STR_VAR_1}'s ability became\n{STR_VAR_2}!{PAUSE_UNTIL_PRESS},,,,
+sText_BasePointsResetToZero,,,{STR_VAR_1}'s base points\nwere all reset to zero!{PAUSE_UNTIL_PRESS},,,,
+sText_CannotSendMonToBoxHM,,,"Cannot send that mon to the box,\nbecause it knows a HM move.{PAUSE_UNTIL_PRESS}",,,,
+sText_CannotSendMonToBoxPartner,,,Cannot send a mon that doesn't\nbelong to you to the box.{PAUSE_UNTIL_PRESS},,,,
+Task_Mint@d73c93,,,It might affect {STR_VAR_1}'s stats.\nAre you sure you want to use it?,,,,
+Task_Mint@67bf6c,,,{STR_VAR_1}'s stats may have changed due\nto the effects of the {STR_VAR_2}!{PAUSE_UNTIL_PRESS},,,,
+Task_DynamaxCandy@f87e4a,,,{STR_VAR_1}'s Dynamax Level\nincreased by 1!{PAUSE_UNTIL_PRESS},,,,

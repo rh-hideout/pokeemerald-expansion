@@ -1,0 +1,8 @@
+key,context,max_width,en,es,pt,fr,status
+Route12_NorthEntrance_2F_Text_TakeTMDontNeedAnymoreMale,,,My POKéMON's ashes are stored in\nPOKéMON TOWER.\pYou can have this TM.\nI don't need it anymore…,,,,
+Route12_NorthEntrance_2F_Text_TakeTMDontNeedAnymoreFemale,,,My POKéMON's ashes are stored in\nPOKéMON TOWER.\pYou can have this TM.\nI don't need it anymore…,,,,
+Route12_NorthEntrance_2F_Text_ReceivedTM27FromLittleGirl,,,{PLAYER} received TM27\nfrom the little girl.,,,,
+Route12_NorthEntrance_2F_Text_ExplainTM27,,,"TM27 is a move called RETURN…\pIf you treat your POKéMON good,\nit will return your love by working\lits hardest in battle.",,,,
+Route12_NorthEntrance_2F_Text_DontHaveRoomForThis,,,You don't have room for this.,,,,
+Route12_NorthEntrance_2F_Text_TheresManFishing,,,Let's see what the binoculars have\nto show…\pThere's a man fishing!,,,,
+Route12_NorthEntrance_2F_Text_ItsPokemonTower,,,Let's see what the binoculars have\nto show…\pIt's POKéMON TOWER!,,,,

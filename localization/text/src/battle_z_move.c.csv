@@ -1,0 +1,10 @@
+key,context,max_width,en,es,pt,fr,status
+sText_ResetStats,,,Reset Lowered Stats,,,,
+sText_StatsPlus,,,+ All Stats,,,,
+sText_StatsPlus2,,,++ All Stats,,,,
+sText_CritHitsPlus,,,+ Critical Hit Chance,,,,
+sText_FollowMe,,,Follow Me,,,,
+sText_RecoverHP,,,Recover HP,,,,
+sText_HealAllyHP,,,Heal Replacement HP,,,,
+sText_PowerColon,,,Power: ,,,,
+sText_NoAdditionalEffect,,,No Additional Effect,,,,

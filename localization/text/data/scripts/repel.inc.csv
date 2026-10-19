@@ -1,0 +1,5 @@
+key,context,max_width,en,es,pt,fr,status
+Text_SprayWoreOff,,,{STR_VAR_1}'s effect wore off…,,,,
+Text_SprayWoreOffAskUseAnother,,,{STR_VAR_1}'s effect wore off!\nUse another?,,,,
+Text_SprayWoreOffAskUseX,,,{STR_VAR_1}'s effect wore off…\nUse a {STR_VAR_2}?,,,,
+Text_SprayWoreOffUseX,,,{PLAYER} used the\n{STR_VAR_2}.,,,,

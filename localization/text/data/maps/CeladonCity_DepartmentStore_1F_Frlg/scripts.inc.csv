@@ -1,0 +1,4 @@
+key,context,max_width,en,es,pt,fr,status
+CeladonCity_DepartmentStore_1F_Text_WelcomeToDeptStore,,,Hello!\nWelcome to CELADON DEPT. STORE.\pThe board on the right describes\nthe store layout.,,,,
+CeladonCity_DepartmentStore_1F_Text_FloorDescriptions,,,1F: SERVICE COUNTER\p2F: TRAINER'S MARKET\p3F: TV GAME SHOP\p4F: WISE MAN GIFTS\p5F: DRUGSTORE\pROOFTOP SQUARE: VENDING MACHINES,,,,
+CeladonCity_DepartmentStore_1F_Text_ServiceCounter,,,1F: SERVICE COUNTER,,,,

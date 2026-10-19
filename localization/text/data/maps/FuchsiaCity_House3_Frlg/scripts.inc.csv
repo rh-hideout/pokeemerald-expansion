@@ -1,0 +1,9 @@
+key,context,max_width,en,es,pt,fr,status
+FuchsiaCity_House3_Text_WouldYouLikeToForgetMove,,,"Uh…\nOh, yes, I'm the MOVE DELETER.\pI can make POKéMON forget their\nmoves.\pWould you like me to do that?",,,,
+FuchsiaCity_House3_Text_WhichMonShouldForgetMove,,,Which POKéMON should forget a\nmove?,,,,
+FuchsiaCity_House3_Text_WhichMoveShouldBeForgotten,,,Which move should be forgotten?,,,,
+FuchsiaCity_House3_Text_MonOnlyKnowsOneMove,,,{STR_VAR_1} seems to know only one\nmove…,,,,
+FuchsiaCity_House3_Text_MonsMoveShouldBeForgotten,,,Hm! {STR_VAR_1}'s {STR_VAR_2}?\nThat move should be forgotten?,,,,
+FuchsiaCity_House3_Text_MonHasForgottenMoveCompletely,,,It worked to perfection!\p{STR_VAR_1} has forgotten\n{STR_VAR_2} completely.,,,,
+FuchsiaCity_House3_Text_ComeAgainToForgetOtherMoves,,,Come again if there are other\nmoves to be forgotten.,,,,
+FuchsiaCity_House3_Text_NoEggShouldKnowMoves,,,What?\nNo EGG should know any moves.,,,,

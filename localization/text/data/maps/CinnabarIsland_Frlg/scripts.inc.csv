@@ -1,0 +1,13 @@
+key,context,max_width,en,es,pt,fr,status
+CinnabarIsland_Text_DoorIsLocked,,,The door is locked…,,,,
+CinnabarIsland_Text_BlaineLivedHereSinceBeforeLab,,,CINNABAR GYM's BLAINE is quite the\nodd fellow.\pHe's lived on the island since way\nbefore the LAB was built.,,,,
+CinnabarIsland_Text_ScientistsExperimentInMansion,,,"Scientists conduct experiments \nin the burned-out building.\pYou know, the one they call the\nPOKéMON MANSION.",,,,
+CinnabarIsland_Text_IslandSign,,,CINNABAR ISLAND\nThe Fiery Town of Burning Desire,,,,
+CinnabarIsland_Text_PokemonLab,,,POKéMON LAB,,,,
+CinnabarIsland_Text_GymSign,,,CINNABAR ISLAND POKéMON GYM\nLEADER: BLAINE\lThe Hotheaded Quiz Master!,,,,
+CinnabarIsland_Text_HeyIfItIsntPlayer,,,"Huh?\nHey, if it isn't {PLAYER}!",,,,
+CinnabarIsland_Text_ComeWithMeToOneIsland,,,"Look, it's me, BILL.\nLong time no see!\pI hope you're still using my\nPC system.\pWell, listen, since we met up here,\nhow about spending time with me?\pThere's this little island in the far\nsouth called ONE ISLAND.\pA friend invited me, so I'm on my\nway out there.\pHow about it?\nDo you feel like coming with me?",,,,
+CinnabarIsland_Text_AllRightLetsGo,,,"All right, then.\nLet's go!",,,,
+CinnabarIsland_Text_IllBeWaitingInPokeCenter,,,"What, are you too busy?\pWell, all right.\nThe boat hasn't arrived yet anyway.\pI'll be waiting at the POKéMON\nCENTER over there.\pCome see me when you're done with\nyour business here.",,,,
+CinnabarIsland_Text_MyPalsBoatArrived,,,"Looks like my pal's boat arrived,\ntoo.\pHe sent it specially here to\nCINNABAR to pick me up.",,,,
+CinnabarIsland_Text_IfYouHaveTriPassYouCanGoAgain,,,"Hey, wasn't that a long cruise?\pMy buddy CELIO seemed to enjoy\nyour company.\pI'm sure he'd welcome you if you\nwere to visit him again.\pIf you have a TRI-PASS, you can\nalways take a ferry there from\lVERMILION PORT.\pAll right, thanks for your company!",,,,

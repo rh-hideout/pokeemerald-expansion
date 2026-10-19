@@ -25,6 +25,7 @@
 #include "asm_file.h"
 #include "c_file.h"
 #include "charmap.h"
+#include "localization.h"
 
 #ifdef _WIN32
 #include <io.h>
@@ -88,8 +89,23 @@ void PreprocAsmFile(std::string filename, bool isStdin, bool doEnum, bool doSize
         case Directive::String:
         {
             unsigned char s[kMaxStringLength];
+            long lineNum = stack.top().GetLineNum();
             int length = stack.top().ReadString(s);
-            PrintAsmBytes(s, length);
+
+            std::vector<unsigned char> translated;
+            std::string error;
+            if (g_locTables != nullptr
+             && g_locTables->LookupAsm(stack.top().GetFilename(), lineNum, s, length, translated, error))
+            {
+                if (!error.empty())
+                    FATAL_ERROR("%s:%ld: error: %s\n", stack.top().GetFilename().c_str(), lineNum, error.c_str());
+                if (!translated.empty())
+                    PrintAsmBytes(translated.data(), translated.size());
+            }
+            else
+            {
+                PrintAsmBytes(s, length);
+            }
             break;
         }
         case Directive::Braille:
@@ -155,9 +171,9 @@ void PreprocAsmFile(std::string filename, bool isStdin, bool doEnum, bool doSize
     }
 }
 
-void PreprocCFile(const char * filename, bool isStdin, const char * graphicsRoot)
+void PreprocCFile(const char * filename, bool isStdin, const char * graphicsRoot, const char * overlayDir)
 {
-    CFile cFile(filename, isStdin, graphicsRoot);
+    CFile cFile(filename, isStdin, graphicsRoot, overlayDir);
     cFile.Preproc();
 }
 
@@ -184,7 +200,7 @@ const char* GetFileExtension(const char* filename)
 
 static void UsageAndExit(const char *program)
 {
-    std::fprintf(stderr, "Usage: %s [-i] [-e] [-g PATH] [-s] SRC_FILE CHARMAP_FILE\nwhere -i denotes if input is from stdin\n      -e enables enum handling\n      -g specifies the root for INCGFX\n      -s enables '.size' handling\n", program);
+    std::fprintf(stderr, "Usage: %s [-i] [-e] [-g PATH] [-s] [-t DIR] [-L DIR] [-u FILE] SRC_FILE CHARMAP_FILE\nwhere -i denotes if input is from stdin\n      -e enables enum handling\n      -g specifies the root for INCGFX\n      -s enables '.size' handling\n      -t specifies the localization table directory\n      -L specifies the localized graphics overlay directory\n      -u appends applied localization entries to FILE\n", program);
     std::exit(EXIT_FAILURE);
 }
 
@@ -197,9 +213,12 @@ int main(int argc, char **argv)
     bool doEnum = false;
     const char *graphicsRoot = "";
     bool doSize = false;
+    const char *tableDir = NULL;
+    const char *overlayDir = "";
+    const char *usageLog = "";
 
     /* preproc [-i] [-e] [-s] SRC_FILE CHARMAP_FILE */
-    while ((opt = getopt(argc, argv, "ieg:s")) != -1)
+    while ((opt = getopt(argc, argv, "ieg:st:L:u:")) != -1)
     {
         switch (opt)
         {
@@ -215,6 +234,15 @@ int main(int argc, char **argv)
         case 'g':
             graphicsRoot = optarg;
             break;
+        case 't':
+            tableDir = optarg;
+            break;
+        case 'L':
+            overlayDir = optarg;
+            break;
+        case 'u':
+            usageLog = optarg;
+            break;
         default:
             UsageAndExit(argv[0]);
             break;
@@ -228,6 +256,9 @@ int main(int argc, char **argv)
     charmap = argv[optind + 1];
 
     g_charmap = new Charmap(charmap);
+
+    if (tableDir != NULL && tableDir[0] != 0)
+        g_locTables = new LocTables(tableDir, usageLog);
 
 #ifdef _WIN32
 	// On Windows, piping from stdout can break newlines. Treat stdout as binary stream to avoid this.
@@ -247,7 +278,7 @@ int main(int argc, char **argv)
     {
         if (doEnum)
             FATAL_ERROR("-e is invalid for C sources\n");
-        PreprocCFile(source, isStdin, graphicsRoot);
+        PreprocCFile(source, isStdin, graphicsRoot, overlayDir);
     }
     else
     {

@@ -1,0 +1,5 @@
+key,context,max_width,en,es,pt,fr,status
+SaffronCity_MrPsychicsHouse_Text_YouWantedThis,,,…Wait! Don't say a word!\pYou wanted this!,,,,
+SaffronCity_MrPsychicsHouse_Text_ReceivedTM29FromMrPsychic,,,{PLAYER} received TM29\nfrom MR. PSYCHIC.,,,,
+SaffronCity_MrPsychicsHouse_Text_ExplainTM29,,,"You already know, don't you?\nTM29 is PSYCHIC.\pIt's an attack that may also lower\nthe target's special stats.",,,,
+SaffronCity_MrPsychicsHouse_Text_YouveNoRoom,,,Where do you plan to put this?\nYou've no room.,,,,

@@ -1,0 +1,2 @@
+key,context,max_width,en,es,pt,fr,status
+Debug_FlagsAndVarNotSetBattleConfigMessage_Text,,,Feature unavailable! Please define a\nusable flag and a usable var in:\l'include/config/battle.h'!,,,,
