@@ -1,0 +1,12 @@
+key,context,max_width,en,es,pt,fr,status
+sText_Relearn,,,{START_BUTTON} RELEARN,,,,
+GetLetterGrade@022139,,,F,,,,
+GetLetterGrade@021dd3,,,D,,,,
+GetLetterGrade@022652,,,C,,,,
+GetLetterGrade@022805,,,B,,,,
+GetLetterGrade@0222ec,,,A,,,,
+GetLetterGrade@024182,,,S,,,,
+ShowUtilityPrompt@47b45f,,,IVs,,,,
+ShowUtilityPrompt@7fed83,,,EVs,,,,
+ShowUtilityPrompt@6c8c6c,,,STATS,,,,
+ShowUtilityPrompt@2c7a93,,,RENAME,,,,

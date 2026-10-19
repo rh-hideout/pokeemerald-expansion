@@ -1,0 +1,8 @@
+key,context,max_width,en,es,pt,fr,status
+Text_BootUpPC,,,{PLAYER} booted up the PC.,,,,
+gText_WhichPCShouldBeAccessed,,,Which PC should be accessed?,,,,
+gText_AccessedSomeonesPC,,,Accessed SOMEONE'S PC.,,,,
+gText_StorageSystemOpened,,,POKéMON Storage System opened.,,,,
+gText_AccessedPlayersPC,,,Accessed {PLAYER}'s PC.,,,,
+gText_AccessedLanettesPC,,,Accessed LANETTE's PC.,,,,
+gText_AccessedBillsPC,,,Accessed BILL's PC.,,,,

@@ -1,0 +1,10 @@
+key,context,max_width,en,es,pt,fr,status
+Text_UltimateMoveThatMon,,,I perfected the ultimate move of\nits type…\pBut will no one take it for\nfuture use?\p…Hm? Hmmm!\pY-you…\nTh-that {STR_VAR_1}…,,,,
+Text_JustMistaken,,,…No…\nI was just mistaken.,,,,
+Text_AllowMeToTeachMonUltimateMove,,,Oh! This is the one!\nThis is the POKéMON!\pThis {STR_VAR_1} is worthy of\nlearning my ultimate move!\pWill you allow it?\pWill you allow your {STR_VAR_1} to\nlearn my {STR_VAR_2}?,,,,
+Text_YouRejectIt,,,"Gaah! You reject it?\nNo, I won't be dissuaded!",,,,
+Text_LetMeConferUltimateMove,,,"You will allow it?\pThen, let me confer my ultimate\n{STR_VAR_2} on your {STR_VAR_1}.\pGgggrah-awooo!",,,,
+Text_TaughtMove,,,"Gasp, gasp, gasp…\pI didn't think I could teach that\nmove while I still lived…",,,,
+Text_MakeBestUseOfMove,,,I implore you to make the best\nuse of that move and gain power!,,,,
+Text_PassedOnEverythingIKnow,,,"Gasp, gasp, gasp…\pI have no regrets now.\nI've passed on everything I know.\pNow I can live out my life knowing\nmy work is done.",,,,
+Text_FeelRejuvenated,,,"After I passed on my knowledge to\nyou, I felt so much relief.\pIn fact, I feel rejuvenated,\nas if I were younger again!",,,,

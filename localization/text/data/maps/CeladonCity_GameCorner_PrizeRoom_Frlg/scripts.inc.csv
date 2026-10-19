@@ -1,0 +1,9 @@
+key,context,max_width,en,es,pt,fr,status
+CeladonCity_GameCorner_PrizeRoom_Text_FancyThatPorygon,,,"I sure do fancy that PORYGON!\nBut, it's hard to win at slots!",,,,
+CeladonCity_GameCorner_PrizeRoom_Text_RakedItInToday,,,Gahaha! I raked it in today!\nIf only every day were like this…,,,,
+CeladonCity_GameCorner_PrizeRoom_Text_CoinCaseRequired,,,A COIN CASE is required…,,,,
+CeladonCity_GameCorner_PrizeRoom_Text_WeExchangeCoinsForPrizes,,,We exchange your COINS for prizes.,,,,
+CeladonCity_GameCorner_PrizeRoom_Text_WhichPrize,,,Which prize would you like?,,,,
+CeladonCity_GameCorner_PrizeRoom_Text_YouWantPrize,,,"So, you want the {STR_VAR_1}?",,,,
+CeladonCity_GameCorner_PrizeRoom_Text_YouWantTM,,,"Okay, a TM of {STR_VAR_2}\nis what you want?",,,,
+CeladonCity_GameCorner_PrizeRoom_Text_NeedMoreCoins,,,"Sorry, you'll need more COINS\nthan that.",,,,

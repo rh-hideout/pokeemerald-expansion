@@ -1,0 +1,6 @@
+key,context,max_width,en,es,pt,fr,status
+sText_GetsAPokeBlockQuestion,,, gets a {POKEBLOCK}?,,,,
+sText_WasEnhanced,,,{DYNAMIC 0}was enhanced!,,,,
+sText_NothingChanged,,,Nothing changed!,,,,
+sText_WontEatAnymore,,,It won't eat anymore…,,,,
+sText_NatureSlash,,,NATURE/,,,,

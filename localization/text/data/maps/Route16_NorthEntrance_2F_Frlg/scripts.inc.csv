@@ -1,0 +1,9 @@
+key,context,max_width,en,es,pt,fr,status
+Route16_NorthEntrance_2F_Text_OnBikeRideWithGirlfriend,,,I'm on a relaxing ride on my new\nbike with my girlfriend.,,,,
+Route16_NorthEntrance_2F_Text_RidingTogetherOnNewBikes,,,We're going riding together on our\nnew bikes.,,,,
+Route16_NorthEntrance_2F_Text_ItsCeladonDeptStore,,,Let's see what the binoculars have\nto show…\pIt's the CELADON DEPT. STORE!,,,,
+Route16_NorthEntrance_2F_Text_LongPathOverWater,,,Let's see what the binoculars have\nto show…\pThere's a long path over water far\naway.,,,,
+Route16_NorthEntrance_2F_Text_GiveAmuletCoinIfCaught40,,,"Hi! Remember me?\nI'm one of PROF. OAK's AIDES.\pIf your POKéDEX has complete data\non 40 species, I'm supposed to\lgive you a reward.\pPROF. OAK entrusted me with an\nAMULET COIN for you.\pSo, {PLAYER}, let me ask you.\pHave you gathered data on at least\n40 kinds of POKéMON?",,,,
+Route16_NorthEntrance_2F_Text_GreatHereYouGo,,,Great! You have caught or owned\n{STR_VAR_3} kinds of POKéMON!\pCongratulations!\nHere you go!,,,,
+Route16_NorthEntrance_2F_Text_ReceivedAmuletCoinFromAide,,,{PLAYER} received the AMULET COIN\nfrom the AIDE.,,,,
+Route16_NorthEntrance_2F_Text_ExplainAmuletCoin,,,"An AMULET COIN is an item to be\nheld by a POKéMON.\pIf the POKéMON appears in a winning\nbattle, you will earn more money.",,,,

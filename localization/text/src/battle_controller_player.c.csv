@@ -1,0 +1,7 @@
+key,context,max_width,en,es,pt,fr,status
+MoveSelectionDisplayMoveDescription@d873a5,,,CAT: ,,,,
+MoveSelectionDisplayMoveDescription@7699d4,,,PWR: ,,,,
+MoveSelectionDisplayMoveDescription@2a3c20,,,ACC: ,,,,
+HandleChooseActionAfterDma3@df9b6d,,, frames thinking\n,,,,
+HandleChooseActionAfterDma3@593254,,, cycles,,,,
+PlayerHandleChooseAction@61b0b4,,,Partner will use:\n,,,,

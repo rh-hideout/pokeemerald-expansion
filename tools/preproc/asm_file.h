@@ -64,6 +64,8 @@ public:
     void OutputLine();
     void OutputLocation();
     bool ParseEnum();
+    const std::string& GetFilename() const { return m_filename; }
+    long GetLineNum() const { return m_lineNum; }
 
 private:
     char* m_buffer;

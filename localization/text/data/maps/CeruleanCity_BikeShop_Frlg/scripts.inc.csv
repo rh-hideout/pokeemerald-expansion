@@ -1,0 +1,12 @@
+key,context,max_width,en,es,pt,fr,status
+CeruleanCity_BikeShop_Text_WelcomeToBikeShop,,,Hi!\nWelcome to our BIKE SHOP.\pHave we got just the BIKE for\nyou!,,,,
+CeruleanCity_BikeShop_Text_SorryYouCantAffordIt,,,Sorry!\nYou can't afford it!,,,,
+CeruleanCity_BikeShop_Text_OhBikeVoucherHereYouGo,,,"Oh, that's…\pA BIKE VOUCHER!\pOkay!\nHere you go!",,,,
+CeruleanCity_BikeShop_Text_ExchangedVoucherForBicycle,,,{PLAYER} exchanged the\nBIKE VOUCHER for a BICYCLE.,,,,
+CeruleanCity_BikeShop_Text_ThankYouComeAgain,,,Thank you!\nCome back again sometime!,,,,
+CeruleanCity_BikeShop_Text_HowDoYouLikeNewBicycle,,,How do you like your new BICYCLE?\nDo you like how it rides?\pYou can take it out on CYCLING\nROAD and even into caves!,,,,
+CeruleanCity_BikeShop_Text_MakeRoomForBicycle,,,You better make room for your\nBICYCLE!,,,,
+CeruleanCity_BikeShop_Text_CityBikeGoodEnoughForMe,,,"A plain city bike is good enough\nfor me.\pAfter all, you can't put a shopping\nbasket on a mountain bike.",,,,
+CeruleanCity_BikeShop_Text_BikesCoolButExpensive,,,"These bikes are cool, but they're\nway expensive!",,,,
+CeruleanCity_BikeShop_Text_WowYourBikeIsCool,,,Wow.\nYour BIKE is really cool!,,,,
+CeruleanCity_BikeShop_Text_ShinyNewBicycle,,,A shiny new BICYCLE!,,,,

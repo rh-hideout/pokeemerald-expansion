@@ -1,0 +1,10 @@
+key,context,max_width,en,es,pt,fr,status
+sText_Good,,,Good,,,,
+sText_VeryGood,,,Very good,,,,
+sText_Excellent,,,Excellent,,,,
+sText_SoSo,,,So-so,,,,
+sText_Bad,,,Bad,,,,
+sText_TheWorst,,,The worst,,,,
+sText_Slots,,,SLOTS,,,,
+sText_Roulette,,,ROULETTE,,,,
+sText_Jackpot,,,jackpot,,,,

@@ -1,0 +1,4 @@
+key,context,max_width,en,es,pt,fr,status
+CeladonCity_DepartmentStore_5F_Text_ExplainStatEnhancers,,,POKéMON stat enhancers can be\nbought only here.\pHP UP increases the base HP of a\nPOKéMON.\pCALCIUM raises the base SP. ATK\nstat of one POKéMON.\pZINC boosts the base SP. DEF stat\nof one POKéMON.\pCARBOS enhances the base SPEED\nstat.,,,,
+CeladonCity_DepartmentStore_5F_Text_HereForStatEnhancers,,,I'm here for POKéMON stat\nenhancers.\pPROTEIN increases the base ATTACK\npower.\pIRON increases the base DEFENSE\nstat.,,,,
+CeladonCity_DepartmentStore_5F_Text_Drugstore,,,5F: DRUGSTORE,,,,

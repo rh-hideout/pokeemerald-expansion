@@ -1,0 +1,8 @@
+key,context,max_width,en,es,pt,fr,status
+sText_DexNav_CaptureToSee,,,Capture first!,,,,
+sText_DexNav_PressRToRegister,,,R TO REGISTER!,,,,
+sText_DexNav_SearchForRegisteredSpecies,,,Search {STR_VAR_1},,,,
+sText_DexNav_NotFoundHere,,,This Pokémon cannot be found here!,,,,
+sText_SearchLevel,,,SEARCH {LV}. {STR_VAR_1},,,,
+sText_EggMove,,,MOVE: {STR_VAR_1},,,,
+sText_StartExit,,,{START_BUTTON} EXIT,,,,

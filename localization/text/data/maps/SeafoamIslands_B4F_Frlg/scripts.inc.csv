@@ -1,0 +1,7 @@
+key,context,max_width,en,es,pt,fr,status
+Text_RockSlideTeach,,,"When you're up on a rocky mountain\nlike this, rockslides are a threat.\pCan you imagine?\nBoulders tumbling down on you?\pThat'd be, like, waaaaaaaaaaah!\nTotal terror!\pYou don't seem to be scared.\nWant to try using ROCK SLIDE?",,,,
+Text_RockSlideDeclined,,,"Oh, so you are scared after all.",,,,
+Text_RockSlideWhichMon,,,Which POKéMON should I teach\nROCK SLIDE?,,,,
+Text_RockSlideTaught,,,It might be scary to use it in this\ntunnel…,,,,
+SeafoamIslands_B4F_Text_BouldersMightChangeWaterFlow,,,Hint: Boulders might change the\nflow of water.,,,,
+SeafoamIslands_B4F_Text_DangerFastCurrent,,,DANGER\nFast current!,,,,

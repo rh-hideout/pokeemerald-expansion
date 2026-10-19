@@ -1,0 +1,11 @@
+key,context,max_width,en,es,pt,fr,status
+SixIsland_WaterPath_House1_Text_LoveItNeedItHeracross,,,"Hera, hera, HERACROSS!\nBig and shiny, it's the bug boss!\lLove it, need it, HERACROSS!",,,,
+SixIsland_WaterPath_House1_Text_MayIMeasureHeracross,,,"Eeeeek!\nThat's a HERACROSS!\pPlease, please, may I measure how\nbig it is?",,,,
+SixIsland_WaterPath_House1_Text_ItsXSizeDeserveReward,,,"Eeeek, it's {STR_VAR_2}!\nI've never seen anything like this!\lYou deserve a reward!",,,,
+SixIsland_WaterPath_House1_Text_WantToSeeBiggerOne,,,"I want to see a much, much bigger\nHERACROSS than that one.\pOh, how I adore them, big\nHERACROSS!",,,,
+SixIsland_WaterPath_House1_Text_ItsXSizeSameAsBefore,,,"Huh? This {STR_VAR_2} measurement…\nOh, boo! It's the same as before.",,,,
+SixIsland_WaterPath_House1_Text_ItsXSizeYSizeWasBiggest,,,"Oh, it's just {STR_VAR_2}.\nThe HERACROSS before was bigger.\pIt was {STR_VAR_3}, the biggest\nHERACROSS you've brought me.",,,,
+SixIsland_WaterPath_House1_Text_ThisWontDo,,,"Oh, no! This won't do!\pHERACROSS looks much more macho\nand cool, and has a lovely horn!",,,,
+SixIsland_WaterPath_House1_Text_YourBagIsFull,,,Your BAG is full.\nMy reward won't fit.,,,,
+SixIsland_WaterPath_House1_Text_BiggestHeracrossIsXSize,,,The biggest HERACROSS that I have\never seen measured so far is:\p{STR_VAR_3}!,,,,
+SixIsland_WaterPath_House1_Text_BlankChartOfSomeSort,,,It's a blank chart of some sort.\pIt has spaces for writing in\nrecords of some kind.,,,,

@@ -1,0 +1,5 @@
+key,context,max_width,en,es,pt,fr,status
+sText_OhABite,,,Oh! A bite!,,,,
+sText_PokemonOnHook,,,A POKéMON's on the hook!{PAUSE_UNTIL_PRESS},,,,
+sText_NotEvenANibble,,,Not even a nibble…{PAUSE_UNTIL_PRESS},,,,
+sText_ItGotAway,,,It got away…{PAUSE_UNTIL_PRESS},,,,

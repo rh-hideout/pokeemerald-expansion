@@ -1,0 +1,9 @@
+key,context,max_width,en,es,pt,fr,status
+PokemonMansion_Text_PressSecretSwitch,,,A secret switch!\pPress it?,,,,
+PokemonMansion_Text_WhoWouldnt,,,Who wouldn't?,,,,
+PokemonMansion_Text_NotQuiteYet,,,Not quite yet!,,,,
+PokemonMansion_1F_Text_ArnieIntro,,,I can't get out!\nThis old place is one big puzzle.,,,,
+PokemonMansion_1F_Text_ArnieDefeat,,,"Oh, no!\nMy bag of loot!",,,,
+PokemonMansion_1F_Text_ArniePostBattle,,,The switches here open and close\nalternating sets of doors.,,,,
+PokemonMansion_1F_Text_NewMonDiscoveredInGuyanaJungle,,,"Diary: July 5\nGuyana, South America\pA new POKéMON was discovered deep\nin the jungle.",,,,
+PokemonMansion_1F_Text_ChristenedDiscoveredMonMew,,,"Diary: July 10\nWe christened the newly discovered\lPOKéMON, MEW.",,,,

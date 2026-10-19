@@ -1,0 +1,5 @@
+key,context,max_width,en,es,pt,fr,status
+PokemonLeague_BrunosRoom_Text_Intro,,,"I am BRUNO of the ELITE FOUR!\pThrough rigorous training, people\nand POKéMON can become stronger\lwithout limit.\pI've lived and trained with my\nfighting POKéMON!\lAnd that will never change!\p{PLAYER}!\pWe will grind you down with our\nsuperior power!\pHoo hah!{PLAY_BGM}{MUS_RG_ENCOUNTER_GYM_LEADER}",,,,
+PokemonLeague_BrunosRoom_Text_RematchIntro,,,"I am BRUNO of the ELITE FOUR!\pThrough rigorous training, people\nand POKéMON can become stronger\lwithout limit.\pI've lived and trained with my\nfighting POKéMON!\lAnd that will never change!\p{PLAYER}!\pWe will grind you down with our\nsuperior power!\pHoo hah!{PLAY_BGM}{MUS_RG_ENCOUNTER_GYM_LEADER}",,,,
+PokemonLeague_BrunosRoom_Text_Defeat,,,Why?\nHow could I lose?,,,,
+PokemonLeague_BrunosRoom_Text_PostBattle,,,My job is done.\nGo face your next challenge.,,,,

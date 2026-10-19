@@ -1,0 +1,10 @@
+key,context,max_width,en,es,pt,fr,status
+SilphCo_3F_Text_WhatAmIToDo,,,I work for SILPH CO.\nWhat am I to do?,,,,
+SilphCo_3F_Text_YouAndYourMonsSavedUs,,,{PLAYER}!\nYou and your POKéMON saved us!,,,,
+SilphCo_3F_Text_GruntIntro,,,"Quit messing with us, kid!",,,,
+SilphCo_3F_Text_GruntDefeat,,,I give up!,,,,
+SilphCo_3F_Text_GruntPostBattle,,,A hint? You can open doors with\na CARD KEY!,,,,
+SilphCo_3F_Text_JoseIntro,,,I support TEAM ROCKET more than\nI support SILPH CO.!,,,,
+SilphCo_3F_Text_JoseDefeat,,,You really got me!,,,,
+SilphCo_3F_Text_JosePostBattle,,,"Humph…\pTEAM ROCKET said that if I helped\nthem, they'd let me study POKéMON.",,,,
+SilphCo_3F_Text_FloorSign,,,SILPH CO. HEAD OFFICE\n3F,,,,

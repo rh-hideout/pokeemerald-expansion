@@ -1,0 +1,6 @@
+key,context,max_width,en,es,pt,fr,status
+GetTimeOfDayTextWithButton@05f4c4,,,{DPAD_UPDOWN} MORNING,,,,
+GetTimeOfDayTextWithButton@be73a6,,,{DPAD_UPDOWN} DAY,,,,
+GetTimeOfDayTextWithButton@453190,,,{DPAD_UPDOWN} EVENING,,,,
+GetTimeOfDayTextWithButton@4a7552,,,{DPAD_UPDOWN} NIGHT,,,,
+ShowAreaUnknownLabel@fc7aae,,,AREA UNKNOWN,,,,

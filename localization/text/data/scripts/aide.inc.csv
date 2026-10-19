@@ -1,0 +1,4 @@
+key,context,max_width,en,es,pt,fr,status
+Aide_Text_HaventCaughtEnoughMonsForItem,,,Let's see…\nUh-oh! You have caught only\l{STR_VAR_3} kinds of POKéMON!\pYou need {STR_VAR_1} kinds\nif you want the {STR_VAR_2}.,,,,
+Aide_Text_GetEnoughMonsComeBackForItem,,,"…Oh. I see.\pWhen you get {STR_VAR_1} kinds of POKéMON,\ncome back for the {STR_VAR_2}.",,,,
+Aide_Text_DontHaveAnyRoomForItem,,,Oh! I see you don't have any\nroom for the {STR_VAR_2}.,,,,

@@ -18,6 +18,7 @@
 #include "main.h"
 #include "link.h"
 #include "link_rfu.h"
+#include "localization.h"
 #include "item_menu_icons.h"
 #include "berry.h"
 #include "item.h"
@@ -254,7 +255,7 @@ static const u16 sEmpty_Pal[16 * 14] = {0};
 
 static const u8 sText_BerryBlenderStart[] = _("Starting up the BERRY BLENDER.\pPlease select a BERRY from your BAG\nto put in the BERRY BLENDER.\p");
 static const u8 sText_NewParagraph[] = _("\p");
-static const u8 sText_WasMade[] = _(" was made!");
+static const u8 sText_PokeblockWasMade[] = _("{DYNAMIC 0} was made!\n");
 
 static const u8 *const sBlenderOpponentsNames[] =
 {
@@ -270,8 +271,8 @@ static const u8 sText_CommunicationStandby[] = _("Communication standby…");
 static const u8 sText_WouldLikeToBlendAnotherBerry[] = _("Would you like to blend another BERRY?");
 static const u8 sText_RunOutOfBerriesForBlending[] = _("You've run out of BERRIES for\nblending in the BERRY BLENDER.\p");
 static const u8 sText_YourPokeblockCaseIsFull[] = _("Your {POKEBLOCK} CASE is full.\p");
-static const u8 sText_HasNoBerriesToPut[] = _(" has no BERRIES to put in\nthe BERRY BLENDER.");
-static const u8 sText_ApostropheSPokeblockCaseIsFull[] = _("'s {POKEBLOCK} CASE is full.\p");
+static const u8 sText_HasNoBerriesToPut[] = _("{DYNAMIC 0} has no BERRIES to put in\nthe BERRY BLENDER.");
+static const u8 sText_PokeblockCaseIsFull[] = _("{DYNAMIC 0}'s {POKEBLOCK} CASE is full.\p");
 static const u8 sText_BlendingResults[] = _("RESULTS OF BLENDING");
 static const u8 sText_SpaceBerry[] = _(" BERRY");
 static const u8 sText_Time[] = _("Time:");
@@ -280,7 +281,6 @@ static const u8 sText_Sec[] = _(" sec.");
 static const u8 sText_MaximumSpeed[] = _("MAXIMUM SPEED");
 static const u8 sText_RPM[] = _(" RPM");
 static const u8 sText_Dot[] = _(".");
-static const u8 sText_NewLine[] = _("\n");
 static const u8 sText_Ranking[] = _("RANKING");
 static const u8 sText_TheLevelIs[] = _("The level is ");
 static const u8 sText_TheFeelIs[] = _(", and the feel is ");
@@ -2825,13 +2825,11 @@ static void CB2_CheckPlayAgainLink(void)
         break;
     case 1:
         sBerryBlender->gameEndState = 3;
-        StringCopy(gStringVar4, gLinkPlayers[sBerryBlender->canceledPlayerId].name);
-        StringAppend(gStringVar4, sText_ApostropheSPokeblockCaseIsFull);
+        StringFormat1(gStringVar4, sText_PokeblockCaseIsFull, gLinkPlayers[sBerryBlender->canceledPlayerId].name);
         break;
     case 2:
         sBerryBlender->gameEndState++;
-        StringCopy(gStringVar4, gLinkPlayers[sBerryBlender->canceledPlayerId].name);
-        StringAppend(gStringVar4, sText_HasNoBerriesToPut);
+        StringFormat1(gStringVar4, sText_HasNoBerriesToPut, gLinkPlayers[sBerryBlender->canceledPlayerId].name);
         break;
     case 3:
         if (PrintMessage(&sBerryBlender->textState, gStringVar4, GetPlayerTextSpeedDelay()))
@@ -3570,10 +3568,7 @@ static void PrintMadePokeblockString(struct Pokeblock *pokeblock, u8 *dst)
     u8 text[12];
     u8 flavorLvl, feel;
 
-    dst[0] = EOS;
-    StringCopy(dst, gPokeblockNames[pokeblock->color]);
-    StringAppend(dst, sText_WasMade);
-    StringAppend(dst, sText_NewLine);
+    StringFormat1(dst, sText_PokeblockWasMade, gPokeblockNames[pokeblock->color]);
 
     flavorLvl = GetHighestPokeblocksFlavorLevel(pokeblock);
     feel = GetPokeblocksFeel(pokeblock);

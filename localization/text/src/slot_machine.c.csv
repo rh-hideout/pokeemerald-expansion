@@ -1,0 +1,6 @@
+key,context,max_width,en,es,pt,fr,status
+sText_QuitTheGame,,,Quit the game?,,,,
+sText_YouveGot9999Coins,,,"You've got 9,999 COINS.",,,,
+sText_YouveRunOutOfCoins,,,You've run out of COINS.\nGame over!,,,,
+sText_YouDontHaveThreeCoins,,,You don't have three COINS.,,,,
+sText_ReelTimeHelp,,,REEL TIME\nHere's your chance to take\naim and nail marks!\nReel Time continues for the\nawarded number of spins.\nIt all ends on a Big Bonus.,,,,

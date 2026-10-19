@@ -1,0 +1,8 @@
+key,context,max_width,en,es,pt,fr,status
+gText_NumberRegistered,,,No. registered,,,,
+gText_NumberOfBattles,,,No. of battles,,,,
+gText_TrainerCloseBy,,,That TRAINER is close by.\nTalk to the TRAINER in person!,,,,
+gText_Unknown,,,UNKNOWN,,,,
+sMatchCallOptionTexts[MATCH_CALL_OPTION_CALL],,,CALL,,,,
+sMatchCallOptionTexts[MATCH_CALL_OPTION_CHECK],,,CHECK,,,,
+sMatchCallOptionTexts[MATCH_CALL_OPTION_CANCEL],,,CANCEL,,,,

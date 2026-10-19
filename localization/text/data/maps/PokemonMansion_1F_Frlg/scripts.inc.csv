@@ -1,0 +1,7 @@
+key,context,max_width,en,es,pt,fr,status
+PokemonMansion_1F_Text_TedIntro,,,Who are you?\nThere shouldn't be anyone here.,,,,
+PokemonMansion_1F_Text_TedDefeat,,,Ouch!,,,,
+PokemonMansion_1F_Text_TedPostBattle,,,A key? I don't know what you're\ntalking about.,,,,
+PokemonMansion_1F_Text_JohnsonIntro,,,W-w-waah! You startled me!\nI thought you were a ghost.,,,,
+PokemonMansion_1F_Text_JohnsonDefeat,,,Tch!\nI can't get any wins.,,,,
+PokemonMansion_1F_Text_JohnsonPostBattle,,,"I was exploring here by myself,\nbut I feel spooked.\pI ought to go soon.",,,,

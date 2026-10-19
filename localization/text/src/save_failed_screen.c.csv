@@ -1,0 +1,2 @@
+key,context,max_width,en,es,pt,fr,status
+CB2_FlashNotDetectedScreen@a31684,,,"{COLOR RED}ERROR! {COLOR DARK_GRAY}Flash memory not detected!\n\nIf playing on an emulator, set your\nsave type setting to\nFlash 1Mb/128K and reload the ROM.\n\nIf playing on hardware, your cart\ndoes not have a working flash chip.",,,,

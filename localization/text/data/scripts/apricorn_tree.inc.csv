@@ -1,0 +1,8 @@
+key,context,max_width,en,es,pt,fr,status
+ApricornTree_Text_Intro,,,It's an Apricorn Tree!,,,,
+ApricornTree_Text_Empty,,,There are no Apricorns…,,,,
+ApricornTree_Text_WantToPick,,,…It's {STR_VAR_2} {STR_VAR_1}!\nDo you want to pick the\l{STR_VAR_1}?,,,,
+ApricornTree_Text_PickedTheApricorn,,,{PLAYER} obtained\n{STR_VAR_2} {STR_VAR_1}.,,,,
+ApricornTree_Text_PutAwayApricorn,,,{PLAYER} put away the\n{STR_VAR_1} in\lthe BAG's {STR_VAR_3} POCKET.,,,,
+ApricornTree_Text_PocketFull,,,The BAG's {STR_VAR_3} POCKET is full.\p{PLAYER} gave up on the\n{STR_VAR_1}…,,,,
+ApricornTree_Text_ApricornLeftUnpicked,,,{PLAYER} gave up on the\n{STR_VAR_1}…,,,,

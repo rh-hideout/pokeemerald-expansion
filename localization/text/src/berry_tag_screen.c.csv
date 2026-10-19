@@ -1,0 +1,9 @@
+key,context,max_width,en,es,pt,fr,status
+sBerryFirmnessStrings[BERRY_FIRMNESS_VERY_SOFT],,,Very soft,,,,
+sBerryFirmnessStrings[BERRY_FIRMNESS_SOFT],,,Soft,,,,
+sBerryFirmnessStrings[BERRY_FIRMNESS_HARD],,,Hard,,,,
+sBerryFirmnessStrings[BERRY_FIRMNESS_VERY_HARD],,,Very hard,,,,
+sBerryFirmnessStrings[BERRY_FIRMNESS_SUPER_HARD],,,Super hard,,,,
+sText_SizeSlash,,,SIZE /,,,,
+sText_FirmSlash,,,FIRM /,,,,
+sText_BerryTag,,,BERRY TAG,,,,

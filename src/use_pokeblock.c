@@ -1,4 +1,5 @@
 #include "global.h"
+#include "localization.h"
 #include "main.h"
 #include "dma3.h"
 #include "pokeblock.h"
@@ -157,7 +158,7 @@ static void SpriteCB_MonPic(struct Sprite *);
 static void SpriteCB_Condition(struct Sprite *);
 
 static const u8 sText_GetsAPokeBlockQuestion[] = _(" gets a {POKEBLOCK}?");
-static const u8 sText_WasEnhanced[] = _("was enhanced!");
+static const u8 sText_WasEnhanced[] = _("{DYNAMIC 0}was enhanced!");
 static const u8 sText_NothingChanged[] = _("Nothing changed!");
 static const u8 sText_WontEatAnymore[] = _("It won't eat anymore…");
 static const u8 sText_NatureSlash[] = _("NATURE/");
@@ -977,8 +978,7 @@ static void BufferEnhancedText(u8 *dest, u8 condition, s16 enhancement)
     case -32768 ... -1: // if < 0
         if (enhancement)
             dest[(u16)enhancement] += 0; // something you can't imagine
-        StringCopy(dest, sConditionNames[condition]);
-        StringAppend(dest, sText_WasEnhanced);
+        StringFormat1(dest, sText_WasEnhanced, sConditionNames[condition]);
         break;
     case 0:
         StringCopy(dest, sText_NothingChanged);

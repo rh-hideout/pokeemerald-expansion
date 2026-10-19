@@ -1,0 +1,10 @@
+key,context,max_width,en,es,pt,fr,status
+LavenderTown_House2_Text_WantMeToRateNicknames,,,"Hello, hello!\nI am the official NAME RATER!\pWant me to rate the nicknames of\nyour POKéMON?",,,,
+LavenderTown_House2_Text_CritiqueWhichMonsNickname,,,Which POKéMON's nickname should\nI critique?,,,,
+LavenderTown_House2_Text_GiveItANicerName,,,"{STR_VAR_1}, is it?\nThat is a decent nickname!\pBut, would you like me to give it\na nicer name?\pHow about it?",,,,
+LavenderTown_House2_Text_WhatShallNewNicknameBe,,,"Ah, good. Then, what shall the new\nnickname be?",,,,
+LavenderTown_House2_Text_FromNowOnShallBeKnownAsName,,,"Done! From now on, this POKéMON\nshall be known as {STR_VAR_1}!\pIt is a better name than before!\nHow fortunate for you!",,,,
+LavenderTown_House2_Text_ISeeComeVisitAgain,,,I see.\nDo come visit again.,,,,
+LavenderTown_House2_Text_FromNowOnShallBeKnownAsSameName,,,"Done! From now on, this POKéMON\nshall be known as {STR_VAR_1}!\pIt looks no different from before,\nand yet, this is vastly superior!\pHow fortunate for you!",,,,
+LavenderTown_House2_Text_TrulyImpeccableName,,,"{STR_VAR_1}, is it?\nThat is a truly impeccable name!\pTake good care of {STR_VAR_1}!",,,,
+LavenderTown_House2_Text_ThatIsMerelyAnEgg,,,"Now, now.\nThat is merely an EGG!",,,,

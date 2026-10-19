@@ -26,6 +26,7 @@
 #include <string>
 #include <memory>
 #include <map>
+#include <vector>
 #include "preproc.h"
 
 #define __STDC_FORMAT_MACROS 1
@@ -34,7 +35,7 @@
 class CFile
 {
 public:
-    CFile(const char * filenameCStr, bool isStdin, const char * graphicsRootCStr);
+    CFile(const char * filenameCStr, bool isStdin, const char * graphicsRootCStr, const char * overlayDirCStr);
     CFile(CFile&& other);
     CFile(const CFile&) = delete;
     ~CFile();
@@ -51,6 +52,7 @@ private:
     } m_location;
     bool m_isStdin;
     std::string m_graphicsRoot;
+    std::string m_overlayDir;
     std::map<std::vector<unsigned char>, std::uint64_t> m_compoundStrings;
     std::string m_output;
 
@@ -61,6 +63,7 @@ private:
     std::vector<unsigned char> ConvertString();
     void TryConvertString();
     void TryConvertCompoundString();
+    void Localize(std::vector<unsigned char>& converted, const LogicalLocation& location);
     std::unique_ptr<unsigned char[]> ReadWholeFile(const std::string& path, int& size);
     bool CheckIdentifier(const std::string& ident);
     std::string ReadString();

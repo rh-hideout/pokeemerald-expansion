@@ -1,0 +1,8 @@
+key,context,max_width,en,es,pt,fr,status
+Route10_PokemonCenter_1F_Text_EveryTypeStrongerThanOthers,,,The types of POKéMON match up\ndifferently with each other.\pEvery type is stronger than some\ntypes and weaker than others.,,,,
+Route10_PokemonCenter_1F_Text_NuggetUselessSoldFor5000,,,A NUGGET is totally useless.\nSo I sold it for ¥5000.,,,,
+Route10_PokemonCenter_1F_Text_HeardGhostsHauntLavender,,,I heard that ghosts haunt\nLAVENDER TOWN.,,,,
+Route10_PokemonCenter_1F_Text_GiveEverstoneIfCaught20Mons,,,"Oh… {PLAYER}!\nI've been looking for you!\pIt's me, one of the ever-present\nAIDES to PROF. OAK.\pIf your POKéDEX has complete data\non twenty species, I'm supposed to\lgive you a reward from PROF. OAK.\pHe entrusted me with this\nEVERSTONE.\pSo, {PLAYER}, let me ask you.\pHave you gathered data on at least\ntwenty kinds of POKéMON?",,,,
+Route10_PokemonCenter_1F_Text_GreatHereYouGo,,,Great! You have caught or owned\n{STR_VAR_3} kinds of POKéMON!\pCongratulations!\nHere you go!,,,,
+Route10_PokemonCenter_1F_Text_ReceivedEverstoneFromAide,,,{PLAYER} received the EVERSTONE\nfrom the AIDE.,,,,
+Route10_PokemonCenter_1F_Text_ExplainEverstone,,,"Making POKéMON evolve certainly\ncan add to the POKéDEX.\pHowever, at times, you may not\nwant a certain POKéMON to evolve.\pIn that case, give the EVERSTONE\nto that POKéMON.\pIt will prevent evolution according\nto the PROFESSOR.",,,,

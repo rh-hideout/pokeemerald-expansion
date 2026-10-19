@@ -15,6 +15,7 @@
 #include "item.h"
 #include "item_icon.h"
 #include "line_break.h"
+#include "localization.h"
 #include "main.h"
 #include "malloc.h"
 #include "menu.h"
@@ -4486,8 +4487,7 @@ bool32 TryLoadSizeScreen_HGSS(u8 taskId)
     {
         u8 string[64];
 
-        StringCopy(string, gText_SizeComparedTo);
-        StringAppend(string, gSaveBlock2Ptr->playerName);
+        StringFormat1(string, gText_SizeComparedTo, gSaveBlock2Ptr->playerName);
         PrintInfoScreenText(string, GetStringCenterAlignXOffset(FONT_NORMAL, string, 0xF0), 0x79);
         gMain.state++;
         break;

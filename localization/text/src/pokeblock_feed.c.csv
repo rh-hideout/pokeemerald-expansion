@@ -1,0 +1,4 @@
+key,context,max_width,en,es,pt,fr,status
+sText_Var1AteTheVar2,,,{STR_VAR_1} ate the\n{STR_VAR_2}.{PAUSE_UNTIL_PRESS},,,,
+sText_Var1HappilyAteVar2,,,{STR_VAR_1} happily ate the\n{STR_VAR_2}.{PAUSE_UNTIL_PRESS},,,,
+sText_Var1DisdainfullyAteVar2,,,{STR_VAR_1} disdainfully ate the\n{STR_VAR_2}.{PAUSE_UNTIL_PRESS},,,,

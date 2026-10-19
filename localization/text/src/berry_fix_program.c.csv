@@ -1,0 +1,10 @@
+key,context,max_width,en,es,pt,fr,status
+sText_BerryProgramUpdate,,,Berry Program Update,,,,
+sText_RubySapphire,,,Ruby/Sapphire,,,,
+sText_Emerald,,,Emerald,,,,
+sText_BerryProgramWillBeUpdatedPressA,,,The Berry Program on your POKéMON\nRuby/Sapphire Game Pak will be updated.\n{COLOR RED}{SHADOW LIGHT_RED}Press the A Button.,,,,
+sText_EnsureGBAConnectionMatches,,,Please ensure the connection of your\nGame Boy Advance system matches this.\n{COLOR RED}{SHADOW LIGHT_RED}YES: Press the A Button.\nNO: Turn off the power and try again.,,,,
+sText_TurnOffPowerHoldingStartSelect,,,"Please turn on the power of POKéMON\nRuby/Sapphire while holding START and\nSELECT simultaneously. Then, ensure\nthe picture above appears.",,,,
+sText_TransmittingPleaseWait,,,Transmitting. Please wait.\n{COLOR RED}{SHADOW LIGHT_RED}Please do not turn off the power or\nunplug the Game Boy Advance Game\nLink Cable.,,,,
+sText_PleaseFollowInstructionsOnScreen,,,Please follow the instructions on your\nPOKéMON Ruby/Sapphire screen.,,,,
+sText_TransmissionFailureTryAgain,,,Transmission failure.\n{COLOR RED}{SHADOW LIGHT_RED}Please try again.,,,,

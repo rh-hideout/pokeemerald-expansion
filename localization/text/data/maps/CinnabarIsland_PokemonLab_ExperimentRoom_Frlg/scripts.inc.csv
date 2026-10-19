@@ -1,0 +1,13 @@
+key,context,max_width,en,es,pt,fr,status
+Text_MetronomeTeach,,,"Tch-tch-tch!\nI'll teach you a nifty move.\pTeach it to a POKéMON, and watch\nthe fun unfold!\pIt's a move called METRONOME.\nDoes it strike your fancy?",,,,
+Text_MetronomeDeclined,,,"I tell you, it's a lot of fun!",,,,
+Text_MetronomeWhichMon,,,Okay!\nWhich POKéMON should I teach?,,,,
+Text_MetronomeTaught,,,Tch-tch-tch!\nThat's the sound of a METRONOME.\pIt tweaks your POKéMON's brain into\nusing moves it doesn't even know.,,,,
+CinnabarIsland_PokemonLab_ExperimentRoom_Text_HaveYouAFossilForMe,,,"Hiya!\pI am important doctor.\nYes, very much so, indeed.\pHere, I study rare POKéMON fossils.\nAll the time, I study.\pYou!\nHave you a fossil for me?",,,,
+CinnabarIsland_PokemonLab_ExperimentRoom_Text_NoIsTooBad,,,No!\nIs too bad!,,,,
+CinnabarIsland_PokemonLab_ExperimentRoom_Text_FossilMonBackToLife,,,You late.\nWhere were you?\pYour fossil is back to life!\nIt was {STR_VAR_1} like I think!,,,,
+CinnabarIsland_PokemonLab_ExperimentRoom_Text_ReceivedMonFromDoctor,,,{PLAYER} received the {STR_VAR_1}\nfrom the doctor.,,,,
+CinnabarIsland_PokemonLab_ExperimentRoom_Text_ThatFossilIsOfMonMakeItLiveAgain,,,"Oh!\nThat is {STR_VAR_2}, it is!\pIt is fossil of {STR_VAR_1},\na POKéMON that is already extinct!\pMy Resurrection Machine will make\nthat POKéMON live again!",,,,
+CinnabarIsland_PokemonLab_ExperimentRoom_Text_HandedFossilToWeirdDoctor,,,So!\nYou hurry and give me that!\p{FONT_NORMAL}{PLAYER} handed over the\n{STR_VAR_2} to the weird doctor.,,,,
+CinnabarIsland_PokemonLab_ExperimentRoom_Text_TakesTimeGoForWalk,,,I take a little time!\nYou go for walk a little while!,,,,
+CinnabarIsland_PokemonLab_ExperimentRoom_Text_YouComeAgain,,,Aiyah!\nYou come again!,,,,

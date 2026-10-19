@@ -1,0 +1,5 @@
+key,context,max_width,en,es,pt,fr,status
+PokemonLeague_LoreleisRoom_Text_Intro,,,Welcome to the POKéMON LEAGUE.\pI am LORELEI of the ELITE FOUR.\pNo one can best me when it comes\nto icy POKéMON.\pFreezing moves are powerful.\pYour POKéMON will be at my mercy\nwhen they are frozen solid.\pHahaha!\nAre you ready?{PLAY_BGM}{MUS_RG_ENCOUNTER_GYM_LEADER},,,,
+PokemonLeague_LoreleisRoom_Text_RematchIntro,,,"Welcome to the POKéMON LEAGUE.\pI, LORELEI of the ELITE FOUR,\nhave returned!\pYou know how it goes.\nNo one can best me when it comes\lto icy POKéMON.\pFreezing moves are powerful.\pYour POKéMON will be at my mercy\nwhen they are frozen solid.\pHahaha!\nAre you ready?{PLAY_BGM}{MUS_RG_ENCOUNTER_GYM_LEADER}",,,,
+PokemonLeague_LoreleisRoom_Text_Defeat,,,…Things shouldn't be this way!,,,,
+PokemonLeague_LoreleisRoom_Text_PostBattle,,,You're better than I thought.\nGo on ahead.\pYou only got a taste of the\nPOKéMON LEAGUE's power.,,,,

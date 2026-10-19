@@ -1246,6 +1246,7 @@ const u8 *GetApprenticeNameInLanguage(u32 apprenticeId, enum Language language)
     case LANGUAGE_JAPANESE:
         return apprentice->name[0];
     case LANGUAGE_ENGLISH:
+    case LANGUAGE_PORTUGUESE: // No Portuguese names; localized builds translate the English ones.
         return apprentice->name[1];
     case LANGUAGE_FRENCH:
         return apprentice->name[2];
