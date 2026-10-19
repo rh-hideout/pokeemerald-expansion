@@ -77,12 +77,12 @@ struct SwitchAiContext
 typedef bool32 (*AiSwitchFunc)(struct SwitchAiContext*);
 extern AiSwitchFunc gDynamicAiSwitchFunc;
 
-enum PartyMon GetMostSuitableMonToSwitchInto(enum BattlerId battler, enum SwitchType switchType);
+enum PartySlot GetMostSuitableMonToSwitchInto(enum BattlerId battler, enum SwitchType switchType);
 bool32 ShouldSwitch(enum BattlerId battler);
 void ModifySwitchAfterMoveScoring(enum BattlerId battler);
-enum PartyMon AI_SelectRevivalBlessingMon(enum BattlerId battler);
+enum PartySlot AI_SelectRevivalBlessingMon(enum BattlerId battler);
 bool32 IsSwitchinValid(enum BattlerId battler);
-bool32 IsAceMon(enum BattlerId battler, enum PartyMon monPartyId);
+bool32 IsAceMon(enum BattlerId battler, enum PartySlot monPartyId);
 uq4_12_t GetBattlerTypeMatchup(enum BattlerId opposingBattler, enum BattlerId battler);
 uq4_12_t GetTypeMatchupAgainstTypes(enum BattlerId opposingBattler, enum Type defType1, enum Type defType2);
 bool32 CanBattlerWin1v1(u32 hitsToKOAI, u32 hitsToKOPlayer, bool32 isBattlerFirst);
