@@ -3528,7 +3528,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("[Skull Bash]"),
         .description = COMPOUND_STRING(
     #if B_UPDATED_MOVE_DATA >= GEN_2
-            "Tucks in to raise Defense,\n"
+            "Tucks in to raise [Defense],\n"
             "then attacks the next turn."),
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_STAT_PLUS,
@@ -7486,7 +7486,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("[Role Play]"),
         .description = COMPOUND_STRING(
             "Mimics the target and\n"
-            "copies its Ability."),
+            "copies its [Ability]."),
         .effect = EFFECT_ROLE_PLAY,
         .power = 0,
         .type = TYPE_PSYCHIC,
@@ -7826,7 +7826,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("[Skill Swap]"),
         .description = COMPOUND_STRING(
             "The user swaps\n"
-            "Abilities with the target."),
+            "[Abilities] with the target."),
         .effect = EFFECT_SKILL_SWAP,
         .power = 0,
         .type = TYPE_PSYCHIC,
@@ -10361,7 +10361,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("[Gastro Acid]"),
         .description = COMPOUND_STRING(
             "Stomach acid suppresses\n"
-            "the foe's Ability."),
+            "the foe's [Ability]."),
         .effect = EFFECT_GASTRO_ACID,
         .power = 0,
         .type = TYPE_POISON,
@@ -13238,7 +13238,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("[Simple Beam]"),
         .description = COMPOUND_STRING(
             "A beam that changes the\n"
-            "foe's Ability to [Simple]."),
+            "foe's [Ability] to [Simple]."),
         .effect = EFFECT_OVERWRITE_ABILITY,
         .power = 0,
         .type = TYPE_NORMAL,
@@ -13262,7 +13262,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("[Entrainment]"),
         .description = COMPOUND_STRING(
             "Makes the foe mimic the\n"
-            "user, gaining its Ability."),
+            "user, gaining its [Ability]."),
         .effect = EFFECT_ENTRAINMENT,
         .power = 0,
         .type = TYPE_NORMAL,
@@ -13505,7 +13505,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("[Shell Smash]"),
         .description = COMPOUND_STRING(
             "Sharply raises offenses and\n"
-            "Speed, but lowers defenses."),
+            "[Speed], but lowers defenses."),
         .effect = EFFECT_STAT_CHANGE,
         .power = 0,
         .type = TYPE_NORMAL,
@@ -17323,7 +17323,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("[Core Enforcer]"),
         .description = COMPOUND_STRING(
             "Hits with a ray that\n"
-            "nullifies the foe's Ability."),
+            "nullifies the foe's [Ability]."),
         .effect = EFFECT_HIT,
         .power = 100,
         .type = TYPE_DRAGON,
@@ -17768,7 +17768,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("[Sunsteel Strike]"),
         .description = COMPOUND_STRING(
             "A sun-fueled strike that\n"
-            "ignores Abilities."),
+            "ignores [Abilities]."),
         .effect = EFFECT_HIT,
         .power = 100,
         .type = TYPE_STEEL,
@@ -17792,7 +17792,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("[Moongeist Beam]"),
         .description = COMPOUND_STRING(
             "A moon-powered beam that\n"
-            "ignores Abilities."),
+            "ignores [Abilities]."),
         .effect = EFFECT_HIT,
         .power = 100,
         .type = TYPE_GHOST,
@@ -20896,7 +20896,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("[Doodle]"),
         .description = COMPOUND_STRING(
             "Changes user's and ally's\n"
-            "Ability into the target's."),
+            "[Ability] into the target's."),
         .effect = EFFECT_DOODLE,
         .power = 0,
         .type = TYPE_NORMAL,
@@ -22332,7 +22332,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("[Subzero Slammer]"),
         .description = COMPOUND_STRING(
             "Drops the temperature with\n"
-            "Z-Power. Power varies."),
+            "[Z-Power]. Power varies."),
         .effect = EFFECT_HIT,
         .power = 1,
         .type = TYPE_ICE,
@@ -22491,7 +22491,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
     {
         .name = COMPOUND_STRING("[Genesis Supernova]"),
         .description = COMPOUND_STRING(
-            "Mew attacks with full force.\n"
+            "[Mew] attacks with full force.\n"
             "Psychically charges terrain."),
         .effect = EFFECT_HIT,
         .power = 185,
@@ -22620,7 +22620,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
     {
         .name = COMPOUND_STRING("[Guardian of Alola]"),
         .description = COMPOUND_STRING(
-            "The Land Spirit [Pokémon]\n"
+            "The [Land Spirit Pokémon]\n"
             "greatly reduces the foe's HP."),
         .effect = EFFECT_FIXED_PERCENT_DAMAGE,
         .power = 1,
@@ -22638,7 +22638,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("[Searing Sunraze Smash]"),
         .description = COMPOUND_STRING(
             "[Solgaleo] attacks with full\n"
-            "force. Ignores Abilities."),
+            "force. Ignores [Abilities]."),
         .effect = EFFECT_HIT,
         .power = 200,
         .type = TYPE_STEEL,
@@ -22655,7 +22655,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("[Menacing Moonraze Maelstrom]"),
         .description = COMPOUND_STRING(
             "[Lunala] attacks with full\n"
-            "force. Ignores Abilities."),
+            "force. Ignores [Abilities]."),
         .effect = EFFECT_HIT,
         .power = 200,
         .type = TYPE_GHOST,
@@ -22672,7 +22672,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("[Light That Burns the Sky]"),
         .description = COMPOUND_STRING(
             "Uses [Atk] or [Sp. Atk], whicher\n"
-            "is higher. Ignores Abilities."),
+            "is higher. Ignores [Abilities]."),
         .effect = EFFECT_PHOTON_GEYSER,
         .power = 200,
         .type = TYPE_PSYCHIC,
@@ -23379,7 +23379,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("[G-Max Meltdown]"),
         .description = COMPOUND_STRING(
             "[G-Max Melmetal] attack.\n"
-            "Torments opponents."),    //ANIM TODO
+            "[Torments] opponents."),    //ANIM TODO
         .effect = EFFECT_MAX_MOVE,
         .power = 10,
         .type = TYPE_STEEL,
@@ -23399,7 +23399,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("[G-Max Drum Solo]"),
         .description = COMPOUND_STRING(
             "[G-Max Rillaboom] attack.\n"
-            "Ignores target's Ability."),    //ANIM TODO
+            "Ignores target's [Ability]."),    //ANIM TODO
         .effect = EFFECT_MAX_MOVE,
         .power = 10,
         .type = TYPE_GRASS,
@@ -23420,7 +23420,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("[G-Max Fireball]"),
         .description = COMPOUND_STRING(
             "[G-Max Cinderace] attack.\n"
-            "Ignores target's Ability."),    //ANIM TODO
+            "Ignores target's [Ability]."),    //ANIM TODO
         .effect = EFFECT_MAX_MOVE,
         .power = 10,
         .type = TYPE_FIRE,
@@ -23441,7 +23441,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("[G-Max Hydrosnipe]"),
         .description = COMPOUND_STRING(
             "[G-Max Inteleon] attack.\n"
-            "Ignores target's Ability."),    //ANIM TODO
+            "Ignores target's [Ability]."),    //ANIM TODO
         .effect = EFFECT_MAX_MOVE,
         .power = 10,
         .type = TYPE_WATER,
@@ -23482,7 +23482,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("[G-Max Gravitas]"),
         .description = COMPOUND_STRING(
             "[G-Max Orbeetle] attack.\n"
-            "Changes gravity for 5 turns."),    //ANIM TODO
+            "Changes [gravity] for 5 turns."),    //ANIM TODO
         .effect = EFFECT_MAX_MOVE,
         .power = 10,
         .type = TYPE_PSYCHIC,
