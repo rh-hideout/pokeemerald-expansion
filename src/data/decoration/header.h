@@ -705,7 +705,7 @@ const struct Decoration gDecorations[] =
     [DECOR_TV] =
     {
         .id = DECOR_TV,
-        .name = _("[Tv]"),
+        .name = _("TV"),
         .permission = DECORPERM_SOLID_FLOOR,
         .shape = DECORSHAPE_1x1,
         .category = DECORCAT_ORNAMENT,
