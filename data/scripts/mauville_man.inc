@@ -704,17 +704,17 @@ MauvilleCity_PokemonCenter_1F_Text_LedgesJumpedStory::
 	.string "{STR_VAR_3} can't ignore it!$"
 
 MauvilleCity_PokemonCenter_1F_Text_TVWatchedTitle::
-	.string "The Legendary [Tv] Viewer$"
+	.string "The Legendary TV Viewer$"
 
 MauvilleCity_PokemonCenter_1F_Text_TVWatchedAction::
-	.string "Watched [Tv]$"
+	.string "Watched TV$"
 
 MauvilleCity_PokemonCenter_1F_Text_TVWatchedStory::
 	.string "This is a tale of a [Trainer]\n"
 	.string "named {STR_VAR_3}.\p"
-	.string "This [Trainer] watched [Tv]\n"
+	.string "This [Trainer] watched TV\n"
 	.string "{STR_VAR_1} times!\p"
-	.string "{STR_VAR_3} must love watching [Tv]!$"
+	.string "{STR_VAR_3} must love watching TV!$"
 
 MauvilleCity_PokemonCenter_1F_Text_CheckedClockTitle::
 	.string "The Time-Conscious [Trainer]$"
