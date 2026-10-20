@@ -676,6 +676,7 @@ static void Task_FossilFallAndSink(u8 taskId)
             gSprites[sFallingFossil->spriteId].data[0] = gSprites[sFallingFossil->spriteId].x;
             gSprites[sFallingFossil->spriteId].data[1] = 1;
         }
+        [[fallthrough]];
     case 5:
         // Initialize disintegration pattern
         for (i = 0; i < FOSSIL_DISINTEGRATE_LENGTH; i++)

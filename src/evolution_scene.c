@@ -857,7 +857,6 @@ static void Task_EvolutionScene(u8 taskId)
         }
         break;
     }
-
 }
 
 #undef tState

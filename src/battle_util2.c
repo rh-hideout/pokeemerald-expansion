@@ -2,6 +2,7 @@
 #include "battle.h"
 #include "battle_anim.h"
 #include "battle_controllers.h"
+#include "battle_interface.h"
 #include "malloc.h"
 #include "pokemon.h"
 #include "trainer_hill.h"
@@ -30,6 +31,7 @@ void CloseMainBattleScreen(void)
 {
     FreeBattleGfxResources();
     FreeAllWindowBuffers();
+    HideWeatherIndicator(TRUE);
 }
 
 void AllocateBattleResources(void)
@@ -75,7 +77,9 @@ void FreeBattleResources(void)
     else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_HILL)
         FreeTrainerHillBattleStruct();
 
-    gFieldTimers.terrain = 0;
+    memset(&gFieldTimers, 0, sizeof(struct FieldTimer));
+    memset(&gSideTimers, 0, sizeof(struct SideTimer));
+
     if (gBattleResources != NULL)
     {
         FREE_AND_SET_NULL(gBattleStruct);

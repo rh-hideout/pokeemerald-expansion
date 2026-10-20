@@ -62,9 +62,10 @@ SINGLE_BATTLE_TEST("Hit Escape: U-turn does not switch the user out if replaceme
     }
 }
 
-SINGLE_BATTLE_TEST("Hit Escape: U-turn does not switch the user out if Wimp Out activates")
+SINGLE_BATTLE_TEST("Hit Escape: U-turn does not switch the user out if Wimp Out activates (Gen9-)")
 {
     GIVEN {
+        WITH_CONFIG(B_QUEUED_SWITCH_TIMINGS, GEN_9);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WIMPOD) { MaxHP(200); HP(101); Ability(ABILITY_WIMP_OUT); }
@@ -75,6 +76,25 @@ SINGLE_BATTLE_TEST("Hit Escape: U-turn does not switch the user out if Wimp Out 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_U_TURN, player);
         HP_BAR(opponent);
         ABILITY_POPUP(opponent, ABILITY_WIMP_OUT);
+        MESSAGE("2 sent out Wobbuffet!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Hit Escape: U-turn switches the user out even if Wimp Out activates (Champions)")
+{
+    GIVEN {
+        WITH_CONFIG(B_QUEUED_SWITCH_TIMINGS, GEN_CHAMPIONS);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WIMPOD) { MaxHP(200); HP(101); Ability(ABILITY_WIMP_OUT); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_U_TURN); SEND_OUT(opponent, 1); SEND_OUT(player, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_U_TURN, player);
+        HP_BAR(opponent);
+        ABILITY_POPUP(opponent, ABILITY_WIMP_OUT);
+        SEND_IN_MESSAGE("Wynaut");
         MESSAGE("2 sent out Wobbuffet!");
     }
 }

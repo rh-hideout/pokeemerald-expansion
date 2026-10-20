@@ -118,7 +118,6 @@ void RestoreBattlerData(enum BattlerId battlerId);
 enum Move GetAIChosenMove(enum BattlerId battlerId);
 u32 GetTotalBaseStat(enum Species species);
 bool32 IsTruantMonVulnerable(enum BattlerId battlerAI, enum BattlerId opposingBattler);
-bool32 AI_BattlerAtMaxHp(enum BattlerId battler);
 u32 GetHealthPercentage(enum BattlerId battler);
 bool32 AI_CanBattlerEscape(enum BattlerId battler);
 bool32 IsBattlerTrapped(enum BattlerId battlerAtk, enum BattlerId battlerDef);
