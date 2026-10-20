@@ -167,7 +167,7 @@ ARMCC := $(PREFIX)gcc
 PATH_ARMCC := PATH="$(PATH)" $(ARMCC)
 CC1 := $(shell $(PATH_ARMCC) --print-prog-name=cc1) -quiet
 
-override CFLAGS += -mthumb -mthumb-interwork -O$(O_LEVEL) -mabi=apcs-gnu -mtune=arm7tdmi -march=armv4t -Wno-pointer-to-int-cast -std=gnu17 -Werror -Wall -Wno-strict-aliasing -Wno-attribute-alias -Woverride-init -Wnonnull -Wenum-conversion
+override CFLAGS += -mthumb -mthumb-interwork -O$(O_LEVEL) -mabi=apcs-gnu -mtune=arm7tdmi -march=armv4t -Wimplicit-fallthrough -Wno-pointer-to-int-cast -std=gnu17 -Werror -Wall -Wno-strict-aliasing -Wno-attribute-alias -Woverride-init -Wnonnull -Wenum-conversion
 
 ifneq ($(LTO),0)
   ifneq ($(TEST),1)
@@ -213,6 +213,7 @@ include make_tools.mk
 # Tool executables
 SMOLTM       := $(TOOLS_DIR)/compresSmol/compresSmolTilemap$(EXE)
 SMOL         := $(TOOLS_DIR)/compresSmol/compresSmol$(EXE)
+RLFAST       := $(TOOLS_DIR)/rl_compress/rl_compress$(EXE)
 GFX          := $(TOOLS_DIR)/gbagfx/gbagfx$(EXE)
 WAV2AGB      := $(TOOLS_DIR)/wav2agb/wav2agb$(EXE)
 MID          := $(TOOLS_DIR)/mid2agb/mid2agb$(EXE)
@@ -382,7 +383,7 @@ clean-assets:
 	rm -f $(DATA_ASM_SUBDIR)/maps/connections.inc $(DATA_ASM_SUBDIR)/maps/events.inc $(DATA_ASM_SUBDIR)/maps/groups.inc $(DATA_ASM_SUBDIR)/maps/headers.inc $(DATA_SRC_SUBDIR)/map_group_count.h
 	rm -f .map_version
 	find sound -iname '*.bin' -exec rm {} +
-	find . \( -iname '*.1bpp' -o -iname '*.4bpp' -o -iname '*.8bpp' -o -iname '*.gbapal' -o -iname '*.lz' -o -iname '*.smol' -o -iname '*.fastSmol' -o -iname '*.smolTM' -o -iname '*.rl' -o -iname '*.latfont' -o -iname '*.hwjpnfont' -o -iname '*.fwjpnfont' \) -exec rm {} +
+	find . \( -iname '*.1bpp' -o -iname '*.4bpp' -o -iname '*.8bpp' -o -iname '*.gbapal' -o -iname '*.lz' -o -iname '*.smol' -o -iname '*.fastSmol' -o -iname '*.smolTM' -o -iname '*.rlfast' -o -iname '*.rl' -o -iname '*.latfont' -o -iname '*.hwjpnfont' -o -iname '*.fwjpnfont' \) -exec rm {} +
 	find $(DATA_ASM_SUBDIR)/maps \( -iname 'connections.inc' -o -iname 'events.inc' -o -iname 'header.inc' \) -exec rm {} +
 
 tidy: tidymodern tidycheck tidydebug tidyrelease
@@ -434,6 +435,7 @@ generated: $(AUTO_GEN_TARGETS)
 %.smolTM:   %      ; $(SMOLTM) $< $@
 %.fastSmol: %      ; $(SMOL) -w $< $@ false false false
 %.smol:     %      ; $(SMOL) -w $< $@
+%.rlfast:   %      ; $(RLFAST) $< $@
 %.rl:       %      ; $(GFX) $< $@
 
 clean-teachables_intermediates:
@@ -453,7 +455,7 @@ clean-teachables: clean-teachables_intermediates
 $(C_BUILDDIR)/librfu_intr.o: CFLAGS := -mthumb-interwork -O2 -mabi=apcs-gnu -mtune=arm7tdmi -march=armv4t -fno-toplevel-reorder -Wno-pointer-to-int-cast
 $(C_BUILDDIR)/berry_crush.o: override CFLAGS += -Wno-address-of-packed-member
 $(C_BUILDDIR)/agb_flash.o: override CFLAGS += -fno-toplevel-reorder
-$(C_BUILDDIR)/pokedex_plus_hgss.o: CFLAGS := -mthumb -mthumb-interwork -O2 -mabi=apcs-gnu -mtune=arm7tdmi -march=armv4t -Wno-pointer-to-int-cast -std=gnu17 -Werror -Wall -Wno-strict-aliasing -Wno-attribute-alias -Woverride-init
+$(C_BUILDDIR)/pokedex_plus_hgss.o: CFLAGS := -mthumb -mthumb-interwork -O2 -mabi=apcs-gnu -mtune=arm7tdmi -march=armv4t -Wno-pointer-to-int-cast -Wimplicit-fallthrough -std=gnu17 -Werror -Wall -Wno-strict-aliasing -Wno-attribute-alias -Woverride-init
 # Annoyingly we can't turn this on just for src/data/trainers.h
 $(C_BUILDDIR)/data.o: CFLAGS += -fno-show-column -fno-diagnostics-show-caret
 

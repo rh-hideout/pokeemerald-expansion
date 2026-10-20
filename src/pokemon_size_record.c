@@ -120,7 +120,7 @@ static u8* ReturnHeightStringNoWhitespace(u32 size)
 
 static u8 CompareMonSize(enum Species species, u16 *sizeRecord)
 {
-    if (gSpecialVar_Result == PARTY_NOTHING_CHOSEN)
+    if (gSpecialVar_Result == PARTY_MON_CANCEL)
     {
         return POKEMON_NONE;
     }

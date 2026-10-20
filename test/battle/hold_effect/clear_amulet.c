@@ -22,6 +22,7 @@ SINGLE_BATTLE_TEST("Clear Amulet prevents Intimidate")
         HP_BAR(player, captureDamage: &turnOneHit);
         ABILITY_POPUP(player, ABILITY_INTIMIDATE);
         NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        ITEM_POPUP(opponent, ITEM_CLEAR_AMULET);
         MESSAGE("The effects of the Clear Amulet held by the opposing Wobbuffet prevents its stats from being lowered!");
         HP_BAR(player, captureDamage: &turnTwoHit);
     } THEN {
@@ -55,6 +56,7 @@ SINGLE_BATTLE_TEST("Clear Amulet prevents stat reducing effects")
         TURN { MOVE(player, move); }
     } SCENE {
         NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+        ITEM_POPUP(opponent, ITEM_CLEAR_AMULET);
         MESSAGE("The effects of the Clear Amulet held by the opposing Wobbuffet prevents its stats from being lowered!");
     }
 }
@@ -84,6 +86,7 @@ SINGLE_BATTLE_TEST("Clear Amulet prevents secondary effects that reduce stats")
     } SCENE {
         NONE_OF {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+            ITEM_POPUP(opponent, ITEM_CLEAR_AMULET);
             MESSAGE("The effects of the Clear Amulet held by the opposing Wobbuffet prevents its stats from being lowered!");
         }
     }
