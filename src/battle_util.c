@@ -9342,8 +9342,8 @@ void RestoreCaughtWildMonHeldItem(struct Pokemon *mon, enum BattlerId battler)
 
     if (GetMonData(mon, MON_DATA_HELD_ITEM) != itemToRestore)
     {
-        enum Item itemToRestore = ITEM_NONE;
-        SetMonData(mon, MON_DATA_HELD_ITEM, &itemToRestore);
+        enum Item item = ITEM_NONE;
+        SetMonData(mon, MON_DATA_HELD_ITEM, &item);
     }
 
     bool32 shouldRestoreBattleItem = B_RESTORE_HELD_BATTLE_ITEMS >= GEN_9
