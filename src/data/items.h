@@ -303,7 +303,7 @@ const struct ItemInfo gItemsInfo[] =
         .description = COMPOUND_STRING(
             "A [Ball] that works\n"
             "better on [Pokémon]\n"
-            "hooked by a [Rod]."),
+            "hooked by a [rod]."),
         .pocket = POCKET_POKE_BALLS,
         .type = ITEM_USE_BAG_MENU,
         .battleUsage = EFFECT_ITEM_THROW_BALL,
@@ -400,7 +400,7 @@ const struct ItemInfo gItemsInfo[] =
         #if B_DREAM_BALL_MODIFIER >= GEN_8
             "A [Ball] that works\n"
             "better on [Pokémon]\n"
-            "that are alseep."),
+            "that are asleep."),
         #else
             "A special [Ball] that\n"
             "appears in the\n"
@@ -1541,7 +1541,7 @@ const struct ItemInfo gItemsInfo[] =
         .description = COMPOUND_STRING(
             "A capsule that\n"
             "allows a [Pokémon] to\n"
-            "switch Abilities."),
+            "switch [Abilities]."),
         .pocket = POCKET_ITEMS,
         .sortType = ITEM_TYPE_FIELD_USE,
         .type = ITEM_USE_PARTY_MENU,
@@ -1558,8 +1558,8 @@ const struct ItemInfo gItemsInfo[] =
         .holdEffectParam = 0,
         .description = COMPOUND_STRING(
             "Changes a regular\n"
-            "Ability to a\n"
-            "rarer Ability."),
+            "[Ability] to a\n"
+            "rarer [Ability]."),
         .pocket = POCKET_ITEMS,
         .sortType = ITEM_TYPE_FIELD_USE,
         .type = ITEM_USE_PARTY_MENU,
@@ -13014,7 +13014,7 @@ const struct ItemInfo gItemsInfo[] =
         .name = ITEM_NAME("[TM48]"),
         .price = 3000,
         .description = COMPOUND_STRING(
-            "Switches Abilities\n"
+            "Switches [Abilities]\n"
             "with the foe on the\n"
             "turn this is used."),
         .importance = I_REUSABLE_TMS,
@@ -13831,7 +13831,7 @@ const struct ItemInfo gItemsInfo[] =
         .importance = 1,
         .description = COMPOUND_STRING(
             "Returns a\n"
-            "Pokémon back to\n"
+            "[Pokémon] back to\n"
             "its original shape."),
         .pocket = POCKET_KEY_ITEMS,
         .type = ITEM_USE_PARTY_MENU,
@@ -14857,7 +14857,7 @@ const struct ItemInfo gItemsInfo[] =
         .description = COMPOUND_STRING(
             "Guards the holder\n"
             "from having its\n"
-            "Ability changed."),
+            "[Ability] changed."),
         .pocket = POCKET_ITEMS,
         .sortType = ITEM_TYPE_HELD_ITEM,
         .type = ITEM_USE_BAG_MENU,
@@ -14967,7 +14967,7 @@ const struct ItemInfo gItemsInfo[] =
         .description = COMPOUND_STRING(
             "Ups the strength\n"
             "of [Pokémon] with\n"
-            "certain Abilities."),
+            "certain [Abilities]."),
         .pocket = POCKET_ITEMS,
         .sortType = ITEM_TYPE_HELD_ITEM,
         .type = ITEM_USE_BAG_MENU,
