@@ -1,7 +1,7 @@
 #include "global.h"
 #include "test/battle.h"
 
-SINGLE_BATTLE_TEST("Surger Sufer double speed in electric terrain.")
+SINGLE_BATTLE_TEST("Surger Surfer double speed in Electric Terrain.")
 {
     GIVEN {
         PLAYER(SPECIES_RAICHU_ALOLA) { Ability(ABILITY_SURGE_SURFER); Speed(100); }
@@ -17,7 +17,7 @@ SINGLE_BATTLE_TEST("Surger Sufer double speed in electric terrain.")
     }
 }
 
-SINGLE_BATTLE_TEST("Surger Sufer doesn't double speed if Neutralizing gas is on the field.")
+SINGLE_BATTLE_TEST("Surger Surfer doesn't double speed if Neutralizing Gas is on the field.")
 {
     GIVEN {
         PLAYER(SPECIES_RAICHU_ALOLA) { Ability(ABILITY_SURGE_SURFER); Speed(100); }
@@ -33,7 +33,7 @@ SINGLE_BATTLE_TEST("Surger Sufer doesn't double speed if Neutralizing gas is on 
     }
 }
 
-SINGLE_BATTLE_TEST("Surger Sufer doesn't double speed in terrains other than electric terain.")
+SINGLE_BATTLE_TEST("Surger Sufer doesn't double speed in terrains other than Electric Terrain.")
 {
     enum Move move;
     PARAMETRIZE { move = MOVE_MISTY_TERRAIN; }

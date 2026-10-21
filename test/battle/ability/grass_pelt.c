@@ -1,16 +1,12 @@
 #include "global.h"
 #include "test/battle.h"
 
-ASSUMPTIONS
-{
-    ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
-}
-
-SINGLE_BATTLE_TEST("Grass Pelt raises defenses when in grassy terrain.")
+SINGLE_BATTLE_TEST("Grass Pelt raises defenses when in Grassy Terrain.")
 {
     s16 damage[2];
 
     GIVEN {
+        ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
         PLAYER(SPECIES_GOGOAT) { Ability(ABILITY_GRASS_PELT); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
