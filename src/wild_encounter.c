@@ -849,7 +849,7 @@ void rockSmashRNG(struct ScriptContext *ctx)
             itemRate = OW_ROCK_SMASH_ITEMS_USE_DEFAULT_CHANCE;
 
         u32 partySlot = VarGet(VAR_0x8006);
-        if (DoesRockSmashUserHaveIncreasedItemRarity(partySlot))
+        if (DoesRockSmashUserHaveIncreasedItemLikelihood(partySlot))
             itemRate += 5;
 
         if (VarGet(VAR_0x8004) == TRUE)// if the script for the follower smashing the rock is playing
