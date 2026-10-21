@@ -17,11 +17,15 @@ extern const enum Ability gHiddenBySnowAbilities[];
 
 extern const enum Ability gIncreaseHatchingSpeedAbilities[];
 
+extern const enum Ability gRockSmashItemLikelihoodAbilities[];
+extern const enum Ability gRockSmashItemRarityAbilities[];
+
 u32 GetSynchronizedNature(enum GeneratedMonOrigin origin, enum Species species);
 u32 GetSynchronizedGender(enum GeneratedMonOrigin origin, enum Species species);
 enum Type GetWeightedTypeForWildMonEncounter(void);
 bool32 DoesLeadingMonHaveAbilityEffect(const enum Ability *abilityArray);
-bool32 DoesPartyMemberHaveAbilityEffect(const enum Ability *abilityArray);
+bool32 DoesAnyPartyMemberHaveAbilityEffect(const enum Ability *abilityArray);
+bool32 DoesPartySlotHaveAbilityEffect(const enum Ability *abilityArray, u8 partySlot);
 bool32 DoesPartyHaveIncubatorMon(void);
 
 #endif // GUARD_OW_ABILITIES_H

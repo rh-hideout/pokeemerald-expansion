@@ -2503,7 +2503,7 @@ static u32 Cmd_Countdown(struct BerryCrushGame *game,  u8 *args)
     case 2:
         if (IsMinigameCountdownRunning())
             return 0;
-        // fallthrough
+        [[fallthrough]];
     case 0:
         Rfu_SetLinkStandbyCallback();
         break;

@@ -20,6 +20,8 @@
 #include "constants/party_menu.h"
 #include "constants/songs.h"
 
+#include "sound.h"
+
 #define VALID_MON 0
 #define INVALID_MON 1
 
@@ -183,7 +185,7 @@ void PickPartyMon(struct ScriptContext *ctx)
             return;
         }
     }
-    gSpecialVar_0x8004 = PARTY_NOTHING_CHOSEN;
+    gSpecialVar_0x8004 = PARTY_MON_CANCEL;
 }
 
 enum LearnMoveState
@@ -359,8 +361,10 @@ s32 LearnMove(const struct MoveLearnUI *ui, u8 taskId)
         return LEARN_MOVE_END;
     default:
         errorf("Unknown LearnMove state %d\nEnding move learning ...", state);
+        [[fallthrough]];
     case LEARN_MOVE_END:
-        ui->endTask(taskId);
+        if (IsFanfareTaskInactive())
+            ui->endTask(taskId);
         return LEARN_MOVE_END;
     }
 }

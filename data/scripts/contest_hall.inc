@@ -86,7 +86,7 @@ LilycoveCity_ContestLobby_EventScript_CancelEnterContest::
 LilycoveCity_ContestLobby_EventScript_ChooseContestMon::
 	msgbox LilycoveCity_ContestLobby_Text_EnterWhichPokemon1, MSGBOX_DEFAULT
 	choosecontestmon
-	goto_if_eq VAR_0x8004, PARTY_NOTHING_CHOSEN, LilycoveCity_ContestLobby_EventScript_CancelEnterContest
+	goto_if_eq VAR_0x8004, PARTY_MON_CANCEL, LilycoveCity_ContestLobby_EventScript_CancelEnterContest
 	special TryEnterContestMon
 	goto_if_eq VAR_RESULT, CANT_ENTER_CONTEST, LilycoveCity_ContestLobby_EventScript_CantEnterLowRank
 	goto_if_eq VAR_RESULT, CAN_ENTER_CONTEST_EQUAL_RANK, LilycoveCity_ContestLobby_EventScript_EnterMon
@@ -642,7 +642,7 @@ ContestHall_EventScript_AudienceMember3AlreadyEmoted::
 	return
 
 ContestHall_EventScript_TryDisplayHeartAudienceMember4::
-	goto_if_eq VAR_TEMP_4, 1, ContestHall_EventScript_Audience4MemberAlreadyEmoted
+	goto_if_eq VAR_TEMP_4, 1, ContestHall_EventScript_AudienceMember4AlreadyEmoted
 	applymovement LOCALID_CONTEST_AUDIENCE_4, ContestHall_Movement_Heart
 	playse SE_PIN
 	delay 14
@@ -650,7 +650,7 @@ ContestHall_EventScript_TryDisplayHeartAudienceMember4::
 	addvar VAR_TEMP_0, -1
 	return
 
-ContestHall_EventScript_Audience4MemberAlreadyEmoted::
+ContestHall_EventScript_AudienceMember4AlreadyEmoted::
 	return
 
 ContestHall_EventScript_TryDisplayHeartAudienceMember5::

@@ -3,6 +3,7 @@
 #include "battle_pike.h"
 #include "battle_pyramid.h"
 #include "event_data.h"
+#include "event_object_movement.h"
 #include "fieldmap.h"
 #include "fishing.h"
 #include "follower_npc.h"
@@ -25,6 +26,7 @@
 #include "battle_pike.h"
 #include "battle_pyramid.h"
 #include "constants/abilities.h"
+#include "constants/field_specials.h"
 #include "constants/game_stat.h"
 #include "constants/item.h"
 #include "constants/items.h"
@@ -514,7 +516,7 @@ static bool32 HasRepellingHeldItem()
 }
 
 // Returns true if it will try to create a wild encounter.
-static bool8 WildEncounterCheck(u32 encounterRate, bool8 ignoreAbility)
+static u32 WildEncounterOdds(u32 encounterRate, bool8 ignoreAbility)
 {
     encounterRate *= 16;
     if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_MACH_BIKE | PLAYER_AVATAR_FLAG_ACRO_BIKE))
@@ -554,7 +556,12 @@ static bool8 WildEncounterCheck(u32 encounterRate, bool8 ignoreAbility)
     }
     if (encounterRate > MAX_ENCOUNTER_RATE)
         encounterRate = MAX_ENCOUNTER_RATE;
-    return EncounterOddsCheck(encounterRate);
+    return encounterRate;
+}
+
+static bool8 WildEncounterCheck(u32 encounterRate, bool8 ignoreAbility)
+{
+    return EncounterOddsCheck(WildEncounterOdds(encounterRate, ignoreAbility));
 }
 
 bool8 AreLegendariesInSootopolisPreventingEncounters(void)
@@ -660,26 +667,20 @@ bool32 StandardWildEncounter(u32 metatileBehavior, bool32 isForced)
 }
 
 
-static bool32 TryRockSmashWildEncounter(void)
+bool32 RockSmashEncounterCheck(const struct WildPokemonInfo *wildPokemonInfo)
 {
-    const struct WildPokemonInfo *wildPokemonInfo = GetWildPokemonInfo(WILD_ROCK_SMASH_MONS);
     if (wildPokemonInfo == NULL)
         return FALSE;
 
     if (!WildEncounterCheck(wildPokemonInfo->encounterRate, TRUE))
         return FALSE;
 
+    ZeroEnemyPartyMons();
     GenerateStandardWildMons(wildPokemonInfo, WILD_ROCK_SMASH_MONS, FALSE);
     if (!GetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_HP))
         return FALSE;
     BattleSetup_StartWildBattle();
     return TRUE;
-}
-
-void RockSmashWildEncounter(void)
-{
-    ZeroEnemyPartyMons();
-    gSpecialVar_Result = TryRockSmashWildEncounter();
 }
 
 bool32 SweetScentWildEncounter(void)

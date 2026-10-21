@@ -246,7 +246,7 @@ static void SimulateInputChooseAction(enum BattlerId battler)
     case 0:
         gBattleStruct->simulatedInputState2 = 64;
         ++gBattleStruct->simulatedInputState0;
-        // fall through
+        [[fallthrough]];
     case 1:
         if (--gBattleStruct->simulatedInputState2 == 0)
         {
@@ -814,7 +814,7 @@ static void OakOldManHandleChooseMove(enum BattlerId battler)
             InitMoveSelectionsVarsAndStrings(battler);
             ++gBattleStruct->simulatedInputState1;
             gBattleStruct->simulatedInputState3 = 80;
-            // fall through
+            [[fallthrough]];
         case 1:
             if (--gBattleStruct->simulatedInputState3 == 0)
             {

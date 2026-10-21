@@ -75,3 +75,17 @@ const enum Ability gIncreaseHatchingSpeedAbilities[] = {
     ABILITY_STEAM_ENGINE,
     ABILITY_NONE
 };
+
+const enum Ability gRockSmashItemLikelihoodAbilities[] = {
+    ABILITY_KEEN_EYE,
+    ABILITY_MAGNET_PULL,
+    ABILITY_SUCTION_CUPS,
+    ABILITY_NONE
+
+};
+
+const enum Ability gRockSmashItemRarityAbilities[] = {
+    ABILITY_SERENE_GRACE,
+    ABILITY_SUPER_LUCK,
+    ABILITY_NONE
+};

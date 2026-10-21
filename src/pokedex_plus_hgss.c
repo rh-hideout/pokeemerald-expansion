@@ -572,7 +572,7 @@ bool32 TryOpenPokedexPage_HGSS(u8 taskId, u8 page)
 {
     if (!POKEDEX_PLUS_HGSS)
         return FALSE;
-    
+
     if (LoadPokedexListPage(page))
         gTasks[taskId].func = Task_HandlePokedexInput;
 
@@ -3544,7 +3544,7 @@ static u32 GetSpeciesNameWidthInChars(const u8 *speciesName)
 
 static bool32 IsSpeciesAlcremie(enum Species targetSpecies)
 {
-    return GET_BASE_SPECIES_ID(targetSpecies) == SPECIES_ALCREMIE;
+    return GetBaseSpecies(targetSpecies) == SPECIES_ALCREMIE;
 }
 
 static bool32 IsItemSweet(enum Item item)

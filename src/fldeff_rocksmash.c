@@ -8,15 +8,30 @@
 #include "fldeff.h"
 #include "item_use.h"
 #include "overworld.h"
+#include "ow_abilities.h"
 #include "party_menu.h"
+#include "fldeff.h"
 #include "script.h"
 #include "sound.h"
 #include "sprite.h"
 #include "task.h"
+#include "random.h"
+#include "wild_encounter.h"
 #include "constants/event_object_movement.h"
 #include "constants/event_objects.h"
 #include "constants/field_effects.h"
+#include "constants/field_specials.h"
+#include "constants/rock_smash_item_tables.h"
 #include "constants/songs.h"
+
+struct RockSmashItemTable {
+    const enum Item *table;
+    const u16 *weights; //if NULL, there will be equal chance to roll any item on the table
+    u16 size;
+    u16 weightsSum;
+};
+
+#include "data/rock_smash_items.h"
 
 static void Task_DoFieldMove_Init(u8 taskId);
 static void Task_DoFieldMove_ShowMonAfterPose(u8 taskId);
@@ -164,4 +179,89 @@ static void FieldMove_RockSmash(void)
     PlaySE(SE_M_ROCK_THROW);
     FieldEffectActiveListRemove(FLDEFF_USE_ROCK_SMASH);
     ScriptContext_Enable();
+}
+
+void Scrcmd_rockSmashRandomEvent(struct ScriptContext *ctx)
+{
+    gSpecialVar_Result = ROCK_SMASH_NONE;
+    const struct WildPokemonInfo *wildPokemonInfo = GetWildPokemonInfo(WILD_ROCK_SMASH_MONS);
+
+    if (OW_ROCK_SMASH_ITEMS >= GEN_6)
+    {
+        if (wildPokemonInfo && wildPokemonInfo->encounterRate)
+            gSpecialVar_Result = RandomWeighted(RNG_NONE, 1, 1, 1);// 1/3 chance to do each.
+        else
+            gSpecialVar_Result = RandomWeighted(RNG_NONE, 2, 0, 1);// 2/3 chance to do nothing, 1/3 chance of item
+        return;
+    }
+    if (RockSmashEncounterCheck(wildPokemonInfo))
+    {
+        gSpecialVar_Result = ROCK_SMASH_ENCOUNTER;
+    }
+    else if (OW_ROCK_SMASH_ITEMS >= GEN_4)
+    {
+        u16 itemRate = gMapHeader.events->objectEvents[(gSpecialVar_LastTalked - 1)].trainerRange_berryTreeId;// this is 0 on everything by default.
+        itemRate &= 0xFF;//bitmask to remove any data representing user's table
+        if (itemRate == 0)
+            itemRate = OW_ROCK_SMASH_ITEMS_USE_DEFAULT_CHANCE;
+
+        u32 partySlot = VarGet(VAR_0x8006);
+        if (DoesPartySlotHaveAbilityEffect(gRockSmashItemLikelihoodAbilities, partySlot))
+            itemRate += 5;
+
+        if (VarGet(VAR_0x8004) == TRUE)// if the script for the follower smashing the rock is playing
+            itemRate += 5;
+
+        gSpecialVar_Result = ROCK_SMASH_ITEM * RandomPercentage(RNG_NONE, itemRate);// returns either 0 or 2
+    }
+}
+
+static enum Item GetRockSmashRandomItem(void)
+{
+    u32 itemTable = gMapHeader.events->objectEvents[(gSpecialVar_LastTalked - 1)].trainerRange_berryTreeId;
+    itemTable >>= 8;// remove data that is being used for probability
+
+    assertf(itemTable < ROCK_SMASH_ITEM_TABLE_COUNT, "Unassigned or invalid rock smash item table %d", itemTable)
+    {
+        if ((gMapHeader.mapType == MAP_TYPE_OCEAN_ROUTE)
+            || (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_SEAFLOOR_CAVERN_ROOM1)
+            && (gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_SEAFLOOR_CAVERN_ROOM1)
+             || gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_SEAFLOOR_CAVERN_ROOM2)
+             || gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_SEAFLOOR_CAVERN_ROOM5))))
+            itemTable = ROCK_SMASH_ITEM_TABLE_CLIFF;
+        else if (gMapHeader.mapType == MAP_TYPE_INDOOR)
+            itemTable = ROCK_SMASH_ITEM_TABLE_NONE;
+        else
+            itemTable = ROCK_SMASH_ITEM_TABLE_DEFAULT;
+    }
+    if (itemTable == ROCK_SMASH_ITEM_TABLE_NONE)
+    {
+        return ITEM_NONE;
+    }
+
+    u32 randomIndex;
+    if (sRockSmashTables[itemTable].weightsSum)// I.e. if using Gen 4 mechanics
+    {
+        randomIndex = RandomWeightedArray(RNG_ROCK_SMASH_ITEM_DROP, sRockSmashTables[itemTable].weightsSum, sRockSmashTables[itemTable].size, sRockSmashTables[itemTable].weights);
+        if (randomIndex < sRockSmashTables[itemTable].size - 1)
+        {
+            u32 partySlot = VarGet(VAR_0x8006);
+            if (DoesPartySlotHaveAbilityEffect(gRockSmashItemRarityAbilities, partySlot))// Check for serene grace and super luck's impact on a weighted table.
+                randomIndex++;
+        }
+    }
+    else // Gen 6 mechanics
+        randomIndex = RandomUniform(RNG_ROCK_SMASH_ITEM_DROP, 0, sRockSmashTables[itemTable].size - 1);
+
+    return sRockSmashTables[itemTable].table[randomIndex];
+}
+
+void Scrcmd_rockSmashGenerateItem(struct ScriptContext *ctx)
+{
+    enum Item item = ITEM_NONE;
+    if (OW_ROCK_SMASH_ITEMS >= GEN_4)
+        item = GetRockSmashRandomItem();
+    else
+        errorf("Trying to get rock smash item but the OW_ROCK_SMASH_ITEMS config doesn't allow it");
+    VarSet(VAR_0x8005, item);
 }

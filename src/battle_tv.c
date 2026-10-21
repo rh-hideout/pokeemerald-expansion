@@ -1314,6 +1314,8 @@ static void TrySetBattleSeminarShow(void)
             ctx.updateFlags = FALSE;
             ctx.isSelfInflicted = FALSE;
             ctx.fixedBasePower = powerOverride;
+            ctx.weather = GetWeather();
+            ctx.terrain = gFieldTimers.terrain;
             ctx.abilities[gBattlerAttacker] = GetBattlerAbility(gBattlerAttacker);
             ctx.abilities[gBattlerTarget] = GetBattlerAbility(gBattlerTarget);
             ctx.holdEffects[gBattlerAttacker] = GetBattlerHoldEffect(gBattlerAttacker);

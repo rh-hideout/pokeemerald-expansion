@@ -8,6 +8,7 @@
 #include "battle_stat_change.h"
 #include "battle_gimmick.h"
 #include "battle_scripts.h"
+#include "battle_move_resolution.h"
 #include "constants/battle.h"
 #include "constants/battle_string_ids.h"
 #include "constants/abilities.h"
@@ -252,12 +253,8 @@ static bool32 HandleEndTurnFutureSight(enum BattlerId battler)
 
     gBattleStruct->eventState.endTurnBattler++;
 
-    if (gBattleStruct->futureSight[battler].counter > 0
-     && --gBattleStruct->futureSight[battler].counter == 0)
+    if (gBattleStruct->futureSight[battler].counter > 0 && --gBattleStruct->futureSight[battler].counter == 0)
     {
-        if (!IsBattlerPresent(battler)) // Looks like a bug in doubles?
-            return effect;
-
         if (gBattleStruct->futureSight[battler].move == MOVE_FUTURE_SIGHT)
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_FUTURE_SIGHT;
         else
@@ -269,7 +266,15 @@ static bool32 HandleEndTurnFutureSight(enum BattlerId battler)
         gBattlerAttacker = gBattleStruct->futureSight[battler].battlerIndex;
         gCurrentMove = gBattleStruct->futureSight[battler].move;
 
-        gBattleStruct->eventState.atkCanceler = CANCELER_TARGET_FAILURE;
+        if (!IsBattlerPresent(gBattlerTarget))
+        {
+            gBattlerTarget = GetPartnerBattler(gBattlerTarget);
+            if (!IsBattlerPresent(gBattlerTarget))
+                return effect;
+        }
+
+        gBattleStruct->eventState.atkCanceler = CANCELER_NO_TARGET;
+        SetTargetMoveFailureFlags(gBattlerAttacker, GetMoveTarget(gCurrentMove));
 
         if (IsFutureSightAttackerInParty(gBattlerAttacker, gBattlerTarget))
             gSpecialStatuses[gBattlerAttacker].attackerInParty = TRUE;
@@ -963,7 +968,7 @@ static bool32 HandleEndTurnYawn(enum BattlerId battler)
                 gLastUsedAbility = ABILITY_SWEET_VEIL;
                 gBattlerAbility = gBattleScripting.battler;
                 RecordAbilityBattle(gBattleScripting.battler, ABILITY_SWEET_VEIL);
-                BattleScriptCall(BattleScript_ImmunityProtectedRet);
+                BattleScriptCall(BattleScript_AbilityProtectedTarget);
             }
             else
             {
@@ -1449,8 +1454,8 @@ static bool32 TryEndTurnTrainerSlide(enum BattlerId battler)
          || (ShouldDoTrainerSlide(battler, TRAINER_SLIDE_ATTACKER_LANDS_FIRST_SUPER_EFFECTIVE_HIT) != TRAINER_SLIDE_TARGET_NONE)
          || (ShouldDoTrainerSlide(battler, TRAINER_SLIDE_DEFENDER_TAKES_FIRST_STAB_MOVE) != TRAINER_SLIDE_TARGET_NONE)
          || (ShouldDoTrainerSlide(battler, TRAINER_SLIDE_ATTACKER_LANDS_FIRST_STAB_MOVE) != TRAINER_SLIDE_TARGET_NONE)
-         || (ShouldDoTrainerSlide(battler, TRAINER_SLIDE_OPPONENT_MON_UNAFFECTED) != TRAINER_SLIDE_TARGET_NONE)
-         || (ShouldDoTrainerSlide(battler, TRAINER_SLIDE_SELF_MON_UNAFFECTED) != TRAINER_SLIDE_TARGET_NONE));
+         || (ShouldDoTrainerSlide(battler, TRAINER_SLIDE_ATTACKER_LANDS_FIRST_INEFFECTIVE) != TRAINER_SLIDE_TARGET_NONE)
+         || (ShouldDoTrainerSlide(battler, TRAINER_SLIDE_DEFENDER_TAKES_FIRST_INEFFECTIVE) != TRAINER_SLIDE_TARGET_NONE));
 }
 
 static bool32 HandleEndTurnTrainerASlides(enum BattlerId battler)

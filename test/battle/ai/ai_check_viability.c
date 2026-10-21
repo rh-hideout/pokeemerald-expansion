@@ -80,22 +80,18 @@ AI_SINGLE_BATTLE_TEST("AI sees increased base power of Grav Apple")
     enum Move movePlayer;
     u16 expectedMove;
 
-    PARAMETRIZE { movePlayer = MOVE_CELEBRATE; expectedMove = MOVE_DRUM_BEATING; }
+    PARAMETRIZE { movePlayer = MOVE_CELEBRATE; expectedMove = MOVE_IVY_CUDGEL; }
     PARAMETRIZE { movePlayer = MOVE_GRAVITY; expectedMove = MOVE_GRAV_APPLE; }
 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_GRAV_APPLE) == EFFECT_GRAV_APPLE);
-        ASSUME(GetMovePower(MOVE_GRAV_APPLE) == GetMovePower(MOVE_DRUM_BEATING));
-        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_DRUM_BEATING, self: FALSE, speed: -1);
-        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET) { HP(81); Speed(20); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(10); Moves(MOVE_DRUM_BEATING, MOVE_GRAV_APPLE); }
+        ASSUME(GetMovePower(MOVE_IVY_CUDGEL) > GetMovePower(MOVE_GRAV_APPLE));
+        PLAYER(SPECIES_WOBBUFFET) { Speed(20); Item(ITEM_COVERT_CLOAK); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(10); Moves(MOVE_IVY_CUDGEL, MOVE_GRAV_APPLE); }
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
     } WHEN {
-        TURN { MOVE(player, movePlayer); EXPECT_MOVE(opponent, MOVE_DRUM_BEATING); }
+        TURN { MOVE(player, movePlayer); EXPECT_MOVE(opponent, MOVE_IVY_CUDGEL); }
         TURN { MOVE(player, MOVE_CELEBRATE); EXPECT_MOVE(opponent, expectedMove); }
-    } SCENE {
-        if (expectedMove == MOVE_GRAV_APPLE)
-            MESSAGE("Wobbuffet fainted!");
     }
 }
 

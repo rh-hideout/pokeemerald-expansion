@@ -17,6 +17,7 @@ SINGLE_BATTLE_TEST("Blunder Policy raises the users speed by 2 stages if the use
         TURN { MOVE(player, MOVE_FOCUS_BLAST); }
     } SCENE {
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_FOCUS_BLAST, player);
+        ITEM_POPUP(player, ITEM_BLUNDER_POLICY);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
     } THEN {
         EXPECT(player->item == ITEM_NONE);

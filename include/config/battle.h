@@ -10,6 +10,7 @@
 #define B_WHITEOUT_MONEY            GEN_LATEST // In Gen4+, the amount of money dropped after losing a battle is determined by the number of Badges obtained. Previously, half of the player's money would be dropped. (While this change was also in FRLG, for the sake of simplicity, setting this to GEN_3 will result in RSE behavior.)
 #define B_LIGHT_BALL_ATTACK_BOOST   GEN_LATEST // In Gen4+, Light Ball doubles Attack in addition to Sp. Atk.
 #define B_PARALYSIS_CHANCE          GEN_LATEST // In Champions, paralysis has a 12.5% chance of not moving, instead of 25%.
+#define B_HP_RESTORATION_ROUNDING   GEN_LATEST // In Gen5+, healing moves round up
 
 // Experience settings
 #define B_EXP_CATCH                 GEN_LATEST // In Gen6+, the party gains experience when the player catches another Pokémon.
@@ -181,13 +182,13 @@
 #define B_FAINT_MOVE_EFFECT_TIMING      GEN_LATEST // In Champions, some move effects now apply even if the user faints from Rough Skin, Iron Barbs, etc.
                                                    // Effects include: Knock Off, Thief, Rapid Spin, Mortal Spin, Ice Spinner
                                                    // This does not include: Ceaseless Edge, Stone Axe
-#define B_SHEER_FORCE_AGAINST_ABILITIES GEN_LATEST // As of Champions, Sheer Force no longer prevents the activation of Berserk and Pickpocket
-                                                   // Currently does nothing, as there is not enough info to confirm event orders for cases like Eject Pack and Eject Button
+#define B_SHEER_FORCE_TIMING            GEN_LATEST // As of Champions, Sheer Force no longer prevents the activation of Berserk, Pickpocket, Shell Bell, Eject Button, Red Card, and Emergency Exit
 #define B_ENCORE_PRIORITY               GEN_LATEST // In Champions, Encore uses the priority of the Encored move instead of the selected move
                                                    // In Gen9-, Encore allows the target to use the Encored move using the priority of the selected move
 #define B_RAGE_FIST                     GEN_LATEST // In Champions, Rage Fist stacks reset upon switching out or fainting
 #define B_MOVE_EFFECTS_BEFORE_MOVES     GEN_LATEST // In Champions, Beak Blast will work when Encored into from a different move
-                                                   // Additionally, the charging animation will occur 
+                                                   // Additionally, the charging animation will occur
+#define B_QUEUED_SWITCH_TIMINGS         GEN_LATEST // In Champions, Eject Button and Emergency Exit no longer prevent an opponent's pivot move (U-Turn, Volt Switch, etc.) from triggering.
 
 // Ability settings
 #define B_GALE_WINGS                    GEN_LATEST // In Gen7+, Gale Wings requires full HP to trigger.
@@ -226,6 +227,8 @@
 #define B_DANCER_ORDER                  GEN_LATEST // In Gen8+, Dancer activations are based on Speed order including modifiers. In Gen7, Dancer activates from the slowest to fastest battler based on the battler's unmodified Speed stat.
 #define B_UNSEEN_FIST_PIERCING_DRILL    GEN_LATEST // In Gen8-9, Unseen Fist/Piercing Drill deals 100% of the damage dealt to protected targets while also bypassing the contact effects of protect moves.
                                                    // In Champions, Unseen Fist/Piercing Drill nerfs damage dealt against protected targets to 25%. It also no longer bypasses the contact effects of protect moves.
+#define B_RUN_AWAY                      GEN_LATEST // In Champions, Run Away allows the user to ignore trapping effects like Shadow Tag.
+#define B_EMERGENCY_EXIT                GEN_LATEST // In Champions, multiple instances of Emergency Exit can activate in a single move instance rather than one.
 
 // Various volatile timers
 #define B_CONFUSION_TURNS    5
@@ -336,6 +339,8 @@
 #define B_SNOW_WARNING                  GEN_LATEST // In Gen9+, Snow Warning will summon snow instead of hail.
 #define B_PREFERRED_ICE_WEATHER         B_ICE_WEATHER_BOTH // Toggles hail move effects to snow and vice versa.
 #define B_OVERWORLD_WEATHER_OVERRIDE    GEN_LATEST // In Gen9+, overworld weather cannot be overridden.
+#define B_SHOW_WEATHER_INDICATOR        TRUE       // If TRUE, shows an indicator for current weather during player move selection.
+#define B_INSTANT_WEATHER_INDICATORS    FALSE      // If TRUE, weather indicators don't slide in.
 
 // Terrain settings
 #define B_TERRAIN_BG_CHANGE         TRUE       // If set to TRUE, terrain moves permanently change the default battle background until the effect fades.
@@ -358,6 +363,7 @@
 #define B_WAIT_TIME_MULTIPLIER              16         // This determines how long text pauses for in battle. Vanilla is 16. Lower values result in faster battles.
 #define B_QUICK_MOVE_CURSOR_TO_RUN          FALSE      // If set to TRUE, pushing B in the battle menu in a wild encounter will move the cursor to the Run option.
 #define B_RUN_TRAINER_BATTLE                TRUE       // If set to TRUE, players can run from Trainer battles as in Gen9+. This is treated as a white out.
+#define B_BATTLE_INFO_BUTTON                L_BUTTON   // Button that opens the battle status menu on the main command screen.
 #define B_MOVE_DESCRIPTION_BUTTON           L_BUTTON   // If set to a button other than B_LAST_USED_BALL_BUTTON, pressing this button will open the move description menu.
 #define B_SHOW_USELESS_Z_MOVE_INFO          FALSE      // If set to TRUE, Z-Moves without additional effects, like newer generation status moves, will say "No additional effect."
 #define B_ANIMATE_MON_AFTER_KO              TRUE       // If set to TRUE, if a Pokémon on the opposing side faints, the non-fainted Pokémon will play their animations.
@@ -398,6 +404,11 @@
 #define B_PARTNER_MONS_MARKED_SEEN      FALSE      // If set to TRUE, if your Double Battle partner sends out a Pokémon you haven't encountered yet, it will be marked as SEEN in your Pokédex.
 #define B_MULTI_HALF_TEAMS              FALSE      // If TRUE, trainers will be capped at 3 Pokémon each when there are 2 trainers on one side in a battle. If FALSE, per-battle capping may still be set using `Multi Party: Half` in `trainers.party`
 #define B_TERA_ORB_ALWAYS_CHARGED       FALSE      // If TRUE, causes the Tera Orb to always be charged all the time in every case, overriding B_FLAG_TERA_ORB_CHARGED. Use that for modularity.
+#if TESTING
+#define B_FAINTING_KEEPS_FORM           GEN_CHAMPIONS
+#else
+#define B_FAINTING_KEEPS_FORM           GEN_LATEST // In Champions, Mega Evolution and Palafin's Hero Form remain in effect even after fainting. This is relevant for Revival Blessing.
+#endif
 
 #define NUM_BEEPS_GEN_LATEST            4                    // Loops 4 times
 #define NUM_BEEPS_GEN_3                 -1                   // Loops infinitely

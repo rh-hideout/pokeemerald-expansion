@@ -1442,7 +1442,7 @@ u32 GenerateBattlePyramidWildMon(u32 minLevel)
         species = Random() % NUM_SPECIES;
 
         // check if base species
-        if (GET_BASE_SPECIES_ID(species) != species)
+        if (GetBaseSpecies(species) != species)
             continue;
 
         // check type

@@ -4525,7 +4525,7 @@ static void Task_LearnMove(u8 taskId)
 
 void CanTeachMoveBoxMon(void)
 {
-    if (gSpecialVar_0x8004 == PARTY_NOTHING_CHOSEN)
+    if (gSpecialVar_0x8004 == PARTY_MON_CANCEL)
     {
         // We want to wait one frame before using ScriptContext_Enable() or the game freezes
         CreateTask(UIEndTask, 1);

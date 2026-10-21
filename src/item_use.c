@@ -1226,7 +1226,7 @@ bool32 CannotUseItemsInBattle(enum Item itemId, struct Pokemon *mon)
     case EFFECT_ITEM_SET_FOCUS_ENERGY:
         if (hp == 0 ||gPartyMenu.slotId > 1)
             cannotUse = TRUE;
-        else if (gBattleMons[battlerTarget].volatiles.dragonCheer || gBattleMons[battlerTarget].volatiles.focusEnergy)
+        else if (gBattleMons[battlerTarget].volatiles.criticalHitBoost)
             cannotUse = TRUE;
         break;
     case EFFECT_ITEM_SET_MIST:
