@@ -2235,7 +2235,7 @@ static enum PartySlot GetBestMonIntegrated(struct Pokemon *party, int lastId, en
 
     // Dynamic mon selection
     struct SwitchAiContext switchContext;
-    switchContext.dynamicSingleId = PARTY_MON_NONE;
+    switchContext.dynamicSingleId = PARTY_SLOT_NONE;
     switchContext.dynamicMultipleIds = 0;
 
     GetIncomingHealInfo(battler, &healInfoData);
@@ -2517,7 +2517,7 @@ static enum PartySlot GetBestMonVanilla(struct Pokemon *party, int lastId, enum 
 
     // Dynamic mon selection
     struct SwitchAiContext switchContext;
-    switchContext.dynamicSingleId = PARTY_MON_NONE;
+    switchContext.dynamicSingleId = PARTY_SLOT_NONE;
     switchContext.dynamicMultipleIds = 0;
 
     // Save existing battler data
