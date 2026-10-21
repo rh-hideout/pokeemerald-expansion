@@ -1,7 +1,7 @@
 #include "global.h"
 #include "test/battle.h"
 
-SINGLE_BATTLE_TEST("Grass Pelt raises defenses when in Grassy Terrain.")
+SINGLE_BATTLE_TEST("Grass Pelt raises defense when in Grassy Terrain.")
 {
     s16 damage[2];
 
