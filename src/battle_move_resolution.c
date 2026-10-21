@@ -1789,6 +1789,16 @@ static enum CancelerResult CancelerProtean(struct BattleCalcValues *cv)
     return CANCELER_RESULT_SUCCESS;
 }
 
+static void SetValuesForTwoTurnMoveFire(struct BattleCalcValues *cv)
+{
+    gBattleScripting.animTurn = 1;
+    gBattleScripting.animTargetsHit = 0;
+    gBattleMons[cv->battlerAtk].volatiles.multipleTurns = FALSE;
+    gBattleMons[cv->battlerAtk].volatiles.chargeTurn = FALSE;
+    if (gBattleMoveEffects[cv->moveEffect].semiInvulnerableEffect)
+        gBattleMons[cv->battlerAtk].volatiles.semiInvulnerable = STATE_NONE;
+}
+
 static enum CancelerResult CancelerCharging(struct BattleCalcValues *cv)
 {
     bool32 isSkyDrop = cv->moveEffect == EFFECT_SKY_DROP;
@@ -1835,12 +1845,7 @@ static enum CancelerResult CancelerCharging(struct BattleCalcValues *cv)
 
     if (gBattleMons[cv->battlerAtk].volatiles.multipleTurns) // Second turn
     {
-        gBattleScripting.animTurn = 1;
-        gBattleScripting.animTargetsHit = 0;
-        gBattleMons[cv->battlerAtk].volatiles.multipleTurns = FALSE;
-        gBattleMons[cv->battlerAtk].volatiles.chargeTurn = FALSE;
-        if (gBattleMoveEffects[cv->moveEffect].semiInvulnerableEffect)
-            gBattleMons[cv->battlerAtk].volatiles.semiInvulnerable = STATE_NONE;
+        SetValuesForTwoTurnMoveFire(cv);
 
         if (isSkyDrop)
         {
@@ -1902,34 +1907,25 @@ static enum CancelerResult CancelerCharging(struct BattleCalcValues *cv)
 
     enum TwoTurnMoveActivation twoTurnMoveActivation = GetTwoTurnMoveActivation(cv, GetWeather());
 
-    if (twoTurnMoveActivation == ACTIVATION_NEXT_TURN)
-    {
-        gBattleMons[cv->battlerAtk].volatiles.multipleTurns = TRUE;
-        gBattlescriptCurrInstr = BattleScript_MoveEnd;
-        gBattleStruct->eventState.atkCanceler = CANCELER_END;
-        return CANCELER_RESULT_END;
-    }
-
-    gBattleScripting.animTurn = 1;
-    gBattleScripting.animTargetsHit = 0;
-    gBattleScripting.battler = cv->battlerAtk;
-    gBattleMons[cv->battlerAtk].volatiles.chargeTurn = FALSE;
-    if (gBattleMoveEffects[cv->moveEffect].semiInvulnerableEffect)
-        gBattleMons[cv->battlerAtk].volatiles.semiInvulnerable = STATE_NONE;
-
     switch (twoTurnMoveActivation)
     {
     case ACTIVATION_WEATHER:
+        SetValuesForTwoTurnMoveFire(cv);
         return CANCELER_RESULT_SUCCESS;
     case ACTIVATION_MEGA_SOL:
+        SetValuesForTwoTurnMoveFire(cv);
         BattleScriptCall(BattleScript_MegaSolActivatesTwoTurnMove);
         return CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT;
     case ACTIVATION_POWER_HERB:
         gLastUsedItem = gBattleMons[cv->battlerAtk].item;
+        SetValuesForTwoTurnMoveFire(cv);
         BattleScriptCall(BattleScript_PowerHerbActivation);
         return CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT;
     case ACTIVATION_NEXT_TURN:
-        break;
+        gBattleMons[cv->battlerAtk].volatiles.multipleTurns = TRUE;
+        gBattlescriptCurrInstr = BattleScript_MoveEnd;
+        gBattleStruct->eventState.atkCanceler = CANCELER_END;
+        return CANCELER_RESULT_END;
     }
 
     return CANCELER_RESULT_SUCCESS;
