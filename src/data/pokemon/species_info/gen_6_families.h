@@ -6662,8 +6662,8 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
             SHADOW_SIZE_M,
             TRACKS_FOOT,
             sAnimTable_Following,
-            gOverworldPalette_XerneasNeutral,
-            gShinyOverworldPalette_XerneasNeutral
+            gOverworldPalette_XerneasActive,
+            gShinyOverworldPalette_XerneasActive
         )
         .isRestrictedLegendary = TRUE,
         .isFrontierBanned = TRUE,
