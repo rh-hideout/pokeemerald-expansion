@@ -249,8 +249,8 @@ struct AiLogicData
     uq4_12_t effectiveness[MAX_BATTLERS_COUNT][MAX_BATTLERS_COUNT][MAX_MON_MOVES]; // attacker, target, moveIndex
     u8 moveAccuracy[MAX_BATTLERS_COUNT][MAX_BATTLERS_COUNT][MAX_MON_MOVES]; // attacker, target, moveIndex
     u8 moveLimitations[MAX_BATTLERS_COUNT];
-    enum PartyMon monToSwitchInId[MAX_BATTLERS_COUNT]; // ID of the mon to switch in.
-    enum PartyMon mostSuitableMonId[MAX_BATTLERS_COUNT]; // Stores result of GetMostSuitableMonToSwitchInto, which decides which generic mon the AI would switch into if they decide to switch. This can be overruled by specific mons found in ShouldSwitch; the final resulting mon is stored in AI_monToSwitchIntoId.
+    enum PartySlot monToSwitchInId[MAX_BATTLERS_COUNT]; // ID of the mon to switch in.
+    enum PartySlot mostSuitableMonId[MAX_BATTLERS_COUNT]; // Stores result of GetMostSuitableMonToSwitchInto, which decides which generic mon the AI would switch into if they decide to switch. This can be overruled by specific mons found in ShouldSwitch; the final resulting mon is stored in AI_monToSwitchIntoId.
     enum Move predictedMove[MAX_BATTLERS_COUNT];
     u8 resistBerryAffected[MAX_BATTLERS_COUNT][MAX_BATTLERS_COUNT][MAX_MON_MOVES]; // Tracks whether currently calc'd move is affected by a resist berry into given target
 
@@ -503,7 +503,7 @@ struct BattleVideo {
 struct Wish
 {
     u16 counter;
-    enum PartyMon partyId;
+    enum PartySlot partyId;
 };
 
 struct FutureSight
@@ -511,13 +511,13 @@ struct FutureSight
     enum Move move;
     u16 counter:10;
     u16 battlerIndex:3;
-    enum PartyMon partyIndex:3;
+    enum PartySlot partyIndex:3;
 };
 
 struct SleepClause
 {
     enum BattleTrainer trainer:3;
-    enum PartyMon partyIndex:3;
+    enum PartySlot partyIndex:3;
     u8 padding:2;
 };
 
@@ -607,8 +607,8 @@ struct BattleStruct
     u8 weatherDuration;
     u8 weatherDurationTotal;
     u8 weatherSide;
-    enum PartyMon expGettersOrder[PARTY_SIZE]; // First battlers which were sent out, then via exp-share
-    enum PartyMon expGetterMonId;
+    enum PartySlot expGettersOrder[PARTY_SIZE]; // First battlers which were sent out, then via exp-share
+    enum PartySlot expGetterMonId;
     u8 expOrderId:3;
     u8 teamGotExpMsgPrinted:1; // The 'Rest of your team got msg' has been printed.
     u8 padding0:4;
@@ -621,9 +621,9 @@ struct BattleStruct
     u8 moneyMultiplierItem:1;
     u8 moneyMultiplierMove:1;
     u8 savedTurnActionNumber;
-    enum PartyMon scriptPartyIdx; // for printing the nickname
-    enum PartyMon battlerPartyIndexes[MAX_BATTLERS_COUNT];
-    enum PartyMon monToSwitchIntoId[MAX_BATTLERS_COUNT];
+    enum PartySlot scriptPartyIdx; // for printing the nickname
+    enum PartySlot battlerPartyIndexes[MAX_BATTLERS_COUNT];
+    enum PartySlot monToSwitchIntoId[MAX_BATTLERS_COUNT];
     u8 battlerPartyOrders[MAX_BATTLERS_COUNT][PARTY_SIZE / 2];
     u8 runTries;
     u8 safariGoNearCounter;
@@ -634,7 +634,7 @@ struct BattleStruct
     u8 linkBattleVsSpriteId_S; // The letter "S"
     enum MoveSlot chosenMovePositions[MAX_BATTLERS_COUNT];
     u8 stateIdAfterSelScript[MAX_BATTLERS_COUNT];
-    enum PartyMon prevSelectedPartySlot;
+    enum PartySlot prevSelectedPartySlot;
     u8 stringMoveType;
     u8 palaceFlags; // First 4 bits are "is <= 50% HP and not asleep" for each battler, last 4 bits are selected moves to pass to AI
     u8 recordedActionSet; // related to choosing Pokémon?
@@ -668,7 +668,7 @@ struct BattleStruct
     u8 unused1:4;
     struct BattleTvMovePoints tvMovePoints;
     struct BattleTv tv;
-    enum PartyMon AI_monToSwitchIntoId[MAX_BATTLERS_COUNT];
+    enum PartySlot AI_monToSwitchIntoId[MAX_BATTLERS_COUNT];
     s8 arenaMindPoints[NUM_BATTLE_SIDES];
     s8 arenaSkillPoints[NUM_BATTLE_SIDES];
     u16 arenaStartHp[NUM_BATTLE_SIDES];
@@ -711,7 +711,7 @@ struct BattleStruct
     enum DamageCategory dynamicMoveCategory:3;
     enum Item flingItem:14;
     enum FlungItem flungItem:2;
-    enum PartyMon itemPartyIndex[MAX_BATTLERS_COUNT];
+    enum PartySlot itemPartyIndex[MAX_BATTLERS_COUNT];
     enum MoveSlot itemMoveIndex[MAX_BATTLERS_COUNT];
     s32 aiDelayTimer; // Counts number of frames AI takes to choose an action.
     s32 aiDelayFrames; // Number of frames it took to choose an action.
@@ -721,7 +721,7 @@ struct BattleStruct
     u32 stellarBoostFlags[MAX_BATTLE_TRAINERS]; // bitfield
     struct SleepClause monCausingSleepClause[NUM_BATTLE_SIDES]; // Stores which Pokémon on a given side is causing Sleep Clause to be active as the mon's index in the party
     u8 additionalEffectsCounter:4; // A counter for the additionalEffects applied by the current move in Cmd_setadditionaleffects
-    enum PartyMon pursuitStoredSwitch:4; // Stored id for the Pursuit target's switch
+    enum PartySlot pursuitStoredSwitch:4; // Stored id for the Pursuit target's switch
     s32 battlerExpReward;
     enum Species prevTurnSpecies[MAX_BATTLERS_COUNT]; // Stores species the AI has in play at start of turn
     s16 passiveHpUpdate[MAX_BATTLERS_COUNT]; // non-move damage and healing
@@ -1025,7 +1025,7 @@ extern u8 *gBattleAnimBgTileBuffer;
 extern u8 *gBattleAnimBgTilemapBuffer;
 extern u32 gBattleControllerExecFlags;
 extern u8 gBattlersCount;
-extern enum PartyMon gBattlerPartyIndexes[MAX_BATTLERS_COUNT];
+extern enum PartySlot gBattlerPartyIndexes[MAX_BATTLERS_COUNT];
 extern u8 gBattlerPositions[MAX_BATTLERS_COUNT];
 extern u8 gActionsByTurnOrder[MAX_BATTLERS_COUNT];
 extern enum BattlerId gBattlerByTurnOrder[MAX_BATTLERS_COUNT];
