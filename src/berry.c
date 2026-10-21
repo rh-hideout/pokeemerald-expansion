@@ -2798,7 +2798,7 @@ void ObjectEventInteractionGetBerryCountString(void)
     if (berry > 0)
     {
         count = 1;
-        CopyItemNameHandlePlural(gSpecialVar_0x8006, gStringVar3, count);
+        CopyItemNameHandlePlural(BerryTypeToItemId(berry), gStringVar3, count);
         gSpecialVar_Result = TRUE;
     }
     else
