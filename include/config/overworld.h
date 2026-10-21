@@ -13,6 +13,9 @@
 #define OW_DEFOG_FIELD_MOVE             FALSE      // If enabled, Defog can be used as a Field Move as seen in DPPt.
 #define OW_ROCK_CLIMB_FIELD_MOVE        FALSE      // If enabled, Rock Climb can be used as a Field Move as seen in DPPt.
 #define OW_CHOOSE_FROM_PC_AND_PARTY     TRUE       // If enabled, NPCs like move tutors or trainers asking for trade will let you pick a Pokémon from your PC or party instead of just your party
+#define OW_ROCK_SMASH_ITEMS             GEN_3      // From Gen4, using Rock Smash on rocks can yield items. From Gen6, using Rock Smash on rocks yields items with updated mechanics. Configure loot tables in src/data/rock_smash_items.h
+#define OW_ROCK_SMASH_ITEMS_USE_DEFAULT_CHANCE    10   // Only used when OW_ROCK_SMASH_ITEMS is set to GEN_4, assume the default value for rock smash item chance (0) means this number instead. Setting this config to 0 means no rock will give items unless given an explicit item chance
+
 
 // Item Obtain Description Box
 #define OW_ITEM_DESCRIPTIONS_OFF        0   // never show descriptions

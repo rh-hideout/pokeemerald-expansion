@@ -1,4 +1,5 @@
 #include "global.h"
+#include "event_object_movement.h"
 #include "random_mon_generation.h"
 #include "string_util.h"
 #include "test/test.h"
@@ -157,6 +158,83 @@ TEST("Form change targets have the appropriate species flags")
        }
     }
 }
+
+#if OW_POKEMON_OBJECT_EVENTS
+
+TEST("Species' overworld sprites have correct number of frames for animTable")
+{
+    ASSUME(OW_GFX_COMPRESS == OGC_FAST || OW_GFX_COMPRESS == OGC_SMALL);
+
+    enum Species species = 0;
+
+    for (enum Species j = SPECIES_NONE; j < NUM_SPECIES; j++)
+    {
+        if (IsSpeciesEnabled(j))
+            PARAMETRIZE_LABEL("ID:%d - %S", j, GetSpeciesName(j)) { species = j; }
+    }
+
+    {
+        struct ObjectEventGraphicsInfo const * const overworldData = &gSpeciesInfo[species].overworldData;
+        union AnimCmd const * const * const speciesAnimTable = overworldData->anims;
+
+        if (speciesAnimTable == NULL)
+            EXPECT(NULL == overworldData->images);
+        else
+        {
+            u32 frameCount = -1;
+            if (OW_GFX_COMPRESS == OGC_FAST)
+            {
+                frameCount = ((u8*) overworldData->images->data)[1];
+            }
+            else if (OW_GFX_COMPRESS == OGC_SMALL)
+            {
+                u32 headerWord = ((u32*) overworldData->images->data)[0];
+                u32 imageSize = ((headerWord >> 4) & 0x3FFF) * 4;
+                frameCount = imageSize / overworldData->images->size;
+            }
+
+            if (speciesAnimTable == sAnimTable_Following)
+                EXPECT_EQ(6, frameCount);
+            else if (speciesAnimTable == sAnimTable_Following_Asym)
+                EXPECT_EQ(8, frameCount);
+            else
+                Test_ExitWithResult(TEST_RESULT_ASSUMPTION_FAIL, __LINE__, "%s:%d: Unknown anim table: %p", gTestRunnerState.test->filename, __LINE__, speciesAnimTable);
+        }
+    }
+
+    #if P_GENDER_DIFFERENCES
+    {
+        struct ObjectEventGraphicsInfo const * const overworldData = &gSpeciesInfo[species].overworldDataFemale;
+        union AnimCmd const * const * const speciesAnimTable = overworldData->anims;
+
+        if (speciesAnimTable == NULL)
+            EXPECT(NULL == overworldData->images);
+        else
+        {
+            u32 frameCount = -1;
+            if (OW_GFX_COMPRESS == OGC_FAST)
+            {
+                frameCount = ((u8*) overworldData->images->data)[1];
+            }
+            else if (OW_GFX_COMPRESS == OGC_SMALL)
+            {
+                u32 headerWord = ((u32*) overworldData->images->data)[0];
+                u32 imageSize = ((headerWord >> 4) & 0x3FFF) * 4;
+                frameCount = imageSize / overworldData->images->size;
+            }
+
+            if (speciesAnimTable == sAnimTable_Following)
+                EXPECT_EQ(6, frameCount);
+            else if (speciesAnimTable == sAnimTable_Following_Asym)
+                EXPECT_EQ(8, frameCount);
+            else
+                Test_ExitWithResult(TEST_RESULT_ASSUMPTION_FAIL, __LINE__, "%s:%d: Unknown anim table: %p", gTestRunnerState.test->filename, __LINE__, speciesAnimTable);
+        }
+    }
+    #endif
+}
+
+#endif
 
 TEST("No species has two evolutions that use the evolution tracker")
 {

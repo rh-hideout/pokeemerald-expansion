@@ -1016,7 +1016,7 @@ void HandleAction_ActionFinished(void)
 {
     u32 i, j;
     bool32 afterYouActive = gSpecialStatuses[gBattlerByTurnOrder[gCurrentTurnActionNumber + 1]].afterYou;
-    gBattleStruct->monToSwitchIntoId[gBattlerByTurnOrder[gCurrentTurnActionNumber]] = gSelectedMonPartyId = PARTY_MON_NONE;
+    gBattleStruct->monToSwitchIntoId[gBattlerByTurnOrder[gCurrentTurnActionNumber]] = gSelectedMonPartyId = PARTY_SLOT_NONE;
     gCurrentTurnActionNumber++;
     gCurrentActionFuncId = gActionsByTurnOrder[gCurrentTurnActionNumber];
     memset(&gSpecialStatuses, 0, sizeof(gSpecialStatuses));
@@ -1840,7 +1840,7 @@ bool32 HandleFaintedMonActions(void)
             gBattleStruct->eventState.faintedAction++;
             for (enum BattlerId i = 0; i < gBattlersCount; i++)
             {
-                if (gAbsentBattlerFlags & (1u << i) && !HasNoMonsToSwitch(i, PARTY_MON_NONE, PARTY_MON_NONE))
+                if (gAbsentBattlerFlags & (1u << i) && !HasNoMonsToSwitch(i, PARTY_SLOT_NONE, PARTY_SLOT_NONE))
                     gAbsentBattlerFlags &= ~(1u << i);
             }
             [[fallthrough]];
@@ -1915,9 +1915,9 @@ bool32 HandleFaintedMonActions(void)
     return FALSE;
 }
 
-bool32 HasNoMonsToSwitch(enum BattlerId battler, enum PartyMon partyIdBattlerOn1, enum PartyMon partyIdBattlerOn2)
+bool32 HasNoMonsToSwitch(enum BattlerId battler, enum PartySlot partyIdBattlerOn1, enum PartySlot partyIdBattlerOn2)
 {
-    enum PartyMon i;
+    enum PartySlot i;
     enum BattlerId playerId, flankId;
     s32 lastId = GetAILastPartyIndex(battler); // + 1
     struct Pokemon *party = GetBattlerParty(battler);
@@ -1948,9 +1948,9 @@ bool32 HasNoMonsToSwitch(enum BattlerId battler, enum PartyMon partyIdBattlerOn1
                 return TRUE;
         }
 
-        if (partyIdBattlerOn1 == PARTY_MON_NONE)
+        if (partyIdBattlerOn1 == PARTY_SLOT_NONE)
             partyIdBattlerOn1 = gBattlerPartyIndexes[flankId];
-        if (partyIdBattlerOn2 == PARTY_MON_NONE)
+        if (partyIdBattlerOn2 == PARTY_SLOT_NONE)
             partyIdBattlerOn2 = gBattlerPartyIndexes[playerId];
 
         for (i = 0; i < lastId; i++)
@@ -1969,9 +1969,9 @@ bool32 HasNoMonsToSwitch(enum BattlerId battler, enum PartyMon partyIdBattlerOn1
             flankId = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
             playerId = GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT);
 
-            if (partyIdBattlerOn1 == PARTY_MON_NONE)
+            if (partyIdBattlerOn1 == PARTY_SLOT_NONE)
                 partyIdBattlerOn1 = gBattlerPartyIndexes[flankId];
-            if (partyIdBattlerOn2 == PARTY_MON_NONE)
+            if (partyIdBattlerOn2 == PARTY_SLOT_NONE)
                 partyIdBattlerOn2 = gBattlerPartyIndexes[playerId];
 
             for (i = 0; i < lastId; i++)
@@ -2024,9 +2024,9 @@ bool32 HasNoMonsToSwitch(enum BattlerId battler, enum PartyMon partyIdBattlerOn1
             playerId = GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT);
         }
 
-        if (partyIdBattlerOn1 == PARTY_MON_NONE)
+        if (partyIdBattlerOn1 == PARTY_SLOT_NONE)
             partyIdBattlerOn1 = gBattlerPartyIndexes[flankId];
-        if (partyIdBattlerOn2 == PARTY_MON_NONE)
+        if (partyIdBattlerOn2 == PARTY_SLOT_NONE)
             partyIdBattlerOn2 = gBattlerPartyIndexes[playerId];
 
         for (i = 0; i < lastId; i++)
@@ -8988,7 +8988,7 @@ static bool32 CanBattlerFormChange(enum BattlerId battler, enum FormChanges meth
     return DoesSpeciesHaveFormChangeMethod(gBattleMons[battler].species, method);
 }
 
-bool32 TryRevertPartyMonFormChange(enum PartyMon partyIndex)
+bool32 TryRevertPartyMonFormChange(enum PartySlot partyIndex)
 {
      bool32 changedForm = FALSE;
 
@@ -9144,7 +9144,7 @@ enum Species GetIllusionMonSpecies(enum BattlerId battler)
     return SPECIES_NONE;
 }
 
-enum PartyMon GetIllusionMonPartyId(struct Pokemon *party, struct Pokemon *mon, struct Pokemon *partnerMon, enum BattlerId battler)
+enum PartySlot GetIllusionMonPartyId(struct Pokemon *party, struct Pokemon *mon, struct Pokemon *partnerMon, enum BattlerId battler)
 {
     // Find last alive non-egg Pokémon.
     for (s32 id = PARTY_SIZE - 1; id >= 0; id--)
@@ -9157,18 +9157,18 @@ enum PartyMon GetIllusionMonPartyId(struct Pokemon *party, struct Pokemon *mon, 
             if (species == SPECIES_TERAPAGOS_STELLAR || (species >= SPECIES_OGERPON_TEAL_TERA && species <= SPECIES_OGERPON_CORNERSTONE_TERA))
                 continue;
             if (&party[id] != mon && &party[id] != partnerMon)
-                return (enum PartyMon)id;
+                return (enum PartySlot)id;
             else // If this Pokémon or its partner is last in the party, ignore Illusion.
-                return PARTY_MON_NONE;
+                return PARTY_SLOT_NONE;
         }
     }
-    return PARTY_MON_NONE;
+    return PARTY_SLOT_NONE;
 }
 
 void SetIllusionMon(struct Pokemon *mon, enum BattlerId battler)
 {
     struct Pokemon *party, *partnerMon;
-    enum PartyMon id;
+    enum PartySlot id;
 
     gBattleStruct->illusion[battler].state = ILLUSION_OFF;
     if (GetMonAbility(mon) != ABILITY_ILLUSION)
@@ -9182,7 +9182,7 @@ void SetIllusionMon(struct Pokemon *mon, enum BattlerId battler)
         partnerMon = mon;
 
     id = GetIllusionMonPartyId(party, mon, partnerMon, battler);
-    if (id != PARTY_MON_NONE)
+    if (id != PARTY_SLOT_NONE)
     {
         gBattleStruct->illusion[battler].state = ILLUSION_ON;
         gBattleStruct->illusion[battler].mon = &party[id];
@@ -9570,7 +9570,7 @@ void TryRestoreHeldItems(void)
 {
     for (enum BattleTrainer trainer = 0; trainer < gBattlersCount; trainer++)
     {
-        for (enum PartyMon i = PARTY_MON_0; i < PARTY_MON_NONE; i++)
+        for (enum PartySlot i = PARTY_SLOT_0; i < gPartiesCount[trainer]; i++)
         {
             struct LostItem *lostItem = GetLostItemState(trainer, i);
             enum Item originaItem = lostItem->originalItem;
@@ -9664,9 +9664,10 @@ void TrySaveExchangedItem(enum BattlerId battler, enum Item stolenItem)
     if (GetBattlerTrainer(battler) != B_TRAINER_PLAYER)
         return;
 
+    struct LostItem *lostItem = GetLostItemState(B_TRAINER_PLAYER, gBattlerPartyIndexes[battler]);
     // If regular trainer battle and mon's original item matches what is being stolen, save it to be restored at end of battle
-    if (stolenItem == gBattleStruct->itemLost[B_TRAINER_PLAYER][gBattlerPartyIndexes[battler]].originalItem)
-        gBattleStruct->itemLost[B_TRAINER_PLAYER][gBattlerPartyIndexes[battler]].stolen = TRUE;
+    if (stolenItem == lostItem->originalItem)
+        lostItem->stolen = TRUE;
 }
 
 bool32 IsBattlerAffectedByHazards(enum BattlerId battler, enum HoldEffect holdEffect, bool32 toxicSpikes)
@@ -9825,7 +9826,7 @@ void CopyMonAbilityAndTypesToBattleMon(enum BattlerId battler, struct Pokemon *m
     if (gTestRunnerEnabled)
     {
         enum BattleTrainer trainer = GetBattlerTrainer(battler);
-        enum PartyMon partyIndex = gBattlerPartyIndexes[battler];
+        enum PartySlot partyIndex = gBattlerPartyIndexes[battler];
         if (TestRunner_Battle_GetForcedAbility(trainer, partyIndex))
             gBattleMons[battler].ability = TestRunner_Battle_GetForcedAbility(trainer, partyIndex);
     }
@@ -10162,7 +10163,7 @@ enum Type GetBattleMoveType(enum Move move)
     return GetMoveType(move);
 }
 
-void TryActivateSleepClause(enum BattlerId battler, enum PartyMon indexInParty)
+void TryActivateSleepClause(enum BattlerId battler, enum PartySlot indexInParty)
 {
     if (gBattleStruct->battlerState[battler].sleepClauseEffectExempt)
     {
@@ -10179,27 +10180,27 @@ void TryActivateSleepClause(enum BattlerId battler, enum PartyMon indexInParty)
     }
 }
 
-void TryDeactivateSleepClause(enum BattlerId battler, enum PartyMon indexInParty)
+void TryDeactivateSleepClause(enum BattlerId battler, enum PartySlot indexInParty)
 {
     enum BattleSide side = GetBattlerSide(battler);
     struct SleepClause *monCausingSleepClause = &gBattleStruct->monCausingSleepClause[side];
     // If the Pokémon on the given side and trainer party at the given index in the party is the one causing Sleep Clause to be
-    // active, set monCausingSleepClause->partyIndex = PARTY_MON_NONE, which means Sleep Clause is not active for the given side
+    // active, set monCausingSleepClause->partyIndex = PARTY_SLOT_NONE, which means Sleep Clause is not active for the given side
     if (IsSleepClauseEnabled()
      && monCausingSleepClause->partyIndex == indexInParty
      && monCausingSleepClause->trainer == GetBattlerTrainer(battler))
     {
-        monCausingSleepClause->partyIndex = PARTY_MON_NONE;
+        monCausingSleepClause->partyIndex = PARTY_SLOT_NONE;
         monCausingSleepClause->trainer = MAX_BATTLE_TRAINERS;
     }
 }
 
 bool32 IsSleepClauseActiveForSide(enum BattleSide battlerSide)
 {
-    // If monCausingSleepClause[battlerSide].partyIndex == PARTY_MON_NONE, Sleep Clause is not active for the given side.
-    // If monCausingSleepClause[battlerSide].partyIndex < PARTY_MON_NONE, it means it is storing the index of the mon that is causing Sleep Clause to be active,
+    // If monCausingSleepClause[battlerSide].partyIndex == PARTY_SLOT_NONE, Sleep Clause is not active for the given side.
+    // If monCausingSleepClause[battlerSide].partyIndex < PARTY_SLOT_NONE, it means it is storing the index of the mon that is causing Sleep Clause to be active,
     // from which it follows that Sleep Clause is active.
-    return (IsSleepClauseEnabled() && (gBattleStruct->monCausingSleepClause[battlerSide].partyIndex < PARTY_MON_NONE));
+    return (IsSleepClauseEnabled() && (gBattleStruct->monCausingSleepClause[battlerSide].partyIndex < PARTY_SLOT_NONE));
 }
 
 bool32 IsSleepClauseEnabled(void)
@@ -10350,7 +10351,7 @@ void ClearPursuitValues(void)
 {
     for (enum BattlerId i = 0; i < gBattlersCount; i++)
         gBattleStruct->battlerState[i].pursuitTarget = FALSE;
-    gBattleStruct->pursuitStoredSwitch = PARTY_MON_NONE;
+    gBattleStruct->pursuitStoredSwitch = PARTY_SLOT_NONE;
 }
 
 void ClearPursuitValuesIfSet(enum BattlerId battler)

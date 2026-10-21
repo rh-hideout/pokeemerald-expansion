@@ -1618,7 +1618,7 @@ static void WaitForMonSelection(enum BattlerId battler)
         if (gPartyMenuUseExitCallback == TRUE)
             BtlController_EmitChosenMonReturnValue(battler, B_COMM_TO_ENGINE, gSelectedMonPartyId, gBattlePartyCurrentOrder);
         else
-            BtlController_EmitChosenMonReturnValue(battler, B_COMM_TO_ENGINE, PARTY_MON_NONE, NULL);
+            BtlController_EmitChosenMonReturnValue(battler, B_COMM_TO_ENGINE, PARTY_SLOT_NONE, NULL);
 
         if (gBattleResources->bufferA[battler][1] == PARTY_ACTION_SEND_OUT)
             PrintLinkStandbyMsg();
@@ -2204,7 +2204,7 @@ static void PlayerHandleChoosePokemon(enum BattlerId battler)
         && gBattleResources->bufferA[battler][1] != PARTY_ACTION_CHOOSE_FAINTED_MON
         && gBattleResources->bufferA[battler][1] != PARTY_ACTION_SEND_MON_TO_BOX)
     {
-        BtlController_EmitChosenMonReturnValue(battler, B_COMM_TO_ENGINE, (enum PartyMon)(gBattlerPartyIndexes[battler] + 1), gBattlePartyCurrentOrder);
+        BtlController_EmitChosenMonReturnValue(battler, B_COMM_TO_ENGINE, (enum PartySlot)(gBattlerPartyIndexes[battler] + 1), gBattlePartyCurrentOrder);
         BtlController_Complete(battler);
     }
     else
@@ -2212,7 +2212,7 @@ static void PlayerHandleChoosePokemon(enum BattlerId battler)
         gBattleControllerData[battler] = CreateTask(TaskDummy, 0xFF);
         gTasks[gBattleControllerData[battler]].data[0] = gBattleResources->bufferA[battler][1];
         *(&gBattleStruct->battlerPreventingSwitchout) = gBattleResources->bufferA[battler][8];
-        gBattleStruct->prevSelectedPartySlot = (enum PartyMon)gBattleResources->bufferA[battler][2];
+        gBattleStruct->prevSelectedPartySlot = (enum PartySlot)gBattleResources->bufferA[battler][2];
         *(&gBattleStruct->abilityPreventingSwitchout) = (gBattleResources->bufferA[battler][3] & 0xFF) | (gBattleResources->bufferA[battler][7] << 8);
         BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 0x10, RGB_BLACK);
         gBattlerControllerFuncs[battler] = OpenPartyMenuToChooseMon;
@@ -2289,7 +2289,7 @@ static void PlayerHandleTwoReturnValues(enum BattlerId battler)
 
 static void PlayerHandleChosenMonReturnValue(enum BattlerId battler)
 {
-    BtlController_EmitChosenMonReturnValue(battler, B_COMM_TO_ENGINE, PARTY_MON_0, NULL);
+    BtlController_EmitChosenMonReturnValue(battler, B_COMM_TO_ENGINE, PARTY_SLOT_0, NULL);
     BtlController_Complete(battler);
 }
 

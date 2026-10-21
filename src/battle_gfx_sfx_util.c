@@ -1090,8 +1090,8 @@ void HandleBattleLowHpMusicChange(void)
     {
         enum BattlerId playerBattler1 = GetBattlerAtPosition(B_POSITION_PLAYER_LEFT);
         enum BattlerId playerBattler2 = GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT);
-        enum PartyBattleSlot battler1Slot = GetBattleSlotFromBattlePartyId(gBattlerPartyIndexes[playerBattler1]);
-        enum PartyBattleSlot battler2Slot = GetBattleSlotFromBattlePartyId(gBattlerPartyIndexes[playerBattler2]);
+        enum PartyBattleOrder battler1Slot = GetBattleSlotFromBattlePartyId(gBattlerPartyIndexes[playerBattler1]);
+        enum PartyBattleOrder battler2Slot = GetBattleSlotFromBattlePartyId(gBattlerPartyIndexes[playerBattler2]);
         struct Pokemon mon1 = GetBattlerParty(playerBattler1)[battler1Slot];
         struct Pokemon mon2 = GetBattlerParty(playerBattler2)[battler2Slot];
 
