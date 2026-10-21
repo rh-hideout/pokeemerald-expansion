@@ -177,7 +177,7 @@
 
 	@ Copies the value of source into destination.
 	.macro copyvar destination:req, source:req, warn=TRUE
-	.if \warn && !((\source >= VARS_START && \source <= VARS_END) || (\source >= SPECIAL_VARS_START && \source <= SPECIAL_VARS_END))
+	.if \warn && (\source != 0) && !((\source >= VARS_START && \source <= VARS_END) || (\source >= SPECIAL_VARS_START && \source <= SPECIAL_VARS_END))
 	.warning "copyvar with a value that is not a VAR_ constant; did you mean setvar instead?"
 	.endif
 	.byte SCR_OP_COPYVAR
@@ -2232,6 +2232,11 @@
 	.4byte \func
 	.endm
 
+	.macro setdynamicmonchoiceaifunc func:req
+	callnative ScriptSetDynamicAiMonChoiceFunc, requests_effects=1
+	.4byte \func
+	.endm
+
 	@ Set up a totem boost for the next battle.
 	@ 'battler' is the position of the mon you want to gain a boost. see B_POSITION_xx in include/constants/battle.h.
 	@ The rest of the arguments are the stat change values to each stat.
@@ -2721,7 +2726,7 @@
 	goto_if_eq VAR_RESULT, NO, \declineTradeJump
 	chooseboxmon SELECT_PC_MON_TRADE
 	waitstate
-	goto_if_eq VAR_0x8004, PARTY_MON_CANCEL, \declineTradeJump
+	goto_if_eq VAR_0x8004, PARTY_SLOT_CANCEL, \declineTradeJump
 	specialvar VAR_0x800B, GetTradeSpecies
 	goto_if_ne VAR_0x800B, VAR_0x8009, \wrongMonJump
 	special CreateInGameTradePokemon

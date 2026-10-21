@@ -82,30 +82,30 @@ enum Language
 // party sizes
 #define PARTY_SIZE 6
 
-enum __attribute__((packed)) PartyMon
+enum __attribute__((packed)) PartySlot
 {
-    PARTY_MON_0,
-    PARTY_MON_1,
-    PARTY_MON_2,
-    PARTY_MON_3,
-    PARTY_MON_4,
-    PARTY_MON_5,
-    PARTY_MON_NONE = PARTY_SIZE,
-    PARTY_MON_CANCEL = PARTY_SIZE,
+    PARTY_SLOT_0,
+    PARTY_SLOT_1,
+    PARTY_SLOT_2,
+    PARTY_SLOT_3,
+    PARTY_SLOT_4,
+    PARTY_SLOT_5,
+    PARTY_SLOT_NONE = PARTY_SIZE,
+    PARTY_SLOT_CANCEL = PARTY_SIZE,
 };
 
 #define PC_MON_CHOSEN 0xFF
 
 // A position within the in-battle party order, not an identity; the Pokémon
 // occupying a given slot changes as the order is permuted. See gBattlePartyCurrentOrder.
-enum PartyBattleSlot
+enum PartyBattleOrder
 {
-    PARTY_BATTLE_SLOT_0,
-    PARTY_BATTLE_SLOT_1,
-    PARTY_BATTLE_SLOT_2,
-    PARTY_BATTLE_SLOT_3,
-    PARTY_BATTLE_SLOT_4,
-    PARTY_BATTLE_SLOT_5,
+    PARTY_BATTLE_ORDER_0,
+    PARTY_BATTLE_ORDER_1,
+    PARTY_BATTLE_ORDER_2,
+    PARTY_BATTLE_ORDER_3,
+    PARTY_BATTLE_ORDER_4,
+    PARTY_BATTLE_ORDER_5,
 };
 
 #define MULTI_PARTY_SIZE (PARTY_SIZE / 2)
