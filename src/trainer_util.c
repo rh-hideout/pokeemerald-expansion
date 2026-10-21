@@ -41,18 +41,18 @@ static void CustomTrainerPartyAssignMoves(struct Pokemon *mon, const struct Trai
     }
 }
 
-u32 GeneratePersonalityForGender(u32 gender, u32 species)
+u32 GeneratePersonalityForGender(u32 gender, u32 species, u32 genderRng)
 {
     const struct SpeciesInfo *speciesInfo = &gSpeciesInfo[species];
     if (gender == MON_MALE)
     {
         assertf(speciesInfo->genderRatio < MON_FEMALE, "species %d cannot be male", species);
-        return ((255 - speciesInfo->genderRatio) / 2) + speciesInfo->genderRatio;
+        return speciesInfo->genderRatio + (genderRng % (256 - speciesInfo->genderRatio));
     }
     if (gender == MON_FEMALE)
     {
         assertf(speciesInfo->genderRatio != MON_MALE && speciesInfo->genderRatio != MON_GENDERLESS, "species %d cannot be female", species);
-        return speciesInfo->genderRatio / 2;
+        return genderRng % speciesInfo->genderRatio;
     }
     if (gender == MON_GENDERLESS)
         assertf(speciesInfo->genderRatio == MON_GENDERLESS, "species %d cannot be genderless", species);
@@ -76,7 +76,7 @@ void ModifyPersonalityForNature(u32 *personality, s32 newNature)
     *personality += (sModuloLUT[diff] * 0x100 * sign);
 }
 
-static bool32 SetCorrectAbilityNum(struct Pokemon *mon, enum Species species, enum Ability ability)
+bool32 SetCorrectAbilityNum(struct Pokemon *mon, enum Species species, enum Ability ability)
 {
     const struct SpeciesInfo *speciesInfo = &gSpeciesInfo[species];
     u32 abilityNum;
@@ -124,13 +124,13 @@ void GenerateMonFromTrainerMon(struct Pokemon *mon, const struct TrainerMon *tra
 {
     u32 data;
     u32 personality = (LocalRandom32(&trainer->localRngState) & 0xFFFFDF00) + 0x1000;
-    u32 genderValue = 0;
+    u32 genderValue = LocalRandom32(&trainer->localRngState);
     if (trainerMon->gender == TRAINER_MON_RANDOM_GENDER)
-        genderValue = LocalRandom32(&trainer->localRngState) & 0x000000FF;
+        genderValue = genderValue & 0x000000FF;
     else if (trainerMon->gender == TRAINER_MON_MALE)
-        genderValue = GeneratePersonalityForGender(MON_MALE, trainerMon->species);
+        genderValue = GeneratePersonalityForGender(MON_MALE, trainerMon->species, genderValue);
     else if (trainerMon->gender == TRAINER_MON_FEMALE)
-        genderValue = GeneratePersonalityForGender(MON_FEMALE, trainerMon->species);
+        genderValue = GeneratePersonalityForGender(MON_FEMALE, trainerMon->species, genderValue);
     else
         errorf("Unkwown trainer mon gender value %d", trainerMon->gender);
     personality |= genderValue;

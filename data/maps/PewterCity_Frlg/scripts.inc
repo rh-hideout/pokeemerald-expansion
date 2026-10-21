@@ -682,9 +682,7 @@ PewterCity_EventScript_RunningShoesAideTriggerBottom::
 
 PewterCity_EventScript_AideGiveRunningShoes::
 	textcolor NPC_TEXT_COLOR_MALE
-	call_if_eq VAR_TEMP_1, 1, PewterCity_EventScript_AideNoticePlayer
-	call_if_eq VAR_TEMP_1, 2, PewterCity_EventScript_AideNoticePlayer
-	call_if_eq VAR_TEMP_1, 3, PewterCity_EventScript_AideNoticePlayer
+	call_if_between VAR_TEMP_1, 1, 3, PewterCity_EventScript_AideNoticePlayer
 	waitse
 	playse SE_PIN
 	applymovement LOCALID_PEWTER_AIDE, Common_Movement_ExclamationMark

@@ -15,8 +15,9 @@ struct TrainerGenerator
 
 rng_value_t GeneratePartySeed(const struct Trainer *trainer);
 void GenerateMonFromTrainerMon(struct Pokemon *mon, const struct TrainerMon *trainerMon, struct TrainerGenerator *trainer);
-u32 GeneratePersonalityForGender(u32 gender, u32 species);
+u32 GeneratePersonalityForGender(u32 gender, u32 species, u32 genderRng);
 void ModifyPersonalityForNature(u32 *personality, s32 newNature);
+bool32 SetCorrectAbilityNum(struct Pokemon *mon, enum Species species, enum Ability ability);
 void MakeTrainerGenerator(struct TrainerGenerator *trainerGen, const struct Trainer *trainer);
 void MakePartnerGenerator(struct TrainerGenerator *trainerGen, const struct Trainer *partner);
 

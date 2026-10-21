@@ -612,7 +612,7 @@ const u8 *const gBattleStringsTable[STRINGID_COUNT] =
     [STRINGID_TARGETABILITYSTATLOWER]               = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX}'s {B_DEF_ABILITY} {B_BUFF2}lowered its {B_BUFF1}!"), // Not in Gen 5+
     [STRINGID_TARGETSTATWONTGOHIGHER]               = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX}'s {B_BUFF1} won't go any higher!"),
     [STRINGID_PKMNMOVEBOUNCEDABILITY]               = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX}'s {B_CURRENT_MOVE} was bounced back!"),
-    [STRINGID_IMPOSTERTRANSFORM]                    = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} transformed into {B_DEF_NAME_WITH_PREFIX2}!"),
+    [STRINGID_IMPOSTERTRANSFORM]                    = COMPOUND_STRING("{B_EFF_NAME_WITH_PREFIX} transformed into {B_SCR_NAME_WITH_PREFIX2}!"),
     [STRINGID_ASSAULTVESTDOESNTALLOW]               = COMPOUND_STRING("The effects of the {B_LAST_ITEM} prevent status moves from being used!\p"),
     [STRINGID_GRAVITYPREVENTSUSAGE]                 = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} can't use {B_CURRENT_MOVE} because of gravity!\p"),
     [STRINGID_HEALBLOCKPREVENTSUSAGE]               = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} was prevented from healing!\p"),
@@ -3694,9 +3694,9 @@ u32 BattleStringExpandPlaceholders(const u8 *src, u8 *dst, u32 dstSize)
     return dstID;
 }
 
-static void IllusionNickHack(enum BattlerId battler, enum PartyMon partyId, u8 *dst)
+static void IllusionNickHack(enum BattlerId battler, enum PartySlot partyId, u8 *dst)
 {
-    enum PartyMon id = PARTY_MON_NONE;
+    enum PartySlot id = PARTY_SLOT_NONE;
     struct Pokemon *party = GetBattlerParty(battler);
     struct Pokemon *mon = &party[partyId], *partnerMon;
 
@@ -3710,7 +3710,7 @@ static void IllusionNickHack(enum BattlerId battler, enum PartyMon partyId, u8 *
         id = GetIllusionMonPartyId(party, mon, partnerMon, battler);
     }
 
-    if (id != PARTY_MON_NONE)
+    if (id != PARTY_SLOT_NONE)
         GetMonData(&party[id], MON_DATA_NICKNAME, dst);
     else
         GetMonData(mon, MON_DATA_NICKNAME, dst);
