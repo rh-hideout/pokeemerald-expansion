@@ -4194,8 +4194,6 @@ static void DisplayTrainerInfoOnCard(u8 flags, u8 trainerTourneyId)
     i = 0;
     if (trainerId == TRAINER_PLAYER)
         j = gFacilityClassToTrainerClass[FACILITY_CLASS_BRENDAN];
-    else if (trainerId == TRAINER_FRONTIER_BRAIN)
-        j = GetFrontierBrainTrainerClass();
     else
         j = GetFrontierOpponentClass(trainerId);
 
