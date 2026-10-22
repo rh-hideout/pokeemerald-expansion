@@ -17,7 +17,7 @@
 
 struct SafariData
 {
-    u8 startingBalls;
+    u8 startingBalls; // UI only supports up to 99 max balls
     enum SafariActions actions:6;
     u8 noEscape:1; // prevents the player from using Escape Rope or field moves like Dig/Teleport/Fly to exit the safari
     u8 exitWarpOnWhiteout:1; // if the players whiteouts, return them to the exit warp instead of the last pokecenter
@@ -79,6 +79,9 @@ void EnterSafariMode(enum SafariEvents safariId)
     VarSet(VAR_SAFARI_WARP_STATE, SAFARI_WARP_ENTERING);
     sActiveSafari = safariId;
     sNumSafariBalls = sSafariZones[safariId].startingBalls;
+    assertf(sNumSafariBalls < 100, "\nStarting Safari Ball count set to %d\n"
+                                    "UI was not designed to support 3 digit values for safari ball count",
+                                    sNumSafariBalls)
     sSafariZoneStepCounter = sSafariZones[safariId].startingSteps;
 }
 
