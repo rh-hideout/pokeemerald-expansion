@@ -459,8 +459,10 @@ static void DoSafariBattle(void)
     FreezeObjectEvents();
     StopPlayerAvatar();
     gMain.savedCallback = CB2_EndSafariBattle;
-    if (DoesSafariUsePlayerPokemon())
+    if (!DoesSafariUsePlayerPokemon())
         gBattleTypeFlags = BATTLE_TYPE_SAFARI;
+    else
+        gBattleTypeFlags = 0;
     CreateBattleStartTask(GetWildBattleTransition(), 0);
 }
 
