@@ -123,19 +123,16 @@ bool32 IsMassOutbreakActive(void)
     return (gSaveBlock1Ptr->outbreakDaysLeft > 0);
 }
 
-bool8 SetUpMassOutbreakEncounter(u8 flags)
+void GenerateMassOutbreakMon(u32 minLevel)
 {
-    if (flags & WILD_CHECK_REPEL && !IsWildLevelAllowedByRepel(gSaveBlock1Ptr->outbreakPokemonLevel))
-        return FALSE;
-
+    if (gSaveBlock1Ptr->outbreakPokemonLevel < minLevel)
+        return;
     CreateWildMon(gSaveBlock1Ptr->outbreakPokemonSpecies, gSaveBlock1Ptr->outbreakPokemonLevel);
     for (u32 i = 0; i < MAX_MON_MOVES; i++)
         SetMonMoveSlot(&gParties[B_TRAINER_OPPONENT_A][0], gSaveBlock1Ptr->outbreakPokemonMoves[i], i);
-
-    return TRUE;
 }
 
-bool8 DoMassOutbreakEncounterTest(void)
+bool8 CheckForMassOutbreakEncounter(void)
 {
     if (gSaveBlock1Ptr->outbreakDaysLeft == 0)
         return FALSE;

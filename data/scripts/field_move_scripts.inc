@@ -87,17 +87,11 @@ EventScript_SmashRock:: @ fallthrough
 	removeobject VAR_LAST_TALKED
 	specialvar VAR_RESULT, TryUpdateRusturfTunnelState
 	goto_if_eq VAR_RESULT, TRUE, EventScript_EndSmash
-	callnative rockSmashRNG
-	goto_if_eq VAR_RESULT, ROCK_SMASH_ENCOUNTER, EventScript_RockSmashWildEncounter
+	callnative Scrcmd_rockSmashRandomEvent
+	goto_if_eq VAR_RESULT, ROCK_SMASH_NONE, EventScript_EndSmash
 	goto_if_eq VAR_RESULT, ROCK_SMASH_ITEM, EventScript_RockSmashItem
+	waitstate @ ROCK_SMASH_ENCOUNTER automatically starts a battle so we need the script to wait
 EventScript_EndSmash::
-	releaseall
-	end
-
-EventScript_RockSmashWildEncounter::
-	special RockSmashWildEncounter
-	goto_if_eq VAR_RESULT, FALSE, EventScript_EndSmash
-	waitstate
 	releaseall
 	end
 

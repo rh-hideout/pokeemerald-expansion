@@ -27,6 +27,7 @@
 #include "metatile_behavior.h"
 #include "overworld.h"
 #include "pokemon.h"
+#include "random.h"
 #include "safari_zone.h"
 #include "script.h"
 #include "secret_base.h"
@@ -184,7 +185,7 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
     {
         IncrementGameStat(GAME_STAT_STEPS);
         IncrementBirthIslandRockStepCount();
-        DespawnAllOverworldWildEncounters(OWE_GENERATED, WILD_CHECK_REPEL);
+        DespawnAllOverworldWildEncounters(OWE_GENERATED, TRUE);
         if (FindTaskIdByFunc(Task_FollowerNPCOutOfDoor) == TASK_NONE && TryStartStepBasedScript(&position, metatileBehavior, playerDirection) == TRUE)
             return TRUE;
     }
@@ -889,8 +890,7 @@ static bool8 UpdatePoisonStepCounter(void)
 
 void RestartWildEncounterImmunitySteps(void)
 {
-    // Starts at 0 and counts up to 4 steps.
-    sWildEncounterImmunitySteps = 0;
+    sWildEncounterImmunitySteps = WE_STEPS_WITHOUT_ENCOUNTER_AFTER_BATTLE;
 }
 
 static bool32 ShouldDisableRandomEncounters(void)
@@ -910,26 +910,33 @@ static bool32 ShouldDisableRandomEncounters(void)
     return !WE_VANILLA_RANDOM;
 }
 
+// When you first step on a different type of metatile, there's a 40% chance it
+// skips the wild encounter check entirely.
+static bool8 SkipWildCheckOnNewMetatile(void)
+{
+    return !RandomPercentage(RNG_NONE, WE_SKIP_ENCOUNTER_ON_NEW_METATILE_CHANCE);
+}
+
 static bool8 CheckStandardWildEncounter(u16 metatileBehavior)
 {
     if (ShouldDisableRandomEncounters())
         return FALSE;
 
-    if (sWildEncounterImmunitySteps < 4)
+    if (sPrevMetatileBehavior != metatileBehavior)
     {
-        sWildEncounterImmunitySteps++;
         sPrevMetatileBehavior = metatileBehavior;
+        if (SkipWildCheckOnNewMetatile())
+            return FALSE;
+    }
+
+    if (sWildEncounterImmunitySteps > 0)
+    {
+        sWildEncounterImmunitySteps--;
         return FALSE;
     }
 
-    if (StandardWildEncounter(metatileBehavior, sPrevMetatileBehavior) == TRUE)
-    {
-        sWildEncounterImmunitySteps = 0;
-        sPrevMetatileBehavior = metatileBehavior;
+    if (StandardWildEncounter(metatileBehavior, FALSE))
         return TRUE;
-    }
-
-    sPrevMetatileBehavior = metatileBehavior;
     return FALSE;
 }
 

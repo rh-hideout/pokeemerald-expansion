@@ -181,6 +181,41 @@ static void FieldMove_RockSmash(void)
     ScriptContext_Enable();
 }
 
+void Scrcmd_rockSmashRandomEvent(struct ScriptContext *ctx)
+{
+    gSpecialVar_Result = ROCK_SMASH_NONE;
+    const struct WildPokemonInfo *wildPokemonInfo = GetWildPokemonInfo(WILD_ROCK_SMASH_MONS);
+
+    if (OW_ROCK_SMASH_ITEMS >= GEN_6)
+    {
+        if (wildPokemonInfo && wildPokemonInfo->encounterRate)
+            gSpecialVar_Result = RandomWeighted(RNG_NONE, 1, 1, 1);// 1/3 chance to do each.
+        else
+            gSpecialVar_Result = RandomWeighted(RNG_NONE, 2, 0, 1);// 2/3 chance to do nothing, 1/3 chance of item
+        return;
+    }
+    if (RockSmashEncounterCheck(wildPokemonInfo))
+    {
+        gSpecialVar_Result = ROCK_SMASH_ENCOUNTER;
+    }
+    else if (OW_ROCK_SMASH_ITEMS >= GEN_4)
+    {
+        u16 itemRate = gMapHeader.events->objectEvents[(gSpecialVar_LastTalked - 1)].trainerRange_berryTreeId;// this is 0 on everything by default.
+        itemRate &= 0xFF;//bitmask to remove any data representing user's table
+        if (itemRate == 0)
+            itemRate = OW_ROCK_SMASH_ITEMS_USE_DEFAULT_CHANCE;
+
+        u32 partySlot = VarGet(VAR_0x8006);
+        if (DoesPartySlotHaveAbilityEffect(gRockSmashItemLikelihoodAbilities, partySlot))
+            itemRate += 5;
+
+        if (VarGet(VAR_0x8004) == TRUE)// if the script for the follower smashing the rock is playing
+            itemRate += 5;
+
+        gSpecialVar_Result = ROCK_SMASH_ITEM * RandomPercentage(RNG_NONE, itemRate);// returns either 0 or 2
+    }
+}
+
 static enum Item GetRockSmashRandomItem(void)
 {
     u32 itemTable = gMapHeader.events->objectEvents[(gSpecialVar_LastTalked - 1)].trainerRange_berryTreeId;
@@ -211,7 +246,7 @@ static enum Item GetRockSmashRandomItem(void)
         if (randomIndex < sRockSmashTables[itemTable].size - 1)
         {
             u32 partySlot = VarGet(VAR_0x8006);
-            if (DoesRockSmashUserHaveIncreasedItemRarity(partySlot))// Check for serene grace and super luck's impact on a weighted table.
+            if (DoesPartySlotHaveAbilityEffect(gRockSmashItemRarityAbilities, partySlot))// Check for serene grace and super luck's impact on a weighted table.
                 randomIndex++;
         }
     }
