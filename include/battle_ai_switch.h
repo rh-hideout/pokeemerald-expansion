@@ -61,8 +61,8 @@ struct SwitchAiContext
     uq4_12_t typeMatchup;
 
     // Mon selection
-    enum PartyMon dynamicSingleId;
-    enum PartyMon partyMonIndex;
+    enum PartySlot dynamicSingleId;
+    enum PartySlot partyMonIndex;
     enum SwitchType switchType;
 
     // Flags
