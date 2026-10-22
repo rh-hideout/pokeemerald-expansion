@@ -2,6 +2,7 @@
 #include "battle.h"
 #include "battle_anim.h"
 #include "battle_controllers.h"
+#include "battle_interface.h"
 #include "malloc.h"
 #include "pokemon.h"
 #include "trainer_hill.h"
@@ -30,6 +31,7 @@ void CloseMainBattleScreen(void)
 {
     FreeBattleGfxResources();
     FreeAllWindowBuffers();
+    HideWeatherIndicator(TRUE);
 }
 
 void AllocateBattleResources(void)
@@ -75,7 +77,9 @@ void FreeBattleResources(void)
     else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_HILL)
         FreeTrainerHillBattleStruct();
 
-    gFieldTimers.terrain = 0;
+    memset(&gFieldTimers, 0, sizeof(struct FieldTimer));
+    memset(&gSideTimers, 0, sizeof(struct SideTimer));
+
     if (gBattleResources != NULL)
     {
         FREE_AND_SET_NULL(gBattleStruct);
@@ -123,12 +127,12 @@ void AdjustFriendshipOnBattleFaint(enum BattlerId battler)
         AdjustFriendship(GetBattlerMon(battler), FRIENDSHIP_EVENT_FAINT_SMALL);
 }
 
-void SwitchPartyOrderInGameMulti(enum BattlerId battler, enum PartyMon partyId)
+void SwitchPartyOrderInGameMulti(enum BattlerId battler, enum PartySlot partyId)
 {
     if (IsOnPlayerSide(battler))
     {
-        enum PartyMon battlerPartyId = gBattlerPartyIndexes[battler];
-        enum PartyMon switchInPartyId = partyId;
+        enum PartySlot battlerPartyId = gBattlerPartyIndexes[battler];
+        enum PartySlot switchInPartyId = partyId;
         enum BattleTrainer trainer = GetBattlerTrainer(battler);
         enum PartyBattleSlot battlerBattleSlot = PARTY_BATTLE_SLOT_0;
         enum PartyBattleSlot switchinBattleSlot = PARTY_BATTLE_SLOT_0;
@@ -137,8 +141,8 @@ void SwitchPartyOrderInGameMulti(enum BattlerId battler, enum PartyMon partyId)
         // and uses indexes 0-2, but we still use the combined party order.
         if (IsHalfTeamMultiBattle() && trainer == B_TRAINER_PARTNER)
         {
-            battlerPartyId = (enum PartyMon)(battlerPartyId + MULTI_PARTY_SIZE);
-            switchInPartyId = (enum PartyMon)(switchInPartyId + MULTI_PARTY_SIZE);
+            battlerPartyId = (enum PartySlot)(battlerPartyId + MULTI_PARTY_SIZE);
+            switchInPartyId = (enum PartySlot)(switchInPartyId + MULTI_PARTY_SIZE);
         }
 
         for (enum BattlerId battlerId = 0; battlerId < gBattlersCount; battlerId++)
@@ -272,7 +276,7 @@ struct Pokemon *GetTrainerParty(enum BattleTrainer trainer)
 
 struct Pokemon* GetBattlerMon(enum BattlerId battler)
 {
-    enum PartyMon index = gBattlerPartyIndexes[battler];
+    enum PartySlot index = gBattlerPartyIndexes[battler];
 
     return &GetBattlerParty(battler)[index];
 }

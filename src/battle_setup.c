@@ -86,6 +86,7 @@ static void CB2_EndFirstBattle(void);
 static void SaveChangesToPlayerParty(void);
 static void HandleBattleVariantEndParty(void);
 static void CB2_EndTrainerBattle(void);
+static void CB2_EndSafariBattle(void);
 static bool32 IsPlayerDefeated(u32 battleOutcome);
 #if FREE_MATCH_CALL == FALSE
 static u16 GetRematchTrainerId(u16 trainerId);
@@ -458,7 +459,9 @@ static void DoSafariBattle(void)
     FreezeObjectEvents();
     StopPlayerAvatar();
     gMain.savedCallback = CB2_EndSafariBattle;
-    gBattleTypeFlags = BATTLE_TYPE_SAFARI;
+    gBattleTypeFlags = 0;
+    if (!DoesSafariUsePlayerPokemon())
+        gBattleTypeFlags |= BATTLE_TYPE_SAFARI;
     CreateBattleStartTask(GetWildBattleTransition(), 0);
 }
 
@@ -1665,6 +1668,28 @@ static void CB2_EndRematchBattle(void)
     }
 }
 
+static void CB2_EndSafariBattle(void)
+{
+    IncrementSafariValuesPostBattle(gBattleResults.pokeblockThrows, (gBattleOutcome == B_OUTCOME_CAUGHT));
+    if (GetSafariBallCount())
+    {
+        SetMainCallback2(CB2_ReturnToField);
+    }
+    else if (gBattleOutcome == B_OUTCOME_NO_SAFARI_BALLS)
+    {
+        RunScriptImmediately(SafariZone_EventScript_OutOfBallsMidBattle);
+        WarpIntoMap();
+        gFieldCallback = FieldCB_ReturnToFieldNoScriptCheckMusic;
+        SetMainCallback2(CB2_LoadMap);
+    }
+    else if (gBattleOutcome == B_OUTCOME_CAUGHT)
+    {
+        ScriptContext_SetupScript(SafariZone_EventScript_OutOfBalls);
+        ScriptContext_Stop();
+        SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
+    }
+}
+
 void BattleSetup_StartRematchBattle(void)
 {
     gBattleTypeFlags = BATTLE_TYPE_TRAINER;
@@ -1748,50 +1773,8 @@ void PlayTrainerEncounterMusic(void)
     else
         trainerId = TRAINER_BATTLE_PARAM.opponentB;
 
-    switch (GetTrainerEncounterMusicId(trainerId))
-    {
-    case TRAINER_ENCOUNTER_MUSIC_MALE:
-        music = MUS_ENCOUNTER_MALE;
-        break;
-    case TRAINER_ENCOUNTER_MUSIC_FEMALE:
-        music = MUS_ENCOUNTER_FEMALE;
-        break;
-    case TRAINER_ENCOUNTER_MUSIC_GIRL:
-        music = MUS_ENCOUNTER_GIRL;
-        break;
-    case TRAINER_ENCOUNTER_MUSIC_INTENSE:
-        music = MUS_ENCOUNTER_INTENSE;
-        break;
-    case TRAINER_ENCOUNTER_MUSIC_COOL:
-        music = MUS_ENCOUNTER_COOL;
-        break;
-    case TRAINER_ENCOUNTER_MUSIC_AQUA:
-        music = MUS_ENCOUNTER_AQUA;
-        break;
-    case TRAINER_ENCOUNTER_MUSIC_MAGMA:
-        music = MUS_ENCOUNTER_MAGMA;
-        break;
-    case TRAINER_ENCOUNTER_MUSIC_SWIMMER:
-        music = MUS_ENCOUNTER_SWIMMER;
-        break;
-    case TRAINER_ENCOUNTER_MUSIC_TWINS:
-        music = MUS_ENCOUNTER_TWINS;
-        break;
-    case TRAINER_ENCOUNTER_MUSIC_ELITE_FOUR:
-        music = MUS_ENCOUNTER_ELITE_FOUR;
-        break;
-    case TRAINER_ENCOUNTER_MUSIC_HIKER:
-        music = MUS_ENCOUNTER_HIKER;
-        break;
-    case TRAINER_ENCOUNTER_MUSIC_INTERVIEWER:
-        music = MUS_ENCOUNTER_INTERVIEWER;
-        break;
-    case TRAINER_ENCOUNTER_MUSIC_RICH:
-        music = MUS_ENCOUNTER_RICH;
-        break;
-    default:
-        music = MUS_ENCOUNTER_SUSPICIOUS;
-    }
+    enum TrainerApproachMusic musicStyle = GetTrainerEncounterMusicId(trainerId);
+    music = gTrainerApproachMusicStyles[musicStyle];
     PlayNewMapMusic(music);
 
 }

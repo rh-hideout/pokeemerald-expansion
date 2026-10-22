@@ -10,6 +10,7 @@
 #include "battle_tv.h"
 #include "battle_z_move.h"
 #include "battle_gimmick.h"
+#include "battle_info.h"
 #include "bg.h"
 #include "data.h"
 #include "item.h"
@@ -95,6 +96,8 @@ static void ReloadMoveNames(enum BattlerId battler);
 static u32 CheckTypeEffectiveness(enum BattlerId battlerAtk, enum BattlerId battlerDef);
 static u32 CheckTargetTypeEffectiveness(enum BattlerId battler);
 static void MoveSelectionDisplayMoveEffectiveness(u32 foeEffectiveness, enum BattlerId battler);
+static void OpenBattleStatusMenu(enum BattlerId battler);
+static void WaitForBattleStatusMenu(enum BattlerId battler);
 
 static void (*const sPlayerBufferCommands[CONTROLLER_CMDS_COUNT])(enum BattlerId battler) =
 {
@@ -302,8 +305,21 @@ static void HandleInputChooseAction(enum BattlerId battler)
         }
     }
 
+    if (JOY_NEW(B_BATTLE_INFO_BUTTON)
+     && !(B_BATTLE_INFO_BUTTON == L_BUTTON && gSaveBlock2Ptr->optionsButtonMode == OPTIONS_BUTTON_MODE_L_EQUALS_A))
+    {
+        TryToHideBattleStatusHint();
+        PlaySE(SE_SELECT);
+        TryHideLastUsedBall();
+        BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 0x10, RGB_BLACK);
+        gBattlerControllerFuncs[battler] = OpenBattleStatusMenu;
+        gBattlerInMenuId = battler;
+        return;
+    }
+
     if (JOY_NEW(A_BUTTON))
     {
+        TryToHideBattleStatusHint();
         PlaySE(SE_SELECT);
         TryHideLastUsedBall();
 
@@ -408,6 +424,25 @@ static void HandleInputChooseAction(enum BattlerId battler)
         BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_THROW_BALL, 0);
         BtlController_Complete(battler);
     }
+}
+
+static void OpenBattleStatusMenu(enum BattlerId battler)
+{
+    if (!gPaletteFade.active)
+    {
+        gBattlerControllerFuncs[battler] = WaitForBattleStatusMenu;
+        CloseMainBattleScreen();
+        CB2_BattleInfoFromBattle();
+    }
+}
+
+static void WaitForBattleStatusMenu(enum BattlerId battler)
+{
+    if (gPaletteFade.active)
+        return;
+
+    if (gMain.callback2 == BattleMainCB2)
+        PlayerHandleChooseAction(battler);
 }
 
 void HandleInputChooseTarget(enum BattlerId battler)
@@ -1583,7 +1618,7 @@ static void WaitForMonSelection(enum BattlerId battler)
         if (gPartyMenuUseExitCallback == TRUE)
             BtlController_EmitChosenMonReturnValue(battler, B_COMM_TO_ENGINE, gSelectedMonPartyId, gBattlePartyCurrentOrder);
         else
-            BtlController_EmitChosenMonReturnValue(battler, B_COMM_TO_ENGINE, PARTY_MON_NONE, NULL);
+            BtlController_EmitChosenMonReturnValue(battler, B_COMM_TO_ENGINE, PARTY_SLOT_NONE, NULL);
 
         if (gBattleResources->bufferA[battler][1] == PARTY_ACTION_SEND_OUT)
             PrintLinkStandbyMsg();
@@ -2013,6 +2048,7 @@ static void PlayerHandleChooseAction(enum BattlerId battler)
         ActionSelectionDestroyCursorAt(i);
 
     TryRestoreLastUsedBall();
+    TryToAddBattleStatusHint();
     ActionSelectionCreateCursorAt(gActionSelectionCursor[battler], 0);
     PREPARE_MON_NICK_BUFFER(gBattleTextBuff1, battler, gBattlerPartyIndexes[battler]);
     BattleStringExpandPlaceholdersToDisplayedString(gText_WhatWillPkmnDo);
@@ -2108,6 +2144,7 @@ void PlayerHandleChooseMove(enum BattlerId battler)
     {
         struct ChooseMoveStruct *moveInfo = (struct ChooseMoveStruct *)(&gBattleResources->bufferA[battler][4]);
 
+        TryToHideBattleStatusHint();
         InitMoveSelectionsVarsAndStrings(battler);
         gBattleStruct->gimmick.playerSelect = FALSE;
         TryToAddMoveInfoWindow();
@@ -2144,6 +2181,7 @@ static void PlayerHandleChooseItem(enum BattlerId battler)
 {
     s32 i;
 
+    TryToHideBattleStatusHint();
     BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 0x10, RGB_BLACK);
     gBattlerControllerFuncs[battler] = OpenBagAndChooseItem;
     gBattlerInMenuId = battler;
@@ -2156,6 +2194,7 @@ static void PlayerHandleChoosePokemon(enum BattlerId battler)
 {
     s32 i;
 
+    TryToHideBattleStatusHint();
     for (i = 0; i < ARRAY_COUNT(gBattlePartyCurrentOrder); i++)
         gBattlePartyCurrentOrder[i] = gBattleResources->bufferA[battler][4 + i];
 
@@ -2165,7 +2204,7 @@ static void PlayerHandleChoosePokemon(enum BattlerId battler)
         && gBattleResources->bufferA[battler][1] != PARTY_ACTION_CHOOSE_FAINTED_MON
         && gBattleResources->bufferA[battler][1] != PARTY_ACTION_SEND_MON_TO_BOX)
     {
-        BtlController_EmitChosenMonReturnValue(battler, B_COMM_TO_ENGINE, (enum PartyMon)(gBattlerPartyIndexes[battler] + 1), gBattlePartyCurrentOrder);
+        BtlController_EmitChosenMonReturnValue(battler, B_COMM_TO_ENGINE, (enum PartySlot)(gBattlerPartyIndexes[battler] + 1), gBattlePartyCurrentOrder);
         BtlController_Complete(battler);
     }
     else
@@ -2173,7 +2212,7 @@ static void PlayerHandleChoosePokemon(enum BattlerId battler)
         gBattleControllerData[battler] = CreateTask(TaskDummy, 0xFF);
         gTasks[gBattleControllerData[battler]].data[0] = gBattleResources->bufferA[battler][1];
         *(&gBattleStruct->battlerPreventingSwitchout) = gBattleResources->bufferA[battler][8];
-        gBattleStruct->prevSelectedPartySlot = (enum PartyMon)gBattleResources->bufferA[battler][2];
+        gBattleStruct->prevSelectedPartySlot = (enum PartySlot)gBattleResources->bufferA[battler][2];
         *(&gBattleStruct->abilityPreventingSwitchout) = (gBattleResources->bufferA[battler][3] & 0xFF) | (gBattleResources->bufferA[battler][7] << 8);
         BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 0x10, RGB_BLACK);
         gBattlerControllerFuncs[battler] = OpenPartyMenuToChooseMon;
@@ -2250,7 +2289,7 @@ static void PlayerHandleTwoReturnValues(enum BattlerId battler)
 
 static void PlayerHandleChosenMonReturnValue(enum BattlerId battler)
 {
-    BtlController_EmitChosenMonReturnValue(battler, B_COMM_TO_ENGINE, PARTY_MON_0, NULL);
+    BtlController_EmitChosenMonReturnValue(battler, B_COMM_TO_ENGINE, PARTY_SLOT_0, NULL);
     BtlController_Complete(battler);
 }
 
@@ -2292,7 +2331,7 @@ static void PlayerHandleLinkStandbyMsg(enum BattlerId battler)
     {
     case LINK_STANDBY_MSG_STOP_BOUNCE:
         PrintLinkStandbyMsg();
-        // fall through
+        [[fallthrough]];
     case LINK_STANDBY_STOP_BOUNCE_ONLY:
         EndBounceEffect(battler, BOUNCE_HEALTHBOX);
         EndBounceEffect(battler, BOUNCE_MON);

@@ -177,7 +177,7 @@
 
 	@ Copies the value of source into destination.
 	.macro copyvar destination:req, source:req, warn=TRUE
-	.if \warn && !((\source >= VARS_START && \source <= VARS_END) || (\source >= SPECIAL_VARS_START && \source <= SPECIAL_VARS_END))
+	.if \warn && (\source != 0) && !((\source >= VARS_START && \source <= VARS_END) || (\source >= SPECIAL_VARS_START && \source <= SPECIAL_VARS_END))
 	.warning "copyvar with a value that is not a VAR_ constant; did you mean setvar instead?"
 	.endif
 	.byte SCR_OP_COPYVAR
@@ -2039,6 +2039,17 @@
 	trycompare goto_if, NOT_EQUAL, \a, \b, \c
 	.endm
 
+	.macro goto_if_between a:req, l:req, h:req, c @ BETWEEN low (l) and high (h), inclusive
+	goto_if_gt \a, \h, 1f
+	trycompare goto_if, 4, \a, \l, \c
+	1:
+	.endm
+
+	.macro goto_if_notbetween a:req, l:req, h:req, c @ NOT BETWEEN low (l) and high (h), inclusive
+	trycompare goto_if, 0, \a, \l, \c
+	trycompare goto_if, 2, \a, \h, \c
+	.endm
+
 	.macro call_if_unset flag:req, dest:req
 	checkflag \flag
 	call_if FALSE, \dest
@@ -2071,6 +2082,17 @@
 
 	.macro call_if_ne a:req, b, c
 	trycompare call_if, NOT_EQUAL, \a, \b, \c
+	.endm
+
+	.macro call_if_between a:req, l:req, h:req, c @ BETWEEN low (l) and high (h), inclusive
+	goto_if_gt \a, \h, 1f
+	trycompare call_if, 4, \a, \l, \c
+	1:
+	.endm
+
+	.macro call_if_notbetween a:req, l:req, h:req, c @ NOT BETWEEN low (l) and high (h), inclusive
+	trycompare call_if, 0, \a, \l, \c
+	trycompare call_if, 2, \a, \h, \c
 	.endm
 
 	.macro vgoto_if_eq a:req, b, c
@@ -2207,6 +2229,11 @@
 
 	.macro setdynamicswitchaifunc func:req
 	callnative ScriptSetDynamicAiSwitchFunc, requests_effects=1
+	.4byte \func
+	.endm
+
+	.macro setdynamicmonchoiceaifunc func:req
+	callnative ScriptSetDynamicAiMonChoiceFunc, requests_effects=1
 	.4byte \func
 	.endm
 
@@ -2699,7 +2726,7 @@
 	goto_if_eq VAR_RESULT, NO, \declineTradeJump
 	chooseboxmon SELECT_PC_MON_TRADE
 	waitstate
-	goto_if_eq VAR_0x8004, PARTY_MON_CANCEL, \declineTradeJump
+	goto_if_eq VAR_0x8004, PARTY_SLOT_CANCEL, \declineTradeJump
 	specialvar VAR_0x800B, GetTradeSpecies
 	goto_if_ne VAR_0x800B, VAR_0x8009, \wrongMonJump
 	special CreateInGameTradePokemon
@@ -2970,6 +2997,29 @@
 	callnative ScrCmd_getmassoutbreakdata
 	.2byte \var
 	.byte \dataField
+	.endm
+
+@ Safaris
+
+	@ sets VAR_RESULT to the currently active safariId, returns 0/SAFARI_EVENT_NONE if there is no active safari
+	.macro getactivesafari
+	callnative ScrCmd_getactivesafari
+	.endm
+
+	.macro safari_enter safariId:req
+	callnative ScrCmd_safari_enter
+	.byte \safariId
+	.endm
+
+	.macro safari_exitnowarp
+	callnative ScrCmd_safari_exit
+	.byte FALSE
+	.endm
+
+	.macro safari_exit
+	callnative ScrCmd_safari_exit
+	.byte TRUE
+	waitstate
 	.endm
 
 @ FRLG
