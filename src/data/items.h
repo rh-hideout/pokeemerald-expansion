@@ -25,7 +25,7 @@ const struct ItemInfo gItemsInfo[] =
     {
         .name = gQuestionMarksItemName,
         .price = 0,
-        .description = COMPOUND_STRING("[?????]"),
+        .description = COMPOUND_STRING("?????"),
         .pocket = POCKET_ITEMS,
         .sortType = ITEM_TYPE_UNCATEGORIZED,
         .type = ITEM_USE_BAG_MENU,
@@ -12325,7 +12325,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM_FOCUS_PUNCH] =
     {
-        .name = ITEM_NAME("[TM01]"),
+        .name = ITEM_NAME("TM01"),
         .price = 3000,
         .description = COMPOUND_STRING(
             "Powerful, but fails\n"
@@ -12339,7 +12339,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM_DRAGON_CLAW] =
     {
-        .name = ITEM_NAME("[TM02]"),
+        .name = ITEM_NAME("TM02"),
         .price = 3000,
         .description = COMPOUND_STRING(
             "Hooks and slashes\n"
@@ -12353,7 +12353,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM_WATER_PULSE] =
     {
-        .name = ITEM_NAME("[TM03]"),
+        .name = ITEM_NAME("TM03"),
         .price = 3000,
         .description = COMPOUND_STRING(
             "Generates an\n"
@@ -12367,7 +12367,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM_CALM_MIND] =
     {
-        .name = ITEM_NAME("[TM04]"),
+        .name = ITEM_NAME("TM04"),
         .price = 3000,
         .description = COMPOUND_STRING(
             "Raises [Sp. Atk] and\n"
@@ -12381,7 +12381,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM_ROAR] =
     {
-        .name = ITEM_NAME("[TM05]"),
+        .name = ITEM_NAME("TM05"),
         .price = 1000,
         .description = COMPOUND_STRING(
             "A roar that makes\n"
@@ -12395,7 +12395,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM_TOXIC] =
     {
-        .name = ITEM_NAME("[TM06]"),
+        .name = ITEM_NAME("TM06"),
         .price = 3000,
         .description = COMPOUND_STRING(
             "Poisons the foe\n"
@@ -12409,7 +12409,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM_HAIL] =
     {
-        .name = ITEM_NAME("[TM07]"),
+        .name = ITEM_NAME("TM07"),
         .price = 3000,
         .description = COMPOUND_STRING(
         #if B_PREFERRED_ICE_WEATHER == B_ICE_WEATHER_SNOW
@@ -12429,7 +12429,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM_BULK_UP] =
     {
-        .name = ITEM_NAME("[TM08]"),
+        .name = ITEM_NAME("TM08"),
         .price = 3000,
         .description = COMPOUND_STRING(
             "Bulks up the body\n"
@@ -12443,7 +12443,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM_BULLET_SEED] =
     {
-        .name = ITEM_NAME("[TM09]"),
+        .name = ITEM_NAME("TM09"),
         .price = 3000,
         .description = COMPOUND_STRING(
             "Shoots 2 to 5 seeds\n"
@@ -12457,7 +12457,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM_HIDDEN_POWER] =
     {
-        .name = ITEM_NAME("[TM10]"),
+        .name = ITEM_NAME("TM10"),
         .price = 3000,
         .description = COMPOUND_STRING(
             "The type\n"
@@ -12471,7 +12471,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM_SUNNY_DAY] =
     {
-        .name = ITEM_NAME("[TM11]"),
+        .name = ITEM_NAME("TM11"),
         .price = 2000,
         .description = COMPOUND_STRING(
             "Boosts the power\n"
@@ -12485,7 +12485,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM_TAUNT] =
     {
-        .name = ITEM_NAME("[TM12]"),
+        .name = ITEM_NAME("TM12"),
         .price = 3000,
         .description = COMPOUND_STRING(
             "The foe can only\n"
@@ -12505,7 +12505,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM_ICE_BEAM] =
     {
-        .name = ITEM_NAME("[TM13]"),
+        .name = ITEM_NAME("TM13"),
         .price = 3000,
         .description = COMPOUND_STRING(
             "Fires an icy cold\n"
@@ -12523,7 +12523,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM_BLIZZARD] =
     {
-        .name = ITEM_NAME("[TM14]"),
+        .name = ITEM_NAME("TM14"),
         .price = 5500,
         .description = COMPOUND_STRING(
         #if B_USE_FROSTBITE
@@ -12543,7 +12543,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM_HYPER_BEAM] =
     {
-        .name = ITEM_NAME("[TM15]"),
+        .name = ITEM_NAME("TM15"),
         .price = 7500,
         .description = COMPOUND_STRING(
         #if B_SKIP_RECHARGE != GEN_1
@@ -12563,7 +12563,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM_LIGHT_SCREEN] =
     {
-        .name = ITEM_NAME("[TM16]"),
+        .name = ITEM_NAME("TM16"),
         .price = 3000,
         .description = COMPOUND_STRING(
             "Creates a wall of\n"
@@ -12577,7 +12577,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM_PROTECT] =
     {
-        .name = ITEM_NAME("[TM17]"),
+        .name = ITEM_NAME("TM17"),
         .price = 3000,
         .description = COMPOUND_STRING(
             "Negates all damage,\n"
@@ -12591,7 +12591,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM_RAIN_DANCE] =
     {
-        .name = ITEM_NAME("[TM18]"),
+        .name = ITEM_NAME("TM18"),
         .price = 2000,
         .description = COMPOUND_STRING(
             "Boosts the power\n"
@@ -12605,7 +12605,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM_GIGA_DRAIN] =
     {
-        .name = ITEM_NAME("[TM19]"),
+        .name = ITEM_NAME("TM19"),
         .price = 3000,
         .description = COMPOUND_STRING(
             "Recovers half the\n"
@@ -12619,7 +12619,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM_SAFEGUARD] =
     {
-        .name = ITEM_NAME("[TM20]"),
+        .name = ITEM_NAME("TM20"),
         .price = 3000,
         .description = COMPOUND_STRING(
             "Guards allies from\n"
@@ -12633,7 +12633,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM_FRUSTRATION] =
     {
-        .name = ITEM_NAME("[TM21]"),
+        .name = ITEM_NAME("TM21"),
         .price = 1000,
         .description = COMPOUND_STRING(
             "The less the user\n"
@@ -12647,7 +12647,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM_SOLAR_BEAM] =
     {
-        .name = ITEM_NAME("[TM22]"),
+        .name = ITEM_NAME("TM22"),
         .price = 3000,
         .description = COMPOUND_STRING(
             "Absorbs sunlight in\n"
@@ -12661,7 +12661,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM_IRON_TAIL] =
     {
-        .name = ITEM_NAME("[TM23]"),
+        .name = ITEM_NAME("TM23"),
         .price = 3000,
         .description = COMPOUND_STRING(
             "Slams the foe with\n"
@@ -12675,7 +12675,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM_THUNDERBOLT] =
     {
-        .name = ITEM_NAME("[TM24]"),
+        .name = ITEM_NAME("TM24"),
         .price = 3000,
         .description = COMPOUND_STRING(
             "A powerful electric\n"
@@ -12689,7 +12689,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM_THUNDER] =
     {
-        .name = ITEM_NAME("[TM25]"),
+        .name = ITEM_NAME("TM25"),
         .price = 5500,
         .description = COMPOUND_STRING(
             "Strikes the foe\n"
@@ -12703,7 +12703,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM_EARTHQUAKE] =
     {
-        .name = ITEM_NAME("[TM26]"),
+        .name = ITEM_NAME("TM26"),
         .price = 3000,
         .description = COMPOUND_STRING(
             "Causes a quake\n"
@@ -12717,7 +12717,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM_RETURN] =
     {
-        .name = ITEM_NAME("[TM27]"),
+        .name = ITEM_NAME("TM27"),
         .price = 1000,
         .description = COMPOUND_STRING(
             "The more the user\n"
@@ -12731,7 +12731,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM_DIG] =
     {
-        .name = ITEM_NAME("[TM28]"),
+        .name = ITEM_NAME("TM28"),
         .price = 2000,
         .description = COMPOUND_STRING(
             "Digs underground\n"
@@ -12745,7 +12745,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM_PSYCHIC] =
     {
-        .name = ITEM_NAME("[TM29]"),
+        .name = ITEM_NAME("TM29"),
         .price = 2000,
         .description = COMPOUND_STRING(
             "A powerful psychic\n"
@@ -12759,7 +12759,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM_SHADOW_BALL] =
     {
-        .name = ITEM_NAME("[TM30]"),
+        .name = ITEM_NAME("TM30"),
         .price = 3000,
         .description = COMPOUND_STRING(
             "Hurls a dark lump\n"
@@ -12773,7 +12773,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM_BRICK_BREAK] =
     {
-        .name = ITEM_NAME("[TM31]"),
+        .name = ITEM_NAME("TM31"),
         .price = 3000,
         .description = COMPOUND_STRING(
             "Destroys barriers\n"
@@ -12787,7 +12787,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM_DOUBLE_TEAM] =
     {
-        .name = ITEM_NAME("[TM32]"),
+        .name = ITEM_NAME("TM32"),
         .price = 2000,
         .description = COMPOUND_STRING(
             "Creates illusory\n"
@@ -12801,7 +12801,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM_REFLECT] =
     {
-        .name = ITEM_NAME("[TM33]"),
+        .name = ITEM_NAME("TM33"),
         .price = 3000,
         .description = COMPOUND_STRING(
             "Creates a wall of\n"
@@ -12815,7 +12815,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM_SHOCK_WAVE] =
     {
-        .name = ITEM_NAME("[TM34]"),
+        .name = ITEM_NAME("TM34"),
         .price = 3000,
         .description = COMPOUND_STRING(
             "Zaps the foe with a\n"
@@ -12829,7 +12829,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM_FLAMETHROWER] =
     {
-        .name = ITEM_NAME("[TM35]"),
+        .name = ITEM_NAME("TM35"),
         .price = 3000,
         .description = COMPOUND_STRING(
             "Looses a stream of\n"
@@ -12843,7 +12843,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM_SLUDGE_BOMB] =
     {
-        .name = ITEM_NAME("[TM36]"),
+        .name = ITEM_NAME("TM36"),
         .price = 1000,
         .description = COMPOUND_STRING(
             "Hurls sludge at the\n"
@@ -12857,7 +12857,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM_SANDSTORM] =
     {
-        .name = ITEM_NAME("[TM37]"),
+        .name = ITEM_NAME("TM37"),
         .price = 2000,
         .description = COMPOUND_STRING(
             "Causes a sandstorm\n"
@@ -12871,7 +12871,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM_FIRE_BLAST] =
     {
-        .name = ITEM_NAME("[TM38]"),
+        .name = ITEM_NAME("TM38"),
         .price = 5500,
         .description = COMPOUND_STRING(
             "A powerful fire\n"
@@ -12885,7 +12885,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM_ROCK_TOMB] =
     {
-        .name = ITEM_NAME("[TM39]"),
+        .name = ITEM_NAME("TM39"),
         .price = 3000,
         .description = COMPOUND_STRING(
             "Stops the foe from\n"
@@ -12899,7 +12899,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM_AERIAL_ACE] =
     {
-        .name = ITEM_NAME("[TM40]"),
+        .name = ITEM_NAME("TM40"),
         .price = 3000,
         .description = COMPOUND_STRING(
             "An extremely fast\n"
@@ -12913,7 +12913,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM_TORMENT] =
     {
-        .name = ITEM_NAME("[TM41]"),
+        .name = ITEM_NAME("TM41"),
         .price = 3000,
         .description = COMPOUND_STRING(
             "Prevents the foe\n"
@@ -12927,7 +12927,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM_FACADE] =
     {
-        .name = ITEM_NAME("[TM42]"),
+        .name = ITEM_NAME("TM42"),
         .price = 3000,
         .description = COMPOUND_STRING(
             "Boosts power when\n"
@@ -12941,7 +12941,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM_SECRET_POWER] =
     {
-        .name = ITEM_NAME("[TM43]"),
+        .name = ITEM_NAME("TM43"),
         .price = 3000,
         .description = COMPOUND_STRING(
             "Adds an effect to\n"
@@ -12955,7 +12955,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM_REST] =
     {
-        .name = ITEM_NAME("[TM44]"),
+        .name = ITEM_NAME("TM44"),
         .price = 3000,
         .description = COMPOUND_STRING(
             "The user sleeps for\n"
@@ -12969,7 +12969,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM_ATTRACT] =
     {
-        .name = ITEM_NAME("[TM45]"),
+        .name = ITEM_NAME("TM45"),
         .price = 3000,
         .description = COMPOUND_STRING(
             "Makes it tough for\n"
@@ -12983,7 +12983,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM_THIEF] =
     {
-        .name = ITEM_NAME("[TM46]"),
+        .name = ITEM_NAME("TM46"),
         .price = 3000,
         .description = COMPOUND_STRING(
             "While attacking,\n"
@@ -12997,7 +12997,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM_STEEL_WING] =
     {
-        .name = ITEM_NAME("[TM47]"),
+        .name = ITEM_NAME("TM47"),
         .price = 3000,
         .description = COMPOUND_STRING(
             "Slams into the\n"
@@ -13011,7 +13011,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM_SKILL_SWAP] =
     {
-        .name = ITEM_NAME("[TM48]"),
+        .name = ITEM_NAME("TM48"),
         .price = 3000,
         .description = COMPOUND_STRING(
             "Switches [Abilities]\n"
@@ -13025,7 +13025,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM_SNATCH] =
     {
-        .name = ITEM_NAME("[TM49]"),
+        .name = ITEM_NAME("TM49"),
         .price = 3000,
         .description = COMPOUND_STRING(
             "Steals the next\n"
@@ -13039,7 +13039,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM_OVERHEAT] =
     {
-        .name = ITEM_NAME("[TM50]"),
+        .name = ITEM_NAME("TM50"),
         .price = 3000,
         .description = COMPOUND_STRING(
             "Enables full-power\n"
@@ -13053,7 +13053,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM51] =
     {
-        .name = ITEM_NAME("[TM51]"),
+        .name = ITEM_NAME("TM51"),
         .price = 3000,
         .description = COMPOUND_STRING("?????"), // Todo
         .importance = I_REUSABLE_TMS,
@@ -13064,7 +13064,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM52] =
     {
-        .name = ITEM_NAME("[TM52]"),
+        .name = ITEM_NAME("TM52"),
         .price = 3000,
         .description = COMPOUND_STRING("?????"), // Todo
         .importance = I_REUSABLE_TMS,
@@ -13075,7 +13075,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM53] =
     {
-        .name = ITEM_NAME("[TM53]"),
+        .name = ITEM_NAME("TM53"),
         .price = 3000,
         .description = COMPOUND_STRING("?????"), // Todo
         .importance = I_REUSABLE_TMS,
@@ -13086,7 +13086,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM54] =
     {
-        .name = ITEM_NAME("[TM54]"),
+        .name = ITEM_NAME("TM54"),
         .price = 3000,
         .description = COMPOUND_STRING("?????"), // Todo
         .importance = I_REUSABLE_TMS,
@@ -13097,7 +13097,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM55] =
     {
-        .name = ITEM_NAME("[TM55]"),
+        .name = ITEM_NAME("TM55"),
         .price = 3000,
         .description = COMPOUND_STRING("?????"), // Todo
         .importance = I_REUSABLE_TMS,
@@ -13108,7 +13108,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM56] =
     {
-        .name = ITEM_NAME("[TM56]"),
+        .name = ITEM_NAME("TM56"),
         .price = 3000,
         .description = COMPOUND_STRING("?????"), // Todo
         .importance = I_REUSABLE_TMS,
@@ -13119,7 +13119,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM57] =
     {
-        .name = ITEM_NAME("[TM57]"),
+        .name = ITEM_NAME("TM57"),
         .price = 3000,
         .description = COMPOUND_STRING("?????"), // Todo
         .importance = I_REUSABLE_TMS,
@@ -13130,7 +13130,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM58] =
     {
-        .name = ITEM_NAME("[TM58]"),
+        .name = ITEM_NAME("TM58"),
         .price = 3000,
         .description = COMPOUND_STRING("?????"), // Todo
         .importance = I_REUSABLE_TMS,
@@ -13141,7 +13141,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM59] =
     {
-        .name = ITEM_NAME("[TM59]"),
+        .name = ITEM_NAME("TM59"),
         .price = 3000,
         .description = COMPOUND_STRING("?????"), // Todo
         .importance = I_REUSABLE_TMS,
@@ -13152,7 +13152,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM60] =
     {
-        .name = ITEM_NAME("[TM60]"),
+        .name = ITEM_NAME("TM60"),
         .price = 3000,
         .description = COMPOUND_STRING("?????"), // Todo
         .importance = I_REUSABLE_TMS,
@@ -13163,7 +13163,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM61] =
     {
-        .name = ITEM_NAME("[TM61]"),
+        .name = ITEM_NAME("TM61"),
         .price = 3000,
         .description = COMPOUND_STRING("?????"), // Todo
         .importance = I_REUSABLE_TMS,
@@ -13174,7 +13174,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM62] =
     {
-        .name = ITEM_NAME("[TM62]"),
+        .name = ITEM_NAME("TM62"),
         .price = 3000,
         .description = COMPOUND_STRING("?????"), // Todo
         .importance = I_REUSABLE_TMS,
@@ -13185,7 +13185,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM63] =
     {
-        .name = ITEM_NAME("[TM63]"),
+        .name = ITEM_NAME("TM63"),
         .price = 3000,
         .description = COMPOUND_STRING("?????"), // Todo
         .importance = I_REUSABLE_TMS,
@@ -13196,7 +13196,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM64] =
     {
-        .name = ITEM_NAME("[TM64]"),
+        .name = ITEM_NAME("TM64"),
         .price = 3000,
         .description = COMPOUND_STRING("?????"), // Todo
         .importance = I_REUSABLE_TMS,
@@ -13207,7 +13207,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM65] =
     {
-        .name = ITEM_NAME("[TM65]"),
+        .name = ITEM_NAME("TM65"),
         .price = 3000,
         .description = COMPOUND_STRING("?????"), // Todo
         .importance = I_REUSABLE_TMS,
@@ -13218,7 +13218,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM66] =
     {
-        .name = ITEM_NAME("[TM66]"),
+        .name = ITEM_NAME("TM66"),
         .price = 3000,
         .description = COMPOUND_STRING("?????"), // Todo
         .importance = I_REUSABLE_TMS,
@@ -13229,7 +13229,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM67] =
     {
-        .name = ITEM_NAME("[TM67]"),
+        .name = ITEM_NAME("TM67"),
         .price = 3000,
         .description = COMPOUND_STRING("?????"), // Todo
         .importance = I_REUSABLE_TMS,
@@ -13240,7 +13240,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM68] =
     {
-        .name = ITEM_NAME("[TM68]"),
+        .name = ITEM_NAME("TM68"),
         .price = 3000,
         .description = COMPOUND_STRING("?????"), // Todo
         .importance = I_REUSABLE_TMS,
@@ -13251,7 +13251,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM69] =
     {
-        .name = ITEM_NAME("[TM69]"),
+        .name = ITEM_NAME("TM69"),
         .price = 3000,
         .description = COMPOUND_STRING("?????"), // Todo
         .importance = I_REUSABLE_TMS,
@@ -13262,7 +13262,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM70] =
     {
-        .name = ITEM_NAME("[TM70]"),
+        .name = ITEM_NAME("TM70"),
         .price = 3000,
         .description = COMPOUND_STRING("?????"), // Todo
         .importance = I_REUSABLE_TMS,
@@ -13273,7 +13273,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM71] =
     {
-        .name = ITEM_NAME("[TM71]"),
+        .name = ITEM_NAME("TM71"),
         .price = 3000,
         .description = COMPOUND_STRING("?????"), // Todo
         .importance = I_REUSABLE_TMS,
@@ -13284,7 +13284,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM72] =
     {
-        .name = ITEM_NAME("[TM72]"),
+        .name = ITEM_NAME("TM72"),
         .price = 3000,
         .description = COMPOUND_STRING("?????"), // Todo
         .importance = I_REUSABLE_TMS,
@@ -13295,7 +13295,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM73] =
     {
-        .name = ITEM_NAME("[TM73]"),
+        .name = ITEM_NAME("TM73"),
         .price = 3000,
         .description = COMPOUND_STRING("?????"), // Todo
         .importance = I_REUSABLE_TMS,
@@ -13306,7 +13306,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM74] =
     {
-        .name = ITEM_NAME("[TM74]"),
+        .name = ITEM_NAME("TM74"),
         .price = 3000,
         .description = COMPOUND_STRING("?????"), // Todo
         .importance = I_REUSABLE_TMS,
@@ -13317,7 +13317,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM75] =
     {
-        .name = ITEM_NAME("[TM75]"),
+        .name = ITEM_NAME("TM75"),
         .price = 3000,
         .description = COMPOUND_STRING("?????"), // Todo
         .importance = I_REUSABLE_TMS,
@@ -13328,7 +13328,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM76] =
     {
-        .name = ITEM_NAME("[TM76]"),
+        .name = ITEM_NAME("TM76"),
         .price = 3000,
         .description = COMPOUND_STRING("?????"), // Todo
         .importance = I_REUSABLE_TMS,
@@ -13339,7 +13339,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM77] =
     {
-        .name = ITEM_NAME("[TM77]"),
+        .name = ITEM_NAME("TM77"),
         .price = 3000,
         .description = COMPOUND_STRING("?????"), // Todo
         .importance = I_REUSABLE_TMS,
@@ -13350,7 +13350,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM78] =
     {
-        .name = ITEM_NAME("[TM78]"),
+        .name = ITEM_NAME("TM78"),
         .price = 3000,
         .description = COMPOUND_STRING("?????"), // Todo
         .importance = I_REUSABLE_TMS,
@@ -13361,7 +13361,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM79] =
     {
-        .name = ITEM_NAME("[TM79]"),
+        .name = ITEM_NAME("TM79"),
         .price = 3000,
         .description = COMPOUND_STRING("?????"), // Todo
         .importance = I_REUSABLE_TMS,
@@ -13372,7 +13372,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM80] =
     {
-        .name = ITEM_NAME("[TM80]"),
+        .name = ITEM_NAME("TM80"),
         .price = 3000,
         .description = COMPOUND_STRING("?????"), // Todo
         .importance = I_REUSABLE_TMS,
@@ -13383,7 +13383,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM81] =
     {
-        .name = ITEM_NAME("[TM81]"),
+        .name = ITEM_NAME("TM81"),
         .price = 3000,
         .description = COMPOUND_STRING("?????"), // Todo
         .importance = I_REUSABLE_TMS,
@@ -13394,7 +13394,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM82] =
     {
-        .name = ITEM_NAME("[TM82]"),
+        .name = ITEM_NAME("TM82"),
         .price = 3000,
         .description = COMPOUND_STRING("?????"), // Todo
         .importance = I_REUSABLE_TMS,
@@ -13405,7 +13405,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM83] =
     {
-        .name = ITEM_NAME("[TM83]"),
+        .name = ITEM_NAME("TM83"),
         .price = 3000,
         .description = COMPOUND_STRING("?????"), // Todo
         .importance = I_REUSABLE_TMS,
@@ -13416,7 +13416,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM84] =
     {
-        .name = ITEM_NAME("[TM84]"),
+        .name = ITEM_NAME("TM84"),
         .price = 3000,
         .description = COMPOUND_STRING("?????"), // Todo
         .importance = I_REUSABLE_TMS,
@@ -13427,7 +13427,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM85] =
     {
-        .name = ITEM_NAME("[TM85]"),
+        .name = ITEM_NAME("TM85"),
         .price = 3000,
         .description = COMPOUND_STRING("?????"), // Todo
         .importance = I_REUSABLE_TMS,
@@ -13438,7 +13438,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM86] =
     {
-        .name = ITEM_NAME("[TM86]"),
+        .name = ITEM_NAME("TM86"),
         .price = 3000,
         .description = COMPOUND_STRING("?????"), // Todo
         .importance = I_REUSABLE_TMS,
@@ -13449,7 +13449,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM87] =
     {
-        .name = ITEM_NAME("[TM87]"),
+        .name = ITEM_NAME("TM87"),
         .price = 3000,
         .description = COMPOUND_STRING("?????"), // Todo
         .importance = I_REUSABLE_TMS,
@@ -13460,7 +13460,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM88] =
     {
-        .name = ITEM_NAME("[TM88]"),
+        .name = ITEM_NAME("TM88"),
         .price = 3000,
         .description = COMPOUND_STRING("?????"), // Todo
         .importance = I_REUSABLE_TMS,
@@ -13471,7 +13471,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM89] =
     {
-        .name = ITEM_NAME("[TM89]"),
+        .name = ITEM_NAME("TM89"),
         .price = 3000,
         .description = COMPOUND_STRING("?????"), // Todo
         .importance = I_REUSABLE_TMS,
@@ -13482,7 +13482,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM90] =
     {
-        .name = ITEM_NAME("[TM90]"),
+        .name = ITEM_NAME("TM90"),
         .price = 3000,
         .description = COMPOUND_STRING("?????"), // Todo
         .importance = I_REUSABLE_TMS,
@@ -13493,7 +13493,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM91] =
     {
-        .name = ITEM_NAME("[TM91]"),
+        .name = ITEM_NAME("TM91"),
         .price = 3000,
         .description = COMPOUND_STRING("?????"), // Todo
         .importance = I_REUSABLE_TMS,
@@ -13504,7 +13504,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM92] =
     {
-        .name = ITEM_NAME("[TM92]"),
+        .name = ITEM_NAME("TM92"),
         .price = 3000,
         .description = COMPOUND_STRING("?????"), // Todo
         .importance = I_REUSABLE_TMS,
@@ -13515,7 +13515,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM93] =
     {
-        .name = ITEM_NAME("[TM93]"),
+        .name = ITEM_NAME("TM93"),
         .price = 3000,
         .description = COMPOUND_STRING("?????"), // Todo
         .importance = I_REUSABLE_TMS,
@@ -13526,7 +13526,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM94] =
     {
-        .name = ITEM_NAME("[TM94]"),
+        .name = ITEM_NAME("TM94"),
         .price = 3000,
         .description = COMPOUND_STRING("?????"), // Todo
         .importance = I_REUSABLE_TMS,
@@ -13537,7 +13537,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM95] =
     {
-        .name = ITEM_NAME("[TM95]"),
+        .name = ITEM_NAME("TM95"),
         .price = 3000,
         .description = COMPOUND_STRING("?????"), // Todo
         .importance = I_REUSABLE_TMS,
@@ -13548,7 +13548,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM96] =
     {
-        .name = ITEM_NAME("[TM96]"),
+        .name = ITEM_NAME("TM96"),
         .price = 3000,
         .description = COMPOUND_STRING("?????"), // Todo
         .importance = I_REUSABLE_TMS,
@@ -13559,7 +13559,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM97] =
     {
-        .name = ITEM_NAME("[TM97]"),
+        .name = ITEM_NAME("TM97"),
         .price = 3000,
         .description = COMPOUND_STRING("?????"), // Todo
         .importance = I_REUSABLE_TMS,
@@ -13570,7 +13570,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM98] =
     {
-        .name = ITEM_NAME("[TM98]"),
+        .name = ITEM_NAME("TM98"),
         .price = 3000,
         .description = COMPOUND_STRING("?????"), // Todo
         .importance = I_REUSABLE_TMS,
@@ -13581,7 +13581,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM99] =
     {
-        .name = ITEM_NAME("[TM99]"),
+        .name = ITEM_NAME("TM99"),
         .price = 3000,
         .description = COMPOUND_STRING("?????"), // Todo
         .importance = I_REUSABLE_TMS,
@@ -13592,7 +13592,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_TM100] =
     {
-        .name = ITEM_NAME("[TM100]"),
+        .name = ITEM_NAME("TM100"),
         .price = 3000,
         .description = COMPOUND_STRING("?????"), // Todo
         .importance = I_REUSABLE_TMS,
@@ -13603,7 +13603,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_HM_CUT] =
     {
-        .name = ITEM_NAME("[HM01]"),
+        .name = ITEM_NAME("HM01"),
         .price = 0,
         .description = COMPOUND_STRING(
             "Attacks the foe\n"
@@ -13617,7 +13617,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_HM_FLY] =
     {
-        .name = ITEM_NAME("[HM02]"),
+        .name = ITEM_NAME("HM02"),
         .price = 0,
         .description = COMPOUND_STRING(
             "Flies up on the\n"
@@ -13631,7 +13631,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_HM_SURF] =
     {
-        .name = ITEM_NAME("[HM03]"),
+        .name = ITEM_NAME("HM03"),
         .price = 0,
         .description = COMPOUND_STRING(
             "Creates a huge\n"
@@ -13649,7 +13649,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_HM_STRENGTH] =
     {
-        .name = ITEM_NAME("[HM04]"),
+        .name = ITEM_NAME("HM04"),
         .price = 0,
         .description = COMPOUND_STRING(
             "Builds enormous\n"
@@ -13663,7 +13663,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_HM_FLASH] =
     {
-        .name = ITEM_NAME("[HM05]"),
+        .name = ITEM_NAME("HM05"),
         .price = 0,
         .description = COMPOUND_STRING(
             "Looses a powerful\n"
@@ -13677,7 +13677,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_HM_ROCK_SMASH] =
     {
-        .name = ITEM_NAME("[HM06]"),
+        .name = ITEM_NAME("HM06"),
         .price = 0,
         .description = COMPOUND_STRING(
             "A rock-crushingly\n"
@@ -13691,7 +13691,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_HM_WATERFALL] =
     {
-        .name = ITEM_NAME("[HM07]"),
+        .name = ITEM_NAME("HM07"),
         .price = 0,
         .description = COMPOUND_STRING(
         #if B_UPDATED_MOVE_DATA >= GEN_4
@@ -13711,7 +13711,7 @@ const struct ItemInfo gItemsInfo[] =
 
     [ITEM_HM_DIVE] =
     {
-        .name = ITEM_NAME("[HM08]"),
+        .name = ITEM_NAME("HM08"),
         .price = 0,
         .description = COMPOUND_STRING(
             "Dives underwater\n"
