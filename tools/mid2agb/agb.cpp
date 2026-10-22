@@ -539,7 +539,6 @@ void PrintAgbTrack(std::vector<Event>& events)
             break;
         }
 
-        // Review/remove if mid2agb ever implements conditional loop break/jumps
         if (event.type == EventType::LoopEnd && !foundCondJump)
             break;
     }
