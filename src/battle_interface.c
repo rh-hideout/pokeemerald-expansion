@@ -206,6 +206,8 @@ static void Task_FreeAbilityPopUpGfx(u8);
 static void SpriteCB_LastUsedBall(struct Sprite *);
 static void SpriteCB_LastUsedBallWin(struct Sprite *);
 static void SpriteCB_MoveInfoWin(struct Sprite *sprite);
+static void SpriteCB_BattleStatusHint(struct Sprite *sprite);
+static bool32 ShouldUseDoublesBattleStatusHintPosition(void);
 
 static const struct OamData sOamData_64x32 =
 {
@@ -701,6 +703,7 @@ u8 CreateBattlerHealthboxSprites(enum BattlerId battler)
     gBattleStruct->ballSpriteIds[0] = MAX_SPRITES;
     gBattleStruct->ballSpriteIds[1] = MAX_SPRITES;
     gBattleStruct->moveInfoSpriteId = MAX_SPRITES;
+    gBattleStruct->battleStatusHintSpriteId = MAX_SPRITES;
 
     return healthboxLeftSpriteId;
 }
@@ -2054,7 +2057,7 @@ static void UpdateLeftNoOfBallsTextOnHealthbox(u8 healthboxSpriteId)
 
 
     txtPtr = StringCopy(text, gText_SafariBallLeft);
-    ConvertIntToDecimalStringN(txtPtr, gNumSafariBalls, STR_CONV_MODE_LEFT_ALIGN, 2);
+    ConvertIntToDecimalStringN(txtPtr, GetSafariBallCount(), STR_CONV_MODE_LEFT_ALIGN, 2);
 
     FillSpriteRectColor(healthboxSpriteId, 55, 19, 40, 12, HEALTHBOX_BG_INDEX);
     AddSpriteTextPrinterParameterized6(healthboxSpriteId, FONT_SMALL, 55, 19, 0, 0, sHealthBoxTextColor, 0, text);
@@ -2911,6 +2914,7 @@ static const struct SpriteTemplate sSpriteTemplate_LastUsedBallWindow =
 };
 
 #define MOVE_INFO_WINDOW_TAG 0xE722
+#define BATTLE_STATUS_HINT_WINDOW_TAG 0xE723
 
 static const struct OamData sOamData_MoveInfoWindow =
 {
@@ -2935,6 +2939,25 @@ static const struct SpriteTemplate sSpriteTemplate_MoveInfoWindow =
     .paletteTag = TAG_ABILITY_POP_UP,
     .oam = &sOamData_MoveInfoWindow,
     .callback = SpriteCB_MoveInfoWin
+};
+
+#if B_BATTLE_INFO_BUTTON == R_BUTTON
+static const u8 sBattleStatusWindowGfx[] = INCBIN_U8("graphics/battle_interface/battle_status_window_r.4bpp");
+#else
+static const u8 sBattleStatusWindowGfx[] = INCBIN_U8("graphics/battle_interface/battle_status_window_l.4bpp");
+#endif
+
+static const struct SpriteSheet sSpriteSheet_BattleStatusWindow =
+{
+    sBattleStatusWindowGfx, sizeof(sBattleStatusWindowGfx), BATTLE_STATUS_HINT_WINDOW_TAG
+};
+
+static const struct SpriteTemplate sSpriteTemplate_BattleStatusHint =
+{
+    .tileTag = BATTLE_STATUS_HINT_WINDOW_TAG,
+    .paletteTag = TAG_ABILITY_POP_UP,
+    .oam = &sOamData_MoveInfoWindow,
+    .callback = SpriteCB_BattleStatusHint
 };
 
 #if B_LAST_USED_BALL_BUTTON == R_BUTTON && B_LAST_USED_BALL_CYCLE == TRUE
@@ -2970,6 +2993,10 @@ static const struct SpriteSheet sSpriteSheet_MoveInfoWindow =
 #define LAST_BALL_WIN_X_F       (LAST_USED_BALL_X_F - 0)
 #define LAST_BALL_WIN_X_0       (LAST_USED_BALL_X_0 - 0)
 #define LAST_USED_WIN_Y         (LAST_USED_BALL_Y - 8)
+#define BATTLE_SPRITE_HINT_X_F  LAST_BALL_WIN_X_F
+#define BATTLE_SPRITE_HINT_X_0  LAST_BALL_WIN_X_0
+#define BATTLE_SPRITE_HINT_Y_SINGLE 92
+#define BATTLE_SPRITE_HINT_Y_DOUBLE 102
 
 #define sHide  data[0]
 #define sTimer  data[1]
@@ -2992,6 +3019,17 @@ bool32 CanThrowLastUsedBall(void)
     if (IsVictoryCatch())
         return FALSE;
     return TRUE;
+}
+
+static bool32 ShouldUseDoublesBattleStatusHintPosition(void)
+{
+    if (IsDoubleBattle())
+        return TRUE;
+
+    if (B_LAST_USED_BALL_BUTTON == L_BUTTON && gSaveBlock2Ptr->optionsButtonMode == OPTIONS_BUTTON_MODE_L_EQUALS_A)
+        return FALSE;
+
+    return CanThrowLastUsedBall();
 }
 
 void TryAddLastUsedBallItemSprites(void)
@@ -3050,7 +3088,8 @@ void TryAddLastUsedBallItemSprites(void)
 static void DestroyLastUsedBallWinGfx(struct Sprite *sprite)
 {
     FreeSpriteTilesByTag(TAG_LAST_BALL_WINDOW);
-    if (GetSpriteTileStartByTag(MOVE_INFO_WINDOW_TAG) == 0xFFFF)
+    if (GetSpriteTileStartByTag(MOVE_INFO_WINDOW_TAG) == 0xFFFF
+     && GetSpriteTileStartByTag(BATTLE_STATUS_HINT_WINDOW_TAG) == 0xFFFF)
         FreeSpritePaletteByTag(TAG_ABILITY_POP_UP);
     DestroySprite(sprite);
     gBattleStruct->ballSpriteIds[1] = MAX_SPRITES;
@@ -3088,13 +3127,50 @@ void TryToHideMoveInfoWindow(void)
     gSprites[gBattleStruct->moveInfoSpriteId].sHide = TRUE;
 }
 
+void TryToAddBattleStatusHint(void)
+{
+    if (B_BATTLE_INFO_BUTTON == L_BUTTON && gSaveBlock2Ptr->optionsButtonMode == OPTIONS_BUTTON_MODE_L_EQUALS_A)
+        return;
+
+    LoadSpritePalette(&sSpritePalette_AbilityPopUp);
+    if (GetSpriteTileStartByTag(BATTLE_STATUS_HINT_WINDOW_TAG) == 0xFFFF)
+        LoadSpriteSheet(&sSpriteSheet_BattleStatusWindow);
+
+    if (gBattleStruct->battleStatusHintSpriteId == MAX_SPRITES)
+    {
+        s16 y = ShouldUseDoublesBattleStatusHintPosition() ? BATTLE_SPRITE_HINT_Y_DOUBLE : BATTLE_SPRITE_HINT_Y_SINGLE;
+        gBattleStruct->battleStatusHintSpriteId = CreateSprite(&sSpriteTemplate_BattleStatusHint,
+                                                               BATTLE_SPRITE_HINT_X_0,
+                                                               y,
+                                                               6);
+        gSprites[gBattleStruct->battleStatusHintSpriteId].sHide = FALSE;
+    }
+}
+
+void TryToHideBattleStatusHint(void)
+{
+    if (gBattleStruct->battleStatusHintSpriteId != MAX_SPRITES)
+        gSprites[gBattleStruct->battleStatusHintSpriteId].sHide = TRUE;
+}
+
 static void DestroyMoveInfoWinGfx(struct Sprite *sprite)
 {
     FreeSpriteTilesByTag(MOVE_INFO_WINDOW_TAG);
-    if (GetSpriteTileStartByTag(TAG_LAST_BALL_WINDOW) == 0xFFFF)
+    if (GetSpriteTileStartByTag(TAG_LAST_BALL_WINDOW) == 0xFFFF
+     && GetSpriteTileStartByTag(BATTLE_STATUS_HINT_WINDOW_TAG) == 0xFFFF)
         FreeSpritePaletteByTag(TAG_ABILITY_POP_UP);
     DestroySprite(sprite);
     gBattleStruct->moveInfoSpriteId = MAX_SPRITES;
+}
+
+static void DestroyBattleStatusHintGfx(struct Sprite *sprite)
+{
+    FreeSpriteTilesByTag(BATTLE_STATUS_HINT_WINDOW_TAG);
+    if (GetSpriteTileStartByTag(TAG_LAST_BALL_WINDOW) == 0xFFFF
+     && GetSpriteTileStartByTag(MOVE_INFO_WINDOW_TAG) == 0xFFFF)
+        FreeSpritePaletteByTag(TAG_ABILITY_POP_UP);
+    DestroySprite(sprite);
+    gBattleStruct->battleStatusHintSpriteId = MAX_SPRITES;
 }
 
 static void SpriteCB_LastUsedBallWin(struct Sprite *sprite)
@@ -3147,6 +3223,23 @@ static void SpriteCB_MoveInfoWin(struct Sprite *sprite)
     else
     {
         if (sprite->x != LAST_BALL_WIN_X_F)
+            sprite->x++;
+    }
+}
+
+static void SpriteCB_BattleStatusHint(struct Sprite *sprite)
+{
+    if (sprite->sHide)
+    {
+        if (sprite->x != BATTLE_SPRITE_HINT_X_0)
+            sprite->x--;
+
+        if (sprite->x == BATTLE_SPRITE_HINT_X_0)
+            DestroyBattleStatusHintGfx(sprite);
+    }
+    else
+    {
+        if (sprite->x != BATTLE_SPRITE_HINT_X_F)
             sprite->x++;
     }
 }
@@ -3242,7 +3335,8 @@ static void Task_BounceBall(u8 taskId)
         {
             DestroyLastUsedBallGfx(sprite);
             task->sState++;
-        }  // Passthrough
+        }
+        [[fallthrough]];
     case 2: //Create New Icon
         if (!sprite->inUse)
         {
@@ -3253,7 +3347,8 @@ static void Task_BounceBall(u8 taskId)
                 gSprites[gBattleStruct->ballSpriteIds[0]].y = LAST_USED_BALL_Y_BNC;
             }
             task->sState++;
-        }  // Fallthrough
+        }
+        [[fallthrough]];
     case 3: // Bounce Down
         if (!sprite->sMoving)
         {
@@ -3327,3 +3422,162 @@ void CategoryIcons_LoadSpritesGfx(void)
     LoadCompressedSpriteSheet(&gSpriteSheet_CategoryIcons);
     LoadSpritePalette(&gSpritePal_CategoryIcons);
 }
+
+#define tState    data[0]
+#define tSpriteId data[1]
+#define tWeather  data[2]
+#define TAG_WEATHER_INDICATOR_GFX 0x7825
+#define TAG_WEATHER_INDICATOR_PAL 0x7825
+#define INDICATOR_STATE_DRAW_SPRITE 0
+#define INDICATOR_STATE_SLIDE_IN    1
+#define INDICATOR_STATE_SLIDE_END   2
+#define INDICATOR_STATE_WAIT        3
+#define INDICATOR_STATE_SLIDE_OUT   4
+#define INDICATOR_STATE_REMOVE      5
+
+static const u32 sWeatherIndicatorGfx[] = INCGFX_U32("graphics/battle_interface/weather_indicators.png", ".4bpp.smol");
+static const u16 sWeatherIndicatorPal[] = INCGFX_U16("graphics/battle_interface/weather_indicators.png", ".gbapal");
+
+static const struct CompressedSpriteSheet sSpriteSheet_WeatherIndicator =
+{
+    .data = sWeatherIndicatorGfx,
+    .size = 0x400,
+    .tag = TAG_WEATHER_INDICATOR_GFX,
+};
+
+static const struct SpritePalette sSpritePalette_WeatherIndicator =
+{
+    .data = sWeatherIndicatorPal,
+    .tag = TAG_WEATHER_INDICATOR_PAL,
+};
+
+static const struct OamData sOamData_WeatherIndicator =
+{
+    .y = -8,
+    .affineMode = ST_OAM_AFFINE_OFF,
+    .objMode = ST_OAM_OBJ_NORMAL,
+    .mosaic = FALSE,
+    .bpp = ST_OAM_4BPP,
+    .shape = SPRITE_SHAPE(32x16),
+    .x = 120,
+    .matrixNum = 0,
+    .size = SPRITE_SIZE(32x16),
+    .tileNum = 0,
+    .priority = 0,
+    .paletteNum = 0,
+    .affineParam = 0,
+};
+
+static const struct SpriteTemplate sSpriteTemplate_WeatherIndicator =
+{
+    .tileTag = TAG_WEATHER_INDICATOR_GFX,
+    .paletteTag = TAG_WEATHER_INDICATOR_GFX,
+    .oam = &sOamData_WeatherIndicator,
+    .anims = gDummySpriteAnimTable,
+    .callback = SpriteCallbackDummy,
+};
+
+static void Task_WeatherIndicatorHandler(u8 taskId)
+{
+    switch (gTasks[taskId].tState)
+    {
+    case INDICATOR_STATE_DRAW_SPRITE:
+        LoadCompressedSpriteSheet(&sSpriteSheet_WeatherIndicator);
+        LoadSpritePalette(&sSpritePalette_WeatherIndicator);
+        gTasks[taskId].tSpriteId = CreateSprite(&sSpriteTemplate_WeatherIndicator, 120, -8, 0);
+
+        //  Sun already has correct offset
+        if (gTasks[taskId].tWeather & B_WEATHER_RAIN)
+            gSprites[gTasks[taskId].tSpriteId].oam.tileNum += 8;
+        else if (gTasks[taskId].tWeather & B_WEATHER_SANDSTORM)
+            gSprites[gTasks[taskId].tSpriteId].oam.tileNum += 16;
+        else if (gTasks[taskId].tWeather & (B_WEATHER_SNOW | B_WEATHER_HAIL))
+            gSprites[gTasks[taskId].tSpriteId].oam.tileNum += 24;
+
+        gTasks[taskId].tState++;
+        break;
+    case INDICATOR_STATE_SLIDE_IN:
+        if (gSprites[gTasks[taskId].tSpriteId].y < 8)
+            gSprites[gTasks[taskId].tSpriteId].y += 1;
+        else
+            gTasks[taskId].tState++;
+        break;
+    case INDICATOR_STATE_SLIDE_END:
+        gSprites[gTasks[taskId].tSpriteId].y = 8;
+        gTasks[taskId].tState++;
+        break;
+    case INDICATOR_STATE_WAIT:
+        break;
+    case INDICATOR_STATE_SLIDE_OUT:
+        if (gSprites[gTasks[taskId].tSpriteId].y > -8)
+            gSprites[gTasks[taskId].tSpriteId].y -= 1;
+        else
+            gTasks[taskId].tState++;
+        break;
+    case INDICATOR_STATE_REMOVE:
+        DestroySprite(&gSprites[gTasks[taskId].tSpriteId]);
+        FreeSpriteTilesByTag(TAG_WEATHER_INDICATOR_GFX);
+        FreeSpritePaletteByTag(TAG_WEATHER_INDICATOR_PAL);
+
+        DestroyTask(taskId);
+        break;
+    }
+}
+
+void ShowWeatherIndicator(bool32 instant)
+{
+    if (TESTING || !B_SHOW_WEATHER_INDICATOR)
+        return;
+
+    u32 weather = GetWeather();
+    if (weather == B_WEATHER_NONE)
+        return;
+
+    u32 taskId = FindTaskIdByFunc(Task_WeatherIndicatorHandler);
+    if (taskId == TASK_NONE)
+    {
+        taskId = CreateTask(Task_WeatherIndicatorHandler, 1);
+        gTasks[taskId].tState = INDICATOR_STATE_DRAW_SPRITE;
+        gTasks[taskId].tSpriteId = SPRITE_NONE;
+        gTasks[taskId].tWeather = weather;
+        gTasks[taskId].func(taskId);
+        if (instant)
+        {
+            gTasks[taskId].tState = INDICATOR_STATE_SLIDE_END;
+            gTasks[taskId].func(taskId);
+        }
+    }
+}
+
+void HideWeatherIndicator(bool32 instant)
+{
+    if (TESTING || !B_SHOW_WEATHER_INDICATOR)
+        return;
+
+    u32 taskId = FindTaskIdByFunc(Task_WeatherIndicatorHandler);
+
+    if (taskId != TASK_NONE)
+    {
+        if (instant)
+        {
+            gTasks[taskId].tState = INDICATOR_STATE_REMOVE;
+            gTasks[taskId].func(taskId);
+        }
+        else
+        {
+            gTasks[taskId].tState = INDICATOR_STATE_SLIDE_OUT;
+        }
+    }
+}
+
+#undef tState
+#undef tSpriteId
+#undef tWeather
+#undef TAG_WEATHER_INDICATOR_GFX
+#undef TAG_WEATHER_INDICATOR_PAL
+#undef INDICATOR_STATE_DRAW_SPRITE
+#undef INDICATOR_STATE_SLIDE_IN
+#undef INDICATOR_STATE_SLIDE_END
+#undef INDICATOR_STATE_WAIT
+#undef INDICATOR_STATE_SLIDE_OUT
+#undef INDICATOR_STATE_REMOVE

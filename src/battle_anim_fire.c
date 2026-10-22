@@ -877,6 +877,7 @@ static void AnimTask_EruptionLaunchRocks_Step(u8 taskId)
     case 0:
         PrepareEruptAnimTaskData(task, task->tAttackerSpriteId, 0x100, 0x100, 0xE0, 0x200, 32);
         task->tState++;
+        [[fallthrough]];
     case 1:
         if (++task->tTimer1 > 1)
         {
@@ -1120,7 +1121,7 @@ static void AnimEruptionFallingRock_Step(struct Sprite *sprite)
         }
 
         sprite->sState++;
-        // fall through
+        [[fallthrough]];
     case 1:
         // Rock is falling
         sprite->y += 8;
