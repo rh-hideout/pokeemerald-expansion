@@ -1793,6 +1793,7 @@ static void SetValuesForTwoTurnMoveFire(struct BattleCalcValues *cv)
 {
     gBattleScripting.animTurn = 1;
     gBattleScripting.animTargetsHit = 0;
+    gBattleScripting.battler = cv->battlerAtk;
     gBattleMons[cv->battlerAtk].volatiles.multipleTurns = FALSE;
     gBattleMons[cv->battlerAtk].volatiles.chargeTurn = FALSE;
     if (gBattleMoveEffects[cv->moveEffect].semiInvulnerableEffect)
