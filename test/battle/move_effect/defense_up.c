@@ -33,7 +33,10 @@ SINGLE_BATTLE_TEST("Harden raises Defense by 1 stage", s16 damage)
 
 DOUBLE_BATTLE_TEST("Diamond Storm increases Defense after both targets have been hit")
 {
+    u32 stageIncrease = (B_UPDATED_MOVE_DATA >= GEN_7) ? 2 : 1;
+
     GIVEN {
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_DIAMOND_STORM, self: TRUE, defense: stageIncrease);
         PLAYER(SPECIES_WOBBUFFET)
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -47,7 +50,6 @@ DOUBLE_BATTLE_TEST("Diamond Storm increases Defense after both targets have been
         HP_BAR(opponentRight);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
     } THEN {
-        u32 stageIncrease = (B_UPDATED_MOVE_DATA >= GEN_7) ? 2 : 1;
         EXPECT_EQ(playerLeft->statStages[STAT_DEF], DEFAULT_STAT_STAGE + stageIncrease);
     }
 }
