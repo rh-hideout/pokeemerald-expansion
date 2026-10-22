@@ -31,7 +31,7 @@ struct __attribute__((packed, aligned(2))) BattleMoveEffect
 #define ADDITIONAL_EFFECTS(...) EFFECTS_ARR( __VA_ARGS__ ), .numAdditionalEffects = ARRAY_COUNT(EFFECTS_ARR( __VA_ARGS__ ))
 
 #define STAT_FIELD(stat) .stat = 1,
-#define STATS(...) {.statField = (const struct StatField){RECURSIVELY(R_FOR_EACH(STAT_FIELD, __VA_ARGS__))}}
+#define STATS(...) {.statField = {RECURSIVELY(R_FOR_EACH(STAT_FIELD, __VA_ARGS__))}}
 #define STAT_SWAP_OFFENSIVE STATS(atk, spatk)
 #define STAT_SWAP_DEFENSIVE STATS(def, spdef)
 #define STAT_SWAP_ALL       STATS(atk, def, spatk, spdef, speed, acc, evasion)
