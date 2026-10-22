@@ -3,7 +3,8 @@
 
 SINGLE_BATTLE_TEST("Infiltrator bypasses the opponent's Light Screen/Reflect/Aurora Veil", s16 damage)
 {
-    u32 screenMove, attackingMove, ability;
+    enum Move screenMove, attackingMove;
+    enum Ability ability;
 
     PARAMETRIZE { screenMove = MOVE_LIGHT_SCREEN; attackingMove = MOVE_WATER_GUN; ability = ABILITY_INFILTRATOR; }
     PARAMETRIZE { screenMove = MOVE_LIGHT_SCREEN; attackingMove = MOVE_WATER_GUN; ability = ABILITY_CLEAR_BODY;  }
@@ -35,7 +36,8 @@ SINGLE_BATTLE_TEST("Infiltrator bypasses the opponent's Light Screen/Reflect/Aur
 
 DOUBLE_BATTLE_TEST("Infiltrator doesn't bypass an ally's Light Screen/Reflect/Aurora Veil", s16 damage)
 {
-    u32 screenMove, attackingMove, ability;
+    enum Move screenMove, attackingMove;
+    enum Ability ability;
 
     PARAMETRIZE { screenMove = MOVE_LIGHT_SCREEN; attackingMove = MOVE_WATER_GUN; ability = ABILITY_INFILTRATOR; }
     PARAMETRIZE { screenMove = MOVE_LIGHT_SCREEN; attackingMove = MOVE_WATER_GUN; ability = ABILITY_CLEAR_BODY;  }

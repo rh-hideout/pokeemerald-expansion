@@ -232,17 +232,18 @@ struct MapHeader
     /* 0x10 */ u16 music;
     /* 0x12 */ u16 mapLayoutId;
     /* 0x14 */ mapsec_u8_t regionMapSectionId;
-    /* 0x15 */ u8 cave;
-    /* 0x16 */ u8 weather;
-    /* 0x17 */ u8 mapType;
-    /* 0x18 */ s8 floorNumber;
-    /* 0x19 */ u8 filler_19;
+    /* 0x15 */ u8 weather;
+    /* 0x16 */ u8 mapType;
+    /* 0x17 */ s8 floorNumber;
+    /* 0x18 */ u16 nightMusic;
                // fields correspond to the arguments in the map_header_flags macro
     /* 0x1A */ bool8 allowCycling:1;
                bool8 allowEscaping:1; // Escape Rope and Dig
                bool8 allowRunning:1;
-               bool8 showMapName:5; // the last 4 bits are unused
-                                    // but the 5 bit sized bitfield is required to match
+               bool8 showMapName:1;
+               bool8 writeSpecialVarIsEffect:1;
+               bool8 cave:1;
+               bool8 unused:2;
     /* 0x1B */ u8 battleType;
 };
 
@@ -312,6 +313,13 @@ struct ObjectEvent
     /*size = 0x24*/
 };
 
+enum ObjectEventCompressionMode
+{
+    OBJECT_EVENT_COMPRESSION_NONE,
+    OBJECT_EVENT_COMPRESSION_FAST,
+    OBJECT_EVENT_COMPRESSION_SLOW,
+};
+
 struct ObjectEventGraphicsInfo
 {
     /*0x00*/ u16 tileTag;
@@ -323,8 +331,9 @@ struct ObjectEventGraphicsInfo
     /*0x0C*/ u8 paletteSlot:4;
              u8 shadowSize:2;
              u8 inanimate:1;
-             u8 compressed:1;
-    /*0x0D*/ u8 tracks;
+             u8 unused:1;
+    /*0x0D*/ u8 tracks:6;
+             enum ObjectEventCompressionMode compressionMode:2;
     /*0x10*/ const struct OamData *oam;
     /*0x14*/ const struct SubspriteTable *subspriteTables;
     /*0x18*/ const union AnimCmd *const *anims;

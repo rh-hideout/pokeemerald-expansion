@@ -7282,7 +7282,7 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .growthRate = GROWTH_SLOW,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_FLYING),
         .abilities = { ABILITY_STALWART, ABILITY_STALWART, ABILITY_STALWART },
-        .bodyColor = BODY_COLOR_GRAY,
+        .bodyColor = BODY_COLOR_YELLOW,
         .speciesName = _("Skarmory"),
     #if P_MODIFIED_MEGA_CRIES
         .cryId = CRY_SKARMORY_MEGA,

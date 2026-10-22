@@ -75,7 +75,36 @@ SINGLE_BATTLE_TEST("Future Sight is not boosted by Life Orb is original user if 
     }
 }
 
-TO_DO_BATTLE_TEST("Future Sight does not receive STAB from party mon (Gen 2-4)")
+SINGLE_BATTLE_TEST("Future Sight does not receive STAB from party mon (Gen 2-4)")
+{
+    u32 genConfig;
+    s16 directDamage;
+    s16 futureSightDamage;
+
+    PARAMETRIZE { genConfig = GEN_2; }
+    PARAMETRIZE { genConfig = GEN_3; }
+    PARAMETRIZE { genConfig = GEN_4; }
+    GIVEN {
+        WITH_CONFIG(B_UPDATED_MOVE_TYPES, genConfig);
+        PLAYER(SPECIES_RALTS);
+        PLAYER(SPECIES_RAICHU);
+        OPPONENT(SPECIES_REGICE);
+    } WHEN {
+        TURN { MOVE(player, FUTURE_SIGHT_EQUIVALENT, WITH_RNG(RNG_SECONDARY_EFFECT, FALSE)); }
+        TURN { MOVE(player, MOVE_FUTURE_SIGHT); }
+        TURN { SWITCH(player, 1); }
+        TURN {}
+        TURN {}
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, FUTURE_SIGHT_EQUIVALENT, player);
+        HP_BAR(opponent, captureDamage: &directDamage);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, player);
+        HP_BAR(opponent, captureDamage: &futureSightDamage);
+    } THEN {
+        EXPECT_EQ(directDamage, futureSightDamage);
+    }
+}
+
 SINGLE_BATTLE_TEST("Future Sight receives STAB from party mon (Gen 5+)")
 {
     s16 seedFlareDmg;
@@ -101,7 +130,44 @@ SINGLE_BATTLE_TEST("Future Sight receives STAB from party mon (Gen 5+)")
     }
 }
 
-TO_DO_BATTLE_TEST("Future Sight is not affected by type effectiveness (Gen 2-4)")
+SINGLE_BATTLE_TEST("Future Sight is not affected by type effectiveness (Gen 2-4)", s16 damage)
+{
+    u32 genConfig;
+    enum Species species;
+
+    PARAMETRIZE { genConfig = GEN_2; species = SPECIES_DITTO; }
+    PARAMETRIZE { genConfig = GEN_2; species = SPECIES_MACHOP; }
+    PARAMETRIZE { genConfig = GEN_2; species = SPECIES_STARMIE; }
+    PARAMETRIZE { genConfig = GEN_2; species = SPECIES_HOUNDOOM; }
+    PARAMETRIZE { genConfig = GEN_3; species = SPECIES_DITTO; }
+    PARAMETRIZE { genConfig = GEN_3; species = SPECIES_MACHOP; }
+    PARAMETRIZE { genConfig = GEN_3; species = SPECIES_STARMIE; }
+    PARAMETRIZE { genConfig = GEN_3; species = SPECIES_HOUNDOOM; }
+    PARAMETRIZE { genConfig = GEN_4; species = SPECIES_DITTO; }
+    PARAMETRIZE { genConfig = GEN_4; species = SPECIES_MACHOP; }
+    PARAMETRIZE { genConfig = GEN_4; species = SPECIES_STARMIE; }
+    PARAMETRIZE { genConfig = GEN_4; species = SPECIES_HOUNDOOM; }
+    GIVEN {
+        WITH_CONFIG(B_UPDATED_MOVE_TYPES, genConfig);
+        ASSUME(GetSpeciesType(SPECIES_DITTO, 0) == TYPE_NORMAL);
+        ASSUME(GetSpeciesType(SPECIES_MACHOP, 0) == TYPE_FIGHTING);
+        ASSUME(GetSpeciesType(SPECIES_STARMIE, 1) == TYPE_PSYCHIC);
+        ASSUME(GetSpeciesType(SPECIES_HOUNDOOM, 0) == TYPE_DARK);
+        PLAYER(SPECIES_PIKACHU);
+        OPPONENT(species) { HP(1000); MaxHP(1000); SpDefense(100); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_FUTURE_SIGHT); }
+        TURN {}
+        TURN {}
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, player);
+        HP_BAR(opponent, captureDamage: &results[i].damage);
+    } THEN {
+        if (i % 4 != 0)
+            EXPECT_EQ(results[i].damage, results[i - i % 4].damage);
+    }
+}
+
 SINGLE_BATTLE_TEST("Future Sight is affected by type effectiveness (Gen 5+)")
 {
     GIVEN {
@@ -123,7 +189,28 @@ SINGLE_BATTLE_TEST("Future Sight is affected by type effectiveness (Gen 5+)")
     }
 }
 
-TO_DO_BATTLE_TEST("Future Sight ignores Wonder Guard (Gen 2-4)")
+SINGLE_BATTLE_TEST("Future Sight ignores Wonder Guard (Gen 2-4)")
+{
+    u32 genConfig;
+
+    PARAMETRIZE { genConfig = GEN_2; }
+    PARAMETRIZE { genConfig = GEN_3; }
+    PARAMETRIZE { genConfig = GEN_4; }
+    GIVEN {
+        WITH_CONFIG(B_UPDATED_MOVE_TYPES, genConfig);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_SHEDINJA) { Ability(ABILITY_WONDER_GUARD); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_FUTURE_SIGHT); }
+        TURN {}
+        TURN {}
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, player);
+        NOT ABILITY_POPUP(opponent, ABILITY_WONDER_GUARD);
+        HP_BAR(opponent, hp: 0);
+    }
+}
+
 SINGLE_BATTLE_TEST("Future Sight doesn't ignore Wonder Guard (Gen 5+)")
 {
     GIVEN {
@@ -310,7 +397,7 @@ SINGLE_BATTLE_TEST("Future Sight does not trigger Cursed Body")
 SINGLE_BATTLE_TEST("Future Sight flying type attacker in party receives no boost from Psychic Terrain", s16 damage)
 {
     bool32 terrain;
-    u32 species;
+    enum Species species;
 
     PARAMETRIZE { species = SPECIES_PIDGEY; terrain = FALSE; }
     PARAMETRIZE { species = SPECIES_PIDGEY; terrain = TRUE; }
@@ -318,7 +405,8 @@ SINGLE_BATTLE_TEST("Future Sight flying type attacker in party receives no boost
     PARAMETRIZE { species = SPECIES_WOBBUFFET; terrain = TRUE; }
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_PSYCHIC_TERRAIN) == EFFECT_PSYCHIC_TERRAIN);
+        ASSUME(GetMoveEffect(MOVE_PSYCHIC_TERRAIN) == EFFECT_TERRAIN);
+        ASSUME(GetMoveTerrainType(MOVE_PSYCHIC_TERRAIN) == B_TERRAIN_PSYCHIC);
         ASSUME(gSpeciesInfo[SPECIES_PIDGEY].types[0] == TYPE_FLYING || gSpeciesInfo[SPECIES_PIDGEY].types[1] == TYPE_FLYING);
         PLAYER(species);
         PLAYER(SPECIES_WOBBUFFET);
@@ -410,5 +498,95 @@ SINGLE_BATTLE_TEST("Toxic Chain does not trigger from Future Sight if the user i
         }
     } THEN {
         EXPECT(opponent->status1 == 0);
+    }
+}
+
+SINGLE_BATTLE_TEST("Future Sight type is changed by Normalize when user is on field")
+{
+    bool32 switchMon = FALSE;
+
+    PARAMETRIZE { switchMon = FALSE; }
+    PARAMETRIZE { switchMon = TRUE; }
+
+    GIVEN {
+        ASSUME(GetSpeciesType(SPECIES_GASTLY, 0) == TYPE_GHOST);
+        PLAYER(SPECIES_GASTLY);
+        OPPONENT(SPECIES_SKITTY) { Ability(ABILITY_NORMALIZE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_FUTURE_SIGHT); }
+        if (switchMon) { TURN { SWITCH(opponent, 1); } }
+        TURN {}
+        if (!switchMon) { TURN {} }
+    } SCENE {
+        if (switchMon) {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, opponent);
+            HP_BAR(player);
+        }
+        else {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, opponent); // set up
+            NOT {
+                ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, opponent);
+                HP_BAR(player);
+            }
+        }
+    }
+}
+
+DOUBLE_BATTLE_TEST("Future Sight doesn't print an erroneous failure message in doubles")
+{
+    GIVEN {
+        ASSUME(GetSpeciesType(SPECIES_POOCHYENA, 0) == TYPE_DARK);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_POOCHYENA);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_FUTURE_SIGHT, target: opponentLeft); }
+        TURN {}
+        TURN {}
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, playerLeft);
+        NOT MESSAGE("It doesn't affect the opposing Poochyena…");
+    }
+}
+
+DOUBLE_BATTLE_TEST("Future Sight is redirected to partner if target slot is empty")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_FUTURE_SIGHT, target: opponentLeft); }
+        TURN { MOVE(playerLeft, MOVE_POUND, target: opponentLeft); }
+        TURN {}
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, playerLeft);
+        HP_BAR(opponentRight);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Future Sight can't be redirected by Abilities")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_PIKACHU) { Ability(ABILITY_LIGHTNING_ROD); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_FUTURE_SIGHT, target: opponentLeft); }
+        TURN {}
+        TURN { MOVE(opponentRight, MOVE_ELECTRIFY, target: playerLeft); MOVE(playerLeft, MOVE_POUND, target: opponentLeft); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRIFY, opponentRight);
+        ABILITY_POPUP(opponentRight, ABILITY_LIGHTNING_ROD); // redirection
+        ABILITY_POPUP(opponentRight, ABILITY_LIGHTNING_ROD); // absorb pound
+
+        NOT ABILITY_POPUP(opponentRight, ABILITY_LIGHTNING_ROD);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, playerLeft);
+        HP_BAR(opponentLeft);
     }
 }

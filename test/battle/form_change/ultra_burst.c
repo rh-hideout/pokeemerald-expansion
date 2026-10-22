@@ -122,7 +122,7 @@ SINGLE_BATTLE_TEST("Ultra Burst and Mega Evolution can happen on the same turn")
 
 SINGLE_BATTLE_TEST("Necrozma returns its proper Form upon battle end after Ultra Bursting")
 {
-    u32 species;
+    enum Species species;
     PARAMETRIZE { species = SPECIES_NECROZMA_DUSK_MANE; }
     PARAMETRIZE { species = SPECIES_NECROZMA_DAWN_WINGS; }
     GIVEN {
@@ -138,7 +138,7 @@ SINGLE_BATTLE_TEST("Necrozma returns its proper Form upon battle end after Ultra
 
 SINGLE_BATTLE_TEST("Necrozma returns its proper Form upon fainting after Ultra Bursting")
 {
-    u32 species;
+    enum Species species;
     PARAMETRIZE { species = SPECIES_NECROZMA_DUSK_MANE; }
     PARAMETRIZE { species = SPECIES_NECROZMA_DAWN_WINGS; }
     GIVEN {

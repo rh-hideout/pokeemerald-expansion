@@ -66,11 +66,11 @@ static void SaveCurrentWinStreak(void);
 static void ValidateApprenticesChecksums(void);
 static void SetNextBattleTentOpponent(void);
 static void ClearBattleTowerRecord(struct EmeraldBattleTowerRecord *record);
-static void FillTentTrainerParty_(u16 trainerId, u8 firstMonId, u8 monCount);
 
 #include "data/battle_frontier/battle_frontier_trainer_mons.h"
 #include "data/battle_frontier/battle_frontier_trainers.h"
 #include "data/battle_frontier/battle_frontier_mons.h"
+#include "data/battle_frontier/battle_tent.h"
 
 const struct FacilityClass gTowerMaleFacilityClasses[FACILITY_CLASSES_MALE] =
 {
@@ -625,8 +625,6 @@ static const u8 *const *const sPartnerApprenticeTextTables[NUM_APPRENTICES] =
     sPartnerApprenticeTexts16
 };
 
-#include "data/battle_frontier/battle_tent.h"
-
 static void (* const sBattleTowerFuncs[])(void) =
 {
     [BATTLE_TOWER_FUNC_INIT]                = InitTowerChallenge,
@@ -1000,12 +998,6 @@ void PutNewBattleTowerRecord(struct EmeraldBattleTowerRecord *newRecordEm)
     gSaveBlock2Ptr->frontier.towerRecords[slotIds[i]] = *newRecord;
 }
 
-void FillTentTrainerParty(u8 monsCount)
-{
-    ZeroEnemyPartyMons();
-    FillTentTrainerParty_(TRAINER_BATTLE_PARAM.opponentA, 0, monsCount);
-}
-
 static void GetOpponentIntroSpeech(void)
 {
     u16 trainerId;
@@ -1177,8 +1169,7 @@ static void LoadMultiPartnerCandidatesData(void)
     enum FrontierLevelMode lvlMode;
     u32 battleMode;
     s32 challengeNum;
-    u32 species1, species2;
-    u32 UNUSED level;
+    enum Species species1, species2;
     struct ObjectEventTemplate *objEventTemplates;
 
     objEventTemplates = gSaveBlock1Ptr->objectEventTemplates;
@@ -1187,7 +1178,6 @@ static void LoadMultiPartnerCandidatesData(void)
     challengeNum = gSaveBlock2Ptr->frontier.towerWinStreaks[battleMode][lvlMode] / FRONTIER_STAGES_PER_CHALLENGE;
     species1 = GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_SPECIES);
     species2 = GetMonData(&gParties[B_TRAINER_PLAYER][1], MON_DATA_SPECIES);
-    level = SetFacilityPtrsGetLevel();
 
     j = 0;
     do
@@ -1361,7 +1351,6 @@ static void ShowPartnerCandidateMessage(void)
 {
     s32 i, j, partnerId;
     s32 monId;
-    s32 UNUSED level = SetFacilityPtrsGetLevel();
     u16 winStreak = GetCurrentFacilityWinStreak();
     s32 challengeNum = winStreak / FRONTIER_STAGES_PER_CHALLENGE;
     s32 k = gSpecialVar_LastTalked - 2;
@@ -1910,6 +1899,73 @@ static u16 GetBattleTentTrainerId(void)
         return 0;
 }
 
+struct FacilityMonGenerator GetFacilityMonGenerator(u16 trainerId)
+{
+    struct FacilityMonGenerator generator;
+    generator.lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
+    generator.facility = VarGet(VAR_FRONTIER_FACILITY);
+    generator.battleMode = VarGet(VAR_FRONTIER_BATTLE_MODE);
+
+    if (generator.facility == FRONTIER_FACILITY_FACTORY)
+    {
+        generator.otId = READ_OTID_FROM_SAVE;
+        generator.fixedIV = GetFactoryMonFixedIV(&generator, trainerId);
+    }
+    else
+    {
+        generator.otId = Random32();
+        generator.fixedIV = GetFrontierTrainerFixedIvs(trainerId);
+    }
+
+    u32 partyLevel = GetHighestLevelInPlayerParty();
+    if (generator.lvlMode == FRONTIER_LVL_TENT)
+    {
+        if (generator.facility == FRONTIER_FACILITY_FACTORY)
+        {
+            generator.frontierTrainerList = gSlateportBattleTentTrainers;
+            generator.facilityMonList = gSlateportBattleTentMons;
+        }
+        else if (generator.facility == FRONTIER_FACILITY_PALACE)
+        {
+            generator.frontierTrainerList = gVerdanturfBattleTentTrainers;
+            generator.facilityMonList = gVerdanturfBattleTentMons;
+        }
+        else if (generator.facility == FRONTIER_FACILITY_ARENA)
+        {
+            generator.frontierTrainerList = gFallarborBattleTentTrainers;
+            generator.facilityMonList = gFallarborBattleTentMons;
+        }
+        else
+        {
+            errorf("Facility %d is not available in tent mode", generator.facility);
+        }
+        generator.fixedIV = 0;
+        if (partyLevel < TENT_MIN_LEVEL)
+            partyLevel = TENT_MIN_LEVEL;
+    }
+    else if (generator.lvlMode < FRONTIER_LVL_MODE_COUNT)
+    {
+        generator.frontierTrainerList = gBattleFrontierTrainers;
+        generator.facilityMonList = gBattleFrontierMons;
+        if (generator.lvlMode == FRONTIER_LVL_50)
+            partyLevel = FRONTIER_MAX_LEVEL_50;
+        if (generator.lvlMode == FRONTIER_LVL_OPEN)
+        {
+            if (generator.facility == FRONTIER_FACILITY_FACTORY)
+                partyLevel = FRONTIER_MAX_LEVEL_OPEN;
+            else if (partyLevel < FRONTIER_MIN_LEVEL_OPEN)
+                partyLevel = FRONTIER_MIN_LEVEL_OPEN;
+        }
+    }
+    else
+    {
+        errorf("Unkown level mode %d", generator.lvlMode);
+        partyLevel = 1;
+    }
+    generator.partyLevel = partyLevel;
+    return generator;
+}
+
 u8 SetTentPtrsGetLevel(void)
 {
     u8 level = TENT_MIN_LEVEL;
@@ -1962,102 +2018,6 @@ static void SetNextBattleTentOpponent(void)
     SetBattleFacilityTrainerGfxId(TRAINER_BATTLE_PARAM.opponentA, 0);
     if (gSaveBlock2Ptr->frontier.curChallengeBattleNum + 1 < TENT_STAGES_PER_CHALLENGE)
        gSaveBlock2Ptr->frontier.trainerIds[gSaveBlock2Ptr->frontier.curChallengeBattleNum] = TRAINER_BATTLE_PARAM.opponentA;
-}
-
-static void FillTentTrainerParty_(u16 trainerId, u8 firstMonId, u8 monCount)
-{
-    s32 i, j;
-    u16 chosenMonIndices[MAX_FRONTIER_PARTY_SIZE];
-    u8 level = SetTentPtrsGetLevel();
-    u8 fixedIV = 0;
-    u8 bfMonCount;
-    const u16 *monSet = NULL;
-    u32 otID = 0;
-    u16 monId;
-
-    monSet = gFacilityTrainers[TRAINER_BATTLE_PARAM.opponentA].monSet;
-
-    bfMonCount = 0;
-    monId = monSet[bfMonCount];
-    while (monId != 0xFFFF)
-    {
-        bfMonCount++;
-        monId = monSet[bfMonCount];
-        if (monId == 0xFFFF)
-            break;
-    }
-
-    i = 0;
-    otID = Random32();
-    while (i != monCount)
-    {
-        u16 monId = monSet[Random() % bfMonCount];
-
-        // Ensure this Pokémon species isn't a duplicate.
-        for (j = 0; j < i + firstMonId; j++)
-        {
-            if (GetMonData(&gParties[B_TRAINER_OPPONENT_A][j], MON_DATA_SPECIES) == gFacilityTrainerMons[monId].species)
-                break;
-        }
-        if (j != i + firstMonId)
-            continue;
-
-        // Ensure this Pokemon's held item isn't a duplicate.
-        for (j = 0; j < i + firstMonId; j++)
-        {
-            if (GetMonData(&gParties[B_TRAINER_OPPONENT_A][j], MON_DATA_HELD_ITEM) != ITEM_NONE
-             && GetMonData(&gParties[B_TRAINER_OPPONENT_A][j], MON_DATA_HELD_ITEM) == gFacilityTrainerMons[monId].heldItem)
-                break;
-        }
-        if (j != i + firstMonId)
-            continue;
-
-        // Ensure this exact Pokémon index isn't a duplicate. This check doesn't seem necessary
-        // because the species and held items were already checked directly above.
-        for (j = 0; j < i; j++)
-        {
-            if (chosenMonIndices[j] == monId)
-                break;
-        }
-        if (j != i)
-            continue;
-
-        chosenMonIndices[i] = monId;
-        CreateFacilityMon(&gFacilityTrainerMons[monId],
-                level, fixedIV, otID, 0,
-                &gParties[B_TRAINER_OPPONENT_A][i + firstMonId]);
-
-        // The Pokémon was successfully added to the trainer's party, so it's safe to move on to
-        // the next party slot.
-        i++;
-    }
-}
-
-bool32 ValidateBattleTowerRecord(u8 recordId) // unused
-{
-    s32 i;
-    u32 *record = (u32 *)(&gSaveBlock2Ptr->frontier.towerRecords[recordId]);
-    u32 checksum = 0;
-    u32 hasData = 0;
-    for (i = 0; i < offsetof(struct EmeraldBattleTowerRecord, checksum) / sizeof(u32); i++)
-    {
-        checksum += record[i];
-        hasData |= record[i];
-    }
-
-    if (checksum == 0 && hasData == 0)
-    {
-        return FALSE;
-    }
-    else if (gSaveBlock2Ptr->frontier.towerRecords[recordId].checksum != checksum)
-    {
-        ClearBattleTowerRecord(&gSaveBlock2Ptr->frontier.towerRecords[recordId]);
-        return FALSE;
-    }
-    else
-    {
-        return TRUE;
-    }
 }
 
 void TrySetLinkBattleTowerEnemyPartyLevel(void)

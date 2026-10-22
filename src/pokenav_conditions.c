@@ -334,7 +334,8 @@ u8 *CopyStringLeftAlignedToConditionData(u8 *dst, const u8 *src, s16 n)
 
 static u8 *CopyConditionMonNameGender(u8 *str, u16 listId, bool8 skipPadding)
 {
-    u16 boxId, monId, gender, species, level, lvlDigits;
+    u16 boxId, monId, gender, level, lvlDigits;
+    enum Species species;
     struct BoxPokemon *boxMon;
     u8 *txtPtr, *str_;
     struct PokenavMonList *monListPtr = GetSubstructPtr(POKENAV_SUBSTRUCT_MON_LIST);
@@ -568,12 +569,6 @@ u8 GetConditionGraphMenuCurrentLoadIndex(void)
     return menu->loadId;
 }
 
-u8 GetConditionGraphMenuToLoadListIndex(void)
-{
-    struct Pokenav_ConditionMenu *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_CONDITION_GRAPH_MENU);
-    return menu->toLoadListIndex;
-}
-
 void *GetConditionMonPicGfx(u8 loadId)
 {
     struct Pokenav_ConditionMenu *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_CONDITION_GRAPH_MENU);
@@ -584,12 +579,6 @@ void *GetConditionMonPal(u8 loadId)
 {
     struct Pokenav_ConditionMenu *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_CONDITION_GRAPH_MENU);
     return menu->monPal[loadId];
-}
-
-u8 GetConditionGraphMenuToLoadId(void)
-{
-    struct Pokenav_ConditionMenu *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_CONDITION_GRAPH_MENU);
-    return menu->toLoadId;
 }
 
 u8 *GetConditionMonNameText(u8 loadId)

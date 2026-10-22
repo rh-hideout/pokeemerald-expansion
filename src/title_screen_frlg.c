@@ -384,7 +384,7 @@ void CB2_InitTitleScreenFrlg(void)
     {
     default:
         gMain.state = 0;
-        // fallthrough
+        [[fallthrough]];
     case 0:
         SetVBlankCallback(NULL);
         StartTimer1();
@@ -666,7 +666,7 @@ static void SetTitleScreenScene_Run(s16 *data)
         SetGpuRegsForTitleScreenRun();
         tSlashSpriteId = CreateSlashSprite();
         tState++;
-        // fallthrough
+        [[fallthrough]];
     case 1:
         if (JOY_HELD(KEYSTROKE_DELSAVE) == KEYSTROKE_DELSAVE)
         {
@@ -1156,7 +1156,7 @@ static void SpriteCallback_TitleScreenLeaf(struct Sprite *sprite)
 
 static void CreateLeafSprite(s32 y, s32 xspeed, s32 yspeed)
 {
-    u8 spriteId = CreateSprite(&sSpriteTemplate_FlameOrLeaf, DISPLAY_WIDTH, y, 0);
+    u8 spriteId = CreateSpriteUnchecked(&sSpriteTemplate_FlameOrLeaf, DISPLAY_WIDTH, y, 0);
     if (spriteId != MAX_SPRITES)
     {
         gSprites[spriteId].sPosX = DISPLAY_WIDTH * 16;
@@ -1191,7 +1191,7 @@ static void CreateStreakSprites(void)
     u8 spriteId;
     for (i = 0; i < 4; i++)
     {
-        spriteId = CreateSprite(&sSpriteTemplate_Streak, DISPLAY_WIDTH + 16 + 40 * i, sStreakYPositions[i], 0xFF);
+        spriteId = CreateSpriteUnchecked(&sSpriteTemplate_Streak, DISPLAY_WIDTH + 16 + 40 * i, sStreakYPositions[i], 0xFF);
         if (spriteId != MAX_SPRITES)
         {
             gSprites[spriteId].data[7] = i;
@@ -1289,7 +1289,7 @@ static void SetPalOnOrCreateBlankSprite(bool32 hasCreatedBlankSprite)
 
 static u8 CreateSlashSprite(void)
 {
-    u8 spriteId = CreateSprite(&sSlashSpriteTemplate, -32, 27, 1);
+    u8 spriteId = CreateSpriteUnchecked(&sSlashSpriteTemplate, -32, 27, 1);
     if (spriteId != MAX_SPRITES)
     {
         gSprites[spriteId].callback = SpriteCallback_Slash;

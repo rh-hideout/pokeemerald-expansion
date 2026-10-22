@@ -63,16 +63,16 @@
 struct ApprenticePartyMovesData
 {
     u8 moveCounter;
-    u16 moves[MULTI_PARTY_SIZE][NUM_WHICH_MOVE_QUESTIONS];
+    enum Move moves[MULTI_PARTY_SIZE][NUM_WHICH_MOVE_QUESTIONS];
     u8 moveSlots[MULTI_PARTY_SIZE][NUM_WHICH_MOVE_QUESTIONS];
 };
 
 struct ApprenticeQuestionData
 {
-    u16 speciesId;
-    u16 altSpeciesId;
-    u16 move1;
-    u16 move2;
+    enum Species speciesId;
+    enum Species altSpeciesId;
+    enum Move move1;
+    enum Move move2;
 };
 
 // IWRAM common
@@ -202,7 +202,7 @@ static void SetPlayersApprenticeLvlMode(u8 mode)
 
 static void ShuffleApprenticeSpecies(void)
 {
-    u8 species[APPRENTICE_SPECIES_COUNT];
+    enum Species species[APPRENTICE_SPECIES_COUNT];
     u8 i;
 
     for (i = 0; i < ARRAY_COUNT(species); i++)
@@ -462,7 +462,7 @@ static void GetLatestLearnedMoves(enum Species species, u16 *moves)
 
 // Get the level up move or previously suggested move to be the first move choice
 // Compare to GetRandomAlternateMove, which gets the move that will be the second choice
-static enum Move GetDefaultMove(u8 monId, u8 speciesArrayId, u8 moveSlot)
+static enum Move GetDefaultMove(u8 monId, u8 speciesArrayId, enum MoveSlot moveSlot)
 {
     enum Move moves[MAX_MON_MOVES];
     u8 i, numQuestions;
@@ -532,7 +532,7 @@ static void SaveApprenticeParty(u8 numQuestions)
         {
             if (PLAYER_APPRENTICE.questions[i].suggestedChange)
             {
-                u32 moveSlot = PLAYER_APPRENTICE.questions[i].moveSlot;
+                enum MoveSlot moveSlot = PLAYER_APPRENTICE.questions[i].moveSlot;
                 apprenticeMons[monId]->moves[moveSlot] = PLAYER_APPRENTICE.questions[i].data;
             }
         }

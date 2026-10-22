@@ -529,7 +529,7 @@ static void AnimDefensiveWall(struct Sprite *sprite)
         if (IsBattlerSpriteVisible(battler))
             MoveBattlerSpriteToBG(battler, toBG_2, FALSE);
 
-        battler = BATTLE_PARTNER(battlerCopy);
+        battler = GetPartnerBattler(battlerCopy);
         if (IsBattlerSpriteVisible(battler))
             MoveBattlerSpriteToBG(battler, toBG_2 ^ var0, FALSE);
     }
@@ -582,7 +582,7 @@ static void AnimDefensiveWall_Step1(struct Sprite *sprite)
     if (IsBattlerSpriteVisible(battler))
         gSprites[gBattlerSpriteIds[battler]].invisible = TRUE;
 
-    battler = BATTLE_PARTNER(battler);
+    battler = GetPartnerBattler(battler);
     if (IsBattlerSpriteVisible(battler))
         gSprites[gBattlerSpriteIds[battler]].invisible = TRUE;
 
@@ -635,7 +635,7 @@ static void AnimDefensiveWall_Step4(struct Sprite *sprite)
             if (IsBattlerSpriteVisible(battler))
                 gSprites[gBattlerSpriteIds[battler]].invisible = FALSE;
 
-            battler = BATTLE_PARTNER(battlerCopy);
+            battler = GetPartnerBattler(battlerCopy);
             if (IsBattlerSpriteVisible(battler))
                 gSprites[gBattlerSpriteIds[battler]].invisible = FALSE;
         }
@@ -658,7 +658,7 @@ static void AnimDefensiveWall_Step5(struct Sprite *sprite)
         if (IsBattlerSpriteVisible(battler))
             ResetBattleAnimBg(toBG2);
 
-        battler = BATTLE_PARTNER(battlerCopy);
+        battler = GetPartnerBattler(battlerCopy);
         if (IsBattlerSpriteVisible(battler))
             ResetBattleAnimBg(toBG2 ^ var0);
     }
@@ -870,7 +870,7 @@ static void AnimTask_ImprisonOrbs_Step(u8 taskId)
         if (++task->data[1] > 8)
         {
             task->data[1] = 0;
-            spriteId = CreateSprite(&gImprisonOrbSpriteTemplate, task->data[13], task->data[14], 0);
+            spriteId = CreateSpriteUnchecked(&gImprisonOrbSpriteTemplate, task->data[13], task->data[14], 0);
             task->data[task->data[2] + 8] = spriteId;
             if (spriteId != MAX_SPRITES)
             {
@@ -1070,7 +1070,7 @@ static void AnimTask_SkillSwap_Step(u8 taskId)
         if (++task->data[1] > 6)
         {
             task->data[1] = 0;
-            spriteId = CreateSprite(&gSkillSwapOrbSpriteTemplate, task->data[11], task->data[12], 0);
+            spriteId = CreateSpriteUnchecked(&gSkillSwapOrbSpriteTemplate, task->data[11], task->data[12], 0);
             if (spriteId != MAX_SPRITES)
             {
                 gSprites[spriteId].data[0] = 16;
@@ -1106,7 +1106,7 @@ static void AnimTask_HeartSwap_Step(u8 taskId)
         if (++task->data[1] > 6)
         {
             task->data[1] = 0;
-            spriteId = CreateSprite(&gHeartSwapOrbSpriteTemplate, task->data[11], task->data[12], 0);
+            spriteId = CreateSpriteUnchecked(&gHeartSwapOrbSpriteTemplate, task->data[11], task->data[12], 0);
             if (spriteId != MAX_SPRITES)
             {
                 gSprites[spriteId].data[0] = 16;

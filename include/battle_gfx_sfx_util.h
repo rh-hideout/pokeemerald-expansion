@@ -29,7 +29,6 @@ void TrySetBehindSubstituteSpriteBit(enum BattlerId battler, enum Move move);
 void ClearBehindSubstituteBit(enum BattlerId battler);
 void HandleLowHpMusicChange(struct Pokemon *mon, enum BattlerId battler);
 void BattleStopLowHpSound(void);
-u8 GetMonHPBarLevel(struct Pokemon *mon);
 void HandleBattleLowHpMusicChange(void);
 void SetBattlerSpriteAffineMode(u8 affineMode);
 void CreateEnemyShadowSprite(enum BattlerId battler);

@@ -208,12 +208,6 @@ bool8 WaitFanfare(bool8 stop)
     }
 }
 
-// Unused
-void StopFanfareByFanfareNum(u8 fanfareNum)
-{
-    m4aSongNumStop(sFanfares[fanfareNum].songNum);
-}
-
 void PlayFanfare(u16 songNum)
 {
     s32 i;
@@ -460,7 +454,7 @@ void PlayCryInternal(enum Species species, s8 pan, s8 volume, u8 priority, u8 mo
     case CRY_MODE_WEAK_DOUBLES:
         length = 20;
         release = 225;
-        // fallthrough
+        [[fallthrough]];
     case CRY_MODE_WEAK:
         pitch = 15000;
         break;

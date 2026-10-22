@@ -21,7 +21,7 @@ SINGLE_BATTLE_TEST("Berserk Gene sharply raises attack at the start of a single 
         if (item == ITEM_BERSERK_GENE)
         {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-            MESSAGE("The Berserk Gene sharply boosted Wobbuffet's Attack!");
+            MESSAGE("Wobbuffet's Attack rose sharply!");
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, player);
             MESSAGE("Wobbuffet became confused!");
         }
@@ -48,7 +48,7 @@ DOUBLE_BATTLE_TEST("Berserk Gene sharply raises attack at the start of a double 
         if (item == ITEM_BERSERK_GENE)
         {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
-            MESSAGE("The Berserk Gene sharply boosted Wobbuffet's Attack!");
+            MESSAGE("Wobbuffet's Attack rose sharply!");
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, playerRight);
             MESSAGE("Wobbuffet became confused!");
         }
@@ -75,7 +75,7 @@ SINGLE_BATTLE_TEST("Berserk Gene activates on switch in", s16 damage)
         if (item == ITEM_BERSERK_GENE)
         {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-            MESSAGE("The Berserk Gene sharply boosted Wobbuffet's Attack!");
+            MESSAGE("Wobbuffet's Attack rose sharply!");
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, player);
             MESSAGE("Wobbuffet became confused!");
         }
@@ -102,7 +102,7 @@ SINGLE_BATTLE_TEST("Berserk Gene does not confuse a Pokemon with Own Tempo but s
         if (item == ITEM_BERSERK_GENE)
         {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-            MESSAGE("The Berserk Gene sharply boosted Slowbro's Attack!");
+            MESSAGE("Slowbro's Attack rose sharply!");
             ABILITY_POPUP(player, ABILITY_OWN_TEMPO);
             MESSAGE("Slowbro cannot be confused!");
         }
@@ -140,7 +140,7 @@ DOUBLE_BATTLE_TEST("Berserk Gene does not confuse a Pokemon with Own Tempo but s
         if (item == ITEM_BERSERK_GENE)
         {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, (positionLeft) ? playerLeft : playerRight);
-            MESSAGE("The Berserk Gene sharply boosted Slowbro's Attack!");
+            MESSAGE("Slowbro's Attack rose sharply!");
             ABILITY_POPUP(positionLeft ? playerLeft : playerRight, ABILITY_OWN_TEMPO);
             MESSAGE("Slowbro cannot be confused!");
         }
@@ -165,7 +165,7 @@ SINGLE_BATTLE_TEST("Berserk Gene does not confuse on Misty Terrain but still rai
         }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("The Berserk Gene sharply boosted Tapu Fini's Attack!");
+        MESSAGE("Tapu Fini's Attack rose sharply!");
         NOT MESSAGE("Tapu Fini became confused!");
     }
 }
@@ -181,7 +181,7 @@ SINGLE_BATTLE_TEST("Berserk Gene does not confuse when Safeguard is active")
         TURN { SWITCH(player, 1); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("The Berserk Gene sharply boosted Wobbuffet's Attack!");
+        MESSAGE("Wobbuffet's Attack rose sharply!");
         MESSAGE("Wobbuffet is protected by Safeguard!");
         NOT MESSAGE("Wobbuffet became confused!");
     }
@@ -204,20 +204,7 @@ SINGLE_BATTLE_TEST("Berserk Gene causes confusion for more than 5 turns") // how
     }
 }
 
-SINGLE_BATTLE_TEST("Berserk Gene causes infinite confusion") // check if bit is set
-{
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_BERSERK_GENE); }
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN {}
-    } SCENE {
-    } THEN {
-        EXPECT(gBattleMons[GetBattlerAtPosition(B_POSITION_PLAYER_LEFT)].volatiles.infiniteConfusion);
-    }
-}
-
-SINGLE_BATTLE_TEST("Berserk Gene causes confusion timer to not tick down", u32 confusionTurns)
+SINGLE_BATTLE_TEST("Berserk Gene causes confusion timer to not tick down", u32 confusionTimer)
 {
     u32 turns;
     PARAMETRIZE { turns = 1; }
@@ -231,9 +218,9 @@ SINGLE_BATTLE_TEST("Berserk Gene causes confusion timer to not tick down", u32 c
             TURN {}
         }
     } THEN {
-        results[i].confusionTurns = player->volatiles.confusionTurns;
+        results[i].confusionTimer = player->volatiles.confusionTimer;
     } FINALLY {
-        EXPECT_EQ(results[0].confusionTurns, results[1].confusionTurns);
+        EXPECT_EQ(results[0].confusionTimer, results[1].confusionTimer);
     }
 }
 
@@ -249,11 +236,11 @@ SINGLE_BATTLE_TEST("Berserk Gene does not cause an infinite loop")
         TURN { MOVE(player, MOVE_BESTOW); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The Berserk Gene sharply boosted the opposing Wobbuffet's Attack!");
+        MESSAGE("The opposing Wobbuffet's Attack rose sharply!");
     }
 }
 
-SINGLE_BATTLE_TEST("Berserker Gene confusion can be healed with bag items")
+SINGLE_BATTLE_TEST("Berserk Gene confusion can be healed with bag items")
 {
     enum Item item;
     PARAMETRIZE { item = ITEM_FULL_HEAL; }
@@ -274,15 +261,16 @@ SINGLE_BATTLE_TEST("Berserker Gene confusion can be healed with bag items")
     } WHEN {
         TURN { USE_ITEM(player, item, partyIndex: 0); }
     } SCENE {
+        ITEM_POPUP(player, ITEM_BERSERK_GENE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, player);
         MESSAGE("Wobbuffet snapped out of its confusion!");
     } THEN {
-        EXPECT(player->volatiles.infiniteConfusion == 0);
+        EXPECT(player->volatiles.confusionTimer == 0);
     }
 }
 
-SINGLE_BATTLE_TEST("Berserker Gene confusion can be healed with used held items")
+SINGLE_BATTLE_TEST("Berserk Gene confusion can be healed with used held items")
 {
     enum Item item;
     PARAMETRIZE { item = ITEM_PERSIM_BERRY; }
@@ -299,6 +287,6 @@ SINGLE_BATTLE_TEST("Berserker Gene confusion can be healed with used held items"
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
     } THEN {
-        EXPECT(player->volatiles.infiniteConfusion == 0);
+        EXPECT(player->volatiles.confusionTimer == 0);
     }
 }

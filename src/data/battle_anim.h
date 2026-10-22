@@ -1311,7 +1311,7 @@ const struct BattleAnimation gBattleAnimTable[ANIM_TAG_COUNT] =
     BATTLE_ANIMATION(ANIM_TAG_WHITE_STREAK, gBattleAnimSpriteGfx_WhiteStreak, 0x0200, gBattleAnimSpritePal_WhiteStreak),
     BATTLE_ANIMATION(ANIM_TAG_PURPLE_JAB, gBattleAnimSpriteGfx_PurpleJab, 0x0100, gBattleAnimSpritePal_PurpleJab),
     //new particles
-    BATTLE_ANIMATION(ANIM_TAG_TOXIC_SPIKES, gBattleAnimSpriteGfx_Spikes, 0x0080, gBattleAnimSpritePal_ToxicSpikes),
+    BATTLE_ANIMATION(ANIM_TAG_TOXIC_SPIKES, B_NEW_SPIKES_PARTICLE == TRUE ? gBattleAnimSpriteGfx_NewSpikes : gBattleAnimSpriteGfx_Spikes, 0x0080, gBattleAnimSpritePal_ToxicSpikes),
     BATTLE_ANIMATION(ANIM_TAG_ENERGY_BALL, gBattleAnimSpriteGfx_EnergyBall, 0x0200, gBattleAnimSpritePal_EnergyBall),
     BATTLE_ANIMATION(ANIM_TAG_SEED_BROWN, gBattleAnimSpriteGfx_SeedBrown, 0x0080, gBattleAnimSpritePal_SeedBrown),
     BATTLE_ANIMATION(ANIM_TAG_FEINT, gBattleAnimSpriteGfx_Feint, 0x0800, gBattleAnimSpritePal_Feint),

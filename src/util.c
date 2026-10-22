@@ -165,20 +165,6 @@ void CopySpriteTiles(u8 shape, u8 size, u8 *tiles, u16 *tilemap, u8 *output)
     }
 }
 
-int CountTrailingZeroBits(u32 value)
-{
-    u8 i;
-
-    for (i = 0; i < 32; i++)
-    {
-        if ((value & 1) == 0)
-            value >>= 1;
-        else
-            return i;
-    }
-    return 0;
-}
-
 u16 CalcCRC16(const u8 *data, s32 length)
 {
     u16 i, j;
@@ -225,6 +211,10 @@ void BlendPalette(u16 palOffset, u16 numEntries, u8 coeff, u32 blendColor)
 {
     u16 i;
     struct PlttData *data2 = (struct PlttData *) & blendColor;
+    assertf(palOffset + numEntries <= PLTT_BUFFER_SIZE, "BlendPalette out of bounds: palOffset=%d numEntries=%d", palOffset, numEntries)
+    {
+        return;
+    }
     for (i = 0; i < numEntries; i++)
     {
         u16 index = i + palOffset;

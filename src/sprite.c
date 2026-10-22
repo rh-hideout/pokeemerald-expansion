@@ -7,6 +7,7 @@
 #include "text.h"
 #include "battle_anim.h"
 #include "test/test.h"
+#include "decompress.h"
 
 #define MAX_SPRITE_COPY_REQUESTS 64
 
@@ -42,6 +43,8 @@ struct SpriteCopyRequest
     const u8 *src;
     u8 *dest;
     u16 size;
+    u16 index;
+    bool8 compressedFast;
 };
 
 struct OamDimensions32
@@ -89,6 +92,7 @@ static void ApplyAffineAnimFrame(u8 matrixNum, struct AffineAnimFrameCmd *frameC
 static void AllocSpriteTileRange(u16 tag, u16 start, u16 count);
 static void DoLoadSpritePalette(const u16 *src, u16 paletteOffset);
 static void UpdateSpriteMatrixAnchorPos(struct Sprite *, s32, s32);
+static bool32 AddToOamBuffer(u8 *oamIndex, const struct OamData *oam, bool32 copyToObjWin);
 
 typedef void (*AnimFunc)(struct Sprite *);
 typedef void (*AnimCmdFunc)(struct Sprite *);
@@ -145,6 +149,7 @@ static const struct Sprite sDummySprite =
 {
     .oam = DUMMY_OAM_DATA,
     .anims = gDummySpriteAnimTable,
+    .compressedFast = FALSE,
     .affineAnims = gDummySpriteAffineAnimTable,
     .template = &gDummySpriteTemplate,
     .callback = SpriteCallbackDummy,
@@ -168,6 +173,7 @@ const struct SpriteTemplate gDummySpriteTemplate =
     .tileTag = 0,
     .paletteTag = TAG_NONE,
     .oam = &gDummyOamData,
+    .compressedFast = FALSE
 };
 
 static const AnimFunc sAnimFuncs[] =
@@ -262,7 +268,7 @@ EWRAM_DATA struct Sprite gSprites[MAX_SPRITES + 1] = {0};
 EWRAM_DATA static u8 sSpriteOrder[MAX_SPRITES] = {0};
 EWRAM_DATA static bool8 sShouldProcessSpriteCopyRequests = 0;
 EWRAM_DATA static u8 sSpriteCopyRequestCount = 0;
-EWRAM_DATA static struct SpriteCopyRequest sSpriteCopyRequests[MAX_SPRITES] = {0};
+EWRAM_DATA static struct SpriteCopyRequest sSpriteCopyRequests[MAX_SPRITE_COPY_REQUESTS] = {0};
 EWRAM_DATA u8 gOamLimit = 0;
 static EWRAM_DATA u8 sOamDummyIndex = 0;
 EWRAM_DATA u16 gReservedSpriteTileCount = 0;
@@ -464,7 +470,7 @@ u32 CreateSpriteAtEndUnchecked(const struct SpriteTemplate *template, s16 x, s16
 
 u32 CreateInvisibleSprite(void (*callback)(struct Sprite *))
 {
-    u32 index = CreateSprite(&gDummySpriteTemplate, 0, 0, 31);
+    u32 index = CreateSprite(&gDummySpriteTemplate, 0, 0, 31);//This is not unchecked because CreateInvisibleSprite is only used in places that have no handler for when it returns MAX_SPRITES
 
     if (index == MAX_SPRITES)
     {
@@ -505,6 +511,7 @@ u32 CreateSpriteAt(u32 index, const struct SpriteTemplate *template, s16 x, s16 
     sprite->callback = template->callback ? template->callback : SpriteCallbackDummy;
     sprite->x = x;
     sprite->y = y;
+    sprite->compressedFast = template->compressedFast;
 
     CalcCenterToCornerVec(sprite, sprite->oam.shape, sprite->oam.size, sprite->oam.affineMode);
 
@@ -604,6 +611,7 @@ void ClearSpriteCopyRequests(void)
         sSpriteCopyRequests[i].src = 0;
         sSpriteCopyRequests[i].dest = 0;
         sSpriteCopyRequests[i].size = 0;
+        sSpriteCopyRequests[i].compressedFast = FALSE;
     }
 }
 
@@ -777,7 +785,10 @@ void ProcessSpriteCopyRequests(void)
 
         while (sSpriteCopyRequestCount > 0)
         {
-            CpuCopy16(sSpriteCopyRequests[i].src, sSpriteCopyRequests[i].dest, sSpriteCopyRequests[i].size);
+            if (!sSpriteCopyRequests[i].compressedFast)
+                CpuCopy16(sSpriteCopyRequests[i].src, sSpriteCopyRequests[i].dest, sSpriteCopyRequests[i].size);
+            else
+                RlFastUncomp(sSpriteCopyRequests[i].src, sSpriteCopyRequests[i].dest, sSpriteCopyRequests[i].index, sSpriteCopyRequests[i].size);
             sSpriteCopyRequestCount--;
             i++;
         }
@@ -786,32 +797,53 @@ void ProcessSpriteCopyRequests(void)
     }
 }
 
-void RequestSpriteFrameImageCopy(u16 index, u16 tileNum, const struct SpriteFrameImage *images)
+void RequestSpriteFrameImageCopy(u16 index, u16 tileNum, const struct SpriteFrameImage *images, bool8 compressedFast)
 {
     if (sSpriteCopyRequestCount < MAX_SPRITE_COPY_REQUESTS)
     {
-        if (!images[0].relativeFrames)
+        if (compressedFast)
         {
-            sSpriteCopyRequests[sSpriteCopyRequestCount].src = images[index].data;
-            sSpriteCopyRequests[sSpriteCopyRequestCount].size = images[index].size;
+            if (!images[0].relativeFrames)
+            {
+                sSpriteCopyRequests[sSpriteCopyRequestCount].src = images[index].data;
+                sSpriteCopyRequests[sSpriteCopyRequestCount].index = 0;
+                sSpriteCopyRequests[sSpriteCopyRequestCount].size = images[index].size;
+            }
+            else
+            {
+                sSpriteCopyRequests[sSpriteCopyRequestCount].src = images[0].data;
+                sSpriteCopyRequests[sSpriteCopyRequestCount].index = index;
+                sSpriteCopyRequests[sSpriteCopyRequestCount].size = images[0].size;
+            }
         }
         else
         {
-            sSpriteCopyRequests[sSpriteCopyRequestCount].src = images[0].data + images[0].size * index;
-            sSpriteCopyRequests[sSpriteCopyRequestCount].size = images[0].size;
+            if (!images[0].relativeFrames)
+            {
+                sSpriteCopyRequests[sSpriteCopyRequestCount].src = images[index].data;
+                sSpriteCopyRequests[sSpriteCopyRequestCount].size = images[index].size;
+            }
+            else
+            {
+                sSpriteCopyRequests[sSpriteCopyRequestCount].src = images[0].data + images[0].size * index;
+                sSpriteCopyRequests[sSpriteCopyRequestCount].size = images[0].size;
+            }
         }
         sSpriteCopyRequests[sSpriteCopyRequestCount].dest = (u8 *)OBJ_VRAM0 + TILE_SIZE_4BPP * tileNum;
+        sSpriteCopyRequests[sSpriteCopyRequestCount].compressedFast = compressedFast;
         sSpriteCopyRequestCount++;
     }
 }
 
-void RequestSpriteCopy(const u8 *src, u8 *dest, u16 size)
+void RequestSpriteCopy(const u8 *src, u8 *dest, u16 size, bool8 compressedFast, u16 index)
 {
     if (sSpriteCopyRequestCount < MAX_SPRITE_COPY_REQUESTS)
     {
         sSpriteCopyRequests[sSpriteCopyRequestCount].src = src;
         sSpriteCopyRequests[sSpriteCopyRequestCount].dest = dest;
         sSpriteCopyRequests[sSpriteCopyRequestCount].size = size;
+        sSpriteCopyRequests[sSpriteCopyRequestCount].index = index;
+        sSpriteCopyRequests[sSpriteCopyRequestCount].compressedFast = compressedFast;
         sSpriteCopyRequestCount++;
     }
 }
@@ -931,7 +963,7 @@ void BeginAnim(struct Sprite *sprite)
         if (sprite->usingSheet)
         {
             //  Inject OW decompression here
-            if (OW_GFX_COMPRESS && sprite->sheetSpan)
+            if (OW_GFX_COMPRESS == OGC_SMALL && sprite->sheetSpan)
             {
                 imageValue = (imageValue + 1) << sprite->sheetSpan;
             }
@@ -939,7 +971,7 @@ void BeginAnim(struct Sprite *sprite)
         }
         else
         {
-            RequestSpriteFrameImageCopy(imageValue, sprite->oam.tileNum, sprite->images);
+            RequestSpriteFrameImageCopy(imageValue, sprite->oam.tileNum, sprite->images, sprite->compressedFast);
         }
     }
 }
@@ -991,7 +1023,7 @@ void AnimCmd_frame(struct Sprite *sprite)
 
     if (sprite->usingSheet)
     {
-        if (OW_GFX_COMPRESS && sprite->sheetSpan)
+        if (OW_GFX_COMPRESS == OGC_SMALL && sprite->sheetSpan)
         {
             //  Inject OW frame switcher here
             imageValue = (imageValue + 1) << sprite->sheetSpan;
@@ -1000,7 +1032,7 @@ void AnimCmd_frame(struct Sprite *sprite)
     }
     else
     {
-        RequestSpriteFrameImageCopy(imageValue, sprite->oam.tileNum, sprite->images);
+        RequestSpriteFrameImageCopy(imageValue, sprite->oam.tileNum, sprite->images, sprite->compressedFast);
     }
 }
 
@@ -1034,13 +1066,13 @@ void AnimCmd_jump(struct Sprite *sprite)
 
     if (sprite->usingSheet)
     {
-        if (OW_GFX_COMPRESS && sprite->sheetSpan)
+        if (OW_GFX_COMPRESS == OGC_SMALL && sprite->sheetSpan)
             imageValue = (imageValue + 1) << sprite->sheetSpan;
         sprite->oam.tileNum = sprite->sheetTileStart + imageValue;
     }
     else
     {
-        RequestSpriteFrameImageCopy(imageValue, sprite->oam.tileNum, sprite->images);
+        RequestSpriteFrameImageCopy(imageValue, sprite->oam.tileNum, sprite->images, sprite->compressedFast);
     }
 }
 
@@ -1424,7 +1456,7 @@ void SetSpriteSheetFrameTileNum(struct Sprite *sprite)
     if (sprite->usingSheet)
     {
         s16 tileOffset = sprite->anims[sprite->animNum][sprite->animCmdIndex].frame.imageValue;
-        if (OW_GFX_COMPRESS && sprite->sheetSpan)
+        if (OW_GFX_COMPRESS == OGC_SMALL && sprite->sheetSpan)
             tileOffset = (tileOffset + 1) << sprite->sheetSpan;
         if (tileOffset < 0)
             tileOffset = 0;
@@ -1504,28 +1536,39 @@ void SetOamMatrixRotationScaling(u8 matrixNum, s16 xScale, s16 yScale, u16 rotat
     CopyOamMatrix(matrixNum, &matrix);
 }
 
-static u16 LoadSpriteSheetWithOffset(const struct SpriteSheet *sheet, u32 offset)
+static u16 LoadSpriteSheetWithOffset(const struct SpriteSheet *sheet, u32 offset, bool8 compressedFast)
 {
     s16 tileStart = AllocSpriteTiles(sheet->size / TILE_SIZE_4BPP);
+    u16 i;
+    u8 frames;
+    u16 frameSize;
 
     if (tileStart < 0)
     {
-#if T_SHOULD_RUN_MOVE_ANIM
+#if TESTING
         gLoadFail = TRUE;
-#endif // T_SHOULD_RUN_MOVE_ANIM
+#endif // TESTING
         return 0;
     }
     else
     {
         AllocSpriteTileRange(sheet->tag, (u16)tileStart, sheet->size / TILE_SIZE_4BPP);
-        CpuSmartCopy16(sheet->data, (u8 *)OBJ_VRAM0 + TILE_SIZE_4BPP * tileStart + offset, sheet->size - offset);
+        if (compressedFast)
+        {
+            frameSize = GetRlFastUncompSize((u8 *)sheet->data);
+            frames = (sheet->size - offset) / frameSize;
+            for (i = 0; i < frames; i++)
+                RlFastUncomp(sheet->data, (u8 *)OBJ_VRAM0 + TILE_SIZE_4BPP * tileStart + offset + i * frameSize, i, (sheet->size - offset) / frames);
+        }
+        else
+            CpuSmartCopy16(sheet->data, (u8 *)OBJ_VRAM0 + TILE_SIZE_4BPP * tileStart + offset, sheet->size - offset);
         return (u16)tileStart;
     }
 }
 
 u16 LoadSpriteSheet(const struct SpriteSheet *sheet)
 {
-    return LoadSpriteSheetWithOffset(sheet, 0);
+    return LoadSpriteSheetWithOffset(sheet, 0, FALSE);
 }
 
 // Like LoadSpriteSheet, but checks if already loaded, and uses template image frames
@@ -1541,7 +1584,12 @@ u16 LoadSpriteSheetByTemplate(const struct SpriteTemplate *template, u32 frame, 
     sheet.data = template->images[frame].data;
     sheet.size = template->images[frame].size;
     sheet.tag = template->tileTag;
-    return LoadSpriteSheetWithOffset(&sheet, offset);
+    return LoadSpriteSheetWithOffset(&sheet, offset, FALSE);
+}
+
+u16 LoadSpriteSheetCompressedFast(const struct SpriteSheet *sheet)
+{
+    return LoadSpriteSheetWithOffset(sheet, 0, TRUE);
 }
 
 void LoadSpriteSheets(const struct SpriteSheet *sheets)
@@ -1742,37 +1790,26 @@ void SetSubspriteTables(struct Sprite *sprite, const struct SubspriteTable *subs
 
 bool8 AddSpriteToOamBuffer(struct Sprite *sprite, u8 *oamIndex)
 {
-    if (*oamIndex >= gOamLimit)
-        return 1;
-
     if (!sprite->subspriteTables || sprite->subspriteMode == SUBSPRITES_OFF)
-    {
-        gMain.oamBuffer[*oamIndex] = sprite->oam;
-        (*oamIndex)++;
-        return 0;
-    }
+        return AddToOamBuffer(oamIndex, &sprite->oam, sprite->copyToObjWin);
     else
-    {
-        return AddSubspritesToOamBuffer(sprite, &gMain.oamBuffer[*oamIndex], oamIndex);
-    }
+        return AddSubspritesToOamBuffer(sprite, oamIndex);
 }
 
-bool8 AddSubspritesToOamBuffer(struct Sprite *sprite, struct OamData *destOam, u8 *oamIndex)
+bool8 AddSubspritesToOamBuffer(struct Sprite *sprite, u8 *oamIndex)
 {
     const struct SubspriteTable *subspriteTable;
     struct OamData *oam;
 
     if (*oamIndex >= gOamLimit)
-        return 1;
+        return TRUE;
 
     subspriteTable = &sprite->subspriteTables[sprite->subspriteTableNum];
     oam = &sprite->oam;
 
     if (!subspriteTable || !subspriteTable->subsprites)
     {
-        *destOam = *oam;
-        (*oamIndex)++;
-        return 0;
+        return AddToOamBuffer(oamIndex, oam, sprite->copyToObjWin);
     }
     else
     {
@@ -1782,8 +1819,6 @@ bool8 AddSubspritesToOamBuffer(struct Sprite *sprite, struct OamData *destOam, u
         u8 subspriteCount;
         u8 hFlip;
         u8 vFlip;
-        u32 i;
-
         tileNum = oam->tileNum;
         subspriteCount = subspriteTable->subspriteCount;
         hFlip = ((s32)oam->matrixNum >> 3) & 1;
@@ -1791,13 +1826,13 @@ bool8 AddSubspritesToOamBuffer(struct Sprite *sprite, struct OamData *destOam, u
         baseX = oam->x - sprite->centerToCornerVecX;
         baseY = oam->y - sprite->centerToCornerVecY;
 
-        for (i = 0; i < subspriteCount; i++, (*oamIndex)++)
+        for (u32 i = 0; i < subspriteCount; i++)
         {
             u16 x;
             u16 y;
 
             if (*oamIndex >= gOamLimit)
-                return 1;
+                return TRUE;
 
             x = subspriteTable->subsprites[i].x;
             y = subspriteTable->subsprites[i].y;
@@ -1820,19 +1855,43 @@ bool8 AddSubspritesToOamBuffer(struct Sprite *sprite, struct OamData *destOam, u
                 y = ~y + 1;
             }
 
-            destOam[i] = *oam;
-            destOam[i].shape = subspriteTable->subsprites[i].shape;
-            destOam[i].size = subspriteTable->subsprites[i].size;
-            destOam[i].x = (s16)baseX + (s16)x;
-            destOam[i].y = baseY + y;
-            destOam[i].tileNum = tileNum + subspriteTable->subsprites[i].tileOffset;
+            struct OamData subspriteOam = *oam;
+            subspriteOam.shape = subspriteTable->subsprites[i].shape;
+            subspriteOam.size = subspriteTable->subsprites[i].size;
+            subspriteOam.x = (s16)baseX + (s16)x;
+            subspriteOam.y = baseY + y;
+            subspriteOam.tileNum = tileNum + subspriteTable->subsprites[i].tileOffset;
 
             if (sprite->subspriteMode < SUBSPRITES_IGNORE_PRIORITY)
-                destOam[i].priority = subspriteTable->subsprites[i].priority;
+                subspriteOam.priority = subspriteTable->subsprites[i].priority;
+
+            if (AddToOamBuffer(oamIndex, &subspriteOam, sprite->copyToObjWin))
+                return TRUE;
         }
+
     }
 
-    return 0;
+    return FALSE;
+}
+
+static bool32 AddToOamBuffer(u8 *oamIndex, const struct OamData *oam, bool32 copyToObjWin)
+{
+    if (*oamIndex >= gOamLimit)
+        return TRUE;
+
+    gMain.oamBuffer[*oamIndex] = *oam;
+    (*oamIndex)++;
+
+    if (copyToObjWin)
+    {
+        if (*oamIndex >= gOamLimit)
+            return TRUE;
+        gMain.oamBuffer[*oamIndex] = *oam;
+        gMain.oamBuffer[*oamIndex].objMode = ST_OAM_OBJ_WINDOW;
+        (*oamIndex)++;
+    }
+
+    return FALSE;
 }
 
 static const u8 sSpanPerImage[4][4] =

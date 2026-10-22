@@ -1,4 +1,5 @@
 #include "global.h"
+#include "event_object_movement.h"
 #include "random_mon_generation.h"
 #include "string_util.h"
 #include "test/test.h"
@@ -6,10 +7,10 @@
 
 TEST("Form species ID tables are shared between all forms")
 {
-    u32 species = SPECIES_NONE;
+    enum Species species = SPECIES_NONE;
     const u16 *formSpeciesIdTable;
 
-    for (u32 i = 0; i < NUM_SPECIES; i++)
+    for (enum Species i = SPECIES_NONE; i < NUM_SPECIES; i++)
     {
         if (gSpeciesInfo[i].formSpeciesIdTable)
         {
@@ -20,7 +21,7 @@ TEST("Form species ID tables are shared between all forms")
     formSpeciesIdTable = gSpeciesInfo[species].formSpeciesIdTable;
     for (u32 i = 0; formSpeciesIdTable[i] != FORM_SPECIES_END; i++)
     {
-        u32 formSpeciesId = formSpeciesIdTable[i];
+        enum Species formSpeciesId = formSpeciesIdTable[i];
         EXPECT_EQ(gSpeciesInfo[formSpeciesId].formSpeciesIdTable, formSpeciesIdTable);
     }
 }
@@ -28,10 +29,10 @@ TEST("Form species ID tables are shared between all forms")
 TEST("Form species ID tables fit within RANDOM_MON_MAX_FORMS")
 {
     u32 formCount;
-    u32 species = SPECIES_NONE;
+    enum Species species = SPECIES_NONE;
     const u16 *formSpeciesIdTable;
 
-    for (u32 i = 0; i < NUM_SPECIES; i++)
+    for (enum Species i = SPECIES_NONE; i < NUM_SPECIES; i++)
     {
         if (gSpeciesInfo[i].formSpeciesIdTable)
             PARAMETRIZE_LABEL("ID:%d - %S", i, gSpeciesInfo[i].speciesName) { species = i; }
@@ -46,11 +47,11 @@ TEST("Form species ID tables fit within RANDOM_MON_MAX_FORMS")
 
 TEST("Form change tables contain only forms in the form species ID table")
 {
-    u32 species = SPECIES_NONE;
+    enum Species species = SPECIES_NONE;
     const struct FormChange *formChangeTable;
     const u16 *formSpeciesIdTable;
 
-    for (u32 i = 0; i < NUM_SPECIES; i++)
+    for (enum Species i = SPECIES_NONE; i < NUM_SPECIES; i++)
     {
         if (gSpeciesInfo[i].formChangeTable)
         {
@@ -81,9 +82,9 @@ TEST("Form change tables contain only forms in the form species ID table")
 
 TEST("Forms have the appropriate species form changes")
 {
-    u32 species = SPECIES_NONE;
+    enum Species species = SPECIES_NONE;
 
-    for (u32 i = 0; i < NUM_SPECIES; i++)
+    for (enum Species i = SPECIES_NONE; i < NUM_SPECIES; i++)
     {
         if (gSpeciesInfo[i].isMegaEvolution
             || gSpeciesInfo[i].isGigantamax
@@ -122,10 +123,10 @@ TEST("Forms have the appropriate species form changes")
 
 TEST("Form change targets have the appropriate species flags")
 {
-    u32 species = SPECIES_NONE;
+    enum Species species = SPECIES_NONE;
     const struct FormChange *formChangeTable;
 
-    for (u32 i = 0; i < NUM_SPECIES; i++)
+    for (enum Species i = SPECIES_NONE; i < NUM_SPECIES; i++)
     {
         if (gSpeciesInfo[i].formChangeTable)
         {
@@ -152,18 +153,97 @@ TEST("Form change targets have the appropriate species flags")
         case FORM_CHANGE_BATTLE_GIGANTAMAX:
             EXPECT(targetSpeciesInfo->isGigantamax);
             break;
+        default:
+            break;
        }
     }
 }
 
+#if OW_POKEMON_OBJECT_EVENTS
+
+TEST("Species' overworld sprites have correct number of frames for animTable")
+{
+    ASSUME(OW_GFX_COMPRESS == OGC_FAST || OW_GFX_COMPRESS == OGC_SMALL);
+
+    enum Species species = 0;
+
+    for (enum Species j = SPECIES_NONE; j < NUM_SPECIES; j++)
+    {
+        if (IsSpeciesEnabled(j))
+            PARAMETRIZE_LABEL("ID:%d - %S", j, GetSpeciesName(j)) { species = j; }
+    }
+
+    {
+        struct ObjectEventGraphicsInfo const * const overworldData = &gSpeciesInfo[species].overworldData;
+        union AnimCmd const * const * const speciesAnimTable = overworldData->anims;
+
+        if (speciesAnimTable == NULL)
+            EXPECT(NULL == overworldData->images);
+        else
+        {
+            u32 frameCount = -1;
+            if (OW_GFX_COMPRESS == OGC_FAST)
+            {
+                frameCount = ((u8*) overworldData->images->data)[1];
+            }
+            else if (OW_GFX_COMPRESS == OGC_SMALL)
+            {
+                u32 headerWord = ((u32*) overworldData->images->data)[0];
+                u32 imageSize = ((headerWord >> 4) & 0x3FFF) * 4;
+                frameCount = imageSize / overworldData->images->size;
+            }
+
+            if (speciesAnimTable == sAnimTable_Following)
+                EXPECT_EQ(6, frameCount);
+            else if (speciesAnimTable == sAnimTable_Following_Asym)
+                EXPECT_EQ(8, frameCount);
+            else
+                Test_ExitWithResult(TEST_RESULT_ASSUMPTION_FAIL, __LINE__, "%s:%d: Unknown anim table: %p", gTestRunnerState.test->filename, __LINE__, speciesAnimTable);
+        }
+    }
+
+    #if P_GENDER_DIFFERENCES
+    {
+        struct ObjectEventGraphicsInfo const * const overworldData = &gSpeciesInfo[species].overworldDataFemale;
+        union AnimCmd const * const * const speciesAnimTable = overworldData->anims;
+
+        if (speciesAnimTable == NULL)
+            EXPECT(NULL == overworldData->images);
+        else
+        {
+            u32 frameCount = -1;
+            if (OW_GFX_COMPRESS == OGC_FAST)
+            {
+                frameCount = ((u8*) overworldData->images->data)[1];
+            }
+            else if (OW_GFX_COMPRESS == OGC_SMALL)
+            {
+                u32 headerWord = ((u32*) overworldData->images->data)[0];
+                u32 imageSize = ((headerWord >> 4) & 0x3FFF) * 4;
+                frameCount = imageSize / overworldData->images->size;
+            }
+
+            if (speciesAnimTable == sAnimTable_Following)
+                EXPECT_EQ(6, frameCount);
+            else if (speciesAnimTable == sAnimTable_Following_Asym)
+                EXPECT_EQ(8, frameCount);
+            else
+                Test_ExitWithResult(TEST_RESULT_ASSUMPTION_FAIL, __LINE__, "%s:%d: Unknown anim table: %p", gTestRunnerState.test->filename, __LINE__, speciesAnimTable);
+        }
+    }
+    #endif
+}
+
+#endif
+
 TEST("No species has two evolutions that use the evolution tracker")
 {
-    u32 species = SPECIES_NONE;
+    enum Species species = SPECIES_NONE;
     u32 evolutionTrackerEvolutions;
     bool32 hasRecoilEvo;
     const struct Evolution *evolutions;
 
-    for (u32 i = 0; i < NUM_SPECIES; i++)
+    for (enum Species i = SPECIES_NONE; i < NUM_SPECIES; i++)
     {
         if (IsSpeciesEnabled(i) && GetSpeciesEvolutions(i) != NULL)
             PARAMETRIZE_LABEL("ID:%d - %S", i, GetSpeciesName(i)) { species = i; }
@@ -203,8 +283,8 @@ extern const u8 gFallbackPokedexText[];
 
 TEST("Every species has a description")
 {
-    u32 species = SPECIES_NONE;
-    for (u32 i = 1; i < NUM_SPECIES; i++)
+    enum Species species = SPECIES_NONE;
+    for (enum Species i = SPECIES_NONE + 1; i < NUM_SPECIES; i++)
     {
         if (IsSpeciesEnabled(i))
             PARAMETRIZE_LABEL("ID:%d - %S", i, GetSpeciesName(i)) { species = i; }

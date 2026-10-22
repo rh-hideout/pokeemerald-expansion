@@ -92,7 +92,7 @@ DOUBLE_BATTLE_TEST("Ally Switch does not redirect the target of Snipe Shot")
 
 DOUBLE_BATTLE_TEST("Ally Switch does not redirect moves done by Pokémon with Stalwart and Propeller Tail")
 {
-    u16 species;
+    enum Species species;
     enum Ability ability;
     PARAMETRIZE { species = SPECIES_DURALUDON; ability = ABILITY_STALWART; }
     PARAMETRIZE { species = SPECIES_ARROKUDA;  ability = ABILITY_PROPELLER_TAIL; }
@@ -117,7 +117,7 @@ DOUBLE_BATTLE_TEST("Ally Switch does not redirect moves done by Pokémon with St
 
 DOUBLE_BATTLE_TEST("Ally Switch has no effect on partner's chosen move")
 {
-    u16 chosenMove;
+    enum Move chosenMove;
     struct BattlePokemon *chosenTarget = NULL;
 
     PARAMETRIZE { chosenMove = MOVE_SCRATCH; chosenTarget = opponentLeft; }
@@ -326,7 +326,7 @@ DOUBLE_BATTLE_TEST("Ally Switch swaps Illusion data")
     }
 }
 
-DOUBLE_BATTLE_TEST("Ally switch updates last used moves for Mimic")
+DOUBLE_BATTLE_TEST("Ally Switch updates last used moves for Mimic")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_MIMIC) == EFFECT_MIMIC);

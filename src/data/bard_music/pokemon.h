@@ -1,7 +1,7 @@
 #ifndef GUARD_DATA_BARD_MUSIC_POKEMON_H
 #define GUARD_DATA_BARD_MUSIC_POKEMON_H
 
-const u16 gNumBardWords_Species = NUM_SPECIES;
+const enum Species gNumBardWords_Species = NUM_SPECIES;
 
 static const struct BardSoundTemplate sBardSoundTemplates_Pokemon[NUM_SPECIES][MAX_BARD_SOUNDS_PER_WORD] = {
     [SPECIES_NONE] = {

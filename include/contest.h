@@ -137,7 +137,7 @@ struct ContestMoveAnimData
 
 struct Contest
 {
-    u8 playerMoveChoice;
+    enum MoveSlot playerMoveChoice;
     u8 appealNumber;
     u8 unk[CONTESTANT_COUNT]; // never read
     bool16 unused1:1;
@@ -232,7 +232,7 @@ struct ContestAIInfo
 {
     /*0x00*/ u8 aiState;
     /*0x02*/ u16 nextMove;
-    /*0x04*/ u8 nextMoveIndex;
+    /*0x04*/ enum MoveSlot nextMoveIndex;
     /*0x05*/ u8 moveScores[MAX_MON_MOVES];
     /*0x09*/ u8 aiAction;
     /*0x0A*/ u8 filler[6];
@@ -308,8 +308,17 @@ struct ContestCategory
     const u8 *condition;
     const u8 *generic;
     const u8 *negativeTrait;
+    u8 ribbon;
+    u8 imageEffect;
+    const u32 *paintingTiles;
+    const u32 *paintingTilemap;
     u8 palette;
     u16 tile;
+    const u16 *resultsTilemap;
+    u8 stdString;
+    const u8 *text;
+    u8 tvShowState;
+    u8 tvShowStateExciting;
 };
 
 extern const struct ContestCategory gContestCategoryInfo[CONTEST_CATEGORIES_COUNT + 1];

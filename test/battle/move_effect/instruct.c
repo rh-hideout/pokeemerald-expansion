@@ -1,4 +1,5 @@
 #include "global.h"
+#include "constants/battle_move_effects.h"
 #include "test/battle.h"
 
 ASSUMPTIONS
@@ -52,11 +53,26 @@ DOUBLE_BATTLE_TEST("Instruct fails if move is banned by Instruct")
     }
 }
 
-TO_DO_BATTLE_TEST("Instruct fails if target is in the middle of Bide");
+SINGLE_BATTLE_TEST("Instruct fails if target is in the middle of Bide")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_BIDE) == EFFECT_BIDE);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(2); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(1); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_BIDE); }
+        TURN { MOVE(player, MOVE_INSTRUCT); SKIP_TURN(opponent); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BIDE, opponent);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_INSTRUCT, player);
+        MESSAGE("But it failed!");
+    }
+}
 
 DOUBLE_BATTLE_TEST("Instruct fails if target is preparing Focus Punch, Beak Blast or Shell Trap")
 {
-    u32 move, Anim;
+    enum Move move;
+    u32 Anim;
     PARAMETRIZE { move = MOVE_FOCUS_PUNCH; Anim = B_ANIM_FOCUS_PUNCH_SETUP; }
     PARAMETRIZE { move = MOVE_BEAK_BLAST; Anim = B_ANIM_BEAK_BLAST_SETUP; }
     PARAMETRIZE { move = MOVE_SHELL_TRAP; Anim = B_ANIM_SHELL_TRAP_SETUP; }
@@ -290,7 +306,8 @@ DOUBLE_BATTLE_TEST("Instruct-called moves keep their priority")
 {
     GIVEN {
         ASSUME(GetMovePriority(MOVE_QUICK_ATTACK) == 1);
-        ASSUME(GetMoveEffect(MOVE_PSYCHIC_TERRAIN) == EFFECT_PSYCHIC_TERRAIN);
+        ASSUME(GetMoveEffect(MOVE_PSYCHIC_TERRAIN) == EFFECT_TERRAIN);
+        ASSUME(GetMoveTerrainType(MOVE_PSYCHIC_TERRAIN) == B_TERRAIN_PSYCHIC);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_SCRATCH, MOVE_POUND, MOVE_SCRATCH, MOVE_QUICK_ATTACK); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -371,7 +388,7 @@ DOUBLE_BATTLE_TEST("Instructed move will be redirected by Rage Powder after inst
         WITH_CONFIG(B_POWDER_GRASS, GEN_6);
         ASSUME(GetMoveEffect(MOVE_RAGE_POWDER) == EFFECT_FOLLOW_ME);
         ASSUME(IsPowderMove(MOVE_RAGE_POWDER) == TRUE);
-        ASSUME(GetMoveEffect(MOVE_SOAK) == EFFECT_SOAK);
+        ASSUME(GetMoveEffect(MOVE_SOAK) == EFFECT_OVERWRITE_TYPE);
         PLAYER(SPECIES_TREECKO);
         PLAYER(SPECIES_SCEPTILE);
         OPPONENT(SPECIES_WOBBUFFET);

@@ -10,7 +10,6 @@ enum  BattleMoveEffects
     EFFECT_MINIMIZE,
     EFFECT_AUTOTOMIZE,
     EFFECT_NON_VOLATILE_STATUS,
-    EFFECT_ABSORB,
     EFFECT_TERRAIN_BOOST,
     EFFECT_DREAM_EATER, // Same as EFFECT_ABSORB but it can only be used on sleeping targets
     EFFECT_MIRROR_MOVE,
@@ -95,7 +94,6 @@ enum  BattleMoveEffects
     EFFECT_TELEPORT,
     EFFECT_BEAT_UP,
     EFFECT_SEMI_INVULNERABLE,
-    EFFECT_SOFTBOILED, // differences vs Recover - can be used outside of battle to restore HP
     EFFECT_FIRST_TURN_ONLY,
     EFFECT_STOCKPILE,
     EFFECT_SPIT_UP,
@@ -182,15 +180,12 @@ enum  BattleMoveEffects
     EFFECT_ION_DELUGE,
     EFFECT_SUPER_EFFECTIVE_ON_ARG,
     EFFECT_TOPSY_TURVY,
-    EFFECT_MISTY_TERRAIN,
-    EFFECT_GRASSY_TERRAIN,
-    EFFECT_ELECTRIC_TERRAIN,
-    EFFECT_PSYCHIC_TERRAIN,
+    EFFECT_TERRAIN,
     EFFECT_TWO_TYPED_MOVE,
     EFFECT_ME_FIRST,
     EFFECT_ELECTRIFY,
     EFFECT_REFLECT_TYPE,
-    EFFECT_SOAK,
+    EFFECT_OVERWRITE_TYPE,
     EFFECT_GROWTH,
     EFFECT_LAST_RESORT,
     EFFECT_STAT_CHANGE_ON_STATUS,
@@ -287,6 +282,7 @@ enum  BattleMoveEffects
     EFFECT_CEASELESS_EDGE, // Same applies to spikes
     EFFECT_SPECIES_POWER_OVERRIDE, // Uses argument field to for the species, power and (number of hits, used only for multi hit moves)
     EFFECT_SCALE_SHOT,
+    EFFECT_SECRET_POWER,
     NUM_BATTLE_MOVE_EFFECTS,
 };
 

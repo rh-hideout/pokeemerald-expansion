@@ -49,19 +49,3 @@ SINGLE_BATTLE_TEST("Shed Shell allows switching out even when trapped by Arena T
         SEND_IN_MESSAGE("Wynaut");
     }
 }
-
-SINGLE_BATTLE_TEST("Shed Shell does not allow Teleport when trapped")
-{
-    GIVEN {
-        ASSUME(GetMoveEffect(MOVE_TELEPORT) == EFFECT_TELEPORT);
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_SHED_SHELL); Moves(MOVE_TELEPORT, MOVE_SPLASH, MOVE_CELEBRATE); }
-        OPPONENT(SPECIES_GASTLY);
-    } WHEN {
-        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_MEAN_LOOK); }
-        TURN { MOVE(player, MOVE_TELEPORT); MOVE(opponent, MOVE_CELEBRATE); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_MEAN_LOOK, opponent);
-        MESSAGE("Wobbuffet used Teleport!");
-        MESSAGE("But it failed!");
-    }
-}
