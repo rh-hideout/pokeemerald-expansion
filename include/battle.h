@@ -1139,6 +1139,7 @@ enum BattlerId GetBattlerRightFoe(enum BattlerId battler);
 enum BattlerId GetDefaultSelectionTarget(enum BattlerId battler, enum MoveTarget moveTarget);
 
 bool32 IsWildDoubleBattle(void);
+bool32 IsRecordedWildBattle(void);
 bool32 IsTrainerBattle(void);
 bool32 IsMultiBattle(void);
 bool32 IsTowerLinkMulti(void);

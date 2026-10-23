@@ -283,6 +283,11 @@ bool32 IsWildDoubleBattle(void)
     return (HasAnyBattleFlags(BATTLE_TYPE_DOUBLE) && HasNoneOfBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_TRAINER));
 }
 
+bool32 IsRecordedWildBattle(void)
+{
+    return (HasAnyBattleFlags(BATTLE_TYPE_RECORDED) && HasNoneOfBattleFlags(BATTLE_TYPE_TRAINER | BATTLE_TYPE_FRONTIER));
+}
+
 bool32 IsTrainerBattle(void)
 {
     return HasAnyBattleFlags(BATTLE_TYPE_TRAINER);

@@ -1632,7 +1632,7 @@ FEATURE_FLAG_ASSERT(I_EXP_SHARE_FLAG, YouNeedToSetTheExpShareFlagToAnUnusedFlag)
 
 static bool32 BattleTypeAllowsExp(void)
 {
-    if (RECORDED_WILD_BATTLE)
+    if (IsRecordedWildBattle())
         return TRUE;
     else if (HasAnyBattleFlags(BATTLE_TYPE_LINK
               | BATTLE_TYPE_RECORDED_LINK
@@ -3333,7 +3333,7 @@ static void Cmd_handlelearnnewmove(void)
             learnMove = MonTryLearningNewMove(&gParties[B_TRAINER_PLAYER][monId], FALSE);
     }
 
-    if (learnMove == MOVE_NONE || RECORDED_WILD_BATTLE)
+    if (learnMove == MOVE_NONE || IsRecordedWildBattle())
     {
         gBattlescriptCurrInstr = cmd->nothingToLearnPtr;
     }
@@ -3963,7 +3963,7 @@ static void Cmd_drawlvlupbox(void)
         }
         break;
     case 6:
-        if (gMain.newKeys != 0 || RECORDED_WILD_BATTLE || TESTING)
+        if (gMain.newKeys != 0 || IsRecordedWildBattle() || TESTING)
         {
             // Draw page 2 of level up box
             PlaySE(SE_SELECT);
@@ -3973,7 +3973,7 @@ static void Cmd_drawlvlupbox(void)
         }
         break;
     case 8:
-        if (gMain.newKeys != 0 || RECORDED_WILD_BATTLE || TESTING)
+        if (gMain.newKeys != 0 || IsRecordedWildBattle() || TESTING)
         {
             // Close level up box
             PlaySE(SE_SELECT);
