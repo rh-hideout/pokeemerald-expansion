@@ -10116,7 +10116,7 @@ bool32 IsPlayerMultiPartyFullTeam(void)
     return (gBattleTestRunnerState->data.partySizes[B_TRAINER_PLAYER] == PARTY_SIZE);
 #else
     u32 selectedCount = 0;
-    for (enum PartyMon slot = PARTY_MON_0; slot < PARTY_MON_NONE; slot++)
+    for (enum PartySlot slot = PARTY_SLOT_0; slot < PARTY_SLOT_NONE; slot++)
     {
         if (gSelectedOrderFromParty[slot])
         {

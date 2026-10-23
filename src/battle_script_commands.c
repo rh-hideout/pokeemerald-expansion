@@ -2022,10 +2022,10 @@ static bool32 WillPlayerWhiteOutIfPartnerWinsAlone()
         return TRUE;
     if (TESTING)
         return FALSE;
-    for (enum PartyMon i = PARTY_MON_0; i < PARTY_SIZE; i++)
+    for (enum PartySlot i = PARTY_SLOT_0; i < PARTY_SIZE; i++)
     {
-        enum PartyMon j;
-        for (j = PARTY_MON_0; j < PARTY_SIZE; j++)
+        enum PartySlot j;
+        for (j = PARTY_SLOT_0; j < PARTY_SIZE; j++)
         {
             if (gSelectedOrderFromParty[j] == i + 1) break;
         }
