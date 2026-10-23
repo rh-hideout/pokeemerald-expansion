@@ -7583,7 +7583,7 @@ static bool8 TrySwitchInPokemon(void)
     u8 slot = GetCursorSelectionMonId();
     struct Pokemon *party = NULL;
     s8 partySlot = 0, newPartySlot = 0;
-    enum PartyMon battlePartyId = PARTY_SLOT_0, individualPartyId = PARTY_SLOT_0;
+    enum PartySlot battlePartyId = PARTY_SLOT_0, individualPartyId = PARTY_SLOT_0;
     bool32 isPartnerSlot = PartyMenuSlotIsMultiPartner(slot);
     enum BattlerId battler = gBattlerInMenuId;
     enum PartyBattleOrder newSlot = PARTY_BATTLE_ORDER_0;

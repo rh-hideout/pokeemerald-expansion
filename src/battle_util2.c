@@ -134,8 +134,8 @@ void SwitchPartyOrderInGameMulti(enum BattlerId battler, enum PartySlot partyId)
         enum PartySlot battlerPartyId = gBattlerPartyIndexes[battler];
         enum PartySlot switchInPartyId = partyId;
         enum BattleTrainer trainer = GetBattlerTrainer(battler);
-        enum PartyBattleSlot battlerBattleSlot = PARTY_BATTLE_SLOT_0;
-        enum PartyBattleSlot switchinBattleSlot = PARTY_BATTLE_SLOT_0;
+        enum PartyBattleOrder battlerBattleSlot = PARTY_BATTLE_ORDER_0;
+        enum PartyBattleOrder switchinBattleSlot = PARTY_BATTLE_ORDER_0;
 
         // In 6v6 multis, the partner party is stored in gParties[B_TRAINER_PARTNER]
         // and uses indexes 0-2, but we still use the combined party order.

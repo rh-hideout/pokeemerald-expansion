@@ -692,7 +692,7 @@ void TryPutLinkBattleTvShowOnAir(void)
     s32 i, j;
     int zero = 0, one = 1; //needed for matching
     enum BattleTrainer trainer = B_TRAINER_PLAYER;
-    enum PartyMon slot = PARTY_MON_0;
+    enum PartySlot slot = PARTY_SLOT_0;
 
     if (gBattleStruct->anyMonHasTransformed)
         return;
