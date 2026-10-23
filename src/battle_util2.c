@@ -276,37 +276,37 @@ struct Pokemon* GetBattlerMon(enum BattlerId battler)
     return &GetBattlerParty(battler)[index];
 }
 
-bool8 IsTrainerBattle(void)
+bool32 IsTrainerBattle(void)
 {
     return HasAnyBattleFlags(BATTLE_TYPE_TRAINER);
 }
 
-bool8 IsMultiBattle(void)
+bool32 IsMultiBattle(void)
 {
     return HasAnyBattleFlags(BATTLE_TYPE_MULTI);
 }
 
-bool8 IsTowerLinkMulti(void)
+bool32 IsTowerLinkMulti(void)
 {
     return HasAllBattleFlags(BATTLE_TYPE_TOWER_LINK_MULTI);
 }
 
-bool8 IsLinkMultiBattle(void)
+bool32 IsLinkMultiBattle(void)
 {
     return HasAllBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_MULTI);
 }
 
-bool8 HasAnyBattleFlags(u32 flags)
+bool32 HasAnyBattleFlags(u32 flags)
 {
     return (gBattleTypeFlags & flags) != 0;
 }
 
-bool8 HasAllBattleFlags(u32 flags)
+bool32 HasAllBattleFlags(u32 flags)
 {
     return (gBattleTypeFlags & flags) == flags;
 }
 
-bool8 HasNoneOfBattleFlags(u32 flags)
+bool32 HasNoneOfBattleFlags(u32 flags)
 {
     return !HasAnyBattleFlags(flags);
 }

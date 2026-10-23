@@ -1130,12 +1130,12 @@ enum BattlerId GetBattlerLeftFoe(enum BattlerId battler);
 enum BattlerId GetBattlerRightFoe(enum BattlerId battler);
 enum BattlerId GetDefaultSelectionTarget(enum BattlerId battler, enum MoveTarget moveTarget);
 
-bool8 IsTrainerBattle(void);
-bool8 IsMultiBattle(void);
-bool8 IsTowerLinkMulti(void);
-bool8 HasAnyBattleFlags(u32 flags);
-bool8 HasAllBattleFlags(u32 flags);
-bool8 HasNoneOfBattleFlags(u32 flags);
+bool32 IsTrainerBattle(void);
+bool32 IsMultiBattle(void);
+bool32 IsTowerLinkMulti(void);
+bool32 HasAnyBattleFlags(u32 flags);
+bool32 HasAllBattleFlags(u32 flags);
+bool32 HasNoneOfBattleFlags(u32 flags);
 
 static inline bool32 IsBattlerAlive(enum BattlerId battler)
 {
