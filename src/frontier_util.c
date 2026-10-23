@@ -44,16 +44,6 @@
 #include "party_menu.h"
 #include "list_menu.h"
 
-struct FrontierBrainMon
-{
-    enum Species species;
-    enum Item heldItem;
-    u8 fixedIV;
-    u8 nature;
-    u8 evs[NUM_STATS];
-    enum Move moves[MAX_MON_MOVES];
-};
-
 // This file's functions.
 static void GetChallengeStatus(void);
 static void GetFrontierData(void);
