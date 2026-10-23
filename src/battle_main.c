@@ -3361,7 +3361,7 @@ static void DoBattleIntro(void)
         gBattleStruct->eventState.battleIntro++;
         break;
     case BATTLE_INTRO_STATE_WAIT_FOR_PLAYER_SEND_OUT_TEXT:
-        if (HasNoneOfBattleFlags(BATTLE_TYPE_LINK) && gBattleControllerExecFlags)
+        if (!(HasAnyBattleFlags(BATTLE_TYPE_LINK) && gBattleControllerExecFlags))
         {
             if (HasAnyBattleFlags(BATTLE_TYPE_RECORDED_LINK) && HasNoneOfBattleFlags(BATTLE_TYPE_RECORDED_IS_MASTER))
                 battler = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
