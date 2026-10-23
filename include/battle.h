@@ -1143,6 +1143,7 @@ bool32 IsWildDoubleBattle(void);
 bool32 IsRecordedWildBattle(void);
 bool32 IsTrainerBattle(void);
 bool32 IsMultiBattle(void);
+bool32 IsMultiVsOneOpponentBattle(void);
 bool32 IsTowerLinkMulti(void);
 bool32 HasAnyBattleFlags(u32 flags);
 bool32 HasAllBattleFlags(u32 flags);

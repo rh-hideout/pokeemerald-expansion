@@ -303,6 +303,11 @@ bool32 IsMultiBattle(void)
     return HasAnyBattleFlags(BATTLE_TYPE_MULTI);
 }
 
+bool32 IsMultiVsOneOpponentBattle(void)
+{
+    return (HasAnyBattleFlags(BATTLE_TYPE_INGAME_PARTNER) && TRAINER_BATTLE_PARAM.opponentB == 0xFFFF);
+}
+
 bool32 IsTowerLinkMulti(void)
 {
     return HasAllBattleFlags(BATTLE_TYPE_TOWER_LINK_MULTI);

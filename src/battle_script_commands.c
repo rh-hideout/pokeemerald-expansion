@@ -4713,7 +4713,7 @@ static void Cmd_forcerandomswitch(void)
     {
         party = GetBattlerParty(gBattlerTarget);
 
-        if (BATTLE_TWO_VS_ONE_OPPONENT && !IsOnPlayerSide(gBattlerTarget))
+        if (IsMultiVsOneOpponentBattle() && !IsOnPlayerSide(gBattlerTarget))
         {
             firstMonId = PARTY_SLOT_0;
             lastMonId = 6;

@@ -2494,7 +2494,7 @@ void BufferStringBattle(enum StringID stringID, enum BattlerId battler)
             }
             else
             {
-                if (BATTLE_TWO_VS_ONE_OPPONENT)
+                if (IsMultiVsOneOpponentBattle())
                     stringPtr = sText_Trainer1WantsToBattle;
                 else if (HasAnyBattleFlags(BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER))
                     stringPtr = sText_TwoTrainersWantToBattle;
@@ -2557,9 +2557,9 @@ void BufferStringBattle(enum StringID stringID, enum BattlerId battler)
         {
             if (IsDoubleBattle() && IsValidForBattle(GetBattlerMon(GetPartnerBattler(battler))))
             {
-                if (HasAnyBattleFlags(BATTLE_TYPE_RECORDED_LINK) && BATTLE_TWO_VS_ONE_OPPONENT)
+                if (HasAnyBattleFlags(BATTLE_TYPE_RECORDED_LINK) && IsMultiVsOneOpponentBattle())
                     stringPtr = sText_LinkTrainerSentOutTwoPkmn;
-                else if (BATTLE_TWO_VS_ONE_OPPONENT)
+                else if (IsMultiVsOneOpponentBattle())
                     stringPtr = sText_Trainer1SentOutTwoPkmn;
                 else if (HasAllBattleFlags(BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_TWO_OPPONENTS) || HasAllBattleFlags(BATTLE_TYPE_MULTI | BATTLE_TYPE_RECORDED_LINK) || HasAnyBattleFlags(BATTLE_TYPE_LINK))
                     stringPtr = sText_TwoLinkTrainersIntroSendOutPkmn;
@@ -2987,7 +2987,7 @@ static const u8 *BattleStringGetOpponentName(u8 *text, u8 multiplayerId, enum Ba
         toCpy = BattleStringGetOpponentNameByTrainerId(TRAINER_BATTLE_PARAM.opponentA, text, multiplayerId, battler);
         break;
     case B_POSITION_OPPONENT_RIGHT:
-        if (HasAnyBattleFlags(BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_MULTI) && !BATTLE_TWO_VS_ONE_OPPONENT)
+        if (HasAnyBattleFlags(BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_MULTI) && !IsMultiVsOneOpponentBattle())
             toCpy = BattleStringGetOpponentNameByTrainerId(TRAINER_BATTLE_PARAM.opponentB, text, multiplayerId, battler);
         else
             toCpy = BattleStringGetOpponentNameByTrainerId(TRAINER_BATTLE_PARAM.opponentA, text, multiplayerId, battler);
@@ -3542,7 +3542,7 @@ u32 BattleStringExpandPlaceholders(const u8 *src, u8 *dst, u32 dstSize)
                     toCpy = BattleStringGetOpponentClassByTrainerId(TRAINER_BATTLE_PARAM.opponentA);
                     break;
                 case B_POSITION_OPPONENT_RIGHT:
-                    if (HasAnyBattleFlags(BATTLE_TYPE_TWO_OPPONENTS) && !BATTLE_TWO_VS_ONE_OPPONENT)
+                    if (HasAnyBattleFlags(BATTLE_TYPE_TWO_OPPONENTS) && !IsMultiVsOneOpponentBattle())
                         toCpy = BattleStringGetOpponentClassByTrainerId(TRAINER_BATTLE_PARAM.opponentB);
                     else
                         toCpy = BattleStringGetOpponentClassByTrainerId(TRAINER_BATTLE_PARAM.opponentA);
@@ -3577,7 +3577,7 @@ u32 BattleStringExpandPlaceholders(const u8 *src, u8 *dst, u32 dstSize)
                         classString = BattleStringGetOpponentClassByTrainerId(TRAINER_BATTLE_PARAM.opponentA);
                         break;
                     case B_POSITION_OPPONENT_RIGHT:
-                        if (HasAnyBattleFlags(BATTLE_TYPE_TWO_OPPONENTS) && !BATTLE_TWO_VS_ONE_OPPONENT)
+                        if (HasAnyBattleFlags(BATTLE_TYPE_TWO_OPPONENTS) && !IsMultiVsOneOpponentBattle())
                             classString = BattleStringGetOpponentClassByTrainerId(TRAINER_BATTLE_PARAM.opponentB);
                         else
                             classString = BattleStringGetOpponentClassByTrainerId(TRAINER_BATTLE_PARAM.opponentA);

@@ -2934,9 +2934,9 @@ static bool32 TwoMonsAtSendOut(enum BattlerId battler)
     }
     else
     {
-        if ((!TwoOpponentIntroMons(battler) || (HasAnyBattleFlags(BATTLE_TYPE_MULTI))) && !BATTLE_TWO_VS_ONE_OPPONENT)
+        if ((!TwoOpponentIntroMons(battler) || (HasAnyBattleFlags(BATTLE_TYPE_MULTI))) && !IsMultiVsOneOpponentBattle())
             return FALSE;
-        else if (HasAnyBattleFlags(BATTLE_TYPE_TWO_OPPONENTS) || (BATTLE_TWO_VS_ONE_OPPONENT && !TwoOpponentIntroMons(battler)))
+        else if (HasAnyBattleFlags(BATTLE_TYPE_TWO_OPPONENTS) || (IsMultiVsOneOpponentBattle() && !TwoOpponentIntroMons(battler)))
             return FALSE;
         else
             return TRUE;
