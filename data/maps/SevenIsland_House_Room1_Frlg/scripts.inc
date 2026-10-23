@@ -96,7 +96,7 @@ SevenIsland_House_Room1_EventScript_TrainerVisiting::
 	call Common_EventScript_SaveGame
 	goto_if_eq VAR_RESULT, 0, SevenIsland_House_Room1_EventScript_DeclineBattle
 	special SavePlayerParty
-	special ReducePlayerPartyToSelectedMons
+	reduceplayerpartytoselectedmons
 	msgbox SevenIsland_House_Room1_Text_DontHoldAnythingBack
 	closemessage
 	call_if_eq VAR_FACING, DIR_NORTH, SevenIsland_House_Room1_EventScript_EnterBattleRoomNorth
@@ -116,7 +116,7 @@ SevenIsland_House_Room1_EventScript_DeclineBattle::
 SevenIsland_House_Room1_EventScript_ChooseParty::
 	msgbox SevenIsland_House_Room1_Text_LimitThreeMonsPerSide
 	fadescreen FADE_TO_BLACK
-	special ChooseHalfPartyForBattle
+	choosepartyforbattle
 	return
 
 SevenIsland_House_Room1_EventScript_EnterBattleRoomNorth::

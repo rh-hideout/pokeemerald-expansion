@@ -558,7 +558,7 @@ BattleColosseum_2P_EventScript_PlayerSpot1::
 
 BattleColosseum_4P_EventScript_PlayerSpot0::
 	fadescreen FADE_TO_BLACK
-	special ChooseHalfPartyForBattle
+	choosepartyforbattle
 	goto_if_eq VAR_RESULT, 0, BattleColosseum_4P_EventScript_CancelSpotTrigger_Frlg
 	setvar VAR_0x8005, 0
 	textcolor NPC_TEXT_COLOR_NEUTRAL
@@ -567,7 +567,7 @@ BattleColosseum_4P_EventScript_PlayerSpot0::
 
 BattleColosseum_4P_EventScript_PlayerSpot1::
 	fadescreen FADE_TO_BLACK
-	special ChooseHalfPartyForBattle
+	choosepartyforbattle
 	goto_if_eq VAR_RESULT, 0, BattleColosseum_4P_EventScript_CancelSpotTrigger_Frlg
 	setvar VAR_0x8005, 1
 	textcolor NPC_TEXT_COLOR_NEUTRAL
@@ -576,7 +576,7 @@ BattleColosseum_4P_EventScript_PlayerSpot1::
 
 BattleColosseum_4P_EventScript_PlayerSpot2::
 	fadescreen FADE_TO_BLACK
-	special ChooseHalfPartyForBattle
+	choosepartyforbattle
 	goto_if_eq VAR_RESULT, 0, BattleColosseum_4P_EventScript_CancelSpotTrigger_Frlg
 	setvar VAR_0x8005, 2
 	textcolor NPC_TEXT_COLOR_NEUTRAL
@@ -585,7 +585,7 @@ BattleColosseum_4P_EventScript_PlayerSpot2::
 
 BattleColosseum_4P_EventScript_PlayerSpot3::
 	fadescreen FADE_TO_BLACK
-	special ChooseHalfPartyForBattle
+	choosepartyforbattle
 	goto_if_eq VAR_RESULT, 0, BattleColosseum_4P_EventScript_CancelSpotTrigger_Frlg
 	setvar VAR_0x8005, 3
 	textcolor NPC_TEXT_COLOR_NEUTRAL

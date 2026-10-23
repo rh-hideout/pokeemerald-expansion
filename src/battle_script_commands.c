@@ -2018,14 +2018,19 @@ static bool32 WillPlayerWhiteOutIfPartnerWinsAlone()
 {
     if (GetConfig(B_MULTI_BATTLE_WHITEOUT) <= GEN_3)
         return TRUE;
-    if (AreMultiPartiesFullTeams())
+    if (IsPlayerMultiPartyFullTeam())
         return TRUE;
     if (TESTING)
         return FALSE;
-    for (u32 i = 0; i < ARRAY_COUNT(gSelectedOrderFromParty); i++)
+    for (enum PartySlot i = PARTY_SLOT_0; i < PARTY_SIZE; i++)
     {
-        if (gSelectedOrderFromParty[i] <= MULTI_PARTY_SIZE)
-            continue;
+        enum PartySlot j;
+        for (j = PARTY_SLOT_0; j < PARTY_SIZE; j++)
+        {
+            if (gSelectedOrderFromParty[j] == i + 1) break;
+        }
+
+        if (j < PARTY_SIZE) continue;
 
         struct Pokemon *fullPartyMon = GetSavedPlayerPartyMon(i);
 
@@ -2843,7 +2848,7 @@ bool32 HasBattlerViablePartyMonsForSwitch(enum BattlerId battler)
     enum BattlerId battlerIn1, battlerIn2;
     struct Pokemon *party = GetBattlerParty(battler);
 
-    if (BattleSideHasTwoTrainers(GetBattlerSide(battler)) && !AreMultiPartiesFullTeams())
+    if (BattleSideHasTwoTrainers(GetBattlerSide(battler)) && AreMultiPartiesHalfTeams())
         lastMonId = MULTI_PARTY_SIZE;
     else
         lastMonId = PARTY_SIZE;
@@ -7088,8 +7093,8 @@ enum PartySlot GetFirstFaintedPartyIndex(enum BattlerId battler)
     struct Pokemon *party = GetBattlerParty(battler);
 
     // Check whether partner is separate trainer.
-    if (BattleSideHasTwoTrainers(battler & BIT_SIDE) && !AreMultiPartiesFullTeams())
-        end = PARTY_SIZE / 2;
+    if (BattleSideHasTwoTrainers(battler & BIT_SIDE) && AreMultiPartiesHalfTeams())
+        end = MULTI_PARTY_SIZE;
     else
         end = PARTY_SIZE;
 
