@@ -15,6 +15,7 @@
 #include "battle_message.h"
 #include "battle_util.h"
 #include "battle_script_commands.h"
+#include "battle_setup.h"
 #include "battle_gfx_sfx_util.h"
 #include "battle_util2.h"
 #include "battle_bg.h"
@@ -1138,14 +1139,6 @@ enum BattlerId GetBattlerLeftFoe(enum BattlerId battler);
 enum BattlerId GetBattlerRightFoe(enum BattlerId battler);
 enum BattlerId GetDefaultSelectionTarget(enum BattlerId battler, enum MoveTarget moveTarget);
 
-bool32 BattleTypeHasAi(void);
-bool32 IsWildDoubleBattle(void);
-bool32 IsRecordedWildBattle(void);
-bool32 IsTrainerBattle(void);
-bool32 IsMultiBattle(void);
-bool32 IsMultiVsOneOpponentBattle(void);
-bool32 IsTowerLinkMulti(void);
-
 static inline bool32 HasAnyBattleFlags(u32 flags)
 {
     return (gBattleTypeFlags & flags) != 0;
@@ -1159,6 +1152,46 @@ static inline bool32 HasAllBattleFlags(u32 flags)
 static inline bool32 HasNoneOfBattleFlags(u32 flags)
 {
     return !HasAnyBattleFlags(flags);
+}
+
+static inline bool32 BattleTypeHasAi(void)
+{
+    return HasAnyBattleFlags(BATTLE_TYPE_TRAINER | BATTLE_TYPE_FIRST_BATTLE | BATTLE_TYPE_SAFARI | BATTLE_TYPE_ROAMER | BATTLE_TYPE_INGAME_PARTNER);
+}
+
+static inline bool32 IsWildDoubleBattle(void)
+{
+    return (HasAnyBattleFlags(BATTLE_TYPE_DOUBLE) && HasNoneOfBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_TRAINER));
+}
+
+static inline bool32 IsRecordedWildBattle(void)
+{
+    return (HasAnyBattleFlags(BATTLE_TYPE_RECORDED) && HasNoneOfBattleFlags(BATTLE_TYPE_TRAINER | BATTLE_TYPE_FRONTIER));
+}
+
+static inline bool32 IsTrainerBattle(void)
+{
+    return HasAnyBattleFlags(BATTLE_TYPE_TRAINER);
+}
+
+static inline bool32 IsMultiBattle(void)
+{
+    return HasAnyBattleFlags(BATTLE_TYPE_MULTI);
+}
+
+static inline bool32 IsMultiVsOneOpponentBattle(void)
+{
+    return (HasAnyBattleFlags(BATTLE_TYPE_INGAME_PARTNER) && TRAINER_BATTLE_PARAM.opponentB == 0xFFFF);
+}
+
+static inline bool32 IsTowerLinkMulti(void)
+{
+    return HasAllBattleFlags(BATTLE_TYPE_TOWER_LINK_MULTI);
+}
+
+static inline bool32 IsLinkMultiBattle(void)
+{
+    return HasAllBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_MULTI);
 }
 
 static inline bool32 IsBattlerAlive(enum BattlerId battler)
