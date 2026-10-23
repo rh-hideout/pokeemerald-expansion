@@ -117,7 +117,7 @@ static void LinkPartnerBufferRunCommand(enum BattlerId battler)
 void LinkPartnerBufferExecCompleted(enum BattlerId battler)
 {
     gBattlerControllerFuncs[battler] = LinkPartnerBufferRunCommand;
-    if (gBattleTypeFlags & BATTLE_TYPE_LINK)
+    if (HasAnyBattleFlags(BATTLE_TYPE_LINK))
     {
         u8 playerId = GetMultiplayerId();
 
@@ -135,7 +135,7 @@ static void LinkPartnerHandleDrawTrainerPic(enum BattlerId battler)
     s16 xPos;
     enum TrainerPicID trainerPicId;
 
-    if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
+    if (HasAnyBattleFlags(BATTLE_TYPE_MULTI))
     {
         if ((GetBattlerPosition(battler) & BIT_FLANK) != 0) // second mon
             xPos = 90;

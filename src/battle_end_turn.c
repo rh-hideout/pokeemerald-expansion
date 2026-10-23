@@ -1522,7 +1522,7 @@ static bool32 HandleEndTurnArenaTurnEnd(enum BattlerId battler)
 {
     gBattleStruct->eventState.endTurn++;
 
-    if ((gBattleTypeFlags & BATTLE_TYPE_ARENA)
+    if (HasAnyBattleFlags(BATTLE_TYPE_ARENA)
      && gBattleStruct->eventState.arenaTurn == 2
      && IsBattlerAlive(GetBattlerAtPosition(B_POSITION_PLAYER_LEFT)) && IsBattlerAlive(GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT)))
     {
@@ -1553,7 +1553,7 @@ static bool32 HandleEndTurnDynamax(enum BattlerId battler)
      && gBattleStruct->dynamax.dynamaxTurns[battler] > 0)
     {
         if (--gBattleStruct->dynamax.dynamaxTurns[battler] == 0
-         || (gBattleOutcome == B_OUTCOME_WON && IsOnPlayerSide(battler) && !(gBattleTypeFlags & BATTLE_TYPE_LINK)))
+         || (gBattleOutcome == B_OUTCOME_WON && IsOnPlayerSide(battler) && HasNoneOfBattleFlags(BATTLE_TYPE_LINK)))
         {
             gBattleScripting.battler = battler;
             gBattleStruct->dynamax.dynamaxTurns[battler] = 0;

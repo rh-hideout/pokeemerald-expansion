@@ -2452,27 +2452,27 @@ void BufferStringBattle(enum StringID stringID, enum BattlerId battler)
     switch (stringID)
     {
     case STRINGID_INTROMSG: // first battle msg
-        if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
+        if (IsTrainerBattle())
         {
-            if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
+            if (HasAnyBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
             {
-                if (gBattleTypeFlags & BATTLE_TYPE_TOWER_LINK_MULTI)
+                if (IsTowerLinkMulti())
                 {
                     stringPtr = sText_TwoTrainersWantToBattle;
                 }
-                else if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
+                else if (HasAnyBattleFlags(BATTLE_TYPE_TWO_OPPONENTS))
                 {
                     stringPtr = sText_TwoLinkTrainersWantToBattle;
                 }
-                else if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
+                else if (HasAnyBattleFlags(BATTLE_TYPE_MULTI))
                 {
-                    if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
+                    if (HasAnyBattleFlags(BATTLE_TYPE_RECORDED))
                     {
-                        if (gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK)
+                        if (HasAnyBattleFlags(BATTLE_TYPE_RECORDED_LINK))
                             stringPtr = sText_LinkTrainerWantsToBattle;
-                        else if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
+                        else if (HasAnyBattleFlags(BATTLE_TYPE_TWO_OPPONENTS))
                             stringPtr = sText_TwoTrainersWantToBattle;
-                        else if (!(gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS))
+                        else if (HasNoneOfBattleFlags(BATTLE_TYPE_TWO_OPPONENTS))
                             stringPtr = sText_LinkTrainerWantsToBattlePause;
                         else
                             stringPtr = sText_TwoLinkTrainersWantToBattlePause;
@@ -2486,7 +2486,7 @@ void BufferStringBattle(enum StringID stringID, enum BattlerId battler)
                 {
                     if (TRAINER_BATTLE_PARAM.opponentA == TRAINER_UNION_ROOM)
                         stringPtr = sText_Trainer1WantsToBattle;
-                    else if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
+                    else if (HasAnyBattleFlags(BATTLE_TYPE_RECORDED))
                         stringPtr = sText_LinkTrainerWantsToBattlePause;
                     else
                         stringPtr = sText_LinkTrainerWantsToBattle;
@@ -2494,11 +2494,11 @@ void BufferStringBattle(enum StringID stringID, enum BattlerId battler)
             }
             else
             {
-                if (BATTLE_TWO_VS_ONE_OPPONENT)
+                if (IsMultiVsOneOpponentBattle())
                     stringPtr = sText_Trainer1WantsToBattle;
-                else if (gBattleTypeFlags & (BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER))
+                else if (HasAnyBattleFlags(BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER))
                     stringPtr = sText_TwoTrainersWantToBattle;
-                else if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
+                else if (HasAnyBattleFlags(BATTLE_TYPE_TWO_OPPONENTS))
                     stringPtr = sText_TwoTrainersWantToBattle;
                 else
                     stringPtr = sText_Trainer1WantsToBattle;
@@ -2508,13 +2508,13 @@ void BufferStringBattle(enum StringID stringID, enum BattlerId battler)
         {
             if (IsGhostBattleWithoutScope())
                 stringPtr = sText_GhostAppearedCantId;
-            else if (gBattleTypeFlags & BATTLE_TYPE_GHOST)
+            else if (HasAnyBattleFlags(BATTLE_TYPE_GHOST))
                 stringPtr = sText_TheGhostAppeared;
-            else if (gBattleTypeFlags & BATTLE_TYPE_LEGENDARY)
+            else if (HasAnyBattleFlags(BATTLE_TYPE_LEGENDARY))
                 stringPtr = sText_LegendaryPkmnAppeared;
             else if (IsDoubleBattle() && IsValidForBattle(GetBattlerMon(GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT))))
                 stringPtr = sText_TwoWildPkmnAppeared;
-            else if (gBattleTypeFlags & BATTLE_TYPE_CATCH_TUTORIAL)
+            else if (HasAnyBattleFlags(BATTLE_TYPE_CATCH_TUTORIAL))
                 stringPtr = sText_WildPkmnAppearedPause;
             else
                 stringPtr = sText_WildPkmnAppeared;
@@ -2525,21 +2525,21 @@ void BufferStringBattle(enum StringID stringID, enum BattlerId battler)
         {
             if (IsDoubleBattle() && IsValidForBattle(GetBattlerMon(GetPartnerBattler(battler))))
             {
-                if (gBattleTypeFlags & BATTLE_TYPE_MULTI && (gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK || gBattleTypeFlags & BATTLE_TYPE_LINK))
+                if (HasAnyBattleFlags(BATTLE_TYPE_MULTI) && (HasAnyBattleFlags(BATTLE_TYPE_RECORDED_LINK) || HasAnyBattleFlags(BATTLE_TYPE_LINK)))
                 {
                     if (BattlerIsPlayer(battler))
                         stringPtr = sText_LinkPartnerSentOutPkmn2GoPkmn; // Player is on left
                     else
                         stringPtr = sText_LinkPartnerSentOutPkmn1GoPkmn; // Link Partner on left
                 }
-                else if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
+                else if (HasAnyBattleFlags(BATTLE_TYPE_INGAME_PARTNER))
                 {
                     if (BattlerIsPlayer(battler) && (battler & BIT_FLANK) == B_FLANK_LEFT)
                         stringPtr = sText_InGamePartnerSentOutZGoN; // Player is on left
                     else
                         stringPtr = sText_InGamePartnerSentOutNGoZ; // Partner on left
                 }
-                else if (gBattleTypeFlags & BATTLE_TYPE_RAID)
+                else if (HasAnyBattleFlags(BATTLE_TYPE_RAID))
                 {
                     stringPtr = sText_BeCarefulPkmn;
                 }
@@ -2557,13 +2557,13 @@ void BufferStringBattle(enum StringID stringID, enum BattlerId battler)
         {
             if (IsDoubleBattle() && IsValidForBattle(GetBattlerMon(GetPartnerBattler(battler))))
             {
-                if (gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK && BATTLE_TWO_VS_ONE_OPPONENT)
+                if (HasAnyBattleFlags(BATTLE_TYPE_RECORDED_LINK) && IsMultiVsOneOpponentBattle())
                     stringPtr = sText_LinkTrainerSentOutTwoPkmn;
-                else if (BATTLE_TWO_VS_ONE_OPPONENT)
+                else if (IsMultiVsOneOpponentBattle())
                     stringPtr = sText_Trainer1SentOutTwoPkmn;
-                else if ((gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK && gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS) || (gBattleTypeFlags & BATTLE_TYPE_MULTI && (gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK || gBattleTypeFlags & BATTLE_TYPE_LINK)))
+                else if (HasAllBattleFlags(BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_TWO_OPPONENTS) || HasAllBattleFlags(BATTLE_TYPE_MULTI | BATTLE_TYPE_RECORDED_LINK) || HasAnyBattleFlags(BATTLE_TYPE_LINK))
                     stringPtr = sText_TwoLinkTrainersIntroSendOutPkmn;
-                else if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS || gBattleTypeFlags & BATTLE_TYPE_TOWER_LINK_MULTI)
+                else if (HasAnyBattleFlags(BATTLE_TYPE_TWO_OPPONENTS) || IsTowerLinkMulti())
                     stringPtr = sText_TwoTrainersSentPkmn;
                 else if (BattlerIsLink(battler) || (BattlerIsRecorded(battler) && BattlerIsOpponent(battler))) // Link Opponent doubles and test opponent
                     stringPtr = sText_LinkTrainerSentOutTwoPkmn;
@@ -2599,13 +2599,13 @@ void BufferStringBattle(enum StringID stringID, enum BattlerId battler)
             }
             else if (BattlerIsPartner(battler)) // Link or Ingame Partner
             {
-                if (BattlerIsLink(battler) || gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK)
+                if (BattlerIsLink(battler) || HasAnyBattleFlags(BATTLE_TYPE_RECORDED_LINK))
                     stringPtr = sText_LinkPartnerWithdrewPkmn1;
                 else
                     stringPtr = sText_InGamePartnerWithdrewPkmn1;
             }
             else if (TRAINER_BATTLE_PARAM.opponentA == TRAINER_LINK_OPPONENT
-             || gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK) // Link Opponent A and test opponent
+             || HasAnyBattleFlags(BATTLE_TYPE_RECORDED_LINK)) // Link Opponent A and test opponent
             {
                 stringPtr = sText_LinkTrainer1WithdrewPkmn;
             }
@@ -2629,20 +2629,20 @@ void BufferStringBattle(enum StringID stringID, enum BattlerId battler)
             }
             else if (BattlerIsPartner(battler)) // Link or Ingame Partner
             {
-                if (BattlerIsLink(battler) || gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK)
+                if (BattlerIsLink(battler) || HasAnyBattleFlags(BATTLE_TYPE_RECORDED_LINK))
                     stringPtr = sText_LinkPartnerWithdrewPkmn2;
                 else
                     stringPtr = sText_InGamePartnerWithdrewPkmn2;
             }
             else if (TRAINER_BATTLE_PARAM.opponentA == TRAINER_LINK_OPPONENT
-             || gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK) // Link Opponent B and test opponent
+             || HasAnyBattleFlags(BATTLE_TYPE_RECORDED_LINK)) // Link Opponent B and test opponent
             {
                 if (BattleSideHasTwoTrainers(B_SIDE_OPPONENT))
                     stringPtr = sText_LinkTrainer2WithdrewPkmn;
                 else
                     stringPtr = sText_LinkTrainer1WithdrewPkmn;
             }
-            else if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS) // Opponent B
+            else if (HasAnyBattleFlags(BATTLE_TYPE_TWO_OPPONENTS)) // Opponent B
             {
                 stringPtr = sText_Trainer2WithdrewPkmn;
             }
@@ -2668,13 +2668,13 @@ void BufferStringBattle(enum StringID stringID, enum BattlerId battler)
             }
             else if (BattlerIsPartner(gBattleScripting.battler)) // Link or Ingame Partner
             {
-                if (BattlerIsLink(gBattleScripting.battler) || gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK)
+                if (BattlerIsLink(gBattleScripting.battler) || HasAnyBattleFlags(BATTLE_TYPE_RECORDED_LINK))
                     stringPtr = sText_LinkPartnerSentOutPkmn1;
                 else
                     stringPtr = sText_InGamePartnerSentOutPkmn1;
             }
             else if (TRAINER_BATTLE_PARAM.opponentA == TRAINER_LINK_OPPONENT
-             || gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK) // Link Opponent A and test opponent
+             || HasAnyBattleFlags(BATTLE_TYPE_RECORDED_LINK)) // Link Opponent A and test opponent
             {
                 stringPtr = sText_LinkTrainerSentOutPkmn;
             }
@@ -2698,20 +2698,20 @@ void BufferStringBattle(enum StringID stringID, enum BattlerId battler)
             }
             else if (BattlerIsPartner(gBattleScripting.battler)) // Link or Ingame Partner
             {
-                if (BattlerIsLink(gBattleScripting.battler) || gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK)
+                if (BattlerIsLink(gBattleScripting.battler) || HasAnyBattleFlags(BATTLE_TYPE_RECORDED_LINK))
                     stringPtr = sText_LinkPartnerSentOutPkmn2;
                 else
                     stringPtr = sText_InGamePartnerSentOutPkmn2;
             }
             else if (TRAINER_BATTLE_PARAM.opponentA == TRAINER_LINK_OPPONENT
-             || gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK) // Link Opponent B and test opponent
+             || HasAnyBattleFlags(BATTLE_TYPE_RECORDED_LINK)) // Link Opponent B and test opponent
             {
                 if (BattleSideHasTwoTrainers(B_SIDE_OPPONENT))
                     stringPtr = sText_LinkTrainer2SentOutPkmn2;
                 else
                     stringPtr = sText_LinkTrainerSentOutPkmn2;
             }
-            else if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS) // Opponent B
+            else if (HasAnyBattleFlags(BATTLE_TYPE_TWO_OPPONENTS)) // Opponent B
             {
                 stringPtr = sText_Trainer2SentOutPkmn;
             }
@@ -2739,7 +2739,7 @@ void BufferStringBattle(enum StringID stringID, enum BattlerId battler)
 
             if (gBattleTextBuff1[0] == B_OUTCOME_LOST || gBattleTextBuff1[0] == B_OUTCOME_DREW)
                 stringPtr = sText_GotAwaySafely;
-            else if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
+            else if (HasAnyBattleFlags(BATTLE_TYPE_MULTI))
                 stringPtr = sText_TwoWildFled;
             else
                 stringPtr = sText_WildFled;
@@ -2749,12 +2749,12 @@ void BufferStringBattle(enum StringID stringID, enum BattlerId battler)
             if (!(BattlerIsPlayer(battler) || BattlerIsPlayer(GetPartnerBattler(battler))) && gBattleTextBuff1[0] != B_OUTCOME_DREW)
                 gBattleTextBuff1[0] ^= (B_OUTCOME_LOST | B_OUTCOME_WON);
 
-            if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
+            if (HasAnyBattleFlags(BATTLE_TYPE_MULTI))
             {
                 switch (gBattleTextBuff1[0])
                 {
                 case B_OUTCOME_WON:
-                    if (gBattleTypeFlags & BATTLE_TYPE_TOWER_LINK_MULTI)
+                    if (IsTowerLinkMulti())
                         stringPtr = sText_TwoInGameTrainersDefeated;
                     else
                         stringPtr = sText_TwoLinkTrainersDefeated;
@@ -2879,7 +2879,7 @@ static void GetBattlerNick(enum BattlerId battler, u8 *dst)
 #define HANDLE_NICKNAME_STRING_CASE(battler)                            \
     if (!IsOnPlayerSide(battler))                                       \
     {                                                                   \
-        if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)                     \
+        if (IsTrainerBattle())                     \
             toCpy = sText_FoePkmnPrefix;                                \
         else                                                            \
             toCpy = sText_WildPkmnPrefix;                               \
@@ -2896,7 +2896,7 @@ static void GetBattlerNick(enum BattlerId battler, u8 *dst)
 #define HANDLE_NICKNAME_STRING_LOWERCASE(battler)                       \
     if (!IsOnPlayerSide(battler))                       \
     {                                                                   \
-        if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)                     \
+        if (IsTrainerBattle())                     \
             toCpy = sText_FoePkmnPrefixLower;                           \
         else                                                            \
             toCpy = sText_WildPkmnPrefixLower;                          \
@@ -2914,7 +2914,7 @@ static const u8 *BattleStringGetOpponentNameByTrainerId(u16 trainerId, u8 *text,
 {
     const u8 *toCpy = NULL;
 
-    if (gBattleTypeFlags & BATTLE_TYPE_SECRET_BASE)
+    if (HasAnyBattleFlags(BATTLE_TYPE_SECRET_BASE))
     {
         u32 i;
         for (i = 0; i < ARRAY_COUNT(gBattleResources->secretBase->trainerName); i++)
@@ -2929,7 +2929,7 @@ static const u8 *BattleStringGetOpponentNameByTrainerId(u16 trainerId, u8 *text,
     }
     else if (trainerId == TRAINER_LINK_OPPONENT)
     {
-        if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
+        if (HasAnyBattleFlags(BATTLE_TYPE_MULTI))
             toCpy = gLinkPlayers[GetBattlerMultiplayerId(battler)].name;
         else
             toCpy = gLinkPlayers[GetBattlerMultiplayerId(battler) & BIT_SIDE].name;
@@ -2939,22 +2939,22 @@ static const u8 *BattleStringGetOpponentNameByTrainerId(u16 trainerId, u8 *text,
         CopyFrontierBrainTrainerName(text);
         toCpy = text;
     }
-    else if (gBattleTypeFlags & BATTLE_TYPE_FRONTIER)
+    else if (HasAnyBattleFlags(BATTLE_TYPE_FRONTIER))
     {
         GetFrontierTrainerName(text, trainerId);
         toCpy = text;
     }
-    else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_TOWER && gMapHeader.regionMapSectionId == MAPSEC_TRAINER_TOWER_2)
+    else if (HasAnyBattleFlags(BATTLE_TYPE_TRAINER_TOWER) && gMapHeader.regionMapSectionId == MAPSEC_TRAINER_TOWER_2)
     {
         GetTrainerTowerOpponentName(text);
         toCpy = text;
     }
-    else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_HILL)
+    else if (HasAnyBattleFlags(BATTLE_TYPE_TRAINER_HILL))
     {
         GetTrainerHillTrainerName(text, trainerId);
         toCpy = text;
     }
-    else if (gBattleTypeFlags & BATTLE_TYPE_EREADER_TRAINER)
+    else if (HasAnyBattleFlags(BATTLE_TYPE_EREADER_TRAINER))
     {
         GetEreaderTrainerName(text);
         toCpy = text;
@@ -2987,7 +2987,7 @@ static const u8 *BattleStringGetOpponentName(u8 *text, u8 multiplayerId, enum Ba
         toCpy = BattleStringGetOpponentNameByTrainerId(TRAINER_BATTLE_PARAM.opponentA, text, multiplayerId, battler);
         break;
     case B_POSITION_OPPONENT_RIGHT:
-        if (gBattleTypeFlags & (BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_MULTI) && !BATTLE_TWO_VS_ONE_OPPONENT)
+        if (HasAnyBattleFlags(BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_MULTI) && !IsMultiVsOneOpponentBattle())
             toCpy = BattleStringGetOpponentNameByTrainerId(TRAINER_BATTLE_PARAM.opponentB, text, multiplayerId, battler);
         else
             toCpy = BattleStringGetOpponentNameByTrainerId(TRAINER_BATTLE_PARAM.opponentA, text, multiplayerId, battler);
@@ -3006,22 +3006,22 @@ static const u8 *BattleStringGetPlayerName(u8 *text, enum BattlerId battler)
     switch (GetBattlerPosition(battler))
     {
     case B_POSITION_PLAYER_LEFT:
-        if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
+        if (HasAnyBattleFlags(BATTLE_TYPE_RECORDED))
             toCpy = gLinkPlayers[0].name;
         else
             toCpy = gSaveBlock2Ptr->playerName;
         break;
     case B_POSITION_PLAYER_RIGHT:
-        if (((gBattleTypeFlags & BATTLE_TYPE_RECORDED) && !(gBattleTypeFlags & (BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER)))
+        if (((HasAnyBattleFlags(BATTLE_TYPE_RECORDED)) && HasNoneOfBattleFlags(BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER))
             || gTestRunnerEnabled)
         {
             toCpy = gLinkPlayers[0].name;
         }
-        else if ((gBattleTypeFlags & BATTLE_TYPE_LINK) && gBattleTypeFlags & (BATTLE_TYPE_RECORDED | BATTLE_TYPE_MULTI))
+        else if ((HasAnyBattleFlags(BATTLE_TYPE_LINK)) && HasAnyBattleFlags(BATTLE_TYPE_RECORDED | BATTLE_TYPE_MULTI))
         {
             toCpy = gLinkPlayers[2].name;
         }
-        else if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
+        else if (HasAnyBattleFlags(BATTLE_TYPE_INGAME_PARTNER))
         {
             GetFrontierTrainerName(text, gPartnerTrainerId);
             toCpy = text;
@@ -3050,19 +3050,19 @@ static const u8 *BattleStringGetOpponentClassByTrainerId(u16 trainerId)
 {
     const u8 *toCpy;
 
-    if (gBattleTypeFlags & BATTLE_TYPE_SECRET_BASE)
+    if (HasAnyBattleFlags(BATTLE_TYPE_SECRET_BASE))
         toCpy = gTrainerClasses[GetSecretBaseTrainerClass()].name;
     else if (trainerId == TRAINER_UNION_ROOM)
         toCpy = gTrainerClasses[GetUnionRoomTrainerClass()].name;
     else if (trainerId == TRAINER_FRONTIER_BRAIN)
         toCpy = gTrainerClasses[GetFrontierBrainTrainerClass()].name;
-    else if (gBattleTypeFlags & BATTLE_TYPE_FRONTIER)
+    else if (HasAnyBattleFlags(BATTLE_TYPE_FRONTIER))
         toCpy = gTrainerClasses[GetFrontierOpponentClass(trainerId)].name;
-    else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_TOWER && gMapHeader.regionMapSectionId == MAPSEC_TRAINER_TOWER_2)
+    else if (HasAnyBattleFlags(BATTLE_TYPE_TRAINER_TOWER) && gMapHeader.regionMapSectionId == MAPSEC_TRAINER_TOWER_2)
         toCpy = gTrainerClasses[GetTrainerTowerOpponentClass()].name;
-    else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_HILL)
+    else if (HasAnyBattleFlags(BATTLE_TYPE_TRAINER_HILL))
         toCpy = gTrainerClasses[GetTrainerHillOpponentClass(trainerId)].name;
-    else if (gBattleTypeFlags & BATTLE_TYPE_EREADER_TRAINER)
+    else if (HasAnyBattleFlags(BATTLE_TYPE_EREADER_TRAINER))
         toCpy = gTrainerClasses[GetEreaderTrainerClassId()].name;
     else if (trainerId == TRAINER_LINK_OPPONENT)
         toCpy = gTrainerClasses[TRAINER_NONE].name;
@@ -3085,7 +3085,7 @@ u32 BattleStringExpandPlaceholders(const u8 *src, u8 *dst, u32 dstSize)
     u8 multiplayerId;
     u8 fontId = FONT_NORMAL;
 
-    if (gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK)
+    if (HasAnyBattleFlags(BATTLE_TYPE_RECORDED_LINK))
         multiplayerId = gRecordedBattleMultiplayerId;
     else
         multiplayerId = GetMultiplayerId();
@@ -3230,11 +3230,11 @@ u32 BattleStringExpandPlaceholders(const u8 *src, u8 *dst, u32 dstSize)
                     toCpy = GetMoveName(gBattleMsgDataPtr->originallyUsedMove);
                 break;
             case B_TXT_LAST_ITEM: // last used item
-                if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
+                if (HasAnyBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
                 {
                     if (gLastUsedItem == ITEM_ENIGMA_BERRY_E_READER)
                     {
-                        if (!(gBattleTypeFlags & BATTLE_TYPE_MULTI))
+                        if (HasNoneOfBattleFlags(BATTLE_TYPE_MULTI))
                         {
                             if ((gBattleScripting.multiplayerId != 0 && (gPotentialItemEffectBattler & BIT_SIDE))
                                 || (gBattleScripting.multiplayerId == 0 && !(gPotentialItemEffectBattler & BIT_SIDE)))
@@ -3335,17 +3335,17 @@ u32 BattleStringExpandPlaceholders(const u8 *src, u8 *dst, u32 dstSize)
                 toCpy = BattleStringGetPlayerName(text, GetBattlerAtPosition(B_POSITION_PLAYER_LEFT));
                 break;
             case B_TXT_TRAINER1_LOSE_TEXT: // trainerA lose text
-                if (gBattleTypeFlags & BATTLE_TYPE_FRONTIER)
+                if (HasAnyBattleFlags(BATTLE_TYPE_FRONTIER))
                 {
                     CopyFrontierTrainerText(FRONTIER_PLAYER_WON_TEXT, TRAINER_BATTLE_PARAM.opponentA);
                     toCpy = gStringVar4;
                 }
-                else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_TOWER && gMapHeader.regionMapSectionId == MAPSEC_TRAINER_TOWER_2)
+                else if (HasAnyBattleFlags(BATTLE_TYPE_TRAINER_TOWER) && gMapHeader.regionMapSectionId == MAPSEC_TRAINER_TOWER_2)
                 {
                     GetTrainerTowerOpponentLoseText(gStringVar4, 0);
                     toCpy = gStringVar4;
                 }
-                else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_HILL)
+                else if (HasAnyBattleFlags(BATTLE_TYPE_TRAINER_HILL))
                 {
                     CopyTrainerHillTrainerText(TRAINER_HILL_TEXT_PLAYER_WON, TRAINER_BATTLE_PARAM.opponentA);
                     toCpy = gStringVar4;
@@ -3356,17 +3356,17 @@ u32 BattleStringExpandPlaceholders(const u8 *src, u8 *dst, u32 dstSize)
                 }
                 break;
             case B_TXT_TRAINER1_WIN_TEXT: // trainerA win text
-                if (gBattleTypeFlags & BATTLE_TYPE_FRONTIER)
+                if (HasAnyBattleFlags(BATTLE_TYPE_FRONTIER))
                 {
                     CopyFrontierTrainerText(FRONTIER_PLAYER_LOST_TEXT, TRAINER_BATTLE_PARAM.opponentA);
                     toCpy = gStringVar4;
                 }
-                else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_TOWER && gMapHeader.regionMapSectionId == MAPSEC_TRAINER_TOWER_2)
+                else if (HasAnyBattleFlags(BATTLE_TYPE_TRAINER_TOWER) && gMapHeader.regionMapSectionId == MAPSEC_TRAINER_TOWER_2)
                 {
                     GetTrainerTowerOpponentWinText(gStringVar4, 0);
                     toCpy = gStringVar4;
                 }
-                else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_HILL)
+                else if (HasAnyBattleFlags(BATTLE_TYPE_TRAINER_HILL))
                 {
                     CopyTrainerHillTrainerText(TRAINER_HILL_TEXT_PLAYER_LOST, TRAINER_BATTLE_PARAM.opponentA);
                     toCpy = gStringVar4;
@@ -3379,7 +3379,7 @@ u32 BattleStringExpandPlaceholders(const u8 *src, u8 *dst, u32 dstSize)
             case B_TXT_26: // ?
                 if (!IsOnPlayerSide(gBattleScripting.battler))
                 {
-                    if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
+                    if (IsTrainerBattle())
                         toCpy = sText_FoePkmnPrefix;
                     else
                         toCpy = sText_WildPkmnPrefix;
@@ -3464,17 +3464,17 @@ u32 BattleStringExpandPlaceholders(const u8 *src, u8 *dst, u32 dstSize)
                 }
                 break;
             case B_TXT_TRAINER2_LOSE_TEXT:
-                if (gBattleTypeFlags & BATTLE_TYPE_FRONTIER)
+                if (HasAnyBattleFlags(BATTLE_TYPE_FRONTIER))
                 {
                     CopyFrontierTrainerText(FRONTIER_PLAYER_WON_TEXT, TRAINER_BATTLE_PARAM.opponentB);
                     toCpy = gStringVar4;
                 }
-                else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_TOWER && gMapHeader.regionMapSectionId == MAPSEC_TRAINER_TOWER_2)
+                else if (HasAnyBattleFlags(BATTLE_TYPE_TRAINER_TOWER) && gMapHeader.regionMapSectionId == MAPSEC_TRAINER_TOWER_2)
                 {
                     GetTrainerTowerOpponentLoseText(gStringVar4, 1);
                     toCpy = gStringVar4;
                 }
-                else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_HILL)
+                else if (HasAnyBattleFlags(BATTLE_TYPE_TRAINER_HILL))
                 {
                     CopyTrainerHillTrainerText(TRAINER_HILL_TEXT_PLAYER_WON, TRAINER_BATTLE_PARAM.opponentB);
                     toCpy = gStringVar4;
@@ -3485,17 +3485,17 @@ u32 BattleStringExpandPlaceholders(const u8 *src, u8 *dst, u32 dstSize)
                 }
                 break;
             case B_TXT_TRAINER2_WIN_TEXT:
-                if (gBattleTypeFlags & BATTLE_TYPE_FRONTIER)
+                if (HasAnyBattleFlags(BATTLE_TYPE_FRONTIER))
                 {
                     CopyFrontierTrainerText(FRONTIER_PLAYER_LOST_TEXT, TRAINER_BATTLE_PARAM.opponentB);
                     toCpy = gStringVar4;
                 }
-                else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_TOWER && gMapHeader.regionMapSectionId == MAPSEC_TRAINER_TOWER_2)
+                else if (HasAnyBattleFlags(BATTLE_TYPE_TRAINER_TOWER) && gMapHeader.regionMapSectionId == MAPSEC_TRAINER_TOWER_2)
                 {
                     GetTrainerTowerOpponentWinText(gStringVar4, 1);
                     toCpy = gStringVar4;
                 }
-                else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_HILL)
+                else if (HasAnyBattleFlags(BATTLE_TYPE_TRAINER_HILL))
                 {
                     CopyTrainerHillTrainerText(TRAINER_HILL_TEXT_PLAYER_LOST, TRAINER_BATTLE_PARAM.opponentB);
                     toCpy = gStringVar4;
@@ -3535,14 +3535,14 @@ u32 BattleStringExpandPlaceholders(const u8 *src, u8 *dst, u32 dstSize)
                 switch (GetBattlerPosition(gBattlerAttacker))
                 {
                 case B_POSITION_PLAYER_RIGHT:
-                    if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
+                    if (HasAnyBattleFlags(BATTLE_TYPE_INGAME_PARTNER))
                         toCpy = gTrainerClasses[GetFrontierOpponentClass(gPartnerTrainerId)].name;
                     break;
                 case B_POSITION_OPPONENT_LEFT:
                     toCpy = BattleStringGetOpponentClassByTrainerId(TRAINER_BATTLE_PARAM.opponentA);
                     break;
                 case B_POSITION_OPPONENT_RIGHT:
-                    if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS && !BATTLE_TWO_VS_ONE_OPPONENT)
+                    if (HasAnyBattleFlags(BATTLE_TYPE_TWO_OPPONENTS) && !IsMultiVsOneOpponentBattle())
                         toCpy = BattleStringGetOpponentClassByTrainerId(TRAINER_BATTLE_PARAM.opponentB);
                     else
                         toCpy = BattleStringGetOpponentClassByTrainerId(TRAINER_BATTLE_PARAM.opponentA);
@@ -3553,7 +3553,7 @@ u32 BattleStringExpandPlaceholders(const u8 *src, u8 *dst, u32 dstSize)
                 break;
             case B_TXT_ATK_TRAINER_NAME_WITH_CLASS:
                 toCpy = textStart;
-                if (gBattleTypeFlags & BATTLE_TYPE_CATCH_TUTORIAL)
+                if (HasAnyBattleFlags(BATTLE_TYPE_CATCH_TUTORIAL))
                 {
                     if (IS_FRLG)
                         textStart = StringCopy(textStart, COMPOUND_STRING("The old man"));
@@ -3570,14 +3570,14 @@ u32 BattleStringExpandPlaceholders(const u8 *src, u8 *dst, u32 dstSize)
                     switch (GetBattlerPosition(gBattlerAttacker))
                     {
                     case B_POSITION_PLAYER_RIGHT:
-                        if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
+                        if (HasAnyBattleFlags(BATTLE_TYPE_INGAME_PARTNER))
                             classString = gTrainerClasses[GetFrontierOpponentClass(gPartnerTrainerId)].name;
                         break;
                     case B_POSITION_OPPONENT_LEFT:
                         classString = BattleStringGetOpponentClassByTrainerId(TRAINER_BATTLE_PARAM.opponentA);
                         break;
                     case B_POSITION_OPPONENT_RIGHT:
-                        if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS && !BATTLE_TWO_VS_ONE_OPPONENT)
+                        if (HasAnyBattleFlags(BATTLE_TYPE_TWO_OPPONENTS) && !IsMultiVsOneOpponentBattle())
                             classString = BattleStringGetOpponentClassByTrainerId(TRAINER_BATTLE_PARAM.opponentB);
                         else
                             classString = BattleStringGetOpponentClassByTrainerId(TRAINER_BATTLE_PARAM.opponentA);
@@ -3763,14 +3763,14 @@ void ExpandBattleTextBuffPlaceholders(const u8 *src, u8 *dst)
             {
                 if (src[srcID] == B_BUFF_MON_NICK_WITH_PREFIX_LOWER)
                 {
-                    if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
+                    if (IsTrainerBattle())
                         StringAppend(dst, sText_FoePkmnPrefixLower);
                     else
                         StringAppend(dst, sText_WildPkmnPrefixLower);
                 }
                 else
                 {
-                    if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
+                    if (IsTrainerBattle())
                         StringAppend(dst, sText_FoePkmnPrefix);
                     else
                         StringAppend(dst, sText_WildPkmnPrefix);
@@ -3817,7 +3817,7 @@ void ExpandBattleTextBuffPlaceholders(const u8 *src, u8 *dst)
             break;
         case B_BUFF_ITEM: // item name
             hword = T1_READ_16(&src[srcID + 1]);
-            if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
+            if (HasAnyBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
             {
                 if (hword == ITEM_ENIGMA_BERRY_E_READER)
                 {
@@ -3899,16 +3899,16 @@ void BattlePutTextOnWindow(const u8 *text, u8 windowId)
     else
         gTextFlags.useAlternateDownArrow = TRUE;
 
-    if ((gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED)) || gTestRunnerEnabled || ((gBattleTypeFlags & BATTLE_TYPE_POKEDUDE) && windowId != B_WIN_OAK_OLD_MAN))
+    if ((HasAnyBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED)) || gTestRunnerEnabled || (HasAnyBattleFlags(BATTLE_TYPE_POKEDUDE) && windowId != B_WIN_OAK_OLD_MAN))
         gTextFlags.autoScroll = TRUE;
     else
         gTextFlags.autoScroll = FALSE;
 
     if (windowId == B_WIN_MSG || windowId == ARENA_WIN_JUDGMENT_TEXT || windowId == B_WIN_OAK_OLD_MAN)
     {
-        if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
+        if (HasAnyBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
             speed = 1;
-        else if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
+        else if (HasAnyBattleFlags(BATTLE_TYPE_RECORDED))
             speed = sRecordedBattleTextSpeeds[GetTextSpeedInRecordedBattle()];
         else
             speed = GetPlayerTextSpeedDelay();

@@ -283,12 +283,12 @@ static bool8 LoadBattlerSpriteGfx(enum BattlerId battler)
             else
                 BattleLoadSubstituteOrMonSpriteGfx(battler, FALSE);
         }
-        else if (gBattleTypeFlags & BATTLE_TYPE_SAFARI && position == B_POSITION_PLAYER_LEFT)
+        else if (HasAnyBattleFlags(BATTLE_TYPE_SAFARI) && position == B_POSITION_PLAYER_LEFT)
         {
             enum TrainerPicID trainerPicId = GetPlayerTrainerPic(gSaveBlock2Ptr->playerGender, GAME_VERSION);
             LoadSpritePaletteWithTag(GetTrainerBackPicPalette(trainerPicId), GetTrainerPicTag(trainerPicId, FALSE));
         }
-        else if (gBattleTypeFlags & BATTLE_TYPE_CATCH_TUTORIAL && position == B_POSITION_PLAYER_LEFT)
+        else if (HasAnyBattleFlags(BATTLE_TYPE_CATCH_TUTORIAL) && position == B_POSITION_PLAYER_LEFT)
             LoadSpritePaletteWithTag(GetTrainerBackPicPalette(CATCH_TUTORIAL_TRAINER_PIC), GetTrainerPicTag(CATCH_TUTORIAL_TRAINER_PIC, FALSE));
         else if (!gBattleSpritesDataPtr->battlerData[battler].behindSubstitute)
             BattleLoadMonSpriteGfx(GetBattlerMon(battler), battler);
@@ -336,7 +336,7 @@ void CreateBattlerSprite(enum BattlerId battler)
 
             StartSpriteAnim(&gSprites[gBattlerSpriteIds[battler]], 0);
         }
-        else if (gBattleTypeFlags & BATTLE_TYPE_SAFARI && position == B_POSITION_PLAYER_LEFT)
+        else if (HasAnyBattleFlags(BATTLE_TYPE_SAFARI) && position == B_POSITION_PLAYER_LEFT)
         {
             enum TrainerPicID trainerPicId = GetPlayerTrainerPic(gSaveBlock2Ptr->playerGender, GAME_VERSION);
             SetMultiuseSpriteTemplateToTrainerBack(trainerPicId, position);
@@ -347,7 +347,7 @@ void CreateBattlerSprite(enum BattlerId battler)
             gSprites[gBattlerSpriteIds[battler]].callback = SpriteCallbackDummy;
             gSprites[gBattlerSpriteIds[battler]].data[0] = battler;
         }
-        else if (gBattleTypeFlags & BATTLE_TYPE_CATCH_TUTORIAL && position == B_POSITION_PLAYER_LEFT)
+        else if (HasAnyBattleFlags(BATTLE_TYPE_CATCH_TUTORIAL) && position == B_POSITION_PLAYER_LEFT)
         {
             SetMultiuseSpriteTemplateToTrainerBack(CATCH_TUTORIAL_TRAINER_PIC, position);
             gBattlerSpriteIds[battler] = CreateSprite(&gMultiuseSpriteTemplate, 0x50,
@@ -388,9 +388,9 @@ static void CreateHealthboxSprite(enum BattlerId battler)
         u8 healthboxSpriteId;
 
         enum BattlerPosition position = GetBattlerPosition(battler);
-        if (gBattleTypeFlags & BATTLE_TYPE_SAFARI && position == B_POSITION_PLAYER_LEFT)
+        if (HasAnyBattleFlags(BATTLE_TYPE_SAFARI) && position == B_POSITION_PLAYER_LEFT)
             healthboxSpriteId = CreateSafariPlayerHealthboxSprites();
-        else if (gBattleTypeFlags & BATTLE_TYPE_CATCH_TUTORIAL && position == B_POSITION_PLAYER_LEFT)
+        else if (HasAnyBattleFlags(BATTLE_TYPE_CATCH_TUTORIAL) && position == B_POSITION_PLAYER_LEFT)
             return;
         else
             healthboxSpriteId = CreateBattlerHealthboxSprites(battler);
@@ -401,7 +401,7 @@ static void CreateHealthboxSprite(enum BattlerId battler)
 
         if (!IsOnPlayerSide(battler))
             UpdateHealthboxAttribute(gHealthboxSpriteIds[battler], GetBattlerMon(battler), HEALTHBOX_ALL);
-        else if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
+        else if (HasAnyBattleFlags(BATTLE_TYPE_SAFARI))
             UpdateHealthboxAttribute(gHealthboxSpriteIds[battler], GetBattlerMon(battler), HEALTHBOX_SAFARI_ALL_TEXT);
         else
             UpdateHealthboxAttribute(gHealthboxSpriteIds[battler], GetBattlerMon(battler), HEALTHBOX_ALL);
@@ -421,7 +421,7 @@ static void CreateHealthboxSprite(enum BattlerId battler)
             if (GetMonData(GetBattlerMon(battler), MON_DATA_HP) == 0 || gBattleStruct->battlerState[battler].notOnField)
                 SetHealthboxSpriteInvisible(healthboxSpriteId);
         }
-        else if (!(gBattleTypeFlags & BATTLE_TYPE_SAFARI))
+        else if (HasNoneOfBattleFlags(BATTLE_TYPE_SAFARI))
         {
             if (!IsValidForBattle(GetBattlerMon(battler)) || gBattleStruct->battlerState[battler].notOnField)
                 SetHealthboxSpriteInvisible(healthboxSpriteId);

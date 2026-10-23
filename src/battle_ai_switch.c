@@ -1326,7 +1326,7 @@ static bool32 CanBattlerConsiderSwitch(enum BattlerId battler)
         return FALSE;
     if (gBattleStruct->battlerState[battler].commanderSpecies)
         return FALSE;
-    if (gBattleTypeFlags & BATTLE_TYPE_ARENA)
+    if (HasAnyBattleFlags(BATTLE_TYPE_ARENA))
         return FALSE;
     return TRUE;
 }
@@ -2143,7 +2143,7 @@ static bool32 AI_CanSwitchinAbilityTrapOpponent(enum Ability ability, enum Battl
 {
     if (AI_CanBattlerEscape(opposingBattler))
         return FALSE;
-    if (gBattleTypeFlags & BATTLE_TYPE_TRAINER && CountUsablePartyMons(opposingBattler) == 0)
+    if (IsTrainerBattle() && CountUsablePartyMons(opposingBattler) == 0)
         return FALSE;
     else if (ability == ABILITY_SHADOW_TAG)
     {
@@ -2663,7 +2663,7 @@ enum PartySlot GetMostSuitableMonToSwitchInto(enum BattlerId battler, enum Switc
 
     if (gBattleStruct->monToSwitchIntoId[battler] != PARTY_SLOT_NONE)
         return gBattleStruct->monToSwitchIntoId[battler];
-    if (gBattleTypeFlags & BATTLE_TYPE_ARENA)
+    if (HasAnyBattleFlags(BATTLE_TYPE_ARENA))
         return (enum PartySlot)(gBattlerPartyIndexes[battler] + 1);
 
     opposingBattler = GetActiveBattlerIds(battler, &battlerIn1, &battlerIn2);
