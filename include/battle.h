@@ -1203,7 +1203,7 @@ static inline bool32 IsBattlerAlly(enum BattlerId battlerAtk, enum BattlerId bat
 
 static inline bool32 IsDoubleBattle(void)
 {
-    return !!(gBattleTypeFlags & BATTLE_TYPE_MORE_THAN_TWO_BATTLERS);
+    return HasAnyBattleFlags(BATTLE_TYPE_DOUBLE | BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_TWO_OPPONENTS) != 0;
 }
 
 static inline bool32 IsSpreadMove(enum MoveTarget moveTarget)
