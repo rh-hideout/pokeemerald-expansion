@@ -16,12 +16,12 @@ struct RenewableHiddenItemData
     u8 common[MAX_HIDDEN_ITEMS_PER_GROUP];   // 60%
 };
 
+#if IS_FRLG
+
 static void SampleRenewableItemFlags(void);
 
 #define HIDDEN_ID(flag)(flag - FLAG_HIDDEN_ITEMS_START)
 #define NO_ITEM 0xFF
-
-#if IS_FRLG
 
 static const struct RenewableHiddenItemData sRenewableHiddenItems[] = {
     {
@@ -597,9 +597,9 @@ void TryRegenerateRenewableHiddenItems(void)
 #endif
 }
 
+#if IS_FRLG
 static void SampleRenewableItemFlags(void)
 {
-#if IS_FRLG
     u8 i, j;
     const u8 * flags;
     u16 rval;
@@ -619,5 +619,5 @@ static void SampleRenewableItemFlags(void)
                 FlagClear(FLAG_HIDDEN_ITEMS_START + flags[j]);
         }
     }
-#endif
 }
+#endif
