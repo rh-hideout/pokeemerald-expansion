@@ -4,6 +4,7 @@
 #include "battle_ai_util.h"
 #include "battle_main.h"
 #include "battle_setup.h"
+#include "battle_frontier.h"
 #include "battle_tower.h"
 #include "battle_stat_change.h"
 #include "frontier_util.h"
@@ -67,6 +68,7 @@ struct TourneyTreeLineSection
 
 #define DOME_TRAINERS gSaveBlock2Ptr->frontier.domeTrainers
 #define DOME_MONS     gSaveBlock2Ptr->frontier.domeMonIds
+#define DOME_ACE_MONS gFrontierBrainsMons[FRONTIER_FACILITY_DOME][GetFronterBrainSymbol()]
 
 #define tState              data[0]
 
@@ -2086,7 +2088,7 @@ static void InitDomeTrainers(void)
         }
 
         for (i = 0; i < FRONTIER_PARTY_SIZE; i++)
-            DOME_MONS[j][i] = GetFrontierBrainMonSpecies(i);
+            DOME_MONS[j][i] = DOME_ACE_MONS[i].species;
     }
 
     Free(rankingScores);
@@ -2210,7 +2212,7 @@ static u32 SelectOpponentMons(u16 tournamentTrainerId, bool32 effectiveness)
                 enum Species playerMonSpecies = GetMonData(&gParties[B_TRAINER_PLAYER][playerMonId], MON_DATA_SPECIES);
                 enum Move move;
                 if (DOME_TRAINERS[tournamentTrainerId].trainerId == TRAINER_FRONTIER_BRAIN)
-                    move = GetFrontierBrainMonMove(i, moveIndex);
+                    move = DOME_ACE_MONS[i].moves[moveIndex];
                 else
                     move = gFacilityTrainerMons[DOME_MONS[tournamentTrainerId][i]].moves[moveIndex];
                 partyMovePoints[i] += GetTypeEffectivenessPoints(move, playerMonSpecies, effectiveness);
@@ -4170,7 +4172,7 @@ static void DisplayTrainerInfoOnCard(u8 flags, u8 trainerTourneyId)
             {
                 enum Move move;
                 if (trainerId == TRAINER_FRONTIER_BRAIN)
-                    move = GetFrontierBrainMonMove(i, j);
+                    move = DOME_ACE_MONS[i].moves[j];
                 else if (trainerId == TRAINER_PLAYER)
                     move = gSaveBlock2Ptr->frontier.domePlayerPartyData[i].moves[j];
                 else
@@ -4270,7 +4272,7 @@ static void DisplayTrainerInfoOnCard(u8 flags, u8 trainerTourneyId)
             for (j = 0; j < NUM_STATS; j++)
             {
                 if (trainerId == TRAINER_FRONTIER_BRAIN)
-                    allocatedArray[j] = GetFrontierBrainMonEvs(i, j);
+                    allocatedArray[j] = DOME_ACE_MONS[i].ev[j];
                 else
                     allocatedArray[j] = gSaveBlock2Ptr->frontier.domePlayerPartyData[i].evs[j];
             }
@@ -4282,7 +4284,7 @@ static void DisplayTrainerInfoOnCard(u8 flags, u8 trainerTourneyId)
             for (j = 0; j < NUM_NATURE_STATS; j++)
             {
                 if (trainerId == TRAINER_FRONTIER_BRAIN)
-                    nature = GetFrontierBrainMonNature(i);
+                    nature = DOME_ACE_MONS[i].nature;
                 else
                     nature = gSaveBlock2Ptr->frontier.domePlayerPartyData[i].nature;
 
@@ -4981,7 +4983,7 @@ static u16 GetWinningMove(int winnerTournamentId, int loserTournamentId, u8 roun
 
             moveScores[moveIndex] = 0;
             if (DOME_TRAINERS[winnerTournamentId].trainerId == TRAINER_FRONTIER_BRAIN)
-                move = GetFrontierBrainMonMove(i, j);
+                move = DOME_ACE_MONS[i].moves[j];
             else
                 move = gFacilityTrainerMons[DOME_MONS[winnerTournamentId][i]].moves[j];
             moves[moveIndex] = move;
@@ -4996,23 +4998,10 @@ static u16 GetWinningMove(int winnerTournamentId, int loserTournamentId, u8 roun
 
             for (k = 0; k < FRONTIER_PARTY_SIZE; k++)
             {
-                u32 personality = 0;
-                enum Species targetSpecies = SPECIES_NONE;
-                enum Ability targetAbility = ABILITY_NONE;
-                uq4_12_t typeMultiplier = 0;
-                do
-                {
-                    personality = Random32();
-                } while (gFacilityTrainerMons[DOME_MONS[loserTournamentId][k]].nature != GetNatureFromPersonality(personality));
+                enum Species targetSpecies = gFacilityTrainerMons[DOME_MONS[loserTournamentId][k]].species;
+                enum Ability targetAbility = GetSpeciesAbility(targetSpecies, Random32() & 1);
 
-                targetSpecies = gFacilityTrainerMons[DOME_MONS[loserTournamentId][k]].species;
-
-                if (personality & 1)
-                    targetAbility = GetSpeciesAbility(targetSpecies, 1);
-                else
-                    targetAbility = GetSpeciesAbility(targetSpecies, 0);
-
-                typeMultiplier = CalcPartyMonTypeEffectivenessMultiplier(moves[i * 4 + j], targetSpecies, targetAbility);
+                uq4_12_t typeMultiplier = CalcPartyMonTypeEffectivenessMultiplier(moves[i * 4 + j], targetSpecies, targetAbility);
                 if (typeMultiplier == UQ_4_12(0))
                     moveScores[moveIndex] += 0;
                 else if (typeMultiplier >= UQ_4_12(2.0))
