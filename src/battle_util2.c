@@ -278,6 +278,11 @@ struct Pokemon* GetBattlerMon(enum BattlerId battler)
     return &GetBattlerParty(battler)[index];
 }
 
+bool32 BattleTypeHasAi(void)
+{
+    return HasAnyBattleFlags(BATTLE_TYPE_TRAINER | BATTLE_TYPE_FIRST_BATTLE | BATTLE_TYPE_SAFARI | BATTLE_TYPE_ROAMER | BATTLE_TYPE_INGAME_PARTNER));
+}
+
 bool32 IsWildDoubleBattle(void)
 {
     return (HasAnyBattleFlags(BATTLE_TYPE_DOUBLE) && HasNoneOfBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_TRAINER));

@@ -252,7 +252,7 @@ static bool32 IsSmartBattle(void)
     if (IsSpecialTrainer(TRAINER_BATTLE_PARAM.opponentA))
         return FALSE; // Don't set flags for link battle unless Battle Tower link multi mode
 
-    return HasAnyBattleFlags(BATTLE_TYPE_HAS_AI) || IsWildMonSmart();
+    return BattleTypeHasAi() || IsWildMonSmart();
 }
 
 u64 GetAiFlags(u16 trainerId, enum BattlerId battler)
