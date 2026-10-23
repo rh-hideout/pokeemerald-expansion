@@ -2381,7 +2381,7 @@ void SpriteCB_WildMon(struct Sprite *sprite)
     StartSpriteAnimIfDifferent(sprite, 0);
     if (B_FAST_INTRO_NO_SLIDE == FALSE && !gTestRunnerHeadless)
     {
-        if (WILD_DOUBLE_BATTLE)
+        if (IsWildDoubleBattle())
             BeginNormalPaletteFade((0x10000 << sprite->sBattler) | (0x10000 << GetPartnerBattler(sprite->sBattler)), 0, 10, 10, RGB(8, 8, 8));
         else
             BeginNormalPaletteFade((0x10000 << sprite->sBattler), 0, 10, 10, RGB(8, 8, 8));
@@ -2414,7 +2414,7 @@ static void SpriteCB_WildMonShowHealthbox(struct Sprite *sprite)
         StartSpriteAnimIfDifferent(sprite, 0);
         if (B_FAST_INTRO_NO_SLIDE == FALSE && !gTestRunnerHeadless)
         {
-            if (WILD_DOUBLE_BATTLE)
+            if (IsWildDoubleBattle())
                 BeginNormalPaletteFade((0x10000 << sprite->sBattler) | (0x10000 << GetPartnerBattler(sprite->sBattler)), 0, 10, 0, RGB(8, 8, 8));
             else
                 BeginNormalPaletteFade((0x10000 << sprite->sBattler), 0, 10, 0, RGB(8, 8, 8));
@@ -3702,7 +3702,7 @@ u8 IsRunningFromBattleImpossible(enum BattlerId battler)
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_DONT_LEAVE_BIRCH;
         return BATTLE_RUN_FORBIDDEN;
     }
-    if (GetBattlerPosition(battler) == B_POSITION_PLAYER_RIGHT && WILD_DOUBLE_BATTLE
+    if (GetBattlerPosition(battler) == B_POSITION_PLAYER_RIGHT && IsWildDoubleBattle()
         && IsBattlerAlive(GetBattlerAtPosition(B_POSITION_PLAYER_LEFT))) // The second Pokémon cannot run from a double wild battle, unless it's the only alive mon.
     {
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CANT_ESCAPE;
@@ -3844,7 +3844,7 @@ static void HandleTurnActionSelectionState(void)
                         gChosenActionByBattler[battler] = B_ACTION_USE_MOVE;
                         gBattleCommunication[battler] = STATE_WAIT_ACTION_CONFIRMED_STANDBY;
                     }
-                    else if (WILD_DOUBLE_BATTLE
+                    else if (IsWildDoubleBattle()
                              && position == B_POSITION_PLAYER_RIGHT
                              && (gBattleStruct->throwingPokeBall || gChosenActionByBattler[GetBattlerAtPosition(B_POSITION_PLAYER_LEFT)] == B_ACTION_RUN)
                              && gChosenActionByBattler[GetBattlerAtPosition(B_POSITION_PLAYER_LEFT)] != B_ACTION_NOTHING_FAINTED)
@@ -4301,7 +4301,7 @@ static void HandleTurnActionSelectionState(void)
         HideWeatherIndicator(B_INSTANT_WEATHER_INDICATORS);
         RecordedBattle_CheckMovesetChanges(B_RECORD_MODE_RECORDING);
 
-        if (WILD_DOUBLE_BATTLE
+        if (IsWildDoubleBattle()
             && gBattleStruct->throwingPokeBall
             && gChosenActionByBattler[GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT)] != B_ACTION_NOTHING_FAINTED)
         {

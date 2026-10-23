@@ -3659,13 +3659,13 @@ static bool32 DoesRoarFail(enum BattlerId battlerAtk, enum BattlerId effectBattl
     if (HasAnyBattleFlags(BATTLE_TYPE_ARENA))
         return TRUE;
 
-    if (WILD_DOUBLE_BATTLE
+    if (IsWildDoubleBattle()
      && IsOnPlayerSide(battlerAtk)
      && !IsOnPlayerSide(effectBattler)
      && IsWholeSideAlive(effectBattler))
         return TRUE;
 
-    if (WILD_DOUBLE_BATTLE
+    if (IsWildDoubleBattle()
      && !IsOnPlayerSide(battlerAtk)
      && !IsOnPlayerSide(effectBattler))
         return TRUE;

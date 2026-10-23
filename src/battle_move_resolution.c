@@ -2929,7 +2929,7 @@ static enum CancelerResult CancelerMoveAnimation(struct BattleCalcValues *cv)
      && cv->moveEffect != EFFECT_SUBSTITUTE
      && cv->moveEffect != EFFECT_ALLY_SWITCH
      // In a wild double battle gotta use the teleport animation if two wild Pokémon are alive.
-     && !(cv->moveEffect == EFFECT_TELEPORT && WILD_DOUBLE_BATTLE && !IsOnPlayerSide(cv->battlerAtk) && IsBattlerAlive(GetPartnerBattler(cv->battlerAtk))))
+     && !(cv->moveEffect == EFFECT_TELEPORT && IsWildDoubleBattle() && !IsOnPlayerSide(cv->battlerAtk) && IsBattlerAlive(GetPartnerBattler(cv->battlerAtk))))
     {
         gBattleScripting.animTurn++;
         gBattleScripting.animTargetsHit++;

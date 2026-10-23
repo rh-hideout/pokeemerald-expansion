@@ -1000,7 +1000,7 @@ static void Cmd_attackanimation(void)
         && effect != EFFECT_SUBSTITUTE
         && effect != EFFECT_ALLY_SWITCH
         // In a wild double battle gotta use the teleport animation if two wild Pokémon are alive.
-        && !(GetMoveEffect(gCurrentMove) == EFFECT_TELEPORT && WILD_DOUBLE_BATTLE && !IsOnPlayerSide(gBattlerAttacker) && IsBattlerAlive(GetPartnerBattler(gBattlerAttacker))))
+        && !(GetMoveEffect(gCurrentMove) == EFFECT_TELEPORT && IsWildDoubleBattle() && !IsOnPlayerSide(gBattlerAttacker) && IsBattlerAlive(GetPartnerBattler(gBattlerAttacker))))
     {
         BattleScriptPush(cmd->nextInstr);
         gBattlescriptCurrInstr = BattleScript_PauseShort;
@@ -4674,7 +4674,7 @@ static void Cmd_forcerandomswitch(void)
       && !IsTrainerBattle()
       && !IsOnPlayerSide(gBattlerAttacker))   // Check opponent's red card activating
     {
-        if (!WILD_DOUBLE_BATTLE)
+        if (!IsWildDoubleBattle())
         {
             // Wild mon with red card will end single battle
             gBattlescriptCurrInstr = BattleScript_RoarSuccessEndBattle;
@@ -4701,11 +4701,11 @@ static void Cmd_forcerandomswitch(void)
     // wild double battles when an opposing Pokémon uses it against one of the two alive player mons
     // wild double battle when a player Pokémon uses it against its partner
     if ((IsTrainerBattle())
-        || (WILD_DOUBLE_BATTLE
+        || (IsWildDoubleBattle()
             && !IsOnPlayerSide(gBattlerAttacker)
             && IsOnPlayerSide(gBattlerTarget)
             && IsWholeSideAlive(gBattlerTarget))
-        || (WILD_DOUBLE_BATTLE
+        || (IsWildDoubleBattle()
             && IsOnPlayerSide(gBattlerAttacker)
             && IsOnPlayerSide(gBattlerTarget))
         || redCardForcedSwitch

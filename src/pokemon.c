@@ -5389,7 +5389,7 @@ void SetWildMonHeldItem(void)
 {
     u16 rnd;
     enum Species species;
-    u16 count = (WILD_DOUBLE_BATTLE) ? 2 : 1;
+    u16 count = (IsWildDoubleBattle()) ? 2 : 1;
     u16 i;
     bool32 itemHeldBoost = CanFirstMonBoostHeldItemRarity();
     u16 chanceNoItem = itemHeldBoost ? 20 : 45;

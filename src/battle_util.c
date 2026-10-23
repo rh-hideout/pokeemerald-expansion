@@ -1797,7 +1797,7 @@ bool32 HasNoMonsToSwitch(enum BattlerId battler, enum PartySlot partyIdBattlerOn
     }
     else if (HasAnyBattleFlags(BATTLE_TYPE_INGAME_PARTNER))
     {
-        if (!isPlayerSide && WILD_DOUBLE_BATTLE)
+        if (!isPlayerSide && IsWildDoubleBattle())
         {
             flankId = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
             playerId = GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT);

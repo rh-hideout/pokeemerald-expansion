@@ -139,7 +139,6 @@ enum BattleSide
                                              | BATTLE_TYPE_LEGENDARY                                                            \
                                              | BATTLE_TYPE_RECORDED | BATTLE_TYPE_TRAINER_HILL | BATTLE_TYPE_SECRET_BASE))
 
-#define WILD_DOUBLE_BATTLE                  ((gBattleTypeFlags & BATTLE_TYPE_DOUBLE && !(gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_TRAINER))))
 #define RECORDED_WILD_BATTLE                ((gBattleTypeFlags & BATTLE_TYPE_RECORDED) && !(gBattleTypeFlags & (BATTLE_TYPE_TRAINER | BATTLE_TYPE_FRONTIER)))
 #define BATTLE_TWO_VS_ONE_OPPONENT          ((gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER && TRAINER_BATTLE_PARAM.opponentB == 0xFFFF))
 #define BATTLE_TYPE_HAS_AI                  (BATTLE_TYPE_TRAINER | BATTLE_TYPE_FIRST_BATTLE | BATTLE_TYPE_SAFARI | BATTLE_TYPE_ROAMER | BATTLE_TYPE_INGAME_PARTNER)
