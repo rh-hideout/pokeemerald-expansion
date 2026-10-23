@@ -3955,7 +3955,7 @@ static void TryTriggerAdditionalEffect(struct BattleCalcValues *cv, const struct
     bool32 failedToTrigger = TRUE;
 
     // By default, onSide effects apply if they applied on the original target/user
-    if (isPrimary || appliedRandomly || gBattleStruct->setEffectOnAlly)
+    if (isPrimary || isAppliedRandomly || gBattleStruct->setEffectOnAlly)
     {
         if (!additionalEffect->self && !cv->isStatusMove)
             cv->battlerDef = effectBattler; // For SetMoveEffect, will be restored to previous value when run again
