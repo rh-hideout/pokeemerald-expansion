@@ -193,7 +193,6 @@ void InitBattleControllers(void)
 
 static void SetBattlerControllerFunc(enum BattlerPosition position, BattleControllerFunc func)
 {
-    DebugPrintf("position %d battler %d controller %d", position, GetBattlerAtPosition(position), gBattlerBattleController[GetBattlerAtPosition(position)]);
     assertf(position < MAX_POSITION_COUNT, "invalid battler position: %d", position);
     gBattlerControllerFuncs[GetBattlerAtPosition(position)] = func;
 }
