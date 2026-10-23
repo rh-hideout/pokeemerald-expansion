@@ -36,6 +36,7 @@
 #include "party_menu.h"
 #include "pokeblock.h"
 #include "pokemon.h"
+#include "safari_zone.h"
 #include "script.h"
 #include "sound.h"
 #include "strings.h"
@@ -1094,6 +1095,11 @@ bool8 CanUseDigOrEscapeRopeOnCurMap(void)
     if (!CheckFollowerNPCFlag(FOLLOWER_NPC_FLAG_CAN_LEAVE_ROUTE))
         return FALSE;
 
+    if (GetSafariZoneFlag() && CannotEscapeSafari())
+    {
+        return FALSE;
+    }
+
     if (gMapHeader.allowEscaping)
         return TRUE;
     else
@@ -1534,7 +1540,7 @@ static void Task_PlayPokeFlute(u8 taskId)
 void ItemUseOutOfBattle_PokeFlute(u8 taskId)
 {
     bool32 wokeSomeoneUp = FALSE;
-    for (enum PartyMon i = PARTY_MON_0; i < CalculatePlayerPartyCount(); i++)
+    for (enum PartySlot i = PARTY_SLOT_0; i < CalculatePlayerPartyCount(); i++)
     {
         if (!ExecuteTableBasedItemEffect(&gParties[B_TRAINER_PLAYER][i], ITEM_AWAKENING, i, 0))
             wokeSomeoneUp = TRUE;

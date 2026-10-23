@@ -201,7 +201,11 @@ static void HandleSetEffectAbsorb(struct BattleCalcValues *cv, struct SetEffect 
             return;
         }
 
-        s32 healAmount = (gBattleStruct->moveDamage[cv->battlerDef] * absorbPercentage / 100);
+        s32 rounding = GetConfig(B_HP_RESTORATION_ROUNDING) >= GEN_5 ? 1 : 0;
+        s32 damage = gBattleStruct->moveDamage[cv->battlerDef];
+
+        s32 healAmount = (damage + rounding) * absorbPercentage / 100;
+
         healAmount = GetDrainedBigRootHp(cv->battlerAtk, healAmount);
         gEffectBattler = cv->battlerAtk;
         gBattlerAbility = gBattleScripting.battler = cv->battlerDef;
@@ -665,19 +669,18 @@ static void HandleSetEffectRecoilHp25(struct BattleCalcValues *cv, struct SetEff
     gBattlescriptCurrInstr = BattleScript_MoveEffectRecoilHP25;
 }
 
-static void HandleSetEffectTrapBoth(struct BattleCalcValues *cv, struct SetEffect *se)
+static void HandleSetEffectJawLock(struct BattleCalcValues *cv, struct SetEffect *se)
 {
-    if (!(gBattleMons[se->effectBattler].volatiles.escapePrevention || gBattleMons[cv->battlerAtk].volatiles.escapePrevention))
+    if (gBattleMons[cv->battlerAtk].volatiles.escapePrevention
+     || gBattleMons[se->effectBattler].volatiles.escapePrevention
+     || IsBattlerJawLocked(cv->battlerAtk)
+     || IsBattlerJawLocked(se->effectBattler))
     {
-        if (!gBattleMons[se->effectBattler].volatiles.escapePrevention)
-            gBattleMons[se->effectBattler].volatiles.battlerPreventingEscape = cv->battlerAtk;
-
-        if (!gBattleMons[cv->battlerAtk].volatiles.escapePrevention)
-            gBattleMons[cv->battlerAtk].volatiles.battlerPreventingEscape = se->effectBattler;
-
-        gBattleMons[se->effectBattler].volatiles.escapePrevention = TRUE;
-        gBattleMons[cv->battlerAtk].volatiles.escapePrevention = TRUE;
-
+        SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
+    }
+    else if (!cv->onlyChecking)
+    {
+        gBattleMons[cv->battlerAtk].volatiles.jawLock |= 1u << se->effectBattler;
         BattleScriptPush(se->script);
         gBattlescriptCurrInstr = BattleScript_BothCanNoLongerEscape;
     }
@@ -958,9 +961,15 @@ static void HandleSetEffectReflect(struct BattleCalcValues *cv, struct SetEffect
         gSideStatuses[side] |= SIDE_STATUS_REFLECT;
 
         if (cv->holdEffects[se->effectBattler] == HOLD_EFFECT_LIGHT_CLAY)
+        {
             gSideTimers[side].reflectTimer = 8;
+            gSideTimers[side].reflectTimerTotal = 8;
+        }
         else
+        {
             gSideTimers[side].reflectTimer = 5;
+            gSideTimers[side].reflectTimerTotal = 5;
+        }
 
         PrepareStringBattleWithWait(STRINGID_PKMNRAISEDDEF, se->effectBattler);
         BattleScriptPushAndSet(se->script, BattleScript_WaitMessage);
@@ -980,9 +989,15 @@ static void HandleSetEffectLightScreen(struct BattleCalcValues *cv, struct SetEf
         gSideStatuses[side] |= SIDE_STATUS_LIGHTSCREEN;
 
         if (cv->holdEffects[se->effectBattler] == HOLD_EFFECT_LIGHT_CLAY)
+        {
             gSideTimers[side].lightscreenTimer = 8;
+            gSideTimers[side].lightscreenTimerTotal = 8;
+        }
         else
+        {
             gSideTimers[side].lightscreenTimer = 5;
+            gSideTimers[side].lightscreenTimerTotal = 5;
+        }
 
         PrepareStringBattleWithWait(STRINGID_PKMNRAISEDSPDEF, se->effectBattler);
         BattleScriptPushAndSet(se->script, BattleScript_WaitMessage);
@@ -1037,8 +1052,8 @@ static void HandleSetEffectEerieSpell(struct BattleCalcValues *cv, struct SetEff
         if (gBattleMons[se->effectBattler].pp[i] == 0)
             CancelMultiTurnMoves(se->effectBattler);
 
-        PrepareStringBattleWithWait(STRINGID_PKMNREDUCEDPP, cv->battlerAtk);
-        BattleScriptPushAndSet(se->script, BattleScript_WaitMessage);
+        gBattleScripting.savedStringId = STRINGID_PKMNREDUCEDPP;
+        BattleScriptPushAndSet(se->script, BattleScript_PrintSavedMessage);
     }
 }
 
@@ -1545,9 +1560,15 @@ static void HandleSetEffectAuroraVeil(struct BattleCalcValues *cv, struct SetEff
         gSideStatuses[side] |= SIDE_STATUS_AURORA_VEIL;
 
         if (cv->holdEffects[se->effectBattler] == HOLD_EFFECT_LIGHT_CLAY)
+        {
             gSideTimers[side].auroraVeilTimer = 8;
+            gSideTimers[side].auroraVeilTimerTotal = 8;
+        }
         else
+        {
             gSideTimers[side].auroraVeilTimer = 5;
+            gSideTimers[side].auroraVeilTimerTotal = 5;
+        }
 
         PrepareStringBattleWithWait(STRINGID_PKMNAURORAVEIL, se->effectBattler);
         BattleScriptPushAndSet(se->script, BattleScript_WaitMessage);
@@ -1579,8 +1600,8 @@ static void HandleSetEffectRecycle(struct BattleCalcValues *cv, struct SetEffect
             );
         MarkBattlerForControllerExec(se->effectBattler);
 
-        PrepareStringBattleWithWait(STRINGID_XFOUNDONEY, se->effectBattler);
-        BattleScriptPushAndSet(se->script, BattleScript_WaitMessage);
+        gBattleScripting.savedStringId = STRINGID_XFOUNDONEY;
+        BattleScriptPushAndSet(se->script, BattleScript_PrintSavedMessage);
     }
 }
 
@@ -1663,8 +1684,8 @@ static void HandleSetEffectSpite(struct BattleCalcValues *cv, struct SetEffect *
         if (gBattleMons[se->effectBattler].pp[moveSlot] == 0)
             CancelMultiTurnMoves(se->effectBattler);
 
-        PrepareStringBattleWithWait(STRINGID_PKMNREDUCEDPP, se->effectBattler);
-        BattleScriptPushAndSet(se->script, BattleScript_WaitMessage);
+        gBattleScripting.savedStringId = STRINGID_PKMNREDUCEDPP;
+        BattleScriptPushAndSet(se->script, BattleScript_PrintSavedMessage);
     }
 }
 
@@ -2624,9 +2645,8 @@ static void HandleSetEffectSketch(struct BattleCalcValues *cv, struct SetEffect 
         MarkBattlerForControllerExec(cv->battlerAtk);
 
         PREPARE_MOVE_BUFFER(gBattleTextBuff1, moveToSketch)
-
-        PrepareStringBattleWithWait(STRINGID_PKMNSKETCHEDMOVE, cv->battlerAtk);
-        BattleScriptPushAndSet(se->script, BattleScript_WaitMessage);
+        gBattleScripting.savedStringId = STRINGID_PKMNSKETCHEDMOVE;
+        BattleScriptPushAndSet(se->script, BattleScript_PrintSavedMessage);
     }
 }
 
@@ -3611,7 +3631,6 @@ static void HandleSetEffectBestow(struct BattleCalcValues *cv, struct SetEffect 
     else if (!cv->onlyChecking)
     {
         BestowItem(cv->battlerAtk, se->effectBattler);
-        PrepareStringBattleWithWait(STRINGID_BESTOWITEMGIVING, cv->battlerAtk);
         BattleScriptPushAndSet(se->script, BattleScript_Bestow);
     }
 }
@@ -3630,7 +3649,7 @@ static void HandleSetEffectStickyWeb(struct BattleCalcValues *cv, struct SetEffe
         gSideTimers[effectSide].stickyWebBattlerId = cv->battlerAtk; // For Mirror Armor
         gSideTimers[effectSide].stickyWebBattlerSide = GetBattlerSide(cv->battlerAtk); // For Court Change/Defiant - set this to the user's side
 
-        PrepareStringBattle(STRINGID_STICKYWEBUSED, se->effectBattler);
+        PrepareStringBattleWithWait(STRINGID_STICKYWEBUSED, se->effectBattler);
         BattleScriptPushAndSet(se->script, BattleScript_WaitMessage);
     }
 }
@@ -3712,7 +3731,7 @@ static void HandleSetEffectTopsyTurvy(struct BattleCalcValues *cv, struct SetEff
             gBattleMons[se->effectBattler].statStages[stat] = MAX_STAT_STAGE - gBattleMons[se->effectBattler].statStages[stat] + MIN_STAT_STAGE;
         }
 
-        PrepareStringBattle(STRINGID_TOPSYTURVYSWITCHEDSTATS, se->effectBattler);
+        PrepareStringBattleWithWait(STRINGID_TOPSYTURVYSWITCHEDSTATS, se->effectBattler);
         BattleScriptPushAndSet(se->script, BattleScript_WaitMessage);
     }
 }
@@ -3820,6 +3839,9 @@ static void HandleSetEffectCourtChange(struct BattleCalcValues *cv, struct SetEf
     COURTCHANGE_SWAP(SIDE_STATUS_SAFEGUARD, safeguardTimer, temp);
     COURTCHANGE_SWAP(SIDE_STATUS_AURORA_VEIL, auroraVeilTimer, temp);
     COURTCHANGE_SWAP(SIDE_STATUS_TAILWIND, tailwindTimer, temp);
+    SWAP(sideTimerPlayer->reflectTimerTotal, sideTimerOpp->reflectTimerTotal, temp);
+    SWAP(sideTimerPlayer->lightscreenTimerTotal, sideTimerOpp->lightscreenTimerTotal, temp);
+    SWAP(sideTimerPlayer->auroraVeilTimerTotal, sideTimerOpp->auroraVeilTimerTotal, temp);
     // Lucky Chant doesn't exist in gen 8, but seems like it should be affected by Court Change
     COURTCHANGE_SWAP(SIDE_STATUS_LUCKY_CHANT, luckyChantTimer, temp);
     COURTCHANGE_SWAP(SIDE_STATUS_DAMAGE_NON_TYPES, damageNonTypesTimer, temp);
@@ -4194,7 +4216,7 @@ static void (*const sSetEffectHandlers[])(struct BattleCalcValues *cv, struct Se
     [MOVE_EFFECT_INCINERATE] = HandleSetEffectIncinerate,
     [MOVE_EFFECT_BUG_BITE] = HandleSetEffectBugBite,
     [MOVE_EFFECT_RECOIL_HP_25] = HandleSetEffectRecoilHp25,
-    [MOVE_EFFECT_TRAP_BOTH] = HandleSetEffectTrapBoth,
+    [MOVE_EFFECT_JAW_LOCK] = HandleSetEffectJawLock,
     [MOVE_EFFECT_ROUND] = HandleSetEffectRound,
     [MOVE_EFFECT_SYRUP_BOMB] = HandleSetEffectSyrupBomb,
     [MOVE_EFFECT_SECRET_POWER] = HandleSetEffectSecretPower,
@@ -4545,7 +4567,7 @@ enum StringID GetStatus1String(u32 status1)
 
 static s32 GetMaxHpWithRounding(enum BattlerId battler)
 {
-    if (B_UPDATED_MOVE_DATA >= GEN_5)
+    if (GetConfig(B_HP_RESTORATION_ROUNDING) >= GEN_5)
         return GetNonDynamaxMaxHP(battler) + 1;
     return GetNonDynamaxMaxHP(battler);
 }

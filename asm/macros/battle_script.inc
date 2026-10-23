@@ -65,10 +65,6 @@
 	.4byte \ptr
 	.endm
 
-	.macro setadditionaleffects
-	.byte B_SCR_OP_SETADDITIONALEFFECTS
-	.endm
-
 	.macro seteffectprimary battler:req, effectBattler:req, moveEffect=0
 	.if \moveEffect != 0
 		setmoveeffect \moveEffect
@@ -977,61 +973,6 @@
 	.4byte \jumpInstr
 	.endm
 
-	@ Used to active a different Max Move effects.
-	.macro setmaxmoveeffect
-	callnative BS_SetMaxMoveEffect
-	.endm
-
-	.macro trysetparalysis, ptr:req
-	callnative BS_TrySetParalysis
-	.4byte \ptr
-	.endm
-
-	.macro trysetpoison, ptr:req
-	callnative BS_TrySetPoison
-	.4byte \ptr
-	.endm
-
-	.macro trysetpoisonparalysis, ptr:req
-	callnative BS_TrySetPoisonParalyzis
-	.4byte \ptr
-	.endm
-
-	.macro tryseteffectspore, ptr:req
-	callnative BS_TrySetEffectSpore
-	.4byte \ptr
-	.endm
-
-	.macro trysetconfusion, ptr:req
-	callnative BS_TrySetConfusion
-	.4byte \ptr
-	.endm
-
-	.macro trysetinfatuation, ptr:req
-	callnative BS_TrySetInfatuation
-	.4byte \ptr
-	.endm
-
-	.macro trysetescapeprevention, ptr:req
-	callnative BS_TrySetEscapePrevention
-	.4byte \ptr
-	.endm
-
-	.macro trysettorment, ptr:req
-	callnative BS_TrySetTorment
-	.4byte \ptr
-	.endm
-
-	.macro tryhealsixthhealth, ptr:req
-	callnative BS_HealOneSixth
-	.4byte \ptr
-	.endm
-
-	.macro tryrecycleberry, ptr:req
-	callnative BS_TryRecycleBerry
-	.4byte \ptr
-	.endm
-
 	.macro updatedynamax
 	callnative BS_UpdateDynamax
 	.endm
@@ -1692,6 +1633,11 @@
 
 	.macro multihitplurality
 	callnative BS_MultiHitPlurality
+	.endm
+
+	.macro jumpifnotendofsafari jumpInstr:req
+	callnative BS_JumpIfNotEndOfSafari
+	.4byte \jumpInstr
 	.endm
 
 	.macro jumpifterrain comparison:req, terrain:req, jumpInstr:req

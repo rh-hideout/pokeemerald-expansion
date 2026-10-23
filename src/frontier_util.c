@@ -2613,7 +2613,7 @@ void CreateFrontierBrainPokemon(void)
     s32 symbol = GetFronterBrainSymbol();
 
     if (facility == FRONTIER_FACILITY_DOME)
-        selectedMonBits = GetDomeTrainerSelectedMons(TrainerIdToDomeTournamentId(TRAINER_FRONTIER_BRAIN));
+        selectedMonBits = GetDomeTrainerSelectedMons(TRAINER_FRONTIER_BRAIN);
     else
         selectedMonBits = (1 << FRONTIER_PARTY_SIZE) - 1; // all 3 mons selected
 

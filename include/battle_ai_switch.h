@@ -60,6 +60,11 @@ struct SwitchAiContext
     struct Pokemon *party;
     uq4_12_t typeMatchup;
 
+    // Mon selection
+    enum PartySlot dynamicSingleId;
+    enum PartySlot partyMonIndex;
+    enum SwitchType switchType;
+
     // Flags
     u32 canBattlerWin1v1:1;
     u32 hasEffectiveMove:1;
@@ -69,20 +74,22 @@ struct SwitchAiContext
 
     // Party mon flags
     u32 eligiblePartyMons:6;
-
-    u32 padding2:21;
+    u32 dynamicMultipleIds:6;
+    u32 padding2:15;
 };
 
-// Dynamic switch function
+// Dynamic switch functions
 typedef bool32 (*AiSwitchFunc)(struct SwitchAiContext*);
 extern AiSwitchFunc gDynamicAiSwitchFunc;
+typedef void (*AiMonChoiceFunc)(struct SwitchAiContext*);
+extern AiMonChoiceFunc gDynamicAiMonChoiceFunc;
 
-enum PartyMon GetMostSuitableMonToSwitchInto(enum BattlerId battler, enum SwitchType switchType);
+enum PartySlot GetMostSuitableMonToSwitchInto(enum BattlerId battler, enum SwitchType switchType);
 bool32 ShouldSwitch(enum BattlerId battler);
 void ModifySwitchAfterMoveScoring(enum BattlerId battler);
-enum PartyMon AI_SelectRevivalBlessingMon(enum BattlerId battler);
+enum PartySlot AI_SelectRevivalBlessingMon(enum BattlerId battler);
 bool32 IsSwitchinValid(enum BattlerId battler);
-bool32 IsAceMon(enum BattlerId battler, enum PartyMon monPartyId);
+bool32 IsAceMon(enum BattlerId battler, enum PartySlot monPartyId);
 uq4_12_t GetBattlerTypeMatchup(enum BattlerId opposingBattler, enum BattlerId battler);
 uq4_12_t GetTypeMatchupAgainstTypes(enum BattlerId opposingBattler, enum Type defType1, enum Type defType2);
 bool32 CanBattlerWin1v1(u32 hitsToKOAI, u32 hitsToKOPlayer, bool32 isBattlerFirst);

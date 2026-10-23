@@ -31,7 +31,7 @@ struct __attribute__((packed, aligned(2))) BattleMoveEffect
 #define ADDITIONAL_EFFECTS(...) EFFECTS_ARR( __VA_ARGS__ ), .numAdditionalEffects = ARRAY_COUNT(EFFECTS_ARR( __VA_ARGS__ ))
 
 #define STAT_FIELD(stat) .stat = 1,
-#define STATS(...) {.statField = (const struct StatField){RECURSIVELY(R_FOR_EACH(STAT_FIELD, __VA_ARGS__))}}
+#define STATS(...) {.statField = {RECURSIVELY(R_FOR_EACH(STAT_FIELD, __VA_ARGS__))}}
 #define STAT_SWAP_OFFENSIVE STATS(atk, spatk)
 #define STAT_SWAP_DEFENSIVE STATS(def, spdef)
 #define STAT_SWAP_ALL       STATS(atk, def, spatk, spdef, speed, acc, evasion)
@@ -648,7 +648,7 @@ static inline u32 GetTwoTurnMoveWeather(enum Move moveId)
 {
     moveId = SanitizeMoveId(moveId);
     enum BattleMoveEffects effect = gMovesInfo[moveId].effect;
-    assertf(effect == EFFECT_TWO_TURNS_ATTACK || effect == EFFECT_SOLAR_BEAM, "not a two-turn move with weather: %S", gMovesInfo[moveId].name);
+    assertf(effect == EFFECT_TWO_TURNS_ATTACK || effect == EFFECT_SOLAR_BEAM || effect == EFFECT_SEMI_INVULNERABLE || effect == EFFECT_GEOMANCY, "not a two-turn move with weather: %S", gMovesInfo[moveId].name);
     return gMovesInfo[moveId].argument.twoTurnAttack.weather;
 }
 

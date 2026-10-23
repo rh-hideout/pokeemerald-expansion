@@ -550,6 +550,11 @@ BattleScript_WaitMessage::
 	waitmessage B_WAIT_TIME_LONG
 	return
 
+BattleScript_PrintSavedMessage::
+	printsavedstring
+	waitmessage B_WAIT_TIME_LONG
+	return
+
 BattleScript_MoveEffectSubstitute::
 	healthbarupdate BS_EFFECT_BATTLER
 	datahpupdate BS_EFFECT_BATTLER, ASSURANCE_IGNORE
@@ -1107,7 +1112,6 @@ BattleScript_PowerHerbActivation::
 BattleScript_TwoTurnMoveCharging::
 	waitmessage B_WAIT_TIME_LONG
 	twoturnmoveschargestringandanimation
-	setadditionaleffects @ only onChargeTurnOnly effects will work here
 	return
 
 BattleScript_TwoTurnMovesSecondTurnRet:

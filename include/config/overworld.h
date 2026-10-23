@@ -13,6 +13,9 @@
 #define OW_DEFOG_FIELD_MOVE             FALSE      // If enabled, Defog can be used as a Field Move as seen in DPPt.
 #define OW_ROCK_CLIMB_FIELD_MOVE        FALSE      // If enabled, Rock Climb can be used as a Field Move as seen in DPPt.
 #define OW_CHOOSE_FROM_PC_AND_PARTY     TRUE       // If enabled, NPCs like move tutors or trainers asking for trade will let you pick a Pokémon from your PC or party instead of just your party
+#define OW_ROCK_SMASH_ITEMS             GEN_3      // From Gen4, using Rock Smash on rocks can yield items. From Gen6, using Rock Smash on rocks yields items with updated mechanics. Configure loot tables in src/data/rock_smash_items.h
+#define OW_ROCK_SMASH_ITEMS_USE_DEFAULT_CHANCE    10   // Only used when OW_ROCK_SMASH_ITEMS is set to GEN_4, assume the default value for rock smash item chance (0) means this number instead. Setting this config to 0 means no rock will give items unless given an explicit item chance
+
 
 // Item Obtain Description Box
 #define OW_ITEM_DESCRIPTIONS_OFF        0   // never show descriptions
@@ -170,5 +173,11 @@
 
 // Script Config
 #define OW_CHECK_FOR_TOTAL_EVS TRUE        // If FALSE, givemon and createmon will not check for total EVs when generating a new Pokemon
+
+// Safari Config
+#define OW_ALLOW_SAFARI_SAVING FALSE    // If TRUE, Safari data will be added to the savefile and you will be allowed to save during safaris
+#define OW_DISABLE_POKEFEEDERS IS_FRLG  // Make pokefeeders unusable but free 160 bytes of EWRAM (or save data if OW_ALLOW_SAFARI_SAVING if TRUE), TRUE by default for FRLG because there is no pokefeeders in that game
+#define OW_ALLOW_CRITICAL_CAPTURE_SAFARI TRUE // If TRUE, critical capture can occur during safaris (you still need the general critical capture config B_CRITICAL_CAPTURE to be enabled)
+#define OW_POKEFEEDER_FORCE_NATURE_CHANCE 80 // Percentage chance for an active pokefeeder in range to affect the nature of the encountered Pokemon
 
 #endif // GUARD_CONFIG_OVERWORLD_H

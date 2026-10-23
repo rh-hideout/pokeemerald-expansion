@@ -139,9 +139,13 @@ void UpdateAbilityPopup(enum BattlerId battlerId);
 void CategoryIcons_LoadSpritesGfx(void);
 void TryToAddMoveInfoWindow(void);
 void TryToHideMoveInfoWindow(void);
+void TryToAddBattleStatusHint(void);
+void TryToHideBattleStatusHint(void);
 void TryAddPokeballIconToHealthbox(u8 healthboxSpriteId, bool8 noStatus);
 void UpdateNickInHealthbox(u8 healthboxSpriteId, struct Pokemon *mon);
 void CreateItemPopUp(enum BattlerId battlerId);
 void FreeAbilityPopUpGfx(void);
+void ShowWeatherIndicator(bool32 instant);
+void HideWeatherIndicator(bool32 instant);
 
 #endif // GUARD_BATTLE_INTERFACE_H

@@ -366,6 +366,7 @@ bool32 EndOrContinueWeather(void)
     if (gBattleStruct->weatherDuration > 0 && --gBattleStruct->weatherDuration == 0)
     {
         gBattleWeather = B_WEATHER_NONE;
+        gBattleStruct->weatherDurationTotal = 0;
         for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
         {
             gBattleMons[battler].volatiles.weatherAbilityDone = FALSE;
@@ -804,65 +805,6 @@ void HandleAction_Run(void)
     }
 }
 
-#define safariBaitThrowCounter safariPkblThrowCounter
-#define safariRockThrowCounter safariGoNearCounter
-
-void HandleAction_WatchesCarefully(void)
-{
-    gBattlerAttacker = gBattlerByTurnOrder[gCurrentTurnActionNumber];
-    gBattle_BG0_X = 0;
-    gBattle_BG0_Y = 0;
-    if (IS_FRLG)
-    {
-        if (gBattleStruct->safariRockThrowCounter != 0)
-        {
-            gBattleStruct->safariRockThrowCounter--;
-            if (gBattleStruct->safariRockThrowCounter == 0)
-            {
-                gBattleStruct->safariCatchFactor = gSpeciesInfo[GetMonData(gParties[B_TRAINER_OPPONENT_A], MON_DATA_SPECIES)].catchRate * 100 / 1275;
-                gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_MON_WATCHING;
-            }
-            else
-            {
-                gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_MON_ANGRY;
-            }
-        }
-        else
-        {
-            if (gBattleStruct->safariBaitThrowCounter != 0)
-            {
-                --gBattleStruct->safariBaitThrowCounter;
-                if (gBattleStruct->safariBaitThrowCounter == 0)
-                    gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_MON_WATCHING;
-                else
-                    gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_MON_EATING;
-            }
-            else
-            {
-                gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_MON_WATCHING;
-            }
-        }
-        gBattlescriptCurrInstr = gBattlescriptsForSafariActions[0];
-    }
-    else
-    {
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_MON_WATCHING;
-        gBattlescriptCurrInstr = gBattlescriptsForSafariActions[0];
-    }
-    gCurrentActionFuncId = B_ACTION_EXEC_SCRIPT;
-}
-
-void HandleAction_SafariZoneBallThrow(void)
-{
-    gBattlerAttacker = gBattlerByTurnOrder[gCurrentTurnActionNumber];
-    gBattle_BG0_X = 0;
-    gBattle_BG0_Y = 0;
-    gNumSafariBalls--;
-    gLastUsedItem = ITEM_SAFARI_BALL;
-    gBattlescriptCurrInstr = BattleScript_SafariBallThrow;
-    gCurrentActionFuncId = B_ACTION_EXEC_SCRIPT;
-}
-
 void HandleAction_ThrowBall(void)
 {
     gBattlerAttacker = gBattlerByTurnOrder[gCurrentTurnActionNumber];
@@ -873,114 +815,6 @@ void HandleAction_ThrowBall(void)
         RemoveBagItem(gLastUsedItem, 1);
     gBattlescriptCurrInstr = BattleScript_BallThrow;
     gCurrentActionFuncId = B_ACTION_EXEC_SCRIPT;
-}
-
-void HandleAction_ThrowPokeblock(void)
-{
-    gBattlerAttacker = gBattlerByTurnOrder[gCurrentTurnActionNumber];
-    gBattle_BG0_X = 0;
-    gBattle_BG0_Y = 0;
-
-    if (IS_FRLG)
-    {
-        // throw bait
-        gBattleStruct->safariBaitThrowCounter += Random() % 5 + 2;
-        if (gBattleStruct->safariBaitThrowCounter > 6)
-            gBattleStruct->safariBaitThrowCounter = 6;
-
-        gBattleStruct->safariRockThrowCounter = 0;
-        gBattleStruct->safariCatchFactor >>= 1;
-
-        if (gBattleStruct->safariCatchFactor <= 2)
-            gBattleStruct->safariCatchFactor = 3;
-
-        gBattlescriptCurrInstr = gBattlescriptsForSafariActions[5];
-    }
-    else
-    {
-        // throw pokeblock
-        gBattleCommunication[MULTISTRING_CHOOSER] = gBattleResources->bufferB[gBattlerAttacker][1] - 1;
-        gLastUsedItem = gBattleResources->bufferB[gBattlerAttacker][2];
-
-        if (gBattleResults.pokeblockThrows < 255)
-            gBattleResults.pokeblockThrows++;
-        if (gBattleStruct->safariPkblThrowCounter < 3)
-            gBattleStruct->safariPkblThrowCounter++;
-        if (gBattleStruct->safariEscapeFactor > 1)
-        {
-            // BUG: safariEscapeFactor can become 0 below. This causes the pokeblock throw glitch.
-            #ifdef BUGFIX
-            if (gBattleStruct->safariEscapeFactor <= sPkblToEscapeFactor[gBattleStruct->safariPkblThrowCounter][gBattleCommunication[MULTISTRING_CHOOSER]])
-            #else
-            if (gBattleStruct->safariEscapeFactor < sPkblToEscapeFactor[gBattleStruct->safariPkblThrowCounter][gBattleCommunication[MULTISTRING_CHOOSER]])
-            #endif
-                gBattleStruct->safariEscapeFactor = 1;
-            else
-                gBattleStruct->safariEscapeFactor -= sPkblToEscapeFactor[gBattleStruct->safariPkblThrowCounter][gBattleCommunication[MULTISTRING_CHOOSER]];
-        }
-
-        gBattlescriptCurrInstr = gBattlescriptsForSafariActions[2];
-    }
-
-    gCurrentActionFuncId = B_ACTION_EXEC_SCRIPT;
-}
-
-void HandleAction_GoNear(void)
-{
-    gBattlerAttacker = gBattlerByTurnOrder[gCurrentTurnActionNumber];
-    gBattle_BG0_X = 0;
-    gBattle_BG0_Y = 0;
-
-    if (IS_FRLG)
-    {
-        // throw rock
-        gBattleStruct->safariRockThrowCounter += Random() % 5 + 2;
-        if (gBattleStruct->safariRockThrowCounter > 6)
-            gBattleStruct->safariRockThrowCounter = 6;
-
-        gBattleStruct->safariBaitThrowCounter = 0;
-        gBattleStruct->safariCatchFactor <<= 1;
-
-        if (gBattleStruct->safariCatchFactor > 20)
-            gBattleStruct->safariCatchFactor = 20;
-
-        gBattlescriptCurrInstr = gBattlescriptsForSafariActions[4];
-    }
-    else
-    {
-        // go near
-        gBattleStruct->safariCatchFactor += sGoNearCounterToCatchFactor[gBattleStruct->safariGoNearCounter];
-        if (gBattleStruct->safariCatchFactor > 20)
-            gBattleStruct->safariCatchFactor = 20;
-
-        gBattleStruct->safariEscapeFactor += sGoNearCounterToEscapeFactor[gBattleStruct->safariGoNearCounter];
-        if (gBattleStruct->safariEscapeFactor > 20)
-            gBattleStruct->safariEscapeFactor = 20;
-
-        if (gBattleStruct->safariGoNearCounter < 3)
-        {
-            gBattleStruct->safariGoNearCounter++;
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CREPT_CLOSER;
-        }
-        else
-        {
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CANT_GET_CLOSER;
-        }
-        gBattlescriptCurrInstr = gBattlescriptsForSafariActions[1];
-    }
-
-    gCurrentActionFuncId = B_ACTION_EXEC_SCRIPT;
-}
-
-#undef safariBaitThrowCounter
-#undef safariRockThrowCounter
-
-void HandleAction_SafariZoneRun(void)
-{
-    gBattlerAttacker = gBattlerByTurnOrder[gCurrentTurnActionNumber];
-    PlaySE(SE_FLEE);
-    gCurrentTurnActionNumber = gBattlersCount;
-    gBattleOutcome = B_OUTCOME_RAN;
 }
 
 void HandleAction_WallyBallThrow(void)
@@ -1015,7 +849,7 @@ void HandleAction_ActionFinished(void)
 {
     u32 i, j;
     bool32 afterYouActive = gSpecialStatuses[gBattlerByTurnOrder[gCurrentTurnActionNumber + 1]].afterYou;
-    gBattleStruct->monToSwitchIntoId[gBattlerByTurnOrder[gCurrentTurnActionNumber]] = gSelectedMonPartyId = PARTY_MON_NONE;
+    gBattleStruct->monToSwitchIntoId[gBattlerByTurnOrder[gCurrentTurnActionNumber]] = gSelectedMonPartyId = PARTY_SLOT_NONE;
     gCurrentTurnActionNumber++;
     gCurrentActionFuncId = gActionsByTurnOrder[gCurrentTurnActionNumber];
     memset(&gSpecialStatuses, 0, sizeof(gSpecialStatuses));
@@ -1839,7 +1673,7 @@ bool32 HandleFaintedMonActions(void)
             gBattleStruct->eventState.faintedAction++;
             for (enum BattlerId i = 0; i < gBattlersCount; i++)
             {
-                if (gAbsentBattlerFlags & (1u << i) && !HasNoMonsToSwitch(i, PARTY_MON_NONE, PARTY_MON_NONE))
+                if (gAbsentBattlerFlags & (1u << i) && !HasNoMonsToSwitch(i, PARTY_SLOT_NONE, PARTY_SLOT_NONE))
                     gAbsentBattlerFlags &= ~(1u << i);
             }
             [[fallthrough]];
@@ -1914,9 +1748,9 @@ bool32 HandleFaintedMonActions(void)
     return FALSE;
 }
 
-bool32 HasNoMonsToSwitch(enum BattlerId battler, enum PartyMon partyIdBattlerOn1, enum PartyMon partyIdBattlerOn2)
+bool32 HasNoMonsToSwitch(enum BattlerId battler, enum PartySlot partyIdBattlerOn1, enum PartySlot partyIdBattlerOn2)
 {
-    enum PartyMon i;
+    enum PartySlot i;
     enum BattlerId playerId, flankId;
     s32 lastId = GetAILastPartyIndex(battler); // + 1
     struct Pokemon *party = GetBattlerParty(battler);
@@ -1947,9 +1781,9 @@ bool32 HasNoMonsToSwitch(enum BattlerId battler, enum PartyMon partyIdBattlerOn1
                 return TRUE;
         }
 
-        if (partyIdBattlerOn1 == PARTY_MON_NONE)
+        if (partyIdBattlerOn1 == PARTY_SLOT_NONE)
             partyIdBattlerOn1 = gBattlerPartyIndexes[flankId];
-        if (partyIdBattlerOn2 == PARTY_MON_NONE)
+        if (partyIdBattlerOn2 == PARTY_SLOT_NONE)
             partyIdBattlerOn2 = gBattlerPartyIndexes[playerId];
 
         for (i = 0; i < lastId; i++)
@@ -1968,9 +1802,9 @@ bool32 HasNoMonsToSwitch(enum BattlerId battler, enum PartyMon partyIdBattlerOn1
             flankId = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
             playerId = GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT);
 
-            if (partyIdBattlerOn1 == PARTY_MON_NONE)
+            if (partyIdBattlerOn1 == PARTY_SLOT_NONE)
                 partyIdBattlerOn1 = gBattlerPartyIndexes[flankId];
-            if (partyIdBattlerOn2 == PARTY_MON_NONE)
+            if (partyIdBattlerOn2 == PARTY_SLOT_NONE)
                 partyIdBattlerOn2 = gBattlerPartyIndexes[playerId];
 
             for (i = 0; i < lastId; i++)
@@ -2023,9 +1857,9 @@ bool32 HasNoMonsToSwitch(enum BattlerId battler, enum PartyMon partyIdBattlerOn1
             playerId = GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT);
         }
 
-        if (partyIdBattlerOn1 == PARTY_MON_NONE)
+        if (partyIdBattlerOn1 == PARTY_SLOT_NONE)
             partyIdBattlerOn1 = gBattlerPartyIndexes[flankId];
-        if (partyIdBattlerOn2 == PARTY_MON_NONE)
+        if (partyIdBattlerOn2 == PARTY_SLOT_NONE)
             partyIdBattlerOn2 = gBattlerPartyIndexes[playerId];
 
         for (i = 0; i < lastId; i++)
@@ -2085,6 +1919,8 @@ enum WeatherFailure TryChangeBattleWeather(enum BattlerId battler, u32 battleWea
     if (GetConfig(B_ABILITY_WEATHER) < GEN_6 && ability != ABILITY_NONE)
     {
         gBattleWeather = gBattleWeatherInfo[battleWeatherId].flag;
+        gBattleStruct->weatherDuration = 0;
+        gBattleStruct->weatherDurationTotal = 0;
     }
     else
     {
@@ -2097,7 +1933,9 @@ enum WeatherFailure TryChangeBattleWeather(enum BattlerId battler, u32 battleWea
             gBattleStruct->weatherDuration = 8;
         else
             gBattleStruct->weatherDuration = 5;
+        gBattleStruct->weatherDurationTotal = gBattleStruct->weatherDuration;
     }
+    gBattleStruct->weatherSide = GetBattlerSide(battler);
 
     if (ability != ABILITY_NONE) // Weather started by Ability
     {
@@ -2140,6 +1978,8 @@ bool32 TryChangeBattleTerrain(enum BattlerId battler, enum BattleTerrain terrain
             gFieldTimers.terrainTimer = 8;
         else
             gFieldTimers.terrainTimer = 5;
+        gFieldTimers.terrainTimerTotal = gFieldTimers.terrainTimer;
+        gFieldTimers.terrainSide = GetBattlerSide(battler);
         gBattleScripting.battler = battler;
         return TRUE;
     }
@@ -5252,7 +5092,7 @@ u32 IsAbilityPreventingEscape(enum BattlerId battler)
     return 0;
 }
 
-bool32 CanBattlerEscape(enum BattlerId battler) // no ability check
+bool32 CanBattlerEscape(enum BattlerId battler)
 {
     enum Ability ability = GetBattlerAbility(battler);
     if (gBattleStruct->battlerState[battler].commanderSpecies != SPECIES_NONE)
@@ -5262,6 +5102,8 @@ bool32 CanBattlerEscape(enum BattlerId battler) // no ability check
     else if (GetConfig(B_RUN_AWAY) >= GEN_CHAMPIONS && ability == ABILITY_RUN_AWAY)
         return TRUE;
     else if (gBattleMons[battler].volatiles.escapePrevention)
+        return FALSE;
+    else if (IsBattlerJawLocked(battler))
         return FALSE;
     else if (gBattleMons[battler].volatiles.wrapped)
         return FALSE;
@@ -8979,7 +8821,7 @@ static bool32 CanBattlerFormChange(enum BattlerId battler, enum FormChanges meth
     return DoesSpeciesHaveFormChangeMethod(gBattleMons[battler].species, method);
 }
 
-bool32 TryRevertPartyMonFormChange(enum PartyMon partyIndex)
+bool32 TryRevertPartyMonFormChange(enum PartySlot partyIndex)
 {
      bool32 changedForm = FALSE;
 
@@ -9135,7 +8977,7 @@ enum Species GetIllusionMonSpecies(enum BattlerId battler)
     return SPECIES_NONE;
 }
 
-enum PartyMon GetIllusionMonPartyId(struct Pokemon *party, struct Pokemon *mon, struct Pokemon *partnerMon, enum BattlerId battler)
+enum PartySlot GetIllusionMonPartyId(struct Pokemon *party, struct Pokemon *mon, struct Pokemon *partnerMon, enum BattlerId battler)
 {
     // Find last alive non-egg Pokémon.
     for (s32 id = PARTY_SIZE - 1; id >= 0; id--)
@@ -9148,18 +8990,18 @@ enum PartyMon GetIllusionMonPartyId(struct Pokemon *party, struct Pokemon *mon, 
             if (species == SPECIES_TERAPAGOS_STELLAR || (species >= SPECIES_OGERPON_TEAL_TERA && species <= SPECIES_OGERPON_CORNERSTONE_TERA))
                 continue;
             if (&party[id] != mon && &party[id] != partnerMon)
-                return (enum PartyMon)id;
+                return (enum PartySlot)id;
             else // If this Pokémon or its partner is last in the party, ignore Illusion.
-                return PARTY_MON_NONE;
+                return PARTY_SLOT_NONE;
         }
     }
-    return PARTY_MON_NONE;
+    return PARTY_SLOT_NONE;
 }
 
 void SetIllusionMon(struct Pokemon *mon, enum BattlerId battler)
 {
     struct Pokemon *party, *partnerMon;
-    enum PartyMon id;
+    enum PartySlot id;
 
     gBattleStruct->illusion[battler].state = ILLUSION_OFF;
     if (GetMonAbility(mon) != ABILITY_ILLUSION)
@@ -9173,7 +9015,7 @@ void SetIllusionMon(struct Pokemon *mon, enum BattlerId battler)
         partnerMon = mon;
 
     id = GetIllusionMonPartyId(party, mon, partnerMon, battler);
-    if (id != PARTY_MON_NONE)
+    if (id != PARTY_SLOT_NONE)
     {
         gBattleStruct->illusion[battler].state = ILLUSION_ON;
         gBattleStruct->illusion[battler].mon = &party[id];
@@ -9561,7 +9403,7 @@ void TryRestoreHeldItems(void)
 {
     for (enum BattleTrainer trainer = 0; trainer < gBattlersCount; trainer++)
     {
-        for (enum PartyMon i = PARTY_MON_0; i < PARTY_MON_NONE; i++)
+        for (enum PartySlot i = PARTY_SLOT_0; i < gPartiesCount[trainer]; i++)
         {
             struct LostItem *lostItem = GetLostItemState(trainer, i);
             enum Item originaItem = lostItem->originalItem;
@@ -9653,9 +9495,10 @@ void TrySaveExchangedItem(enum BattlerId battler, enum Item stolenItem)
     if (GetBattlerTrainer(battler) != B_TRAINER_PLAYER)
         return;
 
+    struct LostItem *lostItem = GetLostItemState(B_TRAINER_PLAYER, gBattlerPartyIndexes[battler]);
     // If regular trainer battle and mon's original item matches what is being stolen, save it to be restored at end of battle
-    if (stolenItem == gBattleStruct->itemLost[B_TRAINER_PLAYER][gBattlerPartyIndexes[battler]].originalItem)
-        gBattleStruct->itemLost[B_TRAINER_PLAYER][gBattlerPartyIndexes[battler]].stolen = TRUE;
+    if (stolenItem == lostItem->originalItem)
+        lostItem->stolen = TRUE;
 }
 
 bool32 IsBattlerAffectedByHazards(enum BattlerId battler, enum HoldEffect holdEffect, bool32 toxicSpikes)
@@ -9814,7 +9657,7 @@ void CopyMonAbilityAndTypesToBattleMon(enum BattlerId battler, struct Pokemon *m
     if (gTestRunnerEnabled)
     {
         enum BattleTrainer trainer = GetBattlerTrainer(battler);
-        enum PartyMon partyIndex = gBattlerPartyIndexes[battler];
+        enum PartySlot partyIndex = gBattlerPartyIndexes[battler];
         if (TestRunner_Battle_GetForcedAbility(trainer, partyIndex))
             gBattleMons[battler].ability = TestRunner_Battle_GetForcedAbility(trainer, partyIndex);
     }
@@ -10151,7 +9994,7 @@ enum Type GetBattleMoveType(enum Move move)
     return GetMoveType(move);
 }
 
-void TryActivateSleepClause(enum BattlerId battler, enum PartyMon indexInParty)
+void TryActivateSleepClause(enum BattlerId battler, enum PartySlot indexInParty)
 {
     if (gBattleStruct->battlerState[battler].sleepClauseEffectExempt)
     {
@@ -10168,27 +10011,27 @@ void TryActivateSleepClause(enum BattlerId battler, enum PartyMon indexInParty)
     }
 }
 
-void TryDeactivateSleepClause(enum BattlerId battler, enum PartyMon indexInParty)
+void TryDeactivateSleepClause(enum BattlerId battler, enum PartySlot indexInParty)
 {
     enum BattleSide side = GetBattlerSide(battler);
     struct SleepClause *monCausingSleepClause = &gBattleStruct->monCausingSleepClause[side];
     // If the Pokémon on the given side and trainer party at the given index in the party is the one causing Sleep Clause to be
-    // active, set monCausingSleepClause->partyIndex = PARTY_MON_NONE, which means Sleep Clause is not active for the given side
+    // active, set monCausingSleepClause->partyIndex = PARTY_SLOT_NONE, which means Sleep Clause is not active for the given side
     if (IsSleepClauseEnabled()
      && monCausingSleepClause->partyIndex == indexInParty
      && monCausingSleepClause->trainer == GetBattlerTrainer(battler))
     {
-        monCausingSleepClause->partyIndex = PARTY_MON_NONE;
+        monCausingSleepClause->partyIndex = PARTY_SLOT_NONE;
         monCausingSleepClause->trainer = MAX_BATTLE_TRAINERS;
     }
 }
 
 bool32 IsSleepClauseActiveForSide(enum BattleSide battlerSide)
 {
-    // If monCausingSleepClause[battlerSide].partyIndex == PARTY_MON_NONE, Sleep Clause is not active for the given side.
-    // If monCausingSleepClause[battlerSide].partyIndex < PARTY_MON_NONE, it means it is storing the index of the mon that is causing Sleep Clause to be active,
+    // If monCausingSleepClause[battlerSide].partyIndex == PARTY_SLOT_NONE, Sleep Clause is not active for the given side.
+    // If monCausingSleepClause[battlerSide].partyIndex < PARTY_SLOT_NONE, it means it is storing the index of the mon that is causing Sleep Clause to be active,
     // from which it follows that Sleep Clause is active.
-    return (IsSleepClauseEnabled() && (gBattleStruct->monCausingSleepClause[battlerSide].partyIndex < PARTY_MON_NONE));
+    return (IsSleepClauseEnabled() && (gBattleStruct->monCausingSleepClause[battlerSide].partyIndex < PARTY_SLOT_NONE));
 }
 
 bool32 IsSleepClauseEnabled(void)
@@ -10339,7 +10182,7 @@ void ClearPursuitValues(void)
 {
     for (enum BattlerId i = 0; i < gBattlersCount; i++)
         gBattleStruct->battlerState[i].pursuitTarget = FALSE;
-    gBattleStruct->pursuitStoredSwitch = PARTY_MON_NONE;
+    gBattleStruct->pursuitStoredSwitch = PARTY_SLOT_NONE;
 }
 
 void ClearPursuitValuesIfSet(enum BattlerId battler)
@@ -10647,6 +10490,9 @@ static bool32 IsBattlerWeatherAffectedTemp(enum HoldEffect holdEffect, u32 weath
 enum TwoTurnMoveActivation GetTwoTurnMoveActivation(struct BattleCalcValues *cv, u32 weather)
 {
     u32 attackerWeather = GetAttackerWeather(cv->holdEffects[cv->battlerAtk], cv->abilities[cv->battlerAtk], weather);
+
+    if (cv->moveEffect == EFFECT_SKY_DROP)
+        return ACTIVATION_NEXT_TURN;
 
     if (attackerWeather != B_WEATHER_NONE)
     {
@@ -11610,4 +11456,18 @@ bool32 IsWholeSideAlive(enum BattlerId sideBattler)
             return FALSE;
     }
     return TRUE;
+}
+
+bool32 IsBattlerJawLocked(enum BattlerId battler)
+{
+    if (gBattleMons[battler].volatiles.jawLock != 0)
+        return TRUE;
+
+    for (enum BattlerId lockedWithBattler = 0; lockedWithBattler < gBattlersCount; lockedWithBattler++)
+    {
+        if (gBattleMons[lockedWithBattler].volatiles.jawLock & 1u << battler)
+            return TRUE;
+    }
+
+    return FALSE;
 }
