@@ -1145,9 +1145,21 @@ bool32 IsTrainerBattle(void);
 bool32 IsMultiBattle(void);
 bool32 IsMultiVsOneOpponentBattle(void);
 bool32 IsTowerLinkMulti(void);
-bool32 HasAnyBattleFlags(u32 flags);
-bool32 HasAllBattleFlags(u32 flags);
-bool32 HasNoneOfBattleFlags(u32 flags);
+
+static inline bool32 HasAnyBattleFlags(u32 flags)
+{
+    return (gBattleTypeFlags & flags) != 0;
+}
+
+static inline bool32 HasAllBattleFlags(u32 flags)
+{
+    return (gBattleTypeFlags & flags) == flags;
+}
+
+static inline bool32 HasNoneOfBattleFlags(u32 flags)
+{
+    return !HasAnyBattleFlags(flags);
+}
 
 static inline bool32 IsBattlerAlive(enum BattlerId battler)
 {

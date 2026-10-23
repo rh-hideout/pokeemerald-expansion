@@ -317,18 +317,3 @@ bool32 IsLinkMultiBattle(void)
 {
     return HasAllBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_MULTI);
 }
-
-bool32 HasAnyBattleFlags(u32 flags)
-{
-    return (gBattleTypeFlags & flags) != 0;
-}
-
-bool32 HasAllBattleFlags(u32 flags)
-{
-    return (gBattleTypeFlags & flags) == flags;
-}
-
-bool32 HasNoneOfBattleFlags(u32 flags)
-{
-    return !HasAnyBattleFlags(flags);
-}
