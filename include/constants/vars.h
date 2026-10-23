@@ -308,7 +308,6 @@
 #define VAR_MAP_SCENE_PALLET_TOWN_RIVALS_HOUSE               0
 #define VAR_MAP_SCENE_VIRIDIAN_CITY_MART                     0
 #define VAR_MAP_SCENE_VIRIDIAN_CITY_OLD_MAN                  0
-#define VAR_MAP_SCENE_FUCHSIA_CITY_SAFARI_ZONE_ENTRANCE      0
 #define VAR_MAP_SCENE_SAFFRON_CITY_POKEMON_TRAINER_FAN_CLUB  0
 #define VAR_MAP_SCENE_ROUTE16                                0
 #define VAR_MAP_SCENE_ROUTE22                                0
@@ -388,7 +387,5 @@
 #define TESTING_VAR_UNUSED_6                (TESTING_VARS_START + 0x6)
 #define TESTING_VAR_UNUSED_7                (TESTING_VARS_START + 0x7)
 #endif // TESTING
-
-#include "constants/vars_frlg.h"
 
 #endif // GUARD_CONSTANTS_VARS_H

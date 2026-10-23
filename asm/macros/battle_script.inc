@@ -65,10 +65,6 @@
 	.4byte \ptr
 	.endm
 
-	.macro setadditionaleffects
-	.byte B_SCR_OP_SETADDITIONALEFFECTS
-	.endm
-
 	.macro seteffectprimary battler:req, effectBattler:req, moveEffect=0
 	.if \moveEffect != 0
 		setmoveeffect \moveEffect
