@@ -3990,7 +3990,10 @@ static bool32 IsDamageMoveSelfStatChange(bool32 isSelf, enum MoveEffect moveEffe
 {
     if (!isSelf)
         return FALSE;
-    return moveEffect == MOVE_EFFECT_STAT_MINUS || moveEffect == MOVE_EFFECT_STAT_PLUS;
+    return moveEffect == MOVE_EFFECT_STAT_MINUS 
+        || moveEffect == MOVE_EFFECT_STAT_PLUS
+        || moveEffect == MOVE_EFFECT_TERA_BLAST
+        || moveEffect == MOVE_EFFECT_ORDER_UP;
 }
 
 static enum MoveEndResult MoveEndAdditionalEffects(struct BattleCalcValues *cv)
