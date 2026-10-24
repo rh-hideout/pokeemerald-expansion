@@ -1063,69 +1063,50 @@ static void HandleSetEffectFling(struct BattleCalcValues *cv, struct SetEffect *
     {
         enum Item item = ITEM_NONE;
 
-        switch (gBattleStruct->flungItem)
-        {
-        case FLUNG_ITEM_NONE:
-            gBattleStruct->flungItem = FLUNG_ITEM_REMOVE;
-            item = gLastUsedItem = gBattleStruct->flingItem = gBattleMons[cv->battlerAtk].item;
-            break;
-        case FLUNG_ITEM_REMOVE:
-        case FLUNG_ITEM_REMOVED:
-            gBattleStruct->flungItem = FLUNG_ITEM_REMOVED;
-            item = gLastUsedItem = gBattleStruct->flingItem;
-            break;
-        }
+        item = gLastUsedItem = gBattleStruct->flingItem;
 
         enum HoldEffect holdEffect = GetItemHoldEffect(item);
 
         if (IsMoveEffectBlockedByTarget(cv->abilities[se->effectBattler]))
         {
-            BattleScriptPush(se->script);
-            gBattlescriptCurrInstr = BattleScript_FlingBlockedByShieldDust;
+            BattleScriptPushAndSet(se->script, BattleScript_FlingBlockedByShieldDust);
             return;
         }
 
         if (GetItemPocket(item) == POCKET_BERRIES)
         {
-            BattleScriptPush(se->script);
-            gBattlescriptCurrInstr = BattleScript_FlingConsumeBerry;
+            BattleScriptPushAndSet(se->script, BattleScript_FlingConsumeBerry);
             return;
         }
-
-        BattleScriptPush(se->script);
-        gBattlescriptCurrInstr = BattleScript_RemoveItem;
-
-        struct SetEffect flingEffect = {0};
-        flingEffect.script = gBattlescriptCurrInstr;
-        flingEffect.effectBattler = se->effectBattler;
 
         switch (holdEffect)
         {
         case HOLD_EFFECT_FLAME_ORB:
-            flingEffect.moveEffect = MOVE_EFFECT_BURN;
-            SetMoveEffect(cv, &flingEffect);
+            se->moveEffect = MOVE_EFFECT_BURN;
+            SetMoveEffect(cv, se);
             break;
         case HOLD_EFFECT_TOXIC_ORB:
-            flingEffect.moveEffect = MOVE_EFFECT_TOXIC;
-            SetMoveEffect(cv, &flingEffect);
+            se->moveEffect = MOVE_EFFECT_TOXIC;
+            SetMoveEffect(cv, se);
             break;
         case HOLD_EFFECT_LIGHT_BALL:
-            flingEffect.moveEffect = MOVE_EFFECT_PARALYSIS;
-            SetMoveEffect(cv, &flingEffect);
+            se->moveEffect = MOVE_EFFECT_PARALYSIS;
+            SetMoveEffect(cv, se);
             break;
         case HOLD_EFFECT_TYPE_POWER:
             if (GetItemSecondaryId(item) == TYPE_POISON)
             {
-                flingEffect.moveEffect = MOVE_EFFECT_POISON;
-                SetMoveEffect(cv, &flingEffect);
+                se->moveEffect = MOVE_EFFECT_POISON;
+                SetMoveEffect(cv, se);
             }
             break;
         case HOLD_EFFECT_FLINCH:
-            flingEffect.moveEffect = MOVE_EFFECT_FLINCH;
-            SetMoveEffect(cv, &flingEffect);
+            se->moveEffect = MOVE_EFFECT_FLINCH;
+            SetMoveEffect(cv, se);
             break;
         case HOLD_EFFECT_MENTAL_HERB:
         case HOLD_EFFECT_WHITE_HERB:
+            BattleScriptPush(se->script);
             ItemBattleEffects(se->effectBattler, 0, holdEffect, IsOnFlingActivation);
             break;
         default:
