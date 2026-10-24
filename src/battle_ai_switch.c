@@ -2292,8 +2292,8 @@ static enum PartySlot GetBestMonIntegrated(struct SwitchAiContext *switchContext
             // Check that move has PP remaining before running calcs
             if (gBattleMons[switchContext->battler].pp[moveIndex] < 1)
                 continue;
-
             aiMove = gBattleMons[switchContext->battler].moves[moveIndex];
+            switchContext->aimove = aiMove;
             damageDealt = AI_GetDamage(switchContext->battler, switchContext->opposingBattler, moveIndex, AI_SWITCHIN_ATTACKING, gAiLogicData);
             hitsToKOPlayer = GetNoOfHitsToKOBattler(switchContext->battler, switchContext->opposingBattler, moveIndex, AI_SWITCHIN_ATTACKING, CONSIDER_ENDURE);
 
@@ -2550,7 +2550,8 @@ static enum PartySlot GetBestMonVanilla(struct SwitchAiContext *switchContext)
                 continue;
 
             enum Move aiMove = gBattleMons[switchContext->battler].moves[moveIndex];
-
+            switchContext->aimove = aiMove;
+            
             // Dynamic mon choice function
             if (gDynamicAiMonChoiceFunc != NULL)
             {
