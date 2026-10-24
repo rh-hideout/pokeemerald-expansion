@@ -1,4 +1,5 @@
 #include "global.h"
+#include "config_changes.h"
 #include "main.h"
 #include "event_object_movement.h"
 #include "fieldmap.h"
@@ -631,7 +632,7 @@ static void AlignFishingAnimationFrames(void)
 
 void UpdateChainFishingStreak()
 {
-    if (!I_FISHING_CHAIN)
+    if (!GetConfig(I_FISHING_CHAIN))
         return;
 
     if (gChainFishingDexNavStreak == MAX_u8)
@@ -642,7 +643,7 @@ void UpdateChainFishingStreak()
 
 u32 CalculateChainFishingShinyRolls(void)
 {
-    if (!I_FISHING_CHAIN || !gIsFishingEncounter)
+    if (!GetConfig(I_FISHING_CHAIN) || !gIsFishingEncounter)
         return 0;
     u32 a = 2 * min(gChainFishingDexNavStreak, FISHING_CHAIN_SHINY_STREAK_MAX);
     return a;
