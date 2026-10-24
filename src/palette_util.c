@@ -506,3 +506,9 @@ static void UNUSED SetTilemapRect_Unused(void *dest, const u16 *src, u8 left, u8
         y = (y + 1) % 32;
     }
 }
+
+void ReplacePalIndexInTiles(Tile4BPP *tiles, u32 count, u32 old, u32 new)
+{
+    for (u32 i = 0; i < count; i++)
+        ReplacePalIndexInTile(&tiles[i], old, new);
+}
