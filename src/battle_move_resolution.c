@@ -2696,8 +2696,13 @@ static enum CancelerResult CancelerPreAnimActivations(struct BattleCalcValues *c
                 if (ShouldSkipBattlerForDamage(cv->battlerAtk, battlerDef))
                     continue;
 
-                if (gBattleStruct->moveResultFlags[battlerDef] & MOVE_RESULT_HIGH_EFFECTIVENESS
-                 && IS_BATTLER_OF_TYPE(battlerDef, TYPE_FLYING))
+                enum Type types[3];
+                GetBattlerTypes(battlerDef, FALSE, types);
+
+                if (types[0] != TYPE_FLYING && types[1] != TYPE_FLYING && types[2] != TYPE_FLYING)
+                    continue;
+
+                if (GetTypeModifier(GetBattleMoveType(cv->move), TYPE_FLYING) > UQ_4_12(1.0))
                 {
                     BattleScriptCall(BattleScript_AttackWeakenedByStrongWinds);
                     gBattleStruct->eventState.moveEndBlock++;
