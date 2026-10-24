@@ -85,10 +85,7 @@
 #define VAR_MAP_SCENE_ROUTE24                                                  0x406B
 #define VAR_MAP_SCENE_PEWTER_CITY                                              0x406C
 #define VAR_0x406D                                                             0x406D
-#if IS_FRLG
-#undef VAR_SAFARI_WARP_STATE
 #define VAR_SAFARI_WARP_STATE                                                  0x406E
-#endif
 #define VAR_CABLE_CLUB_STATE_FRLG                                              0x406F
 #define VAR_MAP_SCENE_PALLET_TOWN_SIGN_LADY                                    0x4070
 #define VAR_MAP_SCENE_CINNABAR_ISLAND                                          0x4071
@@ -315,7 +312,6 @@
 #define VAR_SLATEPORT_HARBOR_STATE                       0
 #define VAR_SEAFLOOR_CAVERN_STATE                        0
 #define VAR_CABLE_CAR_STATION_STATE                      0
-#define VAR_SAFARI_ZONE_STATE                            0  // 0: In or out of SZ, 1: Player exiting SZ, 2: Player entering SZ
 #define VAR_TRICK_HOUSE_BEING_WATCHED_STATE              0
 #define VAR_TRICK_HOUSE_FOUND_TRICK_MASTER               0
 #define VAR_TRICK_HOUSE_ENTRANCE_STATE                   0

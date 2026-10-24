@@ -1112,7 +1112,6 @@ BattleScript_PowerHerbActivation::
 BattleScript_TwoTurnMoveCharging::
 	waitmessage B_WAIT_TIME_LONG
 	twoturnmoveschargestringandanimation
-	setadditionaleffects @ only onChargeTurnOnly effects will work here
 	return
 
 BattleScript_TwoTurnMovesSecondTurnRet:
