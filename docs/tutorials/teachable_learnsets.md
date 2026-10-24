@@ -3,7 +3,7 @@
 # Generating and editing teachable learnsets
 
 ## Basics:
-When you `make`, a file will be generated in `src/data/pokemon/teachable_learnsets.h` containing the learnsets of your Pokemon. The generated learnset of a pokemon is based on 3 things, its potential moveset defined in `src/data/pokemon/all_learnables.json`, the teaching type of the species defined in the species data files, and the TMs and tutors available in your game. We will explain each of these one by one. 
+When you `make`, a file will be generated in `src/data/pokemon/teachable_learnsets.h` containing the learnsets of your Pokémon. The generated learnset is based on the official potential moves, the project's learnset overrides, the species' teaching type, and the TMs and tutors available in the game. We will explain each of these one by one.
 
 ### Table of Contents:
 
@@ -19,13 +19,48 @@ When you `make`, a file will be generated in `src/data/pokemon/teachable_learnse
 
 ## Potential Teachables
 
-The potential moveset of each pokemon is defined in `src/data/pokemon/all_learnables.json`. If you don't have the file yet, a version will be generated automatically after you run `make`. 
-On its first creation, the file is based on the list of moves a pokemon can learn in official Pokemon games. Those lists are found in `tools/learnset_helpers/porymoves_files`, if a Pokemon learned a move in any way in the game (from level-up, egg move, tm or tutor), it will be added to its teachable learnset. You can delete some of the files mix-and-match from different games list. This is justa  tool to help you quickly generate a vanilla-ish etachable learnset.
-After `src/data/pokemon/all_learnables.json` has been created, this file will NEVER be modified by running `make` so you don't have to worry abour your changes being reverted. However you can choose to remake the file by using a different set of game move list by running `make clean-teachables` and then running `make` again.
+The official potential moveset of each Pokémon is defined in `src/data/pokemon/all_learnables.json`. If the file does not exist, `make` creates it from the official game data in `tools/learnset_helpers/porymoves_files`. The porymoves files are maintained by Expansion and should not be changed for a project.
+
+Project-specific changes belong in `src/data/pokemon/learnset_overrides.json`. Each species can add or remove move constants:
+
+```json
+{
+  "MEWTHREE": {
+    "add": ["MOVE_FOCUS_PUNCH", "MOVE_WATER_PULSE"],
+    "remove": ["MOVE_TOXIC"]
+  }
+}
+```
+
+The `add` and `remove` lists are optional; a custom species can be introduced with only an `add` list. If the same move appears in both lists, `remove` takes precedence. During a normal build, the helper combines the official file and these overrides into an internal file used to generate `teachable_learnsets.h`. Neither source file is overwritten.
+
+Explicit overrides also take precedence over the final teaching rules: removals exclude universal moves and moves granted by `ALL_TEACHABLES`, while additions can allow signature moves or moves normally excluded by TM literacy or species-specific restrictions. Moves still require an available TM, HM, or tutor. Species and forms sharing a teachable array also share its overrides; use the array's species name (for example, `OINKOLOGNE` for `sOinkologneTeachableLearnset`).
+
+To intentionally replace `all_learnables.json` with the latest official porymoves data, run:
+
+```sh
+make refresh-all-learnables
+```
+
+This command replaces only the official base file and preserves `learnset_overrides.json`. Review its changes before committing them.
+
+### Migrating an existing customized file
+
+Existing projects should create a proposed override file before refreshing their customized `all_learnables.json`:
+
+```sh
+make propose-learnset-overrides
+```
+
+This generates fresh official data and compares it with the project's current file. It writes the differences to `tools/learnset_helpers/build/proposed_learnset_overrides.json` without changing `all_learnables.json` or `learnset_overrides.json`.
+
+The command refuses to overwrite an existing proposal. Move it somewhere safe before generating another proposal; the build directory is removed by cleaning commands. Proposals compare only the base files, so preserve any overrides you have already reviewed when merging the proposed changes.
+
+Review every proposed addition and removal. Differences may represent intentional project customizations, but they may also come from official corrections made since the project's file was generated. Copy only the intended project changes into `src/data/pokemon/learnset_overrides.json`. Then run `make refresh-all-learnables` to replace the official base. Future refreshes will reapply the reviewed overrides without changing them.
 
 ## Teaching Types
 
-In addition to their teachable learnset described in `src/data/pokemon/all_learnables.json`, Pokemon will be able to learn additional moves based on their teaching types defined in their species data (found in `species/data/pokemon/species_info/gen_X_families.h` for vanilla Pokemon and `species/data/pokemon/species_info.h` for fakemons). There are currently three teaching types in Expansion: Default Learning, TM Illiterate and All Teahcables
+In addition to the potential moves assembled from the official data and project overrides, Pokémon can learn additional moves based on the teaching types defined in the species data files (found in `species/data/pokemon/species_info/gen_X_families.h` for vanilla Pokémon and `species/data/pokemon/species_info.h` for fakemon). There are currently three teaching types in Expansion: Default Learning, TM Illiterate and All Teachables.
 
 ### Default Learning
 
@@ -59,4 +94,3 @@ The script look for tutors moves in your script files, wether map scripts `/data
 ### Extra Tutors
 
 If you somehow add a move that can be learned in new custom ways that don't fit with the previous patterns, you can add the move to the extra tutors list in `src/data/pokemon/special_movesets.json` (there are multiple lists in the file, make sure to edit the one named "extraTutors"). This shouldn't be necessary for most users and if you use this list, remember you will need to add/remove moves from this list and the code that teaches moves.
-
