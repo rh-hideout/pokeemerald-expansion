@@ -522,7 +522,7 @@ const u8 gStatStageRatios[MAX_STAT_STAGE + 1][2] =
 
 // The classes used by other players in the Union Room.
 // These should correspond with the overworld graphics in sUnionRoomObjGfxIds
-const u16 gUnionRoomFacilityClasses[NUM_UNION_ROOM_CLASSES * GENDER_COUNT] =
+const u16 gUnionRoomFacilityClasses[NUM_UNION_ROOM_CLASSES * TRAINER_GENDER_COUNT] =
 {
     // Male classes
     FACILITY_CLASS_COOLTRAINER_M,
@@ -595,16 +595,16 @@ static const struct SpriteTemplate sTrainerBackSpriteTemplate =
 };
 
 #define NUM_SECRET_BASE_CLASSES 5
-static const u8 sSecretBaseFacilityClasses[GENDER_COUNT][NUM_SECRET_BASE_CLASSES] =
+static const u8 sSecretBaseFacilityClasses[TRAINER_GENDER_COUNT][NUM_SECRET_BASE_CLASSES] =
 {
-    [MALE] = {
+    [TRAINER_GENDER_MALE] = {
         FACILITY_CLASS_YOUNGSTER,
         FACILITY_CLASS_BUG_CATCHER,
         FACILITY_CLASS_RICH_BOY,
         FACILITY_CLASS_CAMPER,
         FACILITY_CLASS_COOLTRAINER_M
     },
-    [FEMALE] = {
+    [TRAINER_GENDER_FEMALE] = {
         FACILITY_CLASS_LASS,
         FACILITY_CLASS_SCHOOL_KID_F,
         FACILITY_CLASS_LADY,
@@ -754,7 +754,7 @@ UNUSED static const struct BoxPokemon sBoxPokemonConstantsFit =
         .metLevel = MAX_LEVEL,
         .metGame = NUM_VERSIONS, // NOTE: NUM_VERSIONS is inclusive!
         .dynamaxLevel = MAX_DYNAMAX_LEVEL,
-        .otGender = GENDER_COUNT - 1,
+        .otGender = TRAINER_GENDER_COUNT - 1,
         .hpIV = MAX_PER_STAT_IVS,
         .attackIV = MAX_PER_STAT_IVS,
         .defenseIV = MAX_PER_STAT_IVS,
@@ -5645,9 +5645,9 @@ enum TrainerPicID FacilityClassToPicIndex(u16 facilityClass)
     return gFacilityClassToPicIndex[facilityClass];
 }
 
-enum TrainerPicID PlayerGenderToFrontTrainerPicId(enum Gender playerGender)
+enum TrainerPicID PlayerGenderToFrontTrainerPicId(enum TrainerGender playerGender)
 {
-    if (playerGender != MALE)
+    if (playerGender != TRAINER_GENDER_MALE)
         return FacilityClassToPicIndex(IS_FRLG ? FACILITY_CLASS_LEAF : FACILITY_CLASS_MAY);
     else
         return FacilityClassToPicIndex(IS_FRLG ? FACILITY_CLASS_RED : FACILITY_CLASS_BRENDAN);

@@ -14,7 +14,7 @@ SSAnne_1F_Room6_EventScript_Woman::
 
 SSAnne_1F_Room6_EventScript_DeclineHeal::
 	checkplayergender
-	goto_if_eq VAR_RESULT, MALE, SSAnne_1F_Room6_EventScript_DeclineHealMale
+	goto_if_eq VAR_RESULT, TRAINER_GENDER_MALE, SSAnne_1F_Room6_EventScript_DeclineHealMale
 	msgbox SSAnne_1F_Room6_Text_SorryYouLookLikeMySister
 	release
 	end

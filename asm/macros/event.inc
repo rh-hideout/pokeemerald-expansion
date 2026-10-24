@@ -1469,7 +1469,7 @@
 	.2byte \heallocation
 	.endm
 
-	@ Checks the player's gender. Stores the result (MALE (0) or FEMALE (1)) in VAR_RESULT.
+	@ Checks the player's gender. Stores the result (TRAINER_GENDER_MALE (0) or TRAINER_GENDER_FEMALE (1)) in VAR_RESULT.
 	.macro checkplayergender
 	.byte SCR_OP_CHECKPLAYERGENDER
 	.endm

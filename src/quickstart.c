@@ -58,17 +58,17 @@ static const struct SpritePalette sSpritePalette_QuickstartHud = {
     .tag = TAG_SKIP_INTRO
 };
 
-static inline enum Gender SetQuickstartPlayerGender()
+static inline enum TrainerGender SetQuickstartPlayerGender()
 {
     switch (QUICKSTART_GENDER)
     {
         case GENDER_MALE:
-            return MALE;
+            return TRAINER_GENDER_MALE;
         case GENDER_FEMALE:
-            return FEMALE;
+            return TRAINER_GENDER_FEMALE;
         case GENDER_RANDOM:
         default:
-            return RandomPercentage(RNG_NONE, 50) ? FEMALE : MALE;
+            return RandomPercentage(RNG_NONE, 50) ? TRAINER_GENDER_FEMALE : TRAINER_GENDER_MALE;
     }
 }
 
@@ -86,7 +86,7 @@ static void CB2_SkipToNewGame(void)
     if (!UpdatePaletteFade())
     {
         gSaveBlock2Ptr->playerGender = SetQuickstartPlayerGender();
-        const u8* textPtr = gSaveBlock2Ptr->playerGender == FEMALE ? sText_PlayerFemale : sText_PlayerMale;
+        const u8* textPtr = gSaveBlock2Ptr->playerGender == TRAINER_GENDER_FEMALE ? sText_PlayerFemale : sText_PlayerMale;
         StringCopy_PlayerName(gSaveBlock2Ptr->playerName, textPtr);
 
 #if IS_FRLG

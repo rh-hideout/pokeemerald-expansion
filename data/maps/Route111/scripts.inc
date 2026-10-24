@@ -50,8 +50,8 @@ Route111_OnTransition:
 
 Route111_EventScript_SetFallingPlayerGfx::
 	checkplayergender
-	goto_if_eq VAR_RESULT, MALE, Route111_EventScript_SetFallingPlayerGfxMale
-	goto_if_eq VAR_RESULT, FEMALE, Route111_EventScript_SetFallingPlayerGfxFemale
+	goto_if_eq VAR_RESULT, TRAINER_GENDER_MALE, Route111_EventScript_SetFallingPlayerGfxMale
+	goto_if_eq VAR_RESULT, TRAINER_GENDER_FEMALE, Route111_EventScript_SetFallingPlayerGfxFemale
 	return
 
 Route111_EventScript_SetFallingPlayerGfxMale::

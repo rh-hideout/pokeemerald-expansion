@@ -16,7 +16,7 @@ LittlerootTown_MaysHouse_1F_EventScript_SetMovingBoxes::
 
 LittlerootTown_MaysHouse_1F_EventScript_CheckShowShoesManual::
 	checkplayergender
-	goto_if_eq VAR_RESULT, FEMALE, LittlerootTown_MaysHouse_1F_EventScript_ShowRunningShoesManual
+	goto_if_eq VAR_RESULT, TRAINER_GENDER_FEMALE, LittlerootTown_MaysHouse_1F_EventScript_ShowRunningShoesManual
 	return
 
 LittlerootTown_MaysHouse_1F_EventScript_ShowRunningShoesManual::
@@ -72,13 +72,13 @@ LittlerootTown_MaysHouse_1F_Movement_PushTowardStairs:
 LittlerootTown_MaysHouse_1F_EventScript_EnterHouseMovingIn::
 	lockall
 	setvar VAR_0x8004, LOCALID_PLAYERS_HOUSE_1F_MOM
-	setvar VAR_0x8005, FEMALE
+	setvar VAR_0x8005, TRAINER_GENDER_FEMALE
 	goto PlayersHouse_1F_EventScript_EnterHouseMovingIn
 	end
 
 LittlerootTown_MaysHouse_1F_EventScript_PetalburgGymReport::
 	lockall
-	setvar VAR_0x8004, FEMALE
+	setvar VAR_0x8004, TRAINER_GENDER_FEMALE
 	setvar VAR_0x8005, LOCALID_PLAYERS_HOUSE_1F_MOM
 	goto PlayersHouse_1F_EventScript_PetalburgGymReportFemale
 	end
@@ -146,7 +146,7 @@ RivalsHouse_1F_EventScript_RivalSibling::
 LittlerootTown_MaysHouse_1F_EventScript_GoSeeRoom::
 	lockall
 	setvar VAR_0x8004, LOCALID_PLAYERS_HOUSE_1F_MOM
-	setvar VAR_0x8005, FEMALE
+	setvar VAR_0x8005, TRAINER_GENDER_FEMALE
 	applymovement VAR_0x8004, Common_Movement_WalkInPlaceFasterRight
 	waitmovement 0
 	goto PlayersHouse_1F_EventScript_MomGoSeeRoom
