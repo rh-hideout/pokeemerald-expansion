@@ -4390,7 +4390,7 @@ bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct Evoluti
             }
 
             if (removeBagItem != ITEM_NONE)
-                RemoveBagItem(removeBagItem, removeBagItemCount);
+                ConsumeBagItem(removeBagItem, removeBagItemCount);
         }
 
         if (currentCondition == FALSE)
