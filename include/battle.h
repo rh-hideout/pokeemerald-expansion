@@ -652,7 +652,7 @@ struct BattleStruct
     } multiBuffer;
     u8 battlerKOAnimsRunning:3;
     u8 fickleBeamBoosted:1;
-    u8 ignoreOrbFailure:1;
+    u8 ignoreOrbFailure:1; // Toxic / Flame orb aren't prevented by Safeguard / Flower Veil
     u8 toxicChainPriority:1; // If Toxic Chain will trigger on target, all other non volatiles will be blocked
     u8 battlersSorted:1; // To avoid unnessasery computation
     u8 unused1:1;
