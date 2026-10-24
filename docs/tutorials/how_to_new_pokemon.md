@@ -760,45 +760,26 @@ Each species flag provides properties to the species:
 
 Let's begin with the moves that can be learned by leveling up.
 
-Append to [src/data/pokemon/level_up_learnsets/gen_9.h](https://github.com/rh-hideout/pokeemerald-expansion/blob/master/src/data/pokemon/level_up_learnsets/gen_9.h):
-**NOTE**: You can ignore the warning at the top of the file if you're just adding moves to Pokemon.
+Add the learnset to `src/data/pokemon/level_up_learnsets.h`. If the file does not exist yet, run a build once to initialize it from the official game data.
 
 ```diff
-#if P_FAMILY_PECHARUNT
-static const struct LevelUpMove sPecharuntLevelUpLearnset[] = {
-    LEVEL_UP_MOVE( 1, MOVE_SMOG),
-    LEVEL_UP_MOVE( 1, MOVE_POISON_GAS),
-    LEVEL_UP_MOVE( 1, MOVE_MEMENTO),
-    LEVEL_UP_MOVE( 1, MOVE_ASTONISH),
-    LEVEL_UP_MOVE( 8, MOVE_WITHDRAW),
-    LEVEL_UP_MOVE(16, MOVE_DESTINY_BOND),
-    LEVEL_UP_MOVE(24, MOVE_FAKE_TEARS),
-    LEVEL_UP_MOVE(32, MOVE_PARTING_SHOT),
-    LEVEL_UP_MOVE(40, MOVE_SHADOW_BALL),
-    LEVEL_UP_MOVE(48, MOVE_MALIGNANT_CHAIN),
-    LEVEL_UP_MOVE(56, MOVE_TOXIC),
-    LEVEL_UP_MOVE(64, MOVE_NASTY_PLOT),
-    LEVEL_UP_MOVE(72, MOVE_RECOVER),
-    LEVEL_UP_END
-};
-#endif
-
 +static const struct LevelUpMove sMewthreeLevelUpLearnset[] = {
-+   LEVEL_UP_MOVE( 1, MOVE_CONFUSION),
-+   LEVEL_UP_MOVE( 1, MOVE_DISABLE),
-+   LEVEL_UP_MOVE(11, MOVE_BARRIER),
-+   LEVEL_UP_MOVE(22, MOVE_SWIFT),
-+   LEVEL_UP_MOVE(33, MOVE_PSYCH_UP),
-+   LEVEL_UP_MOVE(44, MOVE_FUTURE_SIGHT),
-+   LEVEL_UP_MOVE(55, MOVE_MIST),
-+   LEVEL_UP_MOVE(66, MOVE_PSYCHIC),
-+   LEVEL_UP_MOVE(77, MOVE_AMNESIA),
-+   LEVEL_UP_MOVE(88, MOVE_RECOVER),
-+   LEVEL_UP_MOVE(99, MOVE_SAFEGUARD),
-+   LEVEL_UP_END
++    LEVEL_UP_MOVE( 1, MOVE_CONFUSION),
++    LEVEL_UP_MOVE( 1, MOVE_DISABLE),
++    LEVEL_UP_MOVE(11, MOVE_BARRIER),
++    LEVEL_UP_MOVE(22, MOVE_SWIFT),
++    LEVEL_UP_MOVE(33, MOVE_PSYCH_UP),
++    LEVEL_UP_MOVE(44, MOVE_FUTURE_SIGHT),
++    LEVEL_UP_MOVE(55, MOVE_MIST),
++    LEVEL_UP_MOVE(66, MOVE_PSYCHIC),
++    LEVEL_UP_MOVE(77, MOVE_AMNESIA),
++    LEVEL_UP_MOVE(88, MOVE_RECOVER),
++    LEVEL_UP_MOVE(99, MOVE_SAFEGUARD),
++    LEVEL_UP_END
 +};
 ```
-**NOTE**: If `P_LVL_UP_LEARNSETS` is not set to something equal to `GEN_9`, the file to be edited will change to what's specified.
+
+This header belongs to the project: normal builds will not overwrite it. Do not edit `tools/learnset_helpers/porymoves_files` for custom learnsets. See [Level-up Learnsets](level_up_learnsets.md) to choose the initial official data or intentionally regenerate the header.
 
 Again, we need to register the learnset in `gSpeciesInfo`:
 
