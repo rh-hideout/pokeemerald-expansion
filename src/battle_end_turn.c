@@ -1649,7 +1649,7 @@ bool32 DoEndTurnEffects(void)
         gBattleStruct->eventState.endTurn = ENDTURN_TRAINER_A_SLIDES;
 
     struct BattleCalcValues cv = {0};
-    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
+    for (battler = 0; battler < gBattlersCount; battler++)
     {
         cv.abilities[battler] = GetBattlerAbility(battler);
         cv.holdEffects[battler] = GetBattlerHoldEffect(battler);
