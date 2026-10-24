@@ -16,9 +16,9 @@ BattleFrontier_BattlePyramidLobby_EventScript_TurnPlayerNorth:
 BattleFrontier_BattlePyramidLobby_OnFrame:
 	map_script_2 VAR_TEMP_CHALLENGE_STATUS, 0, BattleFrontier_BattlePyramidLobby_EventScript_GetChallengeStatus
 	map_script_2 VAR_TEMP_CHALLENGE_STATUS, CHALLENGE_STATUS_SAVING, BattleFrontier_BattlePyramidLobby_EventScript_QuitWithoutSaving
-	map_script_2 VAR_TEMP_CHALLENGE_STATUS, CHALLENGE_STATUS_PAUSED, BattleFrontier_BattlePyramidLobby_EventScript_ResumeChallenge
-	map_script_2 VAR_TEMP_CHALLENGE_STATUS, CHALLENGE_STATUS_WON, BattleFrontier_BattlePyramidLobby_EventScript_WonChallenge
-	map_script_2 VAR_TEMP_CHALLENGE_STATUS, CHALLENGE_STATUS_LOST, BattleFrontier_BattlePyramidLobby_EventScript_LostChallenge
+	map_script_2 VAR_TEMP_CHALLENGE_STATUS, CHALLENGE_STATUS_PAUSED, BattleFrontier_BattlePyramidLobby_EventScript_ResumeSeries
+	map_script_2 VAR_TEMP_CHALLENGE_STATUS, CHALLENGE_STATUS_WON, BattleFrontier_BattlePyramidLobby_EventScript_WonSeries
+	map_script_2 VAR_TEMP_CHALLENGE_STATUS, CHALLENGE_STATUS_LOST, BattleFrontier_BattlePyramidLobby_EventScript_LostSeries
 	.2byte 0
 
 BattleFrontier_BattlePyramidLobby_EventScript_GetChallengeStatus::
@@ -32,14 +32,11 @@ BattleFrontier_BattlePyramidLobby_EventScript_QuitWithoutSaving::
 	playse SE_EXP_MAX
 	waitse
 	closemessage
-	pyramid_set PYRAMID_DATA_WIN_STREAK, 0
-	pyramid_set PYRAMID_DATA_WIN_STREAK_ACTIVE, FALSE
-	frontier_set FRONTIER_DATA_CHALLENGE_STATUS, 0
-	setvar VAR_TEMP_CHALLENGE_STATUS, 255
+	frontier_endseries FRONTIER_SERIES_DISQUALIFIED
 	releaseall
 	end
 
-BattleFrontier_BattlePyramidLobby_EventScript_WonChallenge::
+BattleFrontier_BattlePyramidLobby_EventScript_WonSeries::
 	lockall
 	frontier_isbrain
 	goto_if_eq VAR_RESULT, TRUE, BattleFrontier_BattlePyramidLobby_EventScript_DefeatedKing
@@ -62,7 +59,7 @@ BattleFrontier_BattlePyramidLobby_EventScript_GiveBattlePoints::
 	playse SE_EXP_MAX
 	waitse
 	msgbox BattleFrontier_BattlePyramidLobby_Text_GiveYouTheseBattlePoints, MSGBOX_DEFAULT
-	frontier_givepoints
+	frontier_endseries FRONTIER_SERIES_WON
 	msgbox BattleFrontier_Text_ObtainedXBattlePoints, MSGBOX_GETPOINTS
 	message BattleFrontier_BattlePyramidLobby_Text_RecordResultsWait
 	waitmessage
@@ -72,11 +69,10 @@ BattleFrontier_BattlePyramidLobby_EventScript_GiveBattlePoints::
 	waitse
 	msgbox BattleFrontier_BattlePyramidLobby_Text_LookForwardToNextChallenge, MSGBOX_DEFAULT
 	closemessage
-	setvar VAR_TEMP_CHALLENGE_STATUS, 255
 	releaseall
 	end
 
-BattleFrontier_BattlePyramidLobby_EventScript_LostChallenge::
+BattleFrontier_BattlePyramidLobby_EventScript_LostSeries::
 	frontier_checkairshow
 	special LoadPlayerParty
 	pyramid_clearhelditems
@@ -89,17 +85,15 @@ BattleFrontier_BattlePyramidLobby_EventScript_LostChallenge::
 	waitse
 	message BattleFrontier_BattlePyramidLobby_Text_RecordResultsWait
 	waitmessage
-	pyramid_set PYRAMID_DATA_WIN_STREAK_ACTIVE, FALSE
-	pyramid_save 0
+	frontier_endseries FRONTIER_SERIES_WON
 	playse SE_SAVE
 	waitse
 	msgbox BattleFrontier_BattlePyramidLobby_Text_LookForwardToNextChallenge, MSGBOX_DEFAULT
 	closemessage
-	setvar VAR_TEMP_CHALLENGE_STATUS, 255
 	releaseall
 	end
 
-BattleFrontier_BattlePyramidLobby_EventScript_ResumeChallenge::
+BattleFrontier_BattlePyramidLobby_EventScript_ResumeSeries::
 	goto BattleFrontier_BattlePyramidLobby_EventScript_EnterChallenge
 
 BattleFrontier_BattlePyramidLobby_EventScript_Attendant::
@@ -146,10 +140,7 @@ BattleFrontier_BattlePyramidLobby_EventScript_TryEnterChallenge::
 BattleFrontier_BattlePyramidLobby_EventScript_SaveBeforeChallenge::
 	setvar VAR_TEMP_CHALLENGE_STATUS, 0
 	frontier_set FRONTIER_DATA_SELECTED_MON_ORDER
-	pyramid_init
-	pyramid_set PYRAMID_DATA_WIN_STREAK_ACTIVE, TRUE
-	frontier_set FRONTIER_DATA_CHALLENGE_STATUS, CHALLENGE_STATUS_SAVING
-	frontier_set FRONTIER_DATA_PAUSED, FALSE
+	frontier_init
 	pyramid_seedfloor
 	pyramid_settrainers
 	special LoadPlayerParty
@@ -217,10 +208,12 @@ BattleFrontier_BattlePyramidLobby_EventScript_HintGiver::
 	end
 
 BattleFrontier_BattlePyramidLobby_EventScript_GiveHint::
+	setvar VAR_FRONTIER_FACILITY, FRONTIER_FACILITY_FACTORY
+	setvar VAR_FRONTIER_BATTLE_MODE, FRONTIER_MODE_SINGLES
 	multichoice 17, 6, MULTI_LEVEL_MODE, FALSE
 	switch VAR_RESULT
-	case FRONTIER_LVL_50, BattleFrontier_BattlePyramidLobby_EventScript_GiveHintLv50
-	case FRONTIER_LVL_OPEN, BattleFrontier_BattlePyramidLobby_EventScript_GiveHintLvOpen
+	case FRONTIER_LVL_50, BattleFrontier_BattlePyramidLobby_EventScript_PrepareHintLv50
+	case FRONTIER_LVL_OPEN, BattleFrontier_BattlePyramidLobby_EventScript_PrepareHintLvOpen
 	case FRONTIER_LVL_TENT, BattleFrontier_BattlePyramidLobby_EventScript_NoHint
 	case MULTI_B_PRESSED, BattleFrontier_BattlePyramidLobby_EventScript_NoHint
 	return
@@ -229,33 +222,21 @@ BattleFrontier_BattlePyramidLobby_EventScript_GiveHint::
 BattleFrontier_BattlePyramidLobby_EventScript_NoHint::
 	return
 
-BattleFrontier_BattlePyramidLobby_EventScript_GiveHintLv50::
+BattleFrontier_BattlePyramidLobby_EventScript_PrepareHintLv50::
+	frontier_set FRONTIER_DATA_LVL_MODE, FRONTIER_LVL_50
+	goto BattleFrontier_BattlePyramidLobby_EventScript_DoHint
+BattleFrontier_BattlePyramidLobby_EventScript_PrepareHintLvOpen::
+	frontier_set FRONTIER_DATA_LVL_MODE, FRONTIER_LVL_OPEN
+BattleFrontier_BattlePyramidLobby_EventScript_DoHint::
 	msgbox BattleFrontier_BattlePyramidLobby_Text_Aah, MSGBOX_DEFAULT
-	pyramid_get PYRAMID_DATA_WIN_STREAK_ACTIVE_50
-	goto_if_ne VAR_RESULT, FALSE, BattleFrontier_BattlePyramidLobby_EventScript_GiveHintGetLv50Streak
+	frontier_iswinstreakactive
+	goto_if_ne VAR_RESULT, FALSE, BattleFrontier_BattlePyramidLobby_EventScript_DoHintComment
 	setvar VAR_RESULT, 0
-	goto BattleFrontier_BattlePyramidLobby_EventScript_DoHintComment
-	return
-
-BattleFrontier_BattlePyramidLobby_EventScript_GiveHintGetLv50Streak::
-	pyramid_get PYRAMID_DATA_WIN_STREAK_50
-	goto BattleFrontier_BattlePyramidLobby_EventScript_DoHintComment
-	return
-
-BattleFrontier_BattlePyramidLobby_EventScript_GiveHintLvOpen::
-	msgbox BattleFrontier_BattlePyramidLobby_Text_Aah, MSGBOX_DEFAULT
-	pyramid_get PYRAMID_DATA_WIN_STREAK_ACTIVE_OPEN
-	goto_if_ne VAR_RESULT, FALSE, BattleFrontier_BattlePyramidLobby_EventScript_GiveHintGetLvOpenStreak
-	setvar VAR_RESULT, 0
-	goto BattleFrontier_BattlePyramidLobby_EventScript_DoHintComment
-	return
-
-BattleFrontier_BattlePyramidLobby_EventScript_GiveHintGetLvOpenStreak::
-	pyramid_get PYRAMID_DATA_WIN_STREAK_OPEN
 	goto BattleFrontier_BattlePyramidLobby_EventScript_DoHintComment
 	return
 
 BattleFrontier_BattlePyramidLobby_EventScript_DoHintComment::
+	frontier_getwinstreak
 	copyvar VAR_0x8004, VAR_RESULT
 	special GetBattlePyramidHint
 	switch VAR_RESULT
@@ -374,7 +355,7 @@ BattleFrontier_BattlePyramidLobby_EventScript_WalkToPanelAndReceiveBag::
 	applymovement LOCALID_PLAYER, BattleFrontier_BattlePyramidLobby_Movement_PlayerWalkToPanel
 	waitmovement 0
 	msgbox BattleFrontier_BattlePyramidLobby_Text_WeWillHoldBagForSafekeeping, MSGBOX_DEFAULT
-	pyramid_get PYRAMID_DATA_WIN_STREAK
+	frontier_getwinstreak
 	goto_if_eq VAR_RESULT, 0, BattleFrontier_BattlePyramidLobby_EventScript_ReceiveNewBattleBag
 	msgbox BattleFrontier_BattlePyramidLobby_Text_PleaseTakePreviousBattleBag, MSGBOX_DEFAULT
 	goto BattleFrontier_BattlePyramidLobby_EventScript_ReceiveBattleBag

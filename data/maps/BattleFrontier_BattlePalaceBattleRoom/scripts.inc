@@ -65,7 +65,7 @@ BattleFrontier_BattlePalaceBattleRoom_EventScript_WarpToLobbyLost::
 	goto BattleFrontier_BattlePalaceBattleRoom_EventScript_WarpToLobby
 
 BattleFrontier_BattlePalaceBattleRoom_EventScript_DefeatedOpponent::
-	call BattleFrontier_EventScript_IncrementWinStreak
+	frontier_incrementstreak
 	frontier_get FRONTIER_DATA_BATTLE_NUM
 	addvar VAR_RESULT, 1
 	frontier_set FRONTIER_DATA_BATTLE_NUM, VAR_RESULT
@@ -217,7 +217,7 @@ BattleFrontier_BattlePalaceBattleRoom_EventScript_BattleSpenserSilver::
 	goto BattleFrontier_BattlePalaceBattleRoom_EventScript_WarpToLobbyLost
 
 BattleFrontier_BattlePalaceBattleRoom_EventScript_DefeatedSpenserSilver::
-	palace_incrementstreak
+	frontier_incrementstreak
 	frontier_getsymbols
 	goto_if_ne VAR_RESULT, 0, BattleFrontier_BattlePalaceBattleRoom_EventScript_WarpToLobbyWon
 	msgbox BattleFrontier_BattlePalaceBattleRoom_Text_SpenserPostSilverBattle, MSGBOX_DEFAULT
@@ -249,7 +249,7 @@ BattleFrontier_BattlePalaceBattleRoom_EventScript_BattleSpenserGold::
 	goto BattleFrontier_BattlePalaceBattleRoom_EventScript_WarpToLobbyLost
 
 BattleFrontier_BattlePalaceBattleRoom_EventScript_DefeatedSpenserGold::
-	palace_incrementstreak
+	frontier_incrementstreak
 	frontier_getsymbols
 	goto_if_eq VAR_RESULT, 2, BattleFrontier_BattlePalaceBattleRoom_EventScript_WarpToLobbyWon
 	msgbox BattleFrontier_BattlePalaceBattleRoom_Text_SpenserYourTeamIsAdmirable, MSGBOX_DEFAULT

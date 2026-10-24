@@ -6,8 +6,8 @@ BattleFrontier_BattlePikeLobby_MapScripts::
 BattleFrontier_BattlePikeLobby_OnFrame:
 	map_script_2 VAR_TEMP_CHALLENGE_STATUS, 0, BattleFrontier_BattlePikeLobby_EventScript_GetChallengeStatus
 	map_script_2 VAR_TEMP_CHALLENGE_STATUS, CHALLENGE_STATUS_SAVING, BattleFrontier_BattlePikeLobby_EventScript_QuitWithoutSaving
-	map_script_2 VAR_TEMP_CHALLENGE_STATUS, CHALLENGE_STATUS_WON, BattleFrontier_BattlePikeLobby_EventScript_WonChallenge
-	map_script_2 VAR_TEMP_CHALLENGE_STATUS, CHALLENGE_STATUS_LOST, BattleFrontier_BattlePikeLobby_EventScript_LostChallenge
+	map_script_2 VAR_TEMP_CHALLENGE_STATUS, CHALLENGE_STATUS_WON, BattleFrontier_BattlePikeLobby_EventScript_WonSeries
+	map_script_2 VAR_TEMP_CHALLENGE_STATUS, CHALLENGE_STATUS_LOST, BattleFrontier_BattlePikeLobby_EventScript_LostSeries
 	.2byte 0
 
 BattleFrontier_BattlePikeLobby_OnWarp:
@@ -29,14 +29,11 @@ BattleFrontier_BattlePikeLobby_EventScript_QuitWithoutSaving::
 	lockall
 	msgbox BattleFrontier_BattlePikeLobby_Text_FailedToSaveBeforeQuitting, MSGBOX_DEFAULT
 	closemessage
-	pike_set PIKE_DATA_WIN_STREAK, 0
-	pike_set PIKE_DATA_WIN_STREAK_ACTIVE, FALSE
-	frontier_set FRONTIER_DATA_CHALLENGE_STATUS, 0
-	setvar VAR_TEMP_CHALLENGE_STATUS, 255
+	frontier_endseries FRONTIER_SERIES_DISQUALIFIED
 	releaseall
 	end
 
-BattleFrontier_BattlePikeLobby_EventScript_WonChallenge::
+BattleFrontier_BattlePikeLobby_EventScript_WonSeries::
 	lockall
 	frontier_isbrain
 	goto_if_eq VAR_RESULT, TRUE, BattleFrontier_BattlePikeLobby_EventScript_DefeatedQueen
@@ -51,10 +48,10 @@ BattleFrontier_BattlePikeLobby_EventScript_GiveBattlePoints::
 	msgbox BattleFrontier_BattlePikeLobby_Text_AwardYouTheseBattlePoints, MSGBOX_DEFAULT
 	frontier_givepoints
 	msgbox BattleFrontier_Text_ObtainedXBattlePoints, MSGBOX_GETPOINTS
-	frontier_checkairshow
-	pike_get PIKE_DATA_TOTAL_STREAKS
+	pike_get PIKE_DATA_TOTAL_SERIES
 	addvar VAR_RESULT, 1
-	pike_set PIKE_DATA_TOTAL_STREAKS, VAR_RESULT
+	pike_set PIKE_DATA_TOTAL_SERIES, VAR_RESULT
+	frontier_endseries FRONTIER_SERIES_WON
 	special LoadPlayerParty
 	special HealPlayerParty
 	callnative UpdateFollowingPokemon
@@ -66,17 +63,14 @@ BattleFrontier_BattlePikeLobby_EventScript_GiveBattlePoints::
 	waitse
 	msgbox BattleFrontier_BattlePikeLobby_Text_LookForwardToSeeingYou, MSGBOX_DEFAULT
 	closemessage
-	setvar VAR_TEMP_CHALLENGE_STATUS, 255
 	releaseall
 	end
 
-BattleFrontier_BattlePikeLobby_EventScript_LostChallenge::
+BattleFrontier_BattlePikeLobby_EventScript_LostSeries::
 	lockall
 	message BattleFrontier_BattlePikeLobby_Text_ChallengeEndedRecordResults
 	waitmessage
-	frontier_checkairshow
-	frontier_set FRONTIER_DATA_BATTLE_NUM, 0
-	pike_set PIKE_DATA_WIN_STREAK_ACTIVE, FALSE
+	frontier_endseries FRONTIER_SERIES_LOST
 	special LoadPlayerParty
 	special HealPlayerParty
 	callnative UpdateFollowingPokemon
@@ -135,11 +129,8 @@ BattleFrontier_BattlePikeLobby_EventScript_SaveBeforeChallenge::
 	setvar VAR_TEMP_CHALLENGE_STATUS, 0
 	setvar VAR_TEMP_1, 0
 	frontier_set FRONTIER_DATA_SELECTED_MON_ORDER
-	pike_init
-	frontier_set FRONTIER_DATA_CHALLENGE_STATUS, CHALLENGE_STATUS_SAVING
-	pike_set PIKE_DATA_WIN_STREAK_ACTIVE, TRUE
+	frontier_init
 	pike_savehelditems
-	frontier_set FRONTIER_DATA_PAUSED, FALSE
 	special LoadPlayerParty
 	closemessage
 	delay 2

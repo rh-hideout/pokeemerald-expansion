@@ -31,8 +31,6 @@ extern const struct BattleFrontierTrainer gSlateportBattleTentTrainers[];
 
 void CallBattleTowerFunc(void);
 void PutNewBattleTowerRecord(struct EmeraldBattleTowerRecord *newRecordEm);
-void CalcEmeraldBattleTowerChecksum(struct EmeraldBattleTowerRecord *record);
-void CalcRubyBattleTowerChecksum(struct RSBattleTowerRecord *record);
 u16 GetCurrentBattleTowerWinStreak(enum FrontierLevelMode lvlMode, u8 battleMode);
 void TryHideBattleTowerReporter(void);
 bool32 RubyBattleTowerRecordToEmerald(struct RSBattleTowerRecord *src, struct EmeraldBattleTowerRecord *dst);

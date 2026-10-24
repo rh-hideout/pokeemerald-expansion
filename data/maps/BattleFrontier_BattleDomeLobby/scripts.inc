@@ -20,9 +20,9 @@ BattleFrontier_BattleDomeLobby_EventScript_TurnPlayerNorth::
 BattleFrontier_BattleDomeLobby_OnFrame:
 	map_script_2 VAR_TEMP_CHALLENGE_STATUS, 0, BattleFrontier_BattleDomeLobby_EventScript_GetChallengeStatus
 	map_script_2 VAR_TEMP_CHALLENGE_STATUS, CHALLENGE_STATUS_SAVING, BattleFrontier_BattleDomeLobby_EventScript_QuitWithoutSaving
-	map_script_2 VAR_TEMP_CHALLENGE_STATUS, CHALLENGE_STATUS_PAUSED, BattleFrontier_BattleDomeLobby_EventScript_ResumeChallenge
-	map_script_2 VAR_TEMP_CHALLENGE_STATUS, CHALLENGE_STATUS_WON, BattleFrontier_BattleDomeLobby_EventScript_WonChallenge
-	map_script_2 VAR_TEMP_CHALLENGE_STATUS, CHALLENGE_STATUS_LOST, BattleFrontier_BattleDomeLobby_EventScript_LostChallenge
+	map_script_2 VAR_TEMP_CHALLENGE_STATUS, CHALLENGE_STATUS_PAUSED, BattleFrontier_BattleDomeLobby_EventScript_ResumeSeries
+	map_script_2 VAR_TEMP_CHALLENGE_STATUS, CHALLENGE_STATUS_WON, BattleFrontier_BattleDomeLobby_EventScript_WonSeries
+	map_script_2 VAR_TEMP_CHALLENGE_STATUS, CHALLENGE_STATUS_LOST, BattleFrontier_BattleDomeLobby_EventScript_LostSeries
 	.2byte 0
 
 BattleFrontier_BattleDomeLobby_EventScript_GetChallengeStatus::
@@ -33,16 +33,12 @@ BattleFrontier_BattleDomeLobby_EventScript_QuitWithoutSaving::
 	lockall
 	msgbox BattleFrontier_BattleDomeLobby_Text_DidntSaveBeforeQuitting, MSGBOX_DEFAULT
 	closemessage
-	dome_set DOME_DATA_WIN_STREAK, 0
-	dome_set DOME_DATA_WIN_STREAK_ACTIVE, FALSE
-	dome_set DOME_DATA_ATTEMPTED_CHALLENGE, TRUE
-	frontier_set FRONTIER_DATA_CHALLENGE_STATUS, 0
-	setvar VAR_TEMP_CHALLENGE_STATUS, 255
+	frontier_endseries FRONTIER_SERIES_DISQUALIFIED
 	releaseall
 	end
 
-BattleFrontier_BattleDomeLobby_EventScript_WonChallenge::
-	call BattleFrontier_EventScript_IncrementWinStreak
+BattleFrontier_BattleDomeLobby_EventScript_WonSeries::
+	frontier_incrementstreak
 	lockall
 	frontier_isbrain
 	goto_if_eq VAR_RESULT, TRUE, BattleFrontier_BattleDomeLobby_EventScript_DefeatedAce
@@ -57,31 +53,20 @@ BattleFrontier_BattleDomeLobby_EventScript_GiveBattlePoints::
 	msgbox BattleFrontier_Text_ObtainedXBattlePoints, MSGBOX_GETPOINTS
 	message BattleFrontier_BattleDomeLobby_Text_RecordWillBeSaved
 	waitmessage
-	special LoadPlayerParty
-	frontier_setpartyorder FRONTIER_PARTY_SIZE
-	frontier_checkairshow
-	dome_set DOME_DATA_ATTEMPTED_CHALLENGE, TRUE
 	dome_set DOME_DATA_HAS_WON_CHALLENGE, TRUE
-	dome_set DOME_DATA_WIN_STREAK_ACTIVE, TRUE
-	special LoadPlayerParty
-	special HealPlayerParty
-	callnative UpdateFollowingPokemon
+	frontier_endseries FRONTIER_SERIES_WON
 	goto BattleFrontier_BattleDomeLobby_EventScript_AskRecordBattle
 
-BattleFrontier_BattleDomeLobby_EventScript_LostChallenge::
+BattleFrontier_BattleDomeLobby_EventScript_LostSeries:
 	lockall
 	msgbox BattleFrontier_BattleDomeLobby_Text_ThankYouForPlaying, MSGBOX_DEFAULT
 	message BattleFrontier_BattleDomeLobby_Text_RecordWillBeSaved
 	waitmessage
-	special LoadPlayerParty
-	frontier_setpartyorder FRONTIER_PARTY_SIZE
-	frontier_checkairshow
-	dome_set DOME_DATA_WIN_STREAK_ACTIVE, FALSE
-	dome_set DOME_DATA_ATTEMPTED_CHALLENGE, TRUE
+	frontier_endseries FRONTIER_SERIES_LOST
+BattleFrontier_BattleDomeLobby_EventScript_AskRecordBattle::
 	special LoadPlayerParty
 	special HealPlayerParty
 	callnative UpdateFollowingPokemon
-BattleFrontier_BattleDomeLobby_EventScript_AskRecordBattle::
 	dome_save 0
 	playse SE_SAVE
 	waitse
@@ -100,11 +85,10 @@ BattleFrontier_BattleDomeLobby_EventScript_RecordBattle::
 BattleFrontier_BattleDomeLobby_EventScript_EndChallenge::
 	msgbox BattleFrontier_BattleDomeLobby_Text_HopeToSeeYouAgain, MSGBOX_DEFAULT
 	closemessage
-	setvar VAR_TEMP_CHALLENGE_STATUS, 255
 	releaseall
 	end
 
-BattleFrontier_BattleDomeLobby_EventScript_ResumeChallenge::
+BattleFrontier_BattleDomeLobby_EventScript_ResumeSeries::
 	lockall
 	msgbox BattleFrontier_BattleDomeLobby_Text_WeveBeenWaitingForYou, MSGBOX_DEFAULT
 	message BattleFrontier_BattleDomeLobby_Text_OkayToSaveBeforeChallenge2
@@ -174,9 +158,7 @@ BattleFrontier_BattleDomeLobby_EventScript_TryEnterChallenge::
 BattleFrontier_BattleDomeLobby_EventScript_SaveBeforeChallenge::
 	setvar VAR_TEMP_CHALLENGE_STATUS, 0
 	frontier_set FRONTIER_DATA_SELECTED_MON_ORDER
-	dome_init
-	frontier_set FRONTIER_DATA_CHALLENGE_STATUS, CHALLENGE_STATUS_SAVING
-	frontier_set FRONTIER_DATA_PAUSED, FALSE
+	frontier_init
 	special LoadPlayerParty
 	closemessage
 	delay 2
@@ -192,6 +174,7 @@ BattleFrontier_BattleDomeLobby_EventScript_EnterChallenge::
 	closemessage
 	call BattleFrontier_BattleDomeLobby_EventScript_WalkToDoor
 	special HealPlayerParty
+	dome_set DOME_DATA_ATTEMPTED_CHALLENGE, TRUE
 	warp MAP_BATTLE_FRONTIER_BATTLE_DOME_CORRIDOR, 23, 6
 	setvar VAR_TEMP_CHALLENGE_STATUS, 0
 	waitstate

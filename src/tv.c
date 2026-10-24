@@ -1374,9 +1374,9 @@ static void InterviewAfter_BravoTrainerBattleTowerProfile(void)
     StringCopy(show->bravoTrainerTower.opponentName, gSaveBlock2Ptr->frontier.towerInterview.opponentName);
     show->bravoTrainerTower.species = gSaveBlock2Ptr->frontier.towerInterview.playerSpecies;
     show->bravoTrainerTower.defeatedSpecies = gSaveBlock2Ptr->frontier.towerInterview.opponentSpecies;
-    show->bravoTrainerTower.numFights = GetCurrentBattleTowerWinStreak(gSaveBlock2Ptr->frontier.towerLvlMode, 0);
+    show->bravoTrainerTower.numFights = GetCurrentBattleTowerWinStreak(gSaveBlock2Ptr->frontier.lvlMode, 0);
     show->bravoTrainerTower.wonTheChallenge = gSaveBlock2Ptr->frontier.towerBattleOutcome;
-    if (gSaveBlock2Ptr->frontier.towerLvlMode == FRONTIER_LVL_50)
+    if (gSaveBlock2Ptr->frontier.lvlMode == FRONTIER_LVL_50)
         show->bravoTrainerTower.btLevel = FRONTIER_MAX_LEVEL_50;
     else
         show->bravoTrainerTower.btLevel = FRONTIER_MAX_LEVEL_OPEN;

@@ -45,9 +45,9 @@
 #include "test/battle.h"
 
 // This file's functions.
-static void InitTowerChallenge(void);
-static void GetTowerData(void);
-static void SetTowerData(void);
+static void Unused_InitTowerChallenge(void);
+static void Unused_GetTowerData(void);
+static void Unused_SetTowerData(void);
 static void SetNextTowerOpponent(void);
 static void SetTowerBattleWon(void);
 static void AwardBattleTowerRibbons(void);
@@ -61,7 +61,6 @@ static void LoadLinkMultiOpponentsData(void);
 static void TowerTryCloseLink(void);
 static void SetMultiPartnerGfx(void);
 static void SetTowerInterviewData(void);
-static void ValidateBattleTowerRecordChecksums(void);
 static void SaveCurrentWinStreak(void);
 static void ValidateApprenticesChecksums(void);
 static void SetNextBattleTentOpponent(void);
@@ -627,9 +626,9 @@ static const u8 *const *const sPartnerApprenticeTextTables[NUM_APPRENTICES] =
 
 static void (* const sBattleTowerFuncs[])(void) =
 {
-    [BATTLE_TOWER_FUNC_INIT]                = InitTowerChallenge,
-    [BATTLE_TOWER_FUNC_GET_DATA]            = GetTowerData,
-    [BATTLE_TOWER_FUNC_SET_DATA]            = SetTowerData,
+    [BATTLE_TOWER_FUNC_INIT]                = Unused_InitTowerChallenge,
+    [BATTLE_TOWER_FUNC_GET_DATA]            = Unused_GetTowerData,
+    [BATTLE_TOWER_FUNC_SET_DATA]            = Unused_SetTowerData,
     [BATTLE_TOWER_FUNC_SET_OPPONENT]        = SetNextTowerOpponent,
     [BATTLE_TOWER_FUNC_SET_BATTLE_WON]      = SetTowerBattleWon,
     [BATTLE_TOWER_FUNC_GIVE_RIBBONS]        = AwardBattleTowerRibbons,
@@ -643,22 +642,6 @@ static void (* const sBattleTowerFuncs[])(void) =
     [BATTLE_TOWER_FUNC_TRY_CLOSE_LINK]      = TowerTryCloseLink,
     [BATTLE_TOWER_FUNC_SET_PARTNER_GFX]     = SetMultiPartnerGfx,
     [BATTLE_TOWER_FUNC_SET_INTERVIEW_DATA]  = SetTowerInterviewData,
-};
-
-static const u32 sWinStreakFlags[][2] =
-{
-    {STREAK_TOWER_SINGLES_50,     STREAK_TOWER_SINGLES_OPEN},
-    {STREAK_TOWER_DOUBLES_50,     STREAK_TOWER_DOUBLES_OPEN},
-    {STREAK_TOWER_MULTIS_50,      STREAK_TOWER_MULTIS_OPEN},
-    {STREAK_TOWER_LINK_MULTIS_50, STREAK_TOWER_LINK_MULTIS_OPEN},
-};
-
-static const u32 sWinStreakMasks[][2] =
-{
-    {~(STREAK_TOWER_SINGLES_50),     ~(STREAK_TOWER_SINGLES_OPEN)},
-    {~(STREAK_TOWER_DOUBLES_50),     ~(STREAK_TOWER_DOUBLES_OPEN)},
-    {~(STREAK_TOWER_MULTIS_50),      ~(STREAK_TOWER_MULTIS_OPEN)},
-    {~(STREAK_TOWER_LINK_MULTIS_50), ~(STREAK_TOWER_LINK_MULTIS_OPEN)},
 };
 
 // The challenge number at which an Apprentice can appear, depending on how many of their questions were answered
@@ -703,67 +686,19 @@ void CallBattleTowerFunc(void)
     sBattleTowerFuncs[gSpecialVar_0x8004]();
 }
 
-static void InitTowerChallenge(void)
+static void Unused_InitTowerChallenge(void)
 {
-    enum FrontierLevelMode lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
-    u32 battleMode = VarGet(VAR_FRONTIER_BATTLE_MODE);
 
-    gSaveBlock2Ptr->frontier.challengeStatus = CHALLENGE_STATUS_SAVING;
-    gSaveBlock2Ptr->frontier.curChallengeBattleNum = 0;
-    gSaveBlock2Ptr->frontier.challengePaused = FALSE;
-    gSaveBlock2Ptr->frontier.disableRecordBattle = FALSE;
-    ResetFrontierTrainerIds();
-    if (!(gSaveBlock2Ptr->frontier.winStreakActiveFlags & sWinStreakFlags[battleMode][lvlMode]))
-        gSaveBlock2Ptr->frontier.towerWinStreaks[battleMode][lvlMode] = 0;
-
-    ValidateBattleTowerRecordChecksums();
-    SetDynamicWarp(0, gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum, WARP_ID_NONE);
-    TRAINER_BATTLE_PARAM.opponentA = 0;
 }
 
-static void GetTowerData(void)
+static void Unused_GetTowerData(void)
 {
-    enum FrontierLevelMode lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
-    u32 battleMode = VarGet(VAR_FRONTIER_BATTLE_MODE);
 
-    switch (gSpecialVar_0x8005)
-    {
-    case 0:
-        break;
-    case TOWER_DATA_WIN_STREAK:
-        gSpecialVar_Result = GetCurrentBattleTowerWinStreak(lvlMode, battleMode);
-        break;
-    case TOWER_DATA_WIN_STREAK_ACTIVE:
-        gSpecialVar_Result = ((gSaveBlock2Ptr->frontier.winStreakActiveFlags & sWinStreakFlags[battleMode][lvlMode]) != 0);
-        break;
-    case TOWER_DATA_LVL_MODE:
-        gSaveBlock2Ptr->frontier.towerLvlMode = gSaveBlock2Ptr->frontier.lvlMode;
-        break;
-    }
 }
 
-static void SetTowerData(void)
+static void Unused_SetTowerData(void)
 {
-    enum FrontierLevelMode lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
-    u32 battleMode = VarGet(VAR_FRONTIER_BATTLE_MODE);
 
-    switch (gSpecialVar_0x8005)
-    {
-    case 0:
-        break;
-    case TOWER_DATA_WIN_STREAK:
-        gSaveBlock2Ptr->frontier.towerWinStreaks[battleMode][lvlMode] = gSpecialVar_0x8006;
-        break;
-    case TOWER_DATA_WIN_STREAK_ACTIVE:
-        if (gSpecialVar_0x8006)
-            gSaveBlock2Ptr->frontier.winStreakActiveFlags |= sWinStreakFlags[battleMode][lvlMode];
-        else
-            gSaveBlock2Ptr->frontier.winStreakActiveFlags &= sWinStreakMasks[battleMode][lvlMode];
-        break;
-    case TOWER_DATA_LVL_MODE:
-        gSaveBlock2Ptr->frontier.towerLvlMode = gSaveBlock2Ptr->frontier.lvlMode;
-        break;
-    }
 }
 
 static void SetTowerBattleWon(void)
@@ -816,8 +751,7 @@ static bool8 ChooseSpecialBattleTowerTrainer(void)
         if (validMons >= sBattleTowerPartySizes2[battleMode]
             && gSaveBlock2Ptr->frontier.towerRecords[i].winStreak == winStreak
             && gSaveBlock2Ptr->frontier.towerRecords[i].lvlMode == lvlMode
-            && recordHasData
-            && gSaveBlock2Ptr->frontier.towerRecords[i].checksum == checksum)
+            && recordHasData)
         {
             trainerIds[idsCount] = i + TRAINER_RECORD_MIXING_FRIEND;
             idsCount++;
@@ -1076,7 +1010,6 @@ static void SaveBattleTowerRecord(void)
     }
 
     playerRecord->language = gGameLanguage;
-    CalcEmeraldBattleTowerChecksum(&gSaveBlock2Ptr->frontier.towerPlayer);
     SaveCurrentWinStreak();
 }
 
@@ -1274,8 +1207,7 @@ static void LoadMultiPartnerCandidatesData(void)
 
         if (gSaveBlock2Ptr->frontier.towerRecords[i].winStreak / FRONTIER_STAGES_PER_CHALLENGE <= challengeNum
             && gSaveBlock2Ptr->frontier.towerRecords[i].lvlMode == lvlMode
-            && recordHasData
-            && gSaveBlock2Ptr->frontier.towerRecords[i].checksum == checksum)
+            && recordHasData)
         {
             k = 0;
             for (j = 0; j < MAX_FRONTIER_PARTY_SIZE; j++)
@@ -1575,50 +1507,6 @@ static void SetTowerInterviewData(void)
     gSaveBlock2Ptr->frontier.towerBattleOutcome = gBattleOutcome;
 }
 
-static void ValidateBattleTowerRecordChecksums(void)
-{
-    s32 i, j;
-    u32 *record = (u32 *)(&gSaveBlock2Ptr->frontier.towerPlayer);
-    u32 checksum = 0;
-
-    for (j = 0; j < (sizeof(struct EmeraldBattleTowerRecord) - 4) / 4; j++) // - 4, because of the last field being the checksum itself.
-    {
-        checksum += record[j];
-    }
-    if (gSaveBlock2Ptr->frontier.towerPlayer.checksum != checksum)
-        ClearBattleTowerRecord(&gSaveBlock2Ptr->frontier.towerPlayer);
-
-    for (i = 0; i < BATTLE_TOWER_RECORD_COUNT; i++)
-    {
-        record = (u32 *)(&gSaveBlock2Ptr->frontier.towerRecords[i]);
-        checksum = 0;
-        for (j = 0; j < (sizeof(struct EmeraldBattleTowerRecord) - 4) / 4; j++) // - 4, because of the last field being the checksum itself.
-        {
-            checksum += record[j];
-        }
-        if (gSaveBlock2Ptr->frontier.towerRecords[i].checksum != checksum)
-            ClearBattleTowerRecord(&gSaveBlock2Ptr->frontier.towerRecords[i]);
-    }
-}
-
-void CalcEmeraldBattleTowerChecksum(struct EmeraldBattleTowerRecord *record)
-{
-    u32 i;
-
-    record->checksum = 0;
-    for (i = 0; i < (sizeof(struct EmeraldBattleTowerRecord) - 4) / 4; i++) // - 4, because of the last field being the checksum itself.
-        record->checksum += ((u32 *)record)[i];
-}
-
-void CalcRubyBattleTowerChecksum(struct RSBattleTowerRecord *record)
-{
-    u32 i;
-
-    record->checksum = 0;
-    for (i = 0; i < (sizeof(struct RSBattleTowerRecord) - 4) / 4; i++) // - 4, because of the last field being the checksum itself.
-        record->checksum += ((u32 *)record)[i];
-}
-
 static void ClearBattleTowerRecord(struct EmeraldBattleTowerRecord *record)
 {
     u32 i;
@@ -1771,7 +1659,6 @@ bool32 RubyBattleTowerRecordToEmerald(struct RSBattleTowerRecord *src, struct Em
             dst->party[i] = src->party[i];
 
         CpuFill32(0, &dst->party[FRONTIER_PARTY_SIZE], sizeof(dst->party[FRONTIER_PARTY_SIZE]));
-        CalcEmeraldBattleTowerChecksum(dst);
         return TRUE;
     }
 }
@@ -1819,7 +1706,6 @@ bool32 EmeraldBattleTowerRecordToRuby(struct EmeraldBattleTowerRecord *src, stru
         for (i = 0; i < FRONTIER_PARTY_SIZE; i++)
             dst->party[i] = src->party[i];
 
-        CalcRubyBattleTowerChecksum(dst);
         return TRUE;
     }
 }

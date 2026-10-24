@@ -1,9 +1,3 @@
-	@ Initialize the Battle Dome challenge
-	.macro dome_init
-	setvar VAR_0x8004, BATTLE_DOME_FUNC_INIT
-	special CallBattleDomeFunction
-	.endm
-
 	@ Get the value of some DOME_DATA_*. See GetDomeData for the data types that can be retrieved
 	.macro dome_get data:req
 	setvar VAR_0x8004, BATTLE_DOME_FUNC_GET_DATA
@@ -80,12 +74,6 @@
 	.macro dome_save challengeStatus:req
 	setvar VAR_0x8004, BATTLE_DOME_FUNC_SAVE
 	setvar VAR_0x8005, \challengeStatus
-	special CallBattleDomeFunction
-	.endm
-
-	@ Unused. Increment the win streaks for the current challenge by one
-	.macro dome_incrementstreaks
-	setvar VAR_0x8004, BATTLE_DOME_FUNC_INCREMENT_STREAK
 	special CallBattleDomeFunction
 	.endm
 

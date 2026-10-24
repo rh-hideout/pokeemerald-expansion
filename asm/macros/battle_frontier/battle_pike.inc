@@ -163,9 +163,3 @@
 	setvar VAR_0x8004, BATTLE_PIKE_FUNC_RESET_HELD_ITEMS
 	special CallBattlePikeFunction
 	.endm
-
-	@ Initialize the Battle Pike challenge
-	.macro pike_init
-	setvar VAR_0x8004, BATTLE_PIKE_FUNC_INIT
-	special CallBattlePikeFunction
-	.endm
