@@ -257,6 +257,7 @@ static void CB2_MysteryEventMenu(void)
         {
             // No clue what is going on here, and from where gDecompressionBuffer gets actually populated with mystery event script.
             /*
+            // WHEN THIS CODE BLOCK GETS REMOVED, DELETE THE RunMysteryEventScript FUNCTION
             u16 status = RunMysteryEventScript(gDecompressionBuffer);
             CpuFill32(0, gDecompressionBuffer, 0x7D4);
 

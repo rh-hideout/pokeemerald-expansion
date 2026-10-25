@@ -41,7 +41,7 @@ DOUBLE_BATTLE_TEST("Terrain Boost: Expanding Force hits both foes in Psychic Ter
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_EXPANDING_FORCE, target: opponentLeft); MOVE(playerRight, MOVE_PSYCHIC_TERRAIN); }
-        TURN { MOVE(playerLeft, MOVE_EXPANDING_FORCE, target: opponentLeft); }
+        TURN { MOVE(playerLeft, MOVE_EXPANDING_FORCE, target: playerRight); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EXPANDING_FORCE, playerLeft);
         HP_BAR(opponentLeft);

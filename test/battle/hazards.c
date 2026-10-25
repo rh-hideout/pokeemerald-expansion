@@ -25,7 +25,7 @@ SINGLE_BATTLE_TEST("Hazards are applied based on order of set up")
         MESSAGE("Pointed stones dug into Wobbuffet!");
         MESSAGE("Wobbuffet was caught in a sticky web!");
         MESSAGE("Wobbuffet was hurt by the spikes!");
-        MESSAGE("The poison spikes disappeared from the ground around your team!");
+        MESSAGE("The toxic spikes disappeared from the ground around your side!");
         MESSAGE("Pointed stones dug into Wynaut!");
         MESSAGE("Wynaut was caught in a sticky web!");
         MESSAGE("Wynaut was hurt by the spikes!");
@@ -81,7 +81,7 @@ SINGLE_BATTLE_TEST("Toxic Spikes can be removed after fainting to other hazards"
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPIKES, opponent);
         MESSAGE("Pointed stones dug into Grimer!");
         MESSAGE("Grimer fainted!");
-        MESSAGE("The poison spikes disappeared from the ground around your team!");
+        MESSAGE("The toxic spikes disappeared from the ground around your side!");
         NONE_OF {
             MESSAGE("Grimer was caught in a sticky web!");
             MESSAGE("Grimer was hurt by the spikes!");

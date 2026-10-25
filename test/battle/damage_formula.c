@@ -417,3 +417,40 @@ DOUBLE_BATTLE_TEST("Transistor Damage calculation", s16 damage)
         EXPECT_EQ(damagePlayerRight, expectedDamageTransistorPhys);
     }
 }
+
+SINGLE_BATTLE_TEST("Damage calculation for Protosynthesis")
+{
+    s16 dmg;
+    s16 expectedDamage;
+    PARAMETRIZE { expectedDamage = 105; }
+    PARAMETRIZE { expectedDamage = 103; }
+    PARAMETRIZE { expectedDamage = 102; }
+    PARAMETRIZE { expectedDamage = 100; }
+    PARAMETRIZE { expectedDamage = 100; }
+    PARAMETRIZE { expectedDamage = 99; }
+    PARAMETRIZE { expectedDamage = 97; }
+    PARAMETRIZE { expectedDamage = 97; }
+    PARAMETRIZE { expectedDamage = 96; }
+    PARAMETRIZE { expectedDamage = 94; }
+    PARAMETRIZE { expectedDamage = 94; }
+    PARAMETRIZE { expectedDamage = 93; }
+    PARAMETRIZE { expectedDamage = 91; }
+    PARAMETRIZE { expectedDamage = 90; }
+    PARAMETRIZE { expectedDamage = 90; }
+    PARAMETRIZE { expectedDamage = 88; }
+    GIVEN {
+        ASSUME(GetMoveCategory(MOVE_CLOSE_COMBAT) == DAMAGE_CATEGORY_PHYSICAL);
+        PLAYER(SPECIES_URSHIFU_RAPID_STRIKE) { Level(95); Attack(281); }
+        OPPONENT(SPECIES_GOUGING_FIRE) { Defense(305); Ability(ABILITY_PROTOSYNTHESIS); Item(ITEM_BOOSTER_ENERGY); }
+    } WHEN {
+        TURN {
+            MOVE(player, MOVE_CLOSE_COMBAT, WITH_RNG(RNG_DAMAGE_MODIFIER, i));
+        }
+    }
+    SCENE {
+        HP_BAR(opponent, captureDamage: &dmg);
+    }
+    THEN {
+        EXPECT_EQ(expectedDamage, dmg);
+    }
+}

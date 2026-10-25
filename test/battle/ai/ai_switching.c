@@ -190,7 +190,7 @@ AI_SINGLE_BATTLE_TEST("AI switches if Perish Song is about to kill")
 
 AI_SINGLE_BATTLE_TEST("AI sees on-field player ability correctly and does not see previous Pokémon's ability after player uses a pivot move when choosing a post-KO switch")
 {
-    u32 testAbility;
+    enum Ability testAbility;
     PARAMETRIZE { testAbility = ABILITY_WATER_ABSORB; }
     PARAMETRIZE { testAbility = ABILITY_VOLT_ABSORB; }
     GIVEN {
@@ -756,7 +756,7 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: Switchin move data is reset be
 
         gAiLogicData->resistBerryAffected[battlerAtk][battlerDef][moveIndex] = TRUE;
         gAiLogicData->moveLimitations[battlerAtk] |= 1u << moveIndex;
-        CalcBattlerAiMovesData(gAiLogicData, battlerAtk, battlerDef, AI_GetWeather(), gFieldStatuses);
+        CalcBattlerAiMovesData(gAiLogicData, battlerAtk, battlerDef, AI_GetWeather(), gFieldTimers.terrain);
 
         EXPECT_EQ(gAiLogicData->simulatedDmg[battlerAtk][battlerDef][moveIndex].median, 0);
         EXPECT_EQ(gAiLogicData->effectiveness[battlerAtk][battlerDef][moveIndex], 0);
@@ -1191,7 +1191,8 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will switch out if it can't d
 
 AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will switch out if it has been Toxic'd for at least two turns 50% of the time with more than 1/3 HP remaining with good switchin")
 {
-    u32 species = SPECIES_NONE, odds = 0;
+    enum Species species = SPECIES_NONE;
+    u32 odds = 0;
     PARAMETRIZE { species = SPECIES_ZIGZAGOON, odds = 0; }
     PARAMETRIZE { species = SPECIES_HARIYAMA, odds = SHOULD_SWITCH_BADLY_POISONED_PERCENTAGE; }
     PASSES_RANDOMLY(odds, 100, RNG_AI_SWITCH_BADLY_POISONED);
@@ -1519,7 +1520,7 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will switch out to cycle Inti
 
 AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will not cycle Intimidate when target blocks or punishes Attack drops")
 {
-    u32 Species = SPECIES_NONE;
+    enum Species Species = SPECIES_NONE;
     enum Ability ability;
     PARAMETRIZE { Species = SPECIES_TENTACRUEL; ability = ABILITY_CLEAR_BODY; }
     PARAMETRIZE { Species = SPECIES_BRAVIARY; ability = ABILITY_DEFIANT; }
@@ -1695,7 +1696,7 @@ AI_SINGLE_BATTLE_TEST("Switch AI: AI will switch out if mon has Truant and oppon
 
 AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will switch out if main attacking stat lowered by 2 stages with good switchin candidate 50% of the time")
 {
-    u32 aiSpecies = SPECIES_NONE;
+    enum Species aiSpecies = SPECIES_NONE;
     enum Move aiMove = MOVE_NONE, move = MOVE_NONE;
 
     PASSES_RANDOMLY(SHOULD_SWITCH_ATTACKING_STAT_MINUS_TWO_PERCENTAGE, 100, RNG_AI_SWITCH_STATS_LOWERED);
@@ -1717,7 +1718,7 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will switch out if main attac
 
 AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will switch out if main attacking stat lowered by 3+ stages")
 {
-    u32 aiSpecies = SPECIES_NONE;
+    enum Species aiSpecies = SPECIES_NONE;
     enum Move aiMove = MOVE_NONE, move = MOVE_NONE, move2 = MOVE_NONE;
 
     PASSES_RANDOMLY(SHOULD_SWITCH_ATTACKING_STAT_MINUS_THREE_PLUS_PERCENTAGE, 100, RNG_AI_SWITCH_STATS_LOWERED);
@@ -1893,6 +1894,37 @@ AI_SINGLE_BATTLE_TEST("Switch AI: AI will switch out if Palafin-Zero isn't trans
     }
 }
 
+AI_SINGLE_BATTLE_TEST("Switch AI: Palafin-Hero does not switch to activate Zero to Hero again (Single)")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_GLISCOR) { Moves(MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_PALAFIN_HERO) { Ability(ABILITY_ZERO_TO_HERO); Moves(MOVE_JET_PUNCH); }
+        OPPONENT(SPECIES_GLISCOR) { Moves(MOVE_CELEBRATE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); EXPECT_MOVE(opponent, MOVE_JET_PUNCH); }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("Switch AI: Palafin-Hero does not switch to activate Zero to Hero again (Doubles)")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_GLISCOR) { Moves(MOVE_CELEBRATE); }
+        PLAYER(SPECIES_GLISCOR) { Moves(MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_PALAFIN_HERO) { Ability(ABILITY_ZERO_TO_HERO); Moves(MOVE_JET_PUNCH); }
+        OPPONENT(SPECIES_GLISCOR) { Moves(MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_GLISCOR) { Moves(MOVE_CELEBRATE); }
+    } WHEN {
+        TURN {
+            MOVE(playerLeft, MOVE_CELEBRATE);
+            MOVE(playerRight, MOVE_CELEBRATE);
+            EXPECT_MOVE(opponentLeft, MOVE_JET_PUNCH);
+            EXPECT_MOVE(opponentRight, MOVE_CELEBRATE);
+        }
+    }
+}
+
 AI_SINGLE_BATTLE_TEST("Switch AI: Palafin uses Flip Turn when faster to transform (Single)")
 {
     GIVEN {
@@ -1958,14 +1990,15 @@ AI_DOUBLE_BATTLE_TEST("Switch AI: Palafin hard switches when slower even with Fl
 
 AI_SINGLE_BATTLE_TEST("Switch AI: Palafin hard switches into absorb abilities instead of Flip Turn (Single)")
 {
+    enum Species palafinAbsorbSpecies;
     enum Ability palafinAbsorbAbility;
-    PARAMETRIZE { palafinAbsorbAbility = ABILITY_STORM_DRAIN; }
-    PARAMETRIZE { palafinAbsorbAbility = ABILITY_WATER_ABSORB; }
-    PARAMETRIZE { palafinAbsorbAbility = ABILITY_DRY_SKIN; }
+    PARAMETRIZE { palafinAbsorbSpecies = SPECIES_GASTRODON; palafinAbsorbAbility = ABILITY_STORM_DRAIN; }
+    PARAMETRIZE { palafinAbsorbSpecies = SPECIES_VAPOREON;  palafinAbsorbAbility = ABILITY_WATER_ABSORB; }
+    PARAMETRIZE { palafinAbsorbSpecies = SPECIES_PARASECT;  palafinAbsorbAbility = ABILITY_DRY_SKIN; }
 
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
-        PLAYER(SPECIES_GLISCOR) { Speed(10); Ability(palafinAbsorbAbility); }
+        PLAYER(palafinAbsorbSpecies) { Speed(10); Ability(palafinAbsorbAbility); }
         OPPONENT(SPECIES_PALAFIN_ZERO) { Ability(ABILITY_ZERO_TO_HERO); Speed(20); Moves(MOVE_FLIP_TURN, MOVE_TACKLE); }
         OPPONENT(SPECIES_GLISCOR) { Speed(8); }
     } WHEN {
@@ -1975,14 +2008,15 @@ AI_SINGLE_BATTLE_TEST("Switch AI: Palafin hard switches into absorb abilities in
 
 AI_DOUBLE_BATTLE_TEST("Switch AI: Palafin hard switches into absorb abilities instead of Flip Turn (Doubles)")
 {
+    enum Species palafinAbsorbSpecies;
     enum Ability palafinAbsorbAbility;
-    PARAMETRIZE { palafinAbsorbAbility = ABILITY_STORM_DRAIN; }
-    PARAMETRIZE { palafinAbsorbAbility = ABILITY_WATER_ABSORB; }
-    PARAMETRIZE { palafinAbsorbAbility = ABILITY_DRY_SKIN; }
+    PARAMETRIZE { palafinAbsorbSpecies = SPECIES_GASTRODON; palafinAbsorbAbility = ABILITY_STORM_DRAIN; }
+    PARAMETRIZE { palafinAbsorbSpecies = SPECIES_VAPOREON;  palafinAbsorbAbility = ABILITY_WATER_ABSORB; }
+    PARAMETRIZE { palafinAbsorbSpecies = SPECIES_PARASECT;  palafinAbsorbAbility = ABILITY_DRY_SKIN; }
 
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
-        PLAYER(SPECIES_GLISCOR) { Speed(5); Ability(palafinAbsorbAbility); Moves(MOVE_CELEBRATE); }
+        PLAYER(palafinAbsorbSpecies) { Speed(5); Ability(palafinAbsorbAbility); Moves(MOVE_CELEBRATE); }
         PLAYER(SPECIES_GLISCOR) { Speed(4); Moves(MOVE_CELEBRATE); }
         OPPONENT(SPECIES_PALAFIN_ZERO) { Ability(ABILITY_ZERO_TO_HERO); Speed(20); Moves(MOVE_FLIP_TURN, MOVE_TACKLE); }
         OPPONENT(SPECIES_GLISCOR) { Speed(1); Moves(MOVE_CELEBRATE); }

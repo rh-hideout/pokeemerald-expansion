@@ -2,6 +2,29 @@
 #include "test/battle.h"
 #include "test/test.h"
 #include "test/battle.h"
+#include "constants/characters.h"
+
+TEST("Tests initialize a terminated player name")
+{
+    EXPECT(memchr(gSaveBlock2Ptr->playerName, EOS, sizeof(gSaveBlock2Ptr->playerName)) != NULL);
+}
+
+WILD_BATTLE_TEST("Shiny wild battle tests preserve adjacent TV shows")
+{
+    GIVEN {
+        gSaveBlock1Ptr->tvShows[NUM_NORMAL_TVSHOW_SLOTS + 1].common.kind = TVSHOW_FISHING_ADVICE;
+        gSaveBlock1Ptr->tvShows[NUM_NORMAL_TVSHOW_SLOTS + 1].common.active = TRUE;
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Shiny(TRUE); }
+    } WHEN {
+        TURN { }
+    } THEN {
+        EXPECT_EQ(gSaveBlock1Ptr->tvShows[NUM_NORMAL_TVSHOW_SLOTS].common.kind, TVSHOW_BREAKING_NEWS);
+        EXPECT_EQ(gSaveBlock1Ptr->tvShows[NUM_NORMAL_TVSHOW_SLOTS].breakingNews.playerName[0], gSaveBlock2Ptr->playerName[0]);
+        EXPECT_EQ(gSaveBlock1Ptr->tvShows[NUM_NORMAL_TVSHOW_SLOTS + 1].common.kind, TVSHOW_FISHING_ADVICE);
+        EXPECT_EQ(gSaveBlock1Ptr->tvShows[NUM_NORMAL_TVSHOW_SLOTS + 1].common.active, TRUE);
+    }
+}
 
 TEST("Tests resume after CRASH")
 {
@@ -247,5 +270,31 @@ MULTI_BATTLE_TEST("Celebrate does not need to be explicitly set in a non-AI test
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, playerRight);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentRight);
+    }
+}
+
+SINGLE_BATTLE_TEST("ITEM_POPUP correctly detects popups")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { MaxHP(100); HP(1); Item(ITEM_LEFTOVERS); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {}
+    } SCENE {
+        ITEM_POPUP(player, ITEM_LEFTOVERS);
+    }
+}
+
+SINGLE_BATTLE_TEST("ITEM_POPUP fails when specifying the wrong item")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { MaxHP(100); HP(1); Item(ITEM_LEFTOVERS); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {}
+    } SCENE {
+        EXPECT_FAIL {
+            ITEM_POPUP(player, ITEM_BLACK_SLUDGE);
+        }
     }
 }

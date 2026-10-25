@@ -1435,16 +1435,6 @@ u32 GetBattleMonSpritePalettesMask(u8 playerLeft, u8 playerRight, u8 opponentLef
     return selectedPalettes;
 }
 
-u8 GetSpritePalIdxByBattler(enum BattlerId battler)
-{
-    return battler;
-}
-
-static u8 UNUSED GetSpritePalIdxByPosition(u8 position)
-{
-    return GetBattlerAtPosition(position);
-}
-
 // gBattleAnimArgs 0-3 used
 // 0, 1 used for position
 // 2, 3 as some control variables

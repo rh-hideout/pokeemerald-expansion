@@ -323,6 +323,8 @@ void CreateBattlerSprite(enum BattlerId battler)
                 return;
             if (gBattleScripting.monCaught) // Don't create opponent sprite if it has been caught.
                 return;
+            if (gBattleStruct->victoryCatchState == VICTORY_CATCH_FAINTED) // Don't create opponent sprite if it has faux-fainted during a victory catch sequence.
+                return;
             enum Species species = GetMonData(mon, MON_DATA_SPECIES);
 
             SetMultiuseSpriteTemplateToPokemon(species, position);
@@ -409,7 +411,12 @@ static void CreateHealthboxSprite(enum BattlerId battler)
         else
             DummyBattleInterfaceFunc(gHealthboxSpriteIds[battler], FALSE);
 
-        if (!IsOnPlayerSide(battler))
+        if (gBattleStruct->victoryCatchState != VICTORY_CATCH_START)
+        {
+            // Hide HP boxes to stop the player from seeing the 1 HP hack and for cinematic purposes
+            SetHealthboxSpriteInvisible(healthboxSpriteId);
+        }
+        else if (!IsOnPlayerSide(battler))
         {
             if (GetMonData(GetBattlerMon(battler), MON_DATA_HP) == 0 || gBattleStruct->battlerState[battler].notOnField)
                 SetHealthboxSpriteInvisible(healthboxSpriteId);

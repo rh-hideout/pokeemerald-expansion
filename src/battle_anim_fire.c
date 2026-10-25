@@ -996,7 +996,7 @@ static void CreateEruptionLaunchRocks(u8 spriteId, u8 taskId, u8 activeSpritesId
 
     for (i = 0, j = 0; i <= 6; i++)
     {
-        u8 spriteId = CreateSprite(&gEruptionLaunchRockSpriteTemplate, x, y, 2);
+        u8 spriteId = CreateSpriteUnchecked(&gEruptionLaunchRockSpriteTemplate, x, y, 2);
 
         if (spriteId != MAX_SPRITES)
         {

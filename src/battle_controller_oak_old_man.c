@@ -147,7 +147,7 @@ static void OakOldManBufferRunCommand(enum BattlerId battler)
 static void HandleInputChooseAction(enum BattlerId battler)
 {
     // Like player, but specifically for Rival in Oak's Lab
-    u16 itemId = gBattleResources->bufferA[battler][2] | (gBattleResources->bufferA[battler][3] << 8);
+    enum Item itemId = gBattleResources->bufferA[battler][2] | (gBattleResources->bufferA[battler][3] << 8);
 
     DoBounceEffect(battler, BOUNCE_HEALTHBOX, 7, 1);
     DoBounceEffect(battler, BOUNCE_MON, 7, 1);
@@ -579,7 +579,7 @@ static void PrintOakTextWithMainBgDarkened(enum BattlerId battler, const u8 *tex
                 OakOldManBufferExecCompleted(battler);
             else
                 OpponentBufferExecCompleted(battler);
-            gBattleCommunication[MSG_DISPLAY] = 0;
+            gBattleCommunication[MSG_DISPLAY] = MSG_DISPLAY_CONTINUE;
             gBattleStruct->simulatedInputState0 = 0;
         }
         break;

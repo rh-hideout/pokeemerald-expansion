@@ -50,7 +50,7 @@ DOUBLE_BATTLE_TEST("Role Play copies target's current ability even if it changed
 
 SINGLE_BATTLE_TEST("Role Play and Doodle fail if target's ability can't be copied'")
 {
-    u32 species;
+    enum Species species;
     enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_SHEDINJA; ability = ABILITY_WONDER_GUARD; }
@@ -90,7 +90,7 @@ SINGLE_BATTLE_TEST("Role Play and Doodle fail if target's ability can't be copie
 
 SINGLE_BATTLE_TEST("Role Play fails if user's ability can't be suppressed")
 {
-    u32 species;
+    enum Species species;
     enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_ARCEUS; ability = ABILITY_MULTITYPE; }

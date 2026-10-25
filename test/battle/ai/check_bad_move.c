@@ -6,7 +6,8 @@
 AI_SINGLE_BATTLE_TEST("AI will not try to lower opposing stats if target is protected by it's ability")
 {
     enum Ability ability;
-    u32 species, move;
+    enum Species species;
+    enum Move move;
 
     PARAMETRIZE { ability = ABILITY_SPEED_BOOST;  species = SPECIES_TORCHIC; move = MOVE_SCARY_FACE; }
     PARAMETRIZE { ability = ABILITY_HYPER_CUTTER; species = SPECIES_KRABBY;  move = MOVE_GROWL; }
@@ -49,6 +50,58 @@ AI_DOUBLE_BATTLE_TEST("AI will not try to lower opposing stats if target is prot
     }
 }
 
+AI_DOUBLE_BATTLE_TEST("AI avoids Mind Reader and Lock-On while any target is locked on")
+{
+    enum Move move;
+
+    PARAMETRIZE { move = MOVE_MIND_READER; }
+    PARAMETRIZE { move = MOVE_LOCK_ON; }
+
+    GIVEN {
+        ASSUME(GetMoveEffect(move) == EFFECT_LOCK_ON);
+        TIE_BREAK_SCORE(RNG_AI_SCORE_TIE_DOUBLES_MOVE, SCORE_TIE_LO, 0);
+        TIE_BREAK_TARGET(TARGET_TIE_LO, 0);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(move, MOVE_SCRATCH); }
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { EXPECT_MOVE(opponentLeft, move, target: playerLeft); }
+        TURN {
+            EXPECT_MOVE(opponentLeft, MOVE_SCRATCH);
+            SCORE_LT_VAL(opponentLeft, move, AI_SCORE_DEFAULT, target: playerLeft);
+            SCORE_LT_VAL(opponentLeft, move, AI_SCORE_DEFAULT, target: playerRight);
+        }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI attacks the target of its active Mind Reader or Lock-On")
+{
+    enum Move move;
+
+    PARAMETRIZE { move = MOVE_MIND_READER; }
+    PARAMETRIZE { move = MOVE_LOCK_ON; }
+
+    GIVEN {
+        ASSUME(GetMoveEffect(move) == EFFECT_LOCK_ON);
+        TIE_BREAK_SCORE(RNG_AI_SCORE_TIE_DOUBLES_MOVE, SCORE_TIE_LO, 0);
+        TIE_BREAK_TARGET(TARGET_TIE_LO, 0);
+        AI_FLAGS(AI_FLAG_SMART_TRAINER | AI_FLAG_PREFER_HIGHEST_DAMAGE_MOVE);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(move, MOVE_HYDRO_PUMP); }
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { EXPECT_MOVE(opponentLeft, move, target: playerLeft); }
+        TURN {
+            EXPECT_MOVE(opponentLeft, MOVE_HYDRO_PUMP, target: playerLeft);
+            SCORE_GT_VAL(opponentLeft, MOVE_HYDRO_PUMP, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE, target: playerLeft);
+            SCORE_EQ_VAL(opponentLeft, MOVE_HYDRO_PUMP, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE, target: playerRight);
+        }
+    }
+}
+
 AI_SINGLE_BATTLE_TEST("AI sees No Guard affects semi-invulnerable moves")
 {
     GIVEN {
@@ -72,7 +125,7 @@ AI_SINGLE_BATTLE_TEST("AI predicts semi-invulnerable entry and chooses a move th
     PASSES_RANDOMLY(PREDICT_MOVE_CHANCE, 100, RNG_AI_PREDICT_MOVE);
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_DIVE) == EFFECT_SEMI_INVULNERABLE);
-        ASSUME(GetMoveTwoTurnAttackStatus(MOVE_DIVE) == STATE_UNDERWATER);
+        ASSUME(GetTwoTurnMoveSemiInvulnerability(MOVE_DIVE) == STATE_UNDERWATER);
         ASSUME(!MoveDamagesUnderWater(MOVE_THUNDERBOLT));
         ASSUME(MoveDamagesUnderWater(MOVE_SURF));
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT | AI_FLAG_PREDICT_MOVE);
@@ -99,7 +152,7 @@ AI_SINGLE_BATTLE_TEST("Protect: AI avoids Protect vs Unseen Fist contact (Single
         MOVE_OBSTRUCT,
         MOVE_SILK_TRAP,
     };
-    u32 species = SPECIES_NONE;
+    enum Species species = SPECIES_NONE;
     enum Ability ability = ABILITY_NONE;
     enum Move protectMove = MOVE_NONE;
     bool32 shouldProtect = FALSE;
@@ -148,7 +201,7 @@ AI_DOUBLE_BATTLE_TEST("Protect: AI avoids Protect vs Unseen Fist contact (Double
         MOVE_OBSTRUCT,
         MOVE_SILK_TRAP,
     };
-    u32 species = SPECIES_NONE;
+    enum Species species = SPECIES_NONE;
     enum Ability ability = ABILITY_NONE;
     enum Move protectMove = MOVE_NONE;
     bool32 shouldProtect = FALSE;
@@ -257,7 +310,7 @@ AI_DOUBLE_BATTLE_TEST("Protect: AI avoids Protect vs moves that ignore protectio
 
 AI_SINGLE_BATTLE_TEST("AI penalizes Yawn when target can self-status with Flame/Toxic Orb")
 {
-    u32 heldItem = ITEM_NONE;
+    enum Item heldItem = ITEM_NONE;
     bool32 shouldYawn = FALSE;
 
     PARAMETRIZE { heldItem = ITEM_NONE;      shouldYawn = TRUE; }
@@ -283,7 +336,7 @@ AI_SINGLE_BATTLE_TEST("AI penalizes Yawn when target can self-status with Flame/
 
 AI_SINGLE_BATTLE_TEST("AI avoids Thunder Wave when it can not paralyse target")
 {
-    u32 species;
+    enum Species species;
     enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_HITMONLEE; ability = ABILITY_LIMBER; }
@@ -304,7 +357,7 @@ AI_SINGLE_BATTLE_TEST("AI avoids Thunder Wave when it can not paralyse target")
 
 AI_SINGLE_BATTLE_TEST("AI avoids Will-o-Wisp when it can not burn target")
 {
-    u32 species;
+    enum Species species;
     enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_BUIZEL; ability = ABILITY_WATER_VEIL; }
@@ -327,7 +380,7 @@ AI_SINGLE_BATTLE_TEST("AI avoids Will-o-Wisp when it can not burn target")
 
 AI_SINGLE_BATTLE_TEST("AI avoids hypnosis when it can not put target to sleep")
 {
-    u32 species;
+    enum Species species;
     enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_HOOTHOOT; ability = ABILITY_INSOMNIA; }
@@ -348,7 +401,7 @@ AI_SINGLE_BATTLE_TEST("AI avoids hypnosis when it can not put target to sleep")
 
 AI_SINGLE_BATTLE_TEST("AI avoids toxic when it can not poison target")
 {
-    u32 species;
+    enum Species species;
     enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_SNORLAX; ability = ABILITY_IMMUNITY; }

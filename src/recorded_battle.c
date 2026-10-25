@@ -189,11 +189,6 @@ u8 RecordedBattle_GetBattlerAction(u32 actionType, enum BattlerId battler)
     }
 }
 
-static u8 UNUSED GetRecordedBattleMode(void)
-{
-    return sRecordMode;
-}
-
 u8 RecordedBattle_BufferNewBattlerData(u8 *dst)
 {
     u8 i, j;
@@ -294,7 +289,7 @@ bool32 MoveRecordedBattleToSaveData(void)
     battleSave = AllocZeroed(sizeof(struct RecordedBattleSave));
     savSection = AllocZeroed(SECTOR_SIZE);
 
-    memcpy(battleSave->parties, gParties, sizeof(struct Pokemon[MAX_BATTLE_TRAINERS][PARTY_SIZE]));
+    memcpy(battleSave->parties, sSavedParties, sizeof(struct Pokemon[MAX_BATTLE_TRAINERS][PARTY_SIZE]));
 
     battleSave->playersGender = 0;
 

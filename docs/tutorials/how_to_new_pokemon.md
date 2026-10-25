@@ -663,7 +663,7 @@ Let's explain each of these:
     - Used to reference the back sprite, so in this case, we call for `gMonBackPic_Mewthree`.
 - `backPicSize`:
     - The two values (`width` and `height`) are used for defining the non-empty size of the back sprite, which is used in move animations. If you're unsure of the values, you can leave them both as 64.
-    - **NOTE**: Mew has a tarnary switch here in order to change values depending on if a config option is set for displaying th original Gen 3 sprites.
+    - **NOTE**: Mew has a ternary switch here in order to change values depending on if a config option is set for displaying the original Gen 3 sprites.
 - `backPicYOffset`:
     - Used to define what Y position of the back sprite. When working with the animation debug menu, we recommend aligning the back sprite to the white background, as it was designed to properyly align with the real battle layout.
 - `backAnimId`:
@@ -751,10 +751,18 @@ Each species flag provides properties to the species:
     - **1.10.2 and earlier:** Does nothing.
 - `cannotBeTraded`:
     - This species cannot be traded away (like Black/White Kyurem).
-- `tmIlliterate`:
-    - This species will be unable to learn the universal TM or Tutor moves.
+- `teachingType`:
+    - **1.15.0 onwards:** Check [include/constants/teaching_types.h](/include/constants/teaching_types.h) for more details.
+        - `TM_ILLITERATE`: Cannot learn teachable moves, unless they're specifically defined (like Magikarp)
+        - `ALL_TEACHABLES`: Can learn every teachable move, except those defined in `signatureTeachables` (like Mew)
+    - **1.14.4 and earlier:** Was known as `tmIlliterate`, could only support `TRUE`/`FALSE` and worked like the current `TM_ILLITERATE` setting.
 - `isFrontierBanned` ***(1.9 onwards)***:
-    - This species will be unable to enter Battle Frontier facilities. Replaces `gFrontierBannedSpecies`.
+    - This species will be unable to enter Battle Frontier facilities.
+    - Replaces `gFrontierBannedSpecies` from vanilla.
+- `isSkyBattleBanned` ***(1.15 onwards)***:
+    - This species will be unable to enter Sky Battles, even if they are Flying-type or have the Levitate ability (like Dodrio).
+- `isTelekinesisBanned` ***(1.16 onwards)***:
+    - This species is immune to Telekinesis' effect (like Diglett).
 
 ## 2. Delimit the moveset
 

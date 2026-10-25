@@ -157,7 +157,6 @@ SINGLE_BATTLE_TEST("Grudge's effect disappears if the user takes a new turn - Sl
 
 SINGLE_BATTLE_TEST("Grudge's effect disappears if the user takes a new turn - Paralysis")
 {
-    PASSES_RANDOMLY(25, 100, RNG_PARALYSIS);
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_STUN_SPORE) == EFFECT_NON_VOLATILE_STATUS);
         ASSUME(gMovesInfo[SanitizeMoveId(MOVE_STUN_SPORE)].argument.nonVolatileStatus == MOVE_EFFECT_PARALYSIS);
@@ -168,7 +167,7 @@ SINGLE_BATTLE_TEST("Grudge's effect disappears if the user takes a new turn - Pa
     }
     WHEN {
         TURN { MOVE(player, MOVE_GRUDGE); MOVE(opponent, MOVE_STUN_SPORE); }
-        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_VITAL_THROW); SEND_OUT(player, 1); }
+        TURN { MOVE(player, MOVE_CELEBRATE, WITH_RNG(RNG_PARALYSIS, TRUE)); MOVE(opponent, MOVE_VITAL_THROW); SEND_OUT(player, 1); }
     }
     SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_GRUDGE, player);
@@ -294,7 +293,7 @@ SINGLE_BATTLE_TEST("Grudge's effect doesn't trigger on indirect damage - Future 
         MESSAGE("The opposing Wobbuffet foresaw an attack!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_GRUDGE, player);
         MESSAGE("Wobbuffet took the Future Sight attack!");
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FUTURE_SIGHT_HIT);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, opponent);
         NOT MESSAGE("The opposing Wobbuffet lost all of Future Sight's PP due to the grudge!");
         MESSAGE("Wobbuffet fainted!");
     }

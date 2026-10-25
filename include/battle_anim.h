@@ -107,13 +107,11 @@ bool32 StorePalTag(u32 tag);
 bool32 StoreGfxTag(u32 tag);
 
 // battle_intro.c
-void SetAnimBgAttribute(u8 bgId, u8 attributeId, u8 value);
 void DrawBattlerOnBg(int bgId, u8 x, u8 y, enum BattlerPosition battlerPosition, u8 paletteId, u8 *tiles, u16 *tilemap, u16 tilesOffset);
 void HandleIntroSlide(u8 environment);
 void BattleIntroSlide1(u8 taskId);
 void BattleIntroSlide2(u8 taskId);
 void BattleIntroSlide3(u8 taskId);
-int GetAnimBgAttribute(u8 bgId, u8 attributeId);
 
 // battle_anim_mons.c
 void TranslateSpriteInEllipse(struct Sprite *sprite);
@@ -165,7 +163,6 @@ void PrepareBattlerSpriteForRotScale(u8 spriteId, u8 objMode);
 void SetBattlerSpriteYOffsetFromRotation(u8 spriteId);
 u32 GetBattlePalettesMask(bool8 battleBackground, bool8 attacker, bool8 target, bool8 attackerPartner, bool8 targetPartner, bool8 anim1, bool8 anim2);
 u32 GetBattleMonSpritePalettesMask(u8 playerLeft, u8 playerRight, u8 opponentLeft, u8 opponentRight);
-u8 GetSpritePalIdxByBattler(enum BattlerId battler);
 s16 CloneBattlerSpriteWithBlend(enum AnimBattler animBattler);
 void DestroySpriteWithActiveSheet(struct Sprite *sprite);
 u8 CreateInvisibleSpriteCopy(enum BattlerId battler, u8 spriteId, enum Species species);
@@ -273,11 +270,14 @@ void TryShinyAnimation(enum BattlerId battler, struct Pokemon *mon);
 u8 AnimateBallOpenParticles(u8 x, u8 y, u8 priority, u8 subpriority, enum PokeBall ballId);
 u8 LaunchBallFadeMonTask(bool8 unfadeLater, u8 spritePalNum, u32 selectedPalettes, enum PokeBall ballId);
 bool32 IsCriticalCapture(void);
+
 // battle_anim_utility_funcs.c
 void InitStatsChangeAnimation(u8 taskId);
-void StartMonScrollingBgMask(u8 taskId, int UNUSED unused, u16 scrollSpeed, enum BattlerId battler, bool8 includePartner, u8 numFadeSteps, u8 fadeStepDelay, u8 duration, const u32 *gfx, const u32 *tilemap, const u16 *palette);
+void StartMonScrollingBgMask(u8 taskId, u16 scrollSpeed, enum BattlerId battler, bool8 includePartner, u8 numFadeSteps, u8 fadeStepDelay, u8 duration, const u32 *gfx, const u32 *tilemap, const u16 *palette);
 void LoadHealthboxPalsForLevelUp(u8 *paletteId1, u8 *paletteId2, enum BattlerId battler);
 void FreeHealthboxPalsForLevelUp(enum BattlerId battler);
+void SetAnimBgAttribute(u8 bgId, u8 attributeId, u8 value);
+int GetAnimBgAttribute(u8 bgId, u8 attributeId);
 
 // battle_anim_effects_1.c
 void AnimFalseSwipeSlice_Step3(struct Sprite *);
