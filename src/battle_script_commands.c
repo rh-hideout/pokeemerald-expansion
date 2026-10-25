@@ -10562,13 +10562,6 @@ void BS_IsRunningImpossible(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-void BS_GetMoveTarget(void)
-{
-    NATIVE_ARGS();
-    gBattlerTarget = GetBattleMoveTarget(gCurrentMove, TARGET_NONE);
-    gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
 void BS_GetBattlerFainted(void)
 {
     NATIVE_ARGS(u8 battler);
