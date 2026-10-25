@@ -304,14 +304,14 @@ u8 GetAnimBattlerSpriteId(enum AnimBattler animBattler)
         }
         break;
     case ANIM_ATK_PARTNER:
-        if (!IsBattlerSpriteVisible(BATTLE_PARTNER(gBattleAnimAttacker)))
+        if (!IsBattlerSpriteVisible(GetPartnerBattler(gBattleAnimAttacker)))
             return SPRITE_NONE;
         else
-            return gBattlerSpriteIds[BATTLE_PARTNER(gBattleAnimAttacker)];
+            return gBattlerSpriteIds[GetPartnerBattler(gBattleAnimAttacker)];
         break;
     case ANIM_DEF_PARTNER:
-        if (IsBattlerSpriteVisible(BATTLE_PARTNER(gBattleAnimTarget)))
-            return gBattlerSpriteIds[BATTLE_PARTNER(gBattleAnimTarget)];
+        if (IsBattlerSpriteVisible(GetPartnerBattler(gBattleAnimTarget)))
+            return gBattlerSpriteIds[GetPartnerBattler(gBattleAnimTarget)];
         else
             return SPRITE_NONE;
         break;
@@ -757,13 +757,13 @@ void InitSpritePosToAnimAttackerPartner(struct Sprite *sprite, bool8 respectMonP
 {
     if (!respectMonPicOffsets)
     {
-        sprite->x = GetBattlerSpriteCoord2(BATTLE_PARTNER(gBattleAnimAttacker), BATTLER_COORD_X);
-        sprite->y = GetBattlerSpriteCoord2(BATTLE_PARTNER(gBattleAnimAttacker), BATTLER_COORD_Y);
+        sprite->x = GetBattlerSpriteCoord2(GetPartnerBattler(gBattleAnimAttacker), BATTLER_COORD_X);
+        sprite->y = GetBattlerSpriteCoord2(GetPartnerBattler(gBattleAnimAttacker), BATTLER_COORD_Y);
     }
     else
     {
-        sprite->x = GetBattlerSpriteCoord2(BATTLE_PARTNER(gBattleAnimAttacker), BATTLER_COORD_X_2);
-        sprite->y = GetBattlerSpriteCoord2(BATTLE_PARTNER(gBattleAnimAttacker), BATTLER_COORD_Y_PIC_OFFSET);
+        sprite->x = GetBattlerSpriteCoord2(GetPartnerBattler(gBattleAnimAttacker), BATTLER_COORD_X_2);
+        sprite->y = GetBattlerSpriteCoord2(GetPartnerBattler(gBattleAnimAttacker), BATTLER_COORD_Y_PIC_OFFSET);
     }
     SetAnimSpriteInitialXOffset(sprite, gBattleAnimArgs[0]);
     sprite->y += gBattleAnimArgs[1];
@@ -773,13 +773,13 @@ void InitSpritePosToAnimBothTargets(struct Sprite *sprite, bool8 respectMonPicOf
 {
     if (!respectMonPicOffsets)
     {
-        sprite->x = GetBattlerSpriteCoord2(gBattleAnimTarget, BATTLER_COORD_X) + GetBattlerSpriteCoord2(BATTLE_PARTNER(gBattleAnimTarget), BATTLER_COORD_X);
-        sprite->y = GetBattlerSpriteCoord2(gBattleAnimTarget, BATTLER_COORD_Y) + GetBattlerSpriteCoord2(BATTLE_PARTNER(gBattleAnimTarget), BATTLER_COORD_Y);
+        sprite->x = GetBattlerSpriteCoord2(gBattleAnimTarget, BATTLER_COORD_X) + GetBattlerSpriteCoord2(GetPartnerBattler(gBattleAnimTarget), BATTLER_COORD_X);
+        sprite->y = GetBattlerSpriteCoord2(gBattleAnimTarget, BATTLER_COORD_Y) + GetBattlerSpriteCoord2(GetPartnerBattler(gBattleAnimTarget), BATTLER_COORD_Y);
     }
     else
     {
-        sprite->x = GetBattlerSpriteCoord2(gBattleAnimTarget, BATTLER_COORD_X_2) + GetBattlerSpriteCoord2(BATTLE_PARTNER(gBattleAnimTarget), BATTLER_COORD_X_2);
-        sprite->y = GetBattlerSpriteCoord2(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET) + GetBattlerSpriteCoord2(BATTLE_PARTNER(gBattleAnimTarget), BATTLER_COORD_Y_PIC_OFFSET);
+        sprite->x = GetBattlerSpriteCoord2(gBattleAnimTarget, BATTLER_COORD_X_2) + GetBattlerSpriteCoord2(GetPartnerBattler(gBattleAnimTarget), BATTLER_COORD_X_2);
+        sprite->y = GetBattlerSpriteCoord2(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET) + GetBattlerSpriteCoord2(GetPartnerBattler(gBattleAnimTarget), BATTLER_COORD_Y_PIC_OFFSET);
     }
     sprite->x = sprite->x / 2;
     sprite->y = sprite->y / 2;
@@ -1356,17 +1356,17 @@ u32 GetBattlePalettesMask(bool8 battleBackground, bool8 attacker, bool8 target, 
     }
     if (attackerPartner)
     {
-        if (IsBattlerSpriteVisible(BATTLE_PARTNER(gBattleAnimAttacker)))
+        if (IsBattlerSpriteVisible(GetPartnerBattler(gBattleAnimAttacker)))
         {
-            shift = BATTLE_PARTNER(gBattleAnimAttacker) + 16;
+            shift = GetPartnerBattler(gBattleAnimAttacker) + 16;
             selectedPalettes |= 1 << shift;
         }
     }
     if (targetPartner)
     {
-        if (IsBattlerSpriteVisible(BATTLE_PARTNER(gBattleAnimTarget)))
+        if (IsBattlerSpriteVisible(GetPartnerBattler(gBattleAnimTarget)))
         {
-            shift = BATTLE_PARTNER(gBattleAnimTarget) + 16;
+            shift = GetPartnerBattler(gBattleAnimTarget) + 16;
             selectedPalettes |= 1 << shift;
         }
     }
@@ -1958,10 +1958,10 @@ static void UNUSED SetPriorityForVisibleBattlers(u8 priority)
         gSprites[gBattlerSpriteIds[gBattleAnimTarget]].oam.priority = priority;
     if (IsBattlerSpriteVisible(gBattleAnimAttacker))
         gSprites[gBattlerSpriteIds[gBattleAnimAttacker]].oam.priority = priority;
-    if (IsBattlerSpriteVisible(BATTLE_PARTNER(gBattleAnimTarget)))
-        gSprites[gBattlerSpriteIds[BATTLE_PARTNER(gBattleAnimTarget)]].oam.priority = priority;
-    if (IsBattlerSpriteVisible(BATTLE_PARTNER(gBattleAnimAttacker)))
-        gSprites[gBattlerSpriteIds[BATTLE_PARTNER(gBattleAnimAttacker)]].oam.priority = priority;
+    if (IsBattlerSpriteVisible(GetPartnerBattler(gBattleAnimTarget)))
+        gSprites[gBattlerSpriteIds[GetPartnerBattler(gBattleAnimTarget)]].oam.priority = priority;
+    if (IsBattlerSpriteVisible(GetPartnerBattler(gBattleAnimAttacker)))
+        gSprites[gBattlerSpriteIds[GetPartnerBattler(gBattleAnimAttacker)]].oam.priority = priority;
 }
 
 void InitPrioritiesForVisibleBattlers(void)
@@ -2190,8 +2190,8 @@ void SetAverageBattlerPositions(enum BattlerId battler, bool8 respectMonPicOffse
     battlerY = GetBattlerSpriteCoord(battler, yCoordType);
     if (IsDoubleBattle() && !IsContest())
     {
-        partnerX = GetBattlerSpriteCoord(BATTLE_PARTNER(battler), xCoordType);
-        partnerY = GetBattlerSpriteCoord(BATTLE_PARTNER(battler), yCoordType);
+        partnerX = GetBattlerSpriteCoord(GetPartnerBattler(battler), xCoordType);
+        partnerY = GetBattlerSpriteCoord(GetPartnerBattler(battler), yCoordType);
     }
     else
     {
@@ -2219,10 +2219,10 @@ void SetToPartnerPositions(enum BattlerId battler, bool8 respectMonPicOffsets, s
         yCoordType = BATTLER_COORD_Y_PIC_OFFSET;
     }
 
-    if (IsDoubleBattle() && !IsContest() && IsBattlerAlive(BATTLE_PARTNER(battler)))
+    if (IsDoubleBattle() && !IsContest() && IsBattlerAlive(GetPartnerBattler(battler)))
     {
-        returnX = GetBattlerSpriteCoord(BATTLE_PARTNER(battler), xCoordType);
-        returnY = GetBattlerSpriteCoord(BATTLE_PARTNER(battler), yCoordType);
+        returnX = GetBattlerSpriteCoord(GetPartnerBattler(battler), xCoordType);
+        returnY = GetBattlerSpriteCoord(GetPartnerBattler(battler), yCoordType);
     }
     else
     {

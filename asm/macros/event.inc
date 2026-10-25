@@ -177,7 +177,7 @@
 
 	@ Copies the value of source into destination.
 	.macro copyvar destination:req, source:req, warn=TRUE
-	.if \warn && !((\source >= VARS_START && \source <= VARS_END) || (\source >= SPECIAL_VARS_START && \source <= SPECIAL_VARS_END))
+	.if \warn && (\source != 0) && !((\source >= VARS_START && \source <= VARS_END) || (\source >= SPECIAL_VARS_START && \source <= SPECIAL_VARS_END))
 	.warning "copyvar with a value that is not a VAR_ constant; did you mean setvar instead?"
 	.endif
 	.byte SCR_OP_COPYVAR
@@ -317,7 +317,7 @@
 	@
 	@ implicit is set when a waitstate is generated as part of another command (e.g. special)
 	@ if an implicit waitstate is immediately followed by another waitstate, a warning is raised
-	.macro waitstate, implicit=0
+	.macro waitstate implicit=0
 	.if _last_implicit_waitstate == .
 	.warning "explicit waitstate follows implicit waitstate, ignoring"
 	.else
@@ -1767,12 +1767,12 @@
 	.byte SCR_OP_UNLOADHELP
 	.endm
 
-	@ Used only in FireRed/LeafGreen, does nothing in Emerald.
+	@ After using this command, all standard message boxes will use the signpost frame.
 	.macro signmsg
 	.byte SCR_OP_SIGNMSG
 	.endm
 
-	@ Used only in FireRed/LeafGreen, does nothing in Emerald.
+	@ Ends the effects of signmsg, returning message box frames to normal.
 	.macro normalmsg
 	.byte SCR_OP_NORMALMSG
 	.endm
@@ -2039,6 +2039,17 @@
 	trycompare goto_if, NOT_EQUAL, \a, \b, \c
 	.endm
 
+	.macro goto_if_between a:req, l:req, h:req, c @ BETWEEN low (l) and high (h), inclusive
+	goto_if_gt \a, \h, 1f
+	trycompare goto_if, 4, \a, \l, \c
+	1:
+	.endm
+
+	.macro goto_if_notbetween a:req, l:req, h:req, c @ NOT BETWEEN low (l) and high (h), inclusive
+	trycompare goto_if, 0, \a, \l, \c
+	trycompare goto_if, 2, \a, \h, \c
+	.endm
+
 	.macro call_if_unset flag:req, dest:req
 	checkflag \flag
 	call_if FALSE, \dest
@@ -2071,6 +2082,17 @@
 
 	.macro call_if_ne a:req, b, c
 	trycompare call_if, NOT_EQUAL, \a, \b, \c
+	.endm
+
+	.macro call_if_between a:req, l:req, h:req, c @ BETWEEN low (l) and high (h), inclusive
+	goto_if_gt \a, \h, 1f
+	trycompare call_if, 4, \a, \l, \c
+	1:
+	.endm
+
+	.macro call_if_notbetween a:req, l:req, h:req, c @ NOT BETWEEN low (l) and high (h), inclusive
+	trycompare call_if, 0, \a, \l, \c
+	trycompare call_if, 2, \a, \h, \c
 	.endm
 
 	.macro vgoto_if_eq a:req, b, c
@@ -2207,6 +2229,11 @@
 
 	.macro setdynamicswitchaifunc func:req
 	callnative ScriptSetDynamicAiSwitchFunc, requests_effects=1
+	.4byte \func
+	.endm
+
+	.macro setdynamicmonchoiceaifunc func:req
+	callnative ScriptSetDynamicAiMonChoiceFunc, requests_effects=1
 	.4byte \func
 	.endm
 
@@ -2699,7 +2726,7 @@
 	goto_if_eq VAR_RESULT, NO, \declineTradeJump
 	chooseboxmon SELECT_PC_MON_TRADE
 	waitstate
-	goto_if_eq VAR_0x8004, PARTY_NOTHING_CHOSEN, \declineTradeJump
+	goto_if_eq VAR_0x8004, PARTY_SLOT_CANCEL, \declineTradeJump
 	specialvar VAR_0x800B, GetTradeSpecies
 	goto_if_ne VAR_0x800B, VAR_0x8009, \wrongMonJump
 	special CreateInGameTradePokemon
@@ -2972,6 +2999,29 @@
 	.byte \dataField
 	.endm
 
+@ Safaris
+
+	@ sets VAR_RESULT to the currently active safariId, returns 0/SAFARI_EVENT_NONE if there is no active safari
+	.macro getactivesafari
+	callnative ScrCmd_getactivesafari
+	.endm
+
+	.macro safari_enter safariId:req
+	callnative ScrCmd_safari_enter
+	.byte \safariId
+	.endm
+
+	.macro safari_exitnowarp
+	callnative ScrCmd_safari_exit
+	.byte FALSE
+	.endm
+
+	.macro safari_exit
+	callnative ScrCmd_safari_exit
+	.byte TRUE
+	waitstate
+	.endm
+
 @ FRLG
 
 
@@ -3010,4 +3060,69 @@
 	braillemessage \text
 	getbraillestringwidth \text
 	call EventScript_BrailleCursorWaitButton
+	.endm
+
+	@ Opens a UI that has the player choose a number of Pokemon (bringSize) in their party
+	@ to battle against a trainer(s) that will also pick the same number of Pokemon to battle.
+	@ This mimics Battle Stadium behavior in official titles (Scarlet/Violet, Sword/Shield, etc.)
+	@ which is also used for tournament settings like VGC.
+	.macro bringxpicky battleType:req, bringSize:req, pickSize:req, trainer_a: req, lose_text_a:req, trainer_b = TRAINER_NONE, lose_text_b=NULL, partnerId=PARTNER_NONE
+	.if B_FLAG_BXPY == 0 || B_FLAG_BXPY > FLAGS_COUNT
+		.error "bringxpicky B_FLAG_BXPY must be assigned to a flag for the feature to function"
+	.endif
+	.if \battleType > BXPY_BATTLE_DOUBLE
+		.error "bringxpicky battleType (\battleType) must be either BXPY_BATTLE_SINGLE (\BXPY_BATTLE_SINGLE) or BXPY_BATTLE_DOUBLE (\BXPY_BATTLE_DOUBLE)"
+	.endif
+	.if \battleType == BXPY_BATTLE_SINGLE && \trainer_b != TRAINER_NONE
+		.error "bringxpicky battleType (\battleType) must be BXPY_BATTLE_DOUBLE (\BXPY_BATTLE_DOUBLE) when trainer_b (\trainer_b) is defined"
+	.endif
+	.if \battleType == BXPY_BATTLE_SINGLE && \partnerId != PARTNER_NONE
+		.error "bringxpicky battleType (\battleType) must be BXPY_BATTLE_DOUBLE (\BXPY_BATTLE_DOUBLE) when partnerId (\partnerId) is defined"
+	.endif
+	.if \bringSize < 1
+		.error "bringxpicky bringSize (\bringSize) is less than 1"
+	.endif
+	.if \bringSize > PARTY_SIZE
+		.error "bringxpicky bringSize (\bringSize) is greater than \PARTY_SIZE"
+	.endif
+	.if \bringSize < \pickSize
+		.error "bringxpicky bringSize (\bringSize) is less than pickSize (\pickSize)"
+	.endif
+	.if \pickSize < 1
+		.error "bringxpicky pickSize (\pickSize) is less than 1"
+	.endif
+	.if \pickSize > PARTY_SIZE
+		.error "bringxpicky pickSize (\pickSize) is greater than \PARTY_SIZE"
+	.endif
+	.if \trainer_a == TRAINER_NONE || \trainer_a > TRAINERS_COUNT
+		.error "bringxpicky trainer_a (\trainer_a) must be a valid trainer Id"
+	.endif
+	.if \trainer_b != TRAINER_NONE && \lose_text_b == NULL
+		.error "bringxpicky trainer_b must have valid lose text"
+	.endif
+	.if \trainer_b >= TRAINERS_COUNT
+		.error "bringxpicky trainer_b (\trainer_b) must be a valid trainer Id"
+	.endif
+	.if \trainer_b == TRAINER_NONE && \lose_text_b != NULL
+		.error "bringxpicky trainer_b (\trainer_b) must be a valid trainer Id"
+	.endif
+	.if \partnerId >= PARTNER_COUNT
+		.error "bringxpicky partnerId (\partnerId) must be a valid partner Id"
+	.endif
+	callnative BXPY_TryHealBeforeBattle
+	setvar VAR_BXPY_PICK_SIZE, \pickSize
+	setvar VAR_BXPY_BRING_SIZE, \bringSize
+	setvar VAR_BXPY_PARTNER, \partnerId
+	call BXPY_Script_CheckErrors
+    fadescreen FADE_TO_BLACK
+	callnative ScrCmd_bringxpicky, requests_effects=1
+	.2byte \battleType
+	.2byte \bringSize
+	.2byte \pickSize
+	.2byte \trainer_a
+	.4byte \lose_text_a
+	.2byte \trainer_b
+	.4byte \lose_text_b
+	.2byte \partnerId
+	waitstate
 	.endm

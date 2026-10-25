@@ -426,7 +426,7 @@ static void SpriteCB_Ferry(struct Sprite *sprite)
 
 static void CreateWakeSprite(s16 x)
 {
-    u8 spriteId = CreateSprite(&sWakeSpriteTemplate, x, 92, 8);
+    u8 spriteId = CreateSpriteUnchecked(&sWakeSpriteTemplate, x, 92, 8);
     if (spriteId != MAX_SPRITES)
     {
         if (GetDirectionOfTravel() == DIRN_EASTBOUND)

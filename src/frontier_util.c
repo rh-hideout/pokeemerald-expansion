@@ -2148,7 +2148,7 @@ static void CheckPartyIneligibility(void)
         {
             if (!IsSpeciesEnabled(i))
                 continue;
-            baseSpecies = GET_BASE_SPECIES_ID(i);
+            baseSpecies = GetBaseSpecies(i);
             if (baseSpecies == i && gSpeciesInfo[baseSpecies].isFrontierBanned)
             {
                 if (GetSetPokedexFlag(SpeciesToNationalPokedexNum(baseSpecies), FLAG_GET_CAUGHT))
@@ -2161,7 +2161,7 @@ static void CheckPartyIneligibility(void)
             enum Species species = GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES_OR_EGG);
             if (species == SPECIES_EGG || species == SPECIES_NONE)
                 continue;
-            if (gSpeciesInfo[GET_BASE_SPECIES_ID(species)].isFrontierBanned)
+            if (gSpeciesInfo[GetBaseSpecies(species)].isFrontierBanned)
             {
                 bool32 addToList = TRUE;
                 for (j = 0; j < totalPartyBanned; j++)
@@ -2613,7 +2613,7 @@ void CreateFrontierBrainPokemon(void)
     s32 symbol = GetFronterBrainSymbol();
 
     if (facility == FRONTIER_FACILITY_DOME)
-        selectedMonBits = GetDomeTrainerSelectedMons(TrainerIdToDomeTournamentId(TRAINER_FRONTIER_BRAIN));
+        selectedMonBits = GetDomeTrainerSelectedMons(TRAINER_FRONTIER_BRAIN);
     else
         selectedMonBits = (1 << FRONTIER_PARTY_SIZE) - 1; // all 3 mons selected
 
@@ -2665,7 +2665,7 @@ void SetFrontierBrainObjEventGfx(u8 facility)
     VarSet(VAR_OBJ_GFX_ID_0, gFrontierBrainInfo[facility].objEventGfx);
 }
 
-u16 GetFrontierBrainMonMove(u8 monId, u8 moveSlotId)
+u16 GetFrontierBrainMonMove(u8 monId, enum MoveSlot moveSlotId)
 {
     s32 facility = VarGet(VAR_FRONTIER_FACILITY);
     s32 symbol = GetFronterBrainSymbol();
@@ -3358,7 +3358,7 @@ static u16 *MakeCaughtBannedSpeciesList(u32 totalBannedSpecies)
         if (!IsSpeciesEnabled(i))
             continue;
 
-        enum Species baseSpecies = GET_BASE_SPECIES_ID(i);
+        enum Species baseSpecies = GetBaseSpecies(i);
         if (baseSpecies == i && gSpeciesInfo[baseSpecies].isFrontierBanned)
         {
             if (GetSetPokedexFlag(SpeciesToNationalPokedexNum(baseSpecies), FLAG_GET_CAUGHT))

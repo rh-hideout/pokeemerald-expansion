@@ -17,6 +17,7 @@ SINGLE_BATTLE_TEST("Blunder Policy raises the users speed by 2 stages if the use
         TURN { MOVE(player, MOVE_FOCUS_BLAST); }
     } SCENE {
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_FOCUS_BLAST, player);
+        ITEM_POPUP(player, ITEM_BLUNDER_POLICY);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
     } THEN {
         EXPECT(player->item == ITEM_NONE);
@@ -252,5 +253,30 @@ DOUBLE_BATTLE_TEST("Blunder Policy activates for Dragon Darts if one target miss
         EXPECT_EQ(playerLeft->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + 2);
         EXPECT_EQ(chosenTarget->hp, chosenTarget->maxHP);
         EXPECT_LT(finalTarget->hp, finalTarget->maxHP);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Blunder Policy doesn't activate on Fling miss after Symbiosis passes another Blunder Policy")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_FLING) == EFFECT_FLING);
+        ASSUME(GetItemHoldEffect(ITEM_BRIGHT_POWDER) == HOLD_EFFECT_EVASION_UP);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(100); Item(ITEM_BLUNDER_POLICY); }
+        PLAYER(SPECIES_ORANGURU) { Speed(75); Ability(ABILITY_SYMBIOSIS); Item(ITEM_BLUNDER_POLICY); }
+        OPPONENT(SPECIES_STARAVIA) { Speed(50); Item(ITEM_BRIGHT_POWDER); }
+        OPPONENT(SPECIES_SHUCKLE) { Speed(25); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_FLING, target: opponentLeft, hit: FALSE); }
+    } SCENE {
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, playerLeft);
+        MESSAGE("The opposing Staravia avoided the attack!");
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
+        // symbiosis triggers
+        ABILITY_POPUP(playerRight, ABILITY_SYMBIOSIS);
+        MESSAGE("Oranguru shared its Blunder Policy with Wobbuffet!");
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
+    } THEN {
+        EXPECT_EQ(playerLeft->item, ITEM_BLUNDER_POLICY);
+        EXPECT_EQ(playerLeft->statStages[STAT_SPEED], DEFAULT_STAT_STAGE);
     }
 }

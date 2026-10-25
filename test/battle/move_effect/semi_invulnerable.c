@@ -208,6 +208,7 @@ SINGLE_BATTLE_TEST("Semi-invulnerable moves don't need to charge with Power Herb
         }
         else
             ANIMATION(ANIM_TYPE_MOVE, move, player);
+        ITEM_POPUP(player, ITEM_POWER_HERB);
         MESSAGE("Wobbuffet became fully charged due to its Power Herb!");
         if (B_UPDATED_MOVE_DATA < GEN_5)
         {
@@ -252,6 +253,7 @@ SINGLE_BATTLE_TEST("Power Herb semi-invulnerable moves do not keep the user unta
         NOT MESSAGE("Basculegion vanished instantly!");
         MESSAGE("Basculegion used Phantom Force!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PHANTOM_FORCE, player);
+        ITEM_POPUP(player, ITEM_POWER_HERB);
         MESSAGE("Basculegion became fully charged due to its Power Herb!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PHANTOM_FORCE, player);
         HP_BAR(opponent);
@@ -278,6 +280,22 @@ SINGLE_BATTLE_TEST("Semi-invulnerable moves apply a status that won't block cert
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, move, player);
         ANIMATION(ANIM_TYPE_MOVE, opMove, opponent);
+        HP_BAR(player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Semi-invulnerable moves don't error in weather")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_RAIN_DANCE); MOVE(opponent, MOVE_DIG); }
+        TURN { SKIP_TURN(opponent); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_RAIN_DANCE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DIG, opponent);
         HP_BAR(player);
     }
 }

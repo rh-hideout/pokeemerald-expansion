@@ -89,7 +89,7 @@ bool32 HasTrainerUsedGimmick(enum BattlerId battler, enum Gimmick gimmick)
 {
     if (IsDoubleBattle() && (IsPartnerMonFromSameTrainer(battler) || (gimmick == GIMMICK_DYNAMAX)))
     {
-        enum BattlerId partner = BATTLE_PARTNER(battler);
+        enum BattlerId partner = GetPartnerBattler(battler);
         if (gBattleStruct->gimmick.activated[partner][gimmick]
          || ((gBattleStruct->gimmick.toActivate & (1u << partner)) && gBattleStruct->gimmick.usableGimmick[partner] == gimmick))
             return TRUE;
@@ -101,9 +101,10 @@ bool32 HasTrainerUsedGimmick(enum BattlerId battler, enum Gimmick gimmick)
 // Sets a gimmick as used by a trainer with checks for Multi Battles.
 void SetGimmickAsActivated(enum BattlerId battler, enum Gimmick gimmick)
 {
+    gBattleStruct->gimmick.activatedThisTurn |= 1u << battler;
     gBattleStruct->gimmick.activated[battler][gimmick] = TRUE;
     if (IsDoubleBattle() && (IsPartnerMonFromSameTrainer(battler) || (gimmick == GIMMICK_DYNAMAX)))
-        gBattleStruct->gimmick.activated[BATTLE_PARTNER(battler)][gimmick] = TRUE;
+        gBattleStruct->gimmick.activated[GetPartnerBattler(battler)][gimmick] = TRUE;
 }
 
 #define SINGLES_GIMMICK_TRIGGER_POS_X_OPTIMAL (30)
@@ -303,6 +304,13 @@ const u32 *GetIndicatorSpriteSrc(enum BattlerId battler)
         return (u32 *)gGimmicksInfo[gimmick].indicatorData;
 
     return NULL;
+}
+
+const u32 *GetTeraIndicatorSpriteSrc(enum Type type)
+{
+    if (type >= ARRAY_COUNT(sTeraIndicatorDataPtrs))
+        type = TYPE_NORMAL;
+    return (const u32 *)sTeraIndicatorDataPtrs[type];
 }
 
 u32 GetIndicatorPalTag(enum BattlerId battler)

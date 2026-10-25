@@ -41,10 +41,10 @@ DOUBLE_BATTLE_TEST("Perish Song ignores protect")
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {
-        TURN { 
-            MOVE(playerLeft, MOVE_PROTECT); 
-            MOVE(opponentLeft, MOVE_PROTECT); 
-            MOVE(playerRight, MOVE_PERISH_SONG); 
+        TURN {
+            MOVE(playerLeft, MOVE_PROTECT);
+            MOVE(opponentLeft, MOVE_PROTECT);
+            MOVE(playerRight, MOVE_PERISH_SONG);
         }
         TURN {}
         TURN {}
@@ -93,5 +93,17 @@ DOUBLE_BATTLE_TEST("Perish Song will be blocked by users Soundproof in gen3")
         EXPECT_EQ(opponentLeft->hp, 0);
         EXPECT_EQ(playerRight->hp, 0);
         EXPECT_EQ(opponentRight->hp, 0);
+    }
+}
+
+SINGLE_BATTLE_TEST("Perish Song is blocked by Dazzling if it is Prankster-affected")
+{
+    GIVEN {
+        PLAYER(SPECIES_VOLBEAT) { Ability(ABILITY_PRANKSTER); }
+        OPPONENT(SPECIES_BRUXISH) { Ability(ABILITY_DAZZLING); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_PERISH_SONG); }
+    } SCENE {
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_PERISH_SONG, player);
     }
 }

@@ -567,7 +567,7 @@ bool32 TryOpenPokedexPage_HGSS(u8 taskId, u8 page)
 {
     if (!POKEDEX_PLUS_HGSS)
         return FALSE;
-    
+
     if (LoadPokedexListPage(page))
         gTasks[taskId].func = Task_HandlePokedexInput;
 
@@ -2313,10 +2313,13 @@ static void PrintStatsScreen_Moves_Top(u8 taskId)
 
     //Egg/TM/Level/Tutor Item Icon
     gTasks[taskId].data[3] = AddItemIconSprite(ITEM_TAG, ITEM_TAG, item);
-    gSprites[gTasks[taskId].data[3]].x2 = 203;
-    gSprites[gTasks[taskId].data[3]].y2 = 39;
-    gSprites[gTasks[taskId].data[3]].oam.priority = 0;
-
+// The associated sprite gets cleared a bunch below - I assume that's still okay if it is MAX_SPRITES?
+    if (gTasks[taskId].data[3] != MAX_SPRITES)
+    {
+        gSprites[gTasks[taskId].data[3]].x2 = 203;
+        gSprites[gTasks[taskId].data[3]].y2 = 39;
+        gSprites[gTasks[taskId].data[3]].oam.priority = 0;
+    }
 }
 
 static void PrintStatsScreen_Moves_Description(u8 taskId)
@@ -3293,7 +3296,7 @@ static void Task_HandleEvolutionScreenInput(u8 taskId)
     }
 }
 
-static void HandleTargetSpeciesPrintText(enum Species targetSpecies, u32 base_x, u32 base_y, u32 base_y_offset, u32 base_i)
+static void HandleTargetSpeciesPrintText(enum Species targetSpecies, u32 base_x, u32 base_y, u32 base_y_offset, u32 base_i, u32 numLines)
 {
     bool32 seen = GetSetPokedexFlag(SpeciesToNationalPokedexNum(targetSpecies), FLAG_GET_SEEN);
     u32 fontId = GetSpeciesNameFontId(GetSpeciesNameWidthInChars(GetSpeciesName(targetSpecies)));
@@ -3303,7 +3306,7 @@ static void HandleTargetSpeciesPrintText(enum Species targetSpecies, u32 base_x,
     else
         StringCopy(gStringVar3, gText_ThreeQuestionMarks); //show questionmarks instead of name
     StringExpandPlaceholders(gStringVar3, sText_EVO_Name); //evolution mon name
-    PrintInfoScreenTextSmall(gStringVar3, fontId, base_x, base_y + base_y_offset*base_i); //evolution mon name
+    PrintInfoScreenTextSmall(gStringVar3, fontId, base_x, base_y + base_y_offset * base_i + numLines); //evolution mon name
 }
 
 static void HandleTargetSpeciesPrintIcon(u8 taskId, enum Species targetSpecies, u8 base_i, u8 iterations)
@@ -3535,7 +3538,7 @@ static u32 GetSpeciesNameWidthInChars(const u8 *speciesName)
 
 static bool32 IsSpeciesAlcremie(enum Species targetSpecies)
 {
-    return GET_BASE_SPECIES_ID(targetSpecies) == SPECIES_ALCREMIE;
+    return GetBaseSpecies(targetSpecies) == SPECIES_ALCREMIE;
 }
 
 static bool32 IsItemSweet(enum Item item)
@@ -3563,7 +3566,7 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, enum Species species
 
     StringCopy(gStringVar1, GetSpeciesName(species));
 
-    sPokedexView->sEvoScreenData.arrowSpriteDist[depth] = numLines;
+    sPokedexView->sEvoScreenData.arrowSpriteDist[*depth_i] = numLines;
 
     //If there are no evolutions print text and return
     if (evolutions == NULL)
@@ -3608,7 +3611,7 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, enum Species species
 
         sPokedexView->sEvoScreenData.targetSpecies[*depth_i] = targetSpecies;
         CreateCaughtBallEvolutionScreen(targetSpecies, base_x + depth_x*depth-9, base_y + base_y_offset*(*depth_i) + numLines, 0);
-        HandleTargetSpeciesPrintText(targetSpecies, base_x + depth_x*depth, base_y, base_y_offset + numLines, *depth_i); //evolution mon name
+        HandleTargetSpeciesPrintText(targetSpecies, base_x + depth_x*depth, base_y, base_y_offset, *depth_i, numLines); //evolution mon name
 
         for (u32 j = 0; j < MAX_EVOLUTION_ICONS; j++)
         {
@@ -3932,7 +3935,7 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, enum Species species
 
         numLines = CountLineBreaks(gStringVar4) * fontHeight;
 
-        sPokedexView->sEvoScreenData.arrowSpriteDist[depth + 1] = numLines;
+        sPokedexView->sEvoScreenData.arrowSpriteDist[*depth_i + 1] = numLines;
 
         PrintEvolutionTargetSpeciesAndMethod(taskId, targetSpecies, depth+1, depth_i, alreadyPrintedIcons, icon_depth_i, numLines);
     }//For loop end

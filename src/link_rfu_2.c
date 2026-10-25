@@ -1078,7 +1078,7 @@ static void RfuHandleReceiveCommand(u8 unused)
         case RFUCMD_SEND_PLAYER_IDS_NEW:
             if (gRfu.parentChild == MODE_CHILD && gReceivedRemoteLinkPlayers)
                 return;
-            // fallthrough
+            [[fallthrough]];
         case RFUCMD_SEND_PLAYER_IDS:
             if (gRfuLinkStatus->parentChild == MODE_CHILD)
             {
@@ -1911,7 +1911,7 @@ static void Task_PlayerExchangeUpdate(u8 taskId)
             sio->linkPlayerIdx[i] = gRfu.linkPlayerIdx[i];
         memcpy(sio->linkPlayers, gLinkPlayers, sizeof gLinkPlayers);
         gTasks[taskId].tState++;
-        // fallthrough
+        [[fallthrough]];
     case 4:
         sio = (struct SioInfo *)gBlockSendBuffer;
         sio->playerCount = gRfu.playerCount;
@@ -2290,6 +2290,7 @@ static void LinkManagerCB_Child(u8 msg, u8 unused1)
         gRfu.linkLossRecoveryState = 2;
         if (gRfu.childRecvStatus == RFU_STATUS_JOIN_GROUP_NO)
             break;
+        [[fallthrough]];
     case LMAN_MSG_LINK_RECOVERY_FAILED_AND_DISCONNECTED:
         if (gRfu.linkLossRecoveryState != 2)
             gRfu.linkLossRecoveryState = 4;
@@ -2458,6 +2459,7 @@ static void LinkManagerCB_UnionRoom(u8 msg, u8 paramCount)
         break;
     case LMAN_MSG_LINK_LOSS_DETECTED_AND_DISCONNECTED:
         gRfu.linkLossRecoveryState = 2;
+        [[fallthrough]];
     case LMAN_MSG_LINK_RECOVERY_FAILED_AND_DISCONNECTED:
         if (gRfu.linkLossRecoveryState != 2)
             gRfu.linkLossRecoveryState = 4;

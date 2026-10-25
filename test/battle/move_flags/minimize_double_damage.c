@@ -27,5 +27,21 @@ SINGLE_BATTLE_TEST("MinimizeDoubleDamage flag makes moves cause double damage to
     }
 }
 
-// Remember to add ASSUME(B_MINIMIZE_DMG_ACC >= GEN_6)
-TO_DO_BATTLE_TEST("MinimizeDoubleDamage flag allows moves to skip accuracy checks towards Minimized targets")
+SINGLE_BATTLE_TEST("MinimizeDoubleDamage flag allows moves to skip accuracy checks towards Minimized targets")
+{
+    PASSES_RANDOMLY(100, 100, RNG_ACCURACY);
+    GIVEN {
+        WITH_CONFIG(B_MINIMIZE_DMG_ACC, GEN_6);
+        WITH_CONFIG(B_MINIMIZE_EVASION, GEN_5);
+        ASSUME(GetMoveAccuracy(MOVE_STEAMROLLER) > 0);
+        ASSUME(MoveIncreasesPowerToMinimizedTargets(MOVE_STEAMROLLER));
+        PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_MINIMIZE); MOVE(player, MOVE_STEAMROLLER); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_MINIMIZE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STEAMROLLER, player);
+        HP_BAR(opponent);
+    }
+}
