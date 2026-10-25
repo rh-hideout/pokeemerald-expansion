@@ -2594,9 +2594,9 @@ static enum PartySlot GetBestMonVanilla(struct SwitchAiContext *switchContext)
 
     // Dynamic > Baton Pass > Type Matchup > Best Damage
     if (switchContext->dynamicMultipleIds != 0) return getRandom ? GetSwitchinCandidate(switchContext->dynamicMultipleIds, switchContext) : switchContext->dynamicSingleId;
-    else if (batonPassIds != 0)                  return GetSwitchinCandidate(batonPassIds, switchContext);
-    else if (typeMatchupIds != 0)           return GetSwitchinCandidate(typeMatchupIds, switchContext);
-    else if (bestDamageId != PARTY_SLOT_NONE) return bestDamageId;
+    else if (batonPassIds != 0)                 return GetSwitchinCandidate(batonPassIds, switchContext);
+    else if (typeMatchupIds != 0)               return GetSwitchinCandidate(typeMatchupIds, switchContext);
+    else if (bestDamageId != PARTY_SLOT_NONE)   return bestDamageId;
 
     // Not required to switch here and no good candidates, bail
     if (switchContext->switchType == SWITCH_MID_BATTLE_OPTIONAL)
