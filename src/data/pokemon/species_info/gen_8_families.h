@@ -2916,7 +2916,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
             SIZE_64x64,
             SHADOW_SIZE_M,
             TRACKS_FOOT,
-            sAnimTable_Following,
+            sAnimTable_Following, // TODO: Asym
             gOverworldPalette_Hydrapple,
             gShinyOverworldPalette_Hydrapple
         )
