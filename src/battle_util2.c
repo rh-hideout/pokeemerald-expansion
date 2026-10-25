@@ -136,10 +136,11 @@ void SwitchPartyOrderInGameMulti(enum BattlerId battler, enum PartySlot partyId)
         enum BattleTrainer trainer = GetBattlerTrainer(battler);
         enum PartyBattleOrder battlerBattleSlot = PARTY_BATTLE_ORDER_0;
         enum PartyBattleOrder switchinBattleSlot = PARTY_BATTLE_ORDER_0;
+        bool32 halfTeam = IsHalfTeamMultiBattle();
 
         // In 6v6 multis, the partner party is stored in gParties[B_TRAINER_PARTNER]
         // and uses indexes 0-2, but we still use the combined party order.
-        if (IsHalfTeamMultiBattle() && trainer == B_TRAINER_PARTNER)
+        if (halfTeam && trainer == B_TRAINER_PARTNER)
         {
             battlerPartyId = (enum PartySlot)(battlerPartyId + MULTI_PARTY_SIZE);
             switchInPartyId = (enum PartySlot)(switchInPartyId + MULTI_PARTY_SIZE);
@@ -152,7 +153,7 @@ void SwitchPartyOrderInGameMulti(enum BattlerId battler, enum PartySlot partyId)
 
             // Player and partner party are merged for party menu and summary screen
             // viewing purposes in 6v6 multis, so we need a specific exception here
-            if (!IsHalfTeamMultiBattle() && !BattlersShareParty(battler, battlerId))
+            if (!halfTeam && !BattlersShareParty(battler, battlerId))
                 continue;
 
             int battlePartyCurrentOrderCount = (int)ARRAY_COUNT(gBattlePartyCurrentOrder);
