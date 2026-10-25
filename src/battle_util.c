@@ -2758,7 +2758,7 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
         }
         break;
     case FIELD_EFFECT_OVERWORLD_WEATHER:
-        if (HasNoneOfBattleFlags(BATTLE_TYPE_RECORDED))
+        if (!HasAnyBattleFlags(BATTLE_TYPE_RECORDED))
         {
             switch (GetCurrentWeather())
             {
@@ -3613,7 +3613,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                 }
                 break;
             case ABILITY_BALL_FETCH:
-                if (HasNoneOfBattleFlags(BATTLE_TYPE_RAID)
+                if (!HasAnyBattleFlags(BATTLE_TYPE_RAID)
                  && gBattleMons[battler].item == ITEM_NONE
                  && gBattleResults.catchAttempts[ItemIdToBallId(gLastUsedBall)] >= 1
                  && !gHasFetchedBall)
@@ -6825,7 +6825,7 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
     case HOLD_EFFECT_SOUL_DEW:
         if ((gBattleMons[battlerAtk].species == SPECIES_LATIAS || gBattleMons[battlerAtk].species == SPECIES_LATIOS)
             && ((B_SOUL_DEW_BOOST >= GEN_7 && (moveType == TYPE_PSYCHIC || moveType == TYPE_DRAGON))
-             || (B_SOUL_DEW_BOOST < GEN_7 && HasNoneOfBattleFlags(BATTLE_TYPE_FRONTIER) && IsBattleMoveSpecial(move))))
+             || (B_SOUL_DEW_BOOST < GEN_7 && !HasAnyBattleFlags(BATTLE_TYPE_FRONTIER) && IsBattleMoveSpecial(move))))
             modifier = uq4_12_multiply(modifier, holdEffectModifier);
         break;
     case HOLD_EFFECT_TYPE_POWER:
@@ -7347,7 +7347,7 @@ static inline u32 CalcDefenseStat(struct DamageContext *ctx)
     case HOLD_EFFECT_SOUL_DEW:
         if (B_SOUL_DEW_BOOST < GEN_7
          && (gBattleMons[battlerDef].species == SPECIES_LATIAS || gBattleMons[battlerDef].species == SPECIES_LATIOS)
-         && HasNoneOfBattleFlags(BATTLE_TYPE_FRONTIER)
+         && !HasAnyBattleFlags(BATTLE_TYPE_FRONTIER)
          && !usesDefStat)
             modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
         break;
@@ -8137,7 +8137,7 @@ static bool32 IsCriticalHit(struct DamageContext *ctx)
 
     // Counter for IF_CRITICAL_HITS_GE evolution condition.
     if (isCrit && IsOnPlayerSide(ctx->battlerAtk)
-     && HasNoneOfBattleFlags(BATTLE_TYPE_MULTI) && GetBattlerPosition(ctx->battlerAtk) == B_POSITION_PLAYER_LEFT)
+     && !HasAnyBattleFlags(BATTLE_TYPE_MULTI) && GetBattlerPosition(ctx->battlerAtk) == B_POSITION_PLAYER_LEFT)
         gPartyCriticalHits[gBattlerPartyIndexes[ctx->battlerAtk]]++;
 
     gSpecialStatuses[ctx->battlerDef].criticalHit = isCrit;
@@ -8593,9 +8593,9 @@ s32 GetStealthHazardDamage(enum TypeSideHazard hazardType, enum BattlerId battle
 bool32 IsPartnerMonFromSameTrainer(enum BattlerId battler)
 {
     if (!IsOnPlayerSide(battler))
-        return HasNoneOfBattleFlags(BATTLE_TYPE_TWO_OPPONENTS);
+        return !HasAnyBattleFlags(BATTLE_TYPE_TWO_OPPONENTS);
     else
-        return HasNoneOfBattleFlags(BATTLE_TYPE_MULTI);
+        return !HasAnyBattleFlags(BATTLE_TYPE_MULTI);
 }
 
 bool32 DoesSpeciesUseHoldItemToChangeForm(enum Species species, enum Item heldItemId)
@@ -8633,7 +8633,7 @@ bool32 CanMegaEvolve(enum BattlerId battler)
 
     // Check if Player has a Mega Ring.
     if (!TESTING
-        && (position == B_POSITION_PLAYER_LEFT || (HasNoneOfBattleFlags(BATTLE_TYPE_MULTI) && position == B_POSITION_PLAYER_RIGHT))
+        && (position == B_POSITION_PLAYER_LEFT || (!HasAnyBattleFlags(BATTLE_TYPE_MULTI) && position == B_POSITION_PLAYER_RIGHT))
         && !CheckBagHasItem(ITEM_MEGA_RING, 1))
         return FALSE;
 
@@ -8674,7 +8674,7 @@ bool32 CanUltraBurst(enum BattlerId battler)
 
     // Check if Player has a Z-Ring
     if (!TESTING && (position == B_POSITION_PLAYER_LEFT
-        || (HasNoneOfBattleFlags(BATTLE_TYPE_MULTI) && position == B_POSITION_PLAYER_RIGHT))
+        || (!HasAnyBattleFlags(BATTLE_TYPE_MULTI) && position == B_POSITION_PLAYER_RIGHT))
         && !CheckBagHasItem(ITEM_Z_POWER_RING, 1))
         return FALSE;
 
@@ -9455,7 +9455,7 @@ bool32 CanStealItem(enum BattlerId battlerStealing, enum BattlerId battlerItem, 
 
     // Check if the battler trying to steal should be able to
     if (stealerSide == B_SIDE_OPPONENT
-        && HasNoneOfBattleFlags(BATTLE_TYPE_EREADER_TRAINER
+        && !HasAnyBattleFlags(BATTLE_TYPE_EREADER_TRAINER
               | BATTLE_TYPE_FRONTIER
               | BATTLE_TYPE_LINK
               | BATTLE_TYPE_RECORDED_LINK
@@ -9465,7 +9465,7 @@ bool32 CanStealItem(enum BattlerId battlerStealing, enum BattlerId battlerItem, 
     {
         return FALSE;
     }
-    else if (HasNoneOfBattleFlags(BATTLE_TYPE_EREADER_TRAINER
+    else if (!HasAnyBattleFlags(BATTLE_TYPE_EREADER_TRAINER
            | BATTLE_TYPE_FRONTIER
            | BATTLE_TYPE_LINK
            | BATTLE_TYPE_RECORDED_LINK
@@ -10271,7 +10271,7 @@ bool32 EmergencyExitCanBeTriggered(enum BattlerId battler, enum Ability ability)
 
     if (IsBattlerAlive(battler)
      && !IsPursuitTargetSet()
-     && HasNoneOfBattleFlags(BATTLE_TYPE_ARENA)
+     && !HasAnyBattleFlags(BATTLE_TYPE_ARENA)
      && (CanBattlerSwitch(battler) || !IsTrainerBattle())
      && (HadMoreThanHalfHpNowDoesnt(battler) || gSpecialStatuses[battler].shellBellEmergencyExit)
      && gBattleMons[battler].volatiles.semiInvulnerable != STATE_SKY_DROP_TARGET)
@@ -11107,7 +11107,7 @@ void TryUpdateEvolutionTracker(enum EvolutionConditions evolutionCondition, u32 
 
     if (IsOnPlayerSide(gBattlerAttacker)
      && ((TESTING && IsDoubleBattle()) // To be removed when Wild Double Battles are added to tests
-     || HasNoneOfBattleFlags(BATTLE_TYPE_LINK
+     || !HasAnyBattleFlags(BATTLE_TYPE_LINK
                              | BATTLE_TYPE_EREADER_TRAINER
                              | BATTLE_TYPE_RECORDED_LINK
                              | BATTLE_TYPE_TRAINER_HILL

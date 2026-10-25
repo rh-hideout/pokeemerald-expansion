@@ -374,7 +374,7 @@ static void VBlankIntr(void)
     m4aSoundMain();
     TryReceiveLinkBattleData();
 
-    if (!gTestRunnerEnabled && (!gMain.inBattle || HasNoneOfBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_FRONTIER | BATTLE_TYPE_RECORDED)))
+    if (!gTestRunnerEnabled && (!gMain.inBattle || !HasAnyBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_FRONTIER | BATTLE_TYPE_RECORDED)))
         AdvanceRandom();
 
     UpdateWirelessStatusIndicatorSprite();

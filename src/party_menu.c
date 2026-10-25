@@ -7521,7 +7521,7 @@ static u8 GetPartyMenuActionsTypeInBattle(struct Pokemon *mon)
     {
         if (gPartyMenu.action == PARTY_ACTION_SEND_OUT)
             return ACTIONS_SEND_OUT;
-        if (HasNoneOfBattleFlags(BATTLE_TYPE_ARENA))
+        if (!HasAnyBattleFlags(BATTLE_TYPE_ARENA))
             return ACTIONS_SHIFT;
     }
     return ACTIONS_SUMMARY_ONLY;

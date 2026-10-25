@@ -1149,11 +1149,6 @@ static inline bool32 HasAllBattleFlags(u32 flags)
     return (gBattleTypeFlags & flags) == flags;
 }
 
-static inline bool32 HasNoneOfBattleFlags(u32 flags)
-{
-    return !HasAnyBattleFlags(flags);
-}
-
 static inline bool32 BattleTypeHasAi(void)
 {
     return HasAnyBattleFlags(BATTLE_TYPE_TRAINER | BATTLE_TYPE_FIRST_BATTLE | BATTLE_TYPE_SAFARI | BATTLE_TYPE_ROAMER | BATTLE_TYPE_INGAME_PARTNER);
@@ -1161,12 +1156,12 @@ static inline bool32 BattleTypeHasAi(void)
 
 static inline bool32 IsWildDoubleBattle(void)
 {
-    return (HasAnyBattleFlags(BATTLE_TYPE_DOUBLE) && HasNoneOfBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_TRAINER));
+    return (HasAnyBattleFlags(BATTLE_TYPE_DOUBLE) && !HasAnyBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_TRAINER));
 }
 
 static inline bool32 IsRecordedWildBattle(void)
 {
-    return (HasAnyBattleFlags(BATTLE_TYPE_RECORDED) && HasNoneOfBattleFlags(BATTLE_TYPE_TRAINER | BATTLE_TYPE_FRONTIER));
+    return (HasAnyBattleFlags(BATTLE_TYPE_RECORDED) && !HasAnyBattleFlags(BATTLE_TYPE_TRAINER | BATTLE_TYPE_FRONTIER));
 }
 
 static inline bool32 IsTrainerBattle(void)

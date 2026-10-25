@@ -206,8 +206,8 @@ static void Intro_TryShinyAnimShowHealthbox(enum BattlerId battler)
         TryShinyAnimation(battler, GetBattlerMon(battler));
 
     twoMons = TwoOpponentIntroMons(battler);
-    if (HasNoneOfBattleFlags(BATTLE_TYPE_TWO_OPPONENTS)
-     && (HasNoneOfBattleFlags(BATTLE_TYPE_MULTI) || IsMultiVsOneOpponentBattle())
+    if (!HasAnyBattleFlags(BATTLE_TYPE_TWO_OPPONENTS)
+     && (!HasAnyBattleFlags(BATTLE_TYPE_MULTI) || IsMultiVsOneOpponentBattle())
      && twoMons
      && !gBattleSpritesDataPtr->healthBoxesData[GetPartnerBattler(battler)].triedShinyMonAnim
      && !gBattleSpritesDataPtr->healthBoxesData[GetPartnerBattler(battler)].ballAnimActive
@@ -218,7 +218,7 @@ static void Intro_TryShinyAnimShowHealthbox(enum BattlerId battler)
     {
         if (!gBattleSpritesDataPtr->healthBoxesData[battler].healthboxSlideInStarted)
         {
-            if (twoMons && (HasNoneOfBattleFlags(BATTLE_TYPE_MULTI) || IsMultiVsOneOpponentBattle()))
+            if (twoMons && (!HasAnyBattleFlags(BATTLE_TYPE_MULTI) || IsMultiVsOneOpponentBattle()))
             {
                 UpdateHealthboxAttribute(gHealthboxSpriteIds[GetPartnerBattler(battler)], GetBattlerMon(GetPartnerBattler(battler)), HEALTHBOX_ALL);
                 StartHealthboxSlideIn(GetPartnerBattler(battler));
@@ -280,7 +280,7 @@ static void Intro_TryShinyAnimShowHealthbox(enum BattlerId battler)
 
     if (bgmRestored && battlerAnimsDone)
     {
-        if (twoMons && (HasNoneOfBattleFlags(BATTLE_TYPE_MULTI) || IsMultiVsOneOpponentBattle()))
+        if (twoMons && (!HasAnyBattleFlags(BATTLE_TYPE_MULTI) || IsMultiVsOneOpponentBattle()))
             DestroySprite(&gSprites[gBattleControllerData[GetPartnerBattler(battler)]]);
 
         DestroySprite(&gSprites[gBattleControllerData[battler]]);
@@ -382,7 +382,7 @@ static void OpponentHandleDrawTrainerPic(enum BattlerId battler)
         if (GetBattlerPosition(battler) == B_POSITION_OPPONENT_LEFT)
         {
             trainerPicId = TRAINER_PIC_LEAF;
-            if (HasNoneOfBattleFlags(BATTLE_TYPE_TWO_OPPONENTS))
+            if (!HasAnyBattleFlags(BATTLE_TYPE_TWO_OPPONENTS))
                 xPos = 176;
             else
                 xPos = 200;
@@ -587,7 +587,7 @@ static void OpponentHandleDrawPartyStatusSummary(enum BattlerId battler)
 
 static void OpponentHandleEndLinkBattle(enum BattlerId battler)
 {
-    if (HasAnyBattleFlags(BATTLE_TYPE_LINK) && HasNoneOfBattleFlags(BATTLE_TYPE_IS_MASTER))
+    if (HasAnyBattleFlags(BATTLE_TYPE_LINK) && !HasAnyBattleFlags(BATTLE_TYPE_IS_MASTER))
     {
         gMain.inBattle = FALSE;
         gMain.callback1 = gPreBattleCallback1;

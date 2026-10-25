@@ -1469,7 +1469,7 @@ static void Cmd_cleareffectsonfaint(void)
     if (gBattleControllerExecFlags == 0)
     {
         enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
-        if (HasNoneOfBattleFlags(BATTLE_TYPE_ARENA) || !IsBattlerAlive(battler))
+        if (!HasAnyBattleFlags(BATTLE_TYPE_ARENA) || !IsBattlerAlive(battler))
         {
             gBattleMons[battler].status1 = 0;
             BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, sizeof(gBattleMons[battler].status1), &gBattleMons[battler].status1);
@@ -2042,7 +2042,7 @@ bool32 NoAliveMonsForPlayer(void)
     if (DoesPartyHaveBattleReadyMons(B_TRAINER_PLAYER))
         return FALSE;
 
-    if (HasNoneOfBattleFlags(BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER))
+    if (!HasAnyBattleFlags(BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER))
         return TRUE;
 
     if (!DoesPartyHaveBattleReadyMons(B_TRAINER_PARTNER))
@@ -2831,7 +2831,7 @@ static void Cmd_switchinanim(void)
 
 bool32 CanBattlerSwitch(enum BattlerId battler)
 {
-    return HasNoneOfBattleFlags(BATTLE_TYPE_ARENA)
+    return !HasAnyBattleFlags(BATTLE_TYPE_ARENA)
         && !IsCommanderActive(battler)
         && HasBattlerViablePartyMonsForSwitch(battler);
 }
@@ -2998,7 +2998,7 @@ static void Cmd_openpartyscreen(void)
     }
     else if (cmd->battler == BS_FAINTED_MULTIPLE_2)
     {
-        if (HasNoneOfBattleFlags(BATTLE_TYPE_MULTI))
+        if (!HasAnyBattleFlags(BATTLE_TYPE_MULTI))
         {
             if (IsDoubleBattle())
             {
@@ -3134,7 +3134,7 @@ static void Cmd_switchhandleorder(void)
         }
         break;
     case 1:
-        if (HasNoneOfBattleFlags(BATTLE_TYPE_MULTI))
+        if (!HasAnyBattleFlags(BATTLE_TYPE_MULTI))
             SwitchPartyOrder(battler);
         break;
     case 2:
@@ -4837,7 +4837,7 @@ static void Cmd_givepaydaymoney(void)
 {
     CMD_ARGS();
 
-    if (HasNoneOfBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK) && gPaydayMoney != 0)
+    if (!HasAnyBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK) && gPaydayMoney != 0)
     {
         u32 bonusMoney = gPaydayMoney * gBattleStruct->moneyMultiplier;
         AddMoney(&gSaveBlock1Ptr->money, bonusMoney);
@@ -7926,7 +7926,7 @@ void BS_UpdateChoiceMoveOnLvlUp(void)
 void BS_ResetPlayerFainted(void)
 {
     NATIVE_ARGS();
-    if (HasNoneOfBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_DOUBLE)
+    if (!HasAnyBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_DOUBLE)
         && IsTrainerBattle()
         && IsBattlerAlive(GetBattlerAtPosition(B_POSITION_PLAYER_LEFT))
         && IsBattlerAlive(GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT)))

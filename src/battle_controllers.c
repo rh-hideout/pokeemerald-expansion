@@ -116,7 +116,7 @@ bool32 BattlerHasAi(enum BattlerId battlerId)
         return TRUE;
 
     if (HasAllBattleFlags(BATTLE_TYPE_RECORDED | BATTLE_TYPE_INGAME_PARTNER)
-     && HasNoneOfBattleFlags(BATTLE_TYPE_RECORDED_LINK)
+     && !HasAnyBattleFlags(BATTLE_TYPE_RECORDED_LINK)
      && battlerId == B_BATTLER_2)
     {
         return TRUE;
@@ -166,19 +166,19 @@ void InitBattleControllers(void)
 {
     s32 i;
 
-    if (HasNoneOfBattleFlags(BATTLE_TYPE_RECORDED))
+    if (!HasAnyBattleFlags(BATTLE_TYPE_RECORDED))
         RecordedBattle_Init(B_RECORD_MODE_RECORDING);
     else
         RecordedBattle_Init(B_RECORD_MODE_PLAYBACK);
 
-    if (HasNoneOfBattleFlags(BATTLE_TYPE_RECORDED))
+    if (!HasAnyBattleFlags(BATTLE_TYPE_RECORDED))
         RecordedBattle_SaveParties();
 
     InitBtlControllersInternal();
 
     SetBattlePartyIds();
 
-    if (HasNoneOfBattleFlags(BATTLE_TYPE_MULTI))
+    if (!HasAnyBattleFlags(BATTLE_TYPE_MULTI))
     {
         for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
             BufferBattlePartyCurrentOrderBySide(battler, 0);
@@ -489,7 +489,7 @@ bool32 ShouldUpdateTvData(enum BattlerId battler)
 
 static void SetBattlePartyIds(void)
 {
-    if (HasNoneOfBattleFlags(BATTLE_TYPE_MULTI))
+    if (!HasAnyBattleFlags(BATTLE_TYPE_MULTI))
     {
         for (enum BattlerId i = 0; i < gBattlersCount; i++)
         {
@@ -823,7 +823,7 @@ static void Task_HandleCopyReceivedLinkBuffersData(u8 taskId)
             memcpy(gBattleResources->bufferA[battler], &BYTE_TO_RECEIVE(LINK_BUFF_DATA), blockSize);
             MarkBattlerReceivedLinkData(battler);
 
-            if (HasNoneOfBattleFlags(BATTLE_TYPE_IS_MASTER))
+            if (!HasAnyBattleFlags(BATTLE_TYPE_IS_MASTER))
             {
                 gBattlerAttacker    = BYTE_TO_RECEIVE(LINK_BUFF_ATTACKER);
                 gBattlerTarget      = BYTE_TO_RECEIVE(LINK_BUFF_TARGET);
@@ -2398,7 +2398,7 @@ void BtlController_HandleLoadMonSprite(enum BattlerId battler)
     gSprites[gBattlerSpriteIds[battler]].oam.paletteNum = battler;
     StartSpriteAnim(&gSprites[gBattlerSpriteIds[battler]], 0);
 
-    if (HasNoneOfBattleFlags(BATTLE_TYPE_GHOST))
+    if (!HasAnyBattleFlags(BATTLE_TYPE_GHOST))
         SetBattlerShadowSpriteCallback(battler, species);
 
     if (IsControllerOpponent(battler) || IsControllerLinkOpponent(battler) || IsControllerRecordedOpponent(battler))
@@ -2926,7 +2926,7 @@ static bool32 TwoMonsAtSendOut(enum BattlerId battler)
 {
     if (IsOnPlayerSide(battler))
     {
-        if (TwoPlayerIntroMons(battler) && HasNoneOfBattleFlags(BATTLE_TYPE_MULTI))
+        if (TwoPlayerIntroMons(battler) && !HasAnyBattleFlags(BATTLE_TYPE_MULTI))
             return TRUE;
         else
             return FALSE;

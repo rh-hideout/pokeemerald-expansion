@@ -3276,10 +3276,10 @@ static void HandleSetEffectTrick(struct BattleCalcValues *cv, struct SetEffect *
     bool32 battleTypeTrainer = (B_TRAINERS_KNOCK_OFF_ITEMS == TRUE ? BATTLE_TYPE_TRAINER : 0);
 
     bool32 opponentCantSwapItems = (HasAnyBattleFlags(BATTLE_TYPE_TRAINER_HILL))
-                                || (!IsOnPlayerSide(cv->battlerAtk) && HasNoneOfBattleFlags(notRegularBattleType | battleTypeTrainer));
+                                || (!IsOnPlayerSide(cv->battlerAtk) && !HasAnyBattleFlags(notRegularBattleType | battleTypeTrainer));
 
     bool32 isKnockedOff = (GetBattlerPartyState(cv->battlerAtk)->isKnockedOff || GetBattlerPartyState(se->effectBattler)->isKnockedOff);
-    bool32 cantSwapIfKnockedOff = HasNoneOfBattleFlags(notRegularBattleType | battleTypeTrainer) && isKnockedOff;
+    bool32 cantSwapIfKnockedOff = !HasAnyBattleFlags(notRegularBattleType | battleTypeTrainer) && isKnockedOff;
 
     if (opponentCantSwapItems || cantSwapIfKnockedOff)
     {

@@ -1278,7 +1278,7 @@ static enum CancelerResult CancelerMoveFailure(struct BattleCalcValues *cv)
             battleScript = BattleScript_ButItFailed;
         break;
     case EFFECT_FOLLOW_ME:
-        if (B_UPDATED_MOVE_DATA >= GEN_8 && HasNoneOfBattleFlags(BATTLE_TYPE_DOUBLE))
+        if (B_UPDATED_MOVE_DATA >= GEN_8 && !HasAnyBattleFlags(BATTLE_TYPE_DOUBLE))
             battleScript = BattleScript_ButItFailed;
         break;
     case EFFECT_LAST_RESORT:
@@ -5088,7 +5088,7 @@ static enum MoveEndResult MoveEndMoveBlock(struct BattleCalcValues *cv)
             }
             else
             {
-                bool32 addStolenWildItemToBag = GetConfig(B_STEAL_WILD_ITEMS) >= GEN_9 && HasNoneOfBattleFlags(BATTLE_TYPE_TRAINER | BATTLE_TYPE_PALACE);
+                bool32 addStolenWildItemToBag = GetConfig(B_STEAL_WILD_ITEMS) >= GEN_9 && !HasAnyBattleFlags(BATTLE_TYPE_TRAINER | BATTLE_TYPE_PALACE);
                 StealTargetItem(cv->battlerAtk, battlerDef, ITEM_NONE, addStolenWildItemToBag);  // Attacker steals target item
 
                 struct LostItem *lostItem = GetLostItemState(GetBattlerTrainer(battlerDef), gBattlerPartyIndexes[battlerDef]);
@@ -5728,7 +5728,7 @@ static enum MoveEndResult MoveEndPickpocket(struct BattleCalcValues *cv)
 
                         if (B_TRAINERS_KNOCK_OFF_ITEMS == TRUE
                          && IsTrainerBattle()
-                         && HasNoneOfBattleFlags(BATTLE_TYPE_FRONTIER)
+                         && !HasAnyBattleFlags(BATTLE_TYPE_FRONTIER)
                          && IsOnPlayerSide(cv->battlerAtk)
                          && itemToSteal == lostItem->originalItem)
                             lostItem->stolen = TRUE;

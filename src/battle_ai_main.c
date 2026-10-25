@@ -210,7 +210,7 @@ void BattleAI_SetupItems(void)
 
     // Items are allowed to use in ONLY trainer battles.
     if (IsTrainerBattle()
-        && HasNoneOfBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_SAFARI | BATTLE_TYPE_BATTLE_TOWER
+        && !HasAnyBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_SAFARI | BATTLE_TYPE_BATTLE_TOWER
         | BATTLE_TYPE_EREADER_TRAINER | BATTLE_TYPE_SECRET_BASE | BATTLE_TYPE_FRONTIER
         | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_RECORDED_LINK))
     {
@@ -318,7 +318,7 @@ void BattleAI_SetupFlags(void)
         return;
     }
 
-    if (IsWildMonSmart() && HasNoneOfBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_TRAINER))
+    if (IsWildMonSmart() && !HasAnyBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_TRAINER))
     {
         // smart wild AI
         gAiThinkingStruct->aiFlags[B_BATTLER_1] = GetAiFlags(0xFFFF, B_BATTLER_1);
@@ -6302,7 +6302,7 @@ static s32 AI_AttacksPartner(enum BattlerId battlerAtk, enum BattlerId battlerDe
 {
     if (battlerDef == GetPartnerBattler(battlerAtk)
        // natural enemies in wild battles try to kill each other
-       && ((IsNaturalEnemy(gBattleMons[battlerAtk].species, gBattleMons[battlerDef].species) && HasNoneOfBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_TRAINER))
+       && ((IsNaturalEnemy(gBattleMons[battlerAtk].species, gBattleMons[battlerDef].species) && !HasAnyBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_TRAINER))
        || AI_FLAG_ATTACKS_PARTNER_FOCUSES_PARTNER))
     {
         enum MoveSlot movesetIndex = gAiThinkingStruct->movesetIndex;
@@ -6856,7 +6856,7 @@ static s32 AI_FirstBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef, 
 // Example - prefer attacking opposite foe in a tag battle
 s32 AI_TagBattlePreferFoe(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, s32 score)
 {
-    if (HasNoneOfBattleFlags(BATTLE_TYPE_INGAME_PARTNER))
+    if (!HasAnyBattleFlags(BATTLE_TYPE_INGAME_PARTNER))
     {
         /* not a partner battle */
         return score;

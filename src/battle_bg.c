@@ -1285,7 +1285,7 @@ void DrawBattleEntryBackground(void)
         {
             LoadBattleEnvironmentEntryGfx(gBattleEnvironment);
         }
-        else if (HasNoneOfBattleFlags(BATTLE_TYPE_INGAME_PARTNER) || gPartnerTrainerId > TRAINER_PARTNER(PARTNER_NONE))
+        else if (!HasAnyBattleFlags(BATTLE_TYPE_INGAME_PARTNER) || gPartnerTrainerId > TRAINER_PARTNER(PARTNER_NONE))
         {
             LoadBattleEnvironmentEntryGfx(BATTLE_ENVIRONMENT_BUILDING);
         }

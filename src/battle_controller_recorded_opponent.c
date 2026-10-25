@@ -195,7 +195,7 @@ static void Intro_TryShinyAnimShowHealthbox(enum BattlerId battler)
     {
         if (!gBattleSpritesDataPtr->healthBoxesData[battler].healthboxSlideInStarted)
         {
-            if (IsDoubleBattle() && HasNoneOfBattleFlags(BATTLE_TYPE_MULTI))
+            if (IsDoubleBattle() && !HasAnyBattleFlags(BATTLE_TYPE_MULTI))
             {
                 UpdateHealthboxAttribute(gHealthboxSpriteIds[GetPartnerBattler(battler)], GetBattlerMon(GetPartnerBattler(battler)), HEALTHBOX_ALL);
                 StartHealthboxSlideIn(GetPartnerBattler(battler));
@@ -255,7 +255,7 @@ static void Intro_TryShinyAnimShowHealthbox(enum BattlerId battler)
 
     if (bgmRestored && battlerAnimsDone)
     {
-        if (IsDoubleBattle() && HasNoneOfBattleFlags(BATTLE_TYPE_MULTI))
+        if (IsDoubleBattle() && !HasAnyBattleFlags(BATTLE_TYPE_MULTI))
             DestroySprite(&gSprites[gBattleControllerData[GetPartnerBattler(battler)]]);
 
         DestroySprite(&gSprites[gBattleControllerData[battler]]);
@@ -279,7 +279,7 @@ static void RecordedOpponentHandleDrawTrainerPic(enum BattlerId battler)
         if (position == B_POSITION_OPPONENT_LEFT)
         {
             trainerPicId = TRAINER_PIC_LEAF;
-            if (HasNoneOfBattleFlags(BATTLE_TYPE_TWO_OPPONENTS))
+            if (!HasAnyBattleFlags(BATTLE_TYPE_TWO_OPPONENTS))
                 xPos = 176;
             else
                 xPos = 200;

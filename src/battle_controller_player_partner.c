@@ -162,7 +162,7 @@ void Controller_PlayerPartnerShowIntroHealthbox(enum BattlerId battler)
         gBattleSpritesDataPtr->healthBoxesData[battler].introEndDelay = 0;
         TryShinyAnimation(battler, GetBattlerMon(battler));
 
-        if (IsDoubleBattle() && HasNoneOfBattleFlags(BATTLE_TYPE_MULTI))
+        if (IsDoubleBattle() && !HasAnyBattleFlags(BATTLE_TYPE_MULTI))
         {
             DestroySprite(&gSprites[gBattleControllerData[GetPartnerBattler(battler)]]);
             UpdateHealthboxAttribute(gHealthboxSpriteIds[GetPartnerBattler(battler)], GetBattlerMon(GetPartnerBattler(battler)), HEALTHBOX_ALL);

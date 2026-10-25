@@ -1553,7 +1553,7 @@ static bool32 HandleEndTurnDynamax(enum BattlerId battler)
      && gBattleStruct->dynamax.dynamaxTurns[battler] > 0)
     {
         if (--gBattleStruct->dynamax.dynamaxTurns[battler] == 0
-         || (gBattleOutcome == B_OUTCOME_WON && IsOnPlayerSide(battler) && HasNoneOfBattleFlags(BATTLE_TYPE_LINK)))
+         || (gBattleOutcome == B_OUTCOME_WON && IsOnPlayerSide(battler) && !HasAnyBattleFlags(BATTLE_TYPE_LINK)))
         {
             gBattleScripting.battler = battler;
             gBattleStruct->dynamax.dynamaxTurns[battler] = 0;

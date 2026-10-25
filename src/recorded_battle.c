@@ -217,7 +217,7 @@ void RecordedBattle_RecordAllBattlerData(u8 *src)
     u8 idx = 2;
     u8 size;
 
-    if (HasNoneOfBattleFlags(BATTLE_TYPE_LINK))
+    if (!HasAnyBattleFlags(BATTLE_TYPE_LINK))
         return;
 
     for (i = 0; i < GetLinkPlayerCount(); i++)
@@ -226,7 +226,7 @@ void RecordedBattle_RecordAllBattlerData(u8 *src)
             return;
     }
 
-    if (HasNoneOfBattleFlags(BATTLE_TYPE_IS_MASTER))
+    if (!HasAnyBattleFlags(BATTLE_TYPE_IS_MASTER))
     {
         for (size = *src; size != 0;)
         {

@@ -352,6 +352,6 @@ static void SafariHandleEndLinkBattle(enum BattlerId battler)
     FadeOutMapMusic(5);
     BeginFastPaletteFade(3);
     BtlController_Complete(battler);
-    if ((HasAnyBattleFlags(BATTLE_TYPE_LINK)) && HasNoneOfBattleFlags(BATTLE_TYPE_IS_MASTER))
+    if ((HasAnyBattleFlags(BATTLE_TYPE_LINK)) && !HasAnyBattleFlags(BATTLE_TYPE_IS_MASTER))
         gBattlerControllerFuncs[battler] = SafariSetBattleEndCallbacks;
 }

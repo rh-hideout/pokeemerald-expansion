@@ -157,7 +157,7 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
     u8 *perishCount;
     u16 *statStringId, *finishedMoveId;
 
-    if (HasNoneOfBattleFlags(BATTLE_TYPE_LINK)
+    if (!HasAnyBattleFlags(BATTLE_TYPE_LINK)
      && stringId != STRINGID_ITDOESNTAFFECT
      && stringId != STRINGID_NOTVERYEFFECTIVE
      && stringId != STRINGID_MOSTLYINEFFECTIVE)
@@ -191,7 +191,7 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
     {
     case STRINGID_ITDOESNTAFFECT:
         AddMovePoints(PTS_EFFECTIVENESS, moveSlot, 2, 0);
-        if (HasNoneOfBattleFlags(BATTLE_TYPE_LINK))
+        if (!HasAnyBattleFlags(BATTLE_TYPE_LINK))
             TrySetBattleSeminarShow();
         break;
     case STRINGID_NOTVERYEFFECTIVE:
@@ -199,7 +199,7 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
     case STRINGID_MOSTLYINEFFECTIVE:
     case STRINGID_MOSTLYINEFFECTIVETWOFOES:
         AddMovePoints(PTS_EFFECTIVENESS, moveSlot, 1, 0);
-        if (HasNoneOfBattleFlags(BATTLE_TYPE_LINK) && GetMonData(defMon, MON_DATA_HP) != 0)
+        if (!HasAnyBattleFlags(BATTLE_TYPE_LINK) && GetMonData(defMon, MON_DATA_HP) != 0)
             TrySetBattleSeminarShow();
         break;
     case STRINGID_SUPEREFFECTIVE:
@@ -585,7 +585,7 @@ void BattleTv_SetDataBasedOnMove(enum Move move, u16 weatherFlags)
     u32 atkSide, defSide;
     u8 moveSlot;
 
-    if (HasNoneOfBattleFlags(BATTLE_TYPE_LINK))
+    if (!HasAnyBattleFlags(BATTLE_TYPE_LINK))
         return;
 
     tvPtr = &gBattleStruct->tv;
@@ -634,7 +634,7 @@ void BattleTv_SetDataBasedOnAnimation(u8 animationId)
     struct BattleTv *tvPtr;
     u32 atkSide;
 
-    if (HasNoneOfBattleFlags(BATTLE_TYPE_LINK))
+    if (!HasAnyBattleFlags(BATTLE_TYPE_LINK))
         return;
 
     tvPtr = &gBattleStruct->tv;
@@ -706,7 +706,7 @@ void TryPutLinkBattleTvShowOnAir(void)
         }
     }
 
-    if (HasNoneOfBattleFlags(BATTLE_TYPE_LINK) || countPlayer != countOpponent)
+    if (!HasAnyBattleFlags(BATTLE_TYPE_LINK) || countPlayer != countOpponent)
         return;
 
     // Find the best mon on each side by total move points.

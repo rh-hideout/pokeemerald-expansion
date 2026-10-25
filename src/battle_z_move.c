@@ -117,7 +117,7 @@ bool32 CanUseZMove(enum BattlerId battler)
 
     // Check if Player has Z-Power Ring.
     if (!TESTING && (position == B_POSITION_PLAYER_LEFT
-        || (HasNoneOfBattleFlags(BATTLE_TYPE_MULTI) && position == B_POSITION_PLAYER_RIGHT))
+        || (!HasAnyBattleFlags(BATTLE_TYPE_MULTI) && position == B_POSITION_PLAYER_RIGHT))
         && !CheckBagHasItem(ITEM_Z_POWER_RING, 1))
         return FALSE;
 
@@ -183,7 +183,7 @@ bool32 IsViableZMove(enum BattlerId battler, enum Move move)
 
     enum BattlerPosition position = GetBattlerPosition(battler);
     // Check if Player has Z-Power Ring.
-    if ((position == B_POSITION_PLAYER_LEFT || (HasNoneOfBattleFlags(BATTLE_TYPE_MULTI) && position == B_POSITION_PLAYER_RIGHT))
+    if ((position == B_POSITION_PLAYER_LEFT || (!HasAnyBattleFlags(BATTLE_TYPE_MULTI) && position == B_POSITION_PLAYER_RIGHT))
         && !CheckBagHasItem(ITEM_Z_POWER_RING, 1))
     {
         return FALSE;

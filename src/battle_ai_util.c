@@ -3577,7 +3577,7 @@ bool32 CanKnockOffItem(enum BattlerId fromBattler, enum BattlerId battler, enum 
     if (item == ITEM_NONE)
         return FALSE;
 
-    if (HasNoneOfBattleFlags(BATTLE_TYPE_CANT_KNOCK_OFF) && IsOnPlayerSide(fromBattler))
+    if (!HasAnyBattleFlags(BATTLE_TYPE_CANT_KNOCK_OFF) && IsOnPlayerSide(fromBattler))
         return FALSE;
 
     if (gAiLogicData->abilities[fromBattler] == ABILITY_STICKY_HOLD)

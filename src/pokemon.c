@@ -5497,7 +5497,7 @@ static void Task_PokemonSummaryAnimateAfterDelay(u8 taskId)
 
 void BattleAnimateFrontSprite(struct Sprite *sprite, enum Species species, bool8 noCry, u8 panMode)
 {
-    if (gHitMarker & HITMARKER_NO_ANIMATIONS && HasNoneOfBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
+    if (gHitMarker & HITMARKER_NO_ANIMATIONS && !HasAnyBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
         DoMonFrontSpriteAnimation(sprite, species, noCry, panMode | SKIP_FRONT_ANIM);
     else
         DoMonFrontSpriteAnimation(sprite, species, noCry, panMode);
@@ -5580,7 +5580,7 @@ void StopPokemonAnimationDelayTask(void)
 
 void BattleAnimateBackSprite(struct Sprite *sprite, enum Species species)
 {
-    if (gHitMarker & HITMARKER_NO_ANIMATIONS && HasNoneOfBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
+    if (gHitMarker & HITMARKER_NO_ANIMATIONS && !HasAnyBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
     {
         sprite->callback = SpriteCallbackDummy;
     }

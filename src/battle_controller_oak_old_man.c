@@ -217,7 +217,7 @@ static void HandleInputChooseAction(enum BattlerId battler)
         if ((HasAnyBattleFlags(BATTLE_TYPE_DOUBLE))
          && GetBattlerPosition(battler) == B_POSITION_PLAYER_RIGHT
          && !(gAbsentBattlerFlags & (1 << GetBattlerAtPosition(B_POSITION_PLAYER_LEFT)))
-         && HasNoneOfBattleFlags(BATTLE_TYPE_MULTI))
+         && !HasAnyBattleFlags(BATTLE_TYPE_MULTI))
         {
             if (gBattleResources->bufferA[battler][1] == B_ACTION_USE_ITEM)
             {
@@ -364,7 +364,7 @@ static void Intro_TryShinyAnimShowHealthbox(enum BattlerId battler)
         TryShinyAnimation(GetPartnerBattler(battler), &party[gBattlerPartyIndexes[GetPartnerBattler(battler)]]);
     if (!gBattleSpritesDataPtr->healthBoxesData[battler].ballAnimActive && !gBattleSpritesDataPtr->healthBoxesData[GetPartnerBattler(battler)].ballAnimActive)
     {
-        if (IsDoubleBattle() && HasNoneOfBattleFlags(BATTLE_TYPE_MULTI))
+        if (IsDoubleBattle() && !HasAnyBattleFlags(BATTLE_TYPE_MULTI))
         {
             DestroySprite(&gSprites[gBattleControllerData[GetPartnerBattler(battler)]]);
             UpdateHealthboxAttribute(gHealthboxSpriteIds[GetPartnerBattler(battler)],
@@ -931,7 +931,7 @@ static void OakOldManHandleEndLinkBattle(enum BattlerId battler)
     FadeOutMapMusic(5);
     BeginFastPaletteFade(3);
     OakOldManBufferExecCompleted(battler);
-    if (HasNoneOfBattleFlags(BATTLE_TYPE_IS_MASTER) && HasAnyBattleFlags(BATTLE_TYPE_LINK))
+    if (!HasAnyBattleFlags(BATTLE_TYPE_IS_MASTER) && HasAnyBattleFlags(BATTLE_TYPE_LINK))
         gBattlerControllerFuncs[battler] = OakOldManSetBattleEndCallbacks;
 }
 

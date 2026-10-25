@@ -385,7 +385,7 @@ static void HandleInputChooseAction(enum BattlerId battler)
         if (IsDoubleBattle()
          && GetBattlerPosition(battler) == B_POSITION_PLAYER_RIGHT
          && !(gAbsentBattlerFlags & (1u << GetBattlerAtPosition(B_POSITION_PLAYER_LEFT)))
-         && HasNoneOfBattleFlags(BATTLE_TYPE_MULTI))
+         && !HasAnyBattleFlags(BATTLE_TYPE_MULTI))
         {
             // Return item to bag if partner had selected one (if consumable).
             if (gBattleResources->bufferA[battler][1] == B_ACTION_USE_ITEM && GetItemConsumability(itemId))
@@ -899,7 +899,7 @@ void HandleInputChooseMove(enum BattlerId battler)
     }
     else if (B_MOVE_REARRANGEMENT_IN_BATTLE < GEN_4 && JOY_NEW(SELECT_BUTTON) && !gBattleStruct->zmove.viewing && !gBattleStruct->descriptionSubmenu)
     {
-        if (gNumberOfMovesToChoose > 1 && HasNoneOfBattleFlags(BATTLE_TYPE_LINK))
+        if (gNumberOfMovesToChoose > 1 && !HasAnyBattleFlags(BATTLE_TYPE_LINK))
         {
             MoveSelectionCreateCursorAt(gMoveSelectionCursor[battler], 29);
 
@@ -1287,7 +1287,7 @@ static void Intro_WaitForShinyAnimAndHealthbox(enum BattlerId battler)
     bool8 healthboxAnimDone = FALSE;
 
     // Check if healthbox has finished sliding in
-    if (TwoPlayerIntroMons(battler) && HasNoneOfBattleFlags(BATTLE_TYPE_MULTI))
+    if (TwoPlayerIntroMons(battler) && !HasAnyBattleFlags(BATTLE_TYPE_MULTI))
     {
         if (gSprites[gHealthboxSpriteIds[battler]].callback == SpriteCallbackDummy
          && gSprites[gHealthboxSpriteIds[GetPartnerBattler(battler)]].callback == SpriteCallbackDummy)
@@ -1341,7 +1341,7 @@ static void Intro_TryShinyAnimShowHealthbox(enum BattlerId battler)
     {
         if (!gBattleSpritesDataPtr->healthBoxesData[battler].healthboxSlideInStarted)
         {
-            if (TwoPlayerIntroMons(battler) && HasNoneOfBattleFlags(BATTLE_TYPE_MULTI))
+            if (TwoPlayerIntroMons(battler) && !HasAnyBattleFlags(BATTLE_TYPE_MULTI))
             {
                 UpdateHealthboxAttribute(gHealthboxSpriteIds[GetPartnerBattler(battler)], GetBattlerMon(GetPartnerBattler(battler)), HEALTHBOX_ALL);
                 StartHealthboxSlideIn(GetPartnerBattler(battler));
@@ -1372,7 +1372,7 @@ static void Intro_TryShinyAnimShowHealthbox(enum BattlerId battler)
     }
 
     // Wait for battler anims
-    if (TwoPlayerIntroMons(battler) && HasNoneOfBattleFlags(BATTLE_TYPE_MULTI))
+    if (TwoPlayerIntroMons(battler) && !HasAnyBattleFlags(BATTLE_TYPE_MULTI))
     {
         if (gSprites[gBattleControllerData[battler]].callback == SpriteCallbackDummy
             && gSprites[gBattlerSpriteIds[battler]].callback == SpriteCallbackDummy
@@ -1394,7 +1394,7 @@ static void Intro_TryShinyAnimShowHealthbox(enum BattlerId battler)
     // Clean up
     if (bgmRestored && battlerAnimsDone)
     {
-        if (TwoPlayerIntroMons(battler) && HasNoneOfBattleFlags(BATTLE_TYPE_MULTI))
+        if (TwoPlayerIntroMons(battler) && !HasAnyBattleFlags(BATTLE_TYPE_MULTI))
             DestroySprite(&gSprites[gBattleControllerData[GetPartnerBattler(battler)]]);
         DestroySprite(&gSprites[gBattleControllerData[battler]]);
 

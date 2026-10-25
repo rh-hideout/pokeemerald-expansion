@@ -421,7 +421,7 @@ static void CreateHealthboxSprite(enum BattlerId battler)
             if (GetMonData(GetBattlerMon(battler), MON_DATA_HP) == 0 || gBattleStruct->battlerState[battler].notOnField)
                 SetHealthboxSpriteInvisible(healthboxSpriteId);
         }
-        else if (HasNoneOfBattleFlags(BATTLE_TYPE_SAFARI))
+        else if (!HasAnyBattleFlags(BATTLE_TYPE_SAFARI))
         {
             if (!IsValidForBattle(GetBattlerMon(battler)) || gBattleStruct->battlerState[battler].notOnField)
                 SetHealthboxSpriteInvisible(healthboxSpriteId);

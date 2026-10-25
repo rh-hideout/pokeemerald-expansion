@@ -2472,7 +2472,7 @@ void BufferStringBattle(enum StringID stringID, enum BattlerId battler)
                             stringPtr = sText_LinkTrainerWantsToBattle;
                         else if (HasAnyBattleFlags(BATTLE_TYPE_TWO_OPPONENTS))
                             stringPtr = sText_TwoTrainersWantToBattle;
-                        else if (HasNoneOfBattleFlags(BATTLE_TYPE_TWO_OPPONENTS))
+                        else if (!HasAnyBattleFlags(BATTLE_TYPE_TWO_OPPONENTS))
                             stringPtr = sText_LinkTrainerWantsToBattlePause;
                         else
                             stringPtr = sText_TwoLinkTrainersWantToBattlePause;
@@ -3012,7 +3012,7 @@ static const u8 *BattleStringGetPlayerName(u8 *text, enum BattlerId battler)
             toCpy = gSaveBlock2Ptr->playerName;
         break;
     case B_POSITION_PLAYER_RIGHT:
-        if (((HasAnyBattleFlags(BATTLE_TYPE_RECORDED)) && HasNoneOfBattleFlags(BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER))
+        if (((HasAnyBattleFlags(BATTLE_TYPE_RECORDED)) && !HasAnyBattleFlags(BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER))
             || gTestRunnerEnabled)
         {
             toCpy = gLinkPlayers[0].name;
@@ -3234,7 +3234,7 @@ u32 BattleStringExpandPlaceholders(const u8 *src, u8 *dst, u32 dstSize)
                 {
                     if (gLastUsedItem == ITEM_ENIGMA_BERRY_E_READER)
                     {
-                        if (HasNoneOfBattleFlags(BATTLE_TYPE_MULTI))
+                        if (!HasAnyBattleFlags(BATTLE_TYPE_MULTI))
                         {
                             if ((gBattleScripting.multiplayerId != 0 && (gPotentialItemEffectBattler & BIT_SIDE))
                                 || (gBattleScripting.multiplayerId == 0 && !(gPotentialItemEffectBattler & BIT_SIDE)))
