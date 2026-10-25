@@ -51,7 +51,7 @@ static const struct WindowTemplate sDaycareLevelMenuWindowTemplate =
 };
 
 // Indices here are assigned by Task_HandleDaycareLevelMenuInput to VAR_RESULT,
-// which is copied to VAR_0x8004 and used as an index for GetDaycareCost
+// which is copied to VAR_0x8004 and used as an index for GetDaycareCostAndPrepareString
 static const struct ListMenuItem sLevelMenuItems[] =
 {
     {gText_ExpandedPlaceholder_Empty, 0},
@@ -183,7 +183,7 @@ static void TransferEggMovesFromBoxmonToBoxmon(struct BoxPokemon *receiver, stru
     if (GetBoxMonData(receiver, MON_DATA_MOVE4) != MOVE_NONE)
         return;
 
-    if (GetConfig(EGG_MOVE_TRANSFER) == GEN_8 && GET_BASE_SPECIES_ID(receiverSpecies) != GET_BASE_SPECIES_ID(giverSpecies))
+    if (GetConfig(EGG_MOVE_TRANSFER) == GEN_8 && GetBaseSpecies(receiverSpecies) != GetBaseSpecies(giverSpecies))
         return;
 
     if (GetConfig(EGG_MOVE_TRANSFER) >= GEN_9 && GetBoxMonData(receiver, MON_DATA_HELD_ITEM) != ITEM_MIRROR_HERB)
@@ -399,7 +399,7 @@ static u8 GetNumLevelsGainedForDaycareMon(struct DaycareMon *daycareMon)
     return numLevelsGained;
 }
 
-static u32 GetDaycareCostForSelectedMon(struct DaycareMon *daycareMon)
+static u32 PrepareDaycareCostStringForSelectedMon(struct DaycareMon *daycareMon)
 {
     u32 cost;
 
@@ -410,14 +410,20 @@ static u32 GetDaycareCostForSelectedMon(struct DaycareMon *daycareMon)
     return cost;
 }
 
-static u16 GetDaycareCostForMon(struct DayCare *daycare, u8 slotId)
+static u16 PrepareDaycareCostStringForMon(struct DayCare *daycare, u8 slotId)
 {
-    return GetDaycareCostForSelectedMon(&daycare->mons[slotId]);
+    return PrepareDaycareCostStringForSelectedMon(&daycare->mons[slotId]);
 }
 
-void GetDaycareCost(void)
+void GetDaycareCostAndPrepareString(void)
 {
-    gSpecialVar_0x8005 = GetDaycareCostForMon(&gSaveBlock1Ptr->daycare, gSpecialVar_0x8004);
+    gSpecialVar_0x8005 = PrepareDaycareCostStringForMon(&gSaveBlock1Ptr->daycare, gSpecialVar_0x8004);
+}
+
+static void UNUSED Debug_AddDaycareSteps(u16 numSteps)
+{
+    gSaveBlock1Ptr->daycare.mons[0].steps += numSteps;
+    gSaveBlock1Ptr->daycare.mons[1].steps += numSteps;
 }
 
 u8 GetNumLevelsGainedFromDaycare(void)
@@ -608,8 +614,9 @@ void TriggerPendingDaycareEgg(void)
 
 void InheritIVs(struct Pokemon *egg, struct DayCare *daycare)
 {
-    u32 i, iv, slot;
-    enum Stat powerStat;
+    u32 i, iv;
+    u32 slot = 0;
+    enum Stat powerStat = STAT_HP;
     u32 start = 0;
     u32 powerItemCount = 0;
     u8 selectedIvs[5] = {0};
@@ -687,7 +694,7 @@ static void InheritPokeball(struct Pokemon *egg, struct DayCare *daycare)
         enum Species species0 = GetBoxMonData(&daycare->mons[0].mon, MON_DATA_SPECIES);
         enum Species species1 = GetBoxMonData(&daycare->mons[1].mon, MON_DATA_SPECIES);
 
-        if (GET_BASE_SPECIES_ID(species0) == GET_BASE_SPECIES_ID(species1))
+        if (GetBaseSpecies(species0) == GetBaseSpecies(species1))
             ballSlot = RandomPercentage(RNG_DAYCARE_PICK_BALL_PARENT, 50);
         inheritBall = GetBoxMonData(&daycare->mons[ballSlot].mon, MON_DATA_POKEBALL);
     }
@@ -811,7 +818,7 @@ static void GiveParentSharedLevelUpMoves(struct Pokemon *egg, enum Move *fatherM
     {
         if (sharedMoves[i] == MOVE_NONE)
             break;
-        for (j = 0; levelupLearnset[j].move != LEVEL_UP_MOVE_END; i++)
+        for (j = 0; levelupLearnset[j].move != LEVEL_UP_MOVE_END; j++)
         {
             if (sharedMoves[i] == levelupLearnset[j].move)
             {
@@ -850,7 +857,7 @@ static void GiveMoveIfParentHeldItem(struct Pokemon *egg, struct BoxPokemon *fat
 
 static void BuildEggMoveset(struct Pokemon *egg, struct BoxPokemon *father, struct BoxPokemon *mother)
 {
-    enum Species eggSpecies = GetMonData(egg, MON_DATA_SPECIES); 
+    enum Species eggSpecies = GetMonData(egg, MON_DATA_SPECIES);
     enum Move fatherMoves[MAX_MON_MOVES];
     enum Move motherMoves[MAX_MON_MOVES];
 
@@ -958,11 +965,11 @@ static enum Species DetermineEggSpeciesAndParentSlots(struct DayCare *daycare, u
         eggSpecies = SPECIES_ILLUMISE;
     else if (eggSpecies == SPECIES_MANAPHY)
         eggSpecies = SPECIES_PHIONE;
-    else if (GET_BASE_SPECIES_ID(eggSpecies) == SPECIES_ROTOM)
+    else if (GetBaseSpecies(eggSpecies) == SPECIES_ROTOM)
         eggSpecies = SPECIES_ROTOM;
-    else if (GET_BASE_SPECIES_ID(eggSpecies) == SPECIES_SCATTERBUG)
+    else if (GetBaseSpecies(eggSpecies) == SPECIES_SCATTERBUG)
         eggSpecies = P_SCATTERBUG_LINE_FORM_BREED;
-    else if (GET_BASE_SPECIES_ID(eggSpecies) == SPECIES_FURFROU)
+    else if (GetBaseSpecies(eggSpecies) == SPECIES_FURFROU)
         eggSpecies = SPECIES_FURFROU;
     else if (eggSpecies == SPECIES_SINISTEA_ANTIQUE)
         eggSpecies = SPECIES_SINISTEA_PHONY;
@@ -1516,7 +1523,7 @@ void PutMonInRoute5Daycare(void)
 void GetCostToWithdrawRoute5DaycareMon(void)
 {
 #if IS_FRLG
-    u16 cost = GetDaycareCostForSelectedMon(&gSaveBlock1Ptr->route5DayCareMon);
+    u16 cost = PrepareDaycareCostStringForSelectedMon(&gSaveBlock1Ptr->route5DayCareMon);
 #else
     u16 cost = 100;
 #endif

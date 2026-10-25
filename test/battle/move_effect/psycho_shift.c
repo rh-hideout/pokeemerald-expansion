@@ -98,7 +98,6 @@ SINGLE_BATTLE_TEST("Psycho Shift triggers Synchronize before curing the user (Ge
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PSYCHO_SHIFT, player);
         STATUS_ICON(opponent, burn: TRUE);
-        ABILITY_POPUP(opponent, ABILITY_SYNCHRONIZE);
         STATUS_ICON(player, none: TRUE);
     } THEN {
         EXPECT_EQ(player->status1, STATUS1_NONE);

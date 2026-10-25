@@ -2,12 +2,15 @@
 #define GUARD_MOVES_H
 
 #include "config_changes.h"
+#include "constants/abilities.h"
+#include "constants/pokemon.h"
 #include "contest_effect.h"
 #include "constants/battle.h"
 #include "constants/battle_factory.h"
 #include "constants/battle_move_effects.h"
 #include "constants/battle_string_ids.h"
 #include "constants/battle_z_move_effects.h"
+#include "constants/battle_set_effect.h"
 #include "constants/moves.h"
 
 #define STAT_CHANGE_FORCE_MAX 7 // Used for belly drum as a way to show that stats are maxed
@@ -15,7 +18,6 @@
 // For defining EFFECT_HIT etc. with battle TV scores and flags etc.
 struct __attribute__((packed, aligned(2))) BattleMoveEffect
 {
-    const u8 *battleScript;
     u16 battleTvScore:3;
     enum FactoryStyle battleFactoryStyle:4;
     u16 encourageEncore:1;
@@ -28,7 +30,24 @@ struct __attribute__((packed, aligned(2))) BattleMoveEffect
 #define EFFECTS_ARR(...) (const struct AdditionalEffect[]) {__VA_ARGS__}
 #define ADDITIONAL_EFFECTS(...) EFFECTS_ARR( __VA_ARGS__ ), .numAdditionalEffects = ARRAY_COUNT(EFFECTS_ARR( __VA_ARGS__ ))
 
+#define STAT_FIELD(stat) .stat = 1,
+#define STATS(...) {.statField = {RECURSIVELY(R_FOR_EACH(STAT_FIELD, __VA_ARGS__))}}
+#define STAT_SWAP_OFFENSIVE STATS(atk, spatk)
+#define STAT_SWAP_DEFENSIVE STATS(def, spdef)
+#define STAT_SWAP_ALL       STATS(atk, def, spatk, spdef, speed, acc, evasion)
+
 #define MAX_RANDOM_ADDITIONAL_EFFECTS   3
+
+struct PACKED StatField
+{
+    u8 atk : 1;
+    u8 def : 1;
+    u8 spatk : 1;
+    u8 spdef : 1;
+    u8 speed : 1;
+    u8 acc : 1;
+    u8 evasion : 1;
+};
 
 struct AdditionalEffect
 {
@@ -38,7 +57,7 @@ struct AdditionalEffect
     u8 onChargeTurnOnly:1;
     u8 sheerForceOverride:1; // Handles edge cases for Sheer Force - if TRUE, boosts when it shouldn't, or doesn't boost when it should
     u8 preAttackEffect:1;
-    u8 onSide:1; // Refers to moves that have an effect on both opposing targets on a single target (see dmax stat drops moves). Works on stat drop moves only
+    u8 onSide:1; // Refers to moves that have an effect on both opposing targets on a single target (see dmax stat drops moves).
     u8 pledgeCombo:1; // If set the move effect only applies during a pledge combo attack
     u8 padding:1;
 
@@ -47,6 +66,11 @@ struct AdditionalEffect
         enum WrappedStringID wrapped:8;
         enum BrokeProtectionStringID brokeProtect:8;
         u8 absorbPercentage;
+        u8 maxHpFraction;
+        enum Type type:8;
+        enum Ability overwriteAbility:16;
+        struct StatField statField;
+        enum BattleRoom roomType:8;
     } argument; // argument field for MOVE_EFFECTS
 
     u8 chance; // 0% = effect certain, primary effect
@@ -91,6 +115,12 @@ enum TerrainGroundCheck
     GROUND_CHECK_NONE,
     GROUND_CHECK_USER,
     GROUND_CHECK_TARGET,
+};
+
+struct TypeBasedHalverInfo {
+    u32 statusField;
+    enum Volatile volatileStatus;
+    enum StringID effectString;
 };
 
 struct MoveInfo
@@ -152,7 +182,7 @@ struct MoveInfo
     bool32 alwaysHitsInHailSnow:1;
     bool32 alwaysHitsOnSameType:1; // Always hits if user is of same type as move
     bool32 noAffectOnSameTypeTarget:1; // Fails if target is of same type as move
-    bool32 accIncreaseByTenOnSameType:1; // Accuracy is increased by 10% if user is of same type as move
+    bool32 accDecreaseIfUserNotSameType:1; // Accuracy is increased by 10% if user is of same type as move
     bool32 padding1:15;
     // end of word
 
@@ -210,6 +240,7 @@ struct MoveInfo
         u32 fixedDamage;
         u32 damagePercentage;
         u32 recoilPercentage;
+        u32 secondaryEffectChance;
         u32 nonVolatileStatus;
         u32 overwriteAbility;
         u32 weatherType;
@@ -517,9 +548,9 @@ static inline bool32 MoveHasNoEffectOnSameType(enum Move moveId)
     return gMovesInfo[SanitizeMoveId(moveId)].noAffectOnSameTypeTarget;
 }
 
-static inline bool32 MoveHasIncreasedAccByTenOnSameType(enum Move moveId)
+static inline bool32 MoveDecreasesAccIfUserNotSameType(enum Move moveId)
 {
-    return gMovesInfo[SanitizeMoveId(moveId)].accIncreaseByTenOnSameType;
+    return gMovesInfo[SanitizeMoveId(moveId)].accDecreaseIfUserNotSameType;
 }
 
 static inline bool32 IsMoveGravityBanned(enum Move moveId)
@@ -617,7 +648,7 @@ static inline u32 GetTwoTurnMoveWeather(enum Move moveId)
 {
     moveId = SanitizeMoveId(moveId);
     enum BattleMoveEffects effect = gMovesInfo[moveId].effect;
-    assertf(effect == EFFECT_TWO_TURNS_ATTACK || effect == EFFECT_SOLAR_BEAM, "not a two-turn move with weather: %S", gMovesInfo[moveId].name);
+    assertf(effect == EFFECT_TWO_TURNS_ATTACK || effect == EFFECT_SOLAR_BEAM || effect == EFFECT_SEMI_INVULNERABLE || effect == EFFECT_GEOMANCY, "not a two-turn move with weather: %S", gMovesInfo[moveId].name);
     return gMovesInfo[moveId].argument.twoTurnAttack.weather;
 }
 
@@ -745,7 +776,7 @@ static inline enum Type GetMoveArgType(enum Move moveId)
 {
     moveId = SanitizeMoveId(moveId);
     enum BattleMoveEffects effect = gMovesInfo[moveId].effect;
-    assertf(effect == EFFECT_SOAK
+    assertf(effect == EFFECT_OVERWRITE_TYPE
          || effect == EFFECT_TWO_TYPED_MOVE
          || effect == EFFECT_THIRD_TYPE
          || effect == EFFECT_SUPER_EFFECTIVE_ON_ARG
@@ -767,6 +798,13 @@ static inline u32 GetMoveRecoil(enum Move moveId)
     moveId = SanitizeMoveId(moveId);
     assertf(gMovesInfo[moveId].effect == EFFECT_RECOIL, "not a recoil move: %S", gMovesInfo[moveId].name);
     return gMovesInfo[moveId].argument.recoilPercentage;
+}
+
+static inline u32 GetMoveSecondaryEffectChance(enum Move moveId)
+{
+    moveId = SanitizeMoveId(moveId);
+    assertf(gMovesInfo[moveId].effect == EFFECT_SECRET_POWER, "not a move with a secondary effect chance argument: %S", GetMoveName(moveId));
+    return gMovesInfo[moveId].argument.secondaryEffectChance;
 }
 
 static inline enum MoveEffect GetMoveNonVolatileStatus(enum Move move)
@@ -842,16 +880,6 @@ static inline const u8 *GetMoveAnimationScript(enum Move moveId)
         return gMovesInfo[MOVE_NONE].battleAnimScript;
     }
     return gMovesInfo[moveId].battleAnimScript;
-}
-
-static inline const u8 *GetMoveBattleScript(enum Move moveId)
-{
-    moveId = SanitizeMoveId(moveId);
-    assertf(gBattleMoveEffects[GetMoveEffect(moveId)].battleScript, "No battle script for %S", gMovesInfo[moveId].name)
-    {
-        return gBattleMoveEffects[EFFECT_PLACEHOLDER].battleScript;
-    }
-    return gBattleMoveEffects[GetMoveEffect(moveId)].battleScript;
 }
 
 #endif // GUARD_MOVES_H

@@ -59,25 +59,21 @@ ThreeIsland_EventScript_NoRoomForFullRestore::
 	end
 
 ThreeIsland_EventScript_BikerArgumentScene::
-	call_if_eq VAR_TEMP_1, 1, ThreeIsland_EventScript_PlayerFaceLeft
-	call_if_eq VAR_TEMP_1, 2, ThreeIsland_EventScript_PlayerFaceLeft
+	call_if_between VAR_TEMP_1, 1, 2, ThreeIsland_EventScript_PlayerFaceLeft
 	applymovement LOCALID_THREE_ISLAND_ANTIBIKER1, ThreeIsland_Movement_SpeakRight
 	waitmovement 0
 	msgbox ThreeIsland_Text_GoBackToKanto
-	call_if_eq VAR_TEMP_1, 0, ThreeIsland_EventScript_PlayerFaceRight
-	call_if_eq VAR_TEMP_1, 1, ThreeIsland_EventScript_PlayerFaceRight
+	call_if_between VAR_TEMP_1, 0, 1, ThreeIsland_EventScript_PlayerFaceRight
 	call_if_eq VAR_TEMP_1, 2, ThreeIsland_EventScript_PlayerFaceBiker
 	applymovement LOCALID_THREE_ISLAND_BIKER1, ThreeIsland_Movement_SpeakLeft
 	waitmovement 0
 	msgbox ThreeIsland_Text_BossIsOnHisWay
-	call_if_eq VAR_TEMP_1, 0, ThreeIsland_EventScript_PlayerFaceUp
-	call_if_eq VAR_TEMP_1, 1, ThreeIsland_EventScript_PlayerFaceUp
+	call_if_between VAR_TEMP_1, 0, 1, ThreeIsland_EventScript_PlayerFaceUp
 	call_if_eq VAR_TEMP_1, 2, ThreeIsland_EventScript_PlayerFaceAntiBiker
 	applymovement LOCALID_THREE_ISLAND_ANTIBIKER2, ThreeIsland_Movement_SpeakRight
 	waitmovement 0
 	msgbox ThreeIsland_Text_GetOffIslandNow
-	call_if_eq VAR_TEMP_1, 0, ThreeIsland_EventScript_PlayerFaceRight
-	call_if_eq VAR_TEMP_1, 1, ThreeIsland_EventScript_PlayerFaceRight
+	call_if_between VAR_TEMP_1, 0, 1, ThreeIsland_EventScript_PlayerFaceRight
 	call_if_eq VAR_TEMP_1, 2, ThreeIsland_EventScript_PlayerFaceBiker
 	applymovement LOCALID_THREE_ISLAND_BIKER3, ThreeIsland_Movement_SpeakLeft
 	waitmovement 0

@@ -26,6 +26,7 @@ extern const struct TrainerMon gBattleFrontierMons[];
 void DoFacilityTrainerBattle(struct ScriptContext *ctx);
 void FillFrontierTrainerParty(u8 monsCount);
 void FillFrontierTrainersParties(u8 monsCount);
-void CreateFacilityMon(const struct TrainerMon *fmon, u16 level, u8 fixedIV, u32 otID, u32 flags, struct Pokemon *dst);
+void PickRandomFacilityMons(struct FacilityMonGenerator *generator, u16 trainerId, u16 *dest);
+void CreateFacilityMon(struct Pokemon *dst, struct FacilityMonGenerator *generator, u16 monIndex);
 
 #endif // GUARD_BATTLE_FRONTIER_H

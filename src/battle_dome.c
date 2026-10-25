@@ -110,11 +110,9 @@ enum {
 static u8 GetDomeTrainerMonIvs(u16);
 static void SwapDomeTrainers(int, int, u16 *);
 static void CalcDomeMonStats(const struct TrainerMon *fmon, int level, u8 ivs, int *stats);
-static void CreateDomeOpponentMons(u16);
-static int SelectOpponentMons_Good(u16, bool8);
-static int SelectOpponentMons_Bad(u16, bool8);
 static int GetTypeEffectivenessPoints(enum Move, enum Species, int);
-static int SelectOpponentMonsFromParty(int *, bool8);
+static u32 SelectOpponentMons(u16 tournamentTrainerId, bool32 effectiveness);
+static u32 SelectOpponentMonsFromParty(int *partyMovePoints);
 static void Task_ShowTourneyInfoCard(u8);
 static void Task_HandleInfoCardInput(u8);
 static u8 Task_GetInfoCardInput(u8);
@@ -142,7 +140,7 @@ static void GetDomeData(void);
 static void SetDomeData(void);
 static void BufferDomeRoundText(void);
 static void BufferDomeOpponentName(void);
-static void InitDomeOpponentParty(void);
+static void Unused_InitDomeOpponentParty(void);
 static void ShowDomeOpponentInfo(void);
 static void ShowDomeTourneyTree(void);
 static void ShowPreviousDomeTourneyTree(void);
@@ -755,7 +753,7 @@ static void (*const sBattleDomeFunctions[])(void) =
     [BATTLE_DOME_FUNC_SET_DATA]                 = SetDomeData,
     [BATTLE_DOME_FUNC_GET_ROUND_TEXT]           = BufferDomeRoundText,
     [BATTLE_DOME_FUNC_GET_OPPONENT_NAME]        = BufferDomeOpponentName,
-    [BATTLE_DOME_FUNC_INIT_OPPONENT_PARTY]      = InitDomeOpponentParty,
+    [BATTLE_DOME_FUNC_INIT_OPPONENT_PARTY]      = Unused_InitDomeOpponentParty,
     [BATTLE_DOME_FUNC_SHOW_OPPONENT_INFO]       = ShowDomeOpponentInfo,
     [BATTLE_DOME_FUNC_SHOW_TOURNEY_TREE]        = ShowDomeTourneyTree,
     [BATTLE_DOME_FUNC_SHOW_PREV_TOURNEY_TREE]   = ShowPreviousDomeTourneyTree,
@@ -1910,19 +1908,14 @@ static void SetDomeData(void)
 
 static void InitDomeTrainers(void)
 {
-    int i, j, k;
+    int i, j;
     int monLevel;
-    enum Species species[FRONTIER_PARTY_SIZE];
     int monTypesBits, monTypesCount;
     int trainerId;
-    int monId;
     u16 *rankingScores;
     int *statValues;
     u8 ivs = 0;
 
-    species[0] = SPECIES_NONE;
-    species[1] = SPECIES_NONE;
-    species[2] = SPECIES_NONE;
     rankingScores = AllocZeroed(sizeof(u16) * DOME_TOURNAMENT_TRAINERS_COUNT);
     statValues = AllocZeroed(sizeof(int) * NUM_STATS);
 
@@ -1976,27 +1969,13 @@ static void InitDomeTrainers(void)
             DOME_TRAINERS[i].trainerId = trainerId;
         }
 
-        // Choose party
-        for (j = 0; j < FRONTIER_PARTY_SIZE; j++)
-        {
-            do
-            {
-                monId = GetRandomFrontierMonFromSet(trainerId);
-                for (k = 0; k < j; k++)
-                {
-                    // Make sure the mon is valid.
-                    int alreadySelectedMonId = DOME_MONS[i][k];
-                    if (alreadySelectedMonId == monId
-                        || species[0] == gFacilityTrainerMons[monId].species
-                        || species[1] == gFacilityTrainerMons[monId].species
-                        || gFacilityTrainerMons[alreadySelectedMonId].heldItem == gFacilityTrainerMons[monId].heldItem)
-                        break;
-                }
-            } while (k != j);
-
-            DOME_MONS[i][j] = monId;
-            species[j] = gFacilityTrainerMons[monId].species;
-        }
+        struct FacilityMonGenerator generator = {
+            .frontierTrainerList = gBattleFrontierTrainers,
+            .facilityMonList = gBattleFrontierMons,
+            .partySize = FRONTIER_PARTY_SIZE,
+            .lvlMode = gSaveBlock2Ptr->frontier.lvlMode
+        };
+        PickRandomFacilityMons(&generator, trainerId, DOME_MONS[i]);
 
         DOME_TRAINERS[i].isEliminated = FALSE;
         DOME_TRAINERS[i].eliminatedAt = 0;
@@ -2173,60 +2152,17 @@ static void BufferDomeOpponentName(void)
     CopyDomeTrainerName(gStringVar2, TRAINER_BATTLE_PARAM.opponentA);
 }
 
-static void InitDomeOpponentParty(void)
+static void Unused_InitDomeOpponentParty(void)
 {
-    CalculatePlayerPartyCount();
-    CreateDomeOpponentMons(TrainerIdToTournamentId(TRAINER_BATTLE_PARAM.opponentA));
+
 }
 
-static void CreateDomeOpponentMon(u8 monPartyId, u16 tournamentTrainerId, u8 tournamentMonId, u32 otId)
+void PickDomeFacilityMons(u16 trainerId)
 {
-    #ifdef BUGFIX
-    u8 fixedIv = GetDomeTrainerMonIvs(DOME_TRAINERS[tournamentTrainerId].trainerId);
-    #else
-    u8 fixedIv = GetDomeTrainerMonIvs(tournamentTrainerId); // BUG: Using the wrong ID. As a result, all Pokémon have ivs of 3.
-    #endif
-    u8 level = SetFacilityPtrsGetLevel();
-
-    CreateFacilityMon(&gFacilityTrainerMons[DOME_MONS[tournamentTrainerId][tournamentMonId]],
-                      level, fixedIv, otId, 0, &gParties[B_TRAINER_OPPONENT_A][monPartyId]);
-}
-
-static void CreateDomeOpponentMons(u16 tournamentTrainerId)
-{
-    u8 monsCount = 0;
-    u32 otId = 0;
-    int i, selectedMonBits;
-
-    ZeroEnemyPartyMons();
-    selectedMonBits = GetDomeTrainerSelectedMons(tournamentTrainerId);
-    otId = Random32();
-
-    if (Random() % 10 > 5)
+    u16 tournamentTrainerId = TrainerIdToTournamentId(trainerId);
+    for (u32 i = 0; i < FRONTIER_PARTY_SIZE; i++)
     {
-        // Create mon if it was selected, starting from front
-        for (i = 0; i < FRONTIER_PARTY_SIZE; i++)
-        {
-            if (selectedMonBits & 1)
-            {
-                CreateDomeOpponentMon(monsCount, tournamentTrainerId, i, otId);
-                monsCount++;
-            }
-            selectedMonBits >>= 1;
-        }
-    }
-    else
-    {
-        // Create mon if it was selected, starting from back
-        for (i = FRONTIER_PARTY_SIZE - 1; i >= 0; i--)
-        {
-            if (selectedMonBits & (1 << (FRONTIER_PARTY_SIZE - 1)))
-            {
-                CreateDomeOpponentMon(monsCount, tournamentTrainerId, i, otId);
-                monsCount++;
-            }
-            selectedMonBits <<= 1;
-        }
+        gFrontierTempParty[i] = DOME_MONS[tournamentTrainerId][i];
     }
 }
 
@@ -2237,26 +2173,29 @@ static void CreateDomeOpponentMons(u16 tournamentTrainerId)
 // In the good mode movesets are preferred which are more effective against the
 // player, and in the bad mode the opposite is true. If all 3 Pokémon tie, the
 // other mode will be tried. If they tie again, the Pokémon selection is random.
-int GetDomeTrainerSelectedMons(u16 tournamentTrainerId)
+u32 GetDomeTrainerSelectedMons(u16 trainerId)
 {
+    u16 tournamentTrainerId = TrainerIdToTournamentId(trainerId);
     int selectedMonBits;
-    if (Random() & 1)
+    bool32 effectiveness = RandomPercentage(RNG_NONE, 50);
+    selectedMonBits = SelectOpponentMons(tournamentTrainerId, effectiveness);
+    if (selectedMonBits == 0)
+        selectedMonBits = SelectOpponentMons(tournamentTrainerId, ~effectiveness);
+
+    if (selectedMonBits == 0)
     {
-        selectedMonBits = SelectOpponentMons_Good(tournamentTrainerId, FALSE);
-        if (selectedMonBits == 0)
-            selectedMonBits = SelectOpponentMons_Bad(tournamentTrainerId, TRUE);
-    }
-    else
-    {
-        selectedMonBits = SelectOpponentMons_Bad(tournamentTrainerId, FALSE);
-        if (selectedMonBits == 0)
-            selectedMonBits = SelectOpponentMons_Good(tournamentTrainerId, TRUE);
+        u32 availableMonBits = 0b00000111;
+        u32 randBit = RandomUniform(RNG_NONE, 0, 2);
+        selectedMonBits |= 1u << randBit;
+        availableMonBits &= ~(1u << randBit);
+        randBit = RandomBitIndex(RNG_NONE, availableMonBits);
+        selectedMonBits |= 1u << randBit;
     }
 
     return selectedMonBits;
 }
 
-static int SelectOpponentMons_Good(u16 tournamentTrainerId, bool8 allowRandom)
+static u32 SelectOpponentMons(u16 tournamentTrainerId, bool32 effectiveness)
 {
     int i, moveIndex, playerMonId;
     int partyMovePoints[FRONTIER_PARTY_SIZE];
@@ -2268,52 +2207,20 @@ static int SelectOpponentMons_Good(u16 tournamentTrainerId, bool8 allowRandom)
         {
             for (playerMonId = 0; playerMonId < FRONTIER_PARTY_SIZE; playerMonId++)
             {
+                enum Species playerMonSpecies = GetMonData(&gParties[B_TRAINER_PLAYER][playerMonId], MON_DATA_SPECIES);
+                enum Move move;
                 if (DOME_TRAINERS[tournamentTrainerId].trainerId == TRAINER_FRONTIER_BRAIN)
-                {
-                    partyMovePoints[i] += GetTypeEffectivenessPoints(GetFrontierBrainMonMove(i, moveIndex),
-                                            GetMonData(&gParties[B_TRAINER_PLAYER][playerMonId], MON_DATA_SPECIES), EFFECTIVENESS_MODE_GOOD);
-                }
+                    move = GetFrontierBrainMonMove(i, moveIndex);
                 else
-                {
-                    partyMovePoints[i] += GetTypeEffectivenessPoints(gFacilityTrainerMons[DOME_MONS[tournamentTrainerId][i]].moves[moveIndex],
-                                            GetMonData(&gParties[B_TRAINER_PLAYER][playerMonId], MON_DATA_SPECIES), EFFECTIVENESS_MODE_GOOD);
-                }
+                    move = gFacilityTrainerMons[DOME_MONS[tournamentTrainerId][i]].moves[moveIndex];
+                partyMovePoints[i] += GetTypeEffectivenessPoints(move, playerMonSpecies, effectiveness);
             }
         }
     }
-    return SelectOpponentMonsFromParty(partyMovePoints, allowRandom);
+    return SelectOpponentMonsFromParty(partyMovePoints);
 }
 
-// Identical to function above, but uses EFFECTIVENESS_MODE_BAD
-static int SelectOpponentMons_Bad(u16 tournamentTrainerId, bool8 allowRandom)
-{
-    int i, moveIndex, playerMonId;
-    int partyMovePoints[FRONTIER_PARTY_SIZE];
-
-    for (i = 0; i < FRONTIER_PARTY_SIZE; i++)
-    {
-        partyMovePoints[i] = 0;
-        for (moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
-        {
-            for (playerMonId = 0; playerMonId < FRONTIER_PARTY_SIZE; playerMonId++)
-            {
-                if (DOME_TRAINERS[tournamentTrainerId].trainerId == TRAINER_FRONTIER_BRAIN)
-                {
-                    partyMovePoints[i] += GetTypeEffectivenessPoints(GetFrontierBrainMonMove(i, moveIndex),
-                                            GetMonData(&gParties[B_TRAINER_PLAYER][playerMonId], MON_DATA_SPECIES), EFFECTIVENESS_MODE_BAD);
-                }
-                else
-                {
-                    partyMovePoints[i] += GetTypeEffectivenessPoints(gFacilityTrainerMons[DOME_MONS[tournamentTrainerId][i]].moves[moveIndex],
-                                            GetMonData(&gParties[B_TRAINER_PLAYER][playerMonId], MON_DATA_SPECIES), EFFECTIVENESS_MODE_BAD);
-                }
-            }
-        }
-    }
-    return SelectOpponentMonsFromParty(partyMovePoints, allowRandom);
-}
-
-static int SelectOpponentMonsFromParty(int *partyMovePoints, bool8 allowRandom)
+static u32 SelectOpponentMonsFromParty(int *partyMovePoints)
 {
     int i, j;
     int selectedMonBits = 0;
@@ -2326,46 +2233,32 @@ static int SelectOpponentMonsFromParty(int *partyMovePoints, bool8 allowRandom)
     if (partyMovePoints[0] == partyMovePoints[1]
      && partyMovePoints[0] == partyMovePoints[2])
     {
-        if (allowRandom)
+        return 0;
+    }
+
+    for (i = 0; i < DOME_BATTLE_PARTY_SIZE; i++)
+    {
+        for (j = i + 1; j < FRONTIER_PARTY_SIZE; j++)
         {
-            i = 0;
-            while (i != DOME_BATTLE_PARTY_SIZE)
+            int temp;
+
+            if (partyMovePoints[i] < partyMovePoints[j])
             {
-                u32 rand = Random() & FRONTIER_PARTY_SIZE;
-                if (rand != FRONTIER_PARTY_SIZE && !(selectedMonBits & (1u << rand)))
-                {
-                    selectedMonBits |= 1u << rand;
-                    i++;
-                }
+                SWAP(partyMovePoints[i], partyMovePoints[j],temp)
+                SWAP(partyPositions[i], partyPositions[j], temp)
+            }
+
+            if (partyMovePoints[i] == partyMovePoints[j] && (Random() & 1))
+            {
+                SWAP(partyMovePoints[i], partyMovePoints[j],temp)
+                SWAP(partyPositions[i], partyPositions[j], temp)
             }
         }
     }
-    else
+
+    for (i = 0; i < DOME_BATTLE_PARTY_SIZE; i++)
     {
-        for (i = 0; i < DOME_BATTLE_PARTY_SIZE; i++)
-        {
-            for (j = i + 1; j < FRONTIER_PARTY_SIZE; j++)
-            {
-                int temp;
-
-                if (partyMovePoints[i] < partyMovePoints[j])
-                {
-                    SWAP(partyMovePoints[i], partyMovePoints[j],temp)
-                    SWAP(partyPositions[i], partyPositions[j], temp)
-                }
-
-                if (partyMovePoints[i] == partyMovePoints[j] && (Random() & 1))
-                {
-                    SWAP(partyMovePoints[i], partyMovePoints[j],temp)
-                    SWAP(partyPositions[i], partyPositions[j], temp)
-                }
-            }
-        }
-
-        for (i = 0; i < DOME_BATTLE_PARTY_SIZE; i++)
-        {
-            selectedMonBits |= 1u << partyPositions[i];
-        }
+        selectedMonBits |= 1u << partyPositions[i];
     }
 
     return selectedMonBits;
@@ -3941,7 +3834,7 @@ static bool32 IsDomeLuckyMove(enum Move move)
     case EFFECT_REFLECT_DAMAGE:
         if (GetMoveReflectDamage_DamageCategories(move) != (1u << DAMAGE_CATEGORY_PHYSICAL)) // if not Counter
             return FALSE;
-        // fallthrough
+        [[fallthrough]];
     case EFFECT_OHKO:
     case EFFECT_METRONOME:
     case EFFECT_MIRROR_MOVE:
@@ -5831,20 +5724,6 @@ static void InitRandomTourneyTreeResults(void)
 }
 
 static int TrainerIdToTournamentId(u16 trainerId)
-{
-    int i;
-
-    for (i = 0; i < DOME_TOURNAMENT_TRAINERS_COUNT; i++)
-    {
-        if (DOME_TRAINERS[i].trainerId == trainerId)
-            break;
-    }
-
-    return i;
-}
-
-// The same as the above one, but has global scope.
-int TrainerIdToDomeTournamentId(u16 trainerId)
 {
     int i;
 

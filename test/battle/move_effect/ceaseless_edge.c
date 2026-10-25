@@ -73,8 +73,8 @@ SINGLE_BATTLE_TEST("Ceaseless Edge fails to set up hazards if user faints")
         TURN { MOVE(player, MOVE_CEASELESS_EDGE); SEND_OUT(player, 1); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CEASELESS_EDGE, player);
+        ITEM_POPUP(opponent, ITEM_ROCKY_HELMET);
         HP_BAR(player);
-        MESSAGE("Wobbuffet was hurt by the opposing Wobbuffet's Rocky Helmet!");
         NOT MESSAGE("Spikes were scattered on the ground all around the opposing side!");
     }
 }

@@ -1,4 +1,5 @@
 #include "global.h"
+#include "constants/battle_move_effects.h"
 #include "test/battle.h"
 
 ASSUMPTIONS
@@ -13,7 +14,7 @@ SINGLE_BATTLE_TEST("Float Stone halves the holder's weight", s16 damage)
     PARAMETRIZE { item = ITEM_NONE;        } //  25.0 - 49.9 kg  (60 power)
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_SOAK) == EFFECT_SOAK);
+        ASSUME(GetMoveEffect(MOVE_SOAK) == EFFECT_OVERWRITE_TYPE);
         ASSUME(GetMoveArgType(MOVE_SOAK) == TYPE_WATER);
         ASSUME(GetSpeciesWeight(SPECIES_DURALUDON) == 400);
         PLAYER(SPECIES_WOBBUFFET);
@@ -29,4 +30,21 @@ SINGLE_BATTLE_TEST("Float Stone halves the holder's weight", s16 damage)
     }
 }
 
-TO_DO_BATTLE_TEST("Float Stone doesn't affect Heavy Ball's multiplier")
+WILD_BATTLE_TEST("Float Stone doesn't affect Heavy Ball's multiplier", u32 catchingChance)
+{
+    enum Item item;
+    PARAMETRIZE { item = ITEM_NONE; }
+    PARAMETRIZE { item = ITEM_FLOAT_STONE; }
+
+    GIVEN {
+        ASSUME(GetSpeciesWeight(SPECIES_SCIZOR) == 1180);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_SCIZOR) { Ability(ABILITY_TECHNICIAN); Item(item); }
+    } WHEN {
+        TURN { USE_ITEM(player, ITEM_HEAVY_BALL); }
+    } SCENE {
+        CATCHING_CHANCE(&results[i].catchingChance);
+    } FINALLY {
+        EXPECT_EQ(results[0].catchingChance, results[1].catchingChance);
+    }
+}

@@ -87,8 +87,8 @@ SINGLE_BATTLE_TEST("Stone Axe fails to set up hazards if user faints")
         TURN { MOVE(player, MOVE_STONE_AXE); SEND_OUT(player, 1); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STONE_AXE, player);
+        ITEM_POPUP(opponent, ITEM_ROCKY_HELMET);
         HP_BAR(player);
-        MESSAGE("Wobbuffet was hurt by the opposing Wobbuffet's Rocky Helmet!");
         NOT MESSAGE("Pointed stones float in the air on the opposing side!");
     }
 }

@@ -1,0 +1,33 @@
+#ifndef GUARD_CONSTANTS_WILD_ENCOUNTER_H
+#define GUARD_CONSTANTS_WILD_ENCOUNTER_H
+
+{{ doNotModifyHeader }}
+
+#define NUM_ALTERING_CAVE_TABLES 9
+
+## for wild_encounter_group in wild_encounter_groups
+{% if wild_encounter_group.for_maps %}
+## for wild_encounter_field in wild_encounter_group.fields
+{% if not existsIn(wild_encounter_field, "groups") %}
+## for encounter_rate in wild_encounter_field.encounter_rates
+## endfor
+{% else %}
+## for field_subgroup_key, field_subgroup_subarray in wild_encounter_field.groups
+{{ setVar("field_name", concat(concat(upper(wild_encounter_field.type), "_"), upper(field_subgroup_key))) }}
+## for field_subgroup_index in field_subgroup_subarray
+## endfor
+#define NUM_{{ getVar("field_name") }}_ENCOUNTER_SLOTS ({{ length(field_subgroup_subarray) }})
+## endfor
+{% endif %}
+#define NUM_{{ upper(wild_encounter_field.type) }}_ENCOUNTER_SLOTS ({{ length(wild_encounter_field.encounter_rates) }})
+
+## endfor
+{% endif %}
+## endfor
+
+#define NUM_HIDDEN_MONS_ENCOUNTER_SLOTS   3
+
+#define WILD_CHECK_REPEL    (1 << 0)
+#define WILD_CHECK_KEEN_EYE (1 << 1)
+
+#endif // GUARD_CONSTANTS_WILD_ENCOUNTER_H

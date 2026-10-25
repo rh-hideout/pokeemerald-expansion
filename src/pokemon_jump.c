@@ -820,7 +820,7 @@ static bool32 GameIntro_Leader(void)
     case 0:
         SetLinkTimeInterval(LINK_INTERVAL_SHORT);
         sPokemonJump->mainState++;
-        // fall through
+        [[fallthrough]];
     case 1:
         if (!DoGameIntro())
         {
@@ -842,7 +842,7 @@ static bool32 GameIntro_Member(void)
         SetLinkTimeInterval(LINK_INTERVAL_NONE);
         sPokemonJump->rngSeed = sPokemonJump->comm.data;
         sPokemonJump->mainState++;
-        // fall through
+        [[fallthrough]];
     case 1:
         return DoGameIntro();
     }
@@ -880,7 +880,7 @@ static bool32 WaitRound_Member(void)
         SetLinkTimeInterval(LINK_INTERVAL_NONE);
         sPokemonJump->vineTimer = sPokemonJump->comm.data;
         sPokemonJump->mainState++;
-        // fall through
+        [[fallthrough]];
     case 1:
         if (AreLinkQueuesEmpty())
             return FALSE;
@@ -993,7 +993,7 @@ static bool32 AskPlayAgain_Leader(void)
     case 0:
         SetLinkTimeInterval(LINK_INTERVAL_MEDIUM);
         sPokemonJump->mainState++;
-        // fall through
+        [[fallthrough]];
     case 1:
         if (!DoPlayAgainPrompt())
         {
@@ -1027,7 +1027,7 @@ static bool32 AskPlayAgain_Member(void)
     case 0:
         SetLinkTimeInterval(LINK_INTERVAL_NONE);
         sPokemonJump->mainState++;
-        // fall through
+        [[fallthrough]];
     case 1:
         if (!DoPlayAgainPrompt())
         {
@@ -1527,7 +1527,7 @@ static void Task_CommunicateMonInfo(u8 taskId)
             tReceivedPacket(i) = FALSE;
 
         tState++;
-        // fall through
+        [[fallthrough]];
     case 1:
         SendPacket_MonInfo(&jump->monInfo[jump->multiplayerId]);
         for (i = 0; i < MAX_RFU_PLAYERS; i++)
@@ -2596,7 +2596,7 @@ static void CreateJumpMonSprite(struct PokemonJumpGfx *jumpGfx, struct PokemonJu
 
         spriteTemplate.tileTag += multiplayerId;
         spriteTemplate.paletteTag += multiplayerId;
-        spriteId = CreateSprite(&spriteTemplate, x, y, subpriority);
+        spriteId = CreateSpriteUnchecked(&spriteTemplate, x, y, subpriority);
         if (spriteId != MAX_SPRITES)
         {
             jumpGfx->monSprites[multiplayerId] = &gSprites[spriteId];
@@ -2766,7 +2766,7 @@ static void SpriteCB_MonIntroBounce(struct Sprite *sprite)
         PlaySE(SE_BIKE_HOP);
         sprite->sHopPos = 0;
         sprite->sState++;
-        // fall through
+        [[fallthrough]];
     case 1:
         sprite->sHopPos += 4;
         if (sprite->sHopPos > 127)
@@ -2790,7 +2790,7 @@ static void SpriteCB_MonIntroBounce(struct Sprite *sprite)
 
 static void CreateStarSprite(struct PokemonJumpGfx *jumpGfx, s16 x, s16 y, u8 multiplayerId)
 {
-    u8 spriteId = CreateSprite(&sSpriteTemplate_Star, x, y, 1);
+    u8 spriteId = CreateSpriteUnchecked(&sSpriteTemplate_Star, x, y, 1);
     if (spriteId != MAX_SPRITES)
     {
         gSprites[spriteId].invisible = TRUE;
@@ -3324,6 +3324,7 @@ static bool32 ResetVineGfx(void)
         UpdateVineSwing(sPokemonJumpGfx->vineState);
         if (sPokemonJumpGfx->vineState != VINE_UPSWING_LOW)
             break;
+        [[fallthrough]];
     case 1:
         return FALSE;
     }
@@ -3395,10 +3396,12 @@ static bool32 DoPrizeMessageAndFanfare(void)
         }
         PlayFanfare(sPokemonJumpGfx->fanfare);
         sPokemonJumpGfx->msgWindowState++;
+        [[fallthrough]];
     case 2:
         if (!IsFanfareTaskInactive())
             break;
         sPokemonJumpGfx->msgWindowState++;
+        [[fallthrough]];
     case 3:
         return FALSE;
     }
