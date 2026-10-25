@@ -3782,18 +3782,13 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                 }
                 break;
             case ABILITY_CUD_CHEW:
-                if (gBattleMons[battler].volatiles.cudChew == TRUE)
+                if (--gBattleMons[battler].volatiles.cudChewTimer == 0)
                 {
                     gBattleScripting.battler = battler;
-                    gBattleMons[battler].volatiles.cudChew = FALSE;
                     gLastUsedItem = GetBattlerPartyState(battler)->usedHeldItem;
                     GetBattlerPartyState(battler)->usedHeldItem = ITEM_NONE;
                     BattleScriptCall(BattleScript_CudChewActivates);
                     effect++;
-                }
-                else if (!gBattleMons[battler].volatiles.cudChew && GetItemPocket(GetBattlerPartyState(battler)->usedHeldItem) == POCKET_BERRIES)
-                {
-                    gBattleMons[battler].volatiles.cudChew = TRUE;
                 }
                 break;
             default:
