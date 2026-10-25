@@ -7479,9 +7479,9 @@ void ChooseMonForWirelessMinigame(void)
 
 static u8 GetPartyLayoutFromBattleType(void)
 {
-    if (IsMultiBattle() == TRUE && !AreMultiPartiesFullTeams())
+    if (IsMultiBattle() && !AreMultiPartiesFullTeams())
         return PARTY_LAYOUT_MULTI;
-    if (IsMultiBattle() == TRUE && AreMultiPartiesFullTeams())
+    if (IsMultiBattle() && AreMultiPartiesFullTeams())
         return PARTY_LAYOUT_MULTI_FULL;
     if (!IsDoubleBattle() || gPartiesCount[B_TRAINER_PLAYER] == 1) // Draw the single layout in a double battle where the player has only one Pokémon.
         return PARTY_LAYOUT_SINGLE;
@@ -7539,7 +7539,7 @@ static bool8 TrySwitchInPokemon(void)
     battlePartyId = GetPartyIdFromBattleSlot(slot);
 
     // In a 6v6 multi battle, slots 1, 4, and 5 are the partner's Pokémon
-    if (IsMultiBattle() == TRUE && (slot == 1 || slot == 4 || slot == 5) && !AreMultiPartiesFullTeams())
+    if (IsMultiBattle() && (slot == 1 || slot == 4 || slot == 5) && !AreMultiPartiesFullTeams())
     {
         StringCopy(gStringVar1, GetTrainerPartnerName());
         StringExpandPlaceholders(gStringVar4, gText_CantSwitchWithAlly);
@@ -7606,14 +7606,14 @@ static void BufferBattlePartyOrder(u8 *partyBattleOrder, u8 flankId)
     u8 partyIds[PARTY_SIZE];
     int i, j;
 
-    if (IsMultiBattle() == TRUE && AreMultiPartiesFullTeams() == TRUE)
+    if (IsMultiBattle() && AreMultiPartiesFullTeams())
     {
         partyBattleOrder[0] = (0 << 4) | 1;
         partyBattleOrder[1] = (2 << 4) | 3;
         partyBattleOrder[2] = (4 << 4) | 5;
         return;
     }
-    else if (IsMultiBattle() == TRUE)
+    else if (IsMultiBattle())
     {
         // Party ids are packed in 4 bits at a time
         // i.e. the party id order below would be 0, 3, 5, 4, 2, 1, and the two parties would be 0,5,4 and 3,2,1
@@ -7679,14 +7679,14 @@ static void BufferBattlePartyOrderBySide(u8 *partyBattleOrder, u8 flankId, enum 
     else
         leftBattler = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
 
-    if (IsMultiBattle() == TRUE && AreMultiPartiesFullTeams() == TRUE)
+    if (IsMultiBattle() && AreMultiPartiesFullTeams())
     {
         partyBattleOrder[0] = (0 << 4) | 1;
         partyBattleOrder[1] = (2 << 4) | 3;
         partyBattleOrder[2] = (4 << 4) | 5;
         return;
     }
-    else if (IsMultiBattle() == TRUE)
+    else if (IsMultiBattle())
     {
         if (flankId != 0)
         {
@@ -8595,14 +8595,14 @@ static void Task_FirstBattleEnterParty_WaitFadeNormal(u8 taskId)
 // Functions for 4-party link multi battle handling
 static enum PartySlot CombinedToIndividualPartyId(enum PartySlot index)
 {
-    if (IsMultiBattle() == TRUE && !AreMultiPartiesFullTeams() && index >= MULTI_PARTY_SIZE)
+    if (IsMultiBattle() && !AreMultiPartiesFullTeams() && index >= MULTI_PARTY_SIZE)
         return (enum PartySlot)(index - MULTI_PARTY_SIZE);
     return index;
 }
 
 static enum PartySlot IndividualToCombinedPartyId(enum PartySlot index, enum BattlerId battler)
 {
-    if (IsMultiBattle() == TRUE && !AreMultiPartiesFullTeams() && (GetBattlerPosition(battler) & BIT_FLANK))
+    if (IsMultiBattle() && !AreMultiPartiesFullTeams() && (GetBattlerPosition(battler) & BIT_FLANK))
         return (enum PartySlot)(index + MULTI_PARTY_SIZE);
     return index;
 }
