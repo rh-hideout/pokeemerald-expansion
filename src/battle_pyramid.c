@@ -856,8 +856,6 @@ static void Unused_GetBattlePyramidData(void)
 
 static void SetBattlePyramidData(void)
 {
-    enum FrontierLevelMode lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
-
     switch (gSpecialVar_0x8005)
     {
     case PYRAMID_DATA_TRAINER_FLAGS:
