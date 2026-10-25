@@ -63,16 +63,16 @@ DebugBXPY_Text_0:
 	.string "yes$"
 
 BXPY_Script_CheckErrors_Text_0:
-	.string "You have too many Pokemon in your\n"
+	.string "You have too many [Pokémon] in your\n"
 	.string "party. You cannot have more than\l"
 	.string "{STR_VAR_1}.$"
 
 BXPY_Script_CheckErrors_Text_1:
 	.string "You must have {STR_VAR_1} healthy\n"
-	.string "Pokemon in your party to battle!$"
+	.string "[Pokémon] in your party to battle!$"
 
 BXPY_Script_CheckErrors_Text_2:
-	.string "All of the Pokemon in your party must be\n"
+	.string "All of the [Pokémon] in your party must be\n"
 	.string "of unique species.\l"
 	.string "{STR_VAR_1}\l"
 	.string "appear more than once.$"
@@ -84,6 +84,6 @@ BXPY_Script_CheckErrors_Text_3:
 	.string "appear more than once.$"
 
 BXPY_Script_CheckErrors_Text_4:
-	.string "Some Pokemon are restricted from\n"
+	.string "Some [Pokémon] are restricted from\n"
 	.string "entering. You cannot bring\l"
 	.string "{STR_VAR_1}.$"

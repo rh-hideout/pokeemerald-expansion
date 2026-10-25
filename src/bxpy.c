@@ -564,7 +564,7 @@ const u8 *BXPY_ReturnItemText(enum Item item)
 {
     static const u8 sText_Unknown[] = _("Unknown");
     static const u8 sText_Question[] = _("???");
-    static const u8 sText_None[] = _("NONE");
+    static const u8 sText_None[] = _("[None]");
     bool32 hasItem = (item != ITEM_NONE);
 
     switch (BXPY_GetEnemyItemVisibilityLevel())

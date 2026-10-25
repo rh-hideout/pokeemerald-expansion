@@ -1653,24 +1653,24 @@ static void BXPY_PrintHelpBarText(enum BXPYWindows windowId)
 
     if (hasSelectedEnough)
     {
-        StringAppend(gStringVar4, COMPOUND_STRING("{START_BUTTON} Start Battle"));
+        StringAppend(gStringVar4, COMPOUND_STRING("{START_BUTTON} [Start Battle]"));
     }
     else
     {
         u32 pickSize = BXPY_GetPickSize();
         ConvertIntToDecimalStringN(gStringVar1,pickSize,STR_CONV_MODE_LEFT_ALIGN,CountDigits(pickSize));
-        StringAppend(gStringVar4, COMPOUND_STRING("Select {STR_VAR_1} Pokemon."));
+        StringAppend(gStringVar4, COMPOUND_STRING("Select {STR_VAR_1} [Pokémon]."));
     }
 
     if ((!onEnemy) && (!isPartnerPage))
-        StringAppend(gStringVar4,COMPOUND_STRING(" {A_BUTTON} Select"));
+        StringAppend(gStringVar4,COMPOUND_STRING(" {A_BUTTON} [Select]"));
     else if (isOTSOn == TRUE)
-        StringAppend(gStringVar4,COMPOUND_STRING(" {A_BUTTON} Summary"));
+        StringAppend(gStringVar4,COMPOUND_STRING(" {A_BUTTON} [Summary]"));
 
     if ((isMultiBattle == TRUE) && (!isPartnerPage))
-        StringAppend(gStringVar4,COMPOUND_STRING(" {SELECT_BUTTON} See Partners"));
+        StringAppend(gStringVar4,COMPOUND_STRING(" {SELECT_BUTTON} [See Partners]"));
     else if ((isMultiBattle == TRUE) && (isPartnerPage == TRUE))
-        StringAppend(gStringVar4,COMPOUND_STRING(" {SELECT_BUTTON} See {PLAYER}"));
+        StringAppend(gStringVar4,COMPOUND_STRING(" {SELECT_BUTTON} [See] {PLAYER}"));
 
     StringExpandPlaceholders(gStringVar2,gStringVar4);
 
@@ -1890,9 +1890,9 @@ void BXPY_InitializeAndSaveCallback(u32 bringSize, u32 pickSize, u32 battleFlags
     SetMainCallback2(BXPY_SetupCallback);
 }
 
-static const u8 sText_RemoveMenu[] = _("Remove\nSummary\nCancel");
-static const u8 sText_AddMenu[] = _("Add\nSummary\nCancel");
-static const u8 sText_FullMenu[] = _("Summary\nCancel");
+static const u8 sText_RemoveMenu[] = _("[Remove]\n[Summary]\n[Cancel]");
+static const u8 sText_AddMenu[] = _("[Add]\n[Summary]\n[Cancel]");
+static const u8 sText_FullMenu[] = _("[Summary]\n[Cancel]");
 
 static bool8 BXPY_IsCursorOnSelectedMon(void)
 {
