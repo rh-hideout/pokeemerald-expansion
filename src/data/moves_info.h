@@ -23379,7 +23379,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("[G-Max Meltdown]"),
         .description = COMPOUND_STRING(
             "[G-Max Melmetal] attack.\n"
-            "[Torments] opponents."),    //ANIM TODO
+            "Torments opponents."),    //ANIM TODO
         .effect = EFFECT_MAX_MOVE,
         .power = 10,
         .type = TYPE_STEEL,
