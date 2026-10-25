@@ -24,7 +24,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
 {
     [MOVE_NONE] =
     {
-        .name = COMPOUND_STRING("[-]"),
+        .name = COMPOUND_STRING("-"),
         .description = COMPOUND_STRING(""),
         .effect = EFFECT_HIT,
         .power = 0,
