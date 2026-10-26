@@ -191,12 +191,12 @@ AI_DOUBLE_BATTLE_TEST("AI target coordination: a possible max-roll KO still need
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_WOBBUFFET) { HP(40); Defense(100); Moves(MOVE_PROTECT); }
         PLAYER(SPECIES_WOBBUFFET) { HP(500); MaxHP(500); Defense(100); }
-        OPPONENT(SPECIES_WOBBUFFET) { Level(100); Attack(120); Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Level(100); Attack(120); Moves(MOVE_POUND); }
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_SEISMIC_TOSS); }
     } WHEN {
         TURN {
             MOVE(playerLeft, MOVE_PROTECT);
-            EXPECT_MOVE(opponentLeft, MOVE_TACKLE, target: playerLeft);
+            EXPECT_MOVE(opponentLeft, MOVE_POUND, target: playerLeft);
             EXPECT_MOVE(opponentRight, MOVE_SEISMIC_TOSS, target: playerLeft);
         }
     } THEN {
