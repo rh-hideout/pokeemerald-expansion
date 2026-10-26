@@ -1,2 +1,13 @@
-# Every file is owned by dabaquita; PRs from others need their review.
-* @dabaquita
+# PRs that change code, the build, CI or setup scripts need dabaquita's review.
+# Maps, text, graphics and docs can merge once CI passes.
+# Enforced by the master branch protection rule ("Require review from Code Owners").
+/src/ @dabaquita
+/include/ @dabaquita
+/test/ @dabaquita
+/tools/ @dabaquita
+/Makefile @dabaquita
+*.mk @dabaquita
+/ld_script*.ld @dabaquita
+/.github/ @dabaquita
+/setup/ @dabaquita
+/Build*Play.* @dabaquita

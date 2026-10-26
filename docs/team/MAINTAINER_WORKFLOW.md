@@ -10,14 +10,14 @@ Friends' side: [ONBOARDING.md](ONBOARDING.md) and [DAILY_WORKFLOW.md](DAILY_WORK
 
 ## Still to do
 
-- [ ] **Give members write access:** org **Settings → Member privileges → Base permissions → Write**.
-  - Right now it's **Read**, so friends couldn't push branches.
-- [ ] **Protect `master`:** repo **Settings → Branches → Add rule** for `master`.
-  - Turn on **Require a pull request before merging**.
-  - Turn on **Require status checks to pass**, then pick **CI passed**.
+- [x] **Give members write access:** org **Settings → Member privileges → Base permissions → Write**.
+- [x] **Protect `master`:** rule on `master` requires a pull request, **CI passed**, and Code Owner review.
+  - Admins (you) can bypass it, so your own code PRs aren't stuck waiting for a second reviewer.
+  - Change it: repo **Settings → Branches → `master` → Edit**.
 - [ ] **Test Windows setup** with your first Windows friend (the scripts haven't run on real Windows yet).
 - [ ] **PR template:** replace RHH's `.github/pull_request_template.md` with a short team one.
-- [ ] **Decide on `CODEOWNERS`:** require your review for `src/`, `include/`, `Makefile`, `.github/`?
+- [x] **Decide on `CODEOWNERS`:** your review is required for code, the build, CI and setup scripts
+  (see [`.github/CODEOWNERS`](../../.github/CODEOWNERS)). Maps, text, graphics and docs merge once CI passes.
 
 ---
 
@@ -48,6 +48,7 @@ Friends' side: [ONBOARDING.md](ONBOARDING.md) and [DAILY_WORKFLOW.md](DAILY_WORK
    ```
    Then build and play (`make`, or double-click **Build & Play**). Go back with `git checkout master`.
 5. Merge with **Squash and merge**, then **Delete branch**.
+   - Teammates can merge their own map/text/graphics PRs once CI passes; code PRs wait for your approval.
 6. If the friend gets a **merge conflict**, fix it with them on a call, or check out their branch, merge `master`, and push.
 
 ---
