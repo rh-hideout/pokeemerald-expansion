@@ -2,6 +2,7 @@
 #include "pokemon.h"
 #include "battle.h"
 #include "battle_anim.h"
+#include "battle_controllers.h"
 #include "battle_stat_change.h"
 #include "battle_tv.h"
 #include "constants/battle_string_ids.h"
@@ -184,7 +185,6 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
         && gEffectBattler & BIT_FLANK)
     {
         effPartyIndex += MULTI_PARTY_SIZE;
-    }
     }
 
     if (moveSlot >= MAX_MON_MOVES && IsNotSpecialBattleString(stringId) && stringId > STRINGID_TABLE_START)
@@ -779,7 +779,7 @@ void TryPutLinkBattleTvShowOnAir(void)
                     oppTrainer = B_TRAINER_OPPONENT_B;
                     oppSlot = opponentBestMonId - MULTI_PARTY_SIZE;
                 }
-                if (GetMonData(mon, MON_DATA_EXP) > GetMonData(&gParties[oppTrainer][oppSlot], MON_DATA_EXP))
+                if (GetMonData(oppMon, MON_DATA_EXP) > GetMonData(&gParties[oppTrainer][oppSlot], MON_DATA_EXP))
                 {
                     opponentBestMonId = i;
                     opponentBestSum = sum;
