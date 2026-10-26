@@ -5071,8 +5071,7 @@ static void HandleEndTurn_BattleWon(void)
         gBattlescriptCurrInstr = BattleScript_LinkBattleWonOrLost;
         gBattleOutcome &= ~B_OUTCOME_LINK_BATTLE_RAN;
     }
-    else if (IsTrainerBattle()
-            && HasAnyBattleFlags(BATTLE_TYPE_FRONTIER | BATTLE_TYPE_TRAINER_HILL | BATTLE_TYPE_EREADER_TRAINER))
+    else if (IsTrainerBattle() && HasAnyBattleFlags(BATTLE_TYPE_FRONTIER | BATTLE_TYPE_TRAINER_HILL | BATTLE_TYPE_EREADER_TRAINER))
     {
         BattleStopLowHpSound();
         gBattlescriptCurrInstr = BattleScript_FrontierTrainerBattleWon;
