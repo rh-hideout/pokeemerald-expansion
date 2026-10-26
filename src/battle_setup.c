@@ -2168,7 +2168,7 @@ bool8 IsTrainerReadyForRematch(void)
 
 static void HandleRematchVarsOnBattleEnd(void)
 {
-    if ((IsTrainerBattle()) && (I_VS_SEEKER_CHARGING != 0))
+    if (IsTrainerBattle() && (I_VS_SEEKER_CHARGING != 0))
         ClearRematchMovementByTrainerId();
 
     ClearTrainerWantRematchState(gRematchTable, TRAINER_BATTLE_PARAM.opponentA);

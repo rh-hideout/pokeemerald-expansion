@@ -662,7 +662,7 @@ void BattleTv_SetDataBasedOnAnimation(u8 animationId)
 // Helper following 4-party split in link multis
 static struct Pokemon *GetTvPartyMon(u32 scoreIndex, u32 side)
 {
-    if ((HasAnyBattleFlags(BATTLE_TYPE_MULTI)) && scoreIndex >= MULTI_PARTY_SIZE)
+    if (HasAnyBattleFlags(BATTLE_TYPE_MULTI) && scoreIndex >= MULTI_PARTY_SIZE)
     {
         enum BattleTrainer trainer = (side == B_SIDE_PLAYER) ? B_TRAINER_PARTNER : B_TRAINER_OPPONENT_B;
         return &gParties[trainer][scoreIndex - MULTI_PARTY_SIZE];
@@ -1451,7 +1451,7 @@ static void AddPointsBasedOnWeather(u16 weatherFlags, enum Move move, enum MoveS
 static u32 GetTvPartyIndex(u32 battler)
 {
     u32 index = (u32)gBattlerPartyIndexes[battler];
-    if ((HasAnyBattleFlags(BATTLE_TYPE_MULTI)) && (GetBattlerPosition(battler) & BIT_FLANK))
+    if (HasAnyBattleFlags(BATTLE_TYPE_MULTI) && (GetBattlerPosition(battler) & BIT_FLANK))
         index += MULTI_PARTY_SIZE;
     return index;
 }

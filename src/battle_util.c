@@ -1835,7 +1835,7 @@ bool32 HasNoMonsToSwitch(enum BattlerId battler, enum PartySlot partyIdBattlerOn
         }
         return (i == lastId);
     }
-    else if ((HasAnyBattleFlags(BATTLE_TYPE_TWO_OPPONENTS)) && !isPlayerSide)
+    else if (HasAnyBattleFlags(BATTLE_TYPE_TWO_OPPONENTS) && !isPlayerSide)
     {
         for (i = 0; i < lastId; i++)
         {
@@ -8108,8 +8108,8 @@ s32 CalcCritChanceStageGen1(struct DamageContext *ctx)
 static bool32 IsCriticalHit(struct DamageContext *ctx)
 {
 
-    if ((HasAnyBattleFlags(BATTLE_TYPE_CATCH_TUTORIAL | BATTLE_TYPE_POKEDUDE))
-    || ((HasAnyBattleFlags(BATTLE_TYPE_FIRST_BATTLE)) && (!IS_FRLG || !BtlCtrl_OakOldMan_TestState2Flag(1))))
+    if (HasAnyBattleFlags(BATTLE_TYPE_CATCH_TUTORIAL | BATTLE_TYPE_POKEDUDE)
+    || (HasAnyBattleFlags(BATTLE_TYPE_FIRST_BATTLE) && (!IS_FRLG || !BtlCtrl_OakOldMan_TestState2Flag(1))))
         return FALSE;
     if (ctx->isSelfInflicted)
         return FALSE;

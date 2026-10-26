@@ -3231,7 +3231,7 @@ void ExpectSendOut(u32 sourceLine, struct BattlePokemon *battler, enum PartySlot
     if (!(DATA.actionBattlers & (1 << battlerId)))
     { // Multi test partner trainers want setting to PlayerPartner controller even if no move set in this case.
         if (IsAITest() && (((battlerId & BIT_SIDE) == B_SIDE_OPPONENT) // If Move was not specified, allow any move used.
-         || ((HasAnyBattleFlags(BATTLE_TYPE_MULTI)) && Test_GetBattlerTrainer(battlerId) == B_TRAINER_PARTNER)))
+         || (HasAnyBattleFlags(BATTLE_TYPE_MULTI) && Test_GetBattlerTrainer(battlerId) == B_TRAINER_PARTNER)))
         {
             SetAiActionToPass(sourceLine, battlerId);
         }

@@ -2907,7 +2907,7 @@ static void Cmd_openpartyscreen(void)
 
     if (cmd->battler == BS_FAINTED_MULTIPLE_1)
     {
-        if ((HasAnyBattleFlags(BATTLE_TYPE_MULTI)) || !(IsDoubleBattle()))
+        if (HasAnyBattleFlags(BATTLE_TYPE_MULTI) || !IsDoubleBattle())
         {
             for (battler = 0; battler < gBattlersCount; battler++)
             {
