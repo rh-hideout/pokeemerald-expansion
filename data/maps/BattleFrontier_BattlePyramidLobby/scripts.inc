@@ -49,7 +49,7 @@ BattleFrontier_BattlePyramidLobby_EventScript_GiveBattlePoints::
 	special DoBattlePyramidMonsHaveHeldItem
 	call_if_eq VAR_RESULT, TRUE, BattleFrontier_BattlePyramidLobby_EventScript_StoreHeldItemsInPyramidBag
 	clearflag FLAG_STORING_ITEMS_IN_PYRAMID_BAG
-	frontier_checkairshow
+	frontier_endseries FRONTIER_SERIES_WON
 	special LoadPlayerParty
 	pyramid_clearhelditems
 	special HealPlayerParty
@@ -59,7 +59,6 @@ BattleFrontier_BattlePyramidLobby_EventScript_GiveBattlePoints::
 	playse SE_EXP_MAX
 	waitse
 	msgbox BattleFrontier_BattlePyramidLobby_Text_GiveYouTheseBattlePoints, MSGBOX_DEFAULT
-	frontier_endseries FRONTIER_SERIES_WON
 	msgbox BattleFrontier_Text_ObtainedXBattlePoints, MSGBOX_GETPOINTS
 	message BattleFrontier_BattlePyramidLobby_Text_RecordResultsWait
 	waitmessage
@@ -73,7 +72,7 @@ BattleFrontier_BattlePyramidLobby_EventScript_GiveBattlePoints::
 	end
 
 BattleFrontier_BattlePyramidLobby_EventScript_LostSeries::
-	frontier_checkairshow
+	frontier_endseries FRONTIER_SERIES_LOST
 	special LoadPlayerParty
 	pyramid_clearhelditems
 	special HealPlayerParty
@@ -85,7 +84,6 @@ BattleFrontier_BattlePyramidLobby_EventScript_LostSeries::
 	waitse
 	message BattleFrontier_BattlePyramidLobby_Text_RecordResultsWait
 	waitmessage
-	frontier_endseries FRONTIER_SERIES_WON
 	playse SE_SAVE
 	waitse
 	msgbox BattleFrontier_BattlePyramidLobby_Text_LookForwardToNextChallenge, MSGBOX_DEFAULT

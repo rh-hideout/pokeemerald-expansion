@@ -59,6 +59,7 @@ BattleFrontier_BattleFactoryLobby_EventScript_LostSeries::
 	lockall
 	message BattleFrontier_BattleFactoryLobby_Text_ReturnMonsSaveResults
 	waitmessage
+	factory_set FACTORY_DATA_WIN_STREAK_SWAPS, 0
 	frontier_endseries FRONTIER_SERIES_LOST
 BattleFrontier_BattleFactoryLobby_EventScript_AskRecordBattle::
 	special LoadPlayerParty

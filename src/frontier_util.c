@@ -65,7 +65,7 @@ static void DoSoftReset_(void);
 static void SetFrontierTrainers(void);
 static void SaveSelectedParty(void);
 static void ShowFacilityResultsWindow(void);
-static void CheckPutFrontierTVShowOnAir(void);
+static void CheckPutFrontierTVShowOnAir(u16 winStreak, enum FrontierFacility facility, enum FrontierBattleMode battleMode, enum FrontierLevelMode lvlMode);
 static void Script_GetFrontierBrainStatus(void);
 static void IsTrainerFrontierBrain(void);
 static void GiveBattlePoints(void);
@@ -92,6 +92,7 @@ static void CopyFrontierBrainText(bool8 playerWonText);
 static u16 *MakeCaughtBannedSpeciesList(u32 totalBannedSpecies);
 static void PrintBannedSpeciesName(u8 windowId, u32 itemId, u8 y);
 static void Task_BannedSpeciesWindowInput(u8 taskId);
+static void Unused_CheckTVShow(void);
 
 #define ACTIVE_STREAK_BIT(category) (1 << category)
 
@@ -715,7 +716,7 @@ static void (*const sFrontierUtilFuncs[])(void) =
     [FRONTIER_UTIL_FUNC_SET_TRAINERS]          = SetFrontierTrainers,
     [FRONTIER_UTIL_FUNC_SAVE_PARTY]            = SaveSelectedParty,
     [FRONTIER_UTIL_FUNC_RESULTS_WINDOW]        = ShowFacilityResultsWindow,
-    [FRONTIER_UTIL_FUNC_CHECK_AIR_TV_SHOW]     = CheckPutFrontierTVShowOnAir,
+    [FRONTIER_UTIL_FUNC_CHECK_AIR_TV_SHOW]     = Unused_CheckTVShow,
     [FRONTIER_UTIL_FUNC_GET_BRAIN_STATUS]      = Script_GetFrontierBrainStatus,
     [FRONTIER_UTIL_FUNC_IS_BRAIN]              = IsTrainerFrontierBrain,
     [FRONTIER_UTIL_FUNC_GIVE_BATTLE_POINTS]    = GiveBattlePoints,
@@ -1617,33 +1618,9 @@ static void ShowLinkContestResultsWindow(void)
     CopyWindowToVram(gRecordsWindowId, COPYWIN_FULL);
 }
 
-static void CheckPutFrontierTVShowOnAir(void)
+static void Unused_CheckTVShow(void)
 {
-    u8 name[32];
-    s32 lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
-    s32 facility = VarGet(VAR_FRONTIER_FACILITY);
-    s32 battleMode = VarGet(VAR_FRONTIER_BATTLE_MODE);
 
-    enum FrontierCategory category = sFrontierCategories[facility][battleMode][lvlMode];
-    u16 *winStreak = GetFrontierCategoryWinStreak(category);
-    u16 *recordWinStreak = GetFrontierCategoryRecordWinStreak(category);
-    if (*recordWinStreak >= *winStreak)
-        return;
-
-    *recordWinStreak = *winStreak;
-    if (battleMode == FRONTIER_MODE_LINK_MULTIS)
-    {
-        StringCopy(name, gLinkPlayers[gBattleScripting.multiplayerId ^ 1].name);
-        StripExtCtrlCodes(name);
-        StringCopy(gSaveBlock2Ptr->frontier.opponentNames[lvlMode], name);
-        SetTrainerId(gLinkPlayers[gBattleScripting.multiplayerId ^ 1].trainerId, gSaveBlock2Ptr->frontier.opponentTrainerIds[lvlMode]);
-    }
-
-    if (*winStreak > 1 && ShouldAirFrontierTVShow())
-    {
-        u32 frontierShow = sFacilityInfo[facility].frontierShow + battleMode;
-        TryPutFrontierTVShowOnAir(*winStreak, frontierShow);
-    }
 }
 
 static void Script_GetFrontierBrainStatus(void)
@@ -3293,8 +3270,7 @@ void Script_InitFrontierSeries(void)
     TRAINER_BATTLE_PARAM.opponentA = 0;
 }
 
-//CheckPutFrontierTVShowOnAir()
-static void FrontierTv(u16 winStreak, enum FrontierFacility facility, enum FrontierBattleMode battleMode, enum FrontierLevelMode lvlMode)
+static void CheckPutFrontierTVShowOnAir(u16 winStreak, enum FrontierFacility facility, enum FrontierBattleMode battleMode, enum FrontierLevelMode lvlMode)
 {
     u8 name[32];
     if (battleMode == FRONTIER_MODE_LINK_MULTIS)
@@ -3339,7 +3315,7 @@ void Script_EndFrontierSeries(void)
         if (*recordWinStreak < *winStreak)
         {
             *winStreak = *recordWinStreak;
-            FrontierTv(*winStreak, facility, battleMode, lvlMode);
+            CheckPutFrontierTVShowOnAir(*winStreak, facility, battleMode, lvlMode);
         }
     }
 
