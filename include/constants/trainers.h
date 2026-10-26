@@ -548,9 +548,6 @@ enum TrainerApproachMusic
     TRAINER_ENCOUNTER_MUSIC_COUNT
 };
 
-#define TRAINER_GENDER_MALE   0
-#define TRAINER_GENDER_FEMALE 1
-
 // Trainer party defines
 #define TRAINER_MON_MALE          1
 #define TRAINER_MON_FEMALE        2

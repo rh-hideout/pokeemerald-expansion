@@ -11,8 +11,8 @@ SilphCo_11F_EventScript_President::
 	faceplayer
 	goto_if_set FLAG_GOT_MASTER_BALL_FROM_SILPH, SilphCo_11F_EventScript_AlreadyGotMasterBall
 	checkplayergender
-	call_if_eq VAR_RESULT, MALE, SilphCo_11F_EventScript_PresidentThanksMale
-	call_if_eq VAR_RESULT, FEMALE, SilphCo_11F_EventScript_PresidentThanksFemale
+	call_if_eq VAR_RESULT, TRAINER_GENDER_MALE, SilphCo_11F_EventScript_PresidentThanksMale
+	call_if_eq VAR_RESULT, TRAINER_GENDER_FEMALE, SilphCo_11F_EventScript_PresidentThanksFemale
 	checkitemspace ITEM_MASTER_BALL
 	goto_if_eq VAR_RESULT, FALSE, SilphCo_11F_EventScript_NoRoomForMasterBall
 	giveitem_msg SilphCo_11F_Text_ObtainedMasterBallFromPresident, ITEM_MASTER_BALL, 1, MUS_RG_OBTAIN_KEY_ITEM

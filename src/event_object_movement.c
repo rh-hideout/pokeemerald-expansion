@@ -3323,16 +3323,16 @@ u8 LoadObjectEventPaletteCopy(u16 originalTag, u16 copyTag)
     return LoadSpritePalette(&palette);
 }
 
-u8 LoadPlayerObjectEventPalette(enum Gender gender)
+u8 LoadPlayerObjectEventPalette(enum TrainerGender gender)
 {
     u16 paletteTag;
     switch (gender)
     {
     default:
-    case MALE:
+    case TRAINER_GENDER_MALE:
         paletteTag = OBJ_EVENT_PAL_TAG_BRENDAN;
         break;
-    case FEMALE:
+    case TRAINER_GENDER_FEMALE:
         paletteTag = OBJ_EVENT_PAL_TAG_MAY;
         break;
     }

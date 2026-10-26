@@ -276,7 +276,7 @@ static const u8 gText_MayBrendanMatchCallDesc[] = _("RAD NEIGHBOR");
 static const struct MatchCallRival sMayMatchCallHeader =
 {
     .type = MC_TYPE_RIVAL,
-    .playerGender = MALE,
+    .playerGender = TRAINER_GENDER_MALE,
     .flag = FLAG_ENABLE_RIVAL_MATCH_CALL,
     .desc = gText_MayBrendanMatchCallDesc,
     .name = gText_ExpandedPlaceholder_May,
@@ -303,7 +303,7 @@ static const struct MatchCallRival sMayMatchCallHeader =
 static const struct MatchCallRival sBrendanMatchCallHeader =
 {
     .type = MC_TYPE_RIVAL,
-    .playerGender = FEMALE,
+    .playerGender = TRAINER_GENDER_FEMALE,
     .flag = FLAG_ENABLE_RIVAL_MATCH_CALL,
     .desc = gText_MayBrendanMatchCallDesc,
     .name = gText_ExpandedPlaceholder_Brendan,

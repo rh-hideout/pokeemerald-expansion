@@ -2058,18 +2058,12 @@ static void PrintLevelAndGender(u8 whichParty, u8 monIdx, u8 x, u8 y, u8 width, 
             GetMonData(&gParties[B_TRAINER_OPPONENT_A][monIdx], MON_DATA_NICKNAME, nickname);
         }
 
-        switch (gender)
-        {
-        case MON_MALE:
-            symbolTile = !NameHasGenderSymbol(nickname, MON_MALE) ? 0x84 : 0x83;
-            break;
-        case MON_FEMALE:
-            symbolTile = !NameHasGenderSymbol(nickname, MON_FEMALE) ? 0x85 : 0x83;
-            break;
-        default:
+        if (gender == MON_GENDERLESS || NameHasMatchingGenderSymbol(nickname, gender))
             symbolTile = 0x83;
-            break;
-        }
+        else if (gender == MON_MALE)
+            symbolTile = 0x84;
+        else // gender == MON_FEMALE
+             symbolTile = 0x85;
     }
     sTradeMenu->tilemapBuffer[(y - 1) * 32 + x + 1] = symbolTile;
 }

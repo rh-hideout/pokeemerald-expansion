@@ -308,7 +308,7 @@ u32 FldEff_ORASDowsing(void)
 
     FlagSet(I_ORAS_DOWSING_FLAG);
     SetSpritePosToOffsetMapCoords((s16 *)&fPlayerX, (s16 *)&fPlayerY, 8, 0);
-    if (gPlayerAvatar.gender == MALE)
+    if (gPlayerAvatar.gender == TRAINER_GENDER_MALE)
         spriteId = CreateSpriteAtEndUnchecked(gFieldEffectObjectTemplatePointers[FLDEFFOBJ_ORAS_DOWSE_BRENDAN], fPlayerX, fPlayerY, 1);
     else
         spriteId = CreateSpriteAtEndUnchecked(gFieldEffectObjectTemplatePointers[FLDEFFOBJ_ORAS_DOWSE_MAY], fPlayerX, fPlayerY, 1);
