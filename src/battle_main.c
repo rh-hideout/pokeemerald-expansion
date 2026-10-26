@@ -4222,7 +4222,7 @@ static void HandleTurnActionSelectionState(void)
                 else
                     i = FALSE;
 
-                if (((HasAnyBattleFlags(BATTLE_TYPE_MULTI)) || !IsDoubleBattle())
+                if (HasAnyBattleFlags(BATTLE_TYPE_MULTI) || !IsDoubleBattle()
                     || (position & BIT_FLANK) != B_FLANK_LEFT
                     || gAbsentBattlerFlags & 1u << GetBattlerAtPosition(GetPartnerPosition(position)))
                 {

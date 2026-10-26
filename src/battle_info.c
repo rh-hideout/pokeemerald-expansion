@@ -3505,7 +3505,7 @@ static u32 GetOpponentTrainerCount(void)
     if (!IsTrainerBattle())
         return 0;
 
-    if ((HasAnyBattleFlags(BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_MULTI)) && !IsMultiVsOneOpponentBattle())
+    if (HasAnyBattleFlags(BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_MULTI) && !IsMultiVsOneOpponentBattle())
         return 2;
 
     return 1;

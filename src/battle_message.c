@@ -3012,12 +3012,12 @@ static const u8 *BattleStringGetPlayerName(u8 *text, enum BattlerId battler)
             toCpy = gSaveBlock2Ptr->playerName;
         break;
     case B_POSITION_PLAYER_RIGHT:
-        if (((HasAnyBattleFlags(BATTLE_TYPE_RECORDED)) && !HasAnyBattleFlags(BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER))
+        if ((HasAnyBattleFlags(BATTLE_TYPE_RECORDED) && !HasAnyBattleFlags(BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER))
             || gTestRunnerEnabled)
         {
             toCpy = gLinkPlayers[0].name;
         }
-        else if ((HasAnyBattleFlags(BATTLE_TYPE_LINK)) && HasAnyBattleFlags(BATTLE_TYPE_RECORDED | BATTLE_TYPE_MULTI))
+        else if (HasAnyBattleFlags(BATTLE_TYPE_LINK) && HasAnyBattleFlags(BATTLE_TYPE_RECORDED | BATTLE_TYPE_MULTI))
         {
             toCpy = gLinkPlayers[2].name;
         }
@@ -3899,7 +3899,7 @@ void BattlePutTextOnWindow(const u8 *text, u8 windowId)
     else
         gTextFlags.useAlternateDownArrow = TRUE;
 
-    if ((HasAnyBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED)) || gTestRunnerEnabled || (HasAnyBattleFlags(BATTLE_TYPE_POKEDUDE) && windowId != B_WIN_OAK_OLD_MAN))
+    if (HasAnyBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED) || gTestRunnerEnabled || (HasAnyBattleFlags(BATTLE_TYPE_POKEDUDE) && windowId != B_WIN_OAK_OLD_MAN))
         gTextFlags.autoScroll = TRUE;
     else
         gTextFlags.autoScroll = FALSE;

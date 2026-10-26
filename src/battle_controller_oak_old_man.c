@@ -214,7 +214,7 @@ static void HandleInputChooseAction(enum BattlerId battler)
     }
     else if (JOY_NEW(B_BUTTON))
     {
-        if ((HasAnyBattleFlags(BATTLE_TYPE_DOUBLE))
+        if (HasAnyBattleFlags(BATTLE_TYPE_DOUBLE)
          && GetBattlerPosition(battler) == B_POSITION_PLAYER_RIGHT
          && !(gAbsentBattlerFlags & (1 << GetBattlerAtPosition(B_POSITION_PLAYER_LEFT)))
          && !HasAnyBattleFlags(BATTLE_TYPE_MULTI))

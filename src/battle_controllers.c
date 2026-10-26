@@ -3047,7 +3047,7 @@ void BtlController_HandleHidePartyStatusSummary(enum BattlerId battler)
 
 void BtlController_HandleBattleAnimation(enum BattlerId battler)
 {
-    if ((HasAnyBattleFlags(BATTLE_TYPE_SAFARI | BATTLE_TYPE_CATCH_TUTORIAL))
+    if (HasAnyBattleFlags(BATTLE_TYPE_SAFARI | BATTLE_TYPE_CATCH_TUTORIAL)
         || IsControllerOakOldMan(battler)
         || !IsBattleSEPlaying(battler))
     {

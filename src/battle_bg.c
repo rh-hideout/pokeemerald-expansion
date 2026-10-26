@@ -974,7 +974,7 @@ void LoadBattleMenuWindowGfx(void)
     LoadUserWindowBorderGfx(2, 0x22, BG_PLTT_ID(1));
     LoadPalette(gBattleWindowTextPalette, BG_PLTT_ID(5), PLTT_SIZE_4BPP);
 
-    if ((HasAnyBattleFlags(BATTLE_TYPE_ARENA | BATTLE_TYPE_POKEDUDE))
+    if (HasAnyBattleFlags(BATTLE_TYPE_ARENA | BATTLE_TYPE_POKEDUDE)
     || (IS_FRLG && HasAnyBattleFlags(BATTLE_TYPE_FIRST_BATTLE)))
     {
         // Load graphics for the Battle Arena referee's mid-battle messages.
