@@ -1,0 +1,24 @@
+// Sample Poryscript. `make` compiles this file into scripts.inc next to it,
+// so edit this file, not scripts.inc.
+
+mapscripts OldaleTown_House1_MapScripts {}
+
+script OldaleTown_House1_EventScript_Woman {
+    lock
+    faceplayer
+    // FLAG_UNUSED_0x020 is a free flag; rename it in include/constants/flags.h
+    // once you have a few of your own.
+    if (flag(FLAG_UNUSED_0x020)) {
+        msgbox(format("When a POKéMON battle starts, the one at the left of the list goes out first.\pSo, try switching around the order of your POKéMON."))
+    } else {
+        msgbox(format("Oh, a new TRAINER! Are you just starting out on your journey?"), MSGBOX_YESNO)
+        if (var(VAR_RESULT) == YES) {
+            msgbox(format("How exciting! Here, take this. It'll help in a pinch."))
+            giveitem(ITEM_POTION)
+            setflag(FLAG_UNUSED_0x020)
+        } else {
+            msgbox(format("A seasoned TRAINER, then! Good luck out there."))
+        }
+    }
+    release
+}

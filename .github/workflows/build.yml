@@ -32,6 +32,7 @@ jobs:
   build:
     name: Build (Emerald)
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -86,6 +87,7 @@ jobs:
     # Skip on plain branch pushes; run on PRs, master, and manual runs.
     if: github.event_name != 'push' || github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -137,6 +139,7 @@ jobs:
     if: always()
     needs: [build, test]
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - name: Check results
         run: |

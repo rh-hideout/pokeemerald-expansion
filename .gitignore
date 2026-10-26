@@ -67,5 +67,9 @@ tools/aif2pcm/aif2pcm
 __pycache__
 .map_version
 
+# Poryscript binary (download per-OS from github.com/huderlem/poryscript/releases)
+tools/poryscript/poryscript
+tools/poryscript/poryscript.exe
+
 # Team shortcut (Windows)
 !Build & Play.bat
