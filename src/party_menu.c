@@ -7872,8 +7872,7 @@ static void UpdatePartyToFieldOrder(void)
 
     const u8 *multiBattlePartyIdToMenuId = sMultiBattlePartyIdToMenuId_Left;
 
-    if (HasAnyBattleFlags(BATTLE_TYPE_LINK)
-     && (gBattlerInMenuId & BIT_FLANK) != B_FLANK_LEFT)
+    if (HasAnyBattleFlags(BATTLE_TYPE_LINK) && ((gBattlerInMenuId & BIT_FLANK) != B_FLANK_LEFT))
     {
         multiBattlePartyIdToMenuId = sMultiBattlePartyIdToMenuId_Right;
     }

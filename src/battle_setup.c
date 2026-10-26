@@ -2029,7 +2029,7 @@ static void ClearTrainerWantRematchState(const struct RematchTrainer *table, u16
 void ClearCurrentTrainerWantRematchVsSeeker(void)
 {
 #if FREE_MATCH_CALL == FALSE
-    if ((IsTrainerBattle()) && FlagGet(I_VS_SEEKER_CHARGING) && (I_VS_SEEKER_CHARGING != 0))
+    if (IsTrainerBattle() && FlagGet(I_VS_SEEKER_CHARGING) && (I_VS_SEEKER_CHARGING != 0))
     {
         for (u32 i = 0; i < REMATCH_TABLE_ENTRIES; i++)
         {
@@ -2168,7 +2168,7 @@ bool8 IsTrainerReadyForRematch(void)
 
 static void HandleRematchVarsOnBattleEnd(void)
 {
-    if ((IsTrainerBattle()) && (I_VS_SEEKER_CHARGING != 0))
+    if (IsTrainerBattle() && (I_VS_SEEKER_CHARGING != 0))
         ClearRematchMovementByTrainerId();
 
     ClearTrainerWantRematchState(gRematchTable, TRAINER_BATTLE_PARAM.opponentA);

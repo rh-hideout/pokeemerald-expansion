@@ -1341,8 +1341,7 @@ static enum CancelerResult CancelerMoveFailure(struct BattleCalcValues *cv)
             battleScript = BattleScript_ButItFailed;
         break;
     case EFFECT_TELEPORT:
-        if ((!IsTrainerBattle() && !IsOnPlayerSide(cv->battlerAtk))
-         || GetConfig(B_TELEPORT_BEHAVIOR) <= GEN_7)
+        if ((!IsTrainerBattle() && !IsOnPlayerSide(cv->battlerAtk)) || GetConfig(B_TELEPORT_BEHAVIOR) <= GEN_7)
         {
             bool32 canRun = IsRunningFromBattleImpossible(cv->battlerAtk);
 
