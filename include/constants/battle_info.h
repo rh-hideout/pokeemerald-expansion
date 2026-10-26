@@ -125,8 +125,6 @@ enum CursorDirection
 
 #define B_INFO_HEALTHBAR_PIXELS        48
 #define B_INFO_DETAIL_HEALTHBAR_PIXELS 40
-#define B_INFO_HP_BAR_SEGMENTS         6
-#define B_INFO_DETAIL_HP_BAR_SEGMENTS  5
 
 #define B_INFO_UPDATE_ICON_TILE_TAG              0xD7D0
 #define B_INFO_CURSOR_TILE_TAG                   0xD7E0

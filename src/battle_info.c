@@ -32,6 +32,7 @@
 #include "string_util.h"
 #include "task.h"
 #include "text.h"
+#include "util.h"
 #include "window.h"
 #include "config/battle_info.h"
 #include "constants/battle_info.h"
@@ -253,10 +254,9 @@ static void CreateHpBarEndcaps(u8 *leftEndcapSpriteId, u8 *rightEndcapSpriteId);
 static void CreateEndCapSprite(const struct SpriteTemplate *template, u8 *endcapSpriteId);
 static void UpdateHpBarEndcaps(u32 leftEndCapSpriteId, u32 rightEndCapSpriteId, u32 barCenterX, u32 barY, u32 segmentCount);
 static void UpdateEndcapsSprites(u32 endcapSpriteId, u32 x, u32 y);
-static void UpdateHpBarTilesWithWidth(u32 spriteId, u32 hp, u32 maxHp, u32 totalPixels, u32 segmentCount);
+static void UpdateHpBarTilesWithWidth(u32 spriteId, u32 hp, u32 maxHp, u32 totalPixels);
 static void UpdateHpBarTiles(u32 spriteId, u32 hp, u32 maxHp);
 static void DrawHpBarSprite(struct BattleInfoCard *card);
-static u32 GetBarGfxId(u32 hp, u32 maxHp);
 static u32 GetAilmentFromBattler(enum BattlerId battler);
 static bool32 CanViewCard(enum BattlerId battler);
 static u32 GetCardCount(void);
@@ -1603,15 +1603,14 @@ static void Detail_RefreshHpBar(void)
 
     UpdateHpBarTilesWithWidth(
         sData->hpBarSpriteId, hp, maxHp,
-        B_INFO_DETAIL_HEALTHBAR_PIXELS,
-        B_INFO_DETAIL_HP_BAR_SEGMENTS
+        B_INFO_DETAIL_HEALTHBAR_PIXELS
     );
 
     sprite->invisible = FALSE;
     UpdateHpBarEndcaps(
         sData->hpBarLeftEndcapSpriteId,
         sData->hpBarRightEndcapSpriteId,
-        21, 70, B_INFO_DETAIL_HP_BAR_SEGMENTS
+        21, 70, B_INFO_DETAIL_HEALTHBAR_PIXELS
     );
 }
 
@@ -3620,12 +3619,12 @@ static void CreateEndCapSprite(const struct SpriteTemplate *template, u8 *endcap
     gSprites[*endcapSpriteId].invisible = TRUE;
 }
 
-static void UpdateHpBarEndcaps(u32 leftEndCapSpriteId, u32 rightEndCapSpriteId, u32 barCenterX, u32 barY, u32 segmentCount)
+static void UpdateHpBarEndcaps(u32 leftEndCapSpriteId, u32 rightEndCapSpriteId, u32 barCenterX, u32 barY, u32 totalPixels)
 {
     u32 leftEdge = barCenterX - 32;
     UpdateEndcapsSprites(leftEndCapSpriteId, leftEdge, barY);
 
-    u32 rightEndcapStart = leftEdge + 8 + (segmentCount * 8);
+    u32 rightEndcapStart = leftEdge + 8 + (totalPixels);
     UpdateEndcapsSprites(rightEndCapSpriteId, rightEndcapStart, barY);
 }
 
@@ -3638,47 +3637,27 @@ static void UpdateEndcapsSprites(u32 endcapSpriteId, u32 x, u32 y)
     gSprites[endcapSpriteId].invisible = FALSE;
 }
 
-static void UpdateHpBarTilesWithWidth(u32 spriteId, u32 hp, u32 maxHp, u32 totalPixels, u32 segmentCount)
+static void UpdateHpBarTilesWithWidth(u32 spriteId, u32 hp, u32 maxHp, u32 totalPixels)
 {
-    u32 array[B_INFO_HP_BAR_SEGMENTS];
-    u32 filledPixels = GetScaledHPFraction(hp, maxHp, totalPixels);
-    u32 barElementId = GetBarGfxId(hp, maxHp);
+    u32 pixels = GetScaledHPFraction(hp, maxHp, totalPixels);
+    u32 hpBarColour = GetHealthBarColour(maxHp, hp);
 
-    for (u32 i = 0; i < B_INFO_HP_BAR_SEGMENTS; i++)
-        array[i] = 0;
+    u32 segments = pixels / 8;
+    u32 strayPixels = pixels % 8;
 
-    if (filledPixels == 0 && hp > 0)
-        filledPixels = 1;
+    const Tile4BPP* src = &gBattleHpBarGfx[hpBarColour];
+    Tile4BPP* dst = SpriteTile(&gSprites[spriteId]) + 1;
 
-    for (u32 i = 0; i < segmentCount; i++)
-    {
-        if (filledPixels >= 8)
-        {
-            array[i] = 8;
-            filledPixels -= 8;
-        }
-        else
-        {
-            array[i] = filledPixels;
-            filledPixels = 0;
-        }
-    }
+    FillTiles(src, dst, totalPixels / 8);
+    FillTiles(src + 8, dst, segments);
 
-    u32 tileNum = gSprites[spriteId].oam.tileNum;
-    for (u32 segment = 0; segment < B_INFO_HP_BAR_SEGMENTS; segment++)
-    {
-        void *dst = (void *)(OBJ_VRAM0 + (tileNum + 1 + segment) * TILE_SIZE_4BPP);
-
-        if (segment >= segmentCount)
-            CpuFill16(0, dst, TILE_SIZE_4BPP);
-        else
-            CpuCopy32(&gHealthboxElementsGfxTable[barElementId][array[segment] * TILE_SIZE_4BPP], dst, TILE_SIZE_4BPP);
-    }
+    if (strayPixels)
+        FillTiles(src + strayPixels, dst + segments, 1);
 }
 
 static void UpdateHpBarTiles(u32 spriteId, u32 hp, u32 maxHp)
 {
-    UpdateHpBarTilesWithWidth(spriteId, hp, maxHp, B_INFO_HEALTHBAR_PIXELS, B_INFO_HP_BAR_SEGMENTS);
+    UpdateHpBarTilesWithWidth(spriteId, hp, maxHp, B_INFO_HEALTHBAR_PIXELS);
 }
 
 static void DrawHpBarSprite(struct BattleInfoCard *card)
@@ -3696,26 +3675,9 @@ static void DrawHpBarSprite(struct BattleInfoCard *card)
     UpdateHpBarEndcaps(
         card->hpBarLeftEndcapSpriteId,
         card->hpBarRightEndcapSpriteId,
-        sprite->x, sprite->y, B_INFO_HP_BAR_SEGMENTS
+        sprite->x, sprite->y, B_INFO_HEALTHBAR_PIXELS
     );
     sprite->invisible = FALSE;
-}
-
-static u32 GetBarGfxId(u32 hp, u32 maxHp)
-{
-    switch (GetHPBarLevel(hp, maxHp))
-    {
-    case HP_BAR_GREEN:
-    case HP_BAR_FULL:
-        return HEALTHBOX_GFX_HP_BAR_GREEN;
-    case HP_BAR_YELLOW:
-        return HEALTHBOX_GFX_HP_BAR_YELLOW;
-    case HP_BAR_RED:
-    default:
-        return HEALTHBOX_GFX_HP_BAR_RED;
-    }
-
-    return HEALTHBOX_GFX_HP_BAR_RED;
 }
 
 static u32 GetAilmentFromBattler(enum BattlerId battler)
