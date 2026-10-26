@@ -3863,12 +3863,10 @@ static void Cmd_removeitem(void)
 
     if (gBattleStruct->flungItem == FLUNG_ITEM_REMOVE)
     {
-        gBattleStruct->flungItem = FLUNG_ITEM_REMOVED;
         battler = gBattlerAttacker;
         itemId = gLastUsedItem;
     }
     else if (gBattleScripting.overrideBerryRequirements
-          || gBattleStruct->flungItem == FLUNG_ITEM_REMOVED
           || itemId == ITEM_NONE)
     {
         // bug bite / pluck / no item - don't remove current item
@@ -3892,8 +3890,15 @@ static void Cmd_removeitem(void)
 
     ClearBattlerItemEffectHistory(battler);
     scriptQueued = TrySymbiosis(battler, itemId, cmd->nextInstr);
-    if (TryCheekPouch(battler, itemId, scriptQueued ? gBattlescriptCurrInstr : cmd->nextInstr))
+    if (gBattleStruct->flungItem == FLUNG_ITEM_REMOVE)
+    {
+        // Don't activate Cheek Pouch in this case since it doesn't make sense
+        gBattleStruct->flungItem = FLUNG_ITEM_REMOVED;
+    }
+    else if (TryCheekPouch(battler, itemId, scriptQueued ? gBattlescriptCurrInstr : cmd->nextInstr))
+    {
         scriptQueued = TRUE;
+    }
     if (!scriptQueued)
         gBattlescriptCurrInstr = cmd->nextInstr;
 }

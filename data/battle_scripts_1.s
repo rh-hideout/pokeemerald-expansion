@@ -502,33 +502,19 @@ BattleScript_FlingConsumeBerry::
 	setbyte sBERRY_OVERRIDE, 1 @ override the requirements for eating berries
 	consumeberry BS_TARGET, FALSE
 	setbyte sBERRY_OVERRIDE, 0
-BattleScript_FlingEnd:
-	removeitem BS_ATTACKER @ fallback if a beryy could not be consumed
-	trysymbiosis BS_ATTACKER
 	return
 
 BattleScript_FlingFailConsumeItem::
 	removeitem BS_ATTACKER
 	goto BattleScript_ButItFailed
 
-BattleScript_TargetAvoidsAttackConsumeFlingItem::
-	call BattleScript_BattlerAvoidedAttack
-	removeitem BS_ATTACKER
-	return
-
-BattleScript_TargetProtectedConsumeFlingItem::
-	call BattleScript_TargetProtected
-	removeitem BS_ATTACKER
-	return
-
 BattleScript_FlingBlockedByShieldDust::
 	printstring STRINGID_ITEMWASUSEDUP
 	waitmessage B_WAIT_TIME_LONG
-	removeitem BS_ATTACKER
 	return
 
 BattleScript_RemoveItem::
-	removeitem BS_ATTACKER
+	removeitem BS_SCRIPTING
 	return
 
 BattleScript_PoltergeistMessage::
@@ -4051,7 +4037,6 @@ BattleScript_MentalHerbCureRetTaunt:
 	jumpifbyte CMP_BITMASK, cMULTISTRING_CHOOSER, B_MSG_MENTALHERBCURE_TAUNT, BattleScript_MentalHerbCuresTaunt
 BattleScript_MentalHerbCureRetFinish:
 	updatestatusicon BS_SCRIPTING
-	removeitem BS_SCRIPTING
 	return
 
 BattleScript_MentalHerbCuresInfatuation:
@@ -4081,15 +4066,6 @@ BattleScript_MentalHerbCuresTaunt:
 	goto BattleScript_MentalHerbCureRetFinish
 
 BattleScript_WhiteHerbRet::
-	call BattleScript_ItemPopUpScriptingNoFlush
-	playanimation BS_SCRIPTING, B_ANIM_HELD_ITEM_EFFECT
-	printstring STRINGID_PKMNSITEMRESTOREDSTATUS
-	waitmessage B_WAIT_TIME_LONG
-	destroyitempopup
-	removeitem BS_SCRIPTING
-	return
-
-BattleScript_WhiteHerbFling::
 	call BattleScript_ItemPopUpScriptingNoFlush
 	playanimation BS_SCRIPTING, B_ANIM_HELD_ITEM_EFFECT
 	printstring STRINGID_PKMNSITEMRESTOREDSTATUS

@@ -50,7 +50,7 @@ static bool32 IsOpponentPhysicalAttacker(enum BattlerId battler, enum BattlerId 
 static bool32 CanIntimidateLowerOpponentAtk(enum BattlerId battler, enum BattlerId opposingBattler);
 static bool32 ShouldSwitchIfIntimidateBenefit(struct SwitchAiContext *switchContext);
 static bool32 DoesMostSuitableSwitchinBenefitFromWish(enum BattlerId battler);
-static enum PartySlot GetSwitchinCandidate(u32 switchinCategory, enum BattlerId battler, int lastId, enum SwitchType switchType);
+static enum PartySlot GetSwitchinCandidate(u32 switchinCategory, struct SwitchAiContext *switchContext);
 
 static enum Ability GetPartyMonAbilityForSwitchCalc(enum BattlerId battler, enum PartySlot monIndex, struct Pokemon *mon)
 {
@@ -454,7 +454,7 @@ static u32 FindMonWithMoveOfEffectiveness(struct SwitchAiContext *switchContext,
     }
 
     if (superEffectiveIds != 0)
-        return SetSwitchinAndSwitch(switchContext->battler, GetSwitchinCandidate(superEffectiveIds, switchContext->battler, switchContext->lastId, SWITCH_MID_BATTLE_OPTIONAL));
+        return SetSwitchinAndSwitch(switchContext->battler, GetSwitchinCandidate(superEffectiveIds, switchContext));
 
     return FALSE; // There is not a single Pokémon in the party that has a move with this effectiveness threshold
 }
@@ -1430,6 +1430,7 @@ bool32 ShouldSwitch(enum BattlerId battler)
     switchContext.incomingMove = GetIncomingMove(switchContext.battler, switchContext.opposingBattler, gAiLogicData);
     switchContext.hasStatRaised = AnyUsefulStatIsRaised(switchContext.battler);
     switchContext.typeMatchup = GetBattlerTypeMatchup(switchContext.opposingBattler, switchContext.battler);
+    switchContext.switchType = SWITCH_MID_BATTLE_OPTIONAL;
     GetActiveBattlerIds(switchContext.battler, &switchContext.battlerIn1, &switchContext.battlerIn2);
     GetShouldSwitchMoveData(&switchContext);
     GetShouldSwitchPartyMonEligibility(&switchContext);
@@ -2031,23 +2032,23 @@ uq4_12_t GetBattlerTypeMatchup(enum BattlerId opposingBattler, enum BattlerId ba
     return GetTypeMatchupAgainstTypes(opposingBattler, gBattleMons[battler].types[0], gBattleMons[battler].types[1]);
 }
 
-static enum PartySlot GetSwitchinCandidate(u32 switchinCategory, enum BattlerId battler, int lastId, enum SwitchType switchType)
+static enum PartySlot GetSwitchinCandidate(u32 switchinCategory, struct SwitchAiContext *switchContext)
 {
     if (switchinCategory == 0)
         return PARTY_SLOT_NONE;
 
     // Randomize between eligible mons
-    if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_RANDOMIZE_SWITCHIN)
+    if (gAiThinkingStruct->aiFlags[switchContext->battler] & AI_FLAG_RANDOMIZE_SWITCHIN)
     {
         // This split is necessary because the test system can't handle multiple calls with the same random tag in the same turn
-        if (switchType == SWITCH_AFTER_KO)
+        if (switchContext->switchType == SWITCH_AFTER_KO)
             return (enum PartySlot)RandomBitIndex(RNG_AI_RANDOM_SWITCHIN_POST_KO, switchinCategory); // Can't pass this anything with no set bits
         else
             return (enum PartySlot)RandomBitIndex(RNG_AI_RANDOM_SWITCHIN_MID_BATTLE, switchinCategory); // Can't pass this anything with no set bits
     }
 
     // Pick last eligible mon in party order
-    for (s32 monIndex = (lastId-1); monIndex >= 0; monIndex--)
+    for (s32 monIndex = (switchContext->lastId-1); monIndex >= 0; monIndex--)
     {
         if (switchinCategory & (1 << monIndex))
             return (enum PartySlot)monIndex;
@@ -2056,23 +2057,23 @@ static enum PartySlot GetSwitchinCandidate(u32 switchinCategory, enum BattlerId 
     return PARTY_SLOT_NONE;
 }
 
-static enum PartySlot GetValidSwitchinCandidate(u32 validMonIds, enum BattlerId battler, u32 lastId, enum SwitchType switchType)
+static enum PartySlot GetValidSwitchinCandidate(u32 validMonIds, struct SwitchAiContext *switchContext)
 {
     if (validMonIds == 0)
         return PARTY_SLOT_NONE;
 
     // Randomize between valid mons
-    if ((gAiThinkingStruct->aiFlags[battler] & AI_FLAG_RANDOMIZE_SWITCHIN) && RANDOMIZE_SWITCHIN_ANY_VALID)
+    if ((gAiThinkingStruct->aiFlags[switchContext->battler] & AI_FLAG_RANDOMIZE_SWITCHIN) && RANDOMIZE_SWITCHIN_ANY_VALID)
     {
         // This split is necessary because the test system can't handle multiple calls with the same random tag in the same turn
-        if (switchType == SWITCH_AFTER_KO)
+        if (switchContext->switchType == SWITCH_AFTER_KO)
             return (enum PartySlot)RandomBitIndex(RNG_AI_RANDOM_VALID_SWITCHIN_POST_KO, validMonIds); // Can't pass this anything with no set bits
         else
             return (enum PartySlot)RandomBitIndex(RNG_AI_RANDOM_VALID_SWITCHIN_MID_BATTLE, validMonIds); // Can't pass this anything with no set bits
     }
 
     // Pick last valid mon in party order
-    for (s32 monIndex = (lastId-1); monIndex > 0; monIndex--)
+    for (s32 monIndex = (switchContext->lastId-1); monIndex > 0; monIndex--)
     {
         if (validMonIds & (1 << monIndex))
             return (enum PartySlot)monIndex;
@@ -2217,7 +2218,7 @@ static inline bool32 CanSwitchinWin1v1(u32 hitsToKOAI, u32 hitsToKOPlayer, bool3
 
 // This function splits switching behaviour depending on whether the switch is free.
 // Everything runs in the same loop to minimize computation time. This makes it harder to read, but hopefully the comments can guide you!
-static enum PartySlot GetBestMonIntegrated(struct Pokemon *party, int lastId, enum BattlerId battler, enum BattlerId opposingBattler, enum BattlerId battlerIn1, enum BattlerId battlerIn2, enum SwitchType switchType)
+static enum PartySlot GetBestMonIntegrated(struct SwitchAiContext *switchContext)
 {
     struct IncomingHealInfo healInfoData;
     const struct IncomingHealInfo *healInfo = &healInfoData;
@@ -2226,40 +2227,35 @@ static enum PartySlot GetBestMonIntegrated(struct Pokemon *party, int lastId, en
     enum PartySlot bestDefensiveMonId = PARTY_SLOT_NONE, bestTypeMatchupId = PARTY_SLOT_NONE, bestTypeMatchupEffectiveId = PARTY_SLOT_NONE, bestDamageMonId = PARTY_SLOT_NONE, bestHealGainId = PARTY_SLOT_NONE;
     enum PartySlot aceMonId = PARTY_SLOT_NONE;
     u32 aceMonCount = 0;
-    s32 playerMonHP = gBattleMons[opposingBattler].hp, maxDamageDealt = AI_SWITCHIN_DAMAGE_THRESHOLD, damageDealt = 0, bestHealGain = 0;
+    s32 playerMonHP = gBattleMons[switchContext->opposingBattler].hp, maxDamageDealt = AI_SWITCHIN_DAMAGE_THRESHOLD, damageDealt = 0, bestHealGain = 0;
     enum Move aiMove, bestPlayerMove = MOVE_NONE, bestPlayerPriorityMove = MOVE_NONE;
     u32 hitsToKOAI, hitsToKOPlayer, hitsToKOAIPriority, maxHitsToKO = AI_DEFENSIVE_KO_THRESHOLD;
     uq4_12_t bestResist = AI_TYPE_MATCHUP_THRESHOLD, bestResistEffective = AI_TYPE_MATCHUP_THRESHOLD, typeMatchup; // 2.0 is the default "Neutral" matchup from GetBattlerTypeMatchup
-    bool32 isFreeSwitch = IsFreeSwitch(switchType, battlerIn1, opposingBattler), isSwitchinFirst, isSwitchinFirstPriority, canSwitchinWin1v1;
+    bool32 isFreeSwitch = IsFreeSwitch(switchContext->switchType, switchContext->battlerIn1, switchContext->opposingBattler), isSwitchinFirst, isSwitchinFirstPriority, canSwitchinWin1v1;
     u32 validMonIds = 0;
 
-    // Dynamic mon selection
-    struct SwitchAiContext switchContext;
-    switchContext.dynamicSingleId = PARTY_SLOT_NONE;
-    switchContext.dynamicMultipleIds = 0;
-
-    GetIncomingHealInfo(battler, &healInfoData);
+    GetIncomingHealInfo(switchContext->battler, &healInfoData);
 
     // Save existing battler data
     struct AiLogicData *savedAiLogicData = AllocSaveAiLogicData();
     struct BattlePokemon *savedBattleMons = AllocSaveBattleMons();
-    u32 savedNotOnField = gBattleStruct->battlerState[battler].notOnField;
+    u32 savedNotOnField = gBattleStruct->battlerState[switchContext->battler].notOnField;
 
-    gBattleStruct->battlerState[battler].notOnField = FALSE;
+    gBattleStruct->battlerState[switchContext->battler].notOnField = FALSE;
     // Iterate through mons
-    for (enum PartySlot monIndex = PARTY_SLOT_0; monIndex < lastId; monIndex++)
+    for (enum PartySlot monIndex = PARTY_SLOT_0; monIndex < switchContext->lastId; monIndex++)
     {
         // Check mon validity
-        if (!IsValidForBattle(&party[monIndex]))
+        if (!IsValidForBattle(&switchContext->party[monIndex]))
             continue;
         // Check if mon is already in play or being sent in
-        if (IsPartyMonOnFieldOrChosenToSwitch(battler, monIndex, battlerIn1, battlerIn2))
+        if (IsPartyMonOnFieldOrChosenToSwitch(switchContext->battler, monIndex, switchContext->battlerIn1, switchContext->battlerIn2))
             continue;
         // Check if partner wants to use this mon already
-        if (IsPartyMonPlannedToBeSwitchedInByPartner(monIndex, battler))
+        if (IsPartyMonPlannedToBeSwitchedInByPartner(monIndex, switchContext->battler))
             continue;
         // Save Ace Pokemon for last
-        if (IsAceMon(battler, monIndex))
+        if (IsAceMon(switchContext->battler, monIndex))
         {
             aceMonId = monIndex;
             aceMonCount++;
@@ -2267,25 +2263,26 @@ static enum PartySlot GetBestMonIntegrated(struct Pokemon *party, int lastId, en
         }
 
         validMonIds |= (1u << monIndex);
-        InitializeSwitchinCandidate(battler, monIndex, &party[monIndex]);
+        switchContext->partyMonIndex = monIndex;
+        InitializeSwitchinCandidate(switchContext->battler, monIndex, &switchContext->party[monIndex]);
 
-        u32 originalHp = gBattleMons[battler].hp;
+        u32 originalHp = gBattleMons[switchContext->battler].hp;
 
         if (healInfo->healBeforeHazards)
         {
-            gBattleMons[battler].hp = gBattleMons[battler].maxHP;
+            gBattleMons[switchContext->battler].hp = gBattleMons[switchContext->battler].maxHP;
             if (healInfo->curesStatus)
-                gBattleMons[battler].status1 = 0;
+                gBattleMons[switchContext->battler].status1 = 0;
         }
 
         // While not really invalid per se, not really wise to switch into this mon
-        if (gAiLogicData->abilities[battler] == ABILITY_TRUANT && IsTruantMonVulnerable(battler, opposingBattler))
+        if (gAiLogicData->abilities[switchContext->battler] == ABILITY_TRUANT && IsTruantMonVulnerable(switchContext->battler, switchContext->opposingBattler))
             continue;
 
         // Get max number of hits for player to KO AI mon and type matchup for defensive switching
-        hitsToKOAI = GetSwitchinHitsToKO(GetMaxDamagePlayerCouldDealToSwitchin(battler, opposingBattler, &bestPlayerMove), battler, healInfo, originalHp);
-        hitsToKOAIPriority = GetSwitchinHitsToKO(GetMaxPriorityDamagePlayerCouldDealToSwitchin(battler, opposingBattler, &bestPlayerPriorityMove), battler, healInfo, originalHp);
-        typeMatchup = GetBattlerTypeMatchup(opposingBattler, battler);
+        hitsToKOAI = GetSwitchinHitsToKO(GetMaxDamagePlayerCouldDealToSwitchin(switchContext->battler, switchContext->opposingBattler, &bestPlayerMove), switchContext->battler, healInfo, originalHp);
+        hitsToKOAIPriority = GetSwitchinHitsToKO(GetMaxPriorityDamagePlayerCouldDealToSwitchin(switchContext->battler, switchContext->opposingBattler, &bestPlayerPriorityMove), switchContext->battler, healInfo, originalHp);
+        typeMatchup = GetBattlerTypeMatchup(switchContext->opposingBattler, switchContext->battler);
         canSwitchinWin1v1 = FALSE;
         bool32 anyMoveCanWin1v1 = FALSE;
 
@@ -2293,29 +2290,24 @@ static enum PartySlot GetBestMonIntegrated(struct Pokemon *party, int lastId, en
         for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
         {
             // Check that move has PP remaining before running calcs
-            if (gBattleMons[battler].pp[moveIndex] < 1)
+            if (gBattleMons[switchContext->battler].pp[moveIndex] < 1)
                 continue;
-
-            aiMove = gBattleMons[battler].moves[moveIndex];
-            damageDealt = AI_GetDamage(battler, opposingBattler, moveIndex, AI_SWITCHIN_ATTACKING, gAiLogicData);
-            hitsToKOPlayer = GetNoOfHitsToKOBattler(battler, opposingBattler, moveIndex, AI_SWITCHIN_ATTACKING, CONSIDER_ENDURE);
+            aiMove = gBattleMons[switchContext->battler].moves[moveIndex];
+            switchContext->aiMove = aiMove;
+            damageDealt = AI_GetDamage(switchContext->battler, switchContext->opposingBattler, moveIndex, AI_SWITCHIN_ATTACKING, gAiLogicData);
+            hitsToKOPlayer = GetNoOfHitsToKOBattler(switchContext->battler, switchContext->opposingBattler, moveIndex, AI_SWITCHIN_ATTACKING, CONSIDER_ENDURE);
 
             // Offensive switchin decisions are based on which whether switchin moves first and whether it can win a 1v1
-            isSwitchinFirst = AI_IsFaster(battler, opposingBattler, aiMove, bestPlayerMove, CONSIDER_PRIORITY);
-            isSwitchinFirstPriority = AI_IsFaster(battler, opposingBattler, aiMove, bestPlayerPriorityMove, CONSIDER_PRIORITY);
+            isSwitchinFirst = AI_IsFaster(switchContext->battler, switchContext->opposingBattler, aiMove, bestPlayerMove, CONSIDER_PRIORITY);
+            isSwitchinFirstPriority = AI_IsFaster(switchContext->battler, switchContext->opposingBattler, aiMove, bestPlayerPriorityMove, CONSIDER_PRIORITY);
             canSwitchinWin1v1 = CanSwitchinWin1v1(hitsToKOAI, hitsToKOPlayer, isSwitchinFirst, isFreeSwitch) && CanSwitchinWin1v1(hitsToKOAIPriority, hitsToKOPlayer, isSwitchinFirstPriority, isFreeSwitch); // AI must successfully 1v1 with and without priority to be considered a good option
             anyMoveCanWin1v1 |= canSwitchinWin1v1;
-
-            switchContext.battler = battler;
-            switchContext.opposingBattler = opposingBattler;
-            switchContext.switchType = switchType;
-            switchContext.canBattlerWin1v1 = canSwitchinWin1v1;
-            switchContext.partyMonIndex = monIndex;
+            switchContext->canBattlerWin1v1 = canSwitchinWin1v1;
 
             // Dynamic mon choice function
             if (gDynamicAiMonChoiceFunc != NULL)
             {
-                gDynamicAiMonChoiceFunc(&switchContext);
+                gDynamicAiMonChoiceFunc(switchContext);
             }
 
             // Check for Baton Pass; hitsToKO requirements mean mon can boost and BP without dying whether it's slower or not
@@ -2342,7 +2334,7 @@ static enum PartySlot GetBestMonIntegrated(struct Pokemon *party, int lastId, en
             // Track max hits to KO and set defensive mon
             if (hitsToKOAI > AI_DEFENSIVE_KO_THRESHOLD)
             {
-                if (canSwitchinWin1v1 || gAiThinkingStruct->aiFlags[battler] & AI_FLAG_STALL)
+                if (canSwitchinWin1v1 || gAiThinkingStruct->aiFlags[switchContext->battler] & AI_FLAG_STALL)
                 {
                     defensiveMonIds |= (1u << monIndex);
                     if (hitsToKOAI > maxHitsToKO)
@@ -2361,7 +2353,7 @@ static enum PartySlot GetBestMonIntegrated(struct Pokemon *party, int lastId, en
             {
                 if (typeMatchup < AI_TYPE_MATCHUP_THRESHOLD)
                 {
-                    if (gAiLogicData->effectiveness[battler][opposingBattler][moveIndex] >= UQ_4_12(2.0))
+                    if (gAiLogicData->effectiveness[switchContext->battler][switchContext->opposingBattler][moveIndex] >= UQ_4_12(2.0))
                     {
                         if (canSwitchinWin1v1)
                         {
@@ -2419,8 +2411,8 @@ static enum PartySlot GetBestMonIntegrated(struct Pokemon *party, int lastId, en
                 }
 
                 // If mon can trap
-                if ((AI_CanSwitchinAbilityTrapOpponent(gAiLogicData->abilities[battler], opposingBattler)
-                    || (AI_CanSwitchinAbilityTrapOpponent(gAiLogicData->abilities[opposingBattler], opposingBattler) && gAiLogicData->abilities[battler] == ABILITY_TRACE))
+                if ((AI_CanSwitchinAbilityTrapOpponent(gAiLogicData->abilities[switchContext->battler], switchContext->opposingBattler)
+                    || (AI_CanSwitchinAbilityTrapOpponent(gAiLogicData->abilities[switchContext->opposingBattler], switchContext->opposingBattler) && gAiLogicData->abilities[switchContext->battler] == ABILITY_TRACE))
                     && canSwitchinWin1v1)
                     trapperIds |= (1u << monIndex);
             }
@@ -2429,7 +2421,7 @@ static enum PartySlot GetBestMonIntegrated(struct Pokemon *party, int lastId, en
         // Check for healing candidate - mon that benefits significantly from incoming heal
         if (healInfo->hasHealing)
         {
-            u32 maxHP = gBattleMons[battler].maxHP;
+            u32 maxHP = gBattleMons[switchContext->battler].maxHP;
             s32 healGain = (s32)maxHP - (s32)originalHp;
 
             // For Wish, heal gain is the wish amount (capped at what can actually be gained)
@@ -2454,124 +2446,116 @@ static enum PartySlot GetBestMonIntegrated(struct Pokemon *party, int lastId, en
     }
 
     // Restore battler data
-    gBattleStruct->battlerState[battler].notOnField = savedNotOnField;
+    gBattleStruct->battlerState[switchContext->battler].notOnField = savedNotOnField;
     FreeRestoreAiLogicData(savedAiLogicData);
     FreeRestoreBattleMons(savedBattleMons);
 
     // GetSwitchinCandidate returns either the *last* party mon that met a threshold (without AI_FLAG_RANDOMIZE_SWITCHIN), or a random one that met a threshold
     // If we aren't using AI_FLAG_RANDOMIZE_SWITCHIN there are cases where we don't want the *last* mon, we want the *best* mon
     // Last revenge killer is fine, but if we're picking based on type matchup, we want the best one; so we track that and return accordingly
-    bool32 getRandom = (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_RANDOMIZE_SWITCHIN) ? TRUE : FALSE;
+    bool32 getRandom = (gAiThinkingStruct->aiFlags[switchContext->battler] & AI_FLAG_RANDOMIZE_SWITCHIN) ? TRUE : FALSE;
 
     // Different switching priorities depending on switching mid battle vs switching after a KO or slow switch
     if (isFreeSwitch)
     {
         // Return Dynamic > Trapper > Revenge Killer > Type Matchup > Healing Candidate > Baton Pass > Best Damage
-        if (switchContext.dynamicMultipleIds != 0) return getRandom ? GetSwitchinCandidate(switchContext.dynamicMultipleIds, battler, lastId, switchType) : switchContext.dynamicSingleId;
-        else if (trapperIds != 0)               return GetSwitchinCandidate(trapperIds, battler, lastId, switchType);
-        else if (revengeKillerIds != 0)         return GetSwitchinCandidate(revengeKillerIds, battler, lastId, switchType);
-        else if (slowRevengeKillerIds != 0)     return GetSwitchinCandidate(slowRevengeKillerIds, battler, lastId, switchType);
-        else if (fastThreatenIds != 0)          return GetSwitchinCandidate(fastThreatenIds, battler, lastId, switchType);
-        else if (slowThreatenIds != 0)          return GetSwitchinCandidate(slowThreatenIds, battler, lastId, switchType);
-        else if (typeMatchupEffectiveIds != 0)  return getRandom ? GetSwitchinCandidate(typeMatchupEffectiveIds, battler, lastId, switchType) : bestTypeMatchupEffectiveId;
-        else if (typeMatchupIds != 0)           return getRandom ? GetSwitchinCandidate(typeMatchupIds, battler, lastId, switchType) : bestTypeMatchupId;
-        else if (healingCandidateIds != 0)      return getRandom ? GetSwitchinCandidate(healingCandidateIds, battler, lastId, switchType) : bestHealGainId;
-        else if (batonPassIds != 0)             return GetSwitchinCandidate(batonPassIds, battler, lastId, switchType);
-        else if (generic1v1MonIds != 0)         return GetSwitchinCandidate(generic1v1MonIds, battler, lastId, switchType);
-        else if (damageMonIds != 0)             return getRandom ? GetSwitchinCandidate(damageMonIds, battler, lastId, switchType) : bestDamageMonId;
+        if (switchContext->dynamicMultipleIds != 0) return getRandom ? GetSwitchinCandidate(switchContext->dynamicMultipleIds, switchContext) : switchContext->dynamicSingleId;
+        else if (trapperIds != 0)               return GetSwitchinCandidate(trapperIds, switchContext);
+        else if (revengeKillerIds != 0)         return GetSwitchinCandidate(revengeKillerIds, switchContext);
+        else if (slowRevengeKillerIds != 0)     return GetSwitchinCandidate(slowRevengeKillerIds, switchContext);
+        else if (fastThreatenIds != 0)          return GetSwitchinCandidate(fastThreatenIds, switchContext);
+        else if (slowThreatenIds != 0)          return GetSwitchinCandidate(slowThreatenIds, switchContext);
+        else if (typeMatchupEffectiveIds != 0)  return getRandom ? GetSwitchinCandidate(typeMatchupEffectiveIds, switchContext) : bestTypeMatchupEffectiveId;
+        else if (typeMatchupIds != 0)           return getRandom ? GetSwitchinCandidate(typeMatchupIds, switchContext) : bestTypeMatchupId;
+        else if (healingCandidateIds != 0)      return getRandom ? GetSwitchinCandidate(healingCandidateIds, switchContext) : bestHealGainId;
+        else if (batonPassIds != 0)             return GetSwitchinCandidate(batonPassIds, switchContext);
+        else if (generic1v1MonIds != 0)         return GetSwitchinCandidate(generic1v1MonIds, switchContext);
+        else if (damageMonIds != 0)             return getRandom ? GetSwitchinCandidate(damageMonIds, switchContext) : bestDamageMonId;
     }
     else
     {
         // Return Dynamic > Trapper > Type Matchup > Best Defensive > Healing Candidate > Baton Pass
-        if (switchContext.dynamicMultipleIds != 0) return getRandom ? GetSwitchinCandidate(switchContext.dynamicMultipleIds, battler, lastId, switchType) : switchContext.dynamicSingleId;
-        else if (trapperIds != 0)               return GetSwitchinCandidate(trapperIds, battler, lastId, switchType);
-        else if (typeMatchupEffectiveIds != 0)  return getRandom ? GetSwitchinCandidate(typeMatchupEffectiveIds, battler, lastId, switchType) : bestTypeMatchupEffectiveId;
-        else if (typeMatchupIds != 0)           return getRandom ? GetSwitchinCandidate(typeMatchupIds, battler, lastId, switchType) : bestTypeMatchupId;
-        else if (defensiveMonIds != 0)          return getRandom ? GetSwitchinCandidate(defensiveMonIds, battler, lastId, switchType) : bestDefensiveMonId;
-        else if (healingCandidateIds != 0)      return getRandom ? GetSwitchinCandidate(healingCandidateIds, battler, lastId, switchType) : bestHealGainId;
-        else if (batonPassIds != 0)             return GetSwitchinCandidate(batonPassIds, battler, lastId, switchType);
-        else if (generic1v1MonIds != 0)         return GetSwitchinCandidate(generic1v1MonIds, battler, lastId, switchType);
+        if (switchContext->dynamicMultipleIds != 0) return getRandom ? GetSwitchinCandidate(switchContext->dynamicMultipleIds, switchContext) : switchContext->dynamicSingleId;
+        else if (trapperIds != 0)               return GetSwitchinCandidate(trapperIds, switchContext);
+        else if (typeMatchupEffectiveIds != 0)  return getRandom ? GetSwitchinCandidate(typeMatchupEffectiveIds, switchContext) : bestTypeMatchupEffectiveId;
+        else if (typeMatchupIds != 0)           return getRandom ? GetSwitchinCandidate(typeMatchupIds, switchContext) : bestTypeMatchupId;
+        else if (defensiveMonIds != 0)          return getRandom ? GetSwitchinCandidate(defensiveMonIds, switchContext) : bestDefensiveMonId;
+        else if (healingCandidateIds != 0)      return getRandom ? GetSwitchinCandidate(healingCandidateIds, switchContext) : bestHealGainId;
+        else if (batonPassIds != 0)             return GetSwitchinCandidate(batonPassIds, switchContext);
+        else if (generic1v1MonIds != 0)         return GetSwitchinCandidate(generic1v1MonIds, switchContext);
     }
 
     // Not required to switch here and no good candidates, bail
-    if (switchType == SWITCH_MID_BATTLE_OPTIONAL)
+    if (switchContext->switchType == SWITCH_MID_BATTLE_OPTIONAL)
         return PARTY_SLOT_NONE;
 
     // Fallback
     if (validMonIds != 0)
-        return GetValidSwitchinCandidate(validMonIds, battler, lastId, switchType);
+        return GetValidSwitchinCandidate(validMonIds, switchContext);
 
     // If ace mon is the last available Pokemon and U-Turn/Volt Switch or Eject Pack/Button was used - switch to the mon.
-    if (aceMonId != PARTY_SLOT_NONE && CountUsablePartyMons(battler) <= aceMonCount)
+    if (aceMonId != PARTY_SLOT_NONE && CountUsablePartyMons(switchContext->battler) <= aceMonCount)
         return aceMonId;
 
     return PARTY_SLOT_NONE;
 }
 
-static enum PartySlot GetBestMonVanilla(struct Pokemon *party, int lastId, enum BattlerId battler, enum BattlerId opposingBattler, enum BattlerId battlerIn1, enum BattlerId battlerIn2, enum SwitchType switchType)
+static enum PartySlot GetBestMonVanilla(struct SwitchAiContext *switchContext)
 {
     s32 aceMonCount = 0;
     u32 validMonIds = 0, batonPassIds = 0, typeMatchupIds = 0;
     enum PartySlot bestDamageId = PARTY_SLOT_NONE, aceMonId = PARTY_SLOT_NONE;
     u32 bestResist = UQ_4_12(2.0), typeMatchup, bestDamage = 0;
 
-    // Dynamic mon selection
-    struct SwitchAiContext switchContext;
-    switchContext.dynamicSingleId = PARTY_SLOT_NONE;
-    switchContext.dynamicMultipleIds = 0;
-
     // Save existing battler data
     struct AiLogicData *savedAiLogicData = AllocSaveAiLogicData();
     struct BattlePokemon *savedBattleMons = AllocSaveBattleMons();
-    u32 savedNotOnField = gBattleStruct->battlerState[battler].notOnField;
+    u32 savedNotOnField = gBattleStruct->battlerState[switchContext->battler].notOnField;
 
-    gBattleStruct->battlerState[battler].notOnField = FALSE;
+    gBattleStruct->battlerState[switchContext->battler].notOnField = FALSE;
 
     // Iterate through mons
-    for (enum PartySlot monIndex = PARTY_SLOT_0; monIndex < lastId; monIndex++)
+    for (enum PartySlot monIndex = PARTY_SLOT_0; monIndex < switchContext->lastId; monIndex++)
     {
         // Check mon validity
-        if (!IsValidForBattle(&party[monIndex]))
+        if (!IsValidForBattle(&switchContext->party[monIndex]))
             continue;
         // Check if mon is already in play or being sent in
-        if (IsPartyMonOnFieldOrChosenToSwitch(battler, monIndex, battlerIn1, battlerIn2))
+        if (IsPartyMonOnFieldOrChosenToSwitch(switchContext->battler, monIndex, switchContext->battlerIn1, switchContext->battlerIn2))
             continue;
         // Check if partner wants to use this mon already
-        if (IsPartyMonPlannedToBeSwitchedInByPartner(monIndex, battler))
+        if (IsPartyMonPlannedToBeSwitchedInByPartner(monIndex, switchContext->battler))
             continue;
         // Save Ace Pokemon for last
-        if (IsAceMon(battler, monIndex))
+        if (IsAceMon(switchContext->battler, monIndex))
         {
             aceMonId = monIndex;
             aceMonCount++;
             continue;
         }
         validMonIds |= (1u << monIndex);
-        InitializeSwitchinCandidate(battler, monIndex, &party[monIndex]);
+        switchContext->partyMonIndex = monIndex;
+        InitializeSwitchinCandidate(switchContext->battler, monIndex, &switchContext->party[monIndex]);
 
         // While not really invalid per se, not really wise to switch into this mon
-        if (gAiLogicData->abilities[battler] == ABILITY_TRUANT && IsTruantMonVulnerable(battler, opposingBattler))
+        if (gAiLogicData->abilities[switchContext->battler] == ABILITY_TRUANT && IsTruantMonVulnerable(switchContext->battler, switchContext->opposingBattler))
             continue;
 
-        typeMatchup = GetBattlerTypeMatchup(opposingBattler, battler);
+        typeMatchup = GetBattlerTypeMatchup(switchContext->opposingBattler, switchContext->battler);
 
         for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
         {
             // Check that move has PP remaining before running calcs
-            if (gBattleMons[battler].pp[moveIndex] < 1)
+            if (gBattleMons[switchContext->battler].pp[moveIndex] < 1)
                 continue;
 
-            enum Move aiMove = gBattleMons[battler].moves[moveIndex];
-
-            switchContext.battler = battler;
-            switchContext.opposingBattler = opposingBattler;
-            switchContext.switchType = switchType;
-            switchContext.partyMonIndex = monIndex;
+            enum Move aiMove = gBattleMons[switchContext->battler].moves[moveIndex];
+            switchContext->aiMove = aiMove;
 
             // Dynamic mon choice function
             if (gDynamicAiMonChoiceFunc != NULL)
             {
-                gDynamicAiMonChoiceFunc(&switchContext);
+                gDynamicAiMonChoiceFunc(switchContext);
             }
 
             // Baton Pass
@@ -2581,7 +2565,7 @@ static enum PartySlot GetBestMonVanilla(struct Pokemon *party, int lastId, enum 
             }
 
             // Type Matchup
-            if (typeMatchup < bestResist && gAiLogicData->effectiveness[battler][opposingBattler][moveIndex] >= UQ_4_12(2.0))
+            if (typeMatchup < bestResist && gAiLogicData->effectiveness[switchContext->battler][switchContext->opposingBattler][moveIndex] >= UQ_4_12(2.0))
             {
                 bestResist = typeMatchup;
                 typeMatchupIds |= (1u << monIndex);
@@ -2590,7 +2574,7 @@ static enum PartySlot GetBestMonVanilla(struct Pokemon *party, int lastId, enum 
             // Best damage
             if (aiMove != MOVE_NONE && !IsBattleMoveStatus(aiMove))
             {
-                u32 aiDmg = AI_GetDamage(battler, opposingBattler, moveIndex, AI_SWITCHIN_ATTACKING, gAiLogicData);
+                u32 aiDmg = AI_GetDamage(switchContext->battler, switchContext->opposingBattler, moveIndex, AI_SWITCHIN_ATTACKING, gAiLogicData);
                 if (aiDmg > bestDamage)
                 {
                     bestDamage = aiDmg;
@@ -2601,50 +2585,50 @@ static enum PartySlot GetBestMonVanilla(struct Pokemon *party, int lastId, enum 
     }
 
     // Restore battler data
-    gBattleStruct->battlerState[battler].notOnField = savedNotOnField;
+    gBattleStruct->battlerState[switchContext->battler].notOnField = savedNotOnField;
     FreeRestoreAiLogicData(savedAiLogicData);
     FreeRestoreBattleMons(savedBattleMons);
-    SetBattlerAiData(battler, gAiLogicData);
+    SetBattlerAiData(switchContext->battler, gAiLogicData);
 
-    bool32 getRandom = (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_RANDOMIZE_SWITCHIN) ? TRUE : FALSE;
+    bool32 getRandom = (gAiThinkingStruct->aiFlags[switchContext->battler] & AI_FLAG_RANDOMIZE_SWITCHIN) ? TRUE : FALSE;
 
     // Dynamic > Baton Pass > Type Matchup > Best Damage
-    if (switchContext.dynamicMultipleIds != 0) return getRandom ? GetSwitchinCandidate(switchContext.dynamicMultipleIds, battler, lastId, switchType) : switchContext.dynamicSingleId;
-    else if (batonPassIds != 0)                  return GetSwitchinCandidate(batonPassIds, battler, lastId, switchType);
-    else if (typeMatchupIds != 0)           return GetSwitchinCandidate(typeMatchupIds, battler, lastId, switchType);
-    else if (bestDamageId != PARTY_SLOT_NONE) return bestDamageId;
+    if (switchContext->dynamicMultipleIds != 0) return getRandom ? GetSwitchinCandidate(switchContext->dynamicMultipleIds, switchContext) : switchContext->dynamicSingleId;
+    else if (batonPassIds != 0)                 return GetSwitchinCandidate(batonPassIds, switchContext);
+    else if (typeMatchupIds != 0)               return GetSwitchinCandidate(typeMatchupIds, switchContext);
+    else if (bestDamageId != PARTY_SLOT_NONE)   return bestDamageId;
 
     // Not required to switch here and no good candidates, bail
-    if (switchType == SWITCH_MID_BATTLE_OPTIONAL)
+    if (switchContext->switchType == SWITCH_MID_BATTLE_OPTIONAL)
         return PARTY_SLOT_NONE;
 
     // Fallback
     if (validMonIds != 0)
-        return GetValidSwitchinCandidate(validMonIds, battler, lastId, switchType);
+        return GetValidSwitchinCandidate(validMonIds, switchContext);
 
-    if (aceMonId != PARTY_SLOT_NONE && CountUsablePartyMons(battler) <= aceMonCount)
+    if (aceMonId != PARTY_SLOT_NONE && CountUsablePartyMons(switchContext->battler) <= aceMonCount)
         return aceMonId;
 
     return PARTY_SLOT_NONE;
 }
 
-static enum PartySlot GetNextMonInParty(struct Pokemon *party, int lastId, enum BattlerId battler, enum BattlerId battlerIn1, enum BattlerId battlerIn2)
+static enum PartySlot GetNextMonInParty(struct SwitchAiContext *switchContext)
 {
     // Iterate through mons
-    for (enum PartySlot monIndex = PARTY_SLOT_0; monIndex < lastId; monIndex++)
+    for (enum PartySlot monIndex = PARTY_SLOT_0; monIndex < switchContext->lastId; monIndex++)
     {
         // Check mon validity
-        if (!IsValidForBattle(&party[monIndex]))
+        if (!IsValidForBattle(&switchContext->party[monIndex]))
         {
             continue;
         }
         // Check if mon is already in play or being sent in
-        if (IsPartyMonOnFieldOrChosenToSwitch(battler, monIndex, battlerIn1, battlerIn2))
+        if (IsPartyMonOnFieldOrChosenToSwitch(switchContext->battler, monIndex, switchContext->battlerIn1, switchContext->battlerIn2))
         {
             continue;
         }
         // Check if partner wants to use this mon already
-        if (IsPartyMonPlannedToBeSwitchedInByPartner(monIndex, battler))
+        if (IsPartyMonPlannedToBeSwitchedInByPartner(monIndex, switchContext->battler))
         {
             continue;
         }
@@ -2669,23 +2653,34 @@ enum PartySlot GetMostSuitableMonToSwitchInto(enum BattlerId battler, enum Switc
     opposingBattler = GetActiveBattlerIds(battler, &battlerIn1, &battlerIn2);
     party = GetBattlerParty(battler);
 
+    struct SwitchAiContext switchContext = {0};
+    switchContext.battler = battler;
+    switchContext.opposingBattler = opposingBattler;
+    switchContext.party = party;
+    switchContext.lastId = lastId;
+    switchContext.battlerIn1 = battlerIn1;
+    switchContext.battlerIn2 = battlerIn2;
+    switchContext.switchType = switchType;
+    switchContext.dynamicSingleId = PARTY_SLOT_NONE;
+    switchContext.dynamicMultipleIds = 0;
+
     if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_SEQUENCE_SWITCHING)
     {
-        bestMonId = GetNextMonInParty(party, lastId, battler, battlerIn1, battlerIn2);
+        bestMonId = GetNextMonInParty(&switchContext);
         return bestMonId;
     }
 
     // Only use better mon selection if AI_FLAG_SMART_MON_CHOICES is set for the trainer.
     if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_SMART_MON_CHOICES && !IsDoubleBattle()) // Double Battles aren't included in AI_FLAG_SMART_MON_CHOICE. Defaults to regular switch in logic
     {
-        bestMonId = GetBestMonIntegrated(party, lastId, battler, opposingBattler, battlerIn1, battlerIn2, switchType);
+        bestMonId = GetBestMonIntegrated(&switchContext);
         return bestMonId;
     }
 
     // This all handled by the GetBestMonIntegrated function if the AI_FLAG_SMART_MON_CHOICES flag is set
     else
     {
-        bestMonId = GetBestMonVanilla(party, lastId, battler, opposingBattler, battlerIn1, battlerIn2, switchType);
+        bestMonId = GetBestMonVanilla(&switchContext);
         return bestMonId;
     }
 }

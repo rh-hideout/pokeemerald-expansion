@@ -1455,9 +1455,6 @@ static enum CancelerResult CancelerMoveEffectFailureTarget(struct BattleCalcValu
 
         switch (cv->moveEffect)
         {
-        case EFFECT_FLING:
-            numAffectedTargets++;
-            continue;
         case EFFECT_FUTURE_SIGHT:
             if (gBattleStruct->futureSight[battlerDef].counter > 0)
             {
@@ -1583,19 +1580,10 @@ static enum CancelerResult CancelerMoveEffectFailureTarget(struct BattleCalcValu
 
     gBattleStruct->eventState.atkCancelerBattler = 0;
 
-    if (numAffectedTargets == 0)
+    if (numAffectedTargets == 0 && battleScript != NULL)
     {
-        if (battleScript == NULL && cv->moveEffect == EFFECT_FLING)
-        {
-            // Edge case for removing a mon's item when there is no target available after using Fling.
-            gBattlescriptCurrInstr = BattleScript_FlingFailConsumeItem;
-            return CANCELER_RESULT_FAILURE;
-        }
-        else if (battleScript != NULL)
-        {
-            gBattlescriptCurrInstr = battleScript;
-            return CANCELER_RESULT_FAILURE;
-        }
+        gBattlescriptCurrInstr = battleScript;
+        return CANCELER_RESULT_FAILURE;
     }
 
     return CANCELER_RESULT_SUCCESS;
@@ -2048,13 +2036,15 @@ static enum CancelerResult CancelerNoTarget(struct BattleCalcValues *cv)
 
     if (NoTargetPresent(gBattlerAttacker, gCurrentMove, moveTarget))
     {
+        // Fling item should be removed from attacker in this case
+        gBattleStruct->flungItem = FLUNG_ITEM_REMOVE;
         gBattlescriptCurrInstr = BattleScript_ButItFailed;
         return CANCELER_RESULT_FAILURE;
     }
 
-    if (cv->battlerAtk == cv->battlerDef
-     && moveTarget == TARGET_ALLY)
+    if (cv->battlerAtk == cv->battlerDef && moveTarget == TARGET_ALLY)
     {
+        gBattleStruct->flungItem = FLUNG_ITEM_REMOVE;
         gBattlescriptCurrInstr = BattleScript_ButItFailed;
         return CANCELER_RESULT_FAILURE;
     }
@@ -2178,10 +2168,7 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
             if (!CanBreakThroughSemiInvulnerablity(cv->battlerAtk, cv->battlerDef, cv->abilities[cv->battlerAtk], cv->abilities[cv->battlerDef], cv->move))
             {
                 AddBattlerMoveResultFlag(cv->battlerDef, MOVE_RESULT_FAILED);
-                if (cv->moveEffect == EFFECT_FLING)
-                    BattleScriptCall(BattleScript_TargetAvoidsAttackConsumeFlingItem);
-                else
-                    BattleScriptCall(BattleScript_BattlerAvoidedAttack);
+                BattleScriptCall(BattleScript_BattlerAvoidedAttack);
                 return TargetAvoidedAttack(cv->battlerAtk, cv->battlerDef);
             }
         }
@@ -2222,10 +2209,7 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
             {
                 SetOrClearRageVolatile();
                 AddBattlerMoveResultFlag(cv->battlerDef, MOVE_RESULT_PROTECTED);
-                if (cv->moveEffect == EFFECT_FLING)
-                    BattleScriptCall(BattleScript_TargetProtectedConsumeFlingItem);
-                else
-                    BattleScriptCall(BattleScript_TargetProtected);
+                BattleScriptCall(BattleScript_TargetProtected);
                 return TargetAvoidedAttack(cv->battlerAtk, cv->battlerDef);
             }
         }
@@ -2618,10 +2602,6 @@ static enum CancelerResult CancelerAccuracyCheck(struct BattleCalcValues *cv)
             else if (IsBattlerMoveResultSet(cv->battlerDef, MOVE_RESULT_ONE_HIT_KO_NO_AFFECT))
             {
                 BattleScriptCall(BattleScript_ItDoesntAffectScrTarget);
-            }
-            else if (cv->moveEffect == EFFECT_FLING)
-            {
-                BattleScriptCall(BattleScript_TargetAvoidsAttackConsumeFlingItem);
             }
             else
             {
@@ -3932,6 +3912,25 @@ static enum MoveEndResult MoveEndProtectLikeEffect(struct BattleCalcValues *cv)
     return MOVEEND_RESULT_CONTINUE;
 }
 
+static enum MoveEndResult MoveEndFlingItemRemoval(struct BattleCalcValues *cv)
+{
+    gBattleScripting.moveendState++;
+
+    if (gBattleStruct->unableToUseMove && gBattleStruct->flungItem != FLUNG_ITEM_REMOVE)
+        return MOVEEND_RESULT_CONTINUE;
+
+    if (cv->moveEffect != EFFECT_FLING || gBattleMons[cv->battlerAtk].item == ITEM_NONE)
+        return MOVEEND_RESULT_CONTINUE;
+
+    gLastUsedItem = gBattleStruct->flingItem = gBattleMons[cv->battlerAtk].item;
+    gBattleStruct->flungItem = FLUNG_ITEM_REMOVE;
+    gBattleScripting.battler = cv->battlerAtk;
+    BattleScriptCall(BattleScript_RemoveItem);
+
+    gBattleStruct->blunderPolicy = FALSE;
+    return MOVEEND_RESULT_RUN_SCRIPT;
+}
+
 static bool32 ShouldApplyAfterHitEffects(enum BattlerId battlerAtk, enum BattlerId effectBattler)
 {
     if (gBattleStruct->unableToUseMove)
@@ -4010,7 +4009,7 @@ static bool32 IsDamageMoveSelfStatChange(bool32 isSelf, enum MoveEffect moveEffe
 {
     if (!isSelf)
         return FALSE;
-    return moveEffect == MOVE_EFFECT_STAT_MINUS 
+    return moveEffect == MOVE_EFFECT_STAT_MINUS
         || moveEffect == MOVE_EFFECT_STAT_PLUS
         || moveEffect == MOVE_EFFECT_TERA_BLAST
         || moveEffect == MOVE_EFFECT_ORDER_UP;
@@ -6056,6 +6055,7 @@ static enum MoveEndResult MoveEndClearBits(struct BattleCalcValues *cv)
     gBattleStruct->triAttackBurn = FALSE;
     gBattleStruct->fickleBeamBoosted = FALSE;
     gBattleStruct->battlerState[cv->battlerAtk].usedMicleBerry = FALSE;
+    gBattleStruct->flingItem = ITEM_NONE;
     gBattleStruct->flungItem = FLUNG_ITEM_NONE;
     gBattleStruct->blunderPolicy = FALSE;
     gBattleScripting.animTurn = 0;
@@ -6153,6 +6153,7 @@ static enum MoveEndResult (*const sMoveEndHandlers[])(struct BattleCalcValues *c
     [MOVEEND_CRIT_PROTECT_MESSAGE_ALLIED_SIDE] = MoveEndCritProtectMessage,
     [MOVEEND_ENDURE_DAMAGE_MESSAGE_ALLIED_SIDE] = MoveEndEndureDamageMessage,
     [MOVEEND_PROTECT_LIKE_EFFECTS_ALLIED_SIDE] = MoveEndProtectLikeEffect,
+    [MOVEEND_FLING_ITEM_REMOVAL] = MoveEndFlingItemRemoval,
     [MOVEEND_ADDITIONAL_EFFECTS_ALLIED_SIDE] = MoveEndAdditionalEffects,
     [MOVEEND_ABSORB_ALLIED_SIDE] = MoveEndAbsorb,
     [MOVEEND_STATUS_IMMUNITY_ABILITIES_ALLIED_SIDE] = MoveEndStatusImmunityAbilities,
