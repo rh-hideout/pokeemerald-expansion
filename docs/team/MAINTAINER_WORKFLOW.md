@@ -37,7 +37,7 @@ Friends' side: [ONBOARDING.md](ONBOARDING.md) and [DAILY_WORKFLOW.md](DAILY_WORK
 
 1. Open the PR: <https://github.com/poke-pals/project-poke-flora/pulls>.
 2. Check **CI passed** is ✅.
-   - The build runs on every PR (~5 min); tests run too (~25 min).
+   - The build runs on every PR (~5 min). Battle tests (~25 min) run only when the PR changes code (`src/`, `include/`, `test/`, …); map/text/graphics PRs skip them.
    - ❌? Open the failed job, find the error, and comment on the PR or help the friend fix it.
 3. Read the **Files changed** tab.
    - Maps and text: skim them.

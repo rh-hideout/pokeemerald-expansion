@@ -1,15 +1,18 @@
 name: CI
 
 # Emerald-only build and test pipeline for project-poke-flora.
-# - build: runs on every push and PR. The ROM is NOT uploaded: this repo is public,
+# - build: runs on every PR and every push to master. The ROM is NOT uploaded: this repo is public,
 #   and a built .gba contains the original game. Build locally to play.
-# - test:  runs `make check` (battle engine tests) on PRs and on master
+# - test:  runs `make check` (~5,900 battle engine tests, ~25 min) on master, on manual
+#   runs, and on PRs that change code. Map/text/graphics/docs-only PRs skip it.
 # - ci-passed: single gate job for branch protection
 
 on:
+  # Branches are checked through their PR. Building every branch push too would add a
+  # second "CI passed" check (without tests) to each PR commit.
   push:
     branches:
-      - '**'
+      - master
   pull_request:
     branches:
       - master
@@ -37,10 +40,29 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # Ubuntu's package mirror is sometimes very slow on GitHub runners, so keep the
+      # downloaded packages between runs. The key follows the runner image version.
+      - name: Note runner image
+        run: |
+          echo "IMAGE_OS=$ImageOS" >> "$GITHUB_ENV"
+          echo "RUNNER_IMAGE=$ImageOS-$ImageVersion" >> "$GITHUB_ENV"
+
+      - name: Cache apt packages
+        uses: actions/cache@v4
+        with:
+          path: ~/apt-archives
+          key: apt-${{ env.RUNNER_IMAGE }}
+          restore-keys: apt-${{ env.IMAGE_OS }}-
+
       - name: Install build packages
         run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends binutils-arm-none-eabi gcc-arm-none-eabi libnewlib-arm-none-eabi libpng-dev python3
+          mkdir -p ~/apt-archives/partial
+          sudo apt-get update -o Acquire::Retries=3
+          sudo apt-get install -y --no-install-recommends -o Acquire::Retries=3 \
+            -o Dir::Cache::Archives="$HOME/apt-archives" \
+            binutils-arm-none-eabi gcc-arm-none-eabi libnewlib-arm-none-eabi libpng-dev python3
+          sudo apt-get autoclean -o Dir::Cache::Archives="$HOME/apt-archives"
+          sudo chown -R "$USER" ~/apt-archives
 
       - name: Install Poryscript
         run: |
@@ -71,6 +93,7 @@ jobs:
           key: tools-${{ runner.os }}-${{ hashFiles('tools/*/Makefile', 'tools/**/*.c', 'tools/**/*.cpp', 'tools/**/*.h') }}
 
       - name: Build ROM
+        shell: bash  # adds pipefail, so a failed make fails the step despite `tee`
         run: make -j$(nproc) -O all 2>&1 | tee build.log
 
       - name: Memory report
@@ -82,20 +105,78 @@ jobs:
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
 
+  # Decides whether a PR touches code the battle tests cover.
+  changes:
+    name: Detect code changes
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      pull-requests: read
+    outputs:
+      code: ${{ steps.filter.outputs.code }}
+    steps:
+      - uses: dorny/paths-filter@v3.0.2
+        id: filter
+        with:
+          filters: |
+            code:
+              - 'src/**'
+              - 'include/**'
+              - 'test/**'
+              - 'asm/**'
+              - 'constants/**'
+              - 'data/battle_*.s'
+              - 'tools/**'
+              - 'Makefile'
+              - '*.mk'
+              - 'ld_script*'
+              - 'libagbsyscall/**'
+              - 'charmap.txt'
+              # Sprites used by test/compression/smol.c
+              - 'graphics/pokemon/bulbasaur/**'
+              - 'graphics/pokemon/ivysaur/**'
+              - '.github/workflows/**'
+
   test:
     name: Tests (make check)
-    # Skip on plain branch pushes; run on PRs, master, and manual runs.
-    if: github.event_name != 'push' || github.ref == 'refs/heads/master'
+    # Always on master and manual runs; on PRs only when code changed; never on other branch pushes.
+    needs: changes
+    if: >-
+      !cancelled() && (
+        (github.event_name == 'push' && github.ref == 'refs/heads/master') ||
+        github.event_name == 'workflow_dispatch' ||
+        needs.changes.outputs.code == 'true'
+      )
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # Ubuntu's package mirror is sometimes very slow on GitHub runners, so keep the
+      # downloaded packages between runs. The key follows the runner image version.
+      - name: Note runner image
+        run: |
+          echo "IMAGE_OS=$ImageOS" >> "$GITHUB_ENV"
+          echo "RUNNER_IMAGE=$ImageOS-$ImageVersion" >> "$GITHUB_ENV"
+
+      - name: Cache apt packages
+        uses: actions/cache@v4
+        with:
+          path: ~/apt-archives
+          key: apt-${{ env.RUNNER_IMAGE }}
+          restore-keys: apt-${{ env.IMAGE_OS }}-
+
       - name: Install build packages
         run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends binutils-arm-none-eabi gcc-arm-none-eabi libnewlib-arm-none-eabi libpng-dev python3
+          mkdir -p ~/apt-archives/partial
+          sudo apt-get update -o Acquire::Retries=3
+          sudo apt-get install -y --no-install-recommends -o Acquire::Retries=3 \
+            -o Dir::Cache::Archives="$HOME/apt-archives" \
+            binutils-arm-none-eabi gcc-arm-none-eabi libnewlib-arm-none-eabi libpng-dev python3
+          sudo apt-get autoclean -o Dir::Cache::Archives="$HOME/apt-archives"
+          sudo chown -R "$USER" ~/apt-archives
 
       - name: Install Poryscript
         run: |
@@ -133,16 +214,17 @@ jobs:
         run: make -j$(nproc) check
 
   # Gate job for branch protection: require "CI passed" on master.
-  # Passes when the build succeeded and tests succeeded (or were skipped on branch pushes).
+  # Passes when the build succeeded and tests succeeded or were skipped on purpose.
   ci-passed:
     name: CI passed
-    if: always()
-    needs: [build, test]
+    if: ${{ !cancelled() }}
+    needs: [build, changes, test]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
       - name: Check results
         run: |
-          echo "build: ${{ needs.build.result }}, test: ${{ needs.test.result }}"
+          echo "build: ${{ needs.build.result }}, changes: ${{ needs.changes.result }}, test: ${{ needs.test.result }}"
           [ "${{ needs.build.result }}" = "success" ] || exit 1
+          case "${{ needs.changes.result }}" in success|skipped) ;; *) exit 1 ;; esac
           case "${{ needs.test.result }}" in success|skipped) ;; *) exit 1 ;; esac
