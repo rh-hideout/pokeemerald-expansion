@@ -19,6 +19,7 @@
 #include "field_screen_effect.h"
 #include "field_weather.h"
 #include "follower_npc.h"
+#include "frontier_util.h"
 #include "international_string_util.h"
 #include "item.h"
 #include "item_icon.h"
@@ -430,6 +431,9 @@ static const struct DebugSelection sMassOutbreakMovesSelection;
 static const struct DebugSelection sMassOutbreakLocationSelection;
 static const struct DebugSelection sStaticMassOutbreakSelection;
 static const struct DebugSelection sDynamicMassOutbreakSelection;
+static const struct DebugSelection sWarpToFacilitySelection;
+static const struct DebugSelection sFrontierMetBrainFlagSelection;
+static const struct DebugSelection sFrontierSymbolSelection;
 static const struct DebugSelection sToggleFlagSelection;
 static const struct DebugSelection sSetVarSelection;
 static const struct DebugSelection sGiveItemSelection;
@@ -743,6 +747,15 @@ static const struct DebugMenuOption sDebugMenu_Actions_ROMInfo2[] =
     { NULL }
 };
 
+static const struct DebugMenuOption sDebugMenu_Actions_Frontier[] =
+{
+    //{ COMPOUND_STRING("Set Active Win Streak"), DebugAction_Selection_Init, &sActiveWinStreakSelection },
+    { COMPOUND_STRING("Set Frontier Symbols"), DebugAction_Selection_Init, &sFrontierSymbolSelection },
+    { COMPOUND_STRING("Set Met Brain Flags"), DebugAction_Selection_Init, &sFrontierMetBrainFlagSelection },
+    { COMPOUND_STRING("Warp to Facility"), DebugAction_Selection_Init, &sWarpToFacilitySelection },
+    { NULL }
+};
+
 static const struct DebugMenuOption sDebugMenu_Actions_Flags[] =
 {
     [DEBUG_FLAGVAR_MENU_ITEM_FLAGS]                = { COMPOUND_STRING("Set Flag XYZ…"),                     DebugAction_Selection_Init, &sToggleFlagSelection },
@@ -785,6 +798,7 @@ static const struct DebugMenuOption sDebugMenu_Actions_Main[] =
     { COMPOUND_STRING("Scripts…"),      DebugAction_OpenSubMenu, sDebugMenu_Actions_Scripts, },
     { COMPOUND_STRING("Trainers…"),     DebugAction_OpenSubMenuTrainers, sDebugMenu_Actions_Trainers, },
     { COMPOUND_STRING("Encounters…"),   DebugAction_OpenSubMenu, sDebugMenu_Actions_Encounters, },
+    { COMPOUND_STRING("Frontier…"),     DebugAction_OpenSubMenu, sDebugMenu_Actions_Frontier, },
     { COMPOUND_STRING("Flags & Vars…"), DebugAction_OpenSubMenuFlagsVars, sDebugMenu_Actions_Flags, },
     { COMPOUND_STRING("Sound…"),        DebugAction_OpenSubMenu, sDebugMenu_Actions_Sound, },
     { COMPOUND_STRING("ROM Info…"),     DebugAction_OpenSubMenu, sDebugMenu_Actions_ROMInfo2, },
@@ -1332,6 +1346,12 @@ static void DebugSelectionStep_ReturnToOutbreakMenu(u8 taskId)
 {
     Debug_RemoveCallbackMenu();
     DebugAction_OpenOutbreakMenu(taskId, sDebugMenu_Actions_MassOutbreak);
+}
+
+static void DebugSelectionStep_ReturnToFrontierMenu(u8 taskId)
+{
+    Debug_RemoveCallbackMenu();
+    DebugAction_OpenOutbreakMenu(taskId, sDebugMenu_Actions_Frontier);
 }
 
 static void DebugSelectionStep_ReturnToFlagsVarsMenu(u8 taskId)
@@ -2815,6 +2835,199 @@ static const struct DebugSelection sStaticMassOutbreakSelection = {
     .onCancel = DebugSelectionStep_ReturnToOutbreakMenu,
     .onComplete = DebugSelection_SetStaticMassOutbreak_Complete,
     .steps = {&sStaticOutbreakSelectionStep},
+    .maxSteps = 1,
+};
+
+// *******************************
+// Actions Frontier
+
+static void DebugSelectionStep_UpdateFacility(u8 taskId, u8 digits, u32 min, u32 max)
+{
+    switch (gTasks[taskId].tInput)
+    {
+    case FRONTIER_FACILITY_TOWER:
+        StringExpandPlaceholders(gStringVar2, COMPOUND_STRING("Tower"));
+        break;
+    case FRONTIER_FACILITY_DOME:
+        StringExpandPlaceholders(gStringVar2, COMPOUND_STRING("Dome"));
+        break;
+    case FRONTIER_FACILITY_PALACE:
+        StringExpandPlaceholders(gStringVar2, COMPOUND_STRING("Palace"));
+        break;
+    case FRONTIER_FACILITY_ARENA:
+        StringExpandPlaceholders(gStringVar2, COMPOUND_STRING("Arena"));
+        break;
+    case FRONTIER_FACILITY_FACTORY:
+        StringExpandPlaceholders(gStringVar2, COMPOUND_STRING("Factory"));
+        break;
+    case FRONTIER_FACILITY_PIKE:
+        StringExpandPlaceholders(gStringVar2, COMPOUND_STRING("Pike"));
+        break;
+    case FRONTIER_FACILITY_PYRAMID:
+        StringExpandPlaceholders(gStringVar2, COMPOUND_STRING("Pyramid"));
+        break;
+    default:
+        StringExpandPlaceholders(gStringVar2, COMPOUND_STRING("Error"));
+        break;
+    }
+    StringExpandPlaceholders(gStringVar1, COMPOUND_STRING("Facility:"));
+    StringCopy(gStringVar3, COMPOUND_STRING(""));
+    DebugNativeStep_PrintWindowSelection(taskId);
+}
+
+static const struct DebugSelectionStep sFacilitySelectionStep = {
+    .stepUpdate = DebugSelectionStep_UpdateFacility,
+    .stepConfirm = DebugSelectionStep_GenericInputConfirm,
+    .minValue = 0,
+    .maxValue = NUM_FRONTIER_FACILITIES - 1,
+    .digits = 1,
+};
+
+static void DebugSelectionStep_UpdateSymbolFlag(u8 taskId, u8 digits, u32 min, u32 max)
+{
+    switch (gTasks[taskId].tInput)
+    {
+    case 0:
+        StringExpandPlaceholders(gStringVar2, COMPOUND_STRING("None"));
+        break;
+    case 1:
+        StringExpandPlaceholders(gStringVar2, COMPOUND_STRING("Silver"));
+        break;
+    case 2:
+        StringExpandPlaceholders(gStringVar2, COMPOUND_STRING("Gold"));
+        break;
+    }
+    StringExpandPlaceholders(gStringVar1, COMPOUND_STRING("All Symbols:"));
+    StringCopy(gStringVar3, COMPOUND_STRING(""));
+    DebugNativeStep_PrintWindowSelection(taskId);
+}
+
+static bool32 DebugSelection_FrontierSymbol_Complete(u8 taskId)
+{
+    u32 symbol = DebugSelection_GetData(taskId, 0);
+    for (u32 facility = 0; facility < NUM_FRONTIER_FACILITIES; facility++)
+    {
+        if (symbol >= 1)
+             FlagSet(FLAG_SYS_TOWER_SILVER + facility * 2);
+        else
+            FlagClear(FLAG_SYS_TOWER_SILVER + facility * 2);
+        if (symbol == 2)
+            FlagSet(FLAG_SYS_TOWER_GOLD + facility * 2);
+        else
+            FlagClear(FLAG_SYS_TOWER_GOLD + facility * 2);
+    }
+    DebugAction_DestroyExtraWindow(taskId);
+    return TRUE;
+}
+
+static const struct DebugSelectionStep sSymbolLevelSelectionStep = {
+    .stepUpdate = DebugSelectionStep_UpdateSymbolFlag,
+    .stepConfirm = DebugSelectionStep_GenericInputConfirm,
+    .minValue = 0,
+    .maxValue = 2,
+    .digits = 1,
+};
+
+static const struct DebugSelection sFrontierSymbolSelection = {
+    .onInit = Debug_CreateInputDisplayWindow,
+    .onCancel = DebugSelectionStep_ReturnToFrontierMenu,
+    .onComplete = DebugSelection_FrontierSymbol_Complete,
+    .steps = {&sSymbolLevelSelectionStep},
+    .maxSteps = 1,
+};
+
+
+static void DebugSelectionStep_UpdateMetBrainFlag(u8 taskId, u8 digits, u32 min, u32 max)
+{
+    switch (gTasks[taskId].tInput)
+    {
+    case 0:
+        StringExpandPlaceholders(gStringVar2, COMPOUND_STRING("Never met"));
+        break;
+    case 1:
+        StringExpandPlaceholders(gStringVar2, COMPOUND_STRING("Met Silver"));
+        break;
+    case 2:
+        StringExpandPlaceholders(gStringVar2, COMPOUND_STRING("Met Gold"));
+        break;
+    }
+    StringExpandPlaceholders(gStringVar1, COMPOUND_STRING("Frontier Brain:"));
+    StringCopy(gStringVar3, COMPOUND_STRING(""));
+    DebugNativeStep_PrintWindowSelection(taskId);
+}
+
+static bool32 DebugSelection_FrontierMetBrainFlag_Complete(u8 taskId)
+{
+    u32 facility = DebugSelection_GetData(taskId, 0);
+    const u16 *battledBit = gFrontierBrainInfo[facility].battledBit;
+    u32 appearances = DebugSelection_GetData(taskId, 1);
+    if (appearances >= 1)
+        gSaveBlock2Ptr->frontier.battledBrainFlags |= battledBit[0];
+    else
+        gSaveBlock2Ptr->frontier.battledBrainFlags &= ~battledBit[0];
+    if (appearances == 2)
+        gSaveBlock2Ptr->frontier.battledBrainFlags |= battledBit[1];
+    else
+        gSaveBlock2Ptr->frontier.battledBrainFlags &= ~battledBit[1];
+    DebugAction_DestroyExtraWindow(taskId);
+    return TRUE;
+}
+
+static const struct DebugSelectionStep sAppearanceFlagSelectionStep = {
+    .stepUpdate = DebugSelectionStep_UpdateMetBrainFlag,
+    .stepConfirm = DebugSelectionStep_GenericInputConfirm,
+    .minValue = 0,
+    .maxValue = 2,
+    .digits = 1,
+};
+
+static const struct DebugSelection sFrontierMetBrainFlagSelection = {
+    .onInit = Debug_CreateInputDisplayWindow,
+    .onCancel = DebugSelectionStep_ReturnToFrontierMenu,
+    .onComplete = DebugSelection_FrontierMetBrainFlag_Complete,
+    .steps = {&sFacilitySelectionStep, &sAppearanceFlagSelectionStep},
+    .maxSteps = 2,
+};
+
+static bool32 DebugSelection_WarpToFacility_Complete(u8 taskId)
+{
+    u32 facility = DebugSelection_GetData(taskId, 0);
+    switch (facility)
+    {
+    case FRONTIER_FACILITY_TOWER:
+        SetWarpDestinationToMapWarp(MAP_GROUP(MAP_BATTLE_FRONTIER_BATTLE_TOWER_LOBBY), MAP_NUM(MAP_BATTLE_FRONTIER_BATTLE_TOWER_LOBBY), 0);
+        break;
+    case FRONTIER_FACILITY_DOME:
+        SetWarpDestinationToMapWarp(MAP_GROUP(MAP_BATTLE_FRONTIER_BATTLE_DOME_LOBBY), MAP_NUM(MAP_BATTLE_FRONTIER_BATTLE_DOME_LOBBY), 0);
+        break;
+    case FRONTIER_FACILITY_PALACE:
+        SetWarpDestinationToMapWarp(MAP_GROUP(MAP_BATTLE_FRONTIER_BATTLE_PALACE_LOBBY), MAP_NUM(MAP_BATTLE_FRONTIER_BATTLE_PALACE_LOBBY), 0);
+        break;
+    case FRONTIER_FACILITY_ARENA:
+        SetWarpDestinationToMapWarp(MAP_GROUP(MAP_BATTLE_FRONTIER_BATTLE_ARENA_LOBBY), MAP_NUM(MAP_BATTLE_FRONTIER_BATTLE_ARENA_LOBBY), 0);
+        break;
+    case FRONTIER_FACILITY_FACTORY:
+        SetWarpDestinationToMapWarp(MAP_GROUP(MAP_BATTLE_FRONTIER_BATTLE_FACTORY_LOBBY), MAP_NUM(MAP_BATTLE_FRONTIER_BATTLE_FACTORY_LOBBY), 0);
+        break;
+    case FRONTIER_FACILITY_PIKE:
+        SetWarpDestinationToMapWarp(MAP_GROUP(MAP_BATTLE_FRONTIER_BATTLE_PIKE_LOBBY), MAP_NUM(MAP_BATTLE_FRONTIER_BATTLE_PIKE_LOBBY), 0);
+        break;
+    case FRONTIER_FACILITY_PYRAMID:
+        SetWarpDestinationToMapWarp(MAP_GROUP(MAP_BATTLE_FRONTIER_BATTLE_PYRAMID_LOBBY), MAP_NUM(MAP_BATTLE_FRONTIER_BATTLE_PYRAMID_LOBBY), 0);
+        break;
+    }
+    DoWarp();
+    ResetInitialPlayerAvatarState();
+    DebugAction_DestroyExtraWindow(taskId);
+    ScriptContext_Stop();
+    return TRUE;
+}
+
+static const struct DebugSelection sWarpToFacilitySelection = {
+    .onInit = Debug_CreateInputDisplayWindow,
+    .onCancel = DebugSelectionStep_ReturnToFrontierMenu,
+    .onComplete = DebugSelection_WarpToFacility_Complete,
+    .steps = {&sFacilitySelectionStep},
     .maxSteps = 1,
 };
 
