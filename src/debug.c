@@ -106,7 +106,6 @@ enum FlagsVarsDebugMenu
     DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_LOCATIONS,
     DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_BADGES_ALL,
     DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_GAME_CLEAR,
-    DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_FRONTIER_PASS,
     DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_COLLISION,
     DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_ENCOUNTER,
     DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_TRAINER_SEE,
@@ -173,6 +172,7 @@ enum DebugMenuTypes
     DEBUG_FLAGS_MENU,
     DEBUG_TRAINERS_MENU,
     DEBUG_OUTBREAK_MENU,
+    DEBUG_FRONTIER_MENU,
 };
 
 // *******************************
@@ -224,8 +224,8 @@ struct DebugMenuListData
     const struct DebugMenuOption *subMenuItems[DEBUG_MAX_SUB_MENU_LEVELS];
     struct ListMenuItem listItems[DEBUG_MAX_MENU_ITEMS + 1];
     u8 itemNames[DEBUG_MAX_MENU_ITEMS + 1][26];
-    enum DebugMenuTypes menuType:2;
-    u32 padding:30;
+    enum DebugMenuTypes menuType:3;
+    u32 padding:29;
     s16 data[8];
 };
 
@@ -271,6 +271,7 @@ static u32 Debug_GenerateListBasicMenu(const struct DebugMenuOption *items);
 static u32 Debug_GenerateListTrainerMenu(const struct DebugMenuOption *items);
 static u32 Debug_GenerateListFlagsMenu(const struct DebugMenuOption *items);
 static u32 Debug_GenerateListOutbreakMenu(const struct DebugMenuOption *items);
+static u32 Debug_GenerateListFrontierMenu(const struct DebugMenuOption *items);
 static void Debug_DestroyMenu(u8 taskId);
 static void DebugAction_Cancel(u8 taskId);
 static void DebugAction_DestroyExtraWindow(u8 taskId);
@@ -281,6 +282,7 @@ static void DebugAction_OpenSubMenu(u8 taskId, const struct DebugMenuOption *ite
 static void DebugAction_OpenSubMenuTrainers(u8 taskId, const struct DebugMenuOption *items);
 static void DebugAction_OpenSubMenuFlagsVars(u8 taskId, const struct DebugMenuOption *items);
 static void DebugAction_OpenOutbreakMenu(u8 taskId, const struct DebugMenuOption *items);
+static void DebugAction_OpenFrontierMenu(u8 taskId, const struct DebugMenuOption *items);
 static void DebugAction_OpenSubMenuFakeRTC(u8 taskId, const struct DebugMenuOption *items);
 static void DebugAction_OpenSubMenuCreateFollowerNPC(u8 taskId, const struct DebugMenuOption *items);
 static void DebugAction_ExecuteScript(u8 taskId, void *script);
@@ -528,7 +530,8 @@ static u32 (*const generateListFunctions[])(const struct DebugMenuOption *) =
     [DEBUG_BASIC_MENU] = Debug_GenerateListBasicMenu,
     [DEBUG_FLAGS_MENU] = Debug_GenerateListFlagsMenu,
     [DEBUG_TRAINERS_MENU] = Debug_GenerateListTrainerMenu,
-    [DEBUG_OUTBREAK_MENU] = Debug_GenerateListOutbreakMenu
+    [DEBUG_OUTBREAK_MENU] = Debug_GenerateListOutbreakMenu,
+    [DEBUG_FRONTIER_MENU] = Debug_GenerateListFrontierMenu,
 };
 
 // *******************************
@@ -672,7 +675,6 @@ static const struct DebugMenuOption sDebugMenu_Actions_Give[] =
     { COMPOUND_STRING("Give Decoration…"),  DebugAction_Selection_Init, &sGiveDecorationSelection },
     { COMPOUND_STRING("Max Money"),         DebugAction_Give_MaxMoney },
     { COMPOUND_STRING("Max Coins"),         DebugAction_Give_MaxCoins },
-    { COMPOUND_STRING("Max Battle Points"), DebugAction_Give_MaxBattlePoints },
     { COMPOUND_STRING("Daycare Egg"),       DebugAction_Give_DayCareEgg },
     { NULL }
 };
@@ -749,9 +751,11 @@ static const struct DebugMenuOption sDebugMenu_Actions_ROMInfo2[] =
 
 static const struct DebugMenuOption sDebugMenu_Actions_Frontier[] =
 {
-    //{ COMPOUND_STRING("Set Active Win Streak"), DebugAction_Selection_Init, &sActiveWinStreakSelection },
+    { COMPOUND_STRING("Toggle {STR_VAR_1}Frontier Pass"),   DebugAction_ToggleFlag, DebugAction_FlagsVars_ToggleFrontierPass },
+    { COMPOUND_STRING("Max Battle Points"), DebugAction_Give_MaxBattlePoints },
     { COMPOUND_STRING("Set Frontier Symbols"), DebugAction_Selection_Init, &sFrontierSymbolSelection },
     { COMPOUND_STRING("Set Met Brain Flags"), DebugAction_Selection_Init, &sFrontierMetBrainFlagSelection },
+    //{ COMPOUND_STRING("Set Active Win Streak"), DebugAction_Selection_Init, &sActiveWinStreakSelection },
     { COMPOUND_STRING("Warp to Facility"), DebugAction_Selection_Init, &sWarpToFacilitySelection },
     { NULL }
 };
@@ -771,7 +775,6 @@ static const struct DebugMenuOption sDebugMenu_Actions_Flags[] =
     [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_LOCATIONS]     = { COMPOUND_STRING("Toggle {STR_VAR_1}Fly Flags"),       DebugAction_ToggleFlag, DebugAction_FlagsVars_ToggleFlyFlags },
     [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_BADGES_ALL]    = { COMPOUND_STRING("Toggle {STR_VAR_1}All badges"),      DebugAction_ToggleFlag, DebugAction_FlagsVars_ToggleBadgeFlags },
     [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_GAME_CLEAR]    = { COMPOUND_STRING("Toggle {STR_VAR_1}Game clear"),      DebugAction_ToggleFlag, DebugAction_FlagsVars_ToggleGameClear },
-    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_FRONTIER_PASS] = { COMPOUND_STRING("Toggle {STR_VAR_1}Frontier Pass"),   DebugAction_ToggleFlag, DebugAction_FlagsVars_ToggleFrontierPass },
     [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_COLLISION]     = { COMPOUND_STRING("Toggle {STR_VAR_1}Collision OFF"),   DebugAction_ToggleFlag, DebugAction_FlagsVars_CollisionOnOff },
     [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_ENCOUNTER]     = { COMPOUND_STRING("Toggle {STR_VAR_1}Encounter OFF"),   DebugAction_ToggleFlag, DebugAction_FlagsVars_EncounterOnOff },
     [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_TRAINER_SEE]   = { COMPOUND_STRING("Toggle {STR_VAR_1}Trainer See OFF"), DebugAction_ToggleFlag, DebugAction_FlagsVars_TrainerSeeOnOff },
@@ -798,7 +801,7 @@ static const struct DebugMenuOption sDebugMenu_Actions_Main[] =
     { COMPOUND_STRING("Scripts…"),      DebugAction_OpenSubMenu, sDebugMenu_Actions_Scripts, },
     { COMPOUND_STRING("Trainers…"),     DebugAction_OpenSubMenuTrainers, sDebugMenu_Actions_Trainers, },
     { COMPOUND_STRING("Encounters…"),   DebugAction_OpenSubMenu, sDebugMenu_Actions_Encounters, },
-    { COMPOUND_STRING("Frontier…"),     DebugAction_OpenSubMenu, sDebugMenu_Actions_Frontier, },
+    { COMPOUND_STRING("Frontier…"),     DebugAction_OpenFrontierMenu, sDebugMenu_Actions_Frontier, },
     { COMPOUND_STRING("Flags & Vars…"), DebugAction_OpenSubMenuFlagsVars, sDebugMenu_Actions_Flags, },
     { COMPOUND_STRING("Sound…"),        DebugAction_OpenSubMenu, sDebugMenu_Actions_Sound, },
     { COMPOUND_STRING("ROM Info…"),     DebugAction_OpenSubMenu, sDebugMenu_Actions_ROMInfo2, },
@@ -937,7 +940,8 @@ static bool32 IsSubMenuAction(const void *action)
         || action == DebugAction_OpenSubMenuFakeRTC
         || action == DebugAction_OpenSubMenuCreateFollowerNPC
         || action == DebugAction_OpenSubMenuTrainers
-        || action == DebugAction_OpenOutbreakMenu;
+        || action == DebugAction_OpenOutbreakMenu
+        || action == DebugAction_OpenFrontierMenu;
 }
 
 static u32 Debug_GenerateListBasicMenu(const struct DebugMenuOption *items)
@@ -1351,7 +1355,7 @@ static void DebugSelectionStep_ReturnToOutbreakMenu(u8 taskId)
 static void DebugSelectionStep_ReturnToFrontierMenu(u8 taskId)
 {
     Debug_RemoveCallbackMenu();
-    DebugAction_OpenOutbreakMenu(taskId, sDebugMenu_Actions_Frontier);
+    DebugAction_OpenFrontierMenu(taskId, sDebugMenu_Actions_Frontier);
 }
 
 static void DebugSelectionStep_ReturnToFlagsVarsMenu(u8 taskId)
@@ -1521,6 +1525,29 @@ static u32 Debug_GenerateListOutbreakMenu(const struct DebugMenuOption *items)
     return totalItems;
 }
 
+static u32 Debug_GenerateListFrontierMenu(const struct DebugMenuOption *items)
+{
+    u32 offset = 0;
+    u32 totalItems = 0;
+    for (u32 i = 0; i < (ARRAY_COUNT(sDebugMenu_Actions_Frontier) - 1); i++)
+    {
+        switch (i)
+        {
+        case 0:
+            if (FlagGet(FLAG_SYS_FRONTIER_PASS))
+                StringCopy(gStringVar1, COMPOUND_STRING("{COLOR GREEN}"));
+            else
+                StringCopy(gStringVar1, COMPOUND_STRING("{COLOR RED}"));
+        }
+        StringExpandPlaceholders(gStringVar4, sDebugMenu_Actions_Frontier[i].text);
+        StringCopy(&sDebugMenuListData->itemNames[i][0], gStringVar4);
+        sDebugMenuListData->listItems[i - offset].name = &sDebugMenuListData->itemNames[i][0];
+        sDebugMenuListData->listItems[i - offset].id = i;
+        totalItems++;
+    }
+    return totalItems;
+}
+
 static const u16 sLocationFlags[] =
 {
     FLAG_VISITED_LITTLEROOT_TOWN,
@@ -1614,9 +1641,6 @@ static u32 Debug_CheckToggleFlags(u8 id)
         break;
     case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_GAME_CLEAR:
         result = FlagGet(FLAG_SYS_GAME_CLEAR);
-        break;
-    case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_FRONTIER_PASS:
-        result = FlagGet(FLAG_SYS_FRONTIER_PASS);
         break;
     case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_COLLISION:
         result = OW_FLAG_NO_COLLISION ? FlagGet(OW_FLAG_NO_COLLISION) : DEBUG_OPTION_CANT_BE_TOGGLED;
@@ -1743,6 +1767,11 @@ static void DebugAction_OpenSubMenuFlagsVars(u8 taskId, const struct DebugMenuOp
 static void DebugAction_OpenOutbreakMenu(u8 taskId, const struct DebugMenuOption *items)
 {
     DebugAction_OpenSubMenuWithType(taskId, items, DEBUG_OUTBREAK_MENU);
+}
+
+static void DebugAction_OpenFrontierMenu(u8 taskId, const struct DebugMenuOption *items)
+{
+    DebugAction_OpenSubMenuWithType(taskId, items, DEBUG_FRONTIER_MENU);
 }
 
 static void DebugAction_OpenSubMenu(u8 taskId, const struct DebugMenuOption *items)
