@@ -1000,7 +1000,7 @@ static void Cmd_attackanimation(void)
         && effect != EFFECT_SUBSTITUTE
         && effect != EFFECT_ALLY_SWITCH
         // In a wild double battle gotta use the teleport animation if two wild Pokémon are alive.
-        && !(GetMoveEffect(gCurrentMove) == EFFECT_TELEPORT && WILD_DOUBLE_BATTLE && !IsOnPlayerSide(gBattlerAttacker) && IsBattlerAlive(GetPartnerBattler(gBattlerAttacker))))
+        && !(GetMoveEffect(gCurrentMove) == EFFECT_TELEPORT && IsWildDoubleBattle() && !IsOnPlayerSide(gBattlerAttacker) && IsBattlerAlive(GetPartnerBattler(gBattlerAttacker))))
     {
         BattleScriptPush(cmd->nextInstr);
         gBattlescriptCurrInstr = BattleScript_PauseShort;
@@ -1469,7 +1469,7 @@ static void Cmd_cleareffectsonfaint(void)
     if (gBattleControllerExecFlags == 0)
     {
         enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
-        if (!(gBattleTypeFlags & BATTLE_TYPE_ARENA) || !IsBattlerAlive(battler))
+        if (!HasAnyBattleFlags(BATTLE_TYPE_ARENA) || !IsBattlerAlive(battler))
         {
             gBattleMons[battler].status1 = 0;
             BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, sizeof(gBattleMons[battler].status1), &gBattleMons[battler].status1);
@@ -1632,10 +1632,9 @@ FEATURE_FLAG_ASSERT(I_EXP_SHARE_FLAG, YouNeedToSetTheExpShareFlagToAnUnusedFlag)
 
 static bool32 BattleTypeAllowsExp(void)
 {
-    if (RECORDED_WILD_BATTLE)
+    if (IsRecordedWildBattle())
         return TRUE;
-    else if (gBattleTypeFlags &
-              ( BATTLE_TYPE_LINK
+    else if (HasAnyBattleFlags(BATTLE_TYPE_LINK
               | BATTLE_TYPE_RECORDED_LINK
               | BATTLE_TYPE_TRAINER_HILL
               | BATTLE_TYPE_FRONTIER
@@ -1744,7 +1743,7 @@ static void Cmd_getexp(void)
             else
                 calculatedExp /= 7;
 
-            if (GetConfig(B_TRAINER_EXP_MULTIPLIER) <= GEN_7 && gBattleTypeFlags & BATTLE_TYPE_TRAINER)
+            if (GetConfig(B_TRAINER_EXP_MULTIPLIER) <= GEN_7 && IsTrainerBattle())
                 calculatedExp = (calculatedExp * 150) / 100;
 
             if (GetConfig(B_SPLIT_EXP) < GEN_6)
@@ -1803,7 +1802,7 @@ static void Cmd_getexp(void)
             else
             {
                 // Music change in a wild battle after fainting opposing Pokémon.
-                if (!(gBattleTypeFlags & BATTLE_TYPE_TRAINER)
+                if (!IsTrainerBattle()
                     && (gBattleMons[0].hp || (IsDoubleBattle() && gBattleMons[2].hp))
                     && !IsBattlerAlive(GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT))
                     && (!IsDoubleBattle() || !IsBattlerAlive(GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT)))
@@ -1901,7 +1900,7 @@ static void Cmd_getexp(void)
             {
                 u16 temp = 0xFF;
                 enum BattlerId battler = GetBattlerFromPlayerPartyId(*expMonId);
-                if (gBattleTypeFlags & BATTLE_TYPE_TRAINER && battler != MAX_BATTLERS_COUNT)
+                if (IsTrainerBattle() && battler != MAX_BATTLERS_COUNT)
                     HandleLowHpMusicChange(GetBattlerMon(battler), battler);
 
                 PREPARE_MON_NICK_WITH_PREFIX_BUFFER(gBattleTextBuff1, 0, *expMonId);
@@ -1998,7 +1997,7 @@ static u32 DoesPartyHaveBattleReadyMons(enum BattleTrainer trainer)
         if (!GetMonData(&mon, MON_DATA_SPECIES) || GetMonData(&mon, MON_DATA_IS_EGG))
             continue;
 
-        if (gBattleTypeFlags & BATTLE_TYPE_ARENA)
+        if (HasAnyBattleFlags(BATTLE_TYPE_ARENA))
         {
             if (trainer == B_TRAINER_PLAYER && gBattleStruct->arenaLostPlayerMons & (1u << i))
                 continue;
@@ -2043,7 +2042,7 @@ bool32 NoAliveMonsForPlayer(void)
     if (DoesPartyHaveBattleReadyMons(B_TRAINER_PLAYER))
         return FALSE;
 
-    if (!(gBattleTypeFlags & (BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER)))
+    if (!HasAnyBattleFlags(BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER))
         return TRUE;
 
     if (!DoesPartyHaveBattleReadyMons(B_TRAINER_PARTNER))
@@ -2087,7 +2086,7 @@ static void Cmd_checkteamslost(void)
     // For battles that haven't ended, count number of empty battler spots
     // In multi battles, jump to pointer if more than 1 spot empty
     // In non-multi battles, jump to pointer if 1 spot is missing on both sides
-    if (gBattleOutcome == 0 && (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_TRAINER)))
+    if (gBattleOutcome == 0 && (HasAnyBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_TRAINER)))
     {
         enum BattlerId i;
         s32 emptyPlayerSpots, emptyOpponentSpots;
@@ -2105,7 +2104,7 @@ static void Cmd_checkteamslost(void)
                 emptyOpponentSpots++;
         }
 
-        if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
+        if (HasAnyBattleFlags(BATTLE_TYPE_MULTI))
         {
             if (emptyOpponentSpots + emptyPlayerSpots > 1)
                 gBattlescriptCurrInstr = cmd->jumpInstr;
@@ -2791,7 +2790,7 @@ static void Cmd_switchindataupdate(void)
 
     SwitchInClearSetData(battler, &oldData.volatiles);
 
-    if (gBattleTypeFlags & BATTLE_TYPE_PALACE
+    if (HasAnyBattleFlags(BATTLE_TYPE_PALACE)
         && gBattleMons[battler].maxHP / 2 >= gBattleMons[battler].hp
         && IsBattlerAlive(battler)
         && !(gBattleMons[battler].status1 & STATUS1_SLEEP))
@@ -2826,13 +2825,13 @@ static void Cmd_switchinanim(void)
 
     gBattlescriptCurrInstr = cmd->nextInstr;
 
-    if (gBattleTypeFlags & BATTLE_TYPE_ARENA)
+    if (HasAnyBattleFlags(BATTLE_TYPE_ARENA))
         BattleArena_InitPoints();
 }
 
 bool32 CanBattlerSwitch(enum BattlerId battler)
 {
-    return !(gBattleTypeFlags & BATTLE_TYPE_ARENA)
+    return !HasAnyBattleFlags(BATTLE_TYPE_ARENA)
         && !IsCommanderActive(battler)
         && HasBattlerViablePartyMonsForSwitch(battler);
 }
@@ -2908,7 +2907,7 @@ static void Cmd_openpartyscreen(void)
 
     if (cmd->battler == BS_FAINTED_MULTIPLE_1)
     {
-        if ((gBattleTypeFlags & BATTLE_TYPE_MULTI) || !(IsDoubleBattle()))
+        if (HasAnyBattleFlags(BATTLE_TYPE_MULTI) || !IsDoubleBattle())
         {
             for (battler = 0; battler < gBattlersCount; battler++)
             {
@@ -2944,7 +2943,7 @@ static void Cmd_openpartyscreen(void)
                 if (((1u << i) & hitmarkerFaintBits))
                 {
                     bool32 skipPartnerCheck = FALSE;
-                    if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS
+                    if (HasAnyBattleFlags(BATTLE_TYPE_TWO_OPPONENTS)
                      && GetBattlerSide(i) == B_SIDE_OPPONENT
                      && TRAINER_BATTLE_PARAM.opponentB != TRAINER_NONE)
                         skipPartnerCheck = TRUE;
@@ -2999,7 +2998,7 @@ static void Cmd_openpartyscreen(void)
     }
     else if (cmd->battler == BS_FAINTED_MULTIPLE_2)
     {
-        if (!(gBattleTypeFlags & BATTLE_TYPE_MULTI))
+        if (!HasAnyBattleFlags(BATTLE_TYPE_MULTI))
         {
             if (IsDoubleBattle())
             {
@@ -3080,7 +3079,7 @@ static void Cmd_openpartyscreen(void)
             if (GetBattlerPosition(battler) == B_POSITION_PLAYER_LEFT && gBattleResults.playerSwitchesCounter < 255)
                 gBattleResults.playerSwitchesCounter++;
 
-            if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
+            if (HasAnyBattleFlags(BATTLE_TYPE_MULTI))
             {
                 for (enum BattlerId i = 0; i < gBattlersCount; i++)
                 {
@@ -3135,7 +3134,7 @@ static void Cmd_switchhandleorder(void)
         }
         break;
     case 1:
-        if (!(gBattleTypeFlags & BATTLE_TYPE_MULTI))
+        if (!HasAnyBattleFlags(BATTLE_TYPE_MULTI))
             SwitchPartyOrder(battler);
         break;
     case 2:
@@ -3149,7 +3148,7 @@ static void Cmd_switchhandleorder(void)
         gBattleCommunication[0] = gBattleResources->bufferB[battler][1];
         gBattleStruct->monToSwitchIntoId[battler] = (enum PartySlot)gBattleResources->bufferB[battler][1];
 
-        if (gBattleTypeFlags & BATTLE_TYPE_LINK && gBattleTypeFlags & BATTLE_TYPE_MULTI)
+        if (HasAllBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_MULTI))
         {
             *(battler * 3 + (u8 *)(gBattleStruct->battlerPartyOrders) + 0) &= 0xF;
             *(battler * 3 + (u8 *)(gBattleStruct->battlerPartyOrders) + 0) |= (gBattleResources->bufferB[battler][2] & 0xF0);
@@ -3159,7 +3158,7 @@ static void Cmd_switchhandleorder(void)
             *((GetPartnerBattler(battler)) * 3 + (u8 *)(gBattleStruct->battlerPartyOrders) + 0) |= (gBattleResources->bufferB[battler][2] & 0xF0) >> 4;
             *((GetPartnerBattler(battler)) * 3 + (u8 *)(gBattleStruct->battlerPartyOrders) + 2) = gBattleResources->bufferB[battler][3];
         }
-        else if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
+        else if (HasAnyBattleFlags(BATTLE_TYPE_INGAME_PARTNER))
         {
             SwitchPartyOrderInGameMulti(battler, gBattleStruct->monToSwitchIntoId[battler]);
         }
@@ -3334,7 +3333,7 @@ static void Cmd_handlelearnnewmove(void)
             learnMove = MonTryLearningNewMove(&gParties[B_TRAINER_PLAYER][monId], FALSE);
     }
 
-    if (learnMove == MOVE_NONE || RECORDED_WILD_BATTLE)
+    if (learnMove == MOVE_NONE || IsRecordedWildBattle())
     {
         gBattlescriptCurrInstr = cmd->nothingToLearnPtr;
     }
@@ -3569,7 +3568,7 @@ static u32 GetTrainerMoneyToGive(u16 trainerId)
         lastMonLevel = party[GetTrainerPartySizeFromId(trainerId) - 1].lvl;
         trainerMoney = gTrainerClasses[GetTrainerClassFromId(trainerId)].money ?: 5;
 
-        if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
+        if (HasAnyBattleFlags(BATTLE_TYPE_TWO_OPPONENTS))
             moneyReward = 4 * lastMonLevel * gBattleStruct->moneyMultiplier * trainerMoney;
         else if (IsDoubleBattle())
             moneyReward = 4 * lastMonLevel * gBattleStruct->moneyMultiplier * 2 * trainerMoney;
@@ -3590,7 +3589,7 @@ static void Cmd_getmoneyreward(void)
     if (gBattleOutcome == B_OUTCOME_WON)
     {
         money = GetTrainerMoneyToGive(TRAINER_BATTLE_PARAM.opponentA);
-        if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
+        if (HasAnyBattleFlags(BATTLE_TYPE_TWO_OPPONENTS))
             money += GetTrainerMoneyToGive(TRAINER_BATTLE_PARAM.opponentB);
         AddMoney(&gSaveBlock1Ptr->money, money);
     }
@@ -3863,12 +3862,10 @@ static void Cmd_removeitem(void)
 
     if (gBattleStruct->flungItem == FLUNG_ITEM_REMOVE)
     {
-        gBattleStruct->flungItem = FLUNG_ITEM_REMOVED;
         battler = gBattlerAttacker;
         itemId = gLastUsedItem;
     }
     else if (gBattleScripting.overrideBerryRequirements
-          || gBattleStruct->flungItem == FLUNG_ITEM_REMOVED
           || itemId == ITEM_NONE)
     {
         // bug bite / pluck / no item - don't remove current item
@@ -3892,8 +3889,15 @@ static void Cmd_removeitem(void)
 
     ClearBattlerItemEffectHistory(battler);
     scriptQueued = TrySymbiosis(battler, itemId, cmd->nextInstr);
-    if (TryCheekPouch(battler, itemId, scriptQueued ? gBattlescriptCurrInstr : cmd->nextInstr))
+    if (gBattleStruct->flungItem == FLUNG_ITEM_REMOVE)
+    {
+        // Don't activate Cheek Pouch in this case since it doesn't make sense
+        gBattleStruct->flungItem = FLUNG_ITEM_REMOVED;
+    }
+    else if (TryCheekPouch(battler, itemId, scriptQueued ? gBattlescriptCurrInstr : cmd->nextInstr))
+    {
         scriptQueued = TRUE;
+    }
     if (!scriptQueued)
         gBattlescriptCurrInstr = cmd->nextInstr;
 }
@@ -3964,7 +3968,7 @@ static void Cmd_drawlvlupbox(void)
         }
         break;
     case 6:
-        if (gMain.newKeys != 0 || RECORDED_WILD_BATTLE || TESTING)
+        if (gMain.newKeys != 0 || IsRecordedWildBattle() || TESTING)
         {
             // Draw page 2 of level up box
             PlaySE(SE_SELECT);
@@ -3974,7 +3978,7 @@ static void Cmd_drawlvlupbox(void)
         }
         break;
     case 8:
-        if (gMain.newKeys != 0 || RECORDED_WILD_BATTLE || TESTING)
+        if (gMain.newKeys != 0 || IsRecordedWildBattle() || TESTING)
         {
             // Close level up box
             PlaySE(SE_SELECT);
@@ -4672,10 +4676,10 @@ static void Cmd_forcerandomswitch(void)
     // Red card checks against wild Pokémon. If we have reached here, the player has a mon to switch into
     // Red card swaps attacker with target to get the animation correct, so here we check attacker which is really the target. Thanks GF...
     if (gBattleScripting.switchCase == B_SWITCH_RED_CARD
-      && !(gBattleTypeFlags & BATTLE_TYPE_TRAINER)
+      && !IsTrainerBattle()
       && !IsOnPlayerSide(gBattlerAttacker))   // Check opponent's red card activating
     {
-        if (!WILD_DOUBLE_BATTLE)
+        if (!IsWildDoubleBattle())
         {
             // Wild mon with red card will end single battle
             gBattlescriptCurrInstr = BattleScript_RoarSuccessEndBattle;
@@ -4701,12 +4705,12 @@ static void Cmd_forcerandomswitch(void)
     // trainer battles
     // wild double battles when an opposing Pokémon uses it against one of the two alive player mons
     // wild double battle when a player Pokémon uses it against its partner
-    if ((gBattleTypeFlags & BATTLE_TYPE_TRAINER)
-        || (WILD_DOUBLE_BATTLE
+    if ((IsTrainerBattle())
+        || (IsWildDoubleBattle()
             && !IsOnPlayerSide(gBattlerAttacker)
             && IsOnPlayerSide(gBattlerTarget)
             && IsWholeSideAlive(gBattlerTarget))
-        || (WILD_DOUBLE_BATTLE
+        || (IsWildDoubleBattle()
             && IsOnPlayerSide(gBattlerAttacker)
             && IsOnPlayerSide(gBattlerTarget))
         || redCardForcedSwitch
@@ -4714,16 +4718,16 @@ static void Cmd_forcerandomswitch(void)
     {
         party = GetBattlerParty(gBattlerTarget);
 
-        if (BATTLE_TWO_VS_ONE_OPPONENT && !IsOnPlayerSide(gBattlerTarget))
+        if (IsMultiVsOneOpponentBattle() && !IsOnPlayerSide(gBattlerTarget))
         {
             firstMonId = PARTY_SLOT_0;
             lastMonId = 6;
             battler2PartyId = gBattlerPartyIndexes[gBattlerTarget];
             battler1PartyId = gBattlerPartyIndexes[GetPartnerBattler(gBattlerTarget)];
         }
-        else if ((gBattleTypeFlags & BATTLE_TYPE_BATTLE_TOWER && gBattleTypeFlags & BATTLE_TYPE_LINK)
-            || (gBattleTypeFlags & BATTLE_TYPE_BATTLE_TOWER && gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK)
-            || (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER))
+        else if (HasAllBattleFlags(BATTLE_TYPE_BATTLE_TOWER | BATTLE_TYPE_LINK)
+            || HasAllBattleFlags(BATTLE_TYPE_BATTLE_TOWER | BATTLE_TYPE_RECORDED_LINK)
+            || HasAnyBattleFlags(BATTLE_TYPE_INGAME_PARTNER))
         {
             if ((gBattlerTarget & BIT_FLANK) != B_FLANK_LEFT)
             {
@@ -4738,15 +4742,15 @@ static void Cmd_forcerandomswitch(void)
             battler2PartyId = gBattlerPartyIndexes[gBattlerTarget];
             battler1PartyId = gBattlerPartyIndexes[GetPartnerBattler(gBattlerTarget)];
         }
-        else if ((gBattleTypeFlags & BATTLE_TYPE_MULTI && gBattleTypeFlags & BATTLE_TYPE_LINK)
-                 || (gBattleTypeFlags & BATTLE_TYPE_MULTI && gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK))
+        else if (HasAllBattleFlags(BATTLE_TYPE_MULTI | BATTLE_TYPE_LINK)
+                 || HasAllBattleFlags(BATTLE_TYPE_MULTI | BATTLE_TYPE_RECORDED_LINK))
         {
             firstMonId = PARTY_SLOT_0;
             lastMonId = PARTY_SIZE / 2;
             battler2PartyId = gBattlerPartyIndexes[gBattlerTarget];
             battler1PartyId = gBattlerPartyIndexes[GetPartnerBattler(gBattlerTarget)];
         }
-        else if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
+        else if (HasAnyBattleFlags(BATTLE_TYPE_TWO_OPPONENTS))
         {
             if (IsOnPlayerSide(gBattlerTarget))
             {
@@ -4811,16 +4815,16 @@ static void Cmd_forcerandomswitch(void)
             if (!IsMultiBattle())
                 SwitchPartyOrder(gBattlerTarget);
 
-            if ((gBattleTypeFlags & BATTLE_TYPE_LINK && gBattleTypeFlags & BATTLE_TYPE_BATTLE_TOWER)
-                || (gBattleTypeFlags & BATTLE_TYPE_LINK && gBattleTypeFlags & BATTLE_TYPE_MULTI)
-                || (gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK && gBattleTypeFlags & BATTLE_TYPE_BATTLE_TOWER)
-                || (gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK && gBattleTypeFlags & BATTLE_TYPE_MULTI))
+            if (HasAllBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_BATTLE_TOWER)
+                || HasAllBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_MULTI)
+                || HasAllBattleFlags(BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_BATTLE_TOWER)
+                || HasAllBattleFlags(BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_MULTI))
             {
                 SwitchPartyOrderLinkMulti(gBattlerTarget, gBattleStruct->monToSwitchIntoId[gBattlerTarget], PARTY_BATTLE_ORDER_0);
                 SwitchPartyOrderLinkMulti(GetPartnerBattler(gBattlerTarget), gBattleStruct->monToSwitchIntoId[gBattlerTarget], PARTY_BATTLE_ORDER_1);
             }
 
-            if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
+            if (HasAnyBattleFlags(BATTLE_TYPE_INGAME_PARTNER))
                 SwitchPartyOrderInGameMulti(gBattlerTarget, gBattleStruct->monToSwitchIntoId[gBattlerTarget]);
         }
     }
@@ -4838,7 +4842,7 @@ static void Cmd_givepaydaymoney(void)
 {
     CMD_ARGS();
 
-    if (!(gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK)) && gPaydayMoney != 0)
+    if (!HasAnyBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK) && gPaydayMoney != 0)
     {
         u32 bonusMoney = gPaydayMoney * gBattleStruct->moneyMultiplier;
         AddMoney(&gSaveBlock1Ptr->money, bonusMoney);
@@ -5782,7 +5786,7 @@ static u32 ComputeCaptureOdds(u32 wildMonBattler, u32 playerBattler)
     u32 odds = (battleMon->maxHP * 3 -  battleMon->hp * 2);
     s32 catchRate;
 
-    if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
+    if (HasAnyBattleFlags(BATTLE_TYPE_SAFARI))
         catchRate = gBattleStruct->safariCatchFactor * 1275 / 100;
     else
         catchRate = GetBattleMonCatchRate(battleMon);
@@ -5956,19 +5960,19 @@ static void Cmd_handleballthrow(void)
 
     gBattlerTarget = GetCatchingBattler();
 
-    if (gBattleTypeFlags & BATTLE_TYPE_GHOST)
+    if (HasAnyBattleFlags(BATTLE_TYPE_GHOST))
     {
         BtlController_EmitBallThrowAnim(gBattlerAttacker, B_COMM_TO_CONTROLLER, BALL_GHOST_DODGE);
         MarkBattlerForControllerExec(gBattlerAttacker);
         gBattlescriptCurrInstr = BattleScript_GhostBallDodge;
     }
-    else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
+    else if (IsTrainerBattle())
     {
         BtlController_EmitBallThrowAnim(gBattlerAttacker, B_COMM_TO_CONTROLLER, BALL_TRAINER_BLOCK);
         MarkBattlerForControllerExec(gBattlerAttacker);
         gBattlescriptCurrInstr = BattleScript_TrainerBallBlock;
     }
-    else if (gBattleTypeFlags & BATTLE_TYPE_CATCH_TUTORIAL)
+    else if (HasAnyBattleFlags(BATTLE_TYPE_CATCH_TUTORIAL))
     {
         BtlController_EmitBallThrowAnim(gBattlerAttacker, B_COMM_TO_CONTROLLER, BALL_3_SHAKES_SUCCESS);
         MarkBattlerForControllerExec(gBattlerAttacker);
@@ -7927,8 +7931,8 @@ void BS_UpdateChoiceMoveOnLvlUp(void)
 void BS_ResetPlayerFainted(void)
 {
     NATIVE_ARGS();
-    if (!(gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_DOUBLE))
-        && gBattleTypeFlags & BATTLE_TYPE_TRAINER
+    if (!HasAnyBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_DOUBLE)
+        && IsTrainerBattle()
         && IsBattlerAlive(GetBattlerAtPosition(B_POSITION_PLAYER_LEFT))
         && IsBattlerAlive(GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT)))
     {
@@ -8937,9 +8941,9 @@ void BS_EndTurnEvents(void)
     if (gBattleOutcome != 0)
         return;
 
-    if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
+    if (HasAnyBattleFlags(BATTLE_TYPE_PALACE))
         BattleScriptCall(BattleScript_PalacePrintFlavorTextRet);
-    else if (gBattleTypeFlags & BATTLE_TYPE_ARENA && gBattleStruct->eventState.arenaTurn == 0)
+    else if (HasAnyBattleFlags(BATTLE_TYPE_ARENA) && gBattleStruct->eventState.arenaTurn == 0)
         BattleScriptCall(BattleScript_ArenaTurnBeginningRet);
 }
 

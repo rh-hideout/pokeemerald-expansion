@@ -214,10 +214,10 @@ static void HandleInputChooseAction(enum BattlerId battler)
     }
     else if (JOY_NEW(B_BUTTON))
     {
-        if ((gBattleTypeFlags & BATTLE_TYPE_DOUBLE)
+        if (HasAnyBattleFlags(BATTLE_TYPE_DOUBLE)
          && GetBattlerPosition(battler) == B_POSITION_PLAYER_RIGHT
          && !(gAbsentBattlerFlags & (1 << GetBattlerAtPosition(B_POSITION_PLAYER_LEFT)))
-         && !(gBattleTypeFlags & BATTLE_TYPE_MULTI))
+         && !HasAnyBattleFlags(BATTLE_TYPE_MULTI))
         {
             if (gBattleResources->bufferA[battler][1] == B_ACTION_USE_ITEM)
             {
@@ -326,7 +326,7 @@ static void OpenBagAndChooseItem(enum BattlerId battler)
         gBattlerControllerFuncs[battler] = CompleteWhenChoseItem;
         ReshowBattleScreenDummy();
         CloseMainBattleScreen();
-        if (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE)
+        if (HasAnyBattleFlags(BATTLE_TYPE_FIRST_BATTLE))
             CB2_BagMenuFromBattle();
         else
             InitOldManBag();
@@ -339,7 +339,7 @@ static void CompleteWhenChoseItem(enum BattlerId battler)
     {
         if (IS_FRLG && !BtlCtrl_OakOldMan_TestState2Flag(FIRST_BATTLE_MSG_FLAG_HP_RESTORE)
          && gSpecialVar_ItemId == ITEM_POTION
-         && gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE)
+         && HasAnyBattleFlags(BATTLE_TYPE_FIRST_BATTLE))
         {
             BtlCtrl_OakOldMan_SetState2Flag(FIRST_BATTLE_MSG_FLAG_HP_RESTORE);
             gBattlerControllerFuncs[battler] = PrintOakText_KeepAnEyeOnHP;
@@ -364,7 +364,7 @@ static void Intro_TryShinyAnimShowHealthbox(enum BattlerId battler)
         TryShinyAnimation(GetPartnerBattler(battler), &party[gBattlerPartyIndexes[GetPartnerBattler(battler)]]);
     if (!gBattleSpritesDataPtr->healthBoxesData[battler].ballAnimActive && !gBattleSpritesDataPtr->healthBoxesData[GetPartnerBattler(battler)].ballAnimActive)
     {
-        if (IsDoubleBattle() && !(gBattleTypeFlags & BATTLE_TYPE_MULTI))
+        if (IsDoubleBattle() && !HasAnyBattleFlags(BATTLE_TYPE_MULTI))
         {
             DestroySprite(&gSprites[gBattleControllerData[GetPartnerBattler(battler)]]);
             UpdateHealthboxAttribute(gHealthboxSpriteIds[GetPartnerBattler(battler)],
@@ -666,7 +666,7 @@ static void PrintOakText_KeepAnEyeOnHP(enum BattlerId battler)
 void OakOldManBufferExecCompleted(enum BattlerId battler)
 {
     gBattlerControllerFuncs[battler] = OakOldManBufferRunCommand;
-    if (gBattleTypeFlags & BATTLE_TYPE_LINK)
+    if (HasAnyBattleFlags(BATTLE_TYPE_LINK))
     {
         u8 playerId = GetMultiplayerId();
 
@@ -683,7 +683,7 @@ static void OakOldManHandleDrawTrainerPic(enum BattlerId battler)
 {
     enum TrainerPicID trainerPicId;
 
-    if (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE)
+    if (HasAnyBattleFlags(BATTLE_TYPE_FIRST_BATTLE))
         trainerPicId = GetPlayerTrainerPic(gSaveBlock2Ptr->playerGender, GAME_VERSION);
     else
         trainerPicId = TRAINER_PIC_OLD_MAN;
@@ -695,7 +695,7 @@ static void OakOldManHandleTrainerSlide(enum BattlerId battler)
 {
     enum TrainerPicID trainerPicId;
 
-    if (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE)
+    if (HasAnyBattleFlags(BATTLE_TYPE_FIRST_BATTLE))
         trainerPicId = GetPlayerTrainerPic(gSaveBlock2Ptr->playerGender, GAME_VERSION);
     else
         trainerPicId = TRAINER_PIC_OLD_MAN;
@@ -710,7 +710,7 @@ static void OakOldManHandlePrintString(enum BattlerId battler)
     gBattle_BG0_X = 0;
     gBattle_BG0_Y = 0;
     stringId = (u16 *)(&gBattleResources->bufferA[battler][2]);
-    if (gBattleTypeFlags & BATTLE_TYPE_CATCH_TUTORIAL && *stringId == 1)
+    if (HasAnyBattleFlags(BATTLE_TYPE_CATCH_TUTORIAL) && *stringId == 1)
     {
         OakOldManBufferExecCompleted(battler);
     }
@@ -721,7 +721,7 @@ static void OakOldManHandlePrintString(enum BattlerId battler)
         //     BattlePutTextOnWindow(gDisplayedStringBattle, (B_WIN_MSG | B_TEXT_FLAG_NPC_CONTEXT_FONT));
         // else
             BattlePutTextOnWindow(gDisplayedStringBattle, B_WIN_MSG);
-        if (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE)
+        if (HasAnyBattleFlags(BATTLE_TYPE_FIRST_BATTLE))
         {
             switch (*stringId)
             {
@@ -762,7 +762,7 @@ static void HandleChooseActionAfterDma3(enum BattlerId battler)
     {
         gBattle_BG0_X = 0;
         gBattle_BG0_Y = 160;
-        if (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE)
+        if (HasAnyBattleFlags(BATTLE_TYPE_FIRST_BATTLE))
             gBattlerControllerFuncs[battler] = HandleInputChooseAction;
         else
             gBattlerControllerFuncs[battler] = SimulateInputChooseAction;
@@ -779,7 +779,7 @@ static void OakOldManHandleChooseAction(enum BattlerId battler)
     for (i = 0; i < MAX_MON_MOVES; ++i)
         ActionSelectionDestroyCursorAt((u8)i);
     ActionSelectionCreateCursorAt(gActionSelectionCursor[battler], 0);
-    if (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE)
+    if (HasAnyBattleFlags(BATTLE_TYPE_FIRST_BATTLE))
     {
         PREPARE_MON_NICK_BUFFER(gBattleTextBuff1, battler, gBattlerPartyIndexes[battler]);
         BattleStringExpandPlaceholdersToDisplayedString(gText_WhatWillPkmnDo);
@@ -801,7 +801,7 @@ static void OakHandleChooseMove_WaitDma3(enum BattlerId battler)
 
 static void OakOldManHandleChooseMove(enum BattlerId battler)
 {
-    if (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE)
+    if (HasAnyBattleFlags(BATTLE_TYPE_FIRST_BATTLE))
     {
         InitMoveSelectionsVarsAndStrings(battler);
         gBattlerControllerFuncs[battler] = OakHandleChooseMove_WaitDma3;
@@ -871,7 +871,7 @@ static void OakOldManHandleFaintingCry(enum BattlerId battler)
 
 static void OakOldManHandleIntroTrainerBallThrow(enum BattlerId battler)
 {
-    if (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE)
+    if (HasAnyBattleFlags(BATTLE_TYPE_FIRST_BATTLE))
     {
         enum TrainerPicID trainerPicID = GetPlayerTrainerPic(gSaveBlock2Ptr->playerGender, GAME_VERSION);
         const u16 *trainerPal = GetTrainerBackPicPalette(trainerPicID);
@@ -931,7 +931,7 @@ static void OakOldManHandleEndLinkBattle(enum BattlerId battler)
     FadeOutMapMusic(5);
     BeginFastPaletteFade(3);
     OakOldManBufferExecCompleted(battler);
-    if (!(gBattleTypeFlags & BATTLE_TYPE_IS_MASTER) && gBattleTypeFlags & BATTLE_TYPE_LINK)
+    if (!HasAnyBattleFlags(BATTLE_TYPE_IS_MASTER) && HasAnyBattleFlags(BATTLE_TYPE_LINK))
         gBattlerControllerFuncs[battler] = OakOldManSetBattleEndCallbacks;
 }
 

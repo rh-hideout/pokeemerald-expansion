@@ -181,6 +181,7 @@ enum MoveEndState
     MOVEEND_CRIT_PROTECT_MESSAGE_ALLIED_SIDE, // Crit message, then target couldn't protect itself for each target
     MOVEEND_ENDURE_DAMAGE_MESSAGE_ALLIED_SIDE, // Endure, False Swipe/Hold Back, Sturdy, Focus Sash/Focus Band, Friendship, in that order
     MOVEEND_PROTECT_LIKE_EFFECTS_ALLIED_SIDE,
+    MOVEEND_FLING_ITEM_REMOVAL,
     MOVEEND_ADDITIONAL_EFFECTS_ALLIED_SIDE,
     MOVEEND_ABSORB_ALLIED_SIDE,
     MOVEEND_STATUS_IMMUNITY_ABILITIES_ALLIED_SIDE, // TODO: Do berries come before????

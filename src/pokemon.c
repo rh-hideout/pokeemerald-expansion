@@ -1291,7 +1291,7 @@ enum TrainerPicID GetUnionRoomTrainerPic(void)
     u8 linkId;
     u32 arrId;
 
-    if (gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK)
+    if (HasAnyBattleFlags(BATTLE_TYPE_RECORDED_LINK))
         linkId = gRecordedBattleMultiplayerId ^ 1;
     else
         linkId = GetMultiplayerId() ^ 1;
@@ -1306,7 +1306,7 @@ enum TrainerClassID GetUnionRoomTrainerClass(void)
     u8 linkId;
     u32 arrId;
 
-    if (gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK)
+    if (HasAnyBattleFlags(BATTLE_TYPE_RECORDED_LINK))
         linkId = gRecordedBattleMultiplayerId ^ 1;
     else
         linkId = GetMultiplayerId() ^ 1;
@@ -4849,7 +4849,7 @@ void AdjustFriendship(struct Pokemon *mon, u8 event)
         if (event == FRIENDSHIP_EVENT_LEAGUE_BATTLE)
         {
             // Only if it's a trainer battle with league progression significance
-            if (!(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
+            if (!IsTrainerBattle())
                 return;
 
             if (IsSpecialTrainer(TRAINER_BATTLE_PARAM.opponentA))
@@ -5076,7 +5076,7 @@ bool32 IsSpeciesInHoennDex(enum Species species)
 
 u16 GetBattleBGM(void)
 {
-    if (gBattleTypeFlags & BATTLE_TYPE_LEGENDARY)
+    if (HasAnyBattleFlags(BATTLE_TYPE_LEGENDARY))
     {
         switch (GetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_SPECIES))
         {
@@ -5096,17 +5096,17 @@ u16 GetBattleBGM(void)
             return MUS_RG_VS_LEGEND;
         }
     }
-    else if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
+    else if (HasAnyBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
     {
         return MUS_VS_TRAINER;
     }
-    else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
+    else if (IsTrainerBattle())
     {
         enum TrainerClassID trainerClass;
 
-        if (gBattleTypeFlags & BATTLE_TYPE_FRONTIER)
+        if (HasAnyBattleFlags(BATTLE_TYPE_FRONTIER))
             trainerClass = GetFrontierOpponentClass(TRAINER_BATTLE_PARAM.opponentA);
-        else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_HILL)
+        else if (HasAnyBattleFlags(BATTLE_TYPE_TRAINER_HILL))
             trainerClass = TRAINER_CLASS_EXPERT;
         else
             trainerClass = GetTrainerClassFromId(TRAINER_BATTLE_PARAM.opponentA);
@@ -5126,7 +5126,7 @@ u16 GetBattleBGM(void)
         case TRAINER_CLASS_CHAMPION:
             return MUS_VS_CHAMPION;
         case TRAINER_CLASS_RIVAL:
-            if (gBattleTypeFlags & BATTLE_TYPE_FRONTIER)
+            if (HasAnyBattleFlags(BATTLE_TYPE_FRONTIER))
                 return MUS_VS_RIVAL;
             if (!StringCompare(GetTrainerNameFromId(TRAINER_BATTLE_PARAM.opponentA), gText_BattleWallyName))
                 return MUS_VS_TRAINER;
@@ -5389,7 +5389,7 @@ void SetWildMonHeldItem(void)
 {
     u16 rnd;
     enum Species species;
-    u16 count = (WILD_DOUBLE_BATTLE) ? 2 : 1;
+    u16 count = (IsWildDoubleBattle()) ? 2 : 1;
     u16 i;
     bool32 itemHeldBoost = CanFirstMonBoostHeldItemRarity();
     u16 chanceNoItem = itemHeldBoost ? 20 : 45;
@@ -5450,7 +5450,7 @@ bool8 IsMonShiny(struct Pokemon *mon)
 
 const u8 *GetTrainerPartnerName(void)
 {
-    if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
+    if (HasAnyBattleFlags(BATTLE_TYPE_INGAME_PARTNER))
     {
         GetFrontierTrainerName(gStringVar1, gPartnerTrainerId);
         return gStringVar1;
@@ -5497,7 +5497,7 @@ static void Task_PokemonSummaryAnimateAfterDelay(u8 taskId)
 
 void BattleAnimateFrontSprite(struct Sprite *sprite, enum Species species, bool8 noCry, u8 panMode)
 {
-    if (gHitMarker & HITMARKER_NO_ANIMATIONS && !(gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK)))
+    if (gHitMarker & HITMARKER_NO_ANIMATIONS && !HasAnyBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
         DoMonFrontSpriteAnimation(sprite, species, noCry, panMode | SKIP_FRONT_ANIM);
     else
         DoMonFrontSpriteAnimation(sprite, species, noCry, panMode);
@@ -5518,7 +5518,7 @@ void DoMonFrontSpriteAnimation(struct Sprite *sprite, enum Species species, bool
         pan = 0;
         break;
     }
-    if (panModeAnimFlag & SKIP_FRONT_ANIM || (gBattleTypeFlags & BATTLE_TYPE_GHOST))
+    if (panModeAnimFlag & SKIP_FRONT_ANIM || (HasAnyBattleFlags(BATTLE_TYPE_GHOST)))
     {
         // No animation, only check if cry needs to be played
         if (!noCry)
@@ -5580,7 +5580,7 @@ void StopPokemonAnimationDelayTask(void)
 
 void BattleAnimateBackSprite(struct Sprite *sprite, enum Species species)
 {
-    if (gHitMarker & HITMARKER_NO_ANIMATIONS && !(gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK)))
+    if (gHitMarker & HITMARKER_NO_ANIMATIONS && !HasAnyBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
     {
         sprite->callback = SpriteCallbackDummy;
     }
@@ -5684,7 +5684,7 @@ bool8 HasTwoFramesAnimation(enum Species species)
 
 bool8 ShouldSkipFriendshipChange(void)
 {
-    if (gMain.inBattle && gBattleTypeFlags & (BATTLE_TYPE_FRONTIER))
+    if (gMain.inBattle && HasAnyBattleFlags(BATTLE_TYPE_FRONTIER))
         return TRUE;
     if (!gMain.inBattle && (InBattlePike() || CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE))
         return TRUE;
