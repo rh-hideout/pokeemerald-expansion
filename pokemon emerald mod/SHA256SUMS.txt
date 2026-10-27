@@ -1,0 +1,7 @@
+c734fd301a16c2cec32a206bb7b296d09a8acac106140282253922adbcd963f7  Pokemon Emerald - Consistent Map Randomizer.gba
+6a11b16a646abfa9bb5e5dcd44392ca25cef6d0848ec9772b6bdcf303e22bc6c  Pokemon Emerald - Level 100 Trainers.gba
+0f3edd5b48802815bc9dc0a9f5d57dfc55979ce6b3b9c644ea2354eae33823e9  Pokemon Emerald - Nuzlocke Seven Rules.gba
+efa4785efc076aacc44e447a224e4469bb2292165404af8cd3efbd1c8910513b  Pokemon Emerald - Party Shuffle After Trainers.gba
+4b2af08aa13768551a5b03eb3bd8fc7eab6890f5966c3f953447ed80b5c6b8d2  Pokemon Emerald - Random Evolution Every Level.gba
+66011a38cbce61c974aa322f8b42ec4ae01fc89835e1b6668384a12cbf1b1f73  Pokemon Emerald - Random Trainers and Levels.gba
+258e0cae36e083972dacccf3eb1bbf3733057dd3e5c5f82bc01f7913cb35a1b8  Pokemon Emerald - Trainers legendary pokemon.gba
