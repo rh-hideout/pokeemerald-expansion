@@ -175,8 +175,7 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
     defMon = GetBattlerMon(gBattlerTarget);
     moveSlot = GetBattlerMoveSlotId(gBattlerAttacker, gBattleMsgDataPtr->currentMove);
 
-    if (BattleSideHasTwoTrainers(atkSide)
-        && gBattlerAttacker & BIT_FLANK)
+    if (BattleSideHasTwoTrainers(atkSide) && gBattlerAttacker & BIT_FLANK)
     {
         atkPartyIndex += MULTI_PARTY_SIZE;
     }
