@@ -2593,6 +2593,8 @@
 	.byte \difficulty
 	.endm
 
+	@ Forces a save in the middle of scripting.
+	@ Requires `release` immediately after to clear the Save Dialogue and Save Info Window.
 	.macro forcesave
 	callnative Script_ForceSaveGame
 	waitstate
