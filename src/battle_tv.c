@@ -181,8 +181,7 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
         atkPartyIndex += MULTI_PARTY_SIZE;
     }
 
-    if (BattleSideHasTwoTrainers(effSide)
-        && gEffectBattler & BIT_FLANK)
+    if (BattleSideHasTwoTrainers(effSide) && gEffectBattler & BIT_FLANK)
     {
         effPartyIndex += MULTI_PARTY_SIZE;
     }
