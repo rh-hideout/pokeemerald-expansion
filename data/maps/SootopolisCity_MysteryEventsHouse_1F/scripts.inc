@@ -113,7 +113,7 @@ SootopolisCity_MysteryEventsHouse_1F_EventScript_DeclineBattle::
 SootopolisCity_MysteryEventsHouse_1F_EventScript_ChooseParty::
 	msgbox SootopolisCity_MysteryEventsHouse_1F_Text_KeepItTo3On3, MSGBOX_DEFAULT
 	fadescreen FADE_TO_BLACK
-	choosepartyforbattle MULTI_PARTY_SIZE
+	choosepartyforbattle 3
 	return
 
 SootopolisCity_MysteryEventsHouse_1F_EventScript_EnterBasementNorth::
