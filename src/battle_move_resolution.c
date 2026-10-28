@@ -1639,7 +1639,7 @@ static bool32 CanPledgeComboAttackHappen(struct BattleCalcValues *cv)
 
         gBattlerByTurnOrder[currPledgeUser++] = partner;
 
-        for (u32 i = 0; newTurnOrder[i] != 0xFF && i < 2; i++)
+        for (u32 i = 0; i < ARRAY_COUNT(newTurnOrder) && newTurnOrder[i] != 0xFF; i++)
             gBattlerByTurnOrder[currPledgeUser++] = newTurnOrder[i];
 
         gBattleStruct->pledgeState = PLEDGE_COMBO_WAITING;
