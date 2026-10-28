@@ -102,11 +102,12 @@ DOUBLE_BATTLE_TEST("Symbiosis triggers after partner flings its item")
         TURN { MOVE(playerLeft, MOVE_FLING, target: opponentLeft); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, playerLeft);
-        MESSAGE("The opposing Staravia was burned!");
-        STATUS_ICON(opponentLeft, STATUS1_BURN);
         // symbiosis triggers
         ABILITY_POPUP(playerRight, ABILITY_SYMBIOSIS);
         MESSAGE("Oranguru shared its Toxic Orb with Wobbuffet!");
+        // Probably not the right order for Gen7+ Symbiosis
+        MESSAGE("The opposing Staravia was burned!");
+        STATUS_ICON(opponentLeft, STATUS1_BURN);
         // end of turn, wobb gets poisoned
         MESSAGE("Wobbuffet was badly poisoned!");
         STATUS_ICON(playerLeft, STATUS1_TOXIC_POISON);

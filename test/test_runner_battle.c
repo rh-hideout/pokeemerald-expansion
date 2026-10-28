@@ -566,7 +566,7 @@ static void BattleTest_Run(void *data)
                 Test_ExitWithResult(TEST_RESULT_INVALID, SourceLine(0), "%d PLAYER Pokemon required", requiredPartySizes[trainer]);
                 break;
             case B_TRAINER_OPPONENT_A:
-                if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
+                if (HasAnyBattleFlags(BATTLE_TYPE_TWO_OPPONENTS))
                     Test_ExitWithResult(TEST_RESULT_INVALID, SourceLine(0), "%d OPPONENT_A Pokemon required", requiredPartySizes[trainer]);
                 else
                     Test_ExitWithResult(TEST_RESULT_INVALID, SourceLine(0), "%d OPPONENT Pokemon required", requiredPartySizes[trainer]);
@@ -3231,7 +3231,7 @@ void ExpectSendOut(u32 sourceLine, struct BattlePokemon *battler, enum PartySlot
     if (!(DATA.actionBattlers & (1 << battlerId)))
     { // Multi test partner trainers want setting to PlayerPartner controller even if no move set in this case.
         if (IsAITest() && (((battlerId & BIT_SIDE) == B_SIDE_OPPONENT) // If Move was not specified, allow any move used.
-         || ((gBattleTypeFlags & BATTLE_TYPE_MULTI) && Test_GetBattlerTrainer(battlerId) == B_TRAINER_PARTNER)))
+         || (HasAnyBattleFlags(BATTLE_TYPE_MULTI) && Test_GetBattlerTrainer(battlerId) == B_TRAINER_PARTNER)))
         {
             SetAiActionToPass(sourceLine, battlerId);
         }

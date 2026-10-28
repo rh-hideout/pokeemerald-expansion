@@ -2,6 +2,7 @@
 #include "battle.h"
 #include "battle_anim.h"
 #include "battle_controllers.h"
+#include "battle_setup.h"
 #include "battle_interface.h"
 #include "malloc.h"
 #include "pokemon.h"
@@ -36,9 +37,9 @@ void CloseMainBattleScreen(void)
 
 void AllocateBattleResources(void)
 {
-    if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_TOWER && gMapHeader.regionMapSectionId == MAPSEC_TRAINER_TOWER_2)
+    if (HasAnyBattleFlags(BATTLE_TYPE_TRAINER_TOWER) && gMapHeader.regionMapSectionId == MAPSEC_TRAINER_TOWER_2)
         InitTrainerTowerBattleStruct();
-    else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_HILL)
+    else if (HasAnyBattleFlags(BATTLE_TYPE_TRAINER_HILL))
         InitTrainerHillBattleStruct();
 
     gBattleStruct = AllocZeroed(sizeof(*gBattleStruct));
@@ -63,7 +64,7 @@ void AllocateBattleResources(void)
 
     AllocateBattleGfxResources();
 
-    if (gBattleTypeFlags & BATTLE_TYPE_SECRET_BASE)
+    if (HasAnyBattleFlags(BATTLE_TYPE_SECRET_BASE))
     {
         u16 currSecretBaseId = VarGet(VAR_CURRENT_SECRET_BASE);
         CreateSecretBaseEnemyParty(&gSaveBlock1Ptr->secretBases[currSecretBaseId]);
@@ -72,9 +73,9 @@ void AllocateBattleResources(void)
 
 void FreeBattleResources(void)
 {
-    if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_TOWER && gMapHeader.regionMapSectionId == MAPSEC_TRAINER_TOWER_2)
+    if (HasAnyBattleFlags(BATTLE_TYPE_TRAINER_TOWER) && gMapHeader.regionMapSectionId == MAPSEC_TRAINER_TOWER_2)
         FreeTrainerTowerBattleStruct();
-    else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_HILL)
+    else if (HasAnyBattleFlags(BATTLE_TYPE_TRAINER_HILL))
         FreeTrainerHillBattleStruct();
 
     memset(&gFieldTimers, 0, sizeof(struct FieldTimer));
@@ -131,14 +132,16 @@ void SwitchPartyOrderInGameMulti(enum BattlerId battler, enum PartySlot partyId)
 {
     if (IsOnPlayerSide(battler))
     {
-        s32 i;
         enum PartySlot battlerPartyId = gBattlerPartyIndexes[battler];
         enum PartySlot switchInPartyId = partyId;
         enum BattleTrainer trainer = GetBattlerTrainer(battler);
+        enum PartyBattleOrder battlerBattleSlot = PARTY_BATTLE_ORDER_0;
+        enum PartyBattleOrder switchinBattleSlot = PARTY_BATTLE_ORDER_0;
+        bool32 halfTeam = IsHalfTeamMultiBattle();
 
         // In 6v6 multis, the partner party is stored in gParties[B_TRAINER_PARTNER]
         // and uses indexes 0-2, but we still use the combined party order.
-        if (IsMultiBattle() && AreMultiPartiesHalfTeams() && trainer == B_TRAINER_PARTNER)
+        if (halfTeam && trainer == B_TRAINER_PARTNER)
         {
             battlerPartyId = (enum PartySlot)(battlerPartyId + MULTI_PARTY_SIZE);
             switchInPartyId = (enum PartySlot)(switchInPartyId + MULTI_PARTY_SIZE);
@@ -149,18 +152,21 @@ void SwitchPartyOrderInGameMulti(enum BattlerId battler, enum PartySlot partyId)
             if (!IsOnPlayerSide(battlerId))
                 continue;
 
-            // Don't update battler's orders for party menu if the switching battler and updating battler
-            // don't share a party, unless it's a 6v6 multi where player and partner party are temporarily
-            // merged for party menu and summary screen viewing
-            if (!(IsMultiBattle() && AreMultiPartiesHalfTeams()) && !BattlersShareParty(battler, battlerId))
+            // Player and partner party are merged for party menu and summary screen
+            // viewing purposes in 6v6 multis, so we need a specific exception here
+            if (!halfTeam && !BattlersShareParty(battler, battlerId))
                 continue;
 
-            for (i = 0; i < (int)ARRAY_COUNT(gBattlePartyCurrentOrder); i++)
+            int battlePartyCurrentOrderCount = (int)ARRAY_COUNT(gBattlePartyCurrentOrder);
+
+            for (s32 i = 0; i < battlePartyCurrentOrderCount; i++)
                 gBattlePartyCurrentOrder[i] = gBattleStruct->battlerPartyOrders[battlerId][i];
 
-            SwitchPartyMonSlots(GetBattleSlotFromBattlePartyId(battlerPartyId), GetBattleSlotFromBattlePartyId(switchInPartyId));
+            battlerBattleSlot = GetBattleSlotFromBattlePartyId(battlerPartyId);
+            switchinBattleSlot = GetBattleSlotFromBattlePartyId(switchInPartyId);
+            SwitchPartyMonSlots(battlerBattleSlot, switchinBattleSlot);
 
-            for (i = 0; i < (int)ARRAY_COUNT(gBattlePartyCurrentOrder); i++)
+            for (s32 i = 0; i < battlePartyCurrentOrderCount; i++)
                 gBattleStruct->battlerPartyOrders[battlerId][i] = gBattlePartyCurrentOrder[i];
         }
     }
@@ -275,4 +281,14 @@ struct Pokemon* GetBattlerMon(enum BattlerId battler)
     enum PartySlot index = gBattlerPartyIndexes[battler];
 
     return &GetBattlerParty(battler)[index];
+}
+
+bool32 IsHalfTeamMultiBattle(void)
+{
+    return (IsMultiBattle() && AreMultiPartiesHalfTeams());
+}
+
+bool32 IsFullTeamMultiBattle(void)
+{
+    return (IsMultiBattle() && !AreMultiPartiesHalfTeams());
 }

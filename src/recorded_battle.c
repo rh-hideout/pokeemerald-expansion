@@ -106,7 +106,7 @@ void RecordedBattle_SetTrainerInfo(void)
         gRngValue = gRecordedBattleRngSeed;
     }
 
-    if (gBattleTypeFlags & BATTLE_TYPE_LINK)
+    if (HasAnyBattleFlags(BATTLE_TYPE_LINK))
     {
         // Link recorded battle, record info for all trainers
         u8 linkPlayersCount;
@@ -217,7 +217,7 @@ void RecordedBattle_RecordAllBattlerData(u8 *src)
     u8 idx = 2;
     u8 size;
 
-    if (!(gBattleTypeFlags & BATTLE_TYPE_LINK))
+    if (!HasAnyBattleFlags(BATTLE_TYPE_LINK))
         return;
 
     for (i = 0; i < GetLinkPlayerCount(); i++)
@@ -226,7 +226,7 @@ void RecordedBattle_RecordAllBattlerData(u8 *src)
             return;
     }
 
-    if (!(gBattleTypeFlags & BATTLE_TYPE_IS_MASTER))
+    if (!HasAnyBattleFlags(BATTLE_TYPE_IS_MASTER))
     {
         for (size = *src; size != 0;)
         {
@@ -648,7 +648,7 @@ void RecordedBattle_CopyBattlerMoves(enum BattlerId battler)
 
     if (!IsOnPlayerSide(battler))
         return;
-    if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
+    if (HasAnyBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
         return;
     if (sRecordMode == B_RECORD_MODE_PLAYBACK)
         return;
@@ -665,7 +665,7 @@ void RecordedBattle_CheckMovesetChanges(u8 mode)
 {
     s32 j, k;
 
-    if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
+    if (HasAnyBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
         return;
 
     for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)

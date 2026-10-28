@@ -74,7 +74,7 @@ bool32 CanTerastallize(enum BattlerId battler)
         return FALSE;
 
     // Prevents Zigzagoon from terastalizing in vanilla.
-    if (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE && !IsOnPlayerSide(battler))
+    if (HasAnyBattleFlags(BATTLE_TYPE_FIRST_BATTLE) && !IsOnPlayerSide(battler))
         return FALSE;
 
     if (TESTING || !IsOnPlayerSide(battler))

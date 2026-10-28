@@ -3283,14 +3283,14 @@ static void Overview_DrawTrainerNameBox(enum BattleSide side)
 
 static const u8 *GetTrainerNameForBattler(enum BattlerId battler)
 {
-    if (gBattleTypeFlags & BATTLE_TYPE_LINK)
+    if (HasAnyBattleFlags(BATTLE_TYPE_LINK))
     {
         return gLinkPlayers[GetBattlerMultiplayerId(battler)].name;
     }
 
     if (IsOnPlayerSide(battler))
     {
-        if (GetBattlerPosition(battler) == B_POSITION_PLAYER_RIGHT && (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER))
+        if (GetBattlerPosition(battler) == B_POSITION_PLAYER_RIGHT && (HasAnyBattleFlags(BATTLE_TYPE_INGAME_PARTNER)))
         {
             static u8 trainerName[TRAINER_NAME_LENGTH + 1];
             GetFrontierTrainerName(trainerName, gPartnerTrainerId);
@@ -3375,7 +3375,7 @@ static bool32 ShouldShowTrainerNames(void)
     switch (B_INFO_SHOW_TRAINER_NAMES)
     {
     case B_INFO_SHOW_TRAINER_NAMES_BLANK:  return FALSE;
-    case B_INFO_SHOW_TRAINER_NAMES_LINK:   return gBattleTypeFlags & BATTLE_TYPE_LINK;
+    case B_INFO_SHOW_TRAINER_NAMES_LINK:   return HasAnyBattleFlags(BATTLE_TYPE_LINK);
     case B_INFO_SHOW_TRAINER_NAMES_ALWAYS: return TRUE;
     }
 
@@ -3502,10 +3502,10 @@ static const u8 *GetSideTrainerName(enum BattleSide side)
 
 static u32 GetOpponentTrainerCount(void)
 {
-    if (!(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
+    if (!IsTrainerBattle())
         return 0;
 
-    if ((gBattleTypeFlags & (BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_MULTI)) && !BATTLE_TWO_VS_ONE_OPPONENT)
+    if (HasAnyBattleFlags(BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_MULTI) && !IsMultiVsOneOpponentBattle())
         return 2;
 
     return 1;
