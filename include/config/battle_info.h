@@ -1,6 +1,8 @@
 #ifndef GUARD_CONFIG_BATTLE_INFO_H
 #define GUARD_CONFIG_BATTLE_INFO_H
 
+#define B_INFO_ENABLED FALSE // Will battle info button be shown on battle screen
+
 // Battle Info UI settings
 #define B_INFO_OPPOSING_INFORMATION FALSE // Shows abilities and items for opposing Pokémon
 #define B_INFO_ALWAYS_SHOW_ACCURATE_DURATION FALSE // Shows the increased duration of Light Clay / Weather Rocks / Terrain Extenders for both sides

@@ -29,6 +29,7 @@
 #include "item_icon.h"
 #include "item_use.h"
 #include "test_runner.h"
+#include "config/battle_info.h"
 #include "constants/battle_anim.h"
 #include "constants/rgb.h"
 #include "constants/songs.h"
@@ -3129,6 +3130,9 @@ void TryToHideMoveInfoWindow(void)
 
 void TryToAddBattleStatusHint(void)
 {
+    if (!B_INFO_ENABLED)
+        return;
+
     if (B_BATTLE_INFO_BUTTON == L_BUTTON && gSaveBlock2Ptr->optionsButtonMode == OPTIONS_BUTTON_MODE_L_EQUALS_A)
         return;
 
