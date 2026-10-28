@@ -34,6 +34,7 @@
 #include "util.h"
 #include "window.h"
 #include "line_break.h"
+#include "config/battle_info.h"
 #include "constants/battle_anim.h"
 #include "constants/battle_move_effects.h"
 #include "constants/battle_partner.h"
@@ -305,7 +306,8 @@ static void HandleInputChooseAction(enum BattlerId battler)
         }
     }
 
-    if (JOY_NEW(B_BATTLE_INFO_BUTTON)
+    if (B_INFO_ENABLED
+     && JOY_NEW(B_BATTLE_INFO_BUTTON)
      && !(B_BATTLE_INFO_BUTTON == L_BUTTON && gSaveBlock2Ptr->optionsButtonMode == OPTIONS_BUTTON_MODE_L_EQUALS_A))
     {
         TryToHideBattleStatusHint();
