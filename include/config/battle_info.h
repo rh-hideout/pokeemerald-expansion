@@ -1,7 +1,7 @@
 #ifndef GUARD_CONFIG_BATTLE_INFO_H
 #define GUARD_CONFIG_BATTLE_INFO_H
 
-#define B_INFO_ENABLED TRUE // Will battle info button be shown on battle screen
+#define B_INFO_ENABLED TRUE // If FALSE, battle info will be disabled
 
 // Battle Info UI settings
 #define B_INFO_OPPOSING_INFORMATION FALSE // Shows abilities and items for opposing Pokémon
