@@ -94,7 +94,7 @@
 
 	.macro choose_mons
 	fadescreen 1
-	choosepartyforbattle, MULTI_PARTY_SIZE
+	choosepartyforbattle MULTI_PARTY_SIZE
 	.endm
 
 	.macro multi_do type:req

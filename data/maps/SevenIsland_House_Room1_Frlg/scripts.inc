@@ -116,7 +116,7 @@ SevenIsland_House_Room1_EventScript_DeclineBattle::
 SevenIsland_House_Room1_EventScript_ChooseParty::
 	msgbox SevenIsland_House_Room1_Text_LimitThreeMonsPerSide
 	fadescreen FADE_TO_BLACK
-	choosepartyforbattle
+	choosepartyforbattle MULTI_PARTY_SIZE
 	return
 
 SevenIsland_House_Room1_EventScript_EnterBattleRoomNorth::
