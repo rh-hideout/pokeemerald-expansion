@@ -4894,6 +4894,7 @@ static void RemoveAllTerrains(void)
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_COUNT;  // failsafe
 
     gFieldTimers.terrain = B_TERRAIN_NONE;
+    gFieldTimers.terrainTimer = 0;
     TryToRevertMimicryAndFlags();
 }
 

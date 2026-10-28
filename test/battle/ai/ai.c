@@ -1680,4 +1680,28 @@ AI_DOUBLE_BATTLE_TEST("AI sees Dragon Darts damage redirecting if one target is 
     }
 }
 
+AI_SINGLE_BATTLE_TEST("Ice Spinner can be chosen by AI regardless if there is a terrain or not")
+{
+    enum Move move;
+
+    PARAMETRIZE { move = MOVE_ELECTRIC_TERRAIN; }
+    PARAMETRIZE { move = MOVE_NONE; }
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_ICE_SPINNER) == EFFECT_ICE_SPINNER);
+        ASSUME(GetMoveEffect(MOVE_ELECTRIC_TERRAIN) == EFFECT_TERRAIN);
+        ASSUME(GetMoveTerrainType(MOVE_ELECTRIC_TERRAIN) == B_TERRAIN_ELECTRIC);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_ICE_SPINNER, MOVE_ICE_SHARD); }
+    } WHEN {
+        if (move == MOVE_ELECTRIC_TERRAIN) {
+            TURN { MOVE(player, MOVE_ELECTRIC_TERRAIN); EXPECT_MOVE(opponent, MOVE_ICE_SPINNER); }
+            TURN { EXPECT_MOVE(opponent, MOVE_ICE_SPINNER); }
+        } else {
+            TURN { EXPECT_MOVE(opponent, MOVE_ICE_SPINNER); }
+        }
+    }
+}
+
 TO_DO_BATTLE_TEST("AI doesn't see stomping tantrum as boosted for switch AI if its last move before fainting failed");

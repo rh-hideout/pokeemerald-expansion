@@ -60,9 +60,37 @@ SINGLE_BATTLE_TEST("Ice Spinner and Steel Roller remove a terrain from field")
     }
 }
 
+SINGLE_BATTLE_TEST("Ice Spinner and Steel Roller cancel the removed terrain's timer")
+{
+    enum Move move;
+    PARAMETRIZE { move = MOVE_ICE_SPINNER; }
+    PARAMETRIZE { move = MOVE_STEEL_ROLLER; }
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_GRASSY_TERRAIN) == EFFECT_TERRAIN);
+        ASSUME(GetMoveTerrainType(MOVE_GRASSY_TERRAIN) == B_TERRAIN_GRASSY);
+        ASSUME(GetMoveEffect(MOVE_STEEL_ROLLER) == EFFECT_STEEL_ROLLER);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_GRASSY_TERRAIN); }
+        TURN { MOVE(player, move); }
+        for (u32 turn = 0; turn < 5; turn++)
+            TURN {}
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_GRASSY_TERRAIN, player);
+        ANIMATION(ANIM_TYPE_MOVE, move, player);
+        MESSAGE("The grass disappeared from the battlefield.");
+        NOT MESSAGE("Mist swirled around the battlefield!");
+    }
+}
+
 SINGLE_BATTLE_TEST("Ice Spinner fails to remove terrain if user faints during attack execution (Gen9)")
 {
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_ELECTRIC_TERRAIN) == EFFECT_TERRAIN);
+        ASSUME(GetMoveTerrainType(MOVE_ELECTRIC_TERRAIN) == B_TERRAIN_ELECTRIC);
+        ASSUME(gItemsInfo[ITEM_LIFE_ORB].holdEffect == HOLD_EFFECT_LIFE_ORB);
         WITH_CONFIG(B_FAINT_MOVE_EFFECT_TIMING, GEN_9);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_LIFE_ORB); HP(1); }
@@ -78,6 +106,9 @@ SINGLE_BATTLE_TEST("Ice Spinner fails to remove terrain if user faints during at
 SINGLE_BATTLE_TEST("Ice Spinner removes terrain if user faints during attack execution (Champions)")
 {
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_ELECTRIC_TERRAIN) == EFFECT_TERRAIN);
+        ASSUME(GetMoveTerrainType(MOVE_ELECTRIC_TERRAIN) == B_TERRAIN_ELECTRIC);
+        ASSUME(MoveMakesContact(MOVE_ICE_SPINNER));
         WITH_CONFIG(B_FAINT_MOVE_EFFECT_TIMING, GEN_CHAMPIONS);
         PLAYER(SPECIES_SHARPEDO) { Ability(ABILITY_ROUGH_SKIN); }
         OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
@@ -90,9 +121,12 @@ SINGLE_BATTLE_TEST("Ice Spinner removes terrain if user faints during attack exe
     }
 }
 
-SINGLE_BATTLE_TEST("Ice Spinner will not be remove Terrain if user is switched out due to Red Card")
+SINGLE_BATTLE_TEST("Ice Spinner will not remove terrain if user is switched out due to Red Card")
 {
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_ELECTRIC_TERRAIN) == EFFECT_TERRAIN);
+        ASSUME(GetMoveTerrainType(MOVE_ELECTRIC_TERRAIN) == B_TERRAIN_ELECTRIC);
+        ASSUME(gItemsInfo[ITEM_RED_CARD].holdEffect == HOLD_EFFECT_RED_CARD);
         WITH_CONFIG(B_FAINT_MOVE_EFFECT_TIMING, GEN_9);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_RED_CARD); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -123,30 +157,12 @@ SINGLE_BATTLE_TEST("Ice Spinner doesn't fail if there is no terrain on the field
     }
 }
 
-AI_SINGLE_BATTLE_TEST("Ice Spinner can be chosen by AI regardless if there is a terrain or not")
-{
-    enum Move move;
-
-    PARAMETRIZE { move = MOVE_ELECTRIC_TERRAIN; }
-    PARAMETRIZE { move = MOVE_NONE; }
-
-    GIVEN {
-        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_ICE_SPINNER, MOVE_ICE_SHARD); }
-    } WHEN {
-        if (move == MOVE_ELECTRIC_TERRAIN) {
-            TURN { MOVE(player, MOVE_ELECTRIC_TERRAIN); EXPECT_MOVE(opponent, MOVE_ICE_SPINNER); }
-            TURN { EXPECT_MOVE(opponent, MOVE_ICE_SPINNER); }
-        } else {
-            TURN { EXPECT_MOVE(opponent, MOVE_ICE_SPINNER); }
-        }
-    }
-}
-
 SINGLE_BATTLE_TEST("Ice Spinner will remove terrain if target is behind a Substitute")
 {
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_GRASSY_TERRAIN) == EFFECT_TERRAIN);
+        ASSUME(GetMoveTerrainType(MOVE_GRASSY_TERRAIN) == B_TERRAIN_GRASSY);
+        ASSUME(GetMoveEffect(MOVE_SUBSTITUTE) == EFFECT_SUBSTITUTE);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
