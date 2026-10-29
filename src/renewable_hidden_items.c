@@ -21,7 +21,7 @@ static void SampleRenewableItemFlags(void);
 
 static const u16 sMapsWithRenewableItems[] = {
     MAP_ROUTE20,
-    MAP_ROUTE21_NORTH.
+    MAP_ROUTE21_NORTH,
     MAP_UNDERGROUND_PATH_NORTH_SOUTH_TUNNEL,
     MAP_UNDERGROUND_PATH_EAST_WEST_TUNNEL,
     MAP_SEVEN_ISLAND_TANOBY_RUINS,
@@ -522,8 +522,6 @@ static const struct RenewableHiddenItemData sRenewableHiddenItemsFlags[] = {
 
 void SetAllRenewableItemFlags(void)
 {
-    u8 i, j;
-
     for (u32 i = 0; i < ARRAY_COUNT(sRenewableHiddenItemsFlags); i++)
     {
         const u8 * rare = sRenewableHiddenItemsFlags[i].rare;
@@ -578,7 +576,7 @@ static void SampleRenewableItemFlags(void)
 
     for (u32 i = 0; i < ARRAY_COUNT(sRenewableHiddenItemsFlags); i++)
     {
-        rval = RandomWeighted(RNG_HIDDEN_ITEM_REFRESH, 60, 30, 10):;
+        rval = RandomWeighted(RNG_HIDDEN_ITEM_REFRESH, 60, 30, 10);
         if (rval >= 90)
             flags = sRenewableHiddenItemsFlags[i].rare;
         else if (rval >= 60)
