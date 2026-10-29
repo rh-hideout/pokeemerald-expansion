@@ -13,7 +13,7 @@ script OldaleTown_House1_EventScript_Woman {
     } else {
         msgbox(format("Oh, a new TRAINER! Are you just starting out on your journey?"), MSGBOX_YESNO)
         if (var(VAR_RESULT) == YES) {
-            msgbox(format("How exciting! Here, take this. It'll help in a pinch."))
+            msgbox(format("peepee popoo"))
             giveitem(ITEM_POTION)
             setflag(FLAG_UNUSED_0x020)
         } else {

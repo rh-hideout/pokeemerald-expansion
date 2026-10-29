@@ -50,8 +50,7 @@ OldaleTown_House1_EventScript_Woman_Text_1:
 
 OldaleTown_House1_EventScript_Woman_Text_2:
 # 16 "data/maps/OldaleTown_House1/scripts.pory"
-	.string "How exciting! Here, take this. It'll help\n"
-	.string "in a pinch.$"
+	.string "peepee popoo$"
 
 OldaleTown_House1_EventScript_Woman_Text_3:
 # 20 "data/maps/OldaleTown_House1/scripts.pory"
