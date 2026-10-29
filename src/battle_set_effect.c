@@ -1063,69 +1063,50 @@ static void HandleSetEffectFling(struct BattleCalcValues *cv, struct SetEffect *
     {
         enum Item item = ITEM_NONE;
 
-        switch (gBattleStruct->flungItem)
-        {
-        case FLUNG_ITEM_NONE:
-            gBattleStruct->flungItem = FLUNG_ITEM_REMOVE;
-            item = gLastUsedItem = gBattleStruct->flingItem = gBattleMons[cv->battlerAtk].item;
-            break;
-        case FLUNG_ITEM_REMOVE:
-        case FLUNG_ITEM_REMOVED:
-            gBattleStruct->flungItem = FLUNG_ITEM_REMOVED;
-            item = gLastUsedItem = gBattleStruct->flingItem;
-            break;
-        }
+        item = gLastUsedItem = gBattleStruct->flingItem;
 
         enum HoldEffect holdEffect = GetItemHoldEffect(item);
 
         if (IsMoveEffectBlockedByTarget(cv->abilities[se->effectBattler]))
         {
-            BattleScriptPush(se->script);
-            gBattlescriptCurrInstr = BattleScript_FlingBlockedByShieldDust;
+            BattleScriptPushAndSet(se->script, BattleScript_FlingBlockedByShieldDust);
             return;
         }
 
         if (GetItemPocket(item) == POCKET_BERRIES)
         {
-            BattleScriptPush(se->script);
-            gBattlescriptCurrInstr = BattleScript_FlingConsumeBerry;
+            BattleScriptPushAndSet(se->script, BattleScript_FlingConsumeBerry);
             return;
         }
-
-        BattleScriptPush(se->script);
-        gBattlescriptCurrInstr = BattleScript_RemoveItem;
-
-        struct SetEffect flingEffect = {0};
-        flingEffect.script = gBattlescriptCurrInstr;
-        flingEffect.effectBattler = se->effectBattler;
 
         switch (holdEffect)
         {
         case HOLD_EFFECT_FLAME_ORB:
-            flingEffect.moveEffect = MOVE_EFFECT_BURN;
-            SetMoveEffect(cv, &flingEffect);
+            se->moveEffect = MOVE_EFFECT_BURN;
+            SetMoveEffect(cv, se);
             break;
         case HOLD_EFFECT_TOXIC_ORB:
-            flingEffect.moveEffect = MOVE_EFFECT_TOXIC;
-            SetMoveEffect(cv, &flingEffect);
+            se->moveEffect = MOVE_EFFECT_TOXIC;
+            SetMoveEffect(cv, se);
             break;
         case HOLD_EFFECT_LIGHT_BALL:
-            flingEffect.moveEffect = MOVE_EFFECT_PARALYSIS;
-            SetMoveEffect(cv, &flingEffect);
+            se->moveEffect = MOVE_EFFECT_PARALYSIS;
+            SetMoveEffect(cv, se);
             break;
         case HOLD_EFFECT_TYPE_POWER:
             if (GetItemSecondaryId(item) == TYPE_POISON)
             {
-                flingEffect.moveEffect = MOVE_EFFECT_POISON;
-                SetMoveEffect(cv, &flingEffect);
+                se->moveEffect = MOVE_EFFECT_POISON;
+                SetMoveEffect(cv, se);
             }
             break;
         case HOLD_EFFECT_FLINCH:
-            flingEffect.moveEffect = MOVE_EFFECT_FLINCH;
-            SetMoveEffect(cv, &flingEffect);
+            se->moveEffect = MOVE_EFFECT_FLINCH;
+            SetMoveEffect(cv, se);
             break;
         case HOLD_EFFECT_MENTAL_HERB:
         case HOLD_EFFECT_WHITE_HERB:
+            BattleScriptPush(se->script);
             ItemBattleEffects(se->effectBattler, 0, holdEffect, IsOnFlingActivation);
             break;
         default:
@@ -2378,7 +2359,7 @@ static void HandleSetEffectSubstitute(struct BattleCalcValues *cv, struct SetEff
 
 static void HandleSetEffectShedTail(struct BattleCalcValues *cv, struct SetEffect *se)
 {
-    if (gBattleTypeFlags & BATTLE_TYPE_ARENA
+    if (HasAnyBattleFlags(BATTLE_TYPE_ARENA)
      || gBattleStruct->battlerState[se->effectBattler].commanderSpecies != SPECIES_NONE
      || gBattleMons[se->effectBattler].volatiles.semiInvulnerable == STATE_COMMANDER
      || !CanBattlerSwitch(se->effectBattler))
@@ -3275,11 +3256,11 @@ static void HandleSetEffectTrick(struct BattleCalcValues *cv, struct SetEffect *
     bool32 notRegularBattleType = (BATTLE_TYPE_LINK | BATTLE_TYPE_EREADER_TRAINER | BATTLE_TYPE_FRONTIER | BATTLE_TYPE_SECRET_BASE | BATTLE_TYPE_RECORDED_LINK);
     bool32 battleTypeTrainer = (B_TRAINERS_KNOCK_OFF_ITEMS == TRUE ? BATTLE_TYPE_TRAINER : 0);
 
-    bool32 opponentCantSwapItems = (gBattleTypeFlags & BATTLE_TYPE_TRAINER_HILL)
-                                || (!IsOnPlayerSide(cv->battlerAtk) && !(gBattleTypeFlags & (notRegularBattleType | battleTypeTrainer)));
+    bool32 opponentCantSwapItems = (HasAnyBattleFlags(BATTLE_TYPE_TRAINER_HILL))
+                                || (!IsOnPlayerSide(cv->battlerAtk) && !HasAnyBattleFlags(notRegularBattleType | battleTypeTrainer));
 
     bool32 isKnockedOff = (GetBattlerPartyState(cv->battlerAtk)->isKnockedOff || GetBattlerPartyState(se->effectBattler)->isKnockedOff);
-    bool32 cantSwapIfKnockedOff = !(gBattleTypeFlags & (notRegularBattleType | battleTypeTrainer)) && isKnockedOff;
+    bool32 cantSwapIfKnockedOff = !HasAnyBattleFlags(notRegularBattleType | battleTypeTrainer) && isKnockedOff;
 
     if (opponentCantSwapItems || cantSwapIfKnockedOff)
     {
@@ -3656,16 +3637,16 @@ static void HandleSetEffectStickyWeb(struct BattleCalcValues *cv, struct SetEffe
 
 static bool32 DoesRoarFail(enum BattlerId battlerAtk, enum BattlerId effectBattler)
 {
-    if (gBattleTypeFlags & BATTLE_TYPE_ARENA)
+    if (HasAnyBattleFlags(BATTLE_TYPE_ARENA))
         return TRUE;
 
-    if (WILD_DOUBLE_BATTLE
+    if (IsWildDoubleBattle()
      && IsOnPlayerSide(battlerAtk)
      && !IsOnPlayerSide(effectBattler)
      && IsWholeSideAlive(effectBattler))
         return TRUE;
 
-    if (WILD_DOUBLE_BATTLE
+    if (IsWildDoubleBattle()
      && !IsOnPlayerSide(battlerAtk)
      && !IsOnPlayerSide(effectBattler))
         return TRUE;

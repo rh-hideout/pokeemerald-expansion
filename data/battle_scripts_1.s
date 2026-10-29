@@ -502,33 +502,19 @@ BattleScript_FlingConsumeBerry::
 	setbyte sBERRY_OVERRIDE, 1 @ override the requirements for eating berries
 	consumeberry BS_TARGET, FALSE
 	setbyte sBERRY_OVERRIDE, 0
-BattleScript_FlingEnd:
-	removeitem BS_ATTACKER @ fallback if a beryy could not be consumed
-	trysymbiosis BS_ATTACKER
 	return
 
 BattleScript_FlingFailConsumeItem::
 	removeitem BS_ATTACKER
 	goto BattleScript_ButItFailed
 
-BattleScript_TargetAvoidsAttackConsumeFlingItem::
-	call BattleScript_BattlerAvoidedAttack
-	removeitem BS_ATTACKER
-	return
-
-BattleScript_TargetProtectedConsumeFlingItem::
-	call BattleScript_TargetProtected
-	removeitem BS_ATTACKER
-	return
-
 BattleScript_FlingBlockedByShieldDust::
 	printstring STRINGID_ITEMWASUSEDUP
 	waitmessage B_WAIT_TIME_LONG
-	removeitem BS_ATTACKER
 	return
 
 BattleScript_RemoveItem::
-	removeitem BS_ATTACKER
+	removeitem BS_SCRIPTING
 	return
 
 BattleScript_PoltergeistMessage::
@@ -1112,7 +1098,6 @@ BattleScript_PowerHerbActivation::
 BattleScript_TwoTurnMoveCharging::
 	waitmessage B_WAIT_TIME_LONG
 	twoturnmoveschargestringandanimation
-	setadditionaleffects @ only onChargeTurnOnly effects will work here
 	return
 
 BattleScript_TwoTurnMovesSecondTurnRet:
@@ -1659,7 +1644,7 @@ BattleScript_LocalBattleLostPrintTrainersWinText::
 	trainerslidein BS_OPPONENT1
 	waitstate
 	printstring STRINGID_TRAINER1WINTEXT
-	jumpifbattletype BATTLE_TYPE_TOWER_LINK_MULTI, BattleScript_LocalBattleLostDoTrainer2WinText
+	jumpifnotbattletype BATTLE_TYPE_TOWER_LINK_MULTI, BattleScript_LocalBattleLostEnd_
 	jumpifnotbattletype BATTLE_TYPE_TWO_OPPONENTS, BattleScript_LocalBattleLostEnd_
 BattleScript_LocalBattleLostDoTrainer2WinText::
 	trainerslideout BS_OPPONENT1
@@ -4052,7 +4037,6 @@ BattleScript_MentalHerbCureRetTaunt:
 	jumpifbyte CMP_BITMASK, cMULTISTRING_CHOOSER, B_MSG_MENTALHERBCURE_TAUNT, BattleScript_MentalHerbCuresTaunt
 BattleScript_MentalHerbCureRetFinish:
 	updatestatusicon BS_SCRIPTING
-	removeitem BS_SCRIPTING
 	return
 
 BattleScript_MentalHerbCuresInfatuation:
@@ -4082,15 +4066,6 @@ BattleScript_MentalHerbCuresTaunt:
 	goto BattleScript_MentalHerbCureRetFinish
 
 BattleScript_WhiteHerbRet::
-	call BattleScript_ItemPopUpScriptingNoFlush
-	playanimation BS_SCRIPTING, B_ANIM_HELD_ITEM_EFFECT
-	printstring STRINGID_PKMNSITEMRESTOREDSTATUS
-	waitmessage B_WAIT_TIME_LONG
-	destroyitempopup
-	removeitem BS_SCRIPTING
-	return
-
-BattleScript_WhiteHerbFling::
 	call BattleScript_ItemPopUpScriptingNoFlush
 	playanimation BS_SCRIPTING, B_ANIM_HELD_ITEM_EFFECT
 	printstring STRINGID_PKMNSITEMRESTOREDSTATUS
