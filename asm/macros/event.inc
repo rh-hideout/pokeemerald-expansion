@@ -3064,11 +3064,14 @@
 
 	@ Opens party menu to select up to a maximum team size for battle (outside of Frontier)
 	.macro choosepartyforbattle size=MULTI_PARTY_SIZE
-	.if \size == 0 || \size >= PARTY_SIZE
-		.error "choosepartyforbattle must use a value between 1 and 5"
-	.endif
+	.if 1 <= \size && \size < PARTY_SIZE
 	setvar VAR_0x8005, \size
 	special ChoosePartyForBattle
+	.elseif \size == PARTY_SIZE
+	setvar VAR_RESULT, 1
+	.else
+	.error "choosepartyforbattle must use a value between 1 and PARTY_SIZE"
+	.endif
 	.endm
 
 	@ Opens party menu to select up to a maximum team size for battle (Frontier)
