@@ -4222,7 +4222,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
              && RandomPercentage(RNG_POISON_TOUCH, 30))
             {
                 gEffectBattler = battler;
-                gBattleScripting.battler = battler = gBattlerAttacker;
+                gBattleScripting.battler = gBattlerAttacker;
                 gBattleScripting.moveEffect = MOVE_EFFECT_POISON;
                 PREPARE_ABILITY_BUFFER(gBattleTextBuff1, gLastUsedAbility);
                 BattleScriptCall(BattleScript_AbilityStatusEffect);
@@ -4236,7 +4236,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                 if (!IsMoveEffectBlockedByTarget(GetBattlerAbility(battler)))
                 {
                     gEffectBattler = battler;
-                    gBattleScripting.battler = battler = gBattlerAttacker;
+                    gBattleScripting.battler = gBattlerAttacker;
                     gBattleScripting.moveEffect = MOVE_EFFECT_TOXIC;
                     PREPARE_ABILITY_BUFFER(gBattleTextBuff1, gLastUsedAbility);
                     BattleScriptCall(BattleScript_AbilityStatusEffect);
@@ -4252,13 +4252,14 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
              && !MoveHasAdditionalEffect(gCurrentMove, MOVE_EFFECT_FLINCH))
             {
                 SetMoveEffectHelper(gBattlerAttacker, battler, MOVE_EFFECT_FLINCH, gBattlescriptCurrInstr, NO_FLAGS);
-                battler = gBattlerAttacker;
                 effect++;
             }
             break;
         default:
             break;
         }
+        // Set the battler back to attacker to have the correct gBattlerAbility
+        battler = gBattlerAttacker;
         break;
     case ABILITYEFFECT_ON_STATUS_CHANGE:
         switch (ability)
