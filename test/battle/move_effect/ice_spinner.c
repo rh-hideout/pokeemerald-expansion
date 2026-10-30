@@ -82,6 +82,9 @@ SINGLE_BATTLE_TEST("Ice Spinner and Steel Roller cancel the removed terrain's ti
         ANIMATION(ANIM_TYPE_MOVE, move, player);
         MESSAGE("The grass disappeared from the battlefield.");
         NOT MESSAGE("Mist swirled around the battlefield!");
+    } THEN {
+        EXPECT_EQ(gFieldTimers.terrain, B_TERRAIN_NONE);
+        EXPECT_EQ(gFieldTimers.terrainTimer, 0);
     }
 }
 
