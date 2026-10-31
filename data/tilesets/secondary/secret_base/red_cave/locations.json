@@ -1,0 +1,6 @@
+{
+    "palettes": "secondary/secret_base/red_cave/palettes",
+    "tiles": "secondary/secret_base/red_cave/tiles.png",
+    "metatiles": "secondary/secret_base/metatiles.bin",
+    "metatile_attributes": "secondary/secret_base/metatile_attributes.bin"
+}

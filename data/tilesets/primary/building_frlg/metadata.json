@@ -1,0 +1,9 @@
+{
+    "tiles": 640,
+    "metatiles": 640,
+    "has_triple_layer": false,
+    "has_32bit_attributes": true,
+    "palettes_start": 0,
+    "padded_metatiles": 640,
+    "palettes_end": 7
+}

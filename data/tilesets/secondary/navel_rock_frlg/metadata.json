@@ -1,0 +1,9 @@
+{
+    "tiles": 288,
+    "metatiles": 220,
+    "has_triple_layer": false,
+    "has_32bit_attributes": true,
+    "metatile_offset": 640,
+    "palettes_start": 7,
+    "palettes_end": 13
+}
