@@ -62,13 +62,17 @@ enum Gimmick GetActiveGimmick(enum BattlerId battler)
     return gBattleStruct->gimmick.activeGimmick[GetBattlerTrainer(battler)][gBattlerPartyIndexes[battler]];
 }
 
-// Returns whether a trainer mon is intended to use an unrestrictive gimmick via .useGimmick (i.e Tera).
 bool32 ShouldTrainerBattlerUseGimmick(enum BattlerId battler, enum Gimmick gimmick)
 {
     // There are no trainer party settings in battles, but the AI needs to know which gimmick to use.
     #if TESTING
     return gimmick == TestRunner_Battle_GetChosenGimmick(GetBattlerTrainer(battler), gBattlerPartyIndexes[battler]);
     #else
+
+    // Wild pokemon should not use gimmick
+    if (!(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
+        return FALSE;
+
     // The player can bypass these checks because they can choose through the controller.
     if (IsOnPlayerSide(battler) && !((gBattleTypeFlags & BATTLE_TYPE_MULTI) && GetBattlerPosition(battler) == B_POSITION_PLAYER_RIGHT))
         return TRUE;
