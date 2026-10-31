@@ -1670,7 +1670,7 @@ static void Cmd_getexp(void)
     CMD_ARGS(u8 battler);
 
     enum HoldEffect holdEffect;
-    s32 i; // also used as stringId
+    s32 stringId;
     enum PartySlot *expMonId = &gBattleStruct->expGetterMonId;
     u32 currLvl;
 
@@ -1709,7 +1709,7 @@ static void Cmd_getexp(void)
             s32 viaSentIn = 0;
             s32 viaExpShare = 0;
 
-            for (i = 0; i < PARTY_SIZE; i++)
+            for (u32 i = 0; i < PARTY_SIZE; i++)
             {
                 if (!IsValidForBattle(&gParties[B_TRAINER_PLAYER][i]))
                     continue;
@@ -1842,16 +1842,16 @@ static void Cmd_getexp(void)
 
                     if (IsTradedMon(&gParties[B_TRAINER_PLAYER][*expMonId]))
                     {
-                        i = STRINGID_ABOOSTED;
+                        stringId = STRINGID_ABOOSTED;
                     }
                     else
                     {
-                        i = STRINGID_EMPTYSTRING4;
+                        stringId = STRINGID_EMPTYSTRING4;
                     }
 
                     PREPARE_MON_NICK_WITH_PREFIX_BUFFER(gBattleTextBuff1, 0, *expMonId);
                     // buffer 'gained' or 'gained a boosted'
-                    PREPARE_STRING_BUFFER(gBattleTextBuff2, i);
+                    PREPARE_STRING_BUFFER(gBattleTextBuff2, stringId);
                     PREPARE_WORD_NUMBER_BUFFER(gBattleTextBuff3, 6, gBattleStruct->battlerExpReward);
 
                     if (wasSentOut || holdEffect == HOLD_EFFECT_EXP_SHARE)
@@ -3884,6 +3884,10 @@ static void Cmd_removeitem(void)
      && GetMoveEffect(gCurrentMove) != EFFECT_CORROSIVE_GAS)
         GetBattlerPartyState(battler)->usedHeldItem = itemId; // Remember if switched out
 
+    if (GetItemPocket(itemId) == POCKET_BERRIES && GetBattlerAbility(battler) == ABILITY_CUD_CHEW)
+    {
+        gBattleMons[battler].volatiles.cudChewTimer = 2;
+    }
     gBattleMons[battler].item = ITEM_NONE;
     gBattleStruct->battlerState[battler].canPickupItem = TRUE;
     gBattleStruct->adrenalineOrbActivated = FALSE;
@@ -4372,6 +4376,7 @@ static void RemoveAllTerrains(void)
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_COUNT;  // failsafe
 
     gFieldTimers.terrain = B_TERRAIN_NONE;
+    gFieldTimers.terrainTimer = 0;
     TryToRevertMimicryAndFlags();
 }
 
@@ -6079,12 +6084,6 @@ static void Cmd_givecaughtmon(void)
     case GIVECAUGHTMON_GIVE_AND_SHOW_MSG:
     {
         struct Pokemon *caughtMon = GetBattlerMon(GetCatchingBattler());
-        if (B_RESTORE_HELD_BATTLE_ITEMS >= GEN_9)
-        {
-            enum Item lostItem = gBattleStruct->itemLost[B_TRAINER_OPPONENT_A][gBattlerPartyIndexes[GetCatchingBattler()]].originalItem;
-            if (lostItem != ITEM_NONE && GetItemPocket(lostItem) != POCKET_BERRIES)
-                SetMonData(caughtMon, MON_DATA_HELD_ITEM, &lostItem);  // Restore non-berry items
-        }
 
         enum PartySlot emptySlot;
         for (emptySlot = PARTY_SLOT_0; emptySlot < PARTY_SIZE; emptySlot++)

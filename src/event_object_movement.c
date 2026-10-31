@@ -7692,12 +7692,14 @@ static u8 LoadFillColorPalette(u16 color, u16 paletteTag, struct Sprite *sprite)
 static void ObjectEventSetPokeballGfx(struct ObjectEvent *objEvent)
 {
     #if OW_FOLLOWERS_POKEBALLS
-    enum PokeBall ball = BALL_STRANGE;
+    enum PokeBall ball = BALL_POKE;
     if (objEvent->localId == OBJ_EVENT_ID_FOLLOWER)
     {
         struct Pokemon *mon = GetFirstLiveMon();
         if (mon)
             ball = GetMonData(mon, MON_DATA_POKEBALL);
+        else
+            ball = BALL_STRANGE;
     }
 
     if (ball != BALL_POKE && ball < POKEBALL_COUNT)
@@ -7718,7 +7720,11 @@ static void ObjectEventSetPokeballGfx(struct ObjectEvent *objEvent)
 
 bool8 MovementAction_ExitPokeball_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
-    enum Direction direction = gObjectEvents[gPlayerAvatar.objectEventId].facingDirection;
+    enum Direction direction;
+    if (objectEvent->localId == OBJ_EVENT_ID_FOLLOWER)
+        direction = gObjectEvents[gPlayerAvatar.objectEventId].facingDirection;
+    else
+        direction = objectEvent->facingDirection;
     u16 graphicsId = objectEvent->graphicsId;
     objectEvent->invisible = FALSE;
     if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_DASH))

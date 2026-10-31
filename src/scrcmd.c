@@ -3282,6 +3282,7 @@ static bool32 EventEvolution(enum PartySlot partyIndex)
 
 static void TriggerMultipleEvolutions_Repeatable(void)
 {
+    u32 triedEvolvingCopy = gTriedEvolving;
     if (gSpecialVar_Result == EVO_EVENT_SUCCESSFUL)
         gSpecialVar_0x8006++;
 
@@ -3296,9 +3297,11 @@ static void TriggerMultipleEvolutions_Repeatable(void)
         }
     }
 
-    gTriedEvolving = 0;
     gSpecialVar_Result = gSpecialVar_0x8006;
-    SetMainCallback2(CB2_ReturnToFieldContinueScript);
+    if (triedEvolvingCopy != 0)
+        SetMainCallback2(CB2_ReturnToFieldContinueScript);
+
+    gTriedEvolving = 0;
 }
 
 void Script_TriggerMultipleEvolutions(struct ScriptContext *ctx)

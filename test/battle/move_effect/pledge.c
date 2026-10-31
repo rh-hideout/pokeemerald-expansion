@@ -1127,3 +1127,22 @@ DOUBLE_BATTLE_TEST("Pledge move combo doesn't trigger on opponent's Pledge move 
         HP_BAR(opponentRight);
     }
 }
+
+DOUBLE_BATTLE_TEST("Pledge combo preserves turn order when the first user moves first")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(3); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
+    } WHEN {
+        TURN {
+            MOVE(playerLeft, MOVE_WATER_PLEDGE, target: opponentLeft);
+            MOVE(playerRight, MOVE_FIRE_PLEDGE, target: opponentLeft);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_WATER_PLEDGE, playerRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentRight);
+    }
+}
