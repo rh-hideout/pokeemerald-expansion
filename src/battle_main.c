@@ -5813,11 +5813,7 @@ void ScriptSetTotemBoost(struct ScriptContext *ctx)
 
 bool32 IsWildMonSmart(void)
 {
-#if WE_SMART_WILD_AI_FLAG != 0
     return (FlagGet(WE_SMART_WILD_AI_FLAG));
-#else
-    return FALSE;
-#endif
 }
 
 s32 Factorial(s32 n)
