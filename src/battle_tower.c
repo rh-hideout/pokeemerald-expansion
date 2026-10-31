@@ -1899,6 +1899,7 @@ static u16 GetBattleTentTrainerId(void)
         return 0;
 }
 
+#define FRONTIER_BRAIN_OTID 61226
 struct FacilityMonGenerator GetFacilityMonGenerator(u16 trainerId)
 {
     struct FacilityMonGenerator generator;
@@ -1910,6 +1911,11 @@ struct FacilityMonGenerator GetFacilityMonGenerator(u16 trainerId)
     {
         generator.otId = READ_OTID_FROM_SAVE;
         generator.fixedIV = GetFactoryMonFixedIV(&generator, trainerId);
+    }
+    else if (trainerId == TRAINER_FRONTIER_BRAIN)
+    {
+        generator.otId = FRONTIER_BRAIN_OTID;
+        generator.fixedIV = DO_NOT_USE_FACILITY_IVS;
     }
     else
     {

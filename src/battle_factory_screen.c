@@ -1711,7 +1711,7 @@ static void CreateFrontierFactorySelectableMons()
     {
         u16 monId = gSaveBlock2Ptr->frontier.rentalMons[i].monId;
         sFactorySelectScreen->mons[i].monId = monId;
-        CreateFacilityMon(&sFactorySelectScreen->mons[i].monData, &generator, monId);
+        CreateFacilityMon(&sFactorySelectScreen->mons[i].monData, &generator, &generator.facilityMonList[monId]);
     }
     gFacilityTrainerMons = generator.facilityMonList;
 }
