@@ -86,9 +86,7 @@ BattleFrontier_BattlePikeThreePathRoom_EventScript_RightRoomWarp::
 
 BattleFrontier_BattlePikeThreePathRoom_EventScript_RoomWarp::
 	clearflag FLAG_SAFE_FOLLOWER_MOVEMENT
-	pike_get PIKE_DATA_WIN_STREAK
-	addvar VAR_RESULT, 1
-	pike_set PIKE_DATA_WIN_STREAK, VAR_RESULT
+	frontier_incrementstreak
 	frontier_get FRONTIER_DATA_BATTLE_NUM
 	addvar VAR_RESULT, 1
 	frontier_set FRONTIER_DATA_BATTLE_NUM, VAR_RESULT
@@ -154,9 +152,7 @@ BattleFrontier_BattlePikeRoomNormal_EventScript_Exit::
 	pike_ispartyfullhealth
 	call_if_eq VAR_RESULT, TRUE, BattleFrontier_BattlePikeRoom_EventScript_DisableHealing
 	call_if_ne VAR_RESULT, TRUE, BattleFrontier_BattlePikeRoom_EventScript_EnableHealing
-	pike_get PIKE_DATA_WIN_STREAK
-	addvar VAR_RESULT, 1
-	pike_set PIKE_DATA_WIN_STREAK, VAR_RESULT
+	frontier_incrementstreak
 	frontier_get FRONTIER_DATA_BATTLE_NUM
 	addvar VAR_RESULT, 1
 	frontier_set FRONTIER_DATA_BATTLE_NUM, VAR_RESULT
@@ -193,9 +189,7 @@ BattleFrontier_BattlePikeRoomWildMons_EventScript_Exit::
 	pike_ispartyfullhealth
 	call_if_eq VAR_RESULT, TRUE, BattleFrontier_BattlePikeRoom_EventScript_DisableHealing
 	call_if_ne VAR_RESULT, TRUE, BattleFrontier_BattlePikeRoom_EventScript_EnableHealing
-	pike_get PIKE_DATA_WIN_STREAK
-	addvar VAR_RESULT, 1
-	pike_set PIKE_DATA_WIN_STREAK, VAR_RESULT
+	frontier_incrementstreak
 	frontier_get FRONTIER_DATA_BATTLE_NUM
 	addvar VAR_RESULT, 1
 	frontier_set FRONTIER_DATA_BATTLE_NUM, VAR_RESULT

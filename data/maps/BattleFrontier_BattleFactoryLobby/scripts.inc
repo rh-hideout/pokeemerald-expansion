@@ -15,9 +15,9 @@ BattleFrontier_BattleFactoryLobby_EventScript_TurnPlayerNorth::
 BattleFrontier_BattleFactoryLobby_OnFrame:
 	map_script_2 VAR_TEMP_CHALLENGE_STATUS, 0, BattleFrontier_BattleFactoryLobby_EventScript_GetChallengeStatus
 	map_script_2 VAR_TEMP_CHALLENGE_STATUS, CHALLENGE_STATUS_SAVING, BattleFrontier_BattleFactoryLobby_EventScript_QuitWithoutSaving
-	map_script_2 VAR_TEMP_CHALLENGE_STATUS, CHALLENGE_STATUS_PAUSED, BattleFrontier_BattleFactoryLobby_EventScript_ResumeChallenge
-	map_script_2 VAR_TEMP_CHALLENGE_STATUS, CHALLENGE_STATUS_WON, BattleFrontier_BattleFactoryLobby_EventScript_WonChallenge
-	map_script_2 VAR_TEMP_CHALLENGE_STATUS, CHALLENGE_STATUS_LOST, BattleFrontier_BattleFactoryLobby_EventScript_LostChallenge
+	map_script_2 VAR_TEMP_CHALLENGE_STATUS, CHALLENGE_STATUS_PAUSED, BattleFrontier_BattleFactoryLobby_EventScript_ResumeSeries
+	map_script_2 VAR_TEMP_CHALLENGE_STATUS, CHALLENGE_STATUS_WON, BattleFrontier_BattleFactoryLobby_EventScript_WonSeries
+	map_script_2 VAR_TEMP_CHALLENGE_STATUS, CHALLENGE_STATUS_LOST, BattleFrontier_BattleFactoryLobby_EventScript_LostSeries
 	.2byte 0
 
 BattleFrontier_BattleFactoryLobby_EventScript_GetChallengeStatus::
@@ -30,14 +30,11 @@ BattleFrontier_BattleFactoryLobby_EventScript_QuitWithoutSaving::
 	closemessage
 	factory_setswapped
 	factory_set FACTORY_DATA_WIN_STREAK_SWAPS, 0
-	factory_set FACTORY_DATA_WIN_STREAK, 0
-	factory_set FACTORY_DATA_WIN_STREAK_ACTIVE, FALSE
-	frontier_set FRONTIER_DATA_CHALLENGE_STATUS, 0
-	setvar VAR_TEMP_CHALLENGE_STATUS, 255
+	frontier_endseries FRONTIER_SERIES_DISQUALIFIED
 	releaseall
 	end
 
-BattleFrontier_BattleFactoryLobby_EventScript_WonChallenge::
+BattleFrontier_BattleFactoryLobby_EventScript_WonSeries::
 	lockall
 	frontier_isbrain
 	goto_if_eq VAR_RESULT, TRUE, BattleFrontier_BattleFactoryLobby_EventScript_DefeatedFactoryHead
@@ -54,28 +51,22 @@ BattleFrontier_BattleFactoryLobby_EventScript_GiveBattlePoints::
 	msgbox BattleFrontier_Text_ObtainedXBattlePoints, MSGBOX_GETPOINTS
 	message BattleFrontier_BattleFactoryLobby_Text_ExchangeMonsAndSave
 	waitmessage
-	frontier_checkairshow
-	special LoadPlayerParty
-	callnative UpdateFollowingPokemon
-	factory_save 0
-	playse SE_SAVE
-	waitse
+	frontier_endseries FRONTIER_SERIES_WON
 	goto BattleFrontier_BattleFactoryLobby_EventScript_AskRecordBattle
 	end
 
-BattleFrontier_BattleFactoryLobby_EventScript_LostChallenge::
+BattleFrontier_BattleFactoryLobby_EventScript_LostSeries::
 	lockall
 	message BattleFrontier_BattleFactoryLobby_Text_ReturnMonsSaveResults
 	waitmessage
-	frontier_checkairshow
+	factory_set FACTORY_DATA_WIN_STREAK_SWAPS, 0
+	frontier_endseries FRONTIER_SERIES_LOST
+BattleFrontier_BattleFactoryLobby_EventScript_AskRecordBattle::
 	special LoadPlayerParty
 	callnative UpdateFollowingPokemon
-	factory_set FACTORY_DATA_WIN_STREAK_ACTIVE, FALSE
 	factory_save 0
 	playse SE_SAVE
 	waitse
-
-BattleFrontier_BattleFactoryLobby_EventScript_AskRecordBattle::
 	call BattleFrontier_EventScript_GetCantRecordBattle
 	goto_if_eq VAR_RESULT, TRUE, BattleFrontier_BattleFactoryLobby_EventScript_EndRecordBattle
 	message BattleFrontier_BattleFactoryLobby_Text_RecordLastMatch
@@ -95,7 +86,7 @@ BattleFrontier_BattleFactoryLobby_EventScript_EndRecordBattle::
 	releaseall
 	end
 
-BattleFrontier_BattleFactoryLobby_EventScript_ResumeChallenge::
+BattleFrontier_BattleFactoryLobby_EventScript_ResumeSeries::
 	lockall
 	message BattleFrontier_BattleFactoryLobby_Text_WaitingForYouToResume
 	waitmessage
@@ -152,10 +143,7 @@ BattleFrontier_BattleFactoryLobby_EventScript_TryEnterChallenge::
 
 BattleFrontier_BattleFactoryLobby_EventScript_SaveBeforeChallenge::
 	setvar VAR_TEMP_CHALLENGE_STATUS, 0
-	factory_init
-	frontier_set FRONTIER_DATA_CHALLENGE_STATUS, CHALLENGE_STATUS_SAVING
-	factory_set FACTORY_DATA_WIN_STREAK_ACTIVE, TRUE
-	frontier_set FRONTIER_DATA_PAUSED, FALSE
+	frontier_init
 	closemessage
 	delay 2
 	call Common_EventScript_SaveGame

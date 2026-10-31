@@ -1,26 +1,3 @@
-	@ Initialize the Battle Tower challenge
-	.macro tower_init
-	setvar VAR_0x8004, BATTLE_TOWER_FUNC_INIT
-	special CallBattleTowerFunc
-	.endm
-
-	@ Get the value of some TOWER_DATA_*. See GetTowerData for the data types that can be retrieved
-	.macro tower_get data:req
-	setvar VAR_0x8004, BATTLE_TOWER_FUNC_GET_DATA
-	setvar VAR_0x8005, \data
-	special CallBattleTowerFunc
-	.endm
-
-	@ Set some TOWER_DATA_* to val. See SetTowerData for the data types that can be set
-	.macro tower_set data:req, val=0xFFFF
-	setvar VAR_0x8004, BATTLE_TOWER_FUNC_SET_DATA
-	setvar VAR_0x8005, \data
-	.if \val != 0xFFFF
-	setvar VAR_0x8006, \val
-	.endif
-	special CallBattleTowerFunc
-	.endm
-
 	@ Choose and set the gfx for the next opponent. Also used by Battle Tents
 	.macro tower_setopponent
 	setvar VAR_0x8004, BATTLE_TOWER_FUNC_SET_OPPONENT

@@ -382,7 +382,7 @@ BattleFrontier_BattleArenaBattleRoom_EventScript_DeclarePlayerWinner::
 	waitmovement 0
 	msgbox BattleFrontier_BattleArenaBattleRoom_Text_WinnerIsPlayer, MSGBOX_DEFAULT
 	closemessage
-	call BattleFrontier_EventScript_IncrementWinStreak
+	frontier_incrementstreak
 	return
 
 BattleFrontier_BattleArenaBattleRoom_Movement_PlayerEnter:

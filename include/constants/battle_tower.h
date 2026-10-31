@@ -19,8 +19,7 @@
 #define BATTLE_TOWER_FUNC_SET_INTERVIEW_DATA    15
 
 #define TOWER_DATA_WIN_STREAK         1
-#define TOWER_DATA_WIN_STREAK_ACTIVE  2
-#define TOWER_DATA_LVL_MODE           3
+#define TOWER_DATA_LVL_MODE           2
 
 // IDs for the messages printed by potential partners in the Battle Tower Multi Partner Room
 #define PARTNER_MSGID_INTRO      0

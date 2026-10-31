@@ -15,9 +15,9 @@ BattleFrontier_BattleArenaLobby_EventScript_TurnPlayerNorth::
 BattleFrontier_BattleArenaLobby_OnFrame:
 	map_script_2 VAR_TEMP_CHALLENGE_STATUS, 0, BattleFrontier_BattleArenaLobby_EventScript_GetChallengeStatus
 	map_script_2 VAR_TEMP_CHALLENGE_STATUS, CHALLENGE_STATUS_SAVING, BattleFrontier_BattleArenaLobby_EventScript_QuitWithoutSaving
-	map_script_2 VAR_TEMP_CHALLENGE_STATUS, CHALLENGE_STATUS_PAUSED, BattleFrontier_BattleArenaLobby_EventScript_ResumeChallenge
-	map_script_2 VAR_TEMP_CHALLENGE_STATUS, CHALLENGE_STATUS_WON, BattleFrontier_BattleArenaLobby_EventScript_WonChallenge
-	map_script_2 VAR_TEMP_CHALLENGE_STATUS, CHALLENGE_STATUS_LOST, BattleFrontier_BattleArenaLobby_EventScript_LostChallenge
+	map_script_2 VAR_TEMP_CHALLENGE_STATUS, CHALLENGE_STATUS_PAUSED, BattleFrontier_BattleArenaLobby_EventScript_ResumeSeries
+	map_script_2 VAR_TEMP_CHALLENGE_STATUS, CHALLENGE_STATUS_WON, BattleFrontier_BattleArenaLobby_EventScript_WonSeries
+	map_script_2 VAR_TEMP_CHALLENGE_STATUS, CHALLENGE_STATUS_LOST, BattleFrontier_BattleArenaLobby_EventScript_LostSeries
 	.2byte 0
 
 BattleFrontier_BattleArenaLobby_EventScript_GetChallengeStatus::
@@ -28,14 +28,11 @@ BattleFrontier_BattleArenaLobby_EventScript_QuitWithoutSaving::
 	lockall
 	msgbox BattleFrontier_BattleArenaLobby_Text_DidntSaveBeforeShuttingDown, MSGBOX_DEFAULT
 	closemessage
-	arena_set ARENA_DATA_WIN_STREAK, 0
-	arena_set ARENA_DATA_WIN_STREAK_ACTIVE, FALSE
-	frontier_set FRONTIER_DATA_CHALLENGE_STATUS, 0
-	setvar VAR_TEMP_CHALLENGE_STATUS, 255
+	frontier_endseries FRONTIER_SERIES_DISQUALIFIED
 	releaseall
 	end
 
-BattleFrontier_BattleArenaLobby_EventScript_WonChallenge::
+BattleFrontier_BattleArenaLobby_EventScript_WonSeries::
 	lockall
 	frontier_isbrain
 	goto_if_eq VAR_RESULT, TRUE, BattleFrontier_BattleArenaLobby_EventScript_DefeatedTycoon
@@ -50,27 +47,25 @@ BattleFrontier_BattleArenaLobby_EventScript_GiveBattlePoints::
 	msgbox BattleFrontier_Text_ObtainedXBattlePoints, MSGBOX_GETPOINTS
 	message BattleFrontier_BattleArenaLobby_Text_RecordAchievement
 	waitmessage
+	frontier_endseries FRONTIER_SERIES_WON
 	call BattleFrontier_BattleArenaLobby_EventScript_SaveAfterChallenge
 	msgbox BattleFrontier_BattleArenaLobby_Text_AwaitAnotherChallenge2, MSGBOX_DEFAULT
 	closemessage
-	setvar VAR_TEMP_CHALLENGE_STATUS, 255
 	releaseall
 	end
 
-BattleFrontier_BattleArenaLobby_EventScript_LostChallenge::
+BattleFrontier_BattleArenaLobby_EventScript_LostSeries::
 	lockall
 	message BattleFrontier_BattleArenaLobby_Text_ThankYouWaitWhileSave
 	waitmessage
-	arena_set ARENA_DATA_WIN_STREAK_ACTIVE, FALSE
+	frontier_endseries FRONTIER_SERIES_LOST
 	call BattleFrontier_BattleArenaLobby_EventScript_SaveAfterChallenge
 	msgbox BattleFrontier_BattleArenaLobby_Text_AwaitAnotherChallenge2, MSGBOX_DEFAULT
 	closemessage
-	setvar VAR_TEMP_CHALLENGE_STATUS, 255
 	releaseall
 	end
 
 BattleFrontier_BattleArenaLobby_EventScript_SaveAfterChallenge::
-	frontier_checkairshow
 	special LoadPlayerParty
 	special HealPlayerParty
 	callnative UpdateFollowingPokemon
@@ -92,7 +87,7 @@ BattleFrontier_BattleArenaLobby_EventScript_RecordMatch::
 BattleFrontier_BattleArenaLobby_EventScript_EndSaveAfterChallenge::
 	return
 
-BattleFrontier_BattleArenaLobby_EventScript_ResumeChallenge::
+BattleFrontier_BattleArenaLobby_EventScript_ResumeSeries::
 	lockall
 	message BattleFrontier_BattleArenaLobby_Text_LookingForwardToArrivalSaveGame
 	waitmessage
@@ -146,10 +141,7 @@ BattleFrontier_BattleArenaLobby_EventScript_TryEnterChallenge::
 BattleFrontier_BattleArenaLobby_EventScript_SaveBeforeChallenge::
 	setvar VAR_TEMP_CHALLENGE_STATUS, 0
 	frontier_set FRONTIER_DATA_SELECTED_MON_ORDER
-	arena_init
-	arena_set ARENA_DATA_WIN_STREAK_ACTIVE, TRUE
-	frontier_set FRONTIER_DATA_CHALLENGE_STATUS, CHALLENGE_STATUS_SAVING
-	frontier_set FRONTIER_DATA_PAUSED, FALSE
+	frontier_init
 	special LoadPlayerParty
 	closemessage
 	delay 2

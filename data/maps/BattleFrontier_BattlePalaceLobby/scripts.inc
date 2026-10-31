@@ -15,9 +15,9 @@ BattleFrontier_BattlePalaceLobby_EventScript_TurnPlayerNorth::
 BattleFrontier_BattlePalaceLobby_OnFrame:
 	map_script_2 VAR_TEMP_CHALLENGE_STATUS, 0, BattleFrontier_BattlePalaceLobby_EventScript_GetChallengeStatus
 	map_script_2 VAR_TEMP_CHALLENGE_STATUS, CHALLENGE_STATUS_SAVING, BattleFrontier_BattlePalaceLobby_EventScript_QuitWithoutSaving
-	map_script_2 VAR_TEMP_CHALLENGE_STATUS, CHALLENGE_STATUS_PAUSED, BattleFrontier_BattlePalaceLobby_EventScript_ResumeChallenge
-	map_script_2 VAR_TEMP_CHALLENGE_STATUS, CHALLENGE_STATUS_WON, BattleFrontier_BattlePalaceLobby_EventScript_WonChallenge
-	map_script_2 VAR_TEMP_CHALLENGE_STATUS, CHALLENGE_STATUS_LOST, BattleFrontier_BattlePalaceLobby_EventScript_LostChallenge
+	map_script_2 VAR_TEMP_CHALLENGE_STATUS, CHALLENGE_STATUS_PAUSED, BattleFrontier_BattlePalaceLobby_EventScript_ResumeSeries
+	map_script_2 VAR_TEMP_CHALLENGE_STATUS, CHALLENGE_STATUS_WON, BattleFrontier_BattlePalaceLobby_EventScript_WonSeries
+	map_script_2 VAR_TEMP_CHALLENGE_STATUS, CHALLENGE_STATUS_LOST, BattleFrontier_BattlePalaceLobby_EventScript_LostSeries
 	.2byte 0
 
 BattleFrontier_BattlePalaceLobby_EventScript_GetChallengeStatus::
@@ -28,14 +28,11 @@ BattleFrontier_BattlePalaceLobby_EventScript_QuitWithoutSaving::
 	lockall
 	msgbox BattleFrontier_BattlePalaceLobby_Text_FailedToSaveBeforeEndingChallenge, MSGBOX_DEFAULT
 	closemessage
-	palace_set PALACE_DATA_WIN_STREAK, 0
-	palace_set PALACE_DATA_WIN_STREAK_ACTIVE, FALSE
-	frontier_set FRONTIER_DATA_CHALLENGE_STATUS, 0
-	setvar VAR_TEMP_CHALLENGE_STATUS, 255
+	frontier_endseries FRONTIER_SERIES_DISQUALIFIED
 	releaseall
 	end
 
-BattleFrontier_BattlePalaceLobby_EventScript_WonChallenge::
+BattleFrontier_BattlePalaceLobby_EventScript_WonSeries::
 	lockall
 	frontier_isbrain
 	goto_if_eq VAR_RESULT, TRUE, BattleFrontier_BattlePalaceLobby_EventScript_DefeatedMaven
@@ -50,27 +47,25 @@ BattleFrontier_BattlePalaceLobby_EventScript_GiveBattlePoints::
 	msgbox BattleFrontier_Text_ObtainedXBattlePoints, MSGBOX_GETPOINTS
 	message BattleFrontier_BattlePalaceLobby_Text_FeatWillBeRecorded
 	waitmessage
+	frontier_endseries FRONTIER_SERIES_WON
 	call BattleFrontier_BattlePalaceLobby_EventScript_SaveAfterChallenge
 	msgbox BattleFrontier_BattlePalaceLobby_Text_ReturnWhenFortified, MSGBOX_DEFAULT
 	closemessage
-	setvar VAR_TEMP_CHALLENGE_STATUS, 255
 	releaseall
 	end
 
-BattleFrontier_BattlePalaceLobby_EventScript_LostChallenge::
+BattleFrontier_BattlePalaceLobby_EventScript_LostSeries::
 	lockall
 	message BattleFrontier_BattlePalaceLobby_Text_ResultsWillBeRecorded
 	waitmessage
-	palace_set PALACE_DATA_WIN_STREAK_ACTIVE, FALSE
+	frontier_endseries FRONTIER_SERIES_LOST
 	call BattleFrontier_BattlePalaceLobby_EventScript_SaveAfterChallenge
 	msgbox BattleFrontier_BattlePalaceLobby_Text_ReturnWhenFortified, MSGBOX_DEFAULT
 	closemessage
-	setvar VAR_TEMP_CHALLENGE_STATUS, 255
 	releaseall
 	end
 
 BattleFrontier_BattlePalaceLobby_EventScript_SaveAfterChallenge::
-	frontier_checkairshow
 	special LoadPlayerParty
 	special HealPlayerParty
 	callnative UpdateFollowingPokemon
@@ -92,7 +87,7 @@ BattleFrontier_BattlePalaceLobby_EventScript_RecordMatch::
 BattleFrontier_BattlePalaceLobby_EventScript_EndSaveAfterChallenge::
 	return
 
-BattleFrontier_BattlePalaceLobby_EventScript_ResumeChallenge::
+BattleFrontier_BattlePalaceLobby_EventScript_ResumeSeries::
 	lockall
 	msgbox BattleFrontier_BattlePalaceLobby_Text_WeHaveBeenWaiting, MSGBOX_DEFAULT
 	message BattleFrontier_BattlePalaceLobby_Text_MustSaveBeforeChallenge
@@ -122,7 +117,7 @@ BattleFrontier_BattlePalaceLobby_EventScript_DoublesAttendant::
 
 BattleFrontier_BattlePalaceLobby_EventScript_Attendant::
 	palace_get PALACE_DATA_PRIZE
-	goto_if_ne VAR_RESULT, ITEM_NONE, BattleFrontier_BattlePalaceLobby_EventScript_WonChallenge
+	goto_if_ne VAR_RESULT, ITEM_NONE, BattleFrontier_BattlePalaceLobby_EventScript_WonSeries
 	special SavePlayerParty
 	call_if_eq VAR_FRONTIER_BATTLE_MODE, FRONTIER_MODE_SINGLES, BattleFrontier_BattlePalaceLobby_EventScript_WelcomeForSingleBattle
 	call_if_eq VAR_FRONTIER_BATTLE_MODE, FRONTIER_MODE_DOUBLES, BattleFrontier_BattlePalaceLobby_EventScript_WelcomeForDoubleBattle
@@ -163,10 +158,7 @@ BattleFrontier_BattlePalaceLobby_EventScript_TryEnterChallenge::
 BattleFrontier_BattlePalaceLobby_EventScript_SaveBeforeChallenge::
 	setvar VAR_TEMP_CHALLENGE_STATUS, 0
 	frontier_set FRONTIER_DATA_SELECTED_MON_ORDER
-	palace_init
-	palace_set PALACE_DATA_WIN_STREAK_ACTIVE, TRUE
-	frontier_set FRONTIER_DATA_CHALLENGE_STATUS, CHALLENGE_STATUS_SAVING
-	frontier_set FRONTIER_DATA_PAUSED, FALSE
+	frontier_init
 	special LoadPlayerParty
 	closemessage
 	delay 2
