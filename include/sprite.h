@@ -183,6 +183,7 @@ struct SpriteTemplate
     SpriteCallback callback;
     bool16 compressedFast:1;
     bool16 freeable:1;
+    void (*freeFunction)(struct Sprite *);
 };
 
 // UB: template pointer is often used to point to temporary storage,
@@ -245,6 +246,7 @@ struct Sprite
              u8 subspriteMode:2;
 
     /*0x43*/ u8 subpriority;
+             void (*freeFunction)(struct Sprite *);
 };
 
 struct OamMatrix
