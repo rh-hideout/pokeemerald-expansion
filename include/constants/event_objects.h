@@ -481,6 +481,7 @@ enum
 #define TRACKS_SLITHER    3
 #define TRACKS_SPOT       4
 #define TRACKS_BUG        5
+#define TRACKS_NONE_WITH_GROUND_EFFECTS 6
 
 #define LIGHT_TYPE_BALL             0
 #define LIGHT_TYPE_PKMN_CENTER_SIGN 1
