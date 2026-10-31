@@ -231,6 +231,7 @@ struct PokeBallParticles
         .paletteTag = AnimTag,                    \
         .oam = &gOamData_AffineOff_ObjNormal_8x8, \
         .anims = sAnims_BallParticles,            \
+        .freeable = TRUE,                         \
     }
 
 static const struct PokeBallParticles sBallParticles[POKEBALL_COUNT] =

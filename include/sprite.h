@@ -181,7 +181,8 @@ struct SpriteTemplate
     const struct SpriteFrameImage *images;
     const union AffineAnimCmd *const *affineAnims;
     SpriteCallback callback;
-    bool16 compressedFast;
+    bool16 compressedFast:1;
+    bool16 freeable:1;
 };
 
 // UB: template pointer is often used to point to temporary storage,
@@ -237,7 +238,8 @@ struct Sprite
 
     /*0x40*/ u16 sheetTileStart:10;
              bool16 compressedFast:1;
-             u16 unused:5;
+             bool16 freeable:1;
+             u16 unused:4;
 
     /*0x42*/ u8 subspriteTableNum:6;
              u8 subspriteMode:2;
