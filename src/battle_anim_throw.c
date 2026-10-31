@@ -231,6 +231,8 @@ struct PokeBallParticles
         .paletteTag = AnimTag,                    \
         .oam = &gOamData_AffineOff_ObjNormal_8x8, \
         .anims = sAnims_BallParticles,            \
+        .freeable = TRUE,                         \
+        .freeFunction = DestroyBallOpenAnimationParticle \
     }
 
 static const struct PokeBallParticles sBallParticles[POKEBALL_COUNT] =
@@ -1924,6 +1926,7 @@ static void DestroyBallOpenAnimationParticle(struct Sprite *sprite)
         gBattleSpritesDataPtr->animationData->numBallParticles--;
         if (gBattleSpritesDataPtr->animationData->numBallParticles == 0)
         {
+            DebugPrintf("Zeroed");
             for (i = 0; i < POKEBALL_COUNT; i++)
             {
                 if (FuncIsActiveTask(sBallParticles[i].particleAnimationFunc) == TRUE)
