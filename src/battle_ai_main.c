@@ -648,7 +648,7 @@ void Ai_InitPartyStruct(void)
         if (!TrainerHasParty(trainer))
             continue;
 
-        for (enum PartySlot monIndex = PARTY_SLOT_0; monIndex < PARTY_SLOT_NONE; monIndex++)
+        for (enum PartySlot monIndex = PARTY_SLOT_0; monIndex < PARTY_SIZE; monIndex++)
         {
             mon = &gParties[trainer][monIndex];
             if (GetMonData(mon, MON_DATA_SPECIES) != SPECIES_NONE)
@@ -920,7 +920,7 @@ static u32 PpStallReduction(enum Move move, enum BattlerId battlerAtk, enum Batt
     ctx.weather = GetWeather();
     ctx.terrain = gFieldTimers.terrain;
     memcpy(&backupBattleMon, &gBattleMons[tempBattleMonIndex], sizeof(struct BattlePokemon));
-    for (enum PartySlot partyIndex = PARTY_SLOT_0; partyIndex < PARTY_SLOT_NONE; partyIndex++)
+    for (enum PartySlot partyIndex = PARTY_SLOT_0; partyIndex < PARTY_SIZE; partyIndex++)
     {
         u32 currentStallValue = gAiBattleData->playerStallMons[partyIndex];
         if (currentStallValue == 0 || GetMonData(&party[partyIndex], MON_DATA_HP) == 0)
