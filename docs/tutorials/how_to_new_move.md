@@ -76,6 +76,22 @@ Where moves are defined (and nothing else).
 
 **Note:** When adding custom moves, you should add them between the moves from the latest generation and the z moves, then adjust `MOVES_COUNT` accordingly.  Adding a move after `MOVES_COUNT` that is neither a Max Move or a Z Move will result in that move's name not being printed when it is used, instead a generic message will be printed.
 
+As an example, the resulting changes should look like this:
+```c
+    MOVE_UPPER_HAND = 846,
+    MOVE_MALIGNANT_CHAIN = 847,
+    MOVES_COUNT_GEN9,
+
+    // Add any custom moves here, not further down!
+    MOVE_THROW_DOWN,
+
+    MOVES_COUNT,
+
+    // Z Moves
+    FIRST_Z_MOVE = MOVES_COUNT,
+    MOVE_BREAKNECK_BLITZ = FIRST_Z_MOVE,
+    MOVE_ALL_OUT_PUMMELING,
+```
 ## C files
 ### src/battle_script_commands.c
 This is where a lot of the commands referred to in scripts are defined. For example, the `jumpifnotfirstturn` command above is defined by the function `Cmd_jumpifnotfirstturn` and you can see how it works in C. It's possible that any move editing or updating you have in mind can be done with existing commands, but if you wanted to add a new function that could be called in a script above, this is where you would define it.
