@@ -3925,7 +3925,7 @@ bool8 HealStatusConditions(struct Pokemon *mon, u32 healMask, enum BattlerId bat
             {
                 struct Pokemon *party = GetBattlerParty(battler);
 
-                for (enum PartySlot i = PARTY_SLOT_0; i < PARTY_SLOT_NONE; i++)
+                for (enum PartySlot i = PARTY_SLOT_0; i < PARTY_SIZE; i++)
                 {
                     if (&party[i] == mon)
                     {
@@ -4330,7 +4330,7 @@ bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct Evoluti
             break;
         }
         case IF_CRITICAL_HITS_GE:
-            if (partyId < PARTY_SLOT_NONE && gPartyCriticalHits[partyId] >= params[i].arg1)
+            if (partyId < PARTY_SIZE && gPartyCriticalHits[partyId] >= params[i].arg1)
                 currentCondition = TRUE;
             break;
         case IF_USED_MOVE_X_TIMES:
@@ -6275,7 +6275,7 @@ void TrySpecialOverworldEvo(void)
     u32 triedEvolvingCopy = gTriedEvolving;
     bool32 canStopEvo = FALSE;
 
-    for (enum PartySlot i = PARTY_SLOT_0; i < PARTY_SLOT_NONE; i++)
+    for (enum PartySlot i = PARTY_SLOT_0; i < PARTY_SIZE; i++)
     {
         if (gTriedEvolving & (1u << i))
             continue;

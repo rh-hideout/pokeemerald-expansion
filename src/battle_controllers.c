@@ -496,7 +496,7 @@ static void SetBattlePartyIds(void)
             enum PartySlot faintedMon = PARTY_SLOT_NONE;
             bool32 foundValidMon = FALSE;
 
-            for (enum PartySlot j = PARTY_SLOT_0; j < PARTY_SLOT_NONE; j++)
+            for (enum PartySlot j = PARTY_SLOT_0; j < PARTY_SIZE; j++)
             {
                 if (i < 2)
                 {
@@ -2306,7 +2306,7 @@ void BtlController_HandleGetMonData(enum BattlerId battler)
     else
     {
         monToCheck = gBattleResources->bufferA[battler][2];
-        for (i = PARTY_SLOT_0; i < PARTY_SLOT_NONE; i++)
+        for (i = PARTY_SLOT_0; i < PARTY_SIZE; i++)
         {
             if (monToCheck & 1)
                 size += GetBattlerMonData(battler, party, i, monData + size);
@@ -2346,7 +2346,7 @@ void BtlController_HandleSetMonData(enum BattlerId battler)
     else
     {
         monToCheck = gBattleResources->bufferA[battler][2];
-        for (i = PARTY_SLOT_0; i < PARTY_SLOT_NONE; i++)
+        for (i = PARTY_SLOT_0; i < PARTY_SIZE; i++)
         {
             if (monToCheck & 1)
                 SetBattlerMonData(battler, party, i);

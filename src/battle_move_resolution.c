@@ -6850,18 +6850,18 @@ static enum Move GetAssistMove(void)
 
     party = GetBattlerParty(gBattlerAttacker);
 
-    for (enum PartySlot i = PARTY_SLOT_0; i < PARTY_SLOT_NONE; i++)
+    for (enum PartySlot i = PARTY_SLOT_0; i < PARTY_SIZE; i++)
         battlerByPartyId[i] = MAX_BATTLERS_COUNT;
     for (u32 battler = 0; battler < gBattlersCount; battler++)
     {
         if (!IsBattlerAlly(battler, gBattlerAttacker))
             continue;
 
-        if (gBattlerPartyIndexes[battler] < PARTY_SLOT_NONE)
+        if (gBattlerPartyIndexes[battler] < PARTY_SIZE)
             battlerByPartyId[gBattlerPartyIndexes[battler]] = battler;
     }
 
-    for (enum PartySlot monId = PARTY_SLOT_0; monId < PARTY_SLOT_NONE; monId++)
+    for (enum PartySlot monId = PARTY_SLOT_0; monId < PARTY_SIZE; monId++)
     {
         if (monId == gBattlerPartyIndexes[gBattlerAttacker])
             continue;

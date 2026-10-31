@@ -1724,12 +1724,12 @@ static void Cmd_getexp(void)
                 }
             }
             // Get order of mons getting exp: 1. all mons via sent in, 2. all mons via exp share
-            for (enum PartySlot partyMon = 0; partyMon < PARTY_SIZE; partyMon++)
+            for (enum PartySlot partyMon = PARTY_SLOT_0; partyMon < PARTY_SIZE; partyMon++)
             {
                 if ((1u << partyMon) & sentInBits)
                     gBattleStruct->expGettersOrder[orderId++] = partyMon;
             }
-            for (enum PartySlot partyMon = 0; partyMon < PARTY_SIZE; partyMon++)
+            for (enum PartySlot partyMon = PARTY_SLOT_0; partyMon < PARTY_SIZE; partyMon++)
             {
                 if (!((1u << partyMon) & sentInBits) && (1u << partyMon) & expShareBits)
                     gBattleStruct->expGettersOrder[orderId++] = partyMon;
@@ -1946,7 +1946,7 @@ static void Cmd_getexp(void)
             if ((++gBattleStruct->expOrderId) < PARTY_SIZE)
             {
                 *expMonId = gBattleStruct->expGettersOrder[gBattleStruct->expOrderId];
-                if (*expMonId < PARTY_SLOT_NONE)
+                if (*expMonId < PARTY_SIZE)
                 {
                     gBattleScripting.getexpState = 2; // loop again
                     break;
@@ -1972,7 +1972,7 @@ static u32 CountAliveMonsForBattlerSide(enum BattlerId battler)
     u32 aliveMons = 0;
     struct Pokemon *party = GetBattlerParty(battler);
 
-    for (enum PartySlot partyMon = PARTY_SLOT_0; partyMon < PARTY_SLOT_NONE; partyMon++)
+    for (enum PartySlot partyMon = PARTY_SLOT_0; partyMon < PARTY_SIZE; partyMon++)
     {
         if (GetMonData(&party[partyMon], MON_DATA_SPECIES)
          && GetMonData(&party[partyMon], MON_DATA_HP) > 0
@@ -1990,7 +1990,7 @@ bool32 NoAliveMonsForBattlerSide(enum BattlerId battler)
 
 static u32 DoesPartyHaveBattleReadyMons(enum BattleTrainer trainer)
 {
-    for (enum PartySlot i = PARTY_SLOT_0; i < PARTY_SLOT_NONE; i++)
+    for (enum PartySlot i = PARTY_SLOT_0; i < PARTY_SIZE; i++)
     {
         struct Pokemon mon = gParties[trainer][i];
 
@@ -2707,7 +2707,7 @@ static bool32 IsValidSwitchIn(enum BattleTrainer trainer, enum PartySlot index)
 
 static enum PartySlot GetArbitraryValidSwitchIn(enum BattleTrainer trainer)
 {
-    for (enum PartySlot i = PARTY_SLOT_0; i < PARTY_SLOT_NONE; i++)
+    for (enum PartySlot i = PARTY_SLOT_0; i < PARTY_SIZE; i++)
     {
         if (IsValidSwitchIn(trainer, i))
             return i;

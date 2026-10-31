@@ -2307,7 +2307,7 @@ bool8 ScrCmd_checkfieldmove(struct ScriptContext *ctx)
         return FALSE;
 
     move = FieldMove_GetMoveId(fieldMove);
-    for (enum PartySlot i = PARTY_SLOT_0; i < PARTY_SLOT_NONE; i++)
+    for (enum PartySlot i = PARTY_SLOT_0; i < PARTY_SIZE; i++)
     {
         enum Species species = GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES);
         if (!species)
@@ -3318,7 +3318,7 @@ void Script_TriggerUniqueEvolution(struct ScriptContext *ctx)
         gSpecialVar_Result = EVO_EVENT_IMPOSSIBLE;
         return;
     }
-    assertf(gSpecialVar_0x8004 < PARTY_SLOT_NONE, "TriggerEvolution script called with invalid partyIndex %d", gSpecialVar_0x8004)
+    assertf(gSpecialVar_0x8004 < PARTY_SIZE, "TriggerEvolution script called with invalid partyIndex %d", gSpecialVar_0x8004)
     {
         gSpecialVar_Result = EVO_EVENT_IMPOSSIBLE;
         return;

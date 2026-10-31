@@ -295,7 +295,7 @@ static void PlayerPartnerHandleChoosePokemon(enum BattlerId battler)
             enum BattlerId battler1 = GetBattlerAtPosition(B_POSITION_PLAYER_LEFT);
             enum BattlerId battler2 = IsDoubleBattle() ? GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT) : battler1;
 
-            for (chosenMonId = PARTY_SLOT_0; chosenMonId < PARTY_SLOT_NONE; chosenMonId++)
+            for (chosenMonId = PARTY_SLOT_0; chosenMonId < PARTY_SIZE; chosenMonId++)
             {
                 if (GetMonData(&gParties[B_TRAINER_PARTNER][chosenMonId], MON_DATA_HP) != 0
                     && !(chosenMonId == gBattlerPartyIndexes[battler1] && BattlersShareParty(battler, battler1))
