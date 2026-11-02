@@ -131,6 +131,7 @@ struct MiningObject
     u16 tag;
     const struct CompressedSpriteSheet *sheet;
     const struct SpritePalette *palette;
+    const struct SpriteTemplate *template;
 };
 
 struct BuriedItem
@@ -1596,7 +1597,9 @@ static void DrawItemSprite(u32 x, u32 y, enum MiningId miningId, u32 itemNumPalT
 
     LoadSpritePalette(sMiningObjectList[miningId].palette);
     LoadCompressedSpriteSheet(sMiningObjectList[miningId].sheet);
-    sMiningUiState->buriedItems[itemStateId].spriteId = CreateSprite(&gSpriteTemplate, posX + MINING_POS_OFFS_64X64, posY + MINING_POS_OFFS_64X64, 3);
+    u32 spriteId = CreateSprite(sMiningObjectList[miningId].template, posX + MINING_POS_OFFS_64X64, posY + MINING_POS_OFFS_64X64, 3);
+    if (miningId > MINING_COUNT_ID_STONE)
+        sMiningUiState->buriedItems[itemStateId].spriteId = spriteId;
 }
 
 // Defines && Macros

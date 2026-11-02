@@ -89,6 +89,7 @@ static const struct MiningObject sMiningObjectList[] =
         .tag = MINING_TAG_{{ stone.id }},
         .sheet = &sSpriteSheet_{{ stone.label }},
         .palette = &sSpritePal_Stone,
+        .template = &sSprite{{ stone.label }}
     },
 ## endfor
 ## for item in items
@@ -98,6 +99,7 @@ static const struct MiningObject sMiningObjectList[] =
         .tag = MINING_TAG_{{ item.id }},
         .sheet = &sSpriteSheet_{{ item.label }},
         .palette = &sSpritePal_{{ item.label }},
+        .template = &sSprite{{ item.label }}
     },
 ## endfor
 };
