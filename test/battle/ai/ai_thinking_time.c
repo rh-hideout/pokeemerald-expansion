@@ -3,10 +3,10 @@
 
 #define AI_FRAME_CEILING_SINGLES_NO_FLAGS                       2
 #define AI_FRAME_CEILING_SINGLES_SMART_TRAINER                  6
-#define AI_FRAME_CEILING_DOUBLES_NO_FLAGS                       10
-#define AI_FRAME_CEILING_DOUBLES_SMART_TRAINER                  22
-#define AI_FRAME_CEILING_STEVEN_MULTI                           19
-#define AI_FRAME_CEILING_STEVEN_MULTI_SMART_TRAINER             22
+#define AI_FRAME_CEILING_DOUBLES_NO_FLAGS                       6
+#define AI_FRAME_CEILING_DOUBLES_SMART_TRAINER                  18
+#define AI_FRAME_CEILING_STEVEN_MULTI                           15
+#define AI_FRAME_CEILING_STEVEN_MULTI_SMART_TRAINER             18
 #define AI_FRAME_CEILING_CHECK                                  FALSE // If TRUE, forces all thinking time tests to fail. Useful for printing all actual frame times to console by running the tests
 
 AI_SINGLE_BATTLE_TEST("AI thinking time doesn't explode (singles, no flags)")

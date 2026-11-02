@@ -88,7 +88,8 @@ static void InitializeSwitchinCandidate(enum BattlerId switchinBattler, enum Par
 
     for (enum BattlerId battlerIndex = 0; battlerIndex < gBattlersCount; battlerIndex++)
     {
-        if (switchinBattler == battlerIndex || !IsBattlerAlive(battlerIndex))
+        // NOTE: at time of writing, no AI switch logic is dependent up battler -> ally and/or ally -> battler damage being updated 
+        if (switchinBattler == battlerIndex || IsBattlerAlly(switchinBattler, battlerIndex) || !IsBattlerAlive(battlerIndex))
             continue;
         SetBattlerStatStagesForSwitchin(switchinBattler, battlerIndex, switchinTerrain);
         SetBattlerHPChangeForSwitch(switchinBattler, battlerIndex);
