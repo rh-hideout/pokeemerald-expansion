@@ -57,7 +57,8 @@ void FillPartnerParty(u16 trainerId)
         generator.partySize = FRONTIER_MULTI_PARTY_SIZE;
         for (i = 0; i < FRONTIER_MULTI_PARTY_SIZE; i++)
         {
-            CreateFacilityMon(&gParties[B_TRAINER_PARTNER][i], &generator, gSaveBlock2Ptr->frontier.trainerIds[i + 18]);
+            u32 monIndex = gSaveBlock2Ptr->frontier.trainerIds[i + 18];
+            CreateFacilityMon(&gParties[B_TRAINER_PARTNER][i], &generator, &generator.facilityMonList[monIndex]);
             for (j = 0; j < PLAYER_NAME_LENGTH + 1; j++)
                 trainerName[j] = gFacilityTrainers[trainerId].trainerName[j];
             SetMonData(&gParties[B_TRAINER_PARTNER][i], MON_DATA_OT_NAME, &trainerName);
