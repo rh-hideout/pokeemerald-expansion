@@ -407,14 +407,14 @@ bool32 HasPlayerUnlockedGimmick(enum Gimmick gimmick)
     default:
         return FALSE;
     case GIMMICK_MEGA:
-        return CheckBagHasItem(ITEM_MEGA_RING,1);
+        return CheckBagHasItem(ITEM_MEGA_RING, 1);
     case GIMMICK_ULTRA_BURST:
     case GIMMICK_Z_MOVE:
-        return CheckBagHasItem(ITEM_Z_POWER_RING,1);
+        return CheckBagHasItem(ITEM_Z_POWER_RING, 1);
     case GIMMICK_DYNAMAX:
-        return CheckBagHasItem(ITEM_DYNAMAX_BAND,1);
+        return CheckBagHasItem(ITEM_DYNAMAX_BAND, 1);
     case GIMMICK_TERA:
-        return CheckBagHasItem(ITEM_TERA_ORB,1);
+        return CheckBagHasItem(ITEM_TERA_ORB, 1);
     }
 }
 
