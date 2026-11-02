@@ -118,7 +118,7 @@ bool32 CanUseZMove(enum BattlerId battler)
     // Check if Player has Z-Power Ring.
     if (!TESTING && (position == B_POSITION_PLAYER_LEFT
         || (!HasAnyBattleFlags(BATTLE_TYPE_MULTI) && position == B_POSITION_PLAYER_RIGHT))
-        && !CheckBagHasItem(ITEM_Z_POWER_RING, 1))
+        && !HasPlayerUnlockedGimmick(GIMMICK_Z_MOVE))
         return FALSE;
 
     // Add '| BATTLE_TYPE_FRONTIER' to below if issues occur
@@ -184,7 +184,7 @@ bool32 IsViableZMove(enum BattlerId battler, enum Move move)
     enum BattlerPosition position = GetBattlerPosition(battler);
     // Check if Player has Z-Power Ring.
     if ((position == B_POSITION_PLAYER_LEFT || (!HasAnyBattleFlags(BATTLE_TYPE_MULTI) && position == B_POSITION_PLAYER_RIGHT))
-        && !CheckBagHasItem(ITEM_Z_POWER_RING, 1))
+        && !HasPlayerUnlockedGimmick(GIMMICK_Z_MOVE))
     {
         return FALSE;
     }

@@ -8633,7 +8633,7 @@ bool32 CanMegaEvolve(enum BattlerId battler)
     // Check if Player has a Mega Ring.
     if (!TESTING
         && (position == B_POSITION_PLAYER_LEFT || (!HasAnyBattleFlags(BATTLE_TYPE_MULTI) && position == B_POSITION_PLAYER_RIGHT))
-        && !CheckBagHasItem(ITEM_MEGA_RING, 1))
+        && !HasPlayerUnlockedGimmick(GIMMICK_MEGA))
         return FALSE;
 
     // Check if Trainer has already Mega Evolved.
@@ -8674,7 +8674,7 @@ bool32 CanUltraBurst(enum BattlerId battler)
     // Check if Player has a Z-Ring
     if (!TESTING && (position == B_POSITION_PLAYER_LEFT
         || (!HasAnyBattleFlags(BATTLE_TYPE_MULTI) && position == B_POSITION_PLAYER_RIGHT))
-        && !CheckBagHasItem(ITEM_Z_POWER_RING, 1))
+        && !HasPlayerUnlockedGimmick(GIMMICK_ULTRA_BURST))
         return FALSE;
 
     // Check if Trainer has already Ultra Bursted.
