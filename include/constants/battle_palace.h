@@ -13,8 +13,6 @@
 #define BATTLE_PALACE_FUNC_GIVE_PRIZE           9
 
 #define PALACE_DATA_PRIZE               0
-#define PALACE_DATA_WIN_STREAK          1
-#define PALACE_DATA_WIN_STREAK_ACTIVE   2
 
 // Pokémon in Battle Palace have a move "group" type preference depending on nature
 #define PALACE_MOVE_GROUP_ATTACK  0

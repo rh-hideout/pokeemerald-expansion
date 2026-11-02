@@ -136,13 +136,6 @@ FallarborTown_BattleTentBattleRoom_EventScript_WarpToLobbyWon::
 	warp MAP_FALLARBOR_TOWN_BATTLE_TENT_LOBBY, 6, 6
 	waitstate
 
-@ Unreachable code block? The flow into the next block also doesnt make sense
-	arena_get ARENA_DATA_WIN_STREAK
-	goto_if_eq VAR_RESULT, MAX_STREAK, FallarborTown_BattleTentBattleRoom_EventScript_IncrementBattleNum
-	addvar VAR_RESULT, 1
-	arena_set ARENA_DATA_WIN_STREAK, VAR_RESULT
-@ See above
-
 FallarborTown_BattleTentBattleRoom_EventScript_ReadyFor2ndOpponent::
 	message BattleFrontier_BattleArenaBattleRoom_Text_ReadyFor2ndOpponent
 	waitmessage

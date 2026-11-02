@@ -70,12 +70,12 @@ struct PyramidTrainerEncounterMusic
 };
 
 // This file's functions.
-static void InitPyramidChallenge(void);
-static void GetBattlePyramidData(void);
+static void Unused_InitPyramidChallenge(void);
+static void Unused_GetBattlePyramidData(void);
 static void SetBattlePyramidData(void);
 static void SavePyramidChallenge(void);
 static void SetBattlePyramidPrize(void);
-static void GiveBattlePyramidPrize(void);
+static void Unused_GiveBattlePyramidPrize(void);
 static void SeedPyramidFloor(void);
 static void SetPickupItem(void);
 static void HidePyramidItem(void);
@@ -88,7 +88,6 @@ static void ClearPyramidPartyHeldItems(void);
 static void SetPyramidFloorPalette(void);
 static void BattlePyramidStartMenu(void);
 static void RestorePyramidPlayerParty(void);
-static void InitPyramidBagItems(enum FrontierLevelMode lvlMode);
 static u8 GetPyramidFloorTemplateId(void);
 static u8 GetPostBattleDirectionHintTextIndex(int *, u8, u8);
 static void Task_SetPyramidFloorPalette(u8);
@@ -794,12 +793,12 @@ static const u8 sHintTextTypes[] =
 
 static void (*const sBattlePyramidFunctions[])(void) =
 {
-    [BATTLE_PYRAMID_FUNC_INIT]              = InitPyramidChallenge,
-    [BATTLE_PYRAMID_FUNC_GET_DATA]          = GetBattlePyramidData,
+    [BATTLE_PYRAMID_FUNC_INIT]              = Unused_InitPyramidChallenge,
+    [BATTLE_PYRAMID_FUNC_GET_DATA]          = Unused_GetBattlePyramidData,
     [BATTLE_PYRAMID_FUNC_SET_DATA]          = SetBattlePyramidData,
     [BATTLE_PYRAMID_FUNC_SAVE]              = SavePyramidChallenge,
     [BATTLE_PYRAMID_FUNC_SET_PRIZE]         = SetBattlePyramidPrize,
-    [BATTLE_PYRAMID_FUNC_GIVE_PRIZE]        = GiveBattlePyramidPrize,
+    [BATTLE_PYRAMID_FUNC_GIVE_PRIZE]        = Unused_GiveBattlePyramidPrize,
     [BATTLE_PYRAMID_FUNC_SEED_FLOOR]        = SeedPyramidFloor,
     [BATTLE_PYRAMID_FUNC_SET_ITEM]          = SetPickupItem,
     [BATTLE_PYRAMID_FUNC_HIDE_ITEM]         = HidePyramidItem,
@@ -845,91 +844,20 @@ void CallBattlePyramidFunction(void)
     sBattlePyramidFunctions[gSpecialVar_0x8004]();
 }
 
-static void InitPyramidChallenge(void)
+static void Unused_InitPyramidChallenge(void)
 {
-    bool32 isCurrent;
-    enum FrontierLevelMode lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
 
-    gSaveBlock2Ptr->frontier.challengeStatus = 0;
-    gSaveBlock2Ptr->frontier.curChallengeBattleNum = 0;
-    gSaveBlock2Ptr->frontier.challengePaused = FALSE;
-    if (lvlMode != FRONTIER_LVL_50)
-        isCurrent = gSaveBlock2Ptr->frontier.winStreakActiveFlags & STREAK_PYRAMID_OPEN;
-    else
-        isCurrent = gSaveBlock2Ptr->frontier.winStreakActiveFlags & STREAK_PYRAMID_50;
-
-    if (!isCurrent)
-    {
-        gSaveBlock2Ptr->frontier.pyramidWinStreaks[lvlMode] = 0;
-        InitPyramidBagItems(lvlMode);
-    }
-
-    InitBattlePyramidBagCursorPosition();
-    TRAINER_BATTLE_PARAM.opponentA = 0;
-    gBattleOutcome = 0;
 }
 
-static void GetBattlePyramidData(void)
+static void Unused_GetBattlePyramidData(void)
 {
-    enum FrontierLevelMode lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
 
-    switch (gSpecialVar_0x8005)
-    {
-    case PYRAMID_DATA_PRIZE:
-        gSpecialVar_Result = gSaveBlock2Ptr->frontier.pyramidPrize;
-        break;
-    case PYRAMID_DATA_WIN_STREAK:
-        gSpecialVar_Result = gSaveBlock2Ptr->frontier.pyramidWinStreaks[lvlMode];
-        break;
-    case PYRAMID_DATA_WIN_STREAK_ACTIVE:
-        if (lvlMode != FRONTIER_LVL_50)
-            gSpecialVar_Result = gSaveBlock2Ptr->frontier.winStreakActiveFlags & STREAK_PYRAMID_OPEN;
-        else
-            gSpecialVar_Result = gSaveBlock2Ptr->frontier.winStreakActiveFlags & STREAK_PYRAMID_50;
-        break;
-    case PYRAMID_DATA_WIN_STREAK_50:
-        gSpecialVar_Result = gSaveBlock2Ptr->frontier.pyramidWinStreaks[FRONTIER_LVL_50];
-        break;
-    case PYRAMID_DATA_WIN_STREAK_OPEN:
-        gSpecialVar_Result = gSaveBlock2Ptr->frontier.pyramidWinStreaks[FRONTIER_LVL_OPEN];
-        break;
-    case PYRAMID_DATA_WIN_STREAK_ACTIVE_50:
-        gSpecialVar_Result = gSaveBlock2Ptr->frontier.winStreakActiveFlags & STREAK_PYRAMID_50;
-        break;
-    case PYRAMID_DATA_WIN_STREAK_ACTIVE_OPEN:
-        gSpecialVar_Result = gSaveBlock2Ptr->frontier.winStreakActiveFlags & STREAK_PYRAMID_OPEN;
-        break;
-    }
 }
 
 static void SetBattlePyramidData(void)
 {
-    enum FrontierLevelMode lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
-
     switch (gSpecialVar_0x8005)
     {
-    case PYRAMID_DATA_PRIZE:
-        gSaveBlock2Ptr->frontier.pyramidPrize = gSpecialVar_0x8006;
-        break;
-    case PYRAMID_DATA_WIN_STREAK:
-        gSaveBlock2Ptr->frontier.pyramidWinStreaks[lvlMode] = gSpecialVar_0x8006;
-        break;
-    case PYRAMID_DATA_WIN_STREAK_ACTIVE:
-        if (lvlMode != FRONTIER_LVL_50)
-        {
-            if (gSpecialVar_0x8006)
-                gSaveBlock2Ptr->frontier.winStreakActiveFlags |= STREAK_PYRAMID_OPEN;
-            else
-                gSaveBlock2Ptr->frontier.winStreakActiveFlags &= ~(STREAK_PYRAMID_OPEN);
-        }
-        else
-        {
-            if (gSpecialVar_0x8006)
-                gSaveBlock2Ptr->frontier.winStreakActiveFlags |= STREAK_PYRAMID_50;
-            else
-                gSaveBlock2Ptr->frontier.winStreakActiveFlags &= ~(STREAK_PYRAMID_50);
-        }
-        break;
     case PYRAMID_DATA_TRAINER_FLAGS:
         gSaveBlock2Ptr->frontier.pyramidTrainerFlags = gSpecialVar_0x8006;
         break;
@@ -954,7 +882,7 @@ static void SetBattlePyramidPrize(void)
         gSaveBlock2Ptr->frontier.pyramidPrize = sShortStreakRewardItems[Random() % ARRAY_COUNT(sShortStreakRewardItems)];
 }
 
-static void GiveBattlePyramidPrize(void)
+static void Unused_GiveBattlePyramidPrize(void)
 {
     if (AddBagItem(gSaveBlock2Ptr->frontier.pyramidPrize, 1) == TRUE)
     {
@@ -1121,8 +1049,8 @@ static void UpdatePyramidWinStreak(void)
 
     if (gSaveBlock2Ptr->frontier.pyramidWinStreaks[lvlMode] < 999)
         gSaveBlock2Ptr->frontier.pyramidWinStreaks[lvlMode]++;
-    if (gSaveBlock2Ptr->frontier.pyramidWinStreaks[lvlMode] > gSaveBlock2Ptr->frontier.pyramidRecordStreaks[lvlMode])
-        gSaveBlock2Ptr->frontier.pyramidRecordStreaks[lvlMode] = gSaveBlock2Ptr->frontier.pyramidWinStreaks[lvlMode];
+    if (gSaveBlock2Ptr->frontier.pyramidWinStreaks[lvlMode] > gSaveBlock2Ptr->frontier.pyramidRecordWinStreaks[lvlMode])
+        gSaveBlock2Ptr->frontier.pyramidRecordWinStreaks[lvlMode] = gSaveBlock2Ptr->frontier.pyramidWinStreaks[lvlMode];
 }
 
 static void GetCurrentBattlePyramidLocation(void)
@@ -2160,7 +2088,7 @@ u8 GetNumBattlePyramidObjectEvents(void)
     return i;
 }
 
-static void InitPyramidBagItems(enum FrontierLevelMode lvlMode)
+void InitPyramidBagItems(enum FrontierLevelMode lvlMode)
 {
     int i;
 

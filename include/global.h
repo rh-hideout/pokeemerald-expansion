@@ -433,7 +433,7 @@ struct EmeraldBattleTowerRecord
     /*0x34*/ struct BattleTowerPokemon party[MAX_FRONTIER_PARTY_SIZE];
     /*0xE4*/ u8 language;
     /*0xE7*/ //u8 padding[3];
-    /*0xE8*/ u32 checksum;
+    /*0xE8*/ u32 checksum_unused; // unused in expansion
 };
 
 struct BattleTowerInterview
@@ -512,7 +512,7 @@ struct BattleFrontier
     /*0xD02*/ u16 towerSinglesStreak; // Never read
     /*0xD04*/ u16 towerNumWins; // Increments to MAX_STREAK but never read otherwise
     /*0xD06*/ u8 towerBattleOutcome;
-    /*0xD07*/ u8 towerLvlMode;
+    /*0xD07*/ u8 towerLvlMode_unused; //in exansion, we use lvlMode instead
     /*0xD08*/ u8 domeAttemptedSingles50:1;
     /*0xD08*/ u8 domeAttemptedSinglesOpen:1;
     /*0xD08*/ u8 domeHasWonSingles50:1;
@@ -530,19 +530,19 @@ struct BattleFrontier
     /*0xD24*/ struct BattleDomeTrainer domeTrainers[DOME_TOURNAMENT_TRAINERS_COUNT];
     /*0xD64*/ u16 domeMonIds[DOME_TOURNAMENT_TRAINERS_COUNT][FRONTIER_PARTY_SIZE];
     /*0xDC4*/ u16 unused_DC4;
-    /*0xDC6*/ u16 palacePrize;
+    /*0xDC6*/ u16 palacePrize_unused;
     /*0xDC8*/ u16 palaceWinStreaks[2][FRONTIER_LVL_MODE_COUNT];
     /*0xDD0*/ u16 palaceRecordWinStreaks[2][FRONTIER_LVL_MODE_COUNT];
-    /*0xDD8*/ u16 arenaPrize;
+    /*0xDD8*/ u16 arenaPrize_unused;
     /*0xDDA*/ u16 arenaWinStreaks[FRONTIER_LVL_MODE_COUNT];
-    /*0xDDE*/ u16 arenaRecordStreaks[FRONTIER_LVL_MODE_COUNT];
+    /*0xDDE*/ u16 arenaRecordWinStreaks[FRONTIER_LVL_MODE_COUNT];
     /*0xDE2*/ u16 factoryWinStreaks[2][FRONTIER_LVL_MODE_COUNT];
     /*0xDEA*/ u16 factoryRecordWinStreaks[2][FRONTIER_LVL_MODE_COUNT];
     /*0xDF6*/ u16 factoryRentsCount[2][FRONTIER_LVL_MODE_COUNT];
     /*0xDFA*/ u16 factoryRecordRentsCount[2][FRONTIER_LVL_MODE_COUNT];
-    /*0xE02*/ u16 pikePrize;
+    /*0xE02*/ u16 pikePrize_unused;
     /*0xE04*/ u16 pikeWinStreaks[FRONTIER_LVL_MODE_COUNT];
-    /*0xE08*/ u16 pikeRecordStreaks[FRONTIER_LVL_MODE_COUNT];
+    /*0xE08*/ u16 pikeRecordWinStreaks[FRONTIER_LVL_MODE_COUNT];
     /*0xE0C*/ u16 pikeTotalStreaks[FRONTIER_LVL_MODE_COUNT];
     /*0xE10*/ u8 pikeHintedRoomIndex:3;
               u8 pikeHintedRoomType:4;
@@ -551,7 +551,7 @@ struct BattleFrontier
     /*0xE12*/ u16 pikeHeldItemsBackup[FRONTIER_PARTY_SIZE];
     /*0xE18*/ u16 pyramidPrize;
     /*0xE1A*/ u16 pyramidWinStreaks[FRONTIER_LVL_MODE_COUNT];
-    /*0xE1E*/ u16 pyramidRecordStreaks[FRONTIER_LVL_MODE_COUNT];
+    /*0xE1E*/ u16 pyramidRecordWinStreaks[FRONTIER_LVL_MODE_COUNT];
     /*0xE22*/ u16 pyramidRandoms[4];
     /*0xE2A*/ u8 pyramidTrainerFlags; // 1 bit for each trainer (MAX_PYRAMID_TRAINERS)
     /*0xE2B*/ //u8 padding3;
