@@ -466,7 +466,7 @@ $(C_BUILDDIR)/graphics.o: override CFLAGS += -Wno-missing-braces
 # Have to be explicit or else missing files won't be reported.
 $(C_BUILDDIR)/move_relearner.o: $(C_SUBDIR)/move_relearner.c $(DATA_SRC_SUBDIR)/tutor_moves.h
 $(C_BUILDDIR)/pokemon.o: $(C_SUBDIR)/pokemon.c $(DATA_SRC_SUBDIR)/pokemon/teachable_learnsets.h
-$(C_BUILDDIR)/mining_minigame.o: $(C_SUBDIR)/mining_minigame.c $(DATA_SRC_SUBDIR)/mining_minigame.h
+$(C_BUILDDIR)/mining_minigame.o: $(C_SUBDIR)/mining_minigame.c $(DATA_SRC_SUBDIR)/mining_minigame/enums.h $(DATA_SRC_SUBDIR)/mining_minigame/objects.h $(DATA_SRC_SUBDIR)/mining_minigame/tile_data.h
 
 # As a side effect, they're evaluated immediately instead of when the rule is invoked.
 # It doesn't look like $(shell) can be deferred so there might not be a better way (Icedude_907: there is soon).
@@ -547,7 +547,7 @@ MINING_PNGS := $(shell find graphics/mining_minigame/items/ -type f -name '*.png
 
 MINING_4BPPS := $(MINING_PNGS:%.png=%.4bpp)
 
-MINING_DEPS := $(MINING_4BPPS) tools/mining_minigame/table.json
+MINING_DEPS := $(MINING_4BPPS) $(DATA_SRC_SUBDIR)/mining_minigame/object_tables.json $(TOOLS_DIR)/mining_minigame/analyze_sprites.py
 
 TEACHABLE_DEPS := $(ALL_LEARNABLES_JSON) $(INCLUDE_DIRS)/constants/tms_hms.h $(INCLUDE_DIRS)/config/pokemon.h $(DATA_SRC_SUBDIR)/pokemon/special_movesets.json $(INCLUDE_DIRS)/config/pokedex_plus_hgss.h $(LEARNSET_HELPERS_DIR)/make_teachables.py
 
@@ -569,8 +569,14 @@ $(DATA_SRC_SUBDIR)/pokemon/teachable_learnsets.h: $(TEACHABLE_DEPS) | $(ALL_TUTO
 $(DATA_SRC_SUBDIR)/tutor_moves.h: $(DATA_SRC_SUBDIR)/pokemon/special_movesets.json | $(ALL_TUTORS_JSON)
 	python3 $(LEARNSET_HELPERS_DIR)/make_teachables.py  --tutors $(LEARNSET_HELPERS_BUILD_DIR)
 
-$(DATA_SRC_SUBDIR)/mining_minigame.h: $(MINING_DEPS)
+$(DATA_SRC_SUBDIR)/mining_minigame/tile_data.h: $(MINING_DEPS)
 	python3 $(TOOLS_DIR)/mining_minigame/analyze_sprites.py
+
+$(DATA_SRC_SUBDIR)/mining_minigame/enums.h: $(DATA_SRC_SUBDIR)/mining_minigame/object_tables.json tools/mining_minigame/mining_enums.json.txt
+	$(JSONPROC) $^ $@
+
+$(DATA_SRC_SUBDIR)/mining_minigame/objects.h: $(DATA_SRC_SUBDIR)/mining_minigame/object_tables.json tools/mining_minigame/mining_objects.json.txt
+	$(JSONPROC) $^ $@
 
 # Linker script
 LD_SCRIPT := ld_script_modern.ld

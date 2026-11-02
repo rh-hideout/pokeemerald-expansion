@@ -1,0 +1,23 @@
+{{ doNotModifyHeader }}
+enum MiningId
+{
+    MININGID_NONE,
+## for stone in stones
+    MININGID_{{ stone.id }},
+## endfor
+    MINING_COUNT_ID_STONE = MININGID_{{ last(stones).id }},
+## for item in items
+    MININGID_{{ item.id }},
+## endfor
+};
+
+enum
+{
+    MINING_TAG_STONE_PAL = 12,
+## for stone in stones
+    MINING_TAG_{{ stone.id }},
+## endfor
+## for item in items
+    MINING_TAG_{{ item.id }},
+## endfor
+};
