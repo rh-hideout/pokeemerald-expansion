@@ -5340,7 +5340,7 @@ static const struct SpriteFrameImage sPicTable_Bruxish[] = {
 
 #if P_FAMILY_DRAMPA
 static const struct SpriteFrameImage sPicTable_Drampa[] = {
-    overworld_ascending_frames(gObjectEventPic_Drampa, 4, 4),
+    overworld_ascending_frames(gObjectEventPic_Drampa, 8, 8),
 };
 #endif //P_FAMILY_DRAMPA
 
