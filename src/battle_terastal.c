@@ -81,7 +81,7 @@ bool32 CanTerastallize(enum BattlerId battler)
     {
         // Skip all other checks in this block, go to HasTrainerUsedGimmick
     }
-    else if (!CheckBagHasItem(ITEM_TERA_ORB, 1))
+    else if (!HasPlayerUnlockedGimmick(GIMMICK_TERA))
     {
         return FALSE;
     }
