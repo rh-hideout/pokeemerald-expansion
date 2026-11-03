@@ -679,14 +679,15 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
             TURN { MOVE(playerLeft, MOVE_STOCKPILE); MOVE(opponentLeft, MOVE_STOCKPILE); }
             TURN { MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
         }
-        else if (IsTwoTurnMove(move))
-        {
-            TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
-            TURN {}
-        }
         else
         {
             TURN { MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        }
+
+        if (IsTwoTurnMove(move))
+        {
+            TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
+            TURN {}
         }
 
         switch (GetMoveEffect(move))
@@ -769,14 +770,15 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
             TURN { MOVE(playerLeft, MOVE_STOCKPILE); MOVE(opponentLeft, MOVE_STOCKPILE); }
             TURN { MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
         }
-        else if (IsTwoTurnMove(move))
-        {
-            TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
-            TURN {}
-        }
         else
         {
             TURN { MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        }
+
+        if (IsTwoTurnMove(move))
+        {
+            TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
+            TURN {}
         }
 
         switch (GetMoveEffect(move))
@@ -859,14 +861,15 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
             TURN { MOVE(playerLeft, MOVE_STOCKPILE); MOVE(opponentLeft, MOVE_STOCKPILE); }
             TURN { MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
         }
-        else if (IsTwoTurnMove(move))
-        {
-            TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
-            TURN {}
-        }
         else
         {
             TURN { MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        }
+
+        if (IsTwoTurnMove(move))
+        {
+            TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
+            TURN {}
         }
 
         switch (GetMoveEffect(move))
@@ -949,14 +952,15 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
             TURN { MOVE(playerLeft, MOVE_STOCKPILE); MOVE(opponentLeft, MOVE_STOCKPILE); }
             TURN { MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
         }
-        else if (IsTwoTurnMove(move))
-        {
-            TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
-            TURN {}
-        }
         else
         {
             TURN { MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        }
+
+        if (IsTwoTurnMove(move))
+        {
+            TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
+            TURN {}
         }
 
         switch (GetMoveEffect(move))
@@ -1039,14 +1043,15 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
             TURN { MOVE(playerLeft, MOVE_STOCKPILE); MOVE(opponentLeft, MOVE_STOCKPILE); }
             TURN { MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
         }
-        else if (IsTwoTurnMove(move))
-        {
-            TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
-            TURN {}
-        }
         else
         {
             TURN { MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        }
+
+        if (IsTwoTurnMove(move))
+        {
+            TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
+            TURN {}
         }
 
         switch (GetMoveEffect(move))
@@ -1129,14 +1134,15 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
             TURN { MOVE(playerLeft, MOVE_STOCKPILE); MOVE(opponentLeft, MOVE_STOCKPILE); }
             TURN { MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
         }
-        else if (IsTwoTurnMove(move))
-        {
-            TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
-            TURN {}
-        }
         else
         {
             TURN { MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        }
+
+        if (IsTwoTurnMove(move))
+        {
+            TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
+            TURN {}
         }
 
         switch (GetMoveEffect(move))
@@ -1219,14 +1225,15 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
             TURN { MOVE(playerLeft, MOVE_STOCKPILE); MOVE(opponentLeft, MOVE_STOCKPILE); }
             TURN { MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
         }
-        else if (IsTwoTurnMove(move))
-        {
-            TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
-            TURN {}
-        }
         else
         {
             TURN { MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        }
+
+        if (IsTwoTurnMove(move))
+        {
+            TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
+            TURN {}
         }
 
         switch (GetMoveEffect(move))
@@ -1309,14 +1316,15 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
             TURN { MOVE(playerLeft, MOVE_STOCKPILE); MOVE(opponentLeft, MOVE_STOCKPILE); }
             TURN { MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
         }
-        else if (IsTwoTurnMove(move))
-        {
-            TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
-            TURN {}
-        }
         else
         {
             TURN { MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        }
+
+        if (IsTwoTurnMove(move))
+        {
+            TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
+            TURN {}
         }
 
         switch (GetMoveEffect(move))
@@ -1400,14 +1408,15 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
             TURN { MOVE(playerLeft, MOVE_STOCKPILE); MOVE(opponentLeft, MOVE_STOCKPILE); }
             TURN { MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
         }
-        else if (IsTwoTurnMove(move))
-        {
-            TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
-            TURN {}
-        }
         else
         {
             TURN { MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        }
+
+        if (IsTwoTurnMove(move))
+        {
+            TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
+            TURN {}
         }
 
         switch (GetMoveEffect(move))
