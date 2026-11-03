@@ -1,4 +1,5 @@
 #include "global.h"
+#include "battle.h"
 #include "event_data.h"
 #include "main.h"
 #include "mass_outbreak.h"
@@ -7,6 +8,13 @@
 #include "region_map.h"
 #include "script.h"
 #include "wild_encounter.h"
+#include "config/wild_encounter.h"
+
+#define OUTBREAK_PROGRESS_VERSION 0x4F01
+#define OUTBREAK_SHINY_FIRST_THRESHOLD 30
+#define OUTBREAK_SHINY_SECOND_THRESHOLD 60
+
+static EWRAM_DATA bool8 sGeneratingMassOutbreakMon = FALSE;
 
 static const struct MassOutbreak sPokeOutbreakSpeciesList[OUTBREAK_COUNT] = {
     [OUTBREAK_ID_ROUTE102] = {
@@ -54,7 +62,7 @@ static const struct MassOutbreak sPokeOutbreakSpeciesList[OUTBREAK_COUNT] = {
 
 void ZeroMassOutbreak(void)
 {
-    gSaveBlock1Ptr->outbreakPokemonSpecies = 0;
+    ResetMassOutbreakProgress();
     gSaveBlock1Ptr->outbreakPokemonSpecies = 0;
     gSaveBlock1Ptr->outbreakLocationMapNum = 0;
     gSaveBlock1Ptr->outbreakLocationMapGroup = 0;
@@ -63,6 +71,51 @@ void ZeroMassOutbreak(void)
         gSaveBlock1Ptr->outbreakPokemonMoves[i] = 0;
     gSaveBlock1Ptr->outbreakPokemonProbability = 0;
     gSaveBlock1Ptr->outbreakDaysLeft = 0;
+}
+
+void ResetMassOutbreakProgress(void)
+{
+    gSaveBlock1Ptr->outbreakClearedCount = 0;
+    gSaveBlock1Ptr->outbreakProgressVersion = OUTBREAK_PROGRESS_VERSION;
+}
+
+u32 GetMassOutbreakClearedCount(void)
+{
+    // Older saves used these bytes as padding and must not receive an outbreak bonus from them.
+    if (gSaveBlock1Ptr->outbreakProgressVersion != OUTBREAK_PROGRESS_VERSION)
+        return 0;
+
+    return min(gSaveBlock1Ptr->outbreakClearedCount, OUTBREAK_SHINY_SECOND_THRESHOLD);
+}
+
+void UpdateMassOutbreakProgress(void)
+{
+    bool32 isOutbreakBattle = gBattleTypeFlags & BATTLE_TYPE_MASS_OUTBREAK;
+    gBattleTypeFlags &= ~BATTLE_TYPE_MASS_OUTBREAK;
+
+    if (!isOutbreakBattle || !IsMassOutbreakActive()
+     || gBattleTypeFlags & (BATTLE_TYPE_TRAINER | BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_FRONTIER | BATTLE_TYPE_CATCH_TUTORIAL))
+        return;
+
+    if (gBattleOutcome != B_OUTCOME_WON && gBattleOutcome != B_OUTCOME_CAUGHT)
+        return;
+
+    u32 clearedCount = GetMassOutbreakClearedCount();
+    gSaveBlock1Ptr->outbreakProgressVersion = OUTBREAK_PROGRESS_VERSION;
+    gSaveBlock1Ptr->outbreakClearedCount = min(clearedCount + 1, OUTBREAK_SHINY_SECOND_THRESHOLD);
+}
+
+u32 CalculateMassOutbreakShinyRolls(void)
+{
+    if (WE_MASS_OUTBREAK_SHINY_BONUS < GEN_9 || !sGeneratingMassOutbreakMon || !IsMassOutbreakActive())
+        return 0;
+
+    u32 clearedCount = GetMassOutbreakClearedCount();
+    if (clearedCount >= OUTBREAK_SHINY_SECOND_THRESHOLD)
+        return 2;
+    if (clearedCount >= OUTBREAK_SHINY_FIRST_THRESHOLD)
+        return 1;
+    return 0;
 }
 
 struct MassOutbreak GetStaticOutbreak(enum MassOutbreakIndex outbreakIdx)
@@ -93,6 +146,7 @@ void PrepareTvShowForRandomOutbreak(TVShow *show)
 
 void StartMassOutbreak(struct MassOutbreak outbreak)
 {
+    ResetMassOutbreakProgress();
     gSaveBlock1Ptr->outbreakPokemonSpecies = outbreak.species;
     gSaveBlock1Ptr->outbreakLocationMapNum = MAP_NUM(outbreak.location);
     gSaveBlock1Ptr->outbreakLocationMapGroup = MAP_GROUP(outbreak.location);
@@ -113,7 +167,10 @@ void StartStaticMassOutbreak(enum MassOutbreakIndex outbreakIdx)
 void UpdateMassOutbreakDaysLeft(u16 days)
 {
     if (gSaveBlock1Ptr->outbreakDaysLeft <= days)
+    {
         gSaveBlock1Ptr->outbreakDaysLeft = 0;
+        ResetMassOutbreakProgress();
+    }
     else
         gSaveBlock1Ptr->outbreakDaysLeft -= days;
 }
@@ -125,19 +182,30 @@ bool32 IsMassOutbreakActive(void)
 
 bool8 SetUpMassOutbreakEncounter(u8 flags)
 {
+    if (FlagGet(DN_FLAG_SEARCHING))
+        return FALSE;
+
     if (flags & WILD_CHECK_REPEL && !IsWildLevelAllowedByRepel(gSaveBlock1Ptr->outbreakPokemonLevel))
         return FALSE;
 
+    // Keep creation bonuses scoped to this Pokémon, including when an OWE is spawned without starting a battle.
+    sGeneratingMassOutbreakMon = TRUE;
     CreateWildMon(gSaveBlock1Ptr->outbreakPokemonSpecies, gSaveBlock1Ptr->outbreakPokemonLevel);
-    for (u32 i = 0; i < MAX_MON_MOVES; i++)
-        SetMonMoveSlot(&gParties[B_TRAINER_OPPONENT_A][0], gSaveBlock1Ptr->outbreakPokemonMoves[i], i);
+    sGeneratingMassOutbreakMon = FALSE;
+    SetMassOutbreakMonMoves(&gParties[B_TRAINER_OPPONENT_A][0]);
 
     return TRUE;
 }
 
+void SetMassOutbreakMonMoves(struct Pokemon *mon)
+{
+    for (u32 i = 0; i < MAX_MON_MOVES; i++)
+        SetMonMoveSlot(mon, gSaveBlock1Ptr->outbreakPokemonMoves[i], i);
+}
+
 bool8 DoMassOutbreakEncounterTest(void)
 {
-    if (gSaveBlock1Ptr->outbreakDaysLeft == 0)
+    if (gSaveBlock1Ptr->outbreakDaysLeft == 0 || FlagGet(DN_FLAG_SEARCHING))
         return FALSE;
 
     if (gSaveBlock1Ptr->location.mapNum != gSaveBlock1Ptr->outbreakLocationMapNum || gSaveBlock1Ptr->location.mapGroup != gSaveBlock1Ptr->outbreakLocationMapGroup)
@@ -211,6 +279,7 @@ void ScrCmd_setdynamicoutbreak(struct ScriptContext *ctx)
         return;
     }
 
+    ResetMassOutbreakProgress();
     gSaveBlock1Ptr->outbreakPokemonSpecies = species;
     gSaveBlock1Ptr->outbreakPokemonLevel = level;
     for (u32 i = 0; i < MAX_MON_MOVES; i++)
@@ -244,7 +313,11 @@ void ScrCmd_editoutbreak(struct ScriptContext *ctx)
     if (species != SPECIES_NONE)
     {
         if (IsSpeciesEnabled(species))
+        {
+            if (gSaveBlock1Ptr->outbreakPokemonSpecies != species)
+                ResetMassOutbreakProgress();
             gSaveBlock1Ptr->outbreakPokemonSpecies = species;
+        }
         else
             errorf("Trying to call editoutbreak with unknown species %d", species);
     }
@@ -277,10 +350,16 @@ void ScrCmd_editoutbreak(struct ScriptContext *ctx)
     }
 
     if (daysLeft != 0x3FFF)
+    {
         gSaveBlock1Ptr->outbreakDaysLeft = daysLeft;
+        if (daysLeft == 0)
+            ResetMassOutbreakProgress();
+    }
 
     if (map != MAP_UNDEFINED)
     {
+        if (gSaveBlock1Ptr->outbreakLocationMapNum != MAP_NUM(map) || gSaveBlock1Ptr->outbreakLocationMapGroup != MAP_GROUP(map))
+            ResetMassOutbreakProgress();
         gSaveBlock1Ptr->outbreakLocationMapNum = MAP_NUM(map);
         gSaveBlock1Ptr->outbreakLocationMapGroup = MAP_GROUP(map);
     }
@@ -325,7 +404,9 @@ void ScrCmd_getmassoutbreakdata(struct ScriptContext *ctx)
     case OUTBREAK_DATA_MAP:
         value = gSaveBlock1Ptr->outbreakLocationMapNum | (gSaveBlock1Ptr->outbreakLocationMapGroup << 8);
         break;
+    case OUTBREAK_DATA_CLEARED_COUNT:
+        value = GetMassOutbreakClearedCount();
+        break;
     }
     VarSet(varId, value);
 }
-
