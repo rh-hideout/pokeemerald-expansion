@@ -2952,7 +2952,7 @@ static void GetItemOrPrintError(u8 taskId, u32 itemIndex, enum Item itemId)
 {
     sMiningUiState->loadGameState++;
 
-    if (itemId == ITEM_NONE)
+    if (itemId == ITEM_NONE || !GetBuriedItemStatus(itemIndex))
         return;
 
     if (AddBagItem(itemId, 1))
