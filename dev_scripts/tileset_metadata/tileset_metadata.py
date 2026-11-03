@@ -100,6 +100,7 @@ def get_tileset_metadata(folder_path, tilesets_folder):
     result = {"tiles": tiles, "metatiles": metatiles, "has_triple_layer": has_triple_layer, "has_32bit_attributes": has_32bit_attributes}
     return (locations, result)
 
+'''
 def is_valid_schema(schema):
     bitfield = [0] * schema["size"]
     for attribute in schema["attributes"]:
@@ -116,40 +117,64 @@ def is_valid_schema(schema):
             print("Invalid attribute schema, field " + attribute["field"] + " has " + str(len(schema[attribute["field"]])) + " elements, expected " + str(field_values_count))
             return False
     return True
+'''
 
-def make_empty_tileset_schema(schema):
-    new_schema = {}
-    new_schema["size"] = schema["size"]
-    new_schema["attributes"] = []
-    for attr in schema["attributes"]:
-        new_attr = {"field": attr["field"], "starting_bit": attr["starting_bit"], "bitfield_size": attr["bitfield_size"]}
-        new_schema["attributes"].append(new_attr)
-        new_schema[attr["field"]] = [None] * len(schema[attr["field"]])
-    return new_schema
-
-def write_tileset_schema(metatile_attributes_path, schema):
-    tileset_schema = make_empty_tileset_schema(schema)
+def write_metatiles_csv(tileset_name, metatile_attributes_path, metatiles_path, schema, is_triple_layer):
+    with open(metatiles_path, "rb") as f:
+        data = f.read()
+    metatiles_data = list(struct.unpack("<" + "H" * (len(data) // 2), data))
     with open(metatile_attributes_path, "rb") as f:
         data = f.read()
     if schema["size"] == 16:
-        metatiles = list(struct.unpack("<" + "H" * (len(data) // 2), data))
+        metatile_attributes = list(struct.unpack("<" + "H" * (len(data) // 2), data))
     elif schema["size"] == 32:
-        metatiles = list(struct.unpack("<" + "I" * (len(data) // 4), data))
+        metatile_attributes = list(struct.unpack("<" + "I" * (len(data) // 4), data))
     else:
         print("error: " + metatile_attributes_path + " schema has an unsupported attributes size")
         return
-    metatiles_labels = []
-    for attribute in schema["attributes"]:
-        mask = ((1 << attribute["bitfield_size"]) - 1) << attribute["starting_bit"]
-        field = attribute["field"]
-        for metatile in metatiles:
-            value = (metatile & mask) >> attribute["starting_bit"]
-            if schema[field][value] == None:
-                print("error: " + metatile_attributes_path + " tileset uses value undefined in schema")
+    #print(metatile_attributes)
+    first_line = "label," + ",".join(schema["attributes"].keys()) + ",tile1,tile2,tile3,tile4,tile5,tile6,tile7,tile8"
+    if is_triple_layer:
+        first_line += ",tile9,tile10,tile11,tile12"
+        tiles_per_metatile = 12
+    else:
+        tiles_per_metatile = 8
+    csv_lines = [first_line + "\n"]
+    for i in range(len(metatiles_data) // tiles_per_metatile):
+        line = tileset_name.capitalize() + "Label" + str(i) + ","
+        for attribute, mask in schema["attributes"].items():
+            mask = int(mask, 16)
+            value = metatile_attributes[i] & mask;
+            while mask & 1 == 0:
+                mask = mask >> 1
+                value = value >> 1
+            if schema[attribute][value] == None:
+                print("error: " + metatile_attributes_path + " schema does not support value " + str(value) + "for " + attribute + " attribute")
                 return
-            tileset_schema[field][value] = schema[field][value]
-    with open(os.path.join(os.path.dirname(metatile_attributes_path), "attributes_schema.json"), "w+") as f:
-        json.dump(tileset_schema, f, indent=4)
+            value = schema[attribute][value]
+            line += str(value) + ","
+        metatile_offset = i * tiles_per_metatile
+        tiles = metatiles_data[(i * tiles_per_metatile):((i + 1) * tiles_per_metatile)]
+        tiles = [str(tile) for tile in tiles]
+        line = line + (",").join(tiles)
+        csv_lines.append(line + "\n")
+    with open(os.path.join(os.path.dirname(metatiles_path), "metatiles.csv"), "w+") as f:
+        f.writelines(csv_lines)
+
+def clean_tileset_palettes(palettes_folder_path, palettes_start, palettes_end):
+    for i in range(16):
+        if i >= palettes_start and i < palettes_end:
+            continue
+        palette_path = os.path.join(palettes_folder_path, str(i).zfill(2) + ".pal")
+        new_lines = []
+        with open(palette_path, 'r') as f:
+            palette_file = f.readlines()
+        for j, line in enumerate(palette_file):
+            if j >= 3 and j < 19:
+                line = "0 0 0\n"
+            new_lines.append(line)
+        with open(palette_path, 'w+') as f:
+            f.writelines(new_lines)
 
 if __name__ == '__main__':
     if len(sys.argv) > 1:

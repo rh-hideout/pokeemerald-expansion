@@ -1,17 +1,6 @@
 {
     "size": 16,
-    "attributes": [
-        {
-            "field": "behavior",
-            "starting_bit": 0,
-            "bitfield_size": 8
-        },
-        {
-            "field": "layer",
-            "starting_bit": 12,
-            "bitfield_size": 4
-        }
-    ],
+    "attributes": {"behavior": "0x00ff", "layer": "0xf000"},
     "layer": [
         "METATILE_LAYER_TYPE_NORMAL",
         "METATILE_LAYER_TYPE_COVERED",

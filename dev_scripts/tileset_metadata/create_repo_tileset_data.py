@@ -70,16 +70,16 @@ else:
 
 with open('metatile_attributes_schema.json', 'r') as f:
     repo_schemas.append(json.load(f))
-    if not tileset_metadata.is_valid_schema(repo_schemas[0]):
-        sys.exit(1)
+    #if not tileset_metadata.is_valid_schema(repo_schemas[0]):
+    #    sys.exit(1)
 
 if isExpansion:
     if not os.path.exists("metatile_attributes_schema_frlg.json"):
         exit_with_msg("expansion repo is missing frlg metaile attributes schema")
     with open('metatile_attributes_schema_frlg.json', 'r') as f:
         repo_schemas.append(json.load(f))
-    if not tileset_metadata.is_valid_schema(repo_schemas[1]):
-        sys.exit(1)
+    #if not tileset_metadata.is_valid_schema(repo_schemas[1]):
+    #    sys.exit(1)
 
 for root, subdirs, files in os.walk("data/tilesets/primary"):
     if not is_tileset_folder(root):
@@ -97,10 +97,11 @@ for root, subdirs, files in os.walk("data/tilesets/primary"):
         result["padded_metatiles"] = metatiles_in_primary[0]
         result["palettes_end"] = pals_in_primary[0]
         schema = repo_schemas[0]
-    metadata_path = os.path.join(root, "metadata.json")
-    with open(metadata_path, 'w+') as f:
-        json.dump(result, f, indent=4)
-    tileset_metadata.write_tileset_schema(locations["metatile_attributes"], schema)
+    #metadata_path = os.path.join(root, "metadata.json")
+    #with open(metadata_path, 'w+') as f:
+    #    json.dump(result, f, indent=4)
+    tileset_metadata.clean_tileset_palettes(locations["palettes"], result["palettes_start"], result["palettes_end"])
+    tileset_metadata.write_metatiles_csv(os.path.basename(root), locations["metatile_attributes"], locations["metatiles"], schema, result["has_triple_layer"])
 
 for root, subdirs, files in os.walk("data/tilesets/secondary"):
     if not is_tileset_folder(root):
@@ -118,7 +119,8 @@ for root, subdirs, files in os.walk("data/tilesets/secondary"):
         result["palettes_start"] = pals_in_primary[0]
         schema = repo_schemas[0]
     result["palettes_end"] = num_pals_total
-    metadata_path = os.path.join(root, "metadata.json")
-    with open(metadata_path, 'w+') as f:
-        json.dump(result, f, indent=4)
-    tileset_metadata.write_tileset_schema(locations["metatile_attributes"], schema)
+    #metadata_path = os.path.join(root, "metadata.json")
+    #with open(metadata_path, 'w+') as f:
+    #    json.dump(result, f, indent=4)
+    tileset_metadata.clean_tileset_palettes(locations["palettes"], result["palettes_start"], result["palettes_end"])
+    tileset_metadata.write_metatiles_csv(os.path.basename(root), locations["metatile_attributes"], locations["metatiles"], schema, result["has_triple_layer"])
