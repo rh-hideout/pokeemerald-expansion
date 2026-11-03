@@ -75,6 +75,21 @@ TEST("Terastallization type is reset to the default types when setting Tera Type
         || typeNone == GetSpeciesType(SPECIES_PIDGEY, 1));
 }
 
+TEST("Assigned Ribbon data supports every Ribbon and no Ribbon")
+{
+    u32 i, assignedRibbon;
+    struct Pokemon mon;
+
+    for (i = 0; i < NUM_ASSIGNED_RIBBON_VALUES; i++)
+    {
+        PARAMETRIZE { assignedRibbon = i; }
+    }
+
+    CreateMon(&mon, SPECIES_WOBBUFFET, 100, 0, OTID_STRUCT_PRESET(0));
+    SetMonData(&mon, MON_DATA_ASSIGNED_RIBBON, &assignedRibbon);
+    EXPECT_EQ(GetMonData(&mon, MON_DATA_ASSIGNED_RIBBON), assignedRibbon);
+}
+
 TEST("Shininess independent from PID and OTID")
 {
     u32 pid, otId, data;

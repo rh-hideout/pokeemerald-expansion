@@ -327,6 +327,7 @@
  * - Moves(moves...)
  * - Friendship(friendship)
  * - Status1(status1)
+ * - Ribbon(ribbonId)
  * For example to create a Wobbuffet that is poisoned:
  *     PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_POISON); }
  * Note if Speed is specified for any Pokémon then it must be specified
@@ -1054,6 +1055,7 @@ struct moveWithPP {
 #define MovesWithPP(movewithpp1, ...) MovesWithPP_(__LINE__, (struct moveWithPP[MAX_MON_MOVES]) {movewithpp1, __VA_ARGS__})
 #define Friendship(friendship) Friendship_(__LINE__, friendship)
 #define Status1(status1) Status1_(__LINE__, status1)
+#define Ribbon(ribbonId) Ribbon_(__LINE__, ribbonId)
 #define OTName(otName) do {static const u8 otName_[] = _(otName); OTName_(__LINE__, otName_);} while (0)
 #define DynamaxLevel(dynamaxLevel) DynamaxLevel_(__LINE__, dynamaxLevel)
 #define GigantamaxFactor(gigantamaxFactor) GigantamaxFactor_(__LINE__, gigantamaxFactor)
@@ -1098,6 +1100,7 @@ void Moves_(u32 sourceLine, u16 moves[MAX_MON_MOVES]);
 void MovesWithPP_(u32 sourceLine, struct moveWithPP moveWithPP[MAX_MON_MOVES]);
 void Friendship_(u32 sourceLine, u32 friendship);
 void Status1_(u32 sourceLine, u32 status1);
+void Ribbon_(u32 sourceLine, u32 ribbonId);
 void OTName_(u32 sourceLine, const u8 *otName);
 void DynamaxLevel_(u32 sourceLine, s16 dynamaxLevel);
 void GigantamaxFactor_(u32 sourceLine, bool32 gigantamaxFactor);
