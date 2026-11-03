@@ -2,7 +2,7 @@
 #include "test/battle.h"
 
 #define AI_FRAME_CEILING_SINGLES_NO_FLAGS                       2
-#define AI_FRAME_CEILING_SINGLES_SMART_TRAINER                  6
+#define AI_FRAME_CEILING_SINGLES_SMART_TRAINER                  7
 #define AI_FRAME_CEILING_DOUBLES_NO_FLAGS                       10
 #define AI_FRAME_CEILING_DOUBLES_SMART_TRAINER                  22
 #define AI_FRAME_CEILING_STEVEN_MULTI                           19

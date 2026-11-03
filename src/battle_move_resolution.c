@@ -1788,7 +1788,7 @@ static void SetValuesForTwoTurnMoveFire(struct BattleCalcValues *cv)
     gBattleScripting.battler = cv->battlerAtk;
     gBattleMons[cv->battlerAtk].volatiles.multipleTurns = FALSE;
     gBattleMons[cv->battlerAtk].volatiles.chargeTurn = FALSE;
-    gBattleMons[cv->battlerAtk].volatiles.semiInvulnerable = GetTwoTurnMoveSemiInvulnerability(gCurrentMove);
+    gBattleMons[cv->battlerAtk].volatiles.semiInvulnerable = STATE_NONE;
 }
 
 static enum CancelerResult CancelerCharging(struct BattleCalcValues *cv)
