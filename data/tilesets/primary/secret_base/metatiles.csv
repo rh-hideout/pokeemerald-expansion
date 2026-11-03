@@ -1,0 +1,3 @@
+label,behavior,layer,tile1,tile2,tile3,tile4,tile5,tile6,tile7,tile8
+Secret_baseLabel0,MB_NORMAL,METATILE_LAYER_TYPE_NORMAL,0,0,0,0,0,0,0,0
+Secret_baseLabel1,MB_NORMAL,METATILE_LAYER_TYPE_NORMAL,16479,16479,16479,16479,0,0,0,0
