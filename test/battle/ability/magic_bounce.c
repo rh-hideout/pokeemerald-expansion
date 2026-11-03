@@ -42,7 +42,7 @@ SINGLE_BATTLE_TEST("Magic Bounce wont activate if ability user protects")
 SINGLE_BATTLE_TEST("Magic Bounce wont activate if ability user is in a semi-invulnerable position")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_DIG) == EFFECT_SEMI_INVULNERABLE);
+        ASSUME(IsTwoTurnSemiInvulnerableMove(MOVE_DIG));
         ASSUME(GetMoveEffect(MOVE_TOXIC) == EFFECT_NON_VOLATILE_STATUS);
         ASSUME(GetMoveNonVolatileStatus(MOVE_TOXIC) == MOVE_EFFECT_TOXIC);
         PLAYER(SPECIES_WYNAUT);
@@ -211,7 +211,7 @@ SINGLE_BATTLE_TEST("Magic Bounce can't reflect back Stealth Rock from a semi-inv
 {
     GIVEN {
         ASSUME(GetMoveTarget(MOVE_STEALTH_ROCK) == TARGET_OPPONENTS_FIELD);
-        ASSUME(GetMoveEffect(MOVE_DIG) == EFFECT_SEMI_INVULNERABLE);
+        ASSUME(IsTwoTurnSemiInvulnerableMove(MOVE_DIG));
         PLAYER(SPECIES_MACHAMP) { Ability(ABILITY_NO_GUARD); }
         OPPONENT(SPECIES_ESPEON) { Ability(ABILITY_MAGIC_BOUNCE); }
     } WHEN {

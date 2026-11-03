@@ -4091,7 +4091,7 @@ static void HandleSetEffectInstruct(struct BattleCalcValues *cv, struct SetEffec
      || IsInstructBannedChargingMove(battlerDef)
      || gBattleMons[battlerDef].volatiles.bideTurns != 0
      || gBattleMons[battlerDef].volatiles.semiInvulnerable == STATE_SKY_DROP_TARGET
-     || gBattleMoveEffects[GetMoveEffect(move)].twoTurnEffect
+     || IsTwoTurnMove(move)
      || (GetActiveGimmick(battlerDef) == GIMMICK_DYNAMAX)
      || IsZMove(move)
      || IsMaxMove(move)

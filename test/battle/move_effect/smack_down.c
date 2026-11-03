@@ -65,7 +65,7 @@ SINGLE_BATTLE_TEST("Smack Down hits airborne pokemon and grounds them")
 {
     GIVEN {
         ASSUME(IsSpeciesOfType(SPECIES_PIDGEY, TYPE_FLYING));
-        ASSUME(GetMoveEffect(MOVE_FLY) == EFFECT_SEMI_INVULNERABLE);
+        ASSUME(IsTwoTurnSemiInvulnerableMove(MOVE_FLY));
         ASSUME(GetTwoTurnMoveSemiInvulnerability(MOVE_FLY) == STATE_ON_AIR);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_PIDGEY);

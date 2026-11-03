@@ -35,7 +35,7 @@ SINGLE_BATTLE_TEST("Foresight always hits unless the target is semi-invulnerable
 
     GIVEN {
         ASSUME_STAT_CHANGE(MOVE_DOUBLE_TEAM, evasion: +1);
-        ASSUME(GetMoveEffect(MOVE_FLY) == EFFECT_SEMI_INVULNERABLE);
+        ASSUME(IsTwoTurnSemiInvulnerableMove(MOVE_FLY));
         PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_FORESIGHT, MOVE_SPLASH); Speed(10); }
         OPPONENT(SPECIES_SQUAWKABILLY) { Moves(MOVE_DOUBLE_TEAM, MOVE_FLY); Speed(20); }
     } WHEN {

@@ -675,8 +675,6 @@ static bool32 FindMonThatAbsorbsOpponentsMove(struct SwitchAiContext *switchCont
 // Ideally this is replaced with predicted moves being factored into switchin 1v1 calcs instead, and this can be seen as a "free" switch there; future work :)
 static bool32 ShouldSwitchIfOpponentChargingOrInvulnerable(struct SwitchAiContext *switchContext)
 {
-    enum BattleMoveEffects effect = GetMoveEffect(switchContext->incomingMove);
-
     if (IsDoubleBattle() || !(gAiThinkingStruct->aiFlags[switchContext->battler] & AI_FLAG_SMART_SWITCHING))
         return FALSE;
 
@@ -684,7 +682,7 @@ static bool32 ShouldSwitchIfOpponentChargingOrInvulnerable(struct SwitchAiContex
     // First turn of Fly/Dive/Bounce/Sky Drop: move is selected this turn but user is not yet semi-invulnerable.
     // Opponent is already semi-invulnerable.
     if (!(IsTwoTurnNotSemiInvulnerableMove(switchContext->opposingBattler, switchContext->incomingMove)
-        || ((effect == EFFECT_SEMI_INVULNERABLE || effect == EFFECT_SKY_DROP) && !IsSemiInvulnerable(switchContext->opposingBattler, CHECK_ALL))
+        || (IsTwoTurnSemiInvulnerableMove(switchContext->incomingMove) && !IsSemiInvulnerable(switchContext->opposingBattler, CHECK_ALL))
         || IsSemiInvulnerable(switchContext->opposingBattler, CHECK_ALL)))
     {
         return FALSE;
