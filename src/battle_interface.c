@@ -3259,28 +3259,16 @@ static void TryHideOrRestoreLastUsedBall(u8 caseId)
     {
     case 0: // hide
         if (gBattleStruct->ballSpriteIds[0] != MAX_SPRITES)
-        {
             gSprites[gBattleStruct->ballSpriteIds[0]].sHide = TRUE;
-            gSprites[gBattleStruct->battleStatusHintSpriteId].sHide = TRUE;
-        }
         if (gBattleStruct->ballSpriteIds[1] != MAX_SPRITES)
-        {
             gSprites[gBattleStruct->ballSpriteIds[1]].sHide = TRUE;
-            gSprites[gBattleStruct->battleStatusHintSpriteId].sHide = TRUE;
-        }
         gLastUsedBallMenuPresent = FALSE;
         break;
     case 1: // restore
         if (gBattleStruct->ballSpriteIds[0] != MAX_SPRITES)
-        {
             gSprites[gBattleStruct->ballSpriteIds[0]].sHide = FALSE;
-            gSprites[gBattleStruct->battleStatusHintSpriteId].sHide = FALSE;
-        }
         if (gBattleStruct->ballSpriteIds[1] != MAX_SPRITES)
-        {
             gSprites[gBattleStruct->ballSpriteIds[1]].sHide = FALSE;
-            gSprites[gBattleStruct->battleStatusHintSpriteId].sHide = FALSE;
-        }
         gLastUsedBallMenuPresent = TRUE;
         break;
     }
@@ -3288,13 +3276,40 @@ static void TryHideOrRestoreLastUsedBall(u8 caseId)
         ArrowsChangeColorLastBallCycle(0); //Default the arrows to be invisible
 }
 
-void TryHideLastUsedBall(void)
+static void TryHideOrRestoreBattleInfoMenu(u8 caseId)
+{
+    if (B_INFO_ENABLED == FALSE)
+        return;
+    if (gBattleStruct->battleStatusHintSpriteId == MAX_SPRITES)
+        return;
+
+    switch (caseId)
+    {
+    case 0: // hide
+        if (gBattleStruct->ballSpriteIds[0] != MAX_SPRITES)
+            gSprites[gBattleStruct->battleStatusHintSpriteId].sHide = TRUE;
+        if (gBattleStruct->ballSpriteIds[1] != MAX_SPRITES)
+            gSprites[gBattleStruct->battleStatusHintSpriteId].sHide = TRUE;
+        break;
+    case 1: // restore
+        if (gBattleStruct->ballSpriteIds[0] != MAX_SPRITES)
+            gSprites[gBattleStruct->battleStatusHintSpriteId].sHide = FALSE;
+        if (gBattleStruct->ballSpriteIds[1] != MAX_SPRITES)
+            gSprites[gBattleStruct->battleStatusHintSpriteId].sHide = FALSE;
+        break;
+    }
+}
+
+void TryHideLastUsedBallAndBattleInfoMenu(void)
 {
     if (B_LAST_USED_BALL_BUTTON == L_BUTTON && gSaveBlock2Ptr->optionsButtonMode == OPTIONS_BUTTON_MODE_L_EQUALS_A)
         return;
 
     if (B_LAST_USED_BALL == TRUE)
         TryHideOrRestoreLastUsedBall(0);
+
+    if (B_INFO_ENABLED == TRUE)
+        TryHideOrRestoreBattleInfoMenu(0);
 }
 
 void TryRestoreLastUsedBall(void)
