@@ -52,6 +52,7 @@ Since NPCs move, the player finds them through the world:
 - NPC Pokemon eat, rest and recover like the player's.
 - NPC trainers can encounter and battle wild Pokemon, and lose.
 - NPC Pokemon can be tracked individuals just like wild ones (open question below).
+- **Shared NPC–Pokémon living-world events are locked:** meaningful care, rescue, encounters, travel, trade and habitat effects can occur off-screen and persist, subject to identity and resource accounting. See [Shared living-world events](root/shared-world-events.md).
 - NPCs can become part of ecosystem events: visiting groves, driving off predators, or getting hurt and needing help.
 
 ## Engine reality check
@@ -59,7 +60,7 @@ Since NPCs move, the player finds them through the world:
 Emerald's NPCs are fixed object events with simple movement types. Autonomy needs custom code:
 
 - **On-screen:** real pathing between a few points of interest, driven by time of day and current goal.
-- **Off-screen:** NPCs are updated in bulk when the player changes maps or time passes, using a coarse state (location, activity, hunger) instead of live movement.
+- **Off-screen:** NPCs use the shared hybrid scheduler during active gameplay and bounded relevance catch-up, using coarse state (location, activity, hunger) instead of live movement. No time advances while the game is closed. See [Off-screen scheduler](root/offscreen-scheduler.md).
 - **Importance tiers** control cost: major NPCs (leaders, rivals, shopkeepers) get full state, minor ones get simple loops.
 - **Save space:** a small record per tracked NPC (location, activity, state). Budget must be measured in the repo.
 

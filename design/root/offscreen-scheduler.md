@@ -59,7 +59,7 @@ The player spends an in-game day exploring another region. During play, the sche
 - Exact save representation of progress markers, random state and partial transactions.
 - How to make migration/population transfers atomic across habitats.
 - Whether to provide a debug overlay and reproducible event log for tests.
-- How to coordinate NPC routines with Pokémon ecology through the same scheduler.
+- Shared NPC–Pokémon consequential events are locked; event schema, scheduling integration and transaction boundaries remain open. See [Shared living-world events](shared-world-events.md).
 
 ## Acceptance scenarios
 

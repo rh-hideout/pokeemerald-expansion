@@ -13,7 +13,7 @@ This is the authoritative **high-level vision**, not an implementation checklist
 - **Inspiration:** Rain World's autonomous creature ecology, individual interactions and off-screen abstraction inspire the design, but not its mandatory rain-cycle timer or global survival pressure.
 - **Creatures:** visible wild Pokémon with autonomous behavior and a living food chain. **Tiered persistence is locked**: notable individuals retain identity; ordinary populations are abstracted until an individual becomes significant. See [Individual persistence](root/individual-persistence.md).
 - **Survival:** player, NPCs, party Pokémon, and wild creatures eat; hunger matters but cannot permanently kill anyone or erase a save.
-- **People:** NPCs have routines, needs and relationships; trainers' challenges are optional and gym leaders are not fixed in place.
+- **People:** NPCs have routines, needs and relationships; trainers' challenges are optional and gym leaders are not fixed in place. **Shared NPC–Pokémon events are locked:** consequential interactions may affect relationships, resources and journeys off-screen. See [Shared living-world events](root/shared-world-events.md).
 - **Travel:** ledges can be climbed, Pokémon can help traverse land/water/air, and mount travel is directly controlled rather than teleportation. Natural hazards and stamina matter.
 
 ## 1. World and exploration

@@ -19,7 +19,8 @@
 13. [Hybrid off-screen scheduler](root/offscreen-scheduler.md) — locked distributed updates and bounded in-game catch-up.
 14. [Hybrid catch-up](root/hybrid-catchup.md) — locked aggregate ecology and selective notable events.
 15. [Adaptive scheduling](root/adaptive-scheduling.md) — locked relevance priorities and starvation-free distant updates.
-16. [Save budget investigation](root/save-budget.md) — verified storage structure, pending measured sizes.
+16. [Shared living-world events](root/shared-world-events.md) — locked consequential NPC–Pokémon interactions off-screen.
+17. [Save budget investigation](root/save-budget.md) — verified storage structure, pending measured sizes.
 
 Detailed topic documents follow.
 
@@ -54,6 +55,7 @@ Detailed topic documents follow.
 - **Locked:** hybrid scheduled off-screen simulation, with distributed jobs and bounded catch-up for elapsed in-game time. See [Off-screen scheduler](root/offscreen-scheduler.md).
 - **Locked:** hybrid catch-up uses aggregate ordinary ecology and selective consequential notable-individual events. See [Hybrid catch-up](root/hybrid-catchup.md).
 - **Locked:** adaptive scheduler priority with fairness and aging, so distant habitats are eventually serviced. See [Adaptive scheduling](root/adaptive-scheduling.md).
+- **Locked:** shared consequential NPC–Pokémon events, including off-screen interactions and persistent effects. See [Shared living-world events](root/shared-world-events.md).
 - **Still open:** save-space measurement, exact clock tuning, record serialization/limits and several world-balancing details. See [Dependencies](dependencies.md).
 - **Original source:** `despairarc000/pokeclaude`, branch `design-docs`, commit `f16c0f9853ffd4556a0be8af15a505cdae64dc66`.
 - **Preserved original backup:** `despairarc000/atlasgba`, branch `archive/pokeclaude-design-docs-2026-11-04`, commit `77fdd3ed888ea2d33043728b616fa81940168e52`; a second complete backup is in Google Drive.

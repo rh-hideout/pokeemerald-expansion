@@ -5,7 +5,7 @@
 ## Locked rules
 
 1. **Aggregate ordinary ecology.** Food supply, population growth/decline, recovery, habitat pressure and ordinary migration are advanced through bounded summaries, not one event per anonymous Pokémon.
-2. **Selective notable events.** Persistent individuals can experience consequential journeys, survival, nesting, offspring, relationships and personality development off-screen. Process only events that materially affect persistent state, within a bounded workload.
+2. **Selective notable events.** Persistent individuals can experience consequential journeys, survival, nesting, offspring, relationships and personality development off-screen, including [shared NPC–Pokémon events](shared-world-events.md). Process only events that materially affect persistent state, within a bounded workload.
 3. **Preserve chronology where it matters.** Family formation cannot precede necessary conditions; a Pokémon cannot be in two habitats simultaneously; graph travel must respect edge availability and travel time.
 4. **Exactly-once interval accounting.** Every update consumes a known in-game interval; progress markers and event identifiers or equivalent safeguards prevent repeated births, transfers and promotions on re-entry/save-load.
 5. **Conservation and identity.** Aggregate migration debits and credits matching habitats; notable promotion removes the corresponding anonymous member exactly once; a persistent traveler is never double-counted or cloned.
