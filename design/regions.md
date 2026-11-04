@@ -1,6 +1,6 @@
 # Regions
 
-A fresh world of 14 regions. None are copies of official Pokemon regions. The world is open: any region can be explored at any time. No linear path, and story is a side thing.
+A fresh world of 14 regions. None are copies of official Pokemon regions. The world is nonlinear: players choose their region order without compulsory story or badge gating, although distance, terrain and preparation can affect practical reachability. The [hybrid geography decision](root/hybrid-world-geography.md) connects regions via landmasses, islands, oceans, underground routes and elevations; exact adjacency remains undecided.
 
 | # | Region | Biome | Typical danger |
 |---|---|---|---|

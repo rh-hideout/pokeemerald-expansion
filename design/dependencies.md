@@ -4,6 +4,8 @@ This is a **prerequisite graph**, not a claim that every design document must wa
 
 ## Layer 0 — roots
 
+**World geography (locked):** [hybrid geography](root/hybrid-world-geography.md) requires coherent regional connectivity across land, water, air and underground routes. Actual map topology and engine constraints remain open.
+
 **Player progression (locked):** [parallel progression](root/parallel-player-progression.md) constrains battle rewards, bond/knowledge persistence, traversal access, optional badges and player-facing feedback. Exact data structures and UI are not decided.
 
 **Wild encounter interface (locked):** [hybrid wild Pokémon encounters](root/hybrid-wild-encounters.md) require overworld entity representation, battle transitions, identity-safe capture reconciliation, and measured object/runtime limits. Exact integration is unverified.

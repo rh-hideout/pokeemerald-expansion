@@ -2,6 +2,8 @@
 
 Ledges are no longer one-way drops. The player can climb, trek and cross terrain, often with the help of their Pokemon. How you get through the world is part of the exploration.
 
+**World structure (locked):** traversal connects land, sea, underground and elevated routes within a [hybrid geographic world](root/hybrid-world-geography.md). Exact map links and movement implementation remain open.
+
 ## Core principles
 
 1. **Ledges become climbable.** What used to be a one-way hop is now a route you can go up or down.

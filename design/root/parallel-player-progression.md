@@ -2,6 +2,8 @@
 
 **Decision: LOCKED (2026-11-04).** Player growth occurs through several independent but interacting dimensions: Pokémon training, relationships and care, exploration knowledge, traversal capabilities, discoveries, and optional gym achievements. There is **no single mandatory global progression ladder** or badge/story requirement for enjoying the other paths.
 
+**Geography interface:** [hybrid world geography](hybrid-world-geography.md) makes traversal capability and route knowledge meaningful without story/badge locks.
+
 ## Progression dimensions
 
 | Path | Meaningful growth | Example evidence of progress |

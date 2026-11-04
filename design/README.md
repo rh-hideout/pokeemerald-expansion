@@ -35,7 +35,8 @@
 29. [Regional dynamic economy](root/regional-dynamic-economy.md) — locked settlement aggregates, connected trade, scarcity and gradual prices.
 30. [Hybrid wild Pokémon encounters](root/hybrid-wild-encounters.md) — locked overworld interaction and traditional battle compatibility.
 31. [Parallel player progression](root/parallel-player-progression.md) — locked independent advancement across training, relationships, exploration, traversal, discoveries and optional gyms.
-32. [Save budget investigation](root/save-budget.md) — verified storage structure, pending measured sizes.
+32. [Hybrid world geography](root/hybrid-world-geography.md) — locked connected landmasses, islands, oceans, underground and elevated travel.
+33. [Save budget investigation](root/save-budget.md) — verified storage structure, pending measured sizes.
 
 Detailed topic documents follow.
 
@@ -55,6 +56,8 @@ Detailed topic documents follow.
 | Travel | [Riding and mounts](riding-and-mounts.md) |
 
 ## Status and provenance
+
+- **Locked hybrid geography:** the 14 regions connect through landmasses, islands, oceans, underground routes and elevations; no compulsory story or badge gating. See [Hybrid world geography](root/hybrid-world-geography.md).
 
 - **Locked parallel progression:** training, relationships, exploration, traversal, discoveries and optional gym achievements develop without one mandatory global ladder. See [Parallel progression](root/parallel-player-progression.md).
 

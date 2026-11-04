@@ -6,6 +6,8 @@ This is the authoritative **high-level vision**, not an implementation checklist
 
 ## Agreed direction
 
+**Locked world geography:** [hybrid connected geography](root/hybrid-world-geography.md) mixes landmasses, islands, oceans, underground networks and elevated regions. Travel is nonlinear and geography-driven; precise regional adjacency is still open.
+
 **Locked progression pillar:** [parallel player progression](root/parallel-player-progression.md) recognizes Pokémon training, relationships, exploration knowledge, traversal, discoveries and optional gyms as independent but interacting achievements; no compulsory global ladder.
 
 **Locked encounter pillar:** [hybrid wild Pokémon encounters](root/hybrid-wild-encounters.md) combine natural overworld interaction with traditional Pokémon battle and capture compatibility, including canonical identity transfer.

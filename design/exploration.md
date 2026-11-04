@@ -4,6 +4,8 @@ The world is wide but dense in detail. No corner is filler. Every stretch of map
 
 **Progression (locked):** exploration knowledge and discovery are valid independent progress paths within [parallel player progression](root/parallel-player-progression.md); no mandatory gym or story completion is needed.
 
+**Geography (locked):** the world mixes connected landmasses, islands, oceans, underground and elevated routes, with nonlinear travel. See [Hybrid world geography](root/hybrid-world-geography.md).
+
 ## Core principles
 
 1. **Wide and dense.** Large regions, but no empty space. Distance is made interesting, not skipped.
