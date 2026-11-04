@@ -6,6 +6,8 @@ This is the authoritative **high-level vision**, not an implementation checklist
 
 ## Agreed direction
 
+**Locked core gameplay pillar:** a [balanced Pokémon sandbox](root/balanced-pokemon-sandbox.md). Exploration, collection, battles, care/bonding, survival/travel and living-world participation are all legitimate ways to play; no single compulsory progression track. Exploration and autonomy remain distinctive.
+
 - **Foundation:** use this `pokeemerald-expansion` fork, not vanilla `pokeemerald`. Expansion provides a broader species and mechanics foundation; exact enabled roster/build settings must be verified.
 - **World:** 14 original named regions, open exploration, no forced linear story. Meadowmere is the gentle start; Neonport is the travel hub. Ur-Kalah is almost uncivilized and has no gyms.
 - **Tone:** Safe, Calm, Wild, and Perilous conditions; danger should be visible or reliably signaled, with an opportunity to avoid or escape. Unavoidable surprise encounters are not the design goal.

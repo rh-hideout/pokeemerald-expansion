@@ -6,33 +6,34 @@
 
 1. [Overview](overview.md) — the grouped vision, agreed direction and unsettled choices.
 2. [Dependencies](dependencies.md) — the real prerequisite relationships and root decisions.
-3. [World clock](root/world-clock.md) — locked game-time model and remaining tuning parameters.
-4. [Individual persistence](root/individual-persistence.md) — locked tiered identity rules and unresolved lifecycle details.
-5. [Ecological migration](root/ecological-migration.md) — locked cross-region wildlife movement, constrained by habitat and geography.
-6. [Dynamic population ecology](root/population-ecology.md) — locked reproduction, decline, recovery and bounded ecosystem change.
-7. [Hybrid reproduction](root/hybrid-reproduction.md) — locked abstract births and persistent family relationships.
-8. [Selective social memory](root/social-memory.md) — locked evolving relationships and bounded meaningful memories.
-9. [Utility-based wild AI](root/utility-ai.md) — locked need-driven behavior selection and safety overrides.
-10. [Evolving personality](root/evolving-personality.md) — locked gradual, experience-driven individual behavioral traits.
-11. [Multi-sensory perception](root/multi-sensory-perception.md) — locked environment-aware senses and partial knowledge.
-12. [Hybrid navigation](root/hybrid-navigation.md) — locked local pathfinding and habitat/region graph travel.
-13. [Hybrid off-screen scheduler](root/offscreen-scheduler.md) — locked distributed updates and bounded in-game catch-up.
-14. [Hybrid catch-up](root/hybrid-catchup.md) — locked aggregate ecology and selective notable events.
-15. [Adaptive scheduling](root/adaptive-scheduling.md) — locked relevance priorities and starvation-free distant updates.
-16. [Shared living-world events](root/shared-world-events.md) — locked consequential NPC–Pokémon interactions off-screen.
-17. [Tiered NPC persistence](root/npc-persistence.md) — locked notable identities and abstract background people.
-18. [Hybrid NPC routines and utility AI](root/npc-routine-utility.md) — locked predictable schedules with autonomous needs/events interruptions.
-19. [Selective NPC social memory](root/npc-social-memory.md) — locked meaningful memories and evolving human/Pokémon ties.
-20. [Evolving NPC personality](root/npc-evolving-personality.md) — locked slow experience-shaped human dispositions.
-21. [Hybrid NPC navigation](root/npc-hybrid-navigation.md) — locked local pathfinding and connected world-route travel.
-22. [Contextual NPC perception](root/npc-contextual-perception.md) — locked bounded sight, hearing and off-screen awareness.
-23. [Selective NPC information sharing](root/npc-information-sharing.md) — locked gradual, imperfect rumors and meaningful news.
-24. [Dynamic NPC small groups](root/npc-dynamic-groups.md) — locked emergent small-group membership within stable towns and institutions.
-25. [Hybrid NPC long-term goals](root/npc-long-term-goals.md) — locked authored commitments and evolving personal ambitions.
-26. [Hybrid hierarchical NPC planning](root/npc-hierarchical-planning.md) — locked adaptive milestones with utility-selected immediate actions.
-27. [Hybrid NPC resource management](root/npc-resource-management.md) — locked consequential possessions and aggregate ordinary activity.
-28. [Regional dynamic economy](root/regional-dynamic-economy.md) — locked settlement aggregates, connected trade, scarcity and gradual prices.
-29. [Save budget investigation](root/save-budget.md) — verified storage structure, pending measured sizes.
+3. [Balanced Pokémon sandbox](root/balanced-pokemon-sandbox.md) — locked core player-experience pillar and multiple legitimate play paths.
+4. [World clock](root/world-clock.md) — locked game-time model and remaining tuning parameters.
+5. [Individual persistence](root/individual-persistence.md) — locked tiered identity rules and unresolved lifecycle details.
+6. [Ecological migration](root/ecological-migration.md) — locked cross-region wildlife movement, constrained by habitat and geography.
+7. [Dynamic population ecology](root/population-ecology.md) — locked reproduction, decline, recovery and bounded ecosystem change.
+8. [Hybrid reproduction](root/hybrid-reproduction.md) — locked abstract births and persistent family relationships.
+9. [Selective social memory](root/social-memory.md) — locked evolving relationships and bounded meaningful memories.
+10. [Utility-based wild AI](root/utility-ai.md) — locked need-driven behavior selection and safety overrides.
+11. [Evolving personality](root/evolving-personality.md) — locked gradual, experience-driven individual behavioral traits.
+12. [Multi-sensory perception](root/multi-sensory-perception.md) — locked environment-aware senses and partial knowledge.
+13. [Hybrid navigation](root/hybrid-navigation.md) — locked local pathfinding and habitat/region graph travel.
+14. [Hybrid off-screen scheduler](root/offscreen-scheduler.md) — locked distributed updates and bounded in-game catch-up.
+15. [Hybrid catch-up](root/hybrid-catchup.md) — locked aggregate ecology and selective notable events.
+16. [Adaptive scheduling](root/adaptive-scheduling.md) — locked relevance priorities and starvation-free distant updates.
+17. [Shared living-world events](root/shared-world-events.md) — locked consequential NPC–Pokémon interactions off-screen.
+18. [Tiered NPC persistence](root/npc-persistence.md) — locked notable identities and abstract background people.
+19. [Hybrid NPC routines and utility AI](root/npc-routine-utility.md) — locked predictable schedules with autonomous needs/events interruptions.
+20. [Selective NPC social memory](root/npc-social-memory.md) — locked meaningful memories and evolving human/Pokémon ties.
+21. [Evolving NPC personality](root/npc-evolving-personality.md) — locked slow experience-shaped human dispositions.
+22. [Hybrid NPC navigation](root/npc-hybrid-navigation.md) — locked local pathfinding and connected world-route travel.
+23. [Contextual NPC perception](root/npc-contextual-perception.md) — locked bounded sight, hearing and off-screen awareness.
+24. [Selective NPC information sharing](root/npc-information-sharing.md) — locked gradual, imperfect rumors and meaningful news.
+25. [Dynamic NPC small groups](root/npc-dynamic-groups.md) — locked emergent small-group membership within stable towns and institutions.
+26. [Hybrid NPC long-term goals](root/npc-long-term-goals.md) — locked authored commitments and evolving personal ambitions.
+27. [Hybrid hierarchical NPC planning](root/npc-hierarchical-planning.md) — locked adaptive milestones with utility-selected immediate actions.
+28. [Hybrid NPC resource management](root/npc-resource-management.md) — locked consequential possessions and aggregate ordinary activity.
+29. [Regional dynamic economy](root/regional-dynamic-economy.md) — locked settlement aggregates, connected trade, scarcity and gradual prices.
+30. [Save budget investigation](root/save-budget.md) — verified storage structure, pending measured sizes.
 
 Detailed topic documents follow.
 
@@ -52,6 +53,8 @@ Detailed topic documents follow.
 | Travel | [Riding and mounts](riding-and-mounts.md) |
 
 ## Status and provenance
+
+- **Locked core experience:** balanced Pokémon sandbox with exploration, collection, battles, bonding, survival and world participation as legitimate paths. See [Core player experience](root/balanced-pokemon-sandbox.md).
 
 - **Locked foundation:** the Expansion fork is the codebase. This is not a pending rebase.
 - **Locked:** the Expansion codebase and the in-game-only world clock (no offline progression). See [World clock](root/world-clock.md).

@@ -1,6 +1,6 @@
 # Food and Survival
 
-This is a survival game. **Everyone eats**: the player, NPCs, wild Pokemon and the player's own Pokemon. Berries are the base food, with other foods added on top.
+Survival is one complementary pillar of the [balanced Pokémon sandbox](root/balanced-pokemon-sandbox.md), not a compulsory high-pressure playstyle. **Everyone eats**: the player, NPCs, wild Pokemon and the player's own Pokemon. Berries are the base food, with other foods added on top.
 
 ## Core rules
 

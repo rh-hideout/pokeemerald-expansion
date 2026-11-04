@@ -1,5 +1,7 @@
 # Trainers and Gyms
 
+Trainer battles and gym circuits are optional, meaningful paths within the [balanced Pokémon sandbox](root/balanced-pokemon-sandbox.md), not prerequisites for every other activity.
+
 ## Trainers
 
 - When a trainer sees the player there is a **chance** they challenge. Many just let the player pass.

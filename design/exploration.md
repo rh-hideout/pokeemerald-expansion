@@ -1,6 +1,6 @@
 # Exploration
 
-The world is wide but dense in detail. No corner is filler. Every stretch of map has something that makes the player stop, look and wonder. Exploration is the main game, and nothing is gated by story.
+The world is wide but dense in detail. No corner is filler. Every stretch of map has something that makes the player stop, look and wonder. Exploration is a defining pillar, but not a mandatory dominant activity: the [balanced Pokémon sandbox](root/balanced-pokemon-sandbox.md) also values collection, battles, bonding, survival and world participation. Nothing is gated by compulsory story completion.
 
 ## Core principles
 

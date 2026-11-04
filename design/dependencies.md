@@ -4,6 +4,8 @@ This is a **prerequisite graph**, not a claim that every design document must wa
 
 ## Layer 0 — roots
 
+**Core player-experience pillar (locked):** [balanced Pokémon sandbox](root/balanced-pokemon-sandbox.md). It constrains progression, encounter/capture design, traversal, optional gyms, UI and vertical-slice acceptance without predetermining technical algorithms.
+
 | Root decision | Status | What depends on it |
 |---|---|---|
 | **Code foundation** | **Decided:** `rh-hideout/pokeemerald-expansion` fork | Supported species, forms, engine APIs, collision and battle features |
