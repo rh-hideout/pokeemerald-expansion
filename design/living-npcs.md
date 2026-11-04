@@ -59,7 +59,7 @@ Since NPCs move, the player finds them through the world:
 
 Emerald's NPCs are fixed object events with simple movement types. Autonomy needs custom code:
 
-- **On-screen:** real pathing between a few points of interest, driven by time of day, routine commitments and utility-selected goals. See [NPC routines and utility](root/npc-routine-utility.md).
+- **On-screen:** bounded local pathfinding between points of interest, driven by time of day, routine commitments and utility-selected goals. **Hybrid NPC navigation is locked:** distant journeys follow an access-aware world-route graph, not arbitrary location jumps. See [NPC navigation](root/npc-hybrid-navigation.md) and [NPC routines and utility](root/npc-routine-utility.md).
 - **Off-screen:** NPCs use the shared hybrid scheduler during active gameplay and bounded relevance catch-up, using coarse state (location, activity, hunger) instead of live movement. No time advances while the game is closed. See [Off-screen scheduler](root/offscreen-scheduler.md).
 - **Tiered NPC persistence is locked:** important or meaningfully promoted individuals keep stable identities and histories; ordinary people use lightweight routines or abstract crowds. Promotion can follow player interactions or autonomous events. See [NPC persistence](root/npc-persistence.md).
 - **Save space:** a small record per tracked NPC (location, activity, state). Budget must be measured in the repo.
@@ -67,6 +67,6 @@ Emerald's NPCs are fixed object events with simple movement types. Autonomy need
 ## Open questions
 
 - How many NPCs can be stored as notables, and the exact promotion/overflow rules (tiered policy already locked).
-- Whether NPCs can leave their region and how that is tracked.
+- Cross-region NPC travel through connected routes is locked; graph topology, transport rules and progress serialization remain open. See [NPC navigation](root/npc-hybrid-navigation.md).
 - Whether NPC Pokemon are individually tracked.
 - How the player gets notified of notable NPC events when far away.

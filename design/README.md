@@ -24,7 +24,8 @@
 18. [Hybrid NPC routines and utility AI](root/npc-routine-utility.md) — locked predictable schedules with autonomous needs/events interruptions.
 19. [Selective NPC social memory](root/npc-social-memory.md) — locked meaningful memories and evolving human/Pokémon ties.
 20. [Evolving NPC personality](root/npc-evolving-personality.md) — locked slow experience-shaped human dispositions.
-21. [Save budget investigation](root/save-budget.md) — verified storage structure, pending measured sizes.
+21. [Hybrid NPC navigation](root/npc-hybrid-navigation.md) — locked local pathfinding and connected world-route travel.
+22. [Save budget investigation](root/save-budget.md) — verified storage structure, pending measured sizes.
 
 Detailed topic documents follow.
 
@@ -64,6 +65,7 @@ Detailed topic documents follow.
 - **Locked:** hybrid NPC routines and utility AI: predictable commitments with autonomous, meaningful interruptions. See [NPC routines and utility](root/npc-routine-utility.md).
 - **Locked:** selective NPC social memory, including evolving relationships with people and Pokémon and consequential off-screen events. See [NPC social memory](root/npc-social-memory.md).
 - **Locked:** notable NPC personalities evolve slowly from significant experiences, including autonomous events. See [NPC evolving personality](root/npc-evolving-personality.md).
+- **Locked:** hybrid NPC navigation with bounded local routing and connected, access-aware world journeys. See [NPC navigation](root/npc-hybrid-navigation.md).
 - **Still open:** save-space measurement, exact clock tuning, record serialization/limits and several world-balancing details. See [Dependencies](dependencies.md).
 - **Original source:** `despairarc000/pokeclaude`, branch `design-docs`, commit `f16c0f9853ffd4556a0be8af15a505cdae64dc66`.
 - **Preserved original backup:** `despairarc000/atlasgba`, branch `archive/pokeclaude-design-docs-2026-11-04`, commit `77fdd3ed888ea2d33043728b616fa81940168e52`; a second complete backup is in Google Drive.

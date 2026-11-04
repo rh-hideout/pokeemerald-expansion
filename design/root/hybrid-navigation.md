@@ -1,6 +1,6 @@
 # Hybrid Pokémon navigation — root design decision
 
-**Decision: LOCKED (2026-11-04).** Wild Pokémon use **bounded local pathfinding and obstacle avoidance** for nearby movement, while **long-distance journeys use a species-accessible habitat/region connectivity graph**. Off-screen travel advances through abstract graph transitions, not continuous world-scale tile pathfinding.
+**Decision: LOCKED (2026-11-04).** Wild Pokémon use **bounded local pathfinding and obstacle avoidance** for nearby movement, while **long-distance journeys use a species-accessible habitat/region connectivity graph**. [Hybrid NPC navigation](npc-hybrid-navigation.md) is separately locked; it may share world topology but uses human travel access and transport rules. Off-screen travel advances through abstract graph transitions, not continuous world-scale tile pathfinding.
 
 ## Purpose
 
