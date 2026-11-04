@@ -183,6 +183,8 @@ struct SpriteTemplate
     SpriteCallback callback;
     bool16 compressedFast:1;
     bool16 freeable:1;
+    u16 padding1:14;
+    u16 padding2;
     void (*freeFunction)(struct Sprite *);
 };
 
