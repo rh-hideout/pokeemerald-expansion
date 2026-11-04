@@ -29,7 +29,8 @@
 23. [Selective NPC information sharing](root/npc-information-sharing.md) — locked gradual, imperfect rumors and meaningful news.
 24. [Dynamic NPC small groups](root/npc-dynamic-groups.md) — locked emergent small-group membership within stable towns and institutions.
 25. [Hybrid NPC long-term goals](root/npc-long-term-goals.md) — locked authored commitments and evolving personal ambitions.
-26. [Save budget investigation](root/save-budget.md) — verified storage structure, pending measured sizes.
+26. [Hybrid hierarchical NPC planning](root/npc-hierarchical-planning.md) — locked adaptive milestones with utility-selected immediate actions.
+27. [Save budget investigation](root/save-budget.md) — verified storage structure, pending measured sizes.
 
 Detailed topic documents follow.
 
@@ -74,6 +75,7 @@ Detailed topic documents follow.
 - **Locked:** selective NPC information sharing, with gradual, imperfect rumor and warning propagation through plausible encounters and travel. See [NPC information sharing](root/npc-information-sharing.md).
 - **Locked:** dynamic NPC small groups can form and dissolve around shared purposes, while towns and major institutions remain stable. See [NPC groups](root/npc-dynamic-groups.md).
 - **Locked:** hybrid NPC long-term goals start from meaningful authored commitments and can evolve, pause or end through significant experiences. See [NPC goals](root/npc-long-term-goals.md).
+- **Locked:** bounded hierarchical NPC planning uses adaptive milestones and utility-based immediate actions, with safe interruptions and replanning. See [NPC planning](root/npc-hierarchical-planning.md).
 - **Still open:** save-space measurement, exact clock tuning, record serialization/limits and several world-balancing details. See [Dependencies](dependencies.md).
 - **Original source:** `despairarc000/pokeclaude`, branch `design-docs`, commit `f16c0f9853ffd4556a0be8af15a505cdae64dc66`.
 - **Preserved original backup:** `despairarc000/atlasgba`, branch `archive/pokeclaude-design-docs-2026-11-04`, commit `77fdd3ed888ea2d33043728b616fa81940168e52`; a second complete backup is in Google Drive.

@@ -7,7 +7,7 @@
 1. **Grounded starting direction.** An authored notable NPC begins with coherent home, role, background and relevant commitments; not every NPC must start with a grand ambition.
 2. **Emergent change.** Meaningful successes, failures, journeys, losses, discoveries, social bonds and world events can introduce new goals or alter existing ones, including while off-screen.
 3. **Personal ownership.** A long-term goal belongs to the canonical NPC identity, not a map sprite, temporary group or routine task. Save/load and travel preserve consequential progress.
-4. **Distinct planning horizons.** Long-term ambitions describe desired outcomes; daily routines and short-term utility actions choose feasible steps toward them. Goals do not replace [NPC routine/utility AI](npc-routine-utility.md).
+4. **Distinct planning horizons.** Long-term ambitions describe desired outcomes; [hybrid hierarchical planning](npc-hierarchical-planning.md) provides bounded adaptive milestones; daily routines and [NPC utility AI](npc-routine-utility.md) choose feasible immediate actions.
 5. **Personality and memory influence.** [Slowly evolving personality](npc-evolving-personality.md), [selective social memory](npc-social-memory.md), needs and current circumstances shape which goals matter, without treating every momentary emotion as a new ambition.
 6. **Revision without thrashing.** Goals may be pursued, suspended, completed or abandoned through meaningful evidence and commitment rules, not oscillate with every small utility-score change.
 7. **Multiple priorities, bounded scope.** NPCs may balance personal aspirations, family, work, care and group commitments. Active goal sets and update costs must be bounded by measured GBA budgets.
