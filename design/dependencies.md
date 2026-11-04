@@ -28,6 +28,7 @@ The record is a **shared identity contract**, not necessarily one identical seri
 | Persistent ID/record storage | Save budget, time policy and identity contract |
 | Hunger, food, regrowth | Time policy, species traits, per-entity state |
 | Population persistence and replenishment | IDs, habitat traits, available save capacity |
+| Ecological cross-region migration | Habitat connectivity graph, species traversal traits, persistent identity, clock and off-screen updates; [specification](root/ecological-migration.md) |
 | Bounded off-screen update engine | Clock/catch-up policy, persistence, species traits and budget |
 
 ## Layer 2 — behavior, life and movement
@@ -68,6 +69,7 @@ The record is a **shared identity contract**, not necessarily one identical seri
 
 - World clock **locked:** in-game-only, no offline catch-up. Remaining questions: rate, menu/pause behavior and RTC integration.
 - Save strategy: compact per-entity records, pooled records, existing Pokémon data reuse, and migration across updates?
-- Exact tiered identity lifecycle: promotion, catch, release, NPC ownership, migration and generation of new wild individuals?
+- Ecological cross-region migration is locked; its graph, motivations and travel rates remain to be designed.
+- Exact tiered identity lifecycle: promotion, catch, release, NPC ownership and generation of new wild individuals?
 
 The clock source and no-offline-progression rule are locked. No record size, population cap or day length is locked.

@@ -31,6 +31,8 @@ Every biome exists so that the full Pokemon roster (all generations, 1,000+ spec
 
 ## Connections (draft)
 
+These links are also candidates for the [ecological migration graph](root/ecological-migration.md), but human ferries are **not automatically wildlife migration routes**. Species capabilities and traversable habitats decide which paths Pokémon can use.
+
 - Land links: Meadowmere, Neonport, Cragmoor, Sunreach Steppe and Mistvale connect by land.
 - Boat links from Neonport: Veyra, Tundrael, Sandara, Verdant Maw, The Abyss.
 - Hidden or rare links: Undervale (cave mouths in other regions), Duskhollow (fog roads), Skyreach (high-altitude routes).

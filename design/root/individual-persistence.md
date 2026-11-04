@@ -26,12 +26,13 @@ Inspired by Rain World's memorable autonomous creatures, this preserves relation
 6. **Time source:** all off-screen updates consume the [in-game-only world clock](world-clock.md); closing the game does not advance populations or individuals.
 7. **Fainting is not permanent death.** Individuals may recover; ecosystem replacement and breeding rules remain open.
 8. **No unbounded per-frame simulation.** Abstract populations and off-screen individuals advance through bounded, deterministic or reproducible updates.
+9. **Ecological cross-region migration is allowed.** Persistent wild Pokémon retain identity while moving through reachable habitats in response to needs and environmental conditions. See [Ecological migration](ecological-migration.md).
 
 ## Proposed lifecycle (needs exact implementation design)
 
 `population -> temporary nearby encounter -> [promote if significant] persistent wild individual -> [capture] owned Pokémon`
 
-Other transitions such as release, transfer to NPC ownership, migration, and return to the wild need explicit policies. The above is a **conceptual flow**, not code already implemented.
+Cross-region ecological migration is a locked capability; detailed journey state remains open. Other transitions such as release, transfer to NPC ownership, and return to the wild need explicit policies. The above is a **conceptual flow**, not code already implemented.
 
 ## Promotion policy — LOCKED: meaningful interactions AND autonomous ecosystem events
 
