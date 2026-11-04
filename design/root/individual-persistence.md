@@ -29,6 +29,7 @@ Inspired by Rain World's memorable autonomous creatures, this preserves relation
 9. **Ecological cross-region migration is allowed.** Persistent wild Pokémon retain identity while moving through reachable habitats in response to needs and environmental conditions. See [Ecological migration](ecological-migration.md).
 10. **Dynamic populations are separate from persistent identity.** Births, declines and recovery affect abstract habitat populations without silently cloning or deleting tracked individuals. See [Population ecology](population-ecology.md).
 11. **Notable families can persist.** Mate, nest, egg and offspring relationships can be maintained without assigning permanent IDs to every ordinary newborn. See [Hybrid reproduction](hybrid-reproduction.md).
+12. **Selective social memory is persistent.** Significant relationships may evolve over time and must reference stable identities, without an unbounded event log. See [Social memory](social-memory.md).
 
 ## Proposed lifecycle (needs exact implementation design)
 

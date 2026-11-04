@@ -28,6 +28,7 @@ Capturing removes **that specific individual** from the wild population. **Dynam
 - Marks: a scar, tint or distinct cry after notable encounters.
 - Epithets in battle text after repeated meetings.
 - Reactions: it may flee, hold a grudge or challenge on sight.
+- **Selective social memory (locked):** notable Pokémon remember meaningful encounters with the player and other Pokémon; trust, rivalry, fear and bonds can evolve and affect later behavior. See [Social memory](root/social-memory.md).
 - NPCs mention local individuals.
 
 ## Tiered persistence (locked design)

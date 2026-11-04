@@ -9,7 +9,7 @@ Inspired by Rain World's autonomous creature relationships and observable ecolog
 ## Locked rules
 
 1. **Ordinary population births are abstract.** A suitable habitat's population can increase based on reproduction and ecological conditions without creating permanent IDs for every offspring.
-2. **Notable Pokémon can have persistent families.** Relevant parent, mate, offspring, nest and egg relationships survive map changes and saves, subject to later storage design.
+2. **Notable Pokémon can have persistent families.** Relevant parent, mate, offspring, nest and egg relationships survive map changes and saves, subject to later storage design. Family bonds may affect behavior through [selective social memory](social-memory.md).
 3. **Individual visibility is not mandatory.** Off-screen reproduction and family progress use bounded updates; notable families can be encountered later.
 4. **Significance determines persistence.** Ordinary newborns do not automatically consume persistent records. Offspring can become persistent when family importance, meaningful interactions or ecosystem events justify it; exact promotion triggers remain open.
 5. **No duplicate accounting.** Births must enter either an aggregate population or a distinct individual record, not both. Promoting a newborn or adult adjusts aggregate counts exactly once.
