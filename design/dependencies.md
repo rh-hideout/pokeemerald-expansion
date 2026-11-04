@@ -8,13 +8,13 @@ This is a **prerequisite graph**, not a claim that every design document must wa
 |---|---|---|
 | **Code foundation** | **Decided:** `rh-hideout/pokeemerald-expansion` fork | Supported species, forms, engine APIs, collision and battle features |
 | **Save and runtime budgets** | **Unmeasured:** inspect actual save layouts and available ROM/EWRAM/IWRAM | Persistent record sizes, NPC/creature caps, map object limits and simulation complexity |
-| **World clock and catch-up policy** | **Undecided:** playable-time vs real-world time, pausing, deltas, caps | Hunger, routines, growth, weather, ecology and offline return behavior |
+| **World clock and catch-up policy** | **Decided:** game-session time only; fully paused while closed; no offline catch-up. [Specification](root/world-clock.md) | Hunger, routines, growth, weather and ecology |
 | **Individual identity and records** | **Undesigned:** requires save budget and time semantics | Persistent wild Pokémon, mounts, captured individuals, trainer Pokémon if included |
 
 ### Essential root details to answer
 
 1. **Save:** What space is genuinely free and compatible with existing save data? Which state persists, and what is recreated?
-2. **Clock:** What advances when playing, when paused, and when the game is closed? Are offline changes capped? Which systems follow which time source?
+2. **Clock:** In-game-only time is decided. Still specify exact day length, menus/pause semantics, and how existing RTC-based berry and weather systems integrate.
 3. **Identity:** Which creatures receive permanent IDs? When do ordinary herds become persistent individuals? How are capture, fainting, movement, boxed Pokémon and NPC teams represented without duplicating canonical Pokémon data?
 4. **Compatibility:** Which Expansion species and features are enabled in the actual build? Which engine budgets are already consumed?
 
@@ -56,7 +56,7 @@ The record is a **shared identity contract**, not necessarily one identical seri
 
 1. **Confirm the Expansion fork** — done. Leave its engine code unchanged while refining the design.
 2. **Measure real save and memory constraints** in this specific codebase, including pre-existing expansion storage and backward-compatibility requirements.
-3. **Choose the world-clock policy** and how to cap/abstract time away from the player.
+3. **Implement the chosen in-game world clock** with no offline catch-up; decide its rate, pause semantics and berry/RTC integration.
 4. **Specify and test** individual identity and persistence using measured limits.
 5. **Prototype one vertical slice**: a small safe area, one persistent wild creature, food consumption and an off-screen update.
 6. Add NPC routines, movement and danger behaviors with bounded tests.
@@ -66,9 +66,8 @@ The record is a **shared identity contract**, not necessarily one identical seri
 
 ## Unresolved root questions for the next discussion
 
-- World time: game-session time, device real-time, or a carefully defined hybrid?
-- Offline catch-up: none, bounded, or continuous?
+- World clock **locked:** in-game-only, no offline catch-up. Remaining questions: rate, menu/pause behavior and RTC integration.
 - Save strategy: compact per-entity records, pooled records, existing Pokémon data reuse, and migration across updates?
 - Exact identity lifecycle: catch, release, NPC ownership, migration and generation of new wild individuals?
 
-No clock choice or record size is locked by this document.
+The clock source and no-offline-progression rule are locked. No record size, population cap or day length is locked.

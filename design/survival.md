@@ -78,7 +78,7 @@ Save space must be measured in the repo before fixing counts.
 
 ## Open questions
 
-- Hunger decay rates for player and Pokemon (real-time vs steps vs in-game time).
+- Hunger decay rates for player and Pokemon (in-game world time is locked; rates remain open).
 - The full food list and which species eat what.
 - How boxed Pokemon are handled (simplified schedule or paused).
 - How cooking works (camp action, item combination or recipe system).

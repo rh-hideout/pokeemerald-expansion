@@ -1,6 +1,6 @@
 # Ecosystem Simulation
 
-Inspired by Rain World, adapted for a world that is **safe by default**. Danger is the exception, found in specific places, never imposed everywhere.
+Inspired by Rain World's independent creature behavior and abstract off-screen ecosystem, adapted for a world that is **safe by default**. Its forced rain-cycle pressure is not adopted. Danger is the exception, found in specific places, never imposed everywhere.
 
 ## Core principles
 
@@ -57,8 +57,8 @@ The GBA cannot run every creature live.
 
 There is no global clock. Pressure exists only where the land is dangerous:
 
-- **Day and night:** predators are more active at night. Uses the existing clock.
-- **Weather:** storms and blizzards make dangerous zones worse. Uses the existing weather system.
+- **Day and night:** predators may be more active at night. Uses the new in-game world clock (not real-world elapsed time).
+- **Weather:** storms and blizzards make dangerous zones worse. Weather behavior must be driven consistently by in-game time.
 - **Supplies:** long trips in Ur-Kalah drain items and party health, so planning matters.
 - **Population drift:** an ignored rare Pokemon may grow, evolve or move on over time.
 
@@ -66,7 +66,7 @@ Safe regions and towns are never affected by any of this.
 
 ## Engine notes
 
-- Weather and the real-time clock already exist in pokeemerald.
+- Existing weather and RTC support exist in Expansion, but the new living-world clock must not advance while the game is closed.
 - Individual tracking and off-screen updates need custom C code and save space budgeting.
 - Everything above must be tested on emulator and hardware limits before commitment.
 

@@ -9,6 +9,8 @@ This is the authoritative **high-level vision**, not an implementation checklist
 - **Foundation:** use this `pokeemerald-expansion` fork, not vanilla `pokeemerald`. Expansion provides a broader species and mechanics foundation; exact enabled roster/build settings must be verified.
 - **World:** 14 original named regions, open exploration, no forced linear story. Meadowmere is the gentle start; Neonport is the travel hub. Ur-Kalah is almost uncivilized and has no gyms.
 - **Tone:** Safe, Calm, Wild, and Perilous conditions; danger should be visible or reliably signaled, with an opportunity to avoid or escape. Unavoidable surprise encounters are not the design goal.
+- **Time:** the world advances during active gameplay and pauses when the game is closed. There is no offline catch-up. See [World clock](root/world-clock.md).
+- **Inspiration:** Rain World's autonomous creature ecology, individual interactions and off-screen abstraction inspire the design, but not its mandatory rain-cycle timer or global survival pressure.
 - **Creatures:** visible wild Pokémon with autonomous behavior and a living food chain. Persist memorable individuals; simulate unimportant/off-screen creatures economically.
 - **Survival:** player, NPCs, party Pokémon, and wild creatures eat; hunger matters but cannot permanently kill anyone or erase a save.
 - **People:** NPCs have routines, needs and relationships; trainers' challenges are optional and gym leaders are not fixed in place.
@@ -49,7 +51,7 @@ See [Food and survival](survival.md).
 - Everyone needs food; berries are foundational, with prepared food, meat, fish and roots as proposed additions.
 - Hunger progresses through Fed, Peckish, Hungry, Starving. Severe deprivation can cause weakness or collapse, **never permanent death**.
 - Safe areas make food plentiful and normal travel forgiving; dangerous expeditions demand more planning.
-- Exact decay rates, storage handling and which kind of time advances hunger are **not yet decided**.
+- Hunger uses in-game world time, **not elapsed real-world time while the game is closed**. Exact decay rates and boxed Pokémon handling remain undecided.
 
 ## 5. People, trainers and gyms
 
@@ -75,7 +77,7 @@ See [Traversal](traversal.md), [Riding and mounts](riding-and-mounts.md), and [H
 |---|---|---|
 | Code foundation | **Decided: Expansion fork** | Species/forms, APIs and engine integration |
 | Save-space and runtime budget | **Needs measurement** | Persistent Pokémon/NPC count and off-screen simulation |
-| World-clock policy | **Discussion pending** | Hunger, life schedules, growth, weather and catch-up behavior |
+| World-clock policy | **Decided: in-game-only; no offline catch-up** | Exact day length and pause rules still need tuning |
 | Persistent individual record and identity | **Needs design after budget and clock** | Wild Pokémon, captured Pokémon, mounts and possibly trainer teams |
 
 For the detailed dependency graph and proposed validation order, see [Dependencies](dependencies.md).
