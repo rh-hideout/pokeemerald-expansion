@@ -39,7 +39,7 @@ See [Danger and ecosystem](danger-and-ecosystem.md) and [Hazards](hazards.md).
 See [Ecosystem simulation](ecosystem-simulation.md).
 
 - Notable Pokémon are persistent individuals capable of fainting, recovering, growing, evolving, moving, and remembering encounters.
-- **Locked:** ordinary populations are abstracted until an individual becomes significant, at which point it gains persistent identity. **Exact promotion rules, record sizes and limits remain open.**
+- **Locked:** ordinary populations are abstracted until significant. Promotion can come from **meaningful player interactions or noteworthy autonomous ecosystem events**, including events unseen by the player. Exact thresholds, record sizes and limits remain open.
 - Visible overworld behaviors include passive, skittish, territorial and predatory.
 - Habitat, diet, climate and food shape distribution; rarity emerges from ecology rather than a hard-coded scarcity quota.
 - The GBA only simulates nearby activity in detail; distant activity updates in bounded batches.

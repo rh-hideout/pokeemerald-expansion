@@ -33,9 +33,32 @@ Inspired by Rain World's memorable autonomous creatures, this preserves relation
 
 Other transitions such as release, transfer to NPC ownership, migration, and return to the wild need explicit policies. The above is a **conceptual flow**, not code already implemented.
 
-## Promotion criteria — pending discussion
+## Promotion policy — LOCKED: meaningful interactions AND autonomous ecosystem events
 
-Potential triggers: direct battle, repeated sightings, player intervention, rescue, bonding, a distinctive persistent trait, notable ecosystem role or authored character. **Do not assume every sighting or battle permanently allocates a record.** The threshold should make the world memorable without exhausting save space.
+An ordinary Pokémon becomes persistent through either of two routes, independently:
+
+1. **Meaningful player interaction (B):** a developed relationship, repeated meaningful encounters, rescue, bonding, consequential battle or comparable interaction. Mere visibility, a trivial battle or passing proximity does not necessarily promote it.
+2. **Significant ecosystem event (C):** a Pokémon becomes notable through its **own actions**, even if the player has never met it — for example defending a territory over time, surviving a remarkable encounter, becoming a recognizable local figure, or changing an ecological relationship.
+
+Both routes use the same identity system and produce a stable persistent individual. The ecosystem must not require the player to witness or trigger the event.
+
+### Candidate promotion workflow (implementation proposal, not yet locked)
+
+- Nearby untracked creatures may exist temporarily without permanent save records.
+- Record meaningful interaction signals or notable event summaries in bounded temporary state.
+- When significance criteria are met, atomically allocate a stable identity and transfer relevant temporary history to the persistent record.
+- Deduplicate repeated events so one creature is not promoted multiple times.
+- If capacity is exhausted, preserve existing persistent individuals; do not silently delete them. Define an explicit overflow policy after save-space measurement.
+
+### Remaining decisions
+
+- Exact event thresholds and how to prevent mass promotion from routine predator/prey interactions.
+- Which authored/unique creatures should begin persistent, without relying on rarity quotas.
+- What ecosystem evidence can be retained before promotion without storing every ordinary individual.
+- How the player discovers off-screen notable individuals through tracks, rumors and changed habitats.
+- Persistent pool capacity and safe overflow behavior.
+
+**Not decided:** a single battle always promotes, every off-screen fight promotes, or rarity automatically grants identity.
 
 ## Storage and identity contract — pending measurement
 

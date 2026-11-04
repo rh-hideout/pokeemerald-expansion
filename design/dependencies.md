@@ -15,7 +15,7 @@ This is a **prerequisite graph**, not a claim that every design document must wa
 
 1. **Save:** What space is genuinely free and compatible with existing save data? Which state persists, and what is recreated?
 2. **Clock:** In-game-only time is decided. Still specify exact day length, menus/pause semantics, and how existing RTC-based berry and weather systems integrate.
-3. **Identity:** Tiered persistence is locked. Specify exact promotion triggers, stable IDs, ownership transitions, capture, fainting, movement, boxed Pokémon and NPC teams without duplicating canonical Pokémon data.
+3. **Identity:** Tiered persistence and both promotion pathways (meaningful player interaction + independent ecosystem events) are locked. Specify thresholds, stable IDs, ownership transitions, capture, fainting, movement, boxed Pokémon and NPC teams without duplicating canonical Pokémon data.
 4. **Compatibility:** Which Expansion species and features are enabled in the actual build? Which engine budgets are already consumed?
 
 The record is a **shared identity contract**, not necessarily one identical serialized layout for every person and Pokémon. Human NPC state may need a separate record. Do not assign a record byte count or population cap before measurement.

@@ -34,7 +34,7 @@ Capturing removes **that specific individual** from the wild population. Whether
 
 - **Persistent individuals:** named, notable, personally encountered or otherwise significant Pokémon keep stable identity, history and location across map changes and saves.
 - **Abstract populations:** ordinary, unremarkable Pokémon are modeled as habitat populations, not as one saved record per animal.
-- **Promotion:** when a Pokémon becomes significant, it becomes a persistent individual. The precise trigger list is still under design; **rarity alone is not a required criterion**.
+- **Promotion (locked):** meaningful player interactions **or** remarkable independent ecosystem events can make a Pokémon persistent, even if the player never meets it. Ordinary sightings and routine fights do not automatically promote; precise thresholds remain open.
 - **Simulation detail is separate from persistence:** a persistent individual can be simulated coarsely while off-screen without losing its identity.
 
 See [Individual persistence](root/individual-persistence.md) for the identity contract and open lifecycle decisions. Exact record size and count must be measured; no six-byte assumption is valid.
