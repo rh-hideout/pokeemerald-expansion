@@ -1,6 +1,6 @@
 # Environment-aware multi-sensory Pokémon perception — root design decision
 
-**Decision: LOCKED (2026-11-04).** Nearby wild Pokémon perceive the world through **species-appropriate senses**, including sight, hearing and other suitable capabilities. Distance, obstacles, terrain, lighting, weather and sensory ability affect detection. The design does **not** require exhaustive scent-trail simulation, detailed acoustic propagation or universal omniscient awareness.
+**Decision: LOCKED (2026-11-04).** Nearby wild Pokémon perceive the world through **species-appropriate senses**, including sight, hearing and other suitable capabilities. [Contextual NPC perception](npc-contextual-perception.md) is separately locked for human observers; they may share terrain/event cues but differ in sensory abilities and interpretation. Distance, obstacles, terrain, lighting, weather and sensory ability affect detection. The design does **not** require exhaustive scent-trail simulation, detailed acoustic propagation or universal omniscient awareness.
 
 ## Intent
 

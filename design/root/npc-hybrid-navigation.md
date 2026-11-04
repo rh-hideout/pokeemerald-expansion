@@ -7,7 +7,7 @@
 1. **Two scales of navigation.** Nearby active NPCs use legal local movement; distant travelers use graph edges and logical travel progress.
 2. **Grounded world connections.** Roads, paths, caves, gates, bridges, boats, stations and other valid connections must correspond to actual world access. No arbitrary teleportation.
 3. **Actor-specific access.** NPC abilities, available transport, route permissions, weather, hazards and temporary closures affect route validity. Pokémon-only routes are not automatically human routes.
-4. **Decisions and navigation separate.** [NPC routine/utility AI](npc-routine-utility.md) selects goals and commitments; navigation checks reachability, finds a route and reports delays, blocks or failures.
+4. **Decisions and navigation separate.** [NPC routine/utility AI](npc-routine-utility.md) selects goals and commitments, informed by [contextual perception](npc-contextual-perception.md); navigation checks reachability, finds a route and reports delays, blocks or failures. Perception never grants perfect route knowledge.
 5. **Travel consumes in-game time.** Route progress advances only while the game runs; no wall-clock catch-up when closed.
 6. **Local movement is bounded.** Search radius, explored nodes, retries, replanning frequency and active jobs must fit measured GBA CPU/RAM budgets. Unreachable goals use a safe fallback rather than infinite loops.
 7. **Coherent materialization.** A notable NPC's graph position, travel state and visible object instance reference one canonical identity. Save/load and map transitions must never duplicate or reset a traveler.

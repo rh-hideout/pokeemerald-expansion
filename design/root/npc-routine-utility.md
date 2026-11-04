@@ -42,7 +42,7 @@ A shopkeeper usually opens in the morning. If hungry, they may take a short brea
 - Hybrid NPC navigation is locked; exact graph, transport access, local routing and itinerary format remain open. See [NPC navigation](npc-hybrid-navigation.md).
 - Which roles require substitutes or guaranteed availability and how players locate absent people.
 - Coarse off-screen decision cadence, scheduler priorities and save/reload recovery.
-- NPC perception, dialogue/news and relationship memory formats.
+- Contextual multi-sensory NPC perception is locked; exact cue representation, dialogue/news and relationship memory formats remain open. See [NPC perception](npc-contextual-perception.md).
 - Exact RAM, ROM, save and object-event budgets.
 
 ## Acceptance scenarios
