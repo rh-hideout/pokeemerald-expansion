@@ -4,6 +4,8 @@ This is a **prerequisite graph**, not a claim that every design document must wa
 
 ## Layer 0 — roots
 
+**Wild encounter interface (locked):** [hybrid wild Pokémon encounters](root/hybrid-wild-encounters.md) require overworld entity representation, battle transitions, identity-safe capture reconciliation, and measured object/runtime limits. Exact integration is unverified.
+
 **Core player-experience pillar (locked):** [balanced Pokémon sandbox](root/balanced-pokemon-sandbox.md). It constrains progression, encounter/capture design, traversal, optional gyms, UI and vertical-slice acceptance without predetermining technical algorithms.
 
 | Root decision | Status | What depends on it |

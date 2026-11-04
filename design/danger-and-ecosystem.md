@@ -2,6 +2,8 @@
 
 The world is a living ecosystem, not a difficulty ladder. Strong, average and weak Pokemon all exist. Nothing forces a fight, and danger is always readable.
 
+**Encounter design (locked):** Pokémon are observable overworld creatures, with noncombat interactions and optional traditional battles; hostile behavior remains readable and avoidable where appropriate. See [Hybrid wild encounters](root/hybrid-wild-encounters.md).
+
 ## Danger levels
 
 | Level | Feel | What lives there |

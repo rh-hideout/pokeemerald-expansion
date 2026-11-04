@@ -2,6 +2,8 @@
 
 **Decision: LOCKED (2026-11-04).** The game supports **multiple equally legitimate ways to play**. Exploration, Pokémon discovery and collection, battling, bonding and care, survival, and participation in the living world are complementary paths rather than a single mandatory progression ladder. Exploration and autonomous ecology are the game's distinctive identity, **not compulsory activities that invalidate the others**.
 
+**Wild encounters (locked):** [hybrid overworld interactions with traditional battle compatibility](hybrid-wild-encounters.md) support both combat and noncombat play.
+
 ## Main experience
 
 **Explore → encounter opportunities → choose how to interact → gain experiences, relationships, knowledge, Pokémon or capabilities → explore or play differently.** This is a flexible loop, not a fixed required sequence. Players can also remain in a town, train, care for Pokémon, trade or follow a particular NPC's story.

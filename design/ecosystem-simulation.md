@@ -2,6 +2,8 @@
 
 Inspired by Rain World's independent creature behavior and abstract off-screen ecosystem, adapted for a world that is **safe by default**. Its forced rain-cycle pressure is not adopted. Danger is the exception, found in specific places, never imposed everywhere.
 
+**Player encounter rule (locked):** wild Pokémon are visible and support observation, avoidance, feeding, bonding and traditional battle/capture transitions. See [Hybrid wild encounters](root/hybrid-wild-encounters.md).
+
 ## Core principles
 
 1. **The world is generally safe.** Towns, routes and most wilderness are peaceful. Most wild Pokemon are passive or skittish.

@@ -2,6 +2,8 @@
 
 **Decision: LOCKED (2026-11-04).** Use **tiered persistence**: notable individual Pokémon remain recognizable across visits and saves, while ordinary populations are represented abstractly until a particular individual becomes significant.
 
+**Encounter integration:** [hybrid wild encounters](hybrid-wild-encounters.md) must reconcile a visible individual, battle state, capture and ownership exactly once.
+
 ## Why
 
 Inspired by Rain World's memorable autonomous creatures, this preserves relationships and consequences without requiring a GBA to serialize and simulate every Pokémon on the planet. **Persistence** (whether identity survives) and **simulation fidelity** (how much processing it receives right now) are separate axes.
