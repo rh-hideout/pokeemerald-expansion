@@ -11,7 +11,7 @@ This is the authoritative **high-level vision**, not an implementation checklist
 - **Tone:** Safe, Calm, Wild, and Perilous conditions; danger should be visible or reliably signaled, with an opportunity to avoid or escape. Unavoidable surprise encounters are not the design goal.
 - **Time:** the world advances during active gameplay and pauses when the game is closed. There is no offline catch-up. See [World clock](root/world-clock.md).
 - **Inspiration:** Rain World's autonomous creature ecology, individual interactions and off-screen abstraction inspire the design, but not its mandatory rain-cycle timer or global survival pressure.
-- **Creatures:** visible wild Pokémon with autonomous behavior and a living food chain. Persist memorable individuals; simulate unimportant/off-screen creatures economically.
+- **Creatures:** visible wild Pokémon with autonomous behavior and a living food chain. **Tiered persistence is locked**: notable individuals retain identity; ordinary populations are abstracted until an individual becomes significant. See [Individual persistence](root/individual-persistence.md).
 - **Survival:** player, NPCs, party Pokémon, and wild creatures eat; hunger matters but cannot permanently kill anyone or erase a save.
 - **People:** NPCs have routines, needs and relationships; trainers' challenges are optional and gym leaders are not fixed in place.
 - **Travel:** ledges can be climbed, Pokémon can help traverse land/water/air, and mount travel is directly controlled rather than teleportation. Natural hazards and stamina matter.
@@ -39,7 +39,7 @@ See [Danger and ecosystem](danger-and-ecosystem.md) and [Hazards](hazards.md).
 See [Ecosystem simulation](ecosystem-simulation.md).
 
 - Notable Pokémon are persistent individuals capable of fainting, recovering, growing, evolving, moving, and remembering encounters.
-- Ordinary populations may be abstract until an individual becomes significant. **Exact persistence tiers and limits depend on measured save space.**
+- **Locked:** ordinary populations are abstracted until an individual becomes significant, at which point it gains persistent identity. **Exact promotion rules, record sizes and limits remain open.**
 - Visible overworld behaviors include passive, skittish, territorial and predatory.
 - Habitat, diet, climate and food shape distribution; rarity emerges from ecology rather than a hard-coded scarcity quota.
 - The GBA only simulates nearby activity in detail; distant activity updates in bounded batches.
@@ -78,7 +78,7 @@ See [Traversal](traversal.md), [Riding and mounts](riding-and-mounts.md), and [H
 | Code foundation | **Decided: Expansion fork** | Species/forms, APIs and engine integration |
 | Save-space and runtime budget | **Needs measurement** | Persistent Pokémon/NPC count and off-screen simulation |
 | World-clock policy | **Decided: in-game-only; no offline catch-up** | Exact day length and pause rules still need tuning |
-| Persistent individual record and identity | **Needs design after budget and clock** | Wild Pokémon, captured Pokémon, mounts and possibly trainer teams |
+| Persistent individual record and identity | **Tiered persistence decided; binary format pending budget** | Wild Pokémon, captured Pokémon, mounts and possibly trainer teams |
 
 For the detailed dependency graph and proposed validation order, see [Dependencies](dependencies.md).
 

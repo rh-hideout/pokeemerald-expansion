@@ -9,13 +9,13 @@ This is a **prerequisite graph**, not a claim that every design document must wa
 | **Code foundation** | **Decided:** `rh-hideout/pokeemerald-expansion` fork | Supported species, forms, engine APIs, collision and battle features |
 | **Save and runtime budgets** | **Unmeasured:** inspect actual save layouts and available ROM/EWRAM/IWRAM | Persistent record sizes, NPC/creature caps, map object limits and simulation complexity |
 | **World clock and catch-up policy** | **Decided:** game-session time only; fully paused while closed; no offline catch-up. [Specification](root/world-clock.md) | Hunger, routines, growth, weather and ecology |
-| **Individual identity and records** | **Undesigned:** requires save budget and time semantics | Persistent wild Pokémon, mounts, captured individuals, trainer Pokémon if included |
+| **Individual identity and records** | **Tiered persistence decided:** notable individuals permanently tracked, ordinary populations abstracted. [Specification](root/individual-persistence.md); binary layout pending save budget | Persistent wild Pokémon, mounts, captured individuals, trainer Pokémon if included |
 
 ### Essential root details to answer
 
 1. **Save:** What space is genuinely free and compatible with existing save data? Which state persists, and what is recreated?
 2. **Clock:** In-game-only time is decided. Still specify exact day length, menus/pause semantics, and how existing RTC-based berry and weather systems integrate.
-3. **Identity:** Which creatures receive permanent IDs? When do ordinary herds become persistent individuals? How are capture, fainting, movement, boxed Pokémon and NPC teams represented without duplicating canonical Pokémon data?
+3. **Identity:** Tiered persistence is locked. Specify exact promotion triggers, stable IDs, ownership transitions, capture, fainting, movement, boxed Pokémon and NPC teams without duplicating canonical Pokémon data.
 4. **Compatibility:** Which Expansion species and features are enabled in the actual build? Which engine budgets are already consumed?
 
 The record is a **shared identity contract**, not necessarily one identical serialized layout for every person and Pokémon. Human NPC state may need a separate record. Do not assign a record byte count or population cap before measurement.
@@ -68,6 +68,6 @@ The record is a **shared identity contract**, not necessarily one identical seri
 
 - World clock **locked:** in-game-only, no offline catch-up. Remaining questions: rate, menu/pause behavior and RTC integration.
 - Save strategy: compact per-entity records, pooled records, existing Pokémon data reuse, and migration across updates?
-- Exact identity lifecycle: catch, release, NPC ownership, migration and generation of new wild individuals?
+- Exact tiered identity lifecycle: promotion, catch, release, NPC ownership, migration and generation of new wild individuals?
 
 The clock source and no-offline-progression rule are locked. No record size, population cap or day length is locked.

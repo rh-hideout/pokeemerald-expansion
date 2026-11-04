@@ -38,4 +38,6 @@ Source inspection on 2026-11-04:
 - [Dependencies](../dependencies.md) — record schema depends on this measurement.
 - [Ecosystem simulation](../ecosystem-simulation.md) — individual tracking tiers depend on this budget.
 
+**Persistence policy decided:** [Tiered individual persistence](individual-persistence.md). This does not establish record sizes or counts.
+
 **Next deliverable:** measured structure sizes for a concrete build, then a versioned identity-record proposal.

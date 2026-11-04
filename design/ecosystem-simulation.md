@@ -30,14 +30,14 @@ Capturing removes **that specific individual** from the wild population. Whether
 - Reactions: it may flee, hold a grudge or challenge on sight.
 - NPCs mention local individuals.
 
-## Tiered tracking (save space)
+## Tiered persistence (locked design)
 
-| Tier | Tracking |
-|---|---|
-| Unique, Very Rare, Rare | Always tracked individuals from the start |
-| Common, Uncommon | Anonymous herds until battled, spared or noticed, then promoted to tracked individuals |
+- **Persistent individuals:** named, notable, personally encountered or otherwise significant Pokémon keep stable identity, history and location across map changes and saves.
+- **Abstract populations:** ordinary, unremarkable Pokémon are modeled as habitat populations, not as one saved record per animal.
+- **Promotion:** when a Pokémon becomes significant, it becomes a persistent individual. The precise trigger list is still under design; **rarity alone is not a required criterion**.
+- **Simulation detail is separate from persistence:** a persistent individual can be simulated coarsely while off-screen without losing its identity.
 
-Record size and number are **not yet known**. The fields above are candidates, not a verified six-byte layout; exact IDs, time markers and other data must be designed after the Expansion save layout is measured.
+See [Individual persistence](root/individual-persistence.md) for the identity contract and open lifecycle decisions. Exact record size and count must be measured; no six-byte assumption is valid.
 
 ## Off-screen simulation (abstracted)
 
