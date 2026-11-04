@@ -1,110 +1,87 @@
-# Design Overview — grouped vision
+# Design Overview: grouped vision
 
-A survival-flavored, open-world Pokémon game based on **pokeemerald-expansion**. The world lives independently of the player: **safe by default, dangerous by choice, alive everywhere**. Exploration matters more than a compulsory story.
+A survival-flavored, open-world Pokemon game on **pokeemerald-expansion**. The world lives independently of the player: **safe by default, dangerous by choice, alive everywhere**. Exploration matters more than a compulsory story.
 
-This is the authoritative **high-level vision**, not an implementation checklist. [Dependencies](dependencies.md) identifies what must be decided before each system can be finalized.
+This is the high-level vision, not an implementation checklist. **Decision status lives in [STATUS.md](STATUS.md)**: Locked, Proposed, Aspirational or Open. Where a file under `root/` says "locked", STATUS.md decides. Build order and test gates are in [Dependencies](dependencies.md) and the [technical audit](technical-feasibility-audit.md).
 
-## Agreed direction
+## Core pillars (locked)
 
-**Locked world geography:** [hybrid connected geography](root/hybrid-world-geography.md) mixes landmasses, islands, oceans, underground networks and elevated regions. Travel is nonlinear and geography-driven; precise regional adjacency is still open.
-
-**Locked progression pillar:** [parallel player progression](root/parallel-player-progression.md) recognizes Pokémon training, relationships, exploration knowledge, traversal, discoveries and optional gyms as independent but interacting achievements; no compulsory global ladder.
-
-**Locked encounter pillar:** [hybrid wild Pokémon encounters](root/hybrid-wild-encounters.md) combine natural overworld interaction with traditional Pokémon battle and capture compatibility, including canonical identity transfer.
-
-**Locked core gameplay pillar:** a [balanced Pokémon sandbox](root/balanced-pokemon-sandbox.md). Exploration, collection, battles, care/bonding, survival/travel and living-world participation are all legitimate ways to play; no single compulsory progression track. Exploration and autonomy remain distinctive.
-
-- **Foundation:** use this `pokeemerald-expansion` fork, not vanilla `pokeemerald`. Expansion provides a broader species and mechanics foundation; exact enabled roster/build settings must be verified.
-- **World:** 14 original named regions, open exploration, no forced linear story. Meadowmere is the gentle start; Neonport is the travel hub. Ur-Kalah is almost uncivilized and has no gyms.
-- **Tone:** Safe, Calm, Wild, and Perilous conditions; danger should be visible or reliably signaled, with an opportunity to avoid or escape. Unavoidable surprise encounters are not the design goal.
-- **Time:** the world advances during active gameplay and pauses when the game is closed. There is no offline catch-up. See [World clock](root/world-clock.md).
-- **Inspiration:** Rain World's autonomous creature ecology, individual interactions and off-screen abstraction inspire the design, but not its mandatory rain-cycle timer or global survival pressure.
-- **Creatures:** visible wild Pokémon with autonomous behavior and a living food chain. **Tiered persistence is locked**: notable individuals retain identity; ordinary populations are abstracted until an individual becomes significant. See [Individual persistence](root/individual-persistence.md).
-- **Survival:** player, NPCs, party Pokémon, and wild creatures eat; hunger matters but cannot permanently kill anyone or erase a save.
-- **People:** NPCs have routines, needs and relationships; trainers' challenges are optional and gym leaders are not fixed in place. **Dynamic small groups are locked:** people can form traveling parties, work teams and protective groups while towns and major institutions remain stable. See [NPC groups](root/npc-dynamic-groups.md). **Hybrid NPC long-term goals are locked:** authored ambitions and obligations may evolve through consequential experiences. See [NPC goals](root/npc-long-term-goals.md). **Hybrid hierarchical NPC planning is locked:** bounded adaptive milestones connect ambitions to utility-selected actions. See [NPC planning](root/npc-hierarchical-planning.md). **Hybrid NPC resource management is locked:** important possessions and supplies are tracked for notable people, while routine economic activity is aggregated. See [NPC resources](root/npc-resource-management.md). **Tiered NPC persistence is locked:** notable individuals retain identity and histories, while background crowds use lightweight or abstract state and can be promoted by meaningful events. See [NPC persistence](root/npc-persistence.md). **Shared NPC–Pokémon events are locked:** consequential interactions may affect relationships, resources and journeys off-screen. See [Shared living-world events](root/shared-world-events.md).
-- **Travel:** ledges can be climbed, Pokémon can help traverse land/water/air, and mount travel is directly controlled rather than teleportation. Natural hazards and stamina matter.
+- **Foundation:** this Expansion fork, not vanilla pokeemerald. Exact enabled roster and build settings still need verification.
+- **Balanced sandbox:** exploration, collection, battles, care and bonding, survival and travel, and world participation are all legitimate ways to play. See [balanced sandbox](root/balanced-pokemon-sandbox.md).
+- **Parallel progression:** training, relationships, exploration knowledge, traversal and optional gyms advance independently, with no compulsory global ladder. See [parallel progression](root/parallel-player-progression.md).
+- **Hybrid encounters:** visible wild Pokemon you can observe, avoid, feed, befriend or battle, with traditional turn-based battle and capture kept compatible. See [wild encounters](root/hybrid-wild-encounters.md).
+- **Hybrid geography:** landmasses, islands, oceans, underground networks and elevated regions, with nonlinear travel. Exact adjacency is open. See [geography](root/hybrid-world-geography.md).
+- **Tiered persistence:** notable individuals keep identity; ordinary populations are abstracted until something makes them significant. See [individual persistence](root/individual-persistence.md).
 
 ## 1. World and exploration
 
 See [Regions](regions.md) and [Exploration](exploration.md).
 
-- **14 regions:** Meadowmere, Neonport, Veyra, Tundrael, Sandara, Mistvale, Cragmoor, Sunreach Steppe, Verdant Maw, Duskhollow, The Abyss, Undervale, Skyreach, and Ur-Kalah.
-- Regions have distinct ecologies, cultures and landmarks. Content should be **wide but dense**, rewarding curiosity across the route rather than empty travel.
-- The 1,000+ Pokémon roster is a **coverage ambition**, not a claim that all are configured, spawnable or tested already.
-- Routes and landmarks invite exploration; story is optional and does not gate the whole world.
+- 14 original regions: Meadowmere (gentle start), Neonport (travel hub), Veyra, Tundrael, Sandara, Mistvale, Cragmoor, Sunreach Steppe, Verdant Maw, Duskhollow, The Abyss, Undervale, Skyreach and Ur-Kalah (almost uncivilized, no gyms).
+- Wide but dense: something worth stopping for in every stretch.
+- The 1,000+ species roster is a coverage ambition, not a claim that all are configured, spawnable or tested.
 
-## 2. Danger and environmental rules
+## 2. Danger and hazards
 
 See [Danger and ecosystem](danger-and-ecosystem.md) and [Hazards](hazards.md).
 
-- **Safe / Calm / Wild / Perilous** describe local risk, not an automatic strength ladder or global pressure timer.
-- Signs, tracks, visible behavior and weather forecast danger. Retreat and recovery remain possible.
-- Storms, predators, currents, falls and unstable terrain naturally challenge powerful travel methods, including flight.
-- Ur-Kalah has no regional authority or gym circuit; most areas are Wild or Perilous.
+- Safe, Calm, Wild and Perilous describe local risk, not a strength ladder or global pressure timer.
+- Danger is signaled by tracks, behavior and weather, and retreat is possible.
+- Storms, predators, currents, falls and unstable terrain balance powerful travel, including flight.
 
-## 3. Pokémon and ecosystem
+## 3. Pokemon and ecosystem
 
 See [Ecosystem simulation](ecosystem-simulation.md).
 
-- Notable Pokémon are persistent individuals capable of fainting, recovering, growing, evolving, moving, and remembering encounters.
-- **Locked:** ordinary populations are abstracted until significant. Promotion can come from **meaningful player interactions or noteworthy autonomous ecosystem events**, including events unseen by the player. Exact thresholds, record sizes and limits remain open.
-- Visible overworld behaviors include passive, skittish, territorial and predatory.
-- **Utility-based wild AI is locked:** Pokémon select actions by weighing needs, personality, relationships and conditions, with urgent safety overrides and bounded updates. See [Utility AI](root/utility-ai.md).
-- **Evolving individual personality is locked:** notable Pokémon develop distinct behavioral tendencies that can gradually change through meaningful experiences, including off-screen events. See [Evolving personality](root/evolving-personality.md).
-- **Multi-sensory perception is locked:** Pokémon use environment-affected sight, hearing and species-appropriate senses, with partial information rather than omniscient detection. See [Perception](root/multi-sensory-perception.md).
-- **Hybrid navigation is locked:** nearby Pokémon use bounded local routing and obstacle avoidance, while distant journeys use a species-accessible habitat/region graph. See [Hybrid navigation](root/hybrid-navigation.md).
-- Habitat, diet, climate and food shape distribution; rarity emerges from ecology rather than a hard-coded scarcity quota.
-- **Dynamic population ecology is locked:** species can reproduce, expand, decline and recover based on resources, predators and environmental conditions, with bounded simulation and safeguards against irreversible soft-locks. See [Population ecology](root/population-ecology.md).
-- **Hybrid reproduction is locked:** ordinary populations reproduce abstractly; notable Pokémon can have persistent mates, nests, eggs, offspring and family relationships. See [Hybrid reproduction](root/hybrid-reproduction.md).
-- **Selective social memory is locked:** notable Pokémon can remember consequential interactions, develop evolving trust, rivalry, fear and family bonds, including relationships formed without player involvement. See [Social memory](root/social-memory.md).
-- **Ecological migration is locked:** persistent Pokémon may travel across regions through reachable habitats, keeping their identity, when needs or circumstances motivate them. See [Ecological migration](root/ecological-migration.md).
-- The GBA only simulates nearby activity in detail. **Hybrid scheduled off-screen simulation is locked:** distant activity advances through distributed jobs during gameplay and bounded relevance catch-up, using only elapsed in-game time. See [Off-screen scheduler](root/offscreen-scheduler.md). **Hybrid catch-up is locked:** aggregate ordinary ecology and selectively advance consequential events for notable individuals; see [Hybrid catch-up](root/hybrid-catchup.md). **Adaptive priority with fairness is locked:** nearby areas and consequential events are favored without starving distant habitats; see [Adaptive scheduling](root/adaptive-scheduling.md).
+- Notable Pokemon are persistent individuals that faint, recover, grow, evolve and move.
+- Wild behaviors: passive, skittish, territorial, predatory, with a living food chain.
+- Habitat, diet, climate and food shape distribution. Rarity comes from ecology, not quotas.
+- Distant activity is simulated in aggregate and updated in bounded batches (proposed; see STATUS.md).
+- Deeper layers (social memory, personality, family trees) are aspirational.
+- Inspiration: Rain World's autonomous creatures and off-screen abstraction, without its mandatory rain timer.
 
 ## 4. Survival
 
 See [Food and survival](survival.md).
 
-- Everyone needs food; berries are foundational, with prepared food, meat, fish and roots as proposed additions.
-- Hunger progresses through Fed, Peckish, Hungry, Starving. Severe deprivation can cause weakness or collapse, **never permanent death**.
-- Safe areas make food plentiful and normal travel forgiving; dangerous expeditions demand more planning.
-- Hunger uses in-game world time, **not elapsed real-world time while the game is closed**. Exact decay rates and boxed Pokémon handling remain undecided.
+- Everyone eats: the player, NPCs, party Pokemon and wild creatures. Berries are the base food.
+- Hunger states: Fed, Peckish, Hungry, Starving. Starving means weakness and collapse, never permanent death or a lost save.
+- Safe areas have plentiful food; dangerous expeditions need planning.
+- Time: the clock policy is proposed as in-game time only, with no offline catch-up, pending owner confirmation. See [world clock](root/world-clock.md).
 
 ## 5. People, trainers and gyms
 
 See [Living NPCs](living-npcs.md) and [Trainers and gyms](trainers-and-gyms.md).
 
-- NPCs have homes, needs, goals, routines and relationships, including travel when the player is away. **Hybrid NPC navigation is locked:** local bounded pathfinding and access-aware world-route graph journeys. See [NPC navigation](root/npc-hybrid-navigation.md). **Contextual NPC perception is locked:** bounded sight, hearing and environmental cues with no omniscient off-screen awareness. See [NPC perception](root/npc-contextual-perception.md). **Selective information sharing is locked:** meaningful news and imperfect rumors spread through plausible conversations and journeys. See [NPC information sharing](root/npc-information-sharing.md). **Tiered persistence is locked** for notable people and abstract background crowds; see [NPC persistence](root/npc-persistence.md). **Hybrid routines and utility AI are locked:** NPCs keep recognizable schedules but can change plans due to needs, goals and significant events; see [NPC routines and utility](root/npc-routine-utility.md). **Selective NPC social memory is locked:** notable people remember meaningful encounters and develop evolving ties with people and Pokémon; see [NPC social memory](root/npc-social-memory.md). **Slowly evolving NPC personality is locked:** meaningful experiences can gradually shape notable people's dispositions; see [NPC personality](root/npc-evolving-personality.md).
-- Gym leaders may be elsewhere; the player learns where to find them rather than being blocked by a script.
-- Trainers may propose battles; the player can decline.
-- **A gym-bearing region has its own eight-badge circuit.** Ur-Kalah has none. Which and how many of the other 13 regions will have gyms, and the resulting total badge count, remain **open**; the older claim of “64 badges across 8 regions” was inconsistent with “every region gets 8.”
+- NPCs have homes, needs, routines and relationships, and live whether or not the player is watching (proposed).
+- Notable NPCs keep identity; background crowds are abstract (proposed).
+- Richer NPC layers (social memory, personality, rumors, groups, long-term goals, planning, resources, regional economy) are aspirational.
+- Trainers may propose battles and the player can decline. Gym leaders may be elsewhere, and the player learns where to find them.
+- Each gym-bearing region has its own eight-badge circuit. Ur-Kalah has none. Which of the other 13 regions have gyms, and the total badge count, are open.
 
 ## 6. Traversal and mounts
 
-See [Traversal](traversal.md), [Riding and mounts](riding-and-mounts.md), and [Hazards](hazards.md).
+See [Traversal](traversal.md), [Riding and mounts](riding-and-mounts.md) and [Hazards](hazards.md).
 
-- Traversal includes climbing, swimming, gliding and other movement based on terrain and Pokémon abilities.
-- Mounts can carry the player over land, water and air, with direct steering, stamina, hunger and trust.
-- Travel remains meaningful through geography, weather, predator territory and upkeep, **not artificial rarity quotas**.
-- Non-mount transportation between established safe stops can coexist with direct mount travel; its exact scope is open.
+- Ledges can be climbed. Pokemon can help traverse land, water and air.
+- Mounts are directly steered, with stamina, hunger and trust. Free flight is a real flight mode, not a teleport.
+- Travel stays meaningful through geography, weather, predator territory and upkeep, not artificial rarity.
+- Non-mount transport between safe stops may coexist; its scope is open.
 
-## Root decisions to settle next
+## Root decisions
 
 | Root | Status | Why it matters |
 |---|---|---|
-| Code foundation | **Decided: Expansion fork** | Species/forms, APIs and engine integration |
-| Save-space and runtime budget | **Needs measurement** | Persistent Pokémon/NPC count and off-screen simulation |
-| World-clock policy | **Decided: in-game-only; no offline catch-up** | Exact day length and pause rules still need tuning |
-| Persistent individual record and identity | **Tiered persistence decided; binary format pending budget** | Wild Pokémon, captured Pokémon, mounts and possibly trainer teams |
+| Code foundation | Locked: Expansion fork | Species, forms, APIs, engine |
+| Save and runtime budget | Needs measurement (Gate A, C) | Persistent record counts and simulation size |
+| World clock | Proposed: in-game time only | Hunger, routines, growth, weather, ecology |
+| Individual record | Tiered persistence locked; layout pending budget | Wild, captured and mounted Pokemon |
 
-For the detailed dependency graph and proposed validation order, see [Dependencies](dependencies.md).
+## Unresolved
 
-## Other unresolved design questions
+- Whether all gym regions have 8 gyms, and which regions have circuits.
+- Trainer Pokemon tracking, and how capture, migration and reproduction change wild populations.
+- Species and habitat tagging, biome boundaries, map connections and layouts.
+- Free flight, on-screen AI and player-facing menus.
 
-- Whether all gym-bearing regions have 8 gyms, and which regions have circuits.
-- Trainer Pokémon individual tracking and how capture, migration and reproduction change wild populations.
-- Exact species/habitat tagging, biome boundaries, map connections and layouts.
-- The implementation details of free flight, on-screen AI and player-facing menus.
-
-**Do not treat the above unresolved details as implemented or locked.**
-
-**Regional dynamic economy locked:** settlements aggregate production, consumption, connected trade and scarcity, with gradually changing prices and protected essential services. See [Regional economy](root/regional-dynamic-economy.md).
+Nothing marked Proposed, Aspirational or Open is implemented.
