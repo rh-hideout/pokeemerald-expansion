@@ -6,20 +6,18 @@
 #include "random.h"
 #include "config/pokerus.h"
 
+#if P_POKERUS_STRAIN_DISTRIBUTION < GEN_3
+static const struct WeightedArray sPokerusStrainDistribution = WEIGHTED_ARRAY(15, 30, 30, 30, 30, 30, 30, 30, 30, 1, 1, 1, 1, 1, 1, 1);
+#elif P_POKERUS_STRAIN_DISTRIBUTION < GEN_4
+static const struct WeightedArray sPokerusStrainDistribution = WEIGHTED_ARRAY(30, 31, 31, 31, 31, 31, 31, 31,  1, 1, 1, 1, 1, 1, 1, 1);
+#else
+static const struct WeightedArray sPokerusStrainDistribution = WEIGHTED_ARRAY(0, 31, 31, 31, 31, 31, 31, 31,  0, 1, 1, 1, 1, 1, 1, 1);
+#endif
+
 u32 GetDaysLeftBasedOnStrain(u32 strain)
 {
     u32 daysLeft = (strain % 4) + 1;
     return daysLeft;
-}
-
-static u32 GetRandomPokerusStrain(void)
-{
-    if (P_POKERUS_STRAIN_DISTRIBUTION < GEN_3) // Gen 1 - 2 (Gen 1 had no Pokérus but we default it with gen 2)
-        return RandomWeighted(RNG_POKERUS_STRAIN_DISTRIBUTION, 15, 30, 30, 30, 30, 30, 30, 30, 30, 1, 1, 1, 1, 1, 1, 1);
-    else if (P_POKERUS_STRAIN_DISTRIBUTION < GEN_4) //Gen 3 (Ruby/Sapphire only)
-        return RandomWeighted(RNG_POKERUS_STRAIN_DISTRIBUTION, 30, 31, 31, 31, 31, 31, 31, 31, 1, 1, 1, 1, 1, 1, 1, 1);
-    else // Gen 4+ (Pokérus was disabled in gen 9 but we default it here)
-        return RandomWeighted(RNG_POKERUS_STRAIN_DISTRIBUTION, 0, 31, 31, 31, 31, 31, 31, 31, 0, 1, 1, 1, 1, 1, 1, 1);
 }
 
 void RandomlyGivePartyPokerus(void)
@@ -61,7 +59,7 @@ void RandomlyGivePartyPokerus(void)
 
         if (!CheckMonHasHadPokerus(mon))
         {
-            u32 strain = GetRandomPokerusStrain();
+            u32 strain = RandomWeightedStruct(RNG_POKERUS_STRAIN_DISTRIBUTION, &sPokerusStrainDistribution);
             u32 daysLeft = GetDaysLeftBasedOnStrain(strain);
 
             SetMonData(mon, MON_DATA_POKERUS_STRAIN, &strain);
