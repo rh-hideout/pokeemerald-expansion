@@ -9,7 +9,7 @@ Borrow Rain World's independent ecological relationships and off-screen conseque
 ## Locked principles
 
 1. **Dynamic populations:** local abundance responds to food, habitat capacity, predators, weather, disease or other environmental pressure, competition and migration.
-2. **Natural replenishment:** breeding, immigration and habitat recovery can restore depleted populations over in-game time. No instant magical replacement of a captured individual.
+2. **Natural replenishment:** breeding, immigration and habitat recovery can restore depleted populations over in-game time. No instant magical replacement of a captured individual. **Hybrid reproduction** is locked: ordinary births are abstract while notable families can persist individually. See [Hybrid reproduction](hybrid-reproduction.md).
 3. **Local scarcity and abundance are possible:** habitats may temporarily lose or gain species. No universal static spawn quota or forced rarity balancing.
 4. **Bounded ecology:** population calculations must avoid unbounded growth, negative counts, numerical overflow and runaway performance costs. Exact ecological carrying capacities and recovery rates are **not yet fixed**.
 5. **No permanent save soft-lock:** ecological changes must not irreversibly block essential progress, food or basic movement; recovery pathways or appropriate alternatives are required. This is a playability constraint, not a promise of identical abundance everywhere.

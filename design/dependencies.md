@@ -28,6 +28,7 @@ The record is a **shared identity contract**, not necessarily one identical seri
 | Persistent ID/record storage | Save budget, time policy and identity contract |
 | Hunger, food, regrowth | Time policy, species traits, per-entity state |
 | Dynamic population persistence and replenishment | **Dynamic ecology locked:** food, reproduction, decline and recovery; requires habitat traits, in-game time, aggregate storage, and bounded updates. [Specification](root/population-ecology.md) |
+| Hybrid reproduction and notable families | **Hybrid policy locked:** abstract births plus persistent family relationships; requires population accounting, identity, species traits, clock and save capacity. [Specification](root/hybrid-reproduction.md) |
 | Ecological cross-region migration | Habitat connectivity graph, species traversal traits, persistent identity, clock and off-screen updates; [specification](root/ecological-migration.md) |
 | Bounded off-screen update engine | Clock/catch-up policy, persistence, species traits and budget |
 
@@ -71,6 +72,7 @@ The record is a **shared identity contract**, not necessarily one identical seri
 - Save strategy: compact per-entity records, pooled records, existing Pokémon data reuse, and migration across updates?
 - Ecological cross-region migration is locked; its graph, motivations and travel rates remain to be designed.
 - Dynamic population ecology is locked; reproduction rates, carrying capacity, aggregate granularity and recovery safeguards remain to be designed.
+- Hybrid reproduction is locked; nest/egg lifecycle, family-reference format, juvenile promotion and capacity handling remain to be designed.
 - Exact tiered identity lifecycle: promotion, catch, release, NPC ownership and generation of new wild individuals?
 
 The clock source and no-offline-progression rule are locked. No record size, population cap or day length is locked.

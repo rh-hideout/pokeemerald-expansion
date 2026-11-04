@@ -10,7 +10,8 @@
 4. [Individual persistence](root/individual-persistence.md) — locked tiered identity rules and unresolved lifecycle details.
 5. [Ecological migration](root/ecological-migration.md) — locked cross-region wildlife movement, constrained by habitat and geography.
 6. [Dynamic population ecology](root/population-ecology.md) — locked reproduction, decline, recovery and bounded ecosystem change.
-7. [Save budget investigation](root/save-budget.md) — verified storage structure, pending measured sizes.
+7. [Hybrid reproduction](root/hybrid-reproduction.md) — locked abstract births and persistent family relationships.
+8. [Save budget investigation](root/save-budget.md) — verified storage structure, pending measured sizes.
 
 Detailed topic documents follow.
 
@@ -36,6 +37,7 @@ Detailed topic documents follow.
 - **Locked:** tiered Pokémon persistence, with memorable individuals permanently tracked and ordinary populations abstracted. See [Individual persistence](root/individual-persistence.md).
 - **Locked:** ecologically motivated migration between reachable habitats and regions. See [Ecological migration](root/ecological-migration.md).
 - **Locked:** dynamic populations, natural reproduction and recovery with bounded, playable ecological behavior. See [Population ecology](root/population-ecology.md).
+- **Locked:** hybrid reproduction — abstract births for ordinary populations and persistent families for notable Pokémon. See [Hybrid reproduction](root/hybrid-reproduction.md).
 - **Still open:** save-space measurement, exact clock tuning, record serialization/limits and several world-balancing details. See [Dependencies](dependencies.md).
 - **Original source:** `despairarc000/pokeclaude`, branch `design-docs`, commit `f16c0f9853ffd4556a0be8af15a505cdae64dc66`.
 - **Preserved original backup:** `despairarc000/atlasgba`, branch `archive/pokeclaude-design-docs-2026-11-04`, commit `77fdd3ed888ea2d33043728b616fa81940168e52`; a second complete backup is in Google Drive.

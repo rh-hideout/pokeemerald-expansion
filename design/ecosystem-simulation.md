@@ -54,6 +54,7 @@ The GBA cannot run every creature live.
 - Too little prey means predators roam farther.
 - Over-hunting or resource scarcity can reduce local abundance; food recovery, reproduction and immigration can restore populations over in-game time.
 - **Locked:** populations can grow, decline and recover according to ecology, with bounded simulation and safeguards against permanent progression soft-locks. See [Dynamic population ecology](root/population-ecology.md).
+- **Hybrid reproduction (locked):** ordinary populations reproduce abstractly; notable Pokémon may maintain persistent mates, nests, eggs, offspring and family relationships. See [Hybrid reproduction](root/hybrid-reproduction.md).
 - Fainting does not imply permanent death or automatically subtract an individual from a population.
 
 ## Pressure (soft and local)
