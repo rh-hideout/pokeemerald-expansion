@@ -1,6 +1,6 @@
 # Evolving Pokémon personality — root design decision
 
-**Decision: LOCKED (2026-11-04).** Notable Pokémon have recognizable individual behavioral dispositions that **can gradually change through significant experiences**. Personality influences [utility-based action selection](utility-ai.md) but never overrides physical capabilities, hard safety rules or the game's danger-telegraphing contract.
+**Decision: LOCKED (2026-11-04).** Notable Pokémon have recognizable individual behavioral dispositions that **can gradually change through significant experiences**. [Slowly evolving NPC personality](npc-evolving-personality.md) is separately locked for human actors, with shared consequential-event semantics but distinct trait models. Personality influences [utility-based action selection](utility-ai.md) but never overrides physical capabilities, hard safety rules or the game's danger-telegraphing contract.
 
 ## Design intent
 

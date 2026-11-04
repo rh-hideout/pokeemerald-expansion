@@ -44,7 +44,7 @@ An independent event may establish significance without requiring player observa
 - Exact NPC identity namespace, storage schema, capacity, versioning and save migration.
 - Whether authored lightweight NPCs have stable template IDs without individual history.
 - Promotion thresholds, evidence buffering and overflow behavior.
-- NPC-specific personality, memory and relationship limits.
+- Slowly evolving notable NPC personality and selective social memory are locked; exact trait dimensions, memory and relationship limits remain open. See [NPC personality](npc-evolving-personality.md).
 - Which trainer-owned Pokémon receive permanent identity, and how ownership is stored.
 - NPC pathfinding, schedules, service fallbacks and travel graph semantics.
 - Local object-event reconciliation and debug/consistency tests.

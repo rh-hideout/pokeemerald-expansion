@@ -42,6 +42,7 @@ The record is a **shared identity contract**, not necessarily one identical seri
 | Tiered NPC persistence | **Notable identity + abstract crowds locked:** authored important NPCs and promoted individuals retain histories; depends on save budget, scheduler, shared events and identity reconciliation. [Specification](root/npc-persistence.md) |
 | Hybrid NPC routines and utility | **Schedules + autonomous interruption locked:** requires in-game clock, needs, goals, relationships, safe action filtering, shared events, navigation and bounded scheduler. [Specification](root/npc-routine-utility.md) |
 | Selective NPC social memory | **Meaningful bounded memories and evolving NPC–NPC/NPC–Pokémon relationships locked:** requires typed stable identity, tiered NPC persistence, shared events, in-game clock and save budget. [Specification](root/npc-social-memory.md) |
+| Evolving NPC personality | **Slow experience-shaped traits locked:** requires tiered NPC persistence, significant shared events, social memory, utility behavior, in-game clock and save budget. [Specification](root/npc-evolving-personality.md) |
 
 ## Layer 2 — behavior, life and movement
 
@@ -90,7 +91,7 @@ The record is a **shared identity contract**, not necessarily one identical seri
 - Multi-sensory perception is locked; ranges, occlusion approximation, cue expiration and per-frame budgets remain to be designed.
 - Hybrid navigation is locked; local algorithm, graph granularity, edge constraints, travel rates and reconciliation remain to be designed.
 - Hybrid off-screen scheduling, hybrid catch-up and adaptive fairness are locked; job budgets, priority weights, fairness implementation, aggregate formulas, notable-event selection, atomic transfer rules and progress-marker serialization remain to be designed.
-- Shared NPC–Pokémon events, tiered NPC persistence, hybrid NPC routine/utility behavior and selective NPC social memory are locked; NPC record layouts, relationship capacity/retention, promotion thresholds, schedule representation, utility scoring, ownership transfers, deduplication and event significance remain to be designed.
+- Shared NPC–Pokémon events, tiered NPC persistence, hybrid NPC routine/utility behavior, selective NPC social memory and slow personality evolution are locked; NPC record layouts, trait dimensions/learning rates, relationship capacity/retention, promotion thresholds, schedule representation, utility scoring, ownership transfers, deduplication and event significance remain to be designed.
 - Exact tiered identity lifecycle: promotion, catch, release, NPC ownership and generation of new wild individuals?
 
 The clock source and no-offline-progression rule are locked. No record size, population cap or day length is locked.
