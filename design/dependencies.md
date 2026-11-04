@@ -31,6 +31,7 @@ The record is a **shared identity contract**, not necessarily one identical seri
 | Hybrid reproduction and notable families | **Hybrid policy locked:** abstract births plus persistent family relationships; requires population accounting, identity, species traits, clock and save capacity. [Specification](root/hybrid-reproduction.md) |
 | Selective social memory | **Evolving relationships locked:** bounded salient memory and social references; requires persistent identity, significant-event signals, family ties, clock and save capacity. [Specification](root/social-memory.md) |
 | Utility-based wild behavior selection | **Utility AI locked:** needs, traits, memory, perception, safe action filtering, and bounded scheduling. [Specification](root/utility-ai.md) |
+| Evolving individual personality | **Experience-shaped traits locked:** species baselines, significant-event signals, persistent identity, utility AI and bounded updates. [Specification](root/evolving-personality.md) |
 | Ecological cross-region migration | Habitat connectivity graph, species traversal traits, persistent identity, clock and off-screen updates; [specification](root/ecological-migration.md) |
 | Bounded off-screen update engine | Clock/catch-up policy, persistence, species traits and budget |
 
@@ -77,6 +78,7 @@ The record is a **shared identity contract**, not necessarily one identical seri
 - Hybrid reproduction is locked; nest/egg lifecycle, family-reference format, juvenile promotion and capacity handling remain to be designed.
 - Selective social memory is locked; significance thresholds, memory priority, relationship reference format and limits remain to be designed.
 - Utility-based wild AI is locked; action catalog, scoring, scheduling, navigation and off-screen approximation remain to be designed.
+- Evolving personality is locked; trait dimensions, event thresholds, rates, save representation and Nature integration remain to be designed.
 - Exact tiered identity lifecycle: promotion, catch, release, NPC ownership and generation of new wild individuals?
 
 The clock source and no-offline-progression rule are locked. No record size, population cap or day length is locked.

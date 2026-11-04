@@ -29,6 +29,7 @@ Capturing removes **that specific individual** from the wild population. **Dynam
 - Epithets in battle text after repeated meetings.
 - Reactions: it may flee, hold a grudge or challenge on sight.
 - **Selective social memory (locked):** notable Pokémon remember meaningful encounters with the player and other Pokémon; trust, rivalry, fear and bonds can evolve and affect later behavior. See [Social memory](root/social-memory.md).
+- **Evolving personality (locked):** notable Pokémon retain distinct behavioral tendencies that can gradually shift through consequential experiences, even off-screen. See [Evolving personality](root/evolving-personality.md).
 - NPCs mention local individuals.
 
 ## Tiered persistence (locked design)

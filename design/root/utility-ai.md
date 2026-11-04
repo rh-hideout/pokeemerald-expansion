@@ -10,7 +10,7 @@ Rain World inspires creatures with independent needs, not fixed roles. The same 
 
 1. **Dynamic action selection.** Eligible behaviors receive contextual utility based on current state. No permanently assigned camper/rusher/predator role determines every action.
 2. **Safety and validity first.** Immediate hazards, incapacitation, blocked terrain, inaccessible targets and impossible actions override or filter ordinary utility choices.
-3. **Personality and species matter.** A cautious creature and a bold one may respond differently to the same stimuli; species capabilities constrain actions.
+3. **Personality and species matter.** A cautious creature and a bold one may respond differently to the same stimuli; species capabilities constrain actions. Notable individuals' dispositions can gradually evolve through meaningful experiences. See [Evolving personality](evolving-personality.md).
 4. **Memory and relationships matter.** Significant trust, fear, rivalry and family ties can change utility and reactions. See [Social memory](social-memory.md).
 5. **Ecology matters.** Hunger, available food, territorial pressure, weather, predators, prey, nesting and migration motivations influence choices.
 6. **Behavior is not player-centric.** Pokémon can interact with other Pokémon and the habitat while the player is absent.

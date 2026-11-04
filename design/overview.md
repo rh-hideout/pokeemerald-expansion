@@ -42,6 +42,7 @@ See [Ecosystem simulation](ecosystem-simulation.md).
 - **Locked:** ordinary populations are abstracted until significant. Promotion can come from **meaningful player interactions or noteworthy autonomous ecosystem events**, including events unseen by the player. Exact thresholds, record sizes and limits remain open.
 - Visible overworld behaviors include passive, skittish, territorial and predatory.
 - **Utility-based wild AI is locked:** Pokémon select actions by weighing needs, personality, relationships and conditions, with urgent safety overrides and bounded updates. See [Utility AI](root/utility-ai.md).
+- **Evolving individual personality is locked:** notable Pokémon develop distinct behavioral tendencies that can gradually change through meaningful experiences, including off-screen events. See [Evolving personality](root/evolving-personality.md).
 - Habitat, diet, climate and food shape distribution; rarity emerges from ecology rather than a hard-coded scarcity quota.
 - **Dynamic population ecology is locked:** species can reproduce, expand, decline and recover based on resources, predators and environmental conditions, with bounded simulation and safeguards against irreversible soft-locks. See [Population ecology](root/population-ecology.md).
 - **Hybrid reproduction is locked:** ordinary populations reproduce abstractly; notable Pokémon can have persistent mates, nests, eggs, offspring and family relationships. See [Hybrid reproduction](root/hybrid-reproduction.md).

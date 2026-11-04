@@ -39,7 +39,7 @@ Two notable Pokémon repeatedly contest a feeding ground and develop rivalry. On
 - How to summarize/evict low-priority memories without breaking family or important history.
 - Whether both participants require persistent records for a relationship to survive.
 - Social memory and player relationship handling when Pokémon are captured, released or traded.
-- Whether traits, species and nature affect emotional change, forgetting and social behavior.
+- How evolving personality traits affect emotional change, forgetting and social behavior; the [experience-driven personality policy](evolving-personality.md) is locked, but numerical interactions remain open.
 - How social outcomes are communicated through animation, behavior, tracks or NPC dialogue.
 
 No relationship slot count, numeric emotion range, or record byte size is locked.
