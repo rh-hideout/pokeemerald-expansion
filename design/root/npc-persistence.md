@@ -7,7 +7,7 @@
 | Tier | Persistent information | Simulation |
 |---|---|---|
 | Background population / routine | Aggregate demographics, service availability, habitat/town activity, or authored lightweight routine; no mandatory permanent identity for each person | Bounded routine/aggregate off-screen updates |
-| Notable individual | Stable identity, meaningful home/role/location, goals, relationships, salient events and necessary state | Coarse off-screen individual events; detailed local behavior when nearby |
+| Notable individual | Stable identity, meaningful home/role/location, [hybrid long-term goals](npc-long-term-goals.md), relationships, salient events and necessary state | Coarse off-screen individual events; detailed local behavior when nearby |
 | Active local NPC | Runtime presentation of either tier, not automatically a separate save tier | Local movement, dialogue, perception and interactions as applicable |
 
 **Persistence and simulation fidelity are separate.** A notable NPC remains notable off-screen; an ordinary visible NPC need not receive a permanent record.

@@ -4,7 +4,7 @@
 
 ## Locked invariants
 
-1. **Predictable baseline.** Home, work, meals, rest, travel and social commitments create legible routines. A shopkeeper is normally found at their shop during working hours.
+1. **Predictable baseline.** Home, work, meals, rest, travel and social commitments create legible routines. A shopkeeper is normally found at their shop during working hours. [Hybrid long-term goals](npc-long-term-goals.md) provide persistent ambitions and obligations; routines and utility AI choose feasible immediate actions.
 2. **Autonomous interruptions.** Hunger, exhaustion, danger, urgent care, relationships, unusual opportunities and shared world events may override routine actions.
 3. **Utility-driven choice.** Contextual needs, temperament, goals, obligations, relationships, environmental state and available opportunities influence action priority; no fixed role dictates every action. [Dynamic NPC groups](npc-dynamic-groups.md) can provide shared opportunities and commitments without eliminating individual choice. Notable NPCs draw on [selective social memory](npc-social-memory.md) for meaningful relationship context and [slowly evolving personality](npc-evolving-personality.md) for longer-term dispositions.
 4. **Narrow hard overrides.** Incapacitation, inaccessible locations and urgent hazards block invalid actions; safety handling must not turn all NPCs into identical agents.

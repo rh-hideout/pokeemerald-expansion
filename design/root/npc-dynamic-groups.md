@@ -6,7 +6,7 @@
 
 1. **Dynamic membership.** NPCs can form groups, join, separate or switch affiliation when plausible goals, bonds, opportunities or conflicts change.
 2. **Individual autonomy remains.** A member retains canonical identity, personality, needs, memories, ownership and personal goals. Group membership never turns people into one undifferentiated actor.
-3. **Shared purpose, not universal obedience.** Groups can coordinate travel, work, safety, care and social activity; members may disagree, pause, leave or prioritize urgent individual needs.
+3. **Shared purpose, not universal obedience.** Groups can coordinate travel, work, safety, care and social activity; members may disagree, pause, leave or prioritize urgent individual needs. [Long-term personal goals](npc-long-term-goals.md) remain distinct from temporary group objectives.
 4. **Stable world institutions.** Towns, gym circuits, core shops, recovery and major authored organizations remain coherent and usable. A spontaneous group cannot silently remove essential player access or create permanent unplanned settlements.
 5. **Plausible formation.** Membership changes require social opportunity, geographic/time compatibility or an established communication channel. A stranger cannot instantly join a distant party without a valid meeting or invitation.
 6. **Social consequences.** Friendship, trust, obligations, rivalries and remembered shared events influence cooperation through [selective NPC social memory](npc-social-memory.md), but do not guarantee permanent loyalty.

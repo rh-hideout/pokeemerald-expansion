@@ -8,7 +8,7 @@
 2. **Slow experience-shaped change.** Consequential journeys, rescue, loss, cooperation, conflict, hardship and repeated success can gradually alter longer-term traits. Routine greetings or a single trivial event do not rewrite a person.
 3. **Continuity and bounds.** Change must be gradual, limited and stable enough to avoid abrupt reversals, runaway extremes or frequent oscillation.
 4. **Separate personality, needs and relationships.** Long-term dispositions differ from temporary hunger, fatigue or fear, and from [selective memories](npc-social-memory.md) of particular people or Pokémon.
-5. **Behavioral influence.** Personality modifies [NPC utility decisions](npc-routine-utility.md), such as caution, generosity, curiosity or sociability, without replacing routines, obligations, valid-action checks or emergency safety rules.
+5. **Behavioral influence.** Personality modifies [NPC utility decisions](npc-routine-utility.md) and [long-term goal priorities](npc-long-term-goals.md), such as caution, generosity, curiosity or sociability, without replacing routines, obligations, valid-action checks or emergency safety rules.
 6. **Autonomous growth.** Meaningful off-screen events can shape notable NPCs using bounded selective updates; no exhaustive replay of everyday experiences.
 7. **Tiered persistence.** Ordinary background people do not require full permanent trait records. When an ordinary NPC becomes notable, initialize coherent traits consistent with known background and significant promotion event, without fabricating detailed history.
 8. **Stable identity and saves.** Developed traits remain attached to the canonical notable NPC across travel, local object instances, save/load and shared-world events.
