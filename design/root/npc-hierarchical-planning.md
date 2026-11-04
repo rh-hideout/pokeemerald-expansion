@@ -7,7 +7,7 @@
 1. **Distinct levels of intent.** [Long-term goals](npc-long-term-goals.md) define desired outcomes; milestones define meaningful intermediate progress; [NPC utility AI](npc-routine-utility.md) chooses valid immediate actions.
 2. **Adaptive milestones.** A goal may be decomposed into a short, bounded sequence or set of prerequisite steps; new information, failures or opportunities can change the remaining steps without erasing completed outcomes.
 3. **No omniscient plans.** NPCs plan from their own perception, memory and received information, not hidden world truth or perfect knowledge of every route, resource or actor.
-4. **Feasibility checks.** Routes, transport, resources, time, abilities, obligations and hazards constrain milestones. An impossible step must fail, wait, replan or trigger a safe fallback.
+4. **Feasibility checks.** Routes, transport, [hybrid NPC resources](npc-resource-management.md), time, abilities, obligations and hazards constrain milestones. An impossible step must fail, wait, replan or trigger a safe fallback.
 5. **Commitment and hysteresis.** Minor changes in utility do not repeatedly restart planning; urgent needs and genuine events may interrupt, with a coherent path to resume or reconsider.
 6. **Autonomous off-screen progress.** Selective milestone transitions can occur during in-game time when distant, using coarse causal events rather than executing detailed pathfinding or all intermediate actions.
 7. **Persistent canonical progress.** Important milestones, current commitments and progress markers belong to stable notable NPC identities across maps and save/load; local sprites are only representations.

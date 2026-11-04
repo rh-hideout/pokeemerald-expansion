@@ -13,7 +13,7 @@
 7. **Independent emergent activity.** NPCs may form or change groups while off-screen through selective [shared living-world events](shared-world-events.md), including interactions involving Pokémon.
 8. **Group movement obeys routes.** Shared journeys use [hybrid NPC navigation](npc-hybrid-navigation.md); members cannot teleport to a leader or travel over inaccessible terrain.
 9. **Tiered fidelity and persistence.** Significant groups involving notable NPCs may retain compact purpose, membership and progress; ordinary crowds or temporary teams use aggregate/lightweight state. No exhaustive persistent social graph.
-10. **Canonical membership and accounting.** Each group/member reference must reconcile with stable identity; joining, leaving, shared inventory, travel and event outcomes must not duplicate actors, resources or Pokémon.
+10. **Canonical membership and accounting.** Each group/member reference must reconcile with stable identity; joining, leaving, [shared resources](npc-resource-management.md), travel and event outcomes must not duplicate actors, resources or Pokémon.
 11. **Bounded coordination.** Nearby groups may coordinate concrete actions; off-screen groups use coarse collective progress and selective individual consequences. No full all-pairs negotiation, pathfinding or global group recomputation.
 12. **No closed-game progression.** Membership, travel and shared plans advance only during in-game time, never while the game is closed.
 13. **Safety and continuity.** Group formation and dissolution cannot trap the player, permanently remove authored services, strand critical NPCs or erase protected family/care ties.

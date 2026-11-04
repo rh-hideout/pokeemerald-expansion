@@ -11,6 +11,7 @@ NPCs are people with lives, not props waiting at a spot. They have homes, needs,
 5. **Small groups can emerge.** NPCs may form, join and leave travel parties, work teams, households and protective groups, while towns and major institutions remain stable. See [NPC groups](root/npc-dynamic-groups.md).
 6. **Ambitions can change.** Notable NPCs begin with grounded authored commitments but may develop, pursue, revise or abandon longer-term goals after consequential experiences. See [NPC goals](root/npc-long-term-goals.md).
 7. **Plans are adaptable.** Notable NPCs pursue goals through bounded milestones and utility-selected actions; interruptions and new evidence can alter the plan. See [NPC planning](root/npc-hierarchical-planning.md).
+8. **Resources have consequences.** Notable NPCs track important possessions and supplies; ordinary consumption and trade are abstracted. See [NPC resources](root/npc-resource-management.md).
 
 ## What every NPC has
 
