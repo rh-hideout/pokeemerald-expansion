@@ -73,7 +73,7 @@ Both routes use the same identity system and produce a stable persistent individ
 - Aggregate population granularity (species × habitat or another partition).
 - Trainer-owned Pokémon tracking policy and the relationship between persistent wild records and the existing battle system.
 
-These are **unresolved engineering and gameplay questions**. Do not claim a record byte size or number of simultaneously tracked Pokémon until [save budgets](save-budget.md) are measured.
+These are **unresolved engineering and gameplay questions**. [Tiered NPC persistence](npc-persistence.md) is separately locked; cross-type relationships require stable references without duplicating either record. Do not claim a record byte size or number of simultaneously tracked Pokémon until [save budgets](save-budget.md) are measured.
 
 ## Acceptance scenarios
 

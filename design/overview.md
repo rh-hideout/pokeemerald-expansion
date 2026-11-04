@@ -13,7 +13,7 @@ This is the authoritative **high-level vision**, not an implementation checklist
 - **Inspiration:** Rain World's autonomous creature ecology, individual interactions and off-screen abstraction inspire the design, but not its mandatory rain-cycle timer or global survival pressure.
 - **Creatures:** visible wild Pokémon with autonomous behavior and a living food chain. **Tiered persistence is locked**: notable individuals retain identity; ordinary populations are abstracted until an individual becomes significant. See [Individual persistence](root/individual-persistence.md).
 - **Survival:** player, NPCs, party Pokémon, and wild creatures eat; hunger matters but cannot permanently kill anyone or erase a save.
-- **People:** NPCs have routines, needs and relationships; trainers' challenges are optional and gym leaders are not fixed in place. **Shared NPC–Pokémon events are locked:** consequential interactions may affect relationships, resources and journeys off-screen. See [Shared living-world events](root/shared-world-events.md).
+- **People:** NPCs have routines, needs and relationships; trainers' challenges are optional and gym leaders are not fixed in place. **Tiered NPC persistence is locked:** notable individuals retain identity and histories, while background crowds use lightweight or abstract state and can be promoted by meaningful events. See [NPC persistence](root/npc-persistence.md). **Shared NPC–Pokémon events are locked:** consequential interactions may affect relationships, resources and journeys off-screen. See [Shared living-world events](root/shared-world-events.md).
 - **Travel:** ledges can be climbed, Pokémon can help traverse land/water/air, and mount travel is directly controlled rather than teleportation. Natural hazards and stamina matter.
 
 ## 1. World and exploration
@@ -65,7 +65,7 @@ See [Food and survival](survival.md).
 
 See [Living NPCs](living-npcs.md) and [Trainers and gyms](trainers-and-gyms.md).
 
-- NPCs have homes, needs, goals, routines and relationships, including travel when the player is away.
+- NPCs have homes, needs, goals, routines and relationships, including travel when the player is away. **Tiered persistence is locked** for notable people and abstract background crowds; see [NPC persistence](root/npc-persistence.md).
 - Gym leaders may be elsewhere; the player learns where to find them rather than being blocked by a script.
 - Trainers may propose battles; the player can decline.
 - **A gym-bearing region has its own eight-badge circuit.** Ur-Kalah has none. Which and how many of the other 13 regions will have gyms, and the resulting total badge count, remain **open**; the older claim of “64 badges across 8 regions” was inconsistent with “every region gets 8.”

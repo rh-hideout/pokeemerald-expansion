@@ -61,12 +61,12 @@ Emerald's NPCs are fixed object events with simple movement types. Autonomy need
 
 - **On-screen:** real pathing between a few points of interest, driven by time of day and current goal.
 - **Off-screen:** NPCs use the shared hybrid scheduler during active gameplay and bounded relevance catch-up, using coarse state (location, activity, hunger) instead of live movement. No time advances while the game is closed. See [Off-screen scheduler](root/offscreen-scheduler.md).
-- **Importance tiers** control cost: major NPCs (leaders, rivals, shopkeepers) get full state, minor ones get simple loops.
+- **Tiered NPC persistence is locked:** important or meaningfully promoted individuals keep stable identities and histories; ordinary people use lightweight routines or abstract crowds. Promotion can follow player interactions or autonomous events. See [NPC persistence](root/npc-persistence.md).
 - **Save space:** a small record per tracked NPC (location, activity, state). Budget must be measured in the repo.
 
 ## Open questions
 
-- How many NPCs get full autonomy versus simple loops.
+- How many NPCs can be stored as notables, and the exact promotion/overflow rules (tiered policy already locked).
 - Whether NPCs can leave their region and how that is tracked.
 - Whether NPC Pokemon are individually tracked.
 - How the player gets notified of notable NPC events when far away.

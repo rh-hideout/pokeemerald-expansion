@@ -29,7 +29,7 @@ Source inspection on 2026-11-04:
 2. Compile a small size report or inspect the build's ELF/map output to obtain `sizeof(struct SaveBlock1)`, `sizeof(struct SaveBlock2)`, `sizeof(struct SaveBlock3)`, and `sizeof(struct PokemonStorage)`.
 3. Compute free capacity per structure **after** alignment and existing fields; reserve margin and compatibility space.
 4. Audit runtime EWRAM/IWRAM/ROM and object-event limits separately; flash capacity is not RAM.
-5. Decide canonical Pokémon storage ownership, entity ID strategy, record pool, NPC storage and save-version migration.
+5. Decide canonical Pokémon storage ownership, entity ID strategy, record pool, **tiered NPC storage** and save-version migration. See [NPC persistence](npc-persistence.md).
 6. Prototype serialize/load/reload with checksum and bounds tests before setting record counts.
 
 ## Dependencies
