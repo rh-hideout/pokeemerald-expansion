@@ -15,7 +15,7 @@ A Pokémon should reach food, shelter, family, territory or a migration destinat
 5. **Local bounded search:** limit explored tiles, route length, replanning frequency and active navigation jobs. Exact algorithm and limits remain unselected pending engine measurements.
 6. **Dynamic obstacle response:** nearby Pokémon avoid or replan around moving entities and temporary blockers where feasible; unreachable destinations cause safe fallback rather than infinite loops.
 7. **Coherent transitions:** when a persistent Pokémon enters/leaves the visible area, its local instance and abstract journey reference the same stable identity, never duplicated.
-8. **Off-screen efficiency:** notable travelers retain logical graph location/progress; ordinary populations migrate as aggregates. No per-frame pathfinding outside the active area.
+8. **Off-screen efficiency:** notable travelers retain logical graph location/progress; ordinary populations migrate as aggregates. No per-frame pathfinding outside the active area. Their progress is driven by the [hybrid off-screen scheduler](offscreen-scheduler.md).
 9. **No offline progression:** travel, waiting and replanning advance only while the game runs.
 10. **Fairness and safety:** pathing must not create unavoidable surprise attacks or allow wild Pokémon to ignore intended safe-zone boundaries.
 11. **World layout is authoritative:** graph edges must correspond to actual world connections and movement capabilities; invalid links must be testable.

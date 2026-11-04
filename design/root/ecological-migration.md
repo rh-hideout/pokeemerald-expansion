@@ -13,7 +13,7 @@ Pokémon should have lives independent of the player. Territory, hunger, food av
 3. **Migration requires motivation.** Resource shortage, weather, territory displacement, threats, breeding/social needs or other plausible ecology may change destinations.
 4. **Identity is preserved.** A migrating persistent Pokémon keeps its ID, meaningful history, condition and ownership; changing maps or regions must not create a duplicate.
 5. **World time governs travel.** Progress occurs during active game-time only; closing the game freezes journeys.
-6. **Off-screen migration is abstracted.** Distant individuals use bounded route/region transitions, not continuous pathfinding or active overworld sprites.
+6. **Off-screen migration is abstracted.** Distant individuals use bounded route/region transitions, not continuous pathfinding or active overworld sprites. The [hybrid scheduler](offscreen-scheduler.md) advances these transitions during gameplay.
 7. **Player freedom and safety remain intact.** Migration may affect local ecology and encounters but must not produce unavoidable surprise attacks or a global danger escalation.
 8. **Ordinary populations can also drift** between suitable habitats through aggregate migration, without allocating a permanent ID to every member. Aggregate arrivals and departures contribute to [dynamic population ecology](population-ecology.md).
 

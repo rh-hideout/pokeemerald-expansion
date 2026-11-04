@@ -11,7 +11,7 @@ The goal is a believable world of autonomous Pokémon and people, partly inspire
 1. Time moves forward only when the game is actively simulating. Saving and closing the game preserve the current world timestamp.
 2. Loading a save resumes from that timestamp; **never calculate progress from the device's wall clock**.
 3. NPC routines, hunger, creature recovery/growth, plant regrowth and ecosystem updates all consume the same monotonic in-game elapsed-time service.
-4. Off-screen entities may be updated in bounded batches, but only to catch up with **in-game time that actually passed** while playing. There is no time debt from a closed game.
+4. **Hybrid scheduled off-screen simulation is locked:** distributed jobs and bounded catch-up process only **in-game time that actually passed** while playing. There is no time debt from a closed game. See [Off-screen scheduler](offscreen-scheduler.md).
 5. Visual day/night cycles and weather should agree with the simulated time. Existing RTC-driven mechanics must be audited and adapted; simply leaving real-time berry growth enabled would contradict this decision.
 6. No mandatory global countdown or Rain World-style death cycle. Local hazards and scarcity may still create pressure.
 
