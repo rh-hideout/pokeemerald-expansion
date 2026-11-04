@@ -1926,7 +1926,6 @@ static void DestroyBallOpenAnimationParticle(struct Sprite *sprite)
         gBattleSpritesDataPtr->animationData->numBallParticles--;
         if (gBattleSpritesDataPtr->animationData->numBallParticles == 0)
         {
-            DebugPrintf("Zeroed");
             for (i = 0; i < POKEBALL_COUNT; i++)
             {
                 if (FuncIsActiveTask(sBallParticles[i].particleAnimationFunc) == TRUE)
