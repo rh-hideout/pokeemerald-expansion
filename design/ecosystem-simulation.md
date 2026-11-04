@@ -21,7 +21,7 @@ Every notable wild Pokemon is a specific, trackable individual, not a generic sp
 4. **Growing:** each defeat and each stretch of time makes it stronger. It can evolve naturally and be met again later.
 5. **Remembered:** it tracks how often the player has met and beaten it, so later meetings feel different.
 
-Capturing removes **that specific individual** from the wild population. Whether populations replenish through breeding or migration, and at what rate, remains undecided; a capture does not imply the habitat can never recover.
+Capturing removes **that specific individual** from the wild population. **Dynamic reproduction, migration and recovery are locked**; exact rates and accounting rules remain open. A capture does not imply the habitat can never recover.
 
 ### Memorable individuals
 
@@ -48,11 +48,13 @@ The GBA cannot run every creature live.
 - **Ecological migration (locked):** persistent wild Pokémon may travel across connected regions when food, weather, territory, threats or social needs motivate them. Ordinary populations may migrate in aggregate. See [Ecological migration](root/ecological-migration.md).
 - Predator vs prey fights between wild Pokemon end in fainting, never death.
 
-## Food chain
+## Food chain and population ecology
 
 - Prey flees predators, predators hunt weaker Pokemon.
 - Too little prey means predators roam farther.
-- Over-hunting a species can leave a habitat empty. Recovery is slow.
+- Over-hunting or resource scarcity can reduce local abundance; food recovery, reproduction and immigration can restore populations over in-game time.
+- **Locked:** populations can grow, decline and recover according to ecology, with bounded simulation and safeguards against permanent progression soft-locks. See [Dynamic population ecology](root/population-ecology.md).
+- Fainting does not imply permanent death or automatically subtract an individual from a population.
 
 ## Pressure (soft and local)
 

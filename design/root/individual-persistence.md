@@ -27,6 +27,7 @@ Inspired by Rain World's memorable autonomous creatures, this preserves relation
 7. **Fainting is not permanent death.** Individuals may recover; ecosystem replacement and breeding rules remain open.
 8. **No unbounded per-frame simulation.** Abstract populations and off-screen individuals advance through bounded, deterministic or reproducible updates.
 9. **Ecological cross-region migration is allowed.** Persistent wild Pokémon retain identity while moving through reachable habitats in response to needs and environmental conditions. See [Ecological migration](ecological-migration.md).
+10. **Dynamic populations are separate from persistent identity.** Births, declines and recovery affect abstract habitat populations without silently cloning or deleting tracked individuals. See [Population ecology](population-ecology.md).
 
 ## Proposed lifecycle (needs exact implementation design)
 

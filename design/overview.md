@@ -42,6 +42,7 @@ See [Ecosystem simulation](ecosystem-simulation.md).
 - **Locked:** ordinary populations are abstracted until significant. Promotion can come from **meaningful player interactions or noteworthy autonomous ecosystem events**, including events unseen by the player. Exact thresholds, record sizes and limits remain open.
 - Visible overworld behaviors include passive, skittish, territorial and predatory.
 - Habitat, diet, climate and food shape distribution; rarity emerges from ecology rather than a hard-coded scarcity quota.
+- **Dynamic population ecology is locked:** species can reproduce, expand, decline and recover based on resources, predators and environmental conditions, with bounded simulation and safeguards against irreversible soft-locks. See [Population ecology](root/population-ecology.md).
 - **Ecological migration is locked:** persistent Pokémon may travel across regions through reachable habitats, keeping their identity, when needs or circumstances motivate them. See [Ecological migration](root/ecological-migration.md).
 - The GBA only simulates nearby activity in detail; distant activity updates in bounded batches.
 

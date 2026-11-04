@@ -15,7 +15,7 @@ Pokémon should have lives independent of the player. Territory, hunger, food av
 5. **World time governs travel.** Progress occurs during active game-time only; closing the game freezes journeys.
 6. **Off-screen migration is abstracted.** Distant individuals use bounded route/region transitions, not continuous pathfinding or active overworld sprites.
 7. **Player freedom and safety remain intact.** Migration may affect local ecology and encounters but must not produce unavoidable surprise attacks or a global danger escalation.
-8. **Ordinary populations can also drift** between suitable habitats through aggregate migration, without allocating a permanent ID to every member.
+8. **Ordinary populations can also drift** between suitable habitats through aggregate migration, without allocating a permanent ID to every member. Aggregate arrivals and departures contribute to [dynamic population ecology](population-ecology.md).
 
 ## Conceptual model
 
