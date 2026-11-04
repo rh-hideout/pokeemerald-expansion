@@ -21,10 +21,8 @@ struct __attribute__((packed, aligned(2))) BattleMoveEffect
     u16 battleTvScore:3;
     enum FactoryStyle battleFactoryStyle:4;
     u16 encourageEncore:1;
-    u16 twoTurnEffect:1;
-    u16 semiInvulnerableEffect:1;
     u16 usesProtectCounter:1;
-    u16 padding:5;
+    u16 padding:7;
 };
 
 #define EFFECTS_ARR(...) (const struct AdditionalEffect[]) {__VA_ARGS__}
@@ -165,7 +163,6 @@ struct MoveInfo
     bool32 slicingMove:1;
     bool32 healingMove:1;
     bool32 minimizeDoubleDamage:1;
-    // end of word
     bool32 ignoresTargetAbility:1;
     bool32 ignoresTargetDefenseEvasionStages:1;
     bool32 damagesUnderground:1;
@@ -182,8 +179,10 @@ struct MoveInfo
     bool32 alwaysHitsInHailSnow:1;
     bool32 alwaysHitsOnSameType:1; // Always hits if user is of same type as move
     bool32 noAffectOnSameTypeTarget:1; // Fails if target is of same type as move
+    // end of word
     bool32 accDecreaseIfUserNotSameType:1; // Accuracy is increased by 10% if user is of same type as move
-    bool32 padding1:15;
+    bool32 twoTurn:1;
+    bool32 padding1:30;
     // end of word
 
     // Ban flags
@@ -628,27 +627,39 @@ static inline bool32 IsValidApprenticeMove(enum Move moveId)
     return gMovesInfo[SanitizeMoveId(moveId)].validApprenticeMove;
 }
 
+static inline u32 IsTwoTurnMove(enum Move moveId)
+{
+    return gMovesInfo[SanitizeMoveId(moveId)].twoTurn;
+}
+
 static inline u32 GetMoveTwoTurnAttackStringId(enum Move moveId)
 {
     moveId = SanitizeMoveId(moveId);
-    enum BattleMoveEffects effect = gMovesInfo[moveId].effect;
-    assertf(gBattleMoveEffects[effect].twoTurnEffect, "not a two-turn move: %S", gMovesInfo[moveId].name);
-    return gMovesInfo[moveId].argument.twoTurnAttack.stringId;
+    assertf(IsTwoTurnMove(moveId), "not a two-turn move: %S", gMovesInfo[moveId].name);
+    enum StringID stringId = gMovesInfo[moveId].argument.twoTurnAttack.stringId;
+    // Default to Razor Wind message
+    stringId = stringId == STRINGID_NONE ? STRINGID_PKMNWHIPPEDWHIRLWIND : stringId;
+    return stringId;
 }
 
 static inline u32 GetTwoTurnMoveSemiInvulnerability(enum Move moveId)
 {
     moveId = SanitizeMoveId(moveId);
-    enum BattleMoveEffects effect = gMovesInfo[moveId].effect;
-    assertf(effect == EFFECT_SEMI_INVULNERABLE || effect == EFFECT_SKY_DROP, "not a two-turn move with status: %S", gMovesInfo[moveId].name);
+    assertf(IsTwoTurnMove(moveId), "not a two-turn move: %S", gMovesInfo[moveId].name);
     return gMovesInfo[moveId].argument.twoTurnAttack.state;
+}
+
+static inline bool32 IsTwoTurnSemiInvulnerableMove(enum Move move)
+{
+    if (!IsTwoTurnMove(move))
+        return FALSE;
+    return GetTwoTurnMoveSemiInvulnerability(move) != STATE_NONE;
 }
 
 static inline u32 GetTwoTurnMoveWeather(enum Move moveId)
 {
     moveId = SanitizeMoveId(moveId);
-    enum BattleMoveEffects effect = gMovesInfo[moveId].effect;
-    assertf(effect == EFFECT_TWO_TURNS_ATTACK || effect == EFFECT_SOLAR_BEAM || effect == EFFECT_SEMI_INVULNERABLE || effect == EFFECT_GEOMANCY, "not a two-turn move with weather: %S", gMovesInfo[moveId].name);
+    assertf(IsTwoTurnMove(moveId), "not a two-turn move: %S", gMovesInfo[moveId].name);
     return gMovesInfo[moveId].argument.twoTurnAttack.weather;
 }
 

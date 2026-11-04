@@ -152,7 +152,7 @@ DOUBLE_BATTLE_TEST("Dragon Darts strikes an opponent twice if the other one is i
     PARAMETRIZE { chosenTarget = opponentRight; finalTarget = opponentLeft; }
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_FLY) == EFFECT_SEMI_INVULNERABLE);
+        ASSUME(IsTwoTurnSemiInvulnerableMove(MOVE_FLY));
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);

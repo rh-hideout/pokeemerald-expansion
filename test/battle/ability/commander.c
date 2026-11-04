@@ -834,7 +834,7 @@ DOUBLE_BATTLE_TEST("Commander clears when Dondozo is replaced and Tatsugiri can 
 DOUBLE_BATTLE_TEST("Commander does not clear semi-invulnerability of non-Tatsugiri partner")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_FLY) == EFFECT_SEMI_INVULNERABLE);
+        ASSUME(IsTwoTurnSemiInvulnerableMove(MOVE_FLY));
         PLAYER(SPECIES_DONDOZO) { HP(1); Speed(1); }
         PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_COMMANDER); HP(1); Status1(STATUS1_POISON); Speed(2); }
         PLAYER(SPECIES_PIDGEOT) { Speed(100); }

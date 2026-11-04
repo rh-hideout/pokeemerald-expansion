@@ -494,7 +494,7 @@ bool32 IsTruantMonVulnerable(enum BattlerId battlerAI, enum BattlerId opposingBa
         enum BattleMoveEffects effect = GetMoveEffect(move);
         if (effect == EFFECT_PROTECT && move != MOVE_ENDURE)
             return TRUE;
-        if (effect == EFFECT_SEMI_INVULNERABLE && AI_IsSlower(battlerAI, opposingBattler, GetAIChosenMove(battlerAI), predictedMove, CONSIDER_PRIORITY))
+        if (IsTwoTurnSemiInvulnerableMove(move) && AI_IsSlower(battlerAI, opposingBattler, GetAIChosenMove(battlerAI), predictedMove, CONSIDER_PRIORITY))
             return TRUE;
     }
     return FALSE;
@@ -1199,6 +1199,16 @@ static bool32 AI_IsMoveEffectInMinus(enum BattlerId battlerAtk, enum BattlerId b
     if (IsExplosionMove(move))
         return TRUE;
 
+    if (IsTwoTurnSemiInvulnerableMove(move))
+    {
+        if (abilityAtk == ABILITY_NO_GUARD || abilityDef == ABILITY_NO_GUARD)
+        {
+            if (gAiLogicData->holdEffects[battlerAtk] != HOLD_EFFECT_POWER_HERB)
+                return TRUE;
+        }
+        return FALSE;
+    }
+
     switch (GetMoveEffect(move))
     {
     case EFFECT_MAX_HP_50_RECOIL:
@@ -1209,13 +1219,6 @@ static bool32 AI_IsMoveEffectInMinus(enum BattlerId battlerAtk, enum BattlerId b
     case EFFECT_RECOIL_IF_MISS:
         if (AI_IsDamagedByRecoil(battlerAtk))
             return TRUE;
-        break;
-    case EFFECT_SEMI_INVULNERABLE:
-        if (abilityAtk == ABILITY_NO_GUARD || abilityDef == ABILITY_NO_GUARD)
-        {
-            if (gAiLogicData->holdEffects[battlerAtk] != HOLD_EFFECT_POWER_HERB)
-                return TRUE;
-        }
         break;
     case EFFECT_DREAM_EATER:
         if (abilityDef == ABILITY_LIQUID_OOZE && GetConfig(B_DREAM_EATER_LIQUID_OOZE) >= GEN_5)
@@ -3299,7 +3302,7 @@ bool32 IsTwoTurnNotSemiInvulnerableMove(enum BattlerId battlerAtk, enum Move mov
         .moveEffect = GetMoveEffect(move),
     };
 
-    if (!gBattleMoveEffects[cv.moveEffect].twoTurnEffect)
+    if (!IsTwoTurnMove(move))
         return FALSE;
 
     for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)

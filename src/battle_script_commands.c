@@ -932,8 +932,7 @@ static void Cmd_printattackstring(void)
 
     PrepareStringBattle(STRINGID_USEDMOVE, gBattlerAttacker);
     gBattleCommunication[MSG_DISPLAY] = MSG_DISPLAY_CONTINUE;
-    if (gBattleMoveEffects[GetMoveEffect(gCurrentMove)].twoTurnEffect
-     && !gBattleMons[gBattlerAttacker].volatiles.multipleTurns)
+    if (IsTwoTurnMove(gCurrentMove) && !gBattleMons[gBattlerAttacker].volatiles.multipleTurns)
     {
         gBattleCommunication[MSG_DISPLAY] = MSG_DISPLAY_WAIT;
     }
@@ -5261,13 +5260,14 @@ static void Cmd_setsemiinvulnerablebit(void)
 {
     CMD_ARGS(bool8 clear);
 
-    if (gBattleMoveEffects[GetMoveEffect(gCurrentMove)].semiInvulnerableEffect == TRUE)
+    enum SemiInvulnerableState state = GetTwoTurnMoveSemiInvulnerability(gCurrentMove);
+
+    if (state != STATE_NONE)
     {
-        u32 semiInvulnerableEffect = GetTwoTurnMoveSemiInvulnerability(gCurrentMove);
         if (cmd->clear)
             gBattleMons[gBattlerAttacker].volatiles.semiInvulnerable = STATE_NONE;
         else
-            gBattleMons[gBattlerAttacker].volatiles.semiInvulnerable = semiInvulnerableEffect;
+            gBattleMons[gBattlerAttacker].volatiles.semiInvulnerable = state;
     }
 
     gBattlescriptCurrInstr = cmd->nextInstr;

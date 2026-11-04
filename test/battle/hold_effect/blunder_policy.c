@@ -91,7 +91,7 @@ SINGLE_BATTLE_TEST("Blunder Policy will never trigger if an OHKO move fails")
 SINGLE_BATTLE_TEST("Blunder Policy will never trigger if the move misses due to semi-invulnerability")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_FLY) == EFFECT_SEMI_INVULNERABLE);
+        ASSUME(IsTwoTurnSemiInvulnerableMove(MOVE_FLY));
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_BLUNDER_POLICY); Speed(5); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(10); }
     } WHEN {

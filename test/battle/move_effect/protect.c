@@ -141,8 +141,8 @@ SINGLE_BATTLE_TEST("Protect: King's Shield, Silk Trap and Obstruct don't lower s
     GIVEN {
         ASSUME(MoveMakesContact(MOVE_BOUNCE));
         ASSUME(MoveMakesContact(MOVE_DIG));
-        ASSUME(gBattleMoveEffects[GetMoveEffect(MOVE_BOUNCE)].twoTurnEffect);
-        ASSUME(gBattleMoveEffects[GetMoveEffect(MOVE_DIG)].twoTurnEffect);
+        ASSUME(IsTwoTurnMove(MOVE_BOUNCE));
+        ASSUME(IsTwoTurnMove(MOVE_DIG));
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -204,8 +204,8 @@ SINGLE_BATTLE_TEST("Protect: Spiky Shield doesn't hurt attacker when charging a 
     GIVEN {
         ASSUME(MoveMakesContact(MOVE_BOUNCE));
         ASSUME(MoveMakesContact(MOVE_DIG));
-        ASSUME(gBattleMoveEffects[GetMoveEffect(MOVE_BOUNCE)].twoTurnEffect);
-        ASSUME(gBattleMoveEffects[GetMoveEffect(MOVE_DIG)].twoTurnEffect);
+        ASSUME(IsTwoTurnMove(MOVE_BOUNCE));
+        ASSUME(IsTwoTurnMove(MOVE_DIG));
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -282,8 +282,8 @@ SINGLE_BATTLE_TEST("Protect: Baneful Bunker doesn't poison attacker when chargin
     GIVEN {
         ASSUME(MoveMakesContact(MOVE_BOUNCE));
         ASSUME(MoveMakesContact(MOVE_DIG));
-        ASSUME(gBattleMoveEffects[GetMoveEffect(MOVE_BOUNCE)].twoTurnEffect);
-        ASSUME(gBattleMoveEffects[GetMoveEffect(MOVE_DIG)].twoTurnEffect);
+        ASSUME(IsTwoTurnMove(MOVE_BOUNCE));
+        ASSUME(IsTwoTurnMove(MOVE_DIG));
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -359,8 +359,8 @@ SINGLE_BATTLE_TEST("Protect: Burning Bulwark doesn't burn attacker when charging
     GIVEN {
         ASSUME(MoveMakesContact(MOVE_BOUNCE));
         ASSUME(MoveMakesContact(MOVE_DIG));
-        ASSUME(gBattleMoveEffects[GetMoveEffect(MOVE_BOUNCE)].twoTurnEffect);
-        ASSUME(gBattleMoveEffects[GetMoveEffect(MOVE_DIG)].twoTurnEffect);
+        ASSUME(IsTwoTurnMove(MOVE_BOUNCE));
+        ASSUME(IsTwoTurnMove(MOVE_DIG));
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

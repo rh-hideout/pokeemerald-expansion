@@ -1321,7 +1321,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
 
     // Don't use moves that miss against already semi-invulnerable targets when we move first.
     if (!CanBreakThroughSemiInvulnerablity(battlerAtk, battlerDef, aiData->abilities[battlerAtk], aiData->abilities[battlerDef], move)
-     && moveEffect != EFFECT_SEMI_INVULNERABLE && AI_IsFaster(battlerAtk, battlerDef, move, predictedMove, CONSIDER_PRIORITY)
+     && !IsTwoTurnSemiInvulnerableMove(move) && AI_IsFaster(battlerAtk, battlerDef, move, predictedMove, CONSIDER_PRIORITY)
      && abilityAtk != ABILITY_NO_GUARD && abilityDef != ABILITY_NO_GUARD)
     {
         RETURN_SCORE_MINUS(10);
@@ -1331,9 +1331,9 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
     if (!IsSemiInvulnerable(battlerDef, CHECK_ALL)
      && predictedMove != MOVE_NONE
      && predictedMove != MOVE_UNAVAILABLE
-     && (GetMoveEffect(predictedMove) == EFFECT_SEMI_INVULNERABLE || GetMoveEffect(predictedMove) == EFFECT_SKY_DROP)
+     && IsTwoTurnSemiInvulnerableMove(predictedMove)
      && AI_IsSlower(battlerAtk, battlerDef, move, predictedMove, CONSIDER_PRIORITY)
-     && moveEffect != EFFECT_SEMI_INVULNERABLE
+     && !IsTwoTurnSemiInvulnerableMove(move)
      && aiData->holdEffects[battlerDef] != HOLD_EFFECT_POWER_HERB)
     {
         if (!BreaksThroughSemiInvulnerableState(battlerAtk, battlerDef, abilityAtk, abilityDef, move, GetTwoTurnMoveSemiInvulnerability(predictedMove)))
@@ -1346,7 +1346,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         if (IsTwoTurnNotSemiInvulnerableMove(battlerAtk, move))
             RETURN_SCORE_MINUS(10);
 
-        if (moveEffect == EFFECT_SEMI_INVULNERABLE && aiData->holdEffects[battlerAtk] != HOLD_EFFECT_POWER_HERB)
+        if (IsTwoTurnSemiInvulnerableMove(move) && aiData->holdEffects[battlerAtk] != HOLD_EFFECT_POWER_HERB)
         {
             if (abilityAtk == ABILITY_NO_GUARD || abilityDef == ABILITY_NO_GUARD)
                 RETURN_SCORE_MINUS(10);
@@ -1581,6 +1581,22 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
                 ADJUST_SCORE(-10);
             else
                 ADJUST_SCORE(-1);
+        }
+    }
+
+    if (IsTwoTurnSemiInvulnerableMove(move))
+    {
+        if (incomingMove != MOVE_NONE
+         && AI_IsSlower(battlerAtk, battlerDef, move, predictedMove, CONSIDER_PRIORITY)
+         && IsTwoTurnSemiInvulnerableMove(incomingMove))
+        {
+            ADJUST_SCORE(-10); // Don't Fly/dig/etc if opponent is going to fly/dig/etc after you
+        }
+
+        if (BattlerWillFaintFromWeather(battlerAtk, aiData->abilities[battlerAtk])
+         && GetTwoTurnMoveSemiInvulnerability(move) == STATE_ON_AIR)
+        {
+            ADJUST_SCORE(-10); // Attacker will faint while in the air
         }
     }
 
@@ -2515,16 +2531,6 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
                 ADJUST_SCORE(-10); // Drops our stats more than the amount raised
         }
         break;
-    case EFFECT_SEMI_INVULNERABLE:
-        if (incomingMove != MOVE_NONE
-          && AI_IsSlower(battlerAtk, battlerDef, move, predictedMove, CONSIDER_PRIORITY)
-          && GetMoveEffect(incomingMove) == EFFECT_SEMI_INVULNERABLE)
-            ADJUST_SCORE(-10); // Don't Fly/dig/etc if opponent is going to fly/dig/etc after you
-
-        if (BattlerWillFaintFromWeather(battlerAtk, aiData->abilities[battlerAtk])
-          && GetTwoTurnMoveSemiInvulnerability(move) == STATE_ON_AIR)
-            ADJUST_SCORE(-10); // Attacker will faint while in the air
-        break;
     case EFFECT_HEALING_WISH:   //healing wish, lunar dance
         if (CountUsablePartyMons(battlerAtk) == 0 || DoesPartnerHaveSameMoveEffect(GetPartnerBattler(battlerAtk), battlerDef, move, aiData->partnerMove))
             ADJUST_SCORE(-10);
@@ -3201,9 +3207,7 @@ static bool32 ShouldAvoidRedundantTarget(enum BattlerId battlerAtk, enum Battler
      || gBattleMons[partner].volatiles.semiInvulnerable == STATE_SKY_DROP_TARGET
      || gBattleStruct->battlerState[partner].commandingDondozo
      || (aiData->abilities[partner] == ABILITY_TRUANT && gBattleMons[partner].volatiles.truantToggle)
-     || (GetMoveEffect(partnerMove) == EFFECT_SEMI_INVULNERABLE
-      && !IsSemiInvulnerable(partner, CHECK_ALL)
-      && aiData->holdEffects[partner] != HOLD_EFFECT_POWER_HERB)
+     || (IsTwoTurnSemiInvulnerableMove(partnerMove) && !IsSemiInvulnerable(partner, CHECK_ALL) && aiData->holdEffects[partner] != HOLD_EFFECT_POWER_HERB)
      || (IsTwoTurnNotSemiInvulnerableMove(partner, partnerMove) && !gBattleMons[partner].volatiles.multipleTurns)
      || GetMoveEffect(partnerMove) == EFFECT_FUTURE_SIGHT
      || GetMoveEffect(partnerMove) == EFFECT_FOCUS_PUNCH)
@@ -4487,6 +4491,24 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
     default:
         break;
     }
+
+    if (IsTwoTurnSemiInvulnerableMove(move) && incomingMove != MOVE_NONE && isBattle1v1)
+    {
+        if (aiData->abilities[battlerAtk] != ABILITY_NO_GUARD && aiData->abilities[battlerDef] != ABILITY_NO_GUARD)
+        {
+            enum BattleMoveEffects predictedEffect = GetMoveEffect(incomingMove);
+            if ((AI_IsFaster(battlerAtk, battlerDef, move, predictedMove, CONSIDER_PRIORITY))
+             && (IsExplosionMove(incomingMove) || predictedEffect == EFFECT_PROTECT))
+            {
+                ADJUST_SCORE(GOOD_EFFECT);
+            }
+            else if (IsTwoTurnSemiInvulnerableMove(predictedMove) && !IsSemiInvulnerable(battlerDef, CHECK_ALL))
+            {
+                ADJUST_SCORE(GOOD_EFFECT);
+            }
+        }
+    }
+
     // move effect checks
     switch (moveEffect)
     {
@@ -4993,20 +5015,6 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
         break;
     case EFFECT_PSYCH_UP:
         score += AI_ShouldCopyStatChanges(battlerAtk, battlerDef);
-        break;
-    case EFFECT_SEMI_INVULNERABLE:
-        if (incomingMove != MOVE_NONE && isBattle1v1)
-        {
-            if (aiData->abilities[battlerAtk] == ABILITY_NO_GUARD || aiData->abilities[battlerDef] == ABILITY_NO_GUARD)
-                break;
-
-            enum BattleMoveEffects predictedEffect = GetMoveEffect(incomingMove);
-            if ((AI_IsFaster(battlerAtk, battlerDef, move, predictedMove, CONSIDER_PRIORITY))
-             && (IsExplosionMove(incomingMove) || predictedEffect == EFFECT_PROTECT))
-                ADJUST_SCORE(GOOD_EFFECT);
-            else if (predictedEffect == EFFECT_SEMI_INVULNERABLE && !IsSemiInvulnerable(battlerDef, CHECK_ALL))
-                ADJUST_SCORE(GOOD_EFFECT);
-        }
         break;
     case EFFECT_FIRST_TURN_ONLY:
         if (IsBattlersFirstTurn(battlerAtk) && !IsTargetingPartner(battlerAtk, battlerDef))
