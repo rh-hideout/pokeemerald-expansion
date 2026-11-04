@@ -12,7 +12,7 @@ Two Pokémon of the same species can behave differently; a timid creature may be
 2. **Experience-driven adaptation:** meaningful survival, rescue, repeated conflict, family care, successful exploration and other consequential events may shift traits over in-game time.
 3. **Slow, bounded change:** a single trivial encounter does not rewrite personality. Changes must be bounded to avoid runaway extremes, oscillation or indistinguishable individuals.
 4. **Separate traits, needs and memories:** personality describes longer-term tendencies; hunger/fear in the moment are transient needs; memories/relationships reference particular experiences and individuals.
-5. **Utility AI integration:** traits influence relative action preferences (e.g., boldness affects investigate-versus-retreat) but do not make invalid actions possible.
+5. **Utility AI integration:** traits influence relative action preferences (e.g., boldness affects investigate-versus-retreat) but do not make invalid actions possible. Perception supplies partial environmental cues rather than perfect target knowledge; see [Multi-sensory perception](multi-sensory-perception.md).
 6. **Species identity remains:** individual adaptation must not erase species ecology, movement limits or biology.
 7. **Tiered persistence:** ordinary populations use species/habitat tendencies without permanent per-creature personality histories. Promoted individuals acquire a coherent initial personality; the exact initialization method remains open.
 8. **Off-screen development:** noteworthy autonomous events may affect a notable Pokémon's personality through bounded abstract updates.

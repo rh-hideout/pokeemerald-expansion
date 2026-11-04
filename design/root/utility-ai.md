@@ -43,7 +43,7 @@ A notable Pokémon with high hunger may choose to forage instead of patrolling. 
 - Action catalog and which actions are supported in the first vertical slice.
 - Utility scoring formula, weight ranges and personality representation.
 - Evaluation frequency, action commitment and interrupt policy.
-- Perception radius, line-of-sight, hearing and event signals.
+- Multi-sensory perception is locked; specific ranges, occlusion rules, hearing cues and event limits remain open. See [Perception](multi-sensory-perception.md).
 - Navigation/pathfinding algorithm and object-event budget.
 - Determinism, random variation, save/reload consistency and test instrumentation.
 - Off-screen utility approximation and transition between detailed and abstract simulation.

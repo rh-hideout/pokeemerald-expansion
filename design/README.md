@@ -14,7 +14,8 @@
 8. [Selective social memory](root/social-memory.md) — locked evolving relationships and bounded meaningful memories.
 9. [Utility-based wild AI](root/utility-ai.md) — locked need-driven behavior selection and safety overrides.
 10. [Evolving personality](root/evolving-personality.md) — locked gradual, experience-driven individual behavioral traits.
-11. [Save budget investigation](root/save-budget.md) — verified storage structure, pending measured sizes.
+11. [Multi-sensory perception](root/multi-sensory-perception.md) — locked environment-aware senses and partial knowledge.
+12. [Save budget investigation](root/save-budget.md) — verified storage structure, pending measured sizes.
 
 Detailed topic documents follow.
 
@@ -44,6 +45,7 @@ Detailed topic documents follow.
 - **Locked:** selective evolving relationships and memory for notable Pokémon. See [Social memory](root/social-memory.md).
 - **Locked:** utility-based wild Pokémon AI, with urgent safety overrides and bounded updates. See [Utility AI](root/utility-ai.md).
 - **Locked:** notable Pokémon have evolving individual personalities shaped gradually by meaningful experiences. See [Evolving personality](root/evolving-personality.md).
+- **Locked:** multi-sensory perception with environment-aware sight, hearing and species-appropriate senses. See [Perception](root/multi-sensory-perception.md).
 - **Still open:** save-space measurement, exact clock tuning, record serialization/limits and several world-balancing details. See [Dependencies](dependencies.md).
 - **Original source:** `despairarc000/pokeclaude`, branch `design-docs`, commit `f16c0f9853ffd4556a0be8af15a505cdae64dc66`.
 - **Preserved original backup:** `despairarc000/atlasgba`, branch `archive/pokeclaude-design-docs-2026-11-04`, commit `77fdd3ed888ea2d33043728b616fa81940168e52`; a second complete backup is in Google Drive.
