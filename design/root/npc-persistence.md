@@ -22,7 +22,7 @@
 6. **Bounded histories:** store salient relationships and outcomes rather than an unlimited event log; background NPCs do not require full individual social graphs.
 7. **Shared-world compatibility:** notable NPCs may form persistent relationships with Pokémon and other people; resource, ownership and travel consequences use the shared event contract.
 8. **Geographic plausibility:** NPC travel and encounters obey reachable routes, schedules and environmental constraints; exact NPC travel graph integration remains open.
-9. **Tiered off-screen work:** background people use lightweight updates; notable NPCs receive selective consequential events under the adaptive scheduler.
+9. **Tiered off-screen work:** background people use lightweight updates; notable NPCs receive selective consequential events under the adaptive scheduler. [Hybrid routines and utility AI](npc-routine-utility.md) govern behavior without requiring detailed decisions for everyone.
 10. **In-game time only:** closing the game does not advance routines, relationships, journeys or promotion.
 11. **Player-facing fairness:** autonomy cannot irreversibly block required services, quests or safe recovery.
 

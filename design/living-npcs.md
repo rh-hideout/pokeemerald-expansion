@@ -4,7 +4,7 @@ NPCs are people with lives, not props waiting at a spot. They have homes, needs,
 
 ## Core principles
 
-1. **NPCs live in the world.** They sleep, eat, work, travel, explore and socialize.
+1. **NPCs live in the world.** They sleep, eat, work, travel, explore and socialize. **Hybrid routines and utility AI are locked:** familiar schedules remain the default, but needs, goals, relationships and meaningful events can autonomously interrupt them. See [NPC routines and utility](root/npc-routine-utility.md).
 2. **No fixed positions.** An NPC is somewhere because of what they are doing, not because a script placed them.
 3. **Everyone is findable but never guaranteed.** The player may have to look, wait, ask around or follow a lead.
 4. **The same survival rules apply.** NPCs need food, rest and safety like everyone else (see `survival.md`).
@@ -59,7 +59,7 @@ Since NPCs move, the player finds them through the world:
 
 Emerald's NPCs are fixed object events with simple movement types. Autonomy needs custom code:
 
-- **On-screen:** real pathing between a few points of interest, driven by time of day and current goal.
+- **On-screen:** real pathing between a few points of interest, driven by time of day, routine commitments and utility-selected goals. See [NPC routines and utility](root/npc-routine-utility.md).
 - **Off-screen:** NPCs use the shared hybrid scheduler during active gameplay and bounded relevance catch-up, using coarse state (location, activity, hunger) instead of live movement. No time advances while the game is closed. See [Off-screen scheduler](root/offscreen-scheduler.md).
 - **Tiered NPC persistence is locked:** important or meaningfully promoted individuals keep stable identities and histories; ordinary people use lightweight routines or abstract crowds. Promotion can follow player interactions or autonomous events. See [NPC persistence](root/npc-persistence.md).
 - **Save space:** a small record per tracked NPC (location, activity, state). Budget must be measured in the repo.

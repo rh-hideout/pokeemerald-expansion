@@ -40,6 +40,7 @@ The record is a **shared identity contract**, not necessarily one identical seri
 | Adaptive scheduler priority | **Relevance + urgency + fairness locked:** approaching habitats, consequential notable events and aged distant work share bounded scheduling time. [Specification](root/adaptive-scheduling.md) |
 | Shared NPC–Pokémon events | **Consequential shared events locked:** NPC routines, Pokémon identities, world clock, scheduler, actor co-location, event accounting and relationship storage. [Specification](root/shared-world-events.md) |
 | Tiered NPC persistence | **Notable identity + abstract crowds locked:** authored important NPCs and promoted individuals retain histories; depends on save budget, scheduler, shared events and identity reconciliation. [Specification](root/npc-persistence.md) |
+| Hybrid NPC routines and utility | **Schedules + autonomous interruption locked:** requires in-game clock, needs, goals, relationships, safe action filtering, shared events, navigation and bounded scheduler. [Specification](root/npc-routine-utility.md) |
 
 ## Layer 2 — behavior, life and movement
 
@@ -88,7 +89,7 @@ The record is a **shared identity contract**, not necessarily one identical seri
 - Multi-sensory perception is locked; ranges, occlusion approximation, cue expiration and per-frame budgets remain to be designed.
 - Hybrid navigation is locked; local algorithm, graph granularity, edge constraints, travel rates and reconciliation remain to be designed.
 - Hybrid off-screen scheduling, hybrid catch-up and adaptive fairness are locked; job budgets, priority weights, fairness implementation, aggregate formulas, notable-event selection, atomic transfer rules and progress-marker serialization remain to be designed.
-- Shared NPC–Pokémon events and tiered NPC persistence are locked; NPC record layouts, promotion thresholds, ownership transfers, deduplication and event significance remain to be designed.
+- Shared NPC–Pokémon events, tiered NPC persistence and hybrid NPC routine/utility behavior are locked; NPC record layouts, promotion thresholds, schedule representation, utility scoring, ownership transfers, deduplication and event significance remain to be designed.
 - Exact tiered identity lifecycle: promotion, catch, release, NPC ownership and generation of new wild individuals?
 
 The clock source and no-offline-progression rule are locked. No record size, population cap or day length is locked.

@@ -32,7 +32,7 @@ A notable Pokémon with high hunger may choose to forage instead of patrolling. 
 
 ## Architectural boundaries
 
-- **Decision selection** is distinct from movement/pathfinding, animation, collision, battle resolution, ecological accounting and persistent identity.
+- **Decision selection** is distinct from movement/pathfinding, animation, collision, battle resolution, ecological accounting and persistent identity. NPCs separately use [hybrid routines and utility AI](npc-routine-utility.md), sharing relevant event/scheduling contracts rather than identical action catalogs.
 - A utility score is a relative action preference, **not** a guarantee that the action is reachable or safe.
 - Hard overrides should be narrowly defined so they do not erase personality or create forced aggression.
 - Off-screen decisions must remain coherent with the visible world without simulating all detailed steps.

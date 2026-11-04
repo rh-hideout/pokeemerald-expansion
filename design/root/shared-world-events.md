@@ -10,7 +10,7 @@
 4. **Canonical ownership and identity.** A Pokémon transferred to an NPC or player remains the same individual; an event must not create duplicate owners, wild counts or local instances. Whether all trainer-owned Pokémon get full persistent records remains open.
 5. **Causal consistency.** Participants must plausibly coexist in time and reachable place; migration routes, NPC travel, species abilities, world conditions and resource availability constrain events.
 6. **Fairness and safety.** Fainting is not death. Shared events must not cause irreversible player softlocks, remove essential NPC services without alternatives, or generate unavoidable surprise danger.
-7. **Bounded off-screen cost.** The [adaptive scheduler](adaptive-scheduling.md) runs selective significant events, not all-pairs interactions, detailed dialogue, or off-screen frame-by-frame battles.
+7. **Bounded off-screen cost.** The [adaptive scheduler](adaptive-scheduling.md) runs selective significant events, not all-pairs interactions, detailed dialogue, or off-screen frame-by-frame battles. NPCs use [hybrid routine/utility decisions](npc-routine-utility.md), not continuous full-world planning.
 8. **Exactly-once effects.** An event's changes to inventory/resources, population counts, relationships and ownership must be applied coherently once, including across save/load and partial catch-up.
 9. **Player-independent world.** An event may happen without player observation; player-facing rumors, tracks or later encounters can reveal consequences, but need not reveal every event.
 10. **In-game time only.** Closing the game pauses the event system; no offline event backlog accrues.
