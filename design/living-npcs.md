@@ -8,6 +8,7 @@ NPCs are people with lives, not props waiting at a spot. They have homes, needs,
 2. **No fixed positions.** An NPC is somewhere because of what they are doing, not because a script placed them.
 3. **Everyone is findable but never guaranteed.** The player may have to look, wait, ask around or follow a lead.
 4. **The same survival rules apply.** NPCs need food, rest and safety like everyone else (see `survival.md`).
+5. **Small groups can emerge.** NPCs may form, join and leave travel parties, work teams, households and protective groups, while towns and major institutions remain stable. See [NPC groups](root/npc-dynamic-groups.md).
 
 ## What every NPC has
 

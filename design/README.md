@@ -27,7 +27,8 @@
 21. [Hybrid NPC navigation](root/npc-hybrid-navigation.md) — locked local pathfinding and connected world-route travel.
 22. [Contextual NPC perception](root/npc-contextual-perception.md) — locked bounded sight, hearing and off-screen awareness.
 23. [Selective NPC information sharing](root/npc-information-sharing.md) — locked gradual, imperfect rumors and meaningful news.
-24. [Save budget investigation](root/save-budget.md) — verified storage structure, pending measured sizes.
+24. [Dynamic NPC small groups](root/npc-dynamic-groups.md) — locked emergent small-group membership within stable towns and institutions.
+25. [Save budget investigation](root/save-budget.md) — verified storage structure, pending measured sizes.
 
 Detailed topic documents follow.
 
@@ -70,6 +71,7 @@ Detailed topic documents follow.
 - **Locked:** hybrid NPC navigation with bounded local routing and connected, access-aware world journeys. See [NPC navigation](root/npc-hybrid-navigation.md).
 - **Locked:** contextual NPC sight, hearing and environmental cues with partial knowledge and bounded off-screen approximation. See [NPC perception](root/npc-contextual-perception.md).
 - **Locked:** selective NPC information sharing, with gradual, imperfect rumor and warning propagation through plausible encounters and travel. See [NPC information sharing](root/npc-information-sharing.md).
+- **Locked:** dynamic NPC small groups can form and dissolve around shared purposes, while towns and major institutions remain stable. See [NPC groups](root/npc-dynamic-groups.md).
 - **Still open:** save-space measurement, exact clock tuning, record serialization/limits and several world-balancing details. See [Dependencies](dependencies.md).
 - **Original source:** `despairarc000/pokeclaude`, branch `design-docs`, commit `f16c0f9853ffd4556a0be8af15a505cdae64dc66`.
 - **Preserved original backup:** `despairarc000/atlasgba`, branch `archive/pokeclaude-design-docs-2026-11-04`, commit `77fdd3ed888ea2d33043728b616fa81940168e52`; a second complete backup is in Google Drive.
