@@ -44,7 +44,7 @@ A notable Pokémon with high hunger may choose to forage instead of patrolling. 
 - Utility scoring formula, weight ranges and personality representation.
 - Evaluation frequency, action commitment and interrupt policy.
 - Multi-sensory perception is locked; specific ranges, occlusion rules, hearing cues and event limits remain open. See [Perception](multi-sensory-perception.md).
-- Navigation/pathfinding algorithm and object-event budget.
+- Hybrid navigation is locked (local routing plus habitat/region graph); exact local algorithm, graph representation and object-event budget remain open. See [Hybrid navigation](hybrid-navigation.md).
 - Determinism, random variation, save/reload consistency and test instrumentation.
 - Off-screen utility approximation and transition between detailed and abstract simulation.
 

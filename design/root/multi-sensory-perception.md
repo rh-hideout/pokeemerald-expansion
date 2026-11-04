@@ -34,7 +34,7 @@ A Pokémon behind a boulder is visually obscured from a predator. Moving noisily
 
 `nearby event/entity -> cheap range and relevance filter -> channel-specific environment check -> limited cue -> utility evaluation -> action`
 
-- Use map collision/visibility information where available rather than inventing expensive world physics.
+- Use map collision/visibility information where available rather than inventing expensive world physics. The [hybrid navigation](hybrid-navigation.md) layer uses the same terrain legality where applicable, but perception does not grant a complete route or omniscient map knowledge.
 - Reuse/collapse events where possible, and limit active observers and cue history.
 - A sensory cue can expire; exact duration and confidence formula remain open.
 - Special senses can extend the channel model without requiring every species to use them.

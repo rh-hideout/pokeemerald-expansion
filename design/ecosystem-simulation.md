@@ -47,7 +47,7 @@ The GBA cannot run every creature live.
 
 - **On-screen creatures** use real movement AI, with **utility-based action selection** driven by needs, traits, memory and environment, plus urgent safety overrides. See [Utility AI](root/utility-ai.md). Perception is **multi-sensory and environment-aware**, not omniscient; see [Perception](root/multi-sensory-perception.md).
 - **Off-screen creatures** update in bulk when the player changes maps or time passes: who moved, ate, fought, recovered, grew or evolved.
-- **Ecological migration (locked):** persistent wild Pokémon may travel across connected regions when food, weather, territory, threats or social needs motivate them. Ordinary populations may migrate in aggregate. See [Ecological migration](root/ecological-migration.md).
+- **Ecological migration (locked):** persistent wild Pokémon may travel across connected regions when food, weather, territory, threats or social needs motivate them. Ordinary populations may migrate in aggregate. **Hybrid navigation** uses bounded local pathfinding and an off-screen habitat/region graph. See [Ecological migration](root/ecological-migration.md) and [Hybrid navigation](root/hybrid-navigation.md).
 - Predator vs prey fights between wild Pokemon end in fainting, never death.
 
 ## Food chain and population ecology

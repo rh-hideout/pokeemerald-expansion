@@ -25,7 +25,7 @@ A persistent individual needs at least a logical current location, home or terri
 
 ## Design boundaries and unresolved parameters
 
-- World/region/habitat graph and species-specific movement capabilities are not yet finalized.
+- Hybrid navigation is locked: a habitat/region graph handles long-distance travel and bounded local pathfinding handles visible movement. The graph's actual topology and species-specific edge permissions are not yet finalized. See [Hybrid navigation](hybrid-navigation.md).
 - How frequently individuals reconsider migration, and how quickly they move, remains open.
 - Group movement, family bonds, territorial disputes, weather disruptions and navigation memory require later behavior specs.
 - Which routes are impassable, dangerous or seasonal is content-dependent.

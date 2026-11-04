@@ -33,6 +33,7 @@ The record is a **shared identity contract**, not necessarily one identical seri
 | Utility-based wild behavior selection | **Utility AI locked:** needs, traits, memory, perception, safe action filtering, and bounded scheduling. [Specification](root/utility-ai.md) |
 | Evolving individual personality | **Experience-shaped traits locked:** species baselines, significant-event signals, persistent identity, utility AI and bounded updates. [Specification](root/evolving-personality.md) |
 | Multi-sensory perception | **Environment-aware senses locked:** species traits, nearby event cues, terrain/lighting/weather and bounded detection feed utility AI. [Specification](root/multi-sensory-perception.md) |
+| Hybrid Pokémon navigation | **Two-scale routing locked:** local collision/pathfinding plus species-accessible habitat/region graph; requires map connectivity, traversal tags and bounded CPU. [Specification](root/hybrid-navigation.md) |
 | Ecological cross-region migration | Habitat connectivity graph, species traversal traits, persistent identity, clock and off-screen updates; [specification](root/ecological-migration.md) |
 | Bounded off-screen update engine | Clock/catch-up policy, persistence, species traits and budget |
 
@@ -81,6 +82,7 @@ The record is a **shared identity contract**, not necessarily one identical seri
 - Utility-based wild AI is locked; action catalog, scoring, scheduling, navigation and off-screen approximation remain to be designed.
 - Evolving personality is locked; trait dimensions, event thresholds, rates, save representation and Nature integration remain to be designed.
 - Multi-sensory perception is locked; ranges, occlusion approximation, cue expiration and per-frame budgets remain to be designed.
+- Hybrid navigation is locked; local algorithm, graph granularity, edge constraints, travel rates and reconciliation remain to be designed.
 - Exact tiered identity lifecycle: promotion, catch, release, NPC ownership and generation of new wild individuals?
 
 The clock source and no-offline-progression rule are locked. No record size, population cap or day length is locked.
