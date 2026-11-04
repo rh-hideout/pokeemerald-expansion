@@ -29,7 +29,7 @@ While the player explores elsewhere for three in-game days, a forest's ordinary 
 
 - Aggregation formulas and long-interval numerical stability.
 - Which notable events qualify for replay versus summary.
-- Priority and fairness between overdue habitats and individuals.
+- Adaptive priority and fairness are locked; exact weights, age guarantees and job-cost handling remain open. See [Adaptive scheduling](adaptive-scheduling.md).
 - Transactional migration, promotion, birth and save/load recovery.
 - RNG/reproducibility, timestamps and intermediate event state.
 - Exact job budgets, backlog thresholds and activation fallback after profiling.
