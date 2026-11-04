@@ -102,3 +102,5 @@ The record is a **shared identity contract**, not necessarily one identical seri
 - Exact tiered identity lifecycle: promotion, catch, release, NPC ownership and generation of new wild individuals?
 
 The clock source and no-offline-progression rule are locked. No record size, population cap or day length is locked.
+
+| Regional dynamic economy | **Locked:** settlement aggregate stocks, production, consumption, trade and gradual scarcity/price changes; depends on canonical resource accounting, world routes, shared events, off-screen scheduler and measured save budget. [Specification](root/regional-dynamic-economy.md) |

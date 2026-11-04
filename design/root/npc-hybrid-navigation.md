@@ -68,3 +68,5 @@ Do not lock numeric limits or claim implementation until measured.
 10. Route processing stays within measured budgets and does not stall map entry.
 
 See [Pokémon hybrid navigation](hybrid-navigation.md), [NPC routines and utility](npc-routine-utility.md), [NPC persistence](npc-persistence.md), [Off-screen scheduler](offscreen-scheduler.md), and [Shared events](shared-world-events.md).
+
+**Regional economy integration:** [Regional dynamic economy](regional-dynamic-economy.md) owns settlement-scale aggregate supply, demand and price signals. Consequential transfers must be exactly once, route- and time-valid, and compatible with individual NPC resources.

@@ -31,7 +31,8 @@
 25. [Hybrid NPC long-term goals](root/npc-long-term-goals.md) — locked authored commitments and evolving personal ambitions.
 26. [Hybrid hierarchical NPC planning](root/npc-hierarchical-planning.md) — locked adaptive milestones with utility-selected immediate actions.
 27. [Hybrid NPC resource management](root/npc-resource-management.md) — locked consequential possessions and aggregate ordinary activity.
-28. [Save budget investigation](root/save-budget.md) — verified storage structure, pending measured sizes.
+28. [Regional dynamic economy](root/regional-dynamic-economy.md) — locked settlement aggregates, connected trade, scarcity and gradual prices.
+29. [Save budget investigation](root/save-budget.md) — verified storage structure, pending measured sizes.
 
 Detailed topic documents follow.
 
@@ -82,3 +83,5 @@ Detailed topic documents follow.
 - **Original source:** `despairarc000/pokeclaude`, branch `design-docs`, commit `f16c0f9853ffd4556a0be8af15a505cdae64dc66`.
 - **Preserved original backup:** `despairarc000/atlasgba`, branch `archive/pokeclaude-design-docs-2026-11-04`, commit `77fdd3ed888ea2d33043728b616fa81940168e52`; a second complete backup is in Google Drive.
 - **Revision note:** This directory now organizes and reconciles those plans. Original wording remains recoverable from the archive.
+
+- **Locked:** regional dynamic economy uses bounded settlement production, consumption, trade and scarcity with gradual prices. See [Regional economy](root/regional-dynamic-economy.md).

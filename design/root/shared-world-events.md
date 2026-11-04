@@ -57,3 +57,5 @@ No actor counts, event caps, numeric rates or binary layouts are locked before m
 8. The scheduler stays within measured work budgets and preserves safe gameplay.
 
 See [Off-screen scheduler](offscreen-scheduler.md), [Hybrid catch-up](hybrid-catchup.md), [Adaptive scheduling](adaptive-scheduling.md), [Individual persistence](individual-persistence.md), and [Social memory](social-memory.md).
+
+**Regional economy integration:** [Regional dynamic economy](regional-dynamic-economy.md) owns settlement-scale aggregate supply, demand and price signals. Consequential transfers must be exactly once, route- and time-valid, and compatible with individual NPC resources.

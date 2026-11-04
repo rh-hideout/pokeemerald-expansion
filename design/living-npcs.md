@@ -74,3 +74,5 @@ Emerald's NPCs are fixed object events with simple movement types. Autonomy need
 - Cross-region NPC travel through connected routes is locked; graph topology, transport rules and progress serialization remain open. See [NPC navigation](root/npc-hybrid-navigation.md).
 - Whether NPC Pokemon are individually tracked.
 - Selective NPC information sharing is locked: important news and rumors can travel through plausible social encounters, but exact dialogue, notices, rumor storage and communication channels remain open. See [NPC information sharing](root/npc-information-sharing.md).
+
+**Regional economy locked:** town-scale production, consumption, shortages, prices and connected trade influence NPC supplies and decisions. See [Regional economy](root/regional-dynamic-economy.md).

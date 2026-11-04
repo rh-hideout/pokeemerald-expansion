@@ -61,3 +61,5 @@ No inventory slot count, currency amount, transaction cap or economic rate is lo
 10. Closing the game does not advance resource production, consumption or spoilage.
 
 See [NPC planning](npc-hierarchical-planning.md), [NPC routines](npc-routine-utility.md), [NPC groups](npc-dynamic-groups.md), [Shared events](shared-world-events.md), [Population ecology](population-ecology.md), and [Save budget](save-budget.md).
+
+**Regional economy integration:** [Regional dynamic economy](regional-dynamic-economy.md) owns settlement-scale aggregate supply, demand and price signals. Consequential transfers must be exactly once, route- and time-valid, and compatible with individual NPC resources.

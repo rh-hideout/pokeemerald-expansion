@@ -98,3 +98,5 @@ For the detailed dependency graph and proposed validation order, see [Dependenci
 - The implementation details of free flight, on-screen AI and player-facing menus.
 
 **Do not treat the above unresolved details as implemented or locked.**
+
+**Regional dynamic economy locked:** settlements aggregate production, consumption, connected trade and scarcity, with gradually changing prices and protected essential services. See [Regional economy](root/regional-dynamic-economy.md).

@@ -62,3 +62,5 @@ No numeric depth, milestone count, time budget or record size is locked before m
 10. Closed-game time never advances a milestone.
 
 See [NPC goals](npc-long-term-goals.md), [NPC routines and utility](npc-routine-utility.md), [NPC groups](npc-dynamic-groups.md), [Off-screen scheduler](offscreen-scheduler.md), [Shared events](shared-world-events.md), and [Save budget](save-budget.md).
+
+**Regional economy integration:** [Regional dynamic economy](regional-dynamic-economy.md) owns settlement-scale aggregate supply, demand and price signals. Consequential transfers must be exactly once, route- and time-valid, and compatible with individual NPC resources.
