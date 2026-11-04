@@ -130,7 +130,7 @@ bool32 IsAnyAbilityPopUpActive(void);
 void CreateAbilityPopUp(enum BattlerId battlerId, enum Ability ability, bool32 isDoubleBattle);
 void DestroyAbilityPopUp(enum BattlerId battlerId);
 bool32 CanThrowLastUsedBall(void);
-void TryHideLastUsedBall(void);
+void TryHideLastUsedBallAndBattleInfoMenu(void);
 void TryRestoreLastUsedBall(void);
 void TryAddLastUsedBallItemSprites(void);
 void SwapBallToDisplay(bool32 sameBall);
