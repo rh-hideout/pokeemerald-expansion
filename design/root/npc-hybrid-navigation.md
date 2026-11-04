@@ -13,7 +13,7 @@
 7. **Coherent materialization.** A notable NPC's graph position, travel state and visible object instance reference one canonical identity. Save/load and map transitions must never duplicate or reset a traveler.
 8. **Tiered fidelity.** Notable NPCs preserve coarse route/progress off-screen; ordinary crowds use lightweight schedules or aggregate traffic. No global per-person pathfinding.
 9. **Event causality.** [Shared NPC–Pokémon events](shared-world-events.md) require actors to plausibly meet along reachable paths at compatible times. No cross-region interaction without a valid journey.
-10. **Social travel.** Visiting friends, delivering goods, rescuing others and changing plans may cause a traveler to reroute, wait, return or seek shelter; relationships do not override route legality.
+10. **Social travel.** Visiting friends, delivering goods, rescuing others and changing plans may cause a traveler to reroute, wait, return or seek shelter; relationships do not override route legality. Travelers may carry [selective news and rumors](npc-information-sharing.md), which spread only through plausible meetings or communication.
 11. **Essential-service safety.** Important NPC travel cannot irreversibly remove critical shops, gyms, recovery or required progression; substitutes, discoverable schedules or alternative access must exist.
 12. **Fair scheduling.** Off-screen route updates share the bounded adaptive scheduler, without starving distant travelers or blocking map entry.
 13. **No fabricated arrival.** If an area cannot reconcile overdue travel within budget, use a safe consistent representation rather than showing an actor in two locations.

@@ -4,7 +4,7 @@
 
 ## Locked invariants
 
-1. **Meaning over exhaustive logs.** Record salient consequences and compact relationship state, not every greeting, conversation or passing encounter.
+1. **Meaning over exhaustive logs.** Record salient consequences and compact relationship state, not every greeting, conversation or passing encounter. [Information sharing](npc-information-sharing.md) separately models bounded claims and rumors, not automatic firsthand memories.
 2. **Relationships evolve.** Trust, affection, gratitude, fear, rivalry, obligation and other useful dispositions may change through consequential events. No immutable friend/enemy classification.
 3. **Cross-species and human ties.** A notable NPC can remember another notable NPC, a notable Pokémon or the player; significant care/rescue/trade events can influence both NPC behavior and Pokémon behavior.
 4. **Independent events count.** Relationships may form or change without the player observing, through the [shared living-world event system](shared-world-events.md).

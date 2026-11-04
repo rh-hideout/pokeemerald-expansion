@@ -69,4 +69,4 @@ Emerald's NPCs are fixed object events with simple movement types. Autonomy need
 - How many NPCs can be stored as notables, and the exact promotion/overflow rules (tiered policy already locked).
 - Cross-region NPC travel through connected routes is locked; graph topology, transport rules and progress serialization remain open. See [NPC navigation](root/npc-hybrid-navigation.md).
 - Whether NPC Pokemon are individually tracked.
-- How the player gets notified of notable NPC events when far away.
+- Selective NPC information sharing is locked: important news and rumors can travel through plausible social encounters, but exact dialogue, notices, rumor storage and communication channels remain open. See [NPC information sharing](root/npc-information-sharing.md).

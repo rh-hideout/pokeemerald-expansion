@@ -8,7 +8,7 @@
 2. **Environment matters.** Walls, terrain, foliage, darkness, rain, noise, distance and orientation or attention (where modeled) influence detection by channel.
 3. **Partial evidence, not omniscience.** A sound may reveal a general direction or disturbance, not an exact unseen Pokémon identity or tile. Being on the same map or region does not imply knowledge.
 4. **Different observers.** Roles, experience, attention, current activity and condition may influence perception; a distracted merchant need not react like an alert ranger.
-5. **Sensing versus memory versus reports.** Live cues, [selective social memories](npc-social-memory.md) and information received from other actors are separate knowledge sources, with distinct freshness and reliability.
+5. **Sensing versus memory versus reports.** Live cues, [selective social memories](npc-social-memory.md) and information received through [selective NPC information sharing](npc-information-sharing.md) are separate knowledge sources, with distinct freshness and reliability.
 6. **Behavioral integration.** [NPC utility AI](npc-routine-utility.md) weighs perceived danger, opportunities and social signals; sensing does not directly force arbitrary behavior or reveal an unreachable route.
 7. **Nearby detail, distant abstraction.** Local actors receive bounded cue checks. Distant notable NPCs use coarse environmental context and causally eligible [shared events](shared-world-events.md); ordinary background crowds use aggregate signals.
 8. **Causal geography.** Information must have a plausible source, time and reachable location. NPCs cannot witness or hear an event across inaccessible regions without an explicit communication mechanism.
