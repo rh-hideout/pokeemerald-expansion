@@ -65,7 +65,7 @@ See [Food and survival](survival.md).
 
 See [Living NPCs](living-npcs.md) and [Trainers and gyms](trainers-and-gyms.md).
 
-- NPCs have homes, needs, goals, routines and relationships, including travel when the player is away. **Tiered persistence is locked** for notable people and abstract background crowds; see [NPC persistence](root/npc-persistence.md). **Hybrid routines and utility AI are locked:** NPCs keep recognizable schedules but can change plans due to needs, goals and significant events; see [NPC routines and utility](root/npc-routine-utility.md).
+- NPCs have homes, needs, goals, routines and relationships, including travel when the player is away. **Tiered persistence is locked** for notable people and abstract background crowds; see [NPC persistence](root/npc-persistence.md). **Hybrid routines and utility AI are locked:** NPCs keep recognizable schedules but can change plans due to needs, goals and significant events; see [NPC routines and utility](root/npc-routine-utility.md). **Selective NPC social memory is locked:** notable people remember meaningful encounters and develop evolving ties with people and Pokémon; see [NPC social memory](root/npc-social-memory.md).
 - Gym leaders may be elsewhere; the player learns where to find them rather than being blocked by a script.
 - Trainers may propose battles; the player can decline.
 - **A gym-bearing region has its own eight-badge circuit.** Ur-Kalah has none. Which and how many of the other 13 regions will have gyms, and the resulting total badge count, remain **open**; the older claim of “64 badges across 8 regions” was inconsistent with “every region gets 8.”

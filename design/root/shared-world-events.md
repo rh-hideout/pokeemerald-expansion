@@ -6,7 +6,7 @@
 
 1. **Common event semantics, distinct actors.** NPC and Pokémon systems may publish/consume compatible events, while maintaining separate species-specific needs, behavior and identity records.
 2. **Autonomous consequences.** Meaningful rescue, feeding, care, conflict, travel encounters, trade and habitat disturbance can occur without the player being present.
-3. **Selective persistence.** [Tiered NPC persistence](npc-persistence.md) is locked: notable NPCs and Pokémon retain consequential outcomes and bounded social ties; ordinary people and Pokémon participate through aggregate or summary effects without full permanent records. Meaningful shared events may promote an ordinary NPC.
+3. **Selective persistence.** [Tiered NPC persistence](npc-persistence.md) and [NPC social memory](npc-social-memory.md) are locked: notable NPCs and Pokémon retain consequential outcomes and bounded evolving social ties; ordinary people and Pokémon participate through aggregate or summary effects without full permanent records. Meaningful shared events may promote an ordinary NPC.
 4. **Canonical ownership and identity.** A Pokémon transferred to an NPC or player remains the same individual; an event must not create duplicate owners, wild counts or local instances. Whether all trainer-owned Pokémon get full persistent records remains open.
 5. **Causal consistency.** Participants must plausibly coexist in time and reachable place; migration routes, NPC travel, species abilities, world conditions and resource availability constrain events.
 6. **Fairness and safety.** Fainting is not death. Shared events must not cause irreversible player softlocks, remove essential NPC services without alternatives, or generate unavoidable surprise danger.

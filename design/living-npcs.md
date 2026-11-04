@@ -34,7 +34,7 @@ Gym leaders are people first. A leader may be at the gym, at home, out training,
 
 - **No guaranteed availability.** If the leader is away, the player can wait, ask townspeople, follow a lead, or travel to find them.
 - **Challenges happen when both sides are around.** Leaders can also be challenged in the wild, on the road or at a friend's place.
-- **They talk about each other.** One leader may be out visiting another, which feeds the reputation and badge-recognition lore.
+- **They talk about each other.** One leader may be out visiting another, which feeds the reputation and badge-recognition lore. **Selective NPC social memory is locked:** notable NPCs retain bounded significant memories and evolving ties with people and Pokémon, including off-screen events. See [NPC social memory](root/npc-social-memory.md).
 - **Others fill in.** A gym staff member can say where the leader went, or when they usually return.
 - Their absence is never a bug or a gate. It is just life.
 

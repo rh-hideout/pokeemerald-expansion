@@ -19,7 +19,7 @@
 3. **Authored roles remain reliable:** essential service providers, gym leaders and other important authored NPCs begin notable or have an equivalent stable authored identity; world autonomy must not permanently break critical gameplay services.
 4. **No silent demotion:** established notable identities and meaningful relationships cannot disappear merely because the pool is full. Capacity overflow needs an explicit policy after save measurements.
 5. **One canonical person:** an NPC cannot be instantiated twice because local object events and off-screen state both claim ownership. Transitions must reconcile identity and position.
-6. **Bounded histories:** store salient relationships and outcomes rather than an unlimited event log; background NPCs do not require full individual social graphs.
+6. **Bounded histories:** [selective NPC social memory](npc-social-memory.md) stores salient relationships and outcomes rather than an unlimited event log; background NPCs do not require full individual social graphs.
 7. **Shared-world compatibility:** notable NPCs may form persistent relationships with Pokémon and other people; resource, ownership and travel consequences use the shared event contract.
 8. **Geographic plausibility:** NPC travel and encounters obey reachable routes, schedules and environmental constraints; exact NPC travel graph integration remains open.
 9. **Tiered off-screen work:** background people use lightweight updates; notable NPCs receive selective consequential events under the adaptive scheduler. [Hybrid routines and utility AI](npc-routine-utility.md) govern behavior without requiring detailed decisions for everyone.

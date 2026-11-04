@@ -1,6 +1,6 @@
 # Selective evolving relationships and memory — design decision
 
-**Decision: LOCKED (2026-11-04).** Notable Pokémon can retain **selective, evolving social memories** of meaningful encounters with other Pokémon and with the player. Trust, fear, rivalry, family bonds and other salient relationships can influence future behavior. Do not store a complete social graph or every encounter for every creature.
+**Decision: LOCKED (2026-11-04).** Notable Pokémon can retain **selective, evolving social memories** of meaningful encounters with other Pokémon and with the player. [Selective NPC social memory](npc-social-memory.md) is separately locked for meaningful human–human and human–Pokémon relationships. Trust, fear, rivalry, family bonds and other salient relationships can influence future behavior. Do not store a complete social graph or every encounter for every creature.
 
 ## Purpose
 
