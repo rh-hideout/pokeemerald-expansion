@@ -11,7 +11,7 @@
 ## Gyms
 
 - Gyms are challenges the player seeks out. Most sit in Safe or Calm towns.
-- **Each region has its own set of 8 badges** (64 total across 8 regions). Ur-Kalah has no gyms.
+- **Each gym-bearing region has its own circuit of 8 badges.** Ur-Kalah has no gyms. Which and how many of the other 13 regions have gym circuits is not yet decided; therefore the total badge count is not locked.
 - There is no official top leader or champion title. Reputation is part of untold lore.
 
 ## Leaders read the player
@@ -42,9 +42,10 @@ Example: the player shows a badge from another region. The leader pauses, says t
 
 ## Implementation notes
 
-Badges are flags, already supported in pokeemerald. Each leader script checks flags and picks dialogue and team. This needs no engine changes.
+Badges can build on the existing flag/variable mechanisms, but multiple regional circuits, dynamic leaders and team selection still need save-schema checks, new content and possibly engine changes. Do not assume this is a script-only modification.
 
 ## Open questions
 
 - Ranked badges (bronze, silver, gold) were skipped for now.
 - Gym types per region are still to be decided.
+- Which regions host gyms, and whether all gym circuits contain exactly eight challenges, need to be confirmed against content scope and available badge storage.

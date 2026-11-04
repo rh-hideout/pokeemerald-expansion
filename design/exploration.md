@@ -76,7 +76,7 @@ Density makes maps costly. To keep scope manageable:
 
 - Hidden and conditional areas use existing flag and variable checks.
 - Time and weather already exist in pokeemerald and can gate visibility of events.
-- Traversal abilities need custom field effects. Some already exist (surf, climbing via ledges) and can be expanded.
+- Traversal abilities need custom field effects. Surfing and one-way ledge hopping exist in the base engine; climbing back up ledges is a proposed new behavior.
 - Map size and event limits per map must be checked against the engine's per-map caps.
 
 ## Open questions

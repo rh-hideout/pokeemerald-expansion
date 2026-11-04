@@ -6,8 +6,8 @@ Balance comes from the world pushing back, not from artificial limits. Pokemon a
 
 - **Pokemon live where their biology says they should.** Habitat, diet, climate, territory and food supply decide placement, never a rarity quota.
 - **Rarity is a result, not a setting.** A species is rare because its habitat is small, its food is scarce, its young rarely survive or it needs unusual conditions. It is not rare because a table says so.
-- **Good mounts are rare by nature.** Strong flyers nest on cliffs and storm peaks, big swimmers live in deep water, and fast runners range over wide plains. They are hard to find because they live in hard places.
-- **No exceptions for convenience.** If the player needs a mount, they find one the way they find anything else: by exploring, observing and earning trust.
+- **Capable mounts fit their habitat.** Some flyers live near cliffs or storm peaks, swimmers in deep water and runners on plains. Their frequency follows habitat and food, not an automatic rule that useful mounts must be rare.
+- **Accessible alternatives.** Exploring, observing and earning trust remain meaningful; basic mounts, boats, paths and other grounded routes prevent arbitrary travel gates.
 - Ecosystem rules apply to mounts too: they are tracked individuals that eat, move and get hurt.
 
 ## Environmental hazards
@@ -43,7 +43,7 @@ Hazards belong to terrain, weather and wildlife. They hit every traveler, with o
 | **Rockfalls and landslides** | Triggered by weather, creatures or climbing too hard |
 | **Thin ice and sinking mud** | Trap or drop the traveler |
 | **Heat, toxic air and cold** | Drain stamina and affect Pokemon and the player |
-| **Hostile wildlife in territory** | Chase, ambush from above, or defend nests |
+| **Hostile wildlife in territory** | Give observable warnings, then chase or defend nests if territory is crossed |
 
 ## What happens when things go wrong
 
@@ -68,7 +68,7 @@ Hazards belong to terrain, weather and wildlife. They hit every traveler, with o
 | Swimming and riding on water | Whirlpools, currents, cold, deep predators |
 | Climbing | Crumbling rock, slips, rockfalls, stamina |
 | Land riding | Terrain, wildlife, rough ground, stamina |
-| Strong mounts | Natural scarcity, upkeep, visibility to predators |
+| Strong mounts | Terrain fit, upkeep, stamina, visibility to predators |
 
 ## Engine notes
 

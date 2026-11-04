@@ -6,7 +6,7 @@ Inspired by Rain World, adapted for a world that is **safe by default**. Danger 
 
 1. **The world is generally safe.** Towns, routes and most wilderness are peaceful. Most wild Pokemon are passive or skittish.
 2. **Danger is local and readable.** Dangerous areas are rare, telegraphed and optional (see `danger-and-ecosystem.md`).
-3. **No forced pressure.** No global timer, no forced battles, no forced story. Time only matters inside dangerous zones.
+3. **No forced pressure.** No global countdown, no forced battles and no forced story. Time still governs daily life everywhere, but danger and scarcity intensify only in harsher zones.
 4. **The player is one creature in the ecosystem**, not the center of it.
 
 ## Finite means individuals
@@ -21,7 +21,7 @@ Every notable wild Pokemon is a specific, trackable individual, not a generic sp
 4. **Growing:** each defeat and each stretch of time makes it stronger. It can evolve naturally and be met again later.
 5. **Remembered:** it tracks how often the player has met and beaten it, so later meetings feel different.
 
-Catching removes the individual from the wild for good. Nothing replaces it.
+Capturing removes **that specific individual** from the wild population. Whether populations replenish through breeding or migration, and at what rate, remains undecided; a capture does not imply the habitat can never recover.
 
 ### Memorable individuals
 
@@ -37,7 +37,7 @@ Catching removes the individual from the wild for good. Nothing replaces it.
 | Unique, Very Rare, Rare | Always tracked individuals from the start |
 | Common, Uncommon | Anonymous herds until battled, spared or noticed, then promoted to tracked individuals |
 
-Estimated record size is about 6 bytes (species, level, nature, home slot, state and timer, met and beaten counts). The real spare room in the save layout must be measured in the repo before fixing a record count.
+Record size and number are **not yet known**. The fields above are candidates, not a verified six-byte layout; exact IDs, time markers and other data must be designed after the Expansion save layout is measured.
 
 ## Off-screen simulation (abstracted)
 

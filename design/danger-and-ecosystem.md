@@ -30,17 +30,18 @@ Wild Pokemon are visible on the map (overworld encounters), not random grass amb
 
 ## Rules
 
-- The player is never ambushed. The threat can always be seen first and avoided.
+- There are no unavoidable surprise attacks. Nearby threats are visible or clearly telegraphed before they become unavoidable; stalking enemies can still create tension.
 - Escape is real: territorial Pokemon only chase within their range.
 - Camps and shrines inside Wild and Perilous zones allow rest and healing.
 - Risk pays: Perilous zones hold rare Pokemon, rare items and hidden lore.
-- Strong Pokemon are rare and placed on purpose (caves, peaks, deep water).
+- Strong Pokemon live where their habitat, diet and territory support them; rarity follows ecology rather than designer-enforced quotas.
 
-## Danger profile per region
+## Example local danger areas (draft)
 
-| Region | Mostly | Perilous spot |
+These are examples within the **14 original regions** in [Regions](regions.md), not a complete regional table. Typical danger for all regions is maintained in that file.
+
+| Region | Typical danger | Proposed high-risk location |
 |---|---|---|
-| Hoenn | Calm | Sky Pillar, Cave of Origin |
 | Veyra | Wild | The Drowned Stair (tide-flooded ruin) |
 | Tundrael | Wild | Glacier Heart (blizzard cavern) |
 | Sandara | Wild | The Buried City |
@@ -49,6 +50,8 @@ Wild Pokemon are visible on the map (overworld encounters), not random grass amb
 | Neonport | Safe to Calm | Undercity Tunnels |
 | Skyreach | Wild | The Storm Crown |
 | Ur-Kalah | Perilous | The Heart |
+
+No official Hoenn region is part of the planned new world. Other locations remain to be designed.
 
 ## Engine notes
 

@@ -6,7 +6,7 @@ Ledges are no longer one-way drops. The player can climb, trek and cross terrain
 
 1. **Ledges become climbable.** What used to be a one-way hop is now a route you can go up or down.
 2. **Pokemon are partners in movement.** Traversal depends on who is in your party and how they are doing.
-3. **Terrain has cost.** Climbing, swimming and trekking use stamina and food (see `berries.md`).
+3. **Terrain has cost.** Climbing, swimming and trekking use stamina and food (see `survival.md`).
 4. **Discovery, not unlocks.** The player learns what each Pokemon can do by trying, not from story gates.
 5. **Safe by default.** Gentle terrain needs no special help. Harsh terrain demands preparation.
 

@@ -1,70 +1,90 @@
-# Design Overview
+# Design Overview — grouped vision
 
-A survival-flavored, open-world Pokemon game on pokeemerald-expansion. Safe by default, dangerous by choice, alive everywhere. Story is a side thing. This file groups every idea and points to the detail docs.
+A survival-flavored, open-world Pokémon game based on **pokeemerald-expansion**. The world lives independently of the player: **safe by default, dangerous by choice, alive everywhere**. Exploration matters more than a compulsory story.
 
-## 1. World and regions (`regions.md`, `exploration.md`)
+This is the authoritative **high-level vision**, not an implementation checklist. [Dependencies](dependencies.md) identifies what must be decided before each system can be finalized.
 
-- 14 fresh regions, none copied from official Pokemon regions: Meadowmere (start), Neonport (hub), Veyra, Tundrael, Sandara, Mistvale, Cragmoor, Sunreach Steppe, Verdant Maw, Duskhollow, The Abyss, Undervale, Skyreach, Ur-Kalah.
-- Open world: no linear path, no forced battles, no forced story.
-- Wide but dense: something worth stopping for in every stretch.
-- Each region has a defining quirk and its own tileset.
-- All 1,000+ species, imported through pokeemerald-expansion.
+## Agreed direction
 
-## 2. Danger (`danger-and-ecosystem.md`, `hazards.md`)
+- **Foundation:** use this `pokeemerald-expansion` fork, not vanilla `pokeemerald`. Expansion provides a broader species and mechanics foundation; exact enabled roster/build settings must be verified.
+- **World:** 14 original named regions, open exploration, no forced linear story. Meadowmere is the gentle start; Neonport is the travel hub. Ur-Kalah is almost uncivilized and has no gyms.
+- **Tone:** Safe, Calm, Wild, and Perilous conditions; danger should be visible or reliably signaled, with an opportunity to avoid or escape. Unavoidable surprise encounters are not the design goal.
+- **Creatures:** visible wild Pokémon with autonomous behavior and a living food chain. Persist memorable individuals; simulate unimportant/off-screen creatures economically.
+- **Survival:** player, NPCs, party Pokémon, and wild creatures eat; hunger matters but cannot permanently kill anyone or erase a save.
+- **People:** NPCs have routines, needs and relationships; trainers' challenges are optional and gym leaders are not fixed in place.
+- **Travel:** ledges can be climbed, Pokémon can help traverse land/water/air, and mount travel is directly controlled rather than teleportation. Natural hazards and stamina matter.
 
-- Four levels: Safe, Calm, Wild, Perilous.
-- Danger is local, readable and optional. The player is never ambushed.
-- Environmental hazards (storms, whirlpools, rockfalls, hostile flyers) are the counterweight to powerful travel.
-- Ur-Kalah is the near-uncivilized continent with no gyms and no leader.
+## 1. World and exploration
 
-## 3. Pokemon and ecosystem (`ecosystem-simulation.md`)
+See [Regions](regions.md) and [Exploration](exploration.md).
 
-- Every notable Pokemon is a tracked individual: it faints, recovers, grows, evolves and remembers the player.
-- Wild Pokemon are visible on the map with behaviors: passive, skittish, territorial, predator.
-- Real food chain. Off-screen creatures are updated in bulk, not simulated live.
-- Natural placement: species live where their biology puts them, and rarity is a result, not a quota.
+- **14 regions:** Meadowmere, Neonport, Veyra, Tundrael, Sandara, Mistvale, Cragmoor, Sunreach Steppe, Verdant Maw, Duskhollow, The Abyss, Undervale, Skyreach, and Ur-Kalah.
+- Regions have distinct ecologies, cultures and landmarks. Content should be **wide but dense**, rewarding curiosity across the route rather than empty travel.
+- The 1,000+ Pokémon roster is a **coverage ambition**, not a claim that all are configured, spawnable or tested already.
+- Routes and landmarks invite exploration; story is optional and does not gate the whole world.
 
-## 4. Survival (`berries.md`, covers food and survival)
+## 2. Danger and environmental rules
 
-- Everyone eats: the player, NPCs, wild Pokemon and the player's party.
-- Berries are the base food, with cooked food, meat, fish and roots added.
-- Hunger states: Fed, Peckish, Hungry, Starving. Starving means weakness and collapse, never death.
-- Scarcity follows danger level.
+See [Danger and ecosystem](danger-and-ecosystem.md) and [Hazards](hazards.md).
 
-## 5. People (`living-npcs.md`, `trainers-and-gyms.md`)
+- **Safe / Calm / Wild / Perilous** describe local risk, not an automatic strength ladder or global pressure timer.
+- Signs, tracks, visible behavior and weather forecast danger. Retreat and recovery remain possible.
+- Storms, predators, currents, falls and unstable terrain naturally challenge powerful travel methods, including flight.
+- Ur-Kalah has no regional authority or gym circuit; most areas are Wild or Perilous.
 
-- NPCs have homes, routines, needs, wants and relationships, and they live whether or not the player is watching.
-- Gym leaders can be away from their gyms. Nothing about their presence is scripted.
-- Trainers may challenge the player, who can decline.
-- Each gym region has its own 8 badges, and leaders react to the player's badges through lore.
+## 3. Pokémon and ecosystem
 
-## 6. Traversal (`traversal.md`, `riding-and-mounts.md`, `hazards.md`)
+See [Ecosystem simulation](ecosystem-simulation.md).
 
-- Ledges are climbable routes, not one-way drops.
-- Pokemon act as mounts across land, water and air, with direct control and real flight.
-- Mounts have stamina, hunger and trust.
-- Hazards and natural scarcity balance the power of good mounts.
+- Notable Pokémon are persistent individuals capable of fainting, recovering, growing, evolving, moving, and remembering encounters.
+- Ordinary populations may be abstract until an individual becomes significant. **Exact persistence tiers and limits depend on measured save space.**
+- Visible overworld behaviors include passive, skittish, territorial and predatory.
+- Habitat, diet, climate and food shape distribution; rarity emerges from ecology rather than a hard-coded scarcity quota.
+- The GBA only simulates nearby activity in detail; distant activity updates in bounded batches.
 
-## Doc index
+## 4. Survival
 
-| File | Topic |
-|---|---|
-| `overview.md` | This file |
-| `dependencies.md` | What depends on what |
-| `regions.md` | World and region list |
-| `exploration.md` | Density and discovery |
-| `danger-and-ecosystem.md` | Danger levels and behavior |
-| `ecosystem-simulation.md` | Individuals and simulation |
-| `berries.md` | Food and survival |
-| `living-npcs.md` | Autonomous NPCs |
-| `trainers-and-gyms.md` | Trainers, badges, leaders |
-| `traversal.md` | Climbing and terrain |
-| `riding-and-mounts.md` | Mounts |
-| `hazards.md` | Hazards and natural placement |
+See [Food and survival](survival.md).
 
-## Known gaps
+- Everyone needs food; berries are foundational, with prepared food, meat, fish and roots as proposed additions.
+- Hunger progresses through Fed, Peckish, Hungry, Starving. Severe deprivation can cause weakness or collapse, **never permanent death**.
+- Safe areas make food plentiful and normal travel forgiving; dangerous expeditions demand more planning.
+- Exact decay rates, storage handling and which kind of time advances hunger are **not yet decided**.
 
-- `berries.md` should be renamed to a survival-oriented name.
-- Root spec (code base, save budget, clock, individual record) is not yet written.
-- Gym types, leaders and lore per region are not yet designed.
-- Species tagging and distribution are not yet done.
+## 5. People, trainers and gyms
+
+See [Living NPCs](living-npcs.md) and [Trainers and gyms](trainers-and-gyms.md).
+
+- NPCs have homes, needs, goals, routines and relationships, including travel when the player is away.
+- Gym leaders may be elsewhere; the player learns where to find them rather than being blocked by a script.
+- Trainers may propose battles; the player can decline.
+- **A gym-bearing region has its own eight-badge circuit.** Ur-Kalah has none. Which and how many of the other 13 regions will have gyms, and the resulting total badge count, remain **open**; the older claim of “64 badges across 8 regions” was inconsistent with “every region gets 8.”
+
+## 6. Traversal and mounts
+
+See [Traversal](traversal.md), [Riding and mounts](riding-and-mounts.md), and [Hazards](hazards.md).
+
+- Traversal includes climbing, swimming, gliding and other movement based on terrain and Pokémon abilities.
+- Mounts can carry the player over land, water and air, with direct steering, stamina, hunger and trust.
+- Travel remains meaningful through geography, weather, predator territory and upkeep, **not artificial rarity quotas**.
+- Non-mount transportation between established safe stops can coexist with direct mount travel; its exact scope is open.
+
+## Root decisions to settle next
+
+| Root | Status | Why it matters |
+|---|---|---|
+| Code foundation | **Decided: Expansion fork** | Species/forms, APIs and engine integration |
+| Save-space and runtime budget | **Needs measurement** | Persistent Pokémon/NPC count and off-screen simulation |
+| World-clock policy | **Discussion pending** | Hunger, life schedules, growth, weather and catch-up behavior |
+| Persistent individual record and identity | **Needs design after budget and clock** | Wild Pokémon, captured Pokémon, mounts and possibly trainer teams |
+
+For the detailed dependency graph and proposed validation order, see [Dependencies](dependencies.md).
+
+## Other unresolved design questions
+
+- Whether all gym-bearing regions have 8 gyms, and which regions have circuits.
+- Trainer Pokémon individual tracking and how capture, migration and reproduction change wild populations.
+- Exact species/habitat tagging, biome boundaries, map connections and layouts.
+- The implementation details of free flight, on-screen AI and player-facing menus.
+
+**Do not treat the above unresolved details as implemented or locked.**

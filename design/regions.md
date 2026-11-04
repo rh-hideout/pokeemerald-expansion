@@ -54,7 +54,7 @@ No gyms, no leader, no cities, no ferries. Only camps, hermits, lost explorers a
 |---|---|---|
 | The Rootwood | Giant ancient trees, canopy paths | Apex predators hunt from above |
 | The Bone Plains | Open grassland, fossil fields | Migrating herds, territorial stampedes |
-| The Hollow Deep | Cave networks, glowing fungus | Darkness, ambush species, cave-ins |
+| The Hollow Deep | Cave networks, glowing fungus | Darkness, warned territorial cave predators, cave-ins |
 | The Ash Wastes | Dead volcanic land, toxic air | Poison and heat, few safe spots |
 | The Heart | Central ruin of an unknown civilization | The strongest Pokemon in the game |
 

@@ -1,24 +1,32 @@
-# Pokeclaude design plans
+# Living-world Pokémon — design documents
 
-These twelve documents are preserved, unmodified design proposals for a survival-flavored, living-world Pokémon project, now hosted alongside the pokeemerald-expansion codebase.
+**Status:** These are game-design proposals and decisions, not implemented gameplay features. The codebase is `rh-hideout/pokeemerald-expansion`, forked here as `despairarc000/pokeemerald-expansion`.
 
-**Status:** Planning only; no gameplay features here are implemented merely by adding these files.
+## Read in this order
 
-**Provenance:** Originally from `despairarc000/pokeclaude`, branch `design-docs`, commit `f16c0f9853ffd4556a0be8af15a505cdae64dc66`. The original repository was a fork of `pret/pokeemerald`; it was not itself an Expansion fork. The documents were preserved in `despairarc000/atlasgba` on `archive/pokeclaude-design-docs-2026-11-04`, commit `77fdd3ed888ea2d33043728b616fa81940168e52`, before migration.
+1. [Overview](overview.md) — the grouped vision, agreed direction and unsettled choices.
+2. [Dependencies](dependencies.md) — the real prerequisite relationships and root decisions.
+3. Detailed topic documents below.
 
-**Codebase:** `rh-hideout/pokeemerald-expansion`. Review the current Expansion systems and technical limits before implementing these proposals. No upstream game source files were modified by this import.
+## Topic documents
 
-## Index
+| Group | Document |
+|---|---|
+| World | [Regions](regions.md) |
+| World | [Exploration](exploration.md) |
+| Risk | [Danger and ecosystem](danger-and-ecosystem.md) |
+| Risk | [Hazards and natural placement](hazards.md) |
+| Pokémon | [Ecosystem simulation](ecosystem-simulation.md) |
+| Survival | [Food and survival](survival.md) |
+| People | [Living NPCs](living-npcs.md) |
+| People | [Trainers and gyms](trainers-and-gyms.md) |
+| Travel | [Traversal](traversal.md) |
+| Travel | [Riding and mounts](riding-and-mounts.md) |
 
-- [berries](berries.md)
-- [danger and ecosystem](danger-and-ecosystem.md)
-- [dependencies](dependencies.md)
-- [ecosystem simulation](ecosystem-simulation.md)
-- [exploration](exploration.md)
-- [hazards](hazards.md)
-- [living npcs](living-npcs.md)
-- [overview](overview.md)
-- [regions](regions.md)
-- [riding and mounts](riding-and-mounts.md)
-- [trainers and gyms](trainers-and-gyms.md)
-- [traversal](traversal.md)
+## Status and provenance
+
+- **Locked foundation:** the Expansion fork is the codebase. This is not a pending rebase.
+- **Still open:** the save-space measurement, time model, individual persistence format and several world-balancing details. See [Dependencies](dependencies.md).
+- **Original source:** `despairarc000/pokeclaude`, branch `design-docs`, commit `f16c0f9853ffd4556a0be8af15a505cdae64dc66`.
+- **Preserved original backup:** `despairarc000/atlasgba`, branch `archive/pokeclaude-design-docs-2026-11-04`, commit `77fdd3ed888ea2d33043728b616fa81940168e52`; a second complete backup is in Google Drive.
+- **Revision note:** This directory now organizes and reconciles those plans. Original wording remains recoverable from the archive.
