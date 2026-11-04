@@ -55,6 +55,10 @@ Detailed topic documents follow.
 | Travel | [Traversal](traversal.md) |
 | Travel | [Riding and mounts](riding-and-mounts.md) |
 
+## Technical feasibility
+
+- [Initial repository audit](technical-feasibility-audit.md) — verified configuration and source findings; build, memory measurements and runtime validation still pending.
+
 ## Status and provenance
 
 - **Locked hybrid geography:** the 14 regions connect through landmasses, islands, oceans, underground routes and elevations; no compulsory story or badge gating. See [Hybrid world geography](root/hybrid-world-geography.md).
