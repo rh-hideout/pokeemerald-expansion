@@ -12,7 +12,7 @@ Inspired by Rain World's emergent interactions, the world remembers meaningful h
 2. **Relationships evolve.** Consequential encounters can change trust, fear, rivalry, attachment and behavior over in-game time. A prior enemy may become an ally after rescue; relationships are not permanently fixed labels.
 3. **Autonomous social life.** Pokémon–Pokémon events can form or change relationships without player involvement.
 4. **Family relationships matter.** Parent, mate, offspring and caregiving ties from [Hybrid reproduction](hybrid-reproduction.md) can influence protection, travel and social behavior.
-5. **Memory affects decisions.** Recognition, avoidance, cooperation, defense, warning and territory responses may depend on relationship state, constrained by species behavior and immediate danger.
+5. **Memory affects decisions.** Recognition, avoidance, cooperation, defense, warning and territory responses may depend on relationship state, constrained by species behavior and immediate danger. The [utility-based AI](utility-ai.md) weighs these memories against other needs.
 6. **Identity-safe references.** Memories referring to a Pokémon must use stable persistent identity and survive map changes, migration and save/load; references must never silently attach to a different individual after record reuse.
 7. **Bounded computation and storage.** Social updates must not require simulating every pair of creatures or saving an unbounded event log. Limits and eviction/summarization policies require measurement.
 8. **No offline social updates.** Relationship changes and memory decay occur only during in-game simulation time; closing the game freezes them.
