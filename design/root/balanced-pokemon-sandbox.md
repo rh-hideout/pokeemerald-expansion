@@ -4,6 +4,8 @@
 
 **Wild encounters (locked):** [hybrid overworld interactions with traditional battle compatibility](hybrid-wild-encounters.md) support both combat and noncombat play.
 
+**Progression (locked):** [parallel player progression](parallel-player-progression.md) allows independent but interacting development through training, bonds, knowledge, traversal, discoveries and optional gyms.
+
 ## Main experience
 
 **Explore → encounter opportunities → choose how to interact → gain experiences, relationships, knowledge, Pokémon or capabilities → explore or play differently.** This is a flexible loop, not a fixed required sequence. Players can also remain in a town, train, care for Pokémon, trade or follow a particular NPC's story.

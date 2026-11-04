@@ -2,6 +2,8 @@
 
 **Decision: LOCKED (2026-11-04).** Wild Pokémon exist as observable, autonomous creatures in the overworld. The player may observe, approach, avoid, feed, help, befriend, or challenge them. **Traditional Pokémon battles remain a supported primary combat and capture path**, rather than replacing the battle engine with real-time overworld combat.
 
+**Progression interface:** combat and noncombat encounters support different meaningful growth paths; see [parallel player progression](parallel-player-progression.md).
+
 ## Player experience
 
 - **See the creature first:** wild Pokémon have visible world presence and behavior. No mandatory invisible random-grass ambush is part of the intended core experience.

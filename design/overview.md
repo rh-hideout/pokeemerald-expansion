@@ -6,6 +6,8 @@ This is the authoritative **high-level vision**, not an implementation checklist
 
 ## Agreed direction
 
+**Locked progression pillar:** [parallel player progression](root/parallel-player-progression.md) recognizes Pokémon training, relationships, exploration knowledge, traversal, discoveries and optional gyms as independent but interacting achievements; no compulsory global ladder.
+
 **Locked encounter pillar:** [hybrid wild Pokémon encounters](root/hybrid-wild-encounters.md) combine natural overworld interaction with traditional Pokémon battle and capture compatibility, including canonical identity transfer.
 
 **Locked core gameplay pillar:** a [balanced Pokémon sandbox](root/balanced-pokemon-sandbox.md). Exploration, collection, battles, care/bonding, survival/travel and living-world participation are all legitimate ways to play; no single compulsory progression track. Exploration and autonomy remain distinctive.

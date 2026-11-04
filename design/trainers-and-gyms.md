@@ -2,6 +2,8 @@
 
 Trainer battles and gym circuits are optional, meaningful paths within the [balanced Pokémon sandbox](root/balanced-pokemon-sandbox.md), not prerequisites for every other activity.
 
+**Progression (locked):** regional gym achievements are one optional path alongside exploration, Pokémon growth and relationships. See [Parallel player progression](root/parallel-player-progression.md).
+
 ## Trainers
 
 - When a trainer sees the player there is a **chance** they challenge. Many just let the player pass.

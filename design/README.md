@@ -34,7 +34,8 @@
 28. [Hybrid NPC resource management](root/npc-resource-management.md) — locked consequential possessions and aggregate ordinary activity.
 29. [Regional dynamic economy](root/regional-dynamic-economy.md) — locked settlement aggregates, connected trade, scarcity and gradual prices.
 30. [Hybrid wild Pokémon encounters](root/hybrid-wild-encounters.md) — locked overworld interaction and traditional battle compatibility.
-31. [Save budget investigation](root/save-budget.md) — verified storage structure, pending measured sizes.
+31. [Parallel player progression](root/parallel-player-progression.md) — locked independent advancement across training, relationships, exploration, traversal, discoveries and optional gyms.
+32. [Save budget investigation](root/save-budget.md) — verified storage structure, pending measured sizes.
 
 Detailed topic documents follow.
 
@@ -54,6 +55,8 @@ Detailed topic documents follow.
 | Travel | [Riding and mounts](riding-and-mounts.md) |
 
 ## Status and provenance
+
+- **Locked parallel progression:** training, relationships, exploration, traversal, discoveries and optional gym achievements develop without one mandatory global ladder. See [Parallel progression](root/parallel-player-progression.md).
 
 - **Locked wild encounters:** visible autonomous Pokémon can be observed, avoided, fed, befriended or battled; traditional turn-based combat and capture compatibility remain. See [Hybrid encounters](root/hybrid-wild-encounters.md).
 

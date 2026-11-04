@@ -2,6 +2,8 @@
 
 The world is wide but dense in detail. No corner is filler. Every stretch of map has something that makes the player stop, look and wonder. Exploration is a defining pillar, but not a mandatory dominant activity: the [balanced Pokémon sandbox](root/balanced-pokemon-sandbox.md) also values collection, battles, bonding, survival and world participation. Nothing is gated by compulsory story completion.
 
+**Progression (locked):** exploration knowledge and discovery are valid independent progress paths within [parallel player progression](root/parallel-player-progression.md); no mandatory gym or story completion is needed.
+
 ## Core principles
 
 1. **Wide and dense.** Large regions, but no empty space. Distance is made interesting, not skipped.
