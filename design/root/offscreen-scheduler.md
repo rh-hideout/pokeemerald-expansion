@@ -10,7 +10,7 @@ The GBA cannot update every habitat and creature in detail every frame. Purely e
 
 1. **Single time authority.** All jobs consume elapsed monotonic in-game time from [World clock](world-clock.md), never real-world wall-clock time.
 2. **Distributed background work.** During gameplay, small jobs update distant habitats and notable individuals without requiring every entity to run every frame.
-3. **Bounded relevance catch-up.** On approaching, loading or otherwise querying an area, pending updates are processed within a budget; excess work is deferred, approximated or summarized rather than blocking the game indefinitely.
+3. **Bounded relevance catch-up.** On approaching, loading or otherwise querying an area, pending updates are processed within a budget. **Hybrid catch-up is locked:** aggregate ordinary ecology and selectively process consequential notable events; excess work is deferred or safely summarized rather than blocking indefinitely. See [Hybrid catch-up](hybrid-catchup.md).
 4. **Tiered fidelity.** Nearby entities use detailed behavior/perception/navigation. Distant notable Pokémon use coarse individual events and journey states. Ordinary populations use aggregate ecological updates.
 5. **Deterministic accounting contract.** An interval must not be applied twice. Each simulated unit tracks a logical last-processed world timestamp or equivalent progress marker; reentrant/map-entry jobs must reconcile against it.
 6. **Safe materialization.** Before visible spawn, reconcile a notable Pokémon's authoritative location/identity and pending state. Never spawn both an off-screen traveler and a second local copy.
@@ -54,7 +54,7 @@ The player spends an in-game day exploring another region. During play, the sche
 ## Open questions
 
 - Priority ordering, fairness/aging, maximum job time and active-map scheduling cadence.
-- Reconciliation strategy for heavily overdue habitats: aggregate mathematical step, capped event replay, or staged simulation.
+- Hybrid catch-up is locked; exact aggregate formulas, event selection, interval slicing and activation fallback remain open.
 - How world time advances during menus, battles, cutscenes and pause.
 - Exact save representation of progress markers, random state and partial transactions.
 - How to make migration/population transfers atomic across habitats.

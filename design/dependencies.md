@@ -36,6 +36,7 @@ The record is a **shared identity contract**, not necessarily one identical seri
 | Hybrid Pokémon navigation | **Two-scale routing locked:** local collision/pathfinding plus species-accessible habitat/region graph; requires map connectivity, traversal tags and bounded CPU. [Specification](root/hybrid-navigation.md) |
 | Ecological cross-region migration | Habitat connectivity graph, species traversal traits, persistent identity, clock and off-screen updates; [specification](root/ecological-migration.md) |
 | Hybrid scheduled off-screen update engine | **Hybrid scheduler locked:** distributed in-game jobs plus bounded relevance catch-up; requires clock, persistence/progress markers, ecology, identity and measured CPU/save budgets. [Specification](root/offscreen-scheduler.md) |
+| Hybrid catch-up strategy | **Aggregate ecology + selective notable events locked:** requires timestamp accounting, identity safety, cross-habitat reconciliation and bounded work. [Specification](root/hybrid-catchup.md) |
 
 ## Layer 2 — behavior, life and movement
 
@@ -83,7 +84,7 @@ The record is a **shared identity contract**, not necessarily one identical seri
 - Evolving personality is locked; trait dimensions, event thresholds, rates, save representation and Nature integration remain to be designed.
 - Multi-sensory perception is locked; ranges, occlusion approximation, cue expiration and per-frame budgets remain to be designed.
 - Hybrid navigation is locked; local algorithm, graph granularity, edge constraints, travel rates and reconciliation remain to be designed.
-- Hybrid off-screen scheduling is locked; job budgets, reconciliation method, atomic transfer rules and progress-marker serialization remain to be designed.
+- Hybrid off-screen scheduling and hybrid catch-up are locked; job budgets, aggregate formulas, notable-event selection, atomic transfer rules and progress-marker serialization remain to be designed.
 - Exact tiered identity lifecycle: promotion, catch, release, NPC ownership and generation of new wild individuals?
 
 The clock source and no-offline-progression rule are locked. No record size, population cap or day length is locked.

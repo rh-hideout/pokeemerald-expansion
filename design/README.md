@@ -17,7 +17,8 @@
 11. [Multi-sensory perception](root/multi-sensory-perception.md) — locked environment-aware senses and partial knowledge.
 12. [Hybrid navigation](root/hybrid-navigation.md) — locked local pathfinding and habitat/region graph travel.
 13. [Hybrid off-screen scheduler](root/offscreen-scheduler.md) — locked distributed updates and bounded in-game catch-up.
-14. [Save budget investigation](root/save-budget.md) — verified storage structure, pending measured sizes.
+14. [Hybrid catch-up](root/hybrid-catchup.md) — locked aggregate ecology and selective notable events.
+15. [Save budget investigation](root/save-budget.md) — verified storage structure, pending measured sizes.
 
 Detailed topic documents follow.
 
@@ -50,6 +51,7 @@ Detailed topic documents follow.
 - **Locked:** multi-sensory perception with environment-aware sight, hearing and species-appropriate senses. See [Perception](root/multi-sensory-perception.md).
 - **Locked:** hybrid navigation: bounded local pathfinding and graph-based long-distance migration. See [Hybrid navigation](root/hybrid-navigation.md).
 - **Locked:** hybrid scheduled off-screen simulation, with distributed jobs and bounded catch-up for elapsed in-game time. See [Off-screen scheduler](root/offscreen-scheduler.md).
+- **Locked:** hybrid catch-up uses aggregate ordinary ecology and selective consequential notable-individual events. See [Hybrid catch-up](root/hybrid-catchup.md).
 - **Still open:** save-space measurement, exact clock tuning, record serialization/limits and several world-balancing details. See [Dependencies](dependencies.md).
 - **Original source:** `despairarc000/pokeclaude`, branch `design-docs`, commit `f16c0f9853ffd4556a0be8af15a505cdae64dc66`.
 - **Preserved original backup:** `despairarc000/atlasgba`, branch `archive/pokeclaude-design-docs-2026-11-04`, commit `77fdd3ed888ea2d33043728b616fa81940168e52`; a second complete backup is in Google Drive.

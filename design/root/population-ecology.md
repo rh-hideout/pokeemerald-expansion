@@ -16,7 +16,7 @@ Borrow Rain World's independent ecological relationships and off-screen conseque
 6. **Identity stays distinct:** ordinary creatures are represented as habitat aggregates; promoted persistent individuals keep identity. Births and migration do not silently clone or erase persistent Pokémon.
 7. **Ecological migration:** aggregate populations and persistent individuals may move along plausible species-accessible habitat connections. See [Ecological migration](ecological-migration.md).
 8. **Time:** changes happen only as in-game time advances. Closing the game freezes all ecological processes.
-9. **Off-screen efficiency:** use bounded batch updates rather than frame-by-frame simulation of every distant Pokémon.
+9. **Off-screen efficiency:** use bounded batch updates rather than frame-by-frame simulation of every distant Pokémon. Overdue ordinary ecology uses [hybrid aggregate catch-up](hybrid-catchup.md), not per-creature event replay.
 
 ## Conceptual habitat state (not a binary record)
 

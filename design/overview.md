@@ -50,7 +50,7 @@ See [Ecosystem simulation](ecosystem-simulation.md).
 - **Hybrid reproduction is locked:** ordinary populations reproduce abstractly; notable Pokémon can have persistent mates, nests, eggs, offspring and family relationships. See [Hybrid reproduction](root/hybrid-reproduction.md).
 - **Selective social memory is locked:** notable Pokémon can remember consequential interactions, develop evolving trust, rivalry, fear and family bonds, including relationships formed without player involvement. See [Social memory](root/social-memory.md).
 - **Ecological migration is locked:** persistent Pokémon may travel across regions through reachable habitats, keeping their identity, when needs or circumstances motivate them. See [Ecological migration](root/ecological-migration.md).
-- The GBA only simulates nearby activity in detail. **Hybrid scheduled off-screen simulation is locked:** distant activity advances through distributed jobs during gameplay and bounded relevance catch-up, using only elapsed in-game time. See [Off-screen scheduler](root/offscreen-scheduler.md).
+- The GBA only simulates nearby activity in detail. **Hybrid scheduled off-screen simulation is locked:** distant activity advances through distributed jobs during gameplay and bounded relevance catch-up, using only elapsed in-game time. See [Off-screen scheduler](root/offscreen-scheduler.md). **Hybrid catch-up is locked:** aggregate ordinary ecology and selectively advance consequential events for notable individuals; see [Hybrid catch-up](root/hybrid-catchup.md).
 
 ## 4. Survival
 

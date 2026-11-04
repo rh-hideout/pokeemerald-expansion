@@ -46,7 +46,7 @@ See [Individual persistence](root/individual-persistence.md) for the identity co
 The GBA cannot run every creature live.
 
 - **On-screen creatures** use real movement AI, with **utility-based action selection** driven by needs, traits, memory and environment, plus urgent safety overrides. See [Utility AI](root/utility-ai.md). Perception is **multi-sensory and environment-aware**, not omniscient; see [Perception](root/multi-sensory-perception.md).
-- **Off-screen creatures** use a **hybrid scheduled update engine**: small jobs run during gameplay, with bounded catch-up when an area becomes relevant. They may eat, fight, recover, grow, evolve or move without active sprites. Only elapsed in-game time counts; see [Off-screen scheduler](root/offscreen-scheduler.md).
+- **Off-screen creatures** use a **hybrid scheduled update engine**: small jobs run during gameplay, with bounded catch-up when an area becomes relevant. They may eat, fight, recover, grow, evolve or move without active sprites. Only elapsed in-game time counts; see [Off-screen scheduler](root/offscreen-scheduler.md). Overdue work uses **aggregate ecology plus selective notable events**, see [Hybrid catch-up](root/hybrid-catchup.md).
 - **Ecological migration (locked):** persistent wild Pokémon may travel across connected regions when food, weather, territory, threats or social needs motivate them. Ordinary populations may migrate in aggregate. **Hybrid navigation** uses bounded local pathfinding and an off-screen habitat/region graph. See [Ecological migration](root/ecological-migration.md) and [Hybrid navigation](root/hybrid-navigation.md).
 - Predator vs prey fights between wild Pokemon end in fainting, never death.
 
