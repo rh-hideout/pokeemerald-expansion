@@ -6308,6 +6308,11 @@ static bool32 IsFusionMon(enum Species species)
     return FALSE;
 }
 
+bool32 IsAFusedMon(enum Species species)
+{
+    return (IsFusionMon(species) == UNFUSE_MON);
+}
+
 void FormChangeTeachMove(u8 taskId, enum Move move, u32 slot)
 {
     struct Pokemon *mon;
