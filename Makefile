@@ -437,10 +437,7 @@ generated: $(AUTO_GEN_TARGETS)
 %.rl:       %      ; $(GFX) $< $@
 
 clean-teachables_intermediates:
-	rm -f $(DATA_SRC_SUBDIR)/tutor_moves.h
-	rm -f $(DATA_SRC_SUBDIR)/pokemon/teachable_learnsets.h
-	@rm -Rf $(LEARNSET_HELPERS_BUILD_DIR)
-	@echo "rm -Rf <LEARNSET_HELPERS_BUILD_DIR>"
+	@python3 $(LEARNSET_HELPERS_DIR)/clean_teachable_intermediates.py
 
 clean-generated: clean-teachables_intermediates
 	@rm -f $(AUTO_GEN_TARGETS)
