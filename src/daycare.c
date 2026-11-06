@@ -914,13 +914,19 @@ static void AlterEggSpeciesWithIncenseItem(enum Species *species, struct DayCare
 
 STATIC_ASSERT(P_SCATTERBUG_LINE_FORM_BREED == SPECIES_SCATTERBUG_ICY_SNOW || (P_SCATTERBUG_LINE_FORM_BREED >= SPECIES_SCATTERBUG_POLAR && P_SCATTERBUG_LINE_FORM_BREED <= SPECIES_SCATTERBUG_POKEBALL), ScatterbugLineFormBreedMustBeAValidScatterbugForm);
 
+
+static const enum Species sGenderDivergentSpecies[][2] =
+{
+    {SPECIES_NIDORAN_F, SPECIES_NIDORAN_M},
+    {SPECIES_ILLUMISE, SPECIES_VOLBEAT},
+};
+
 static enum Species DetermineEggSpeciesAndParentSlots(struct DayCare *daycare, u8 *parentSlots)
 {
     u32 i;
     enum Species species[DAYCARE_MON_COUNT];
-    enum Species eggSpecies;
     bool32 hasMotherEverstone, hasFatherEverstone, motherIsForeign, fatherIsForeign;
-    bool32 motherEggSpecies, fatherEggSpecies;
+    enum Species motherEggSpecies, fatherEggSpecies, eggSpecies;
     enum Region currentRegion = GetCurrentRegion();
 
     for (i = 0; i < DAYCARE_MON_COUNT; i++)
@@ -947,22 +953,25 @@ static enum Species DetermineEggSpeciesAndParentSlots(struct DayCare *daycare, u
 
     if (hasMotherEverstone)
         eggSpecies = motherEggSpecies;
-    else if (fatherIsForeign && hasFatherEverstone)
+    else if (fatherIsForeign && hasFatherEverstone && GET_BASE_SPECIES_ID(motherEggSpecies) == GET_BASE_SPECIES_ID(fatherEggSpecies))
         eggSpecies = fatherEggSpecies;
     else if (motherIsForeign)
         eggSpecies = GetRegionalFormByRegion(motherEggSpecies, currentRegion);
     else
         eggSpecies = motherEggSpecies;
 
-    if (eggSpecies == SPECIES_NIDORAN_F && daycare->offspringPersonality & EGG_GENDER_MALE)
-        eggSpecies = SPECIES_NIDORAN_M;
-    else if (eggSpecies == SPECIES_ILLUMISE && daycare->offspringPersonality & EGG_GENDER_MALE)
-        eggSpecies = SPECIES_VOLBEAT;
-    else if (P_NIDORAN_M_DITTO_BREED >= GEN_5 && eggSpecies == SPECIES_NIDORAN_M && !(daycare->offspringPersonality & EGG_GENDER_MALE))
-        eggSpecies = SPECIES_NIDORAN_F;
-    else if (P_NIDORAN_M_DITTO_BREED >= GEN_5 && eggSpecies == SPECIES_VOLBEAT && !(daycare->offspringPersonality & EGG_GENDER_MALE))
-        eggSpecies = SPECIES_ILLUMISE;
-    else if (eggSpecies == SPECIES_MANAPHY)
+    for (u32 i = 0; i < ARRAY_COUNT(sGenderDivergentSpecies); i++)
+    {
+        if (eggSpecies == sGenderDivergentSpecies[i][0]
+         || (eggSpecies == sGenderDivergentSpecies[i][1] && GetConfig(NIDORAN_M_DITTO_BREED) >= GEN_5))
+        {
+            bool32 randomGender = RandomPercentage(RNG_DAYCARE_MALE_CHILD, 50);
+            eggSpecies = sGenderDivergentSpecies[i][randomGender];
+            break;
+        }
+    }
+
+    if (eggSpecies == SPECIES_MANAPHY)
         eggSpecies = SPECIES_PHIONE;
     else if (GET_BASE_SPECIES_ID(eggSpecies) == SPECIES_ROTOM)
         eggSpecies = SPECIES_ROTOM;
