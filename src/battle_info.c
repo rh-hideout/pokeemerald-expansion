@@ -133,7 +133,7 @@ static void BackdropLoadBaseTilemap(void);
 static void LoadBackdropAssets(void);
 static void Overview_ComputeTrainerNameBoxLayout(u32 labelWidth, u32 centerRow, u32 *outTextLenTiles, u32 *outHeaderX, u32 *outHeaderWidth);
 static void Overview_DrawStatusCard(u32 x, u32 y, bool32 isActive, bool32 isBottomRow);
-static void Overview_DrawHeaderBoxRow(u32 cornerTile, u32 fillTile, u32 baseAttrs, s32 x, u32 y, u32 width);
+static void Overview_DrawHeaderBoxRow(u32 cornerLeftTile, u32 fillTile, u32 cornerRightTile, u32 baseAttrs, s32 x, u32 y, u32 width);
 static void Overview_DrawBackground(void);
 static void Overview_DrawTrainerNameBox(enum BattleSide side);
 static void Overview_DrawTrainerNameBoxHelper(u32 labelWidth, u32 top, u32 centerRow);
@@ -271,13 +271,6 @@ static const u8 sTextColor_BattleInfo_Default[] =
     B_INFO_TEXT_COLOR_TRANSPARENT,
     B_INFO_TEXT_COLOR_WHITE,
     B_INFO_TEXT_COLOR_DARK_GRAY
-};
-
-static const u8 sTextColor_BattleInfo_OverviewDefault[] =
-{
-    B_INFO_TEXT_COLOR_TRANSPARENT,
-    B_INFO_TEXT_COLOR_BLACK,
-    B_INFO_TEXT_COLOR_WHITE
 };
 
 static const u8 sTextColor_BattleInfo_Male[] =
@@ -1185,7 +1178,7 @@ static const struct WindowTemplate sBattleInfoDetailWindowTemplates[WIN_DETAIL_C
     },
     [WIN_DETAIL_EFFECTS] = {
         .bg = 0,
-        .tilemapLeft = 17,
+        .tilemapLeft = 16,
         .tilemapTop = 0,
         .width = B_INFO_DETAIL_EFFECTS_WIN_W,
         .height = B_INFO_DETAIL_EFFECTS_WIN_H,
@@ -1194,7 +1187,7 @@ static const struct WindowTemplate sBattleInfoDetailWindowTemplates[WIN_DETAIL_C
     },
     [WIN_DETAIL_DESCRIPTION] = {
         .bg = 0,
-        .tilemapLeft = 17,
+        .tilemapLeft = 16,
         .tilemapTop = 12,
         .width = B_INFO_DETAIL_DESC_WIN_W,
         .height = B_INFO_DETAIL_DESC_WIN_H,
@@ -1542,7 +1535,7 @@ static void Detail_DrawStatLabels(void)
     for (u32 i = 0; i < B_INFO_DETAIL_STAT_ROW_COUNT; i++)
     {
         AddTextPrinterParameterized4(
-            windowId, FONT_SMALL_NARROW, 2,
+            windowId, FONT_SMALL_NARROW, 4,
             Detail_GetStatRowTextY(i), 0, 0,
             sTextColor_BattleInfo_Default, TEXT_SKIP_DRAW,
             sBattleInfoDetailStatLabels[i]
@@ -1645,10 +1638,12 @@ static void Detail_DrawLRButtonGlyphs(void)
         .font = FONT_SHORT_NARROW,
         .color = sTextColor_BattleInfo_Default,
         .speed = TEXT_SKIP_DRAW,
-        .string = sText_BattleInfo_DetailLButtonGlyph,
+        .string = sText_BattleInfo_DetailRButtonGlyph,
     };
 
     s32 alignedAbsY = Detail_DrawLRButtonGlyphsItemAbility(text, rGlyphWidth);
+    text.string = sText_BattleInfo_DetailLButtonGlyph;
+    text.color = sTextColor_BattleInfo_Default,
     Detail_DrawLRButtonGlyphsStats(text, alignedAbsY);
 }
 
@@ -1872,7 +1867,7 @@ static void Detail_PrintMonName(struct PrintText text, struct Pokemon *mon, s32 
     GetMonData(mon, MON_DATA_NICKNAME, monName);
     u32 maxNameWidth = max(levelX - 4, 16);
     text.font = GetFontIdToFit(monName, FONT_NORMAL, 0, maxNameWidth);
-    text.left = 2;
+    text.left = 4;
     text.top = 2;
     text.string = monName;
     PrintTextOnWindow(&text);
@@ -2704,7 +2699,7 @@ static void Detail_RefreshEffectsWindow(void)
     AddTextPrinterParameterized4(
             windowId,
             FONT_NARROWER,
-            2, 2, 0, 0,
+            6, 2, 0, 0,
             sTextColor_BattleInfo_Default,
             TEXT_SKIP_DRAW,
             COMPOUND_STRING("Active States and Effects")
@@ -2905,7 +2900,7 @@ static void Detail_RefreshDescriptionWindow(void)
 
     if (descriptionBuffer[0] != EOS)
     {
-        AddTextPrinterParameterized4(windowId, descFont, 2, 2, 0, 0,
+        AddTextPrinterParameterized4(windowId, descFont, 4, 2, 0, 0,
                                      sTextColor_BattleInfo_Default, TEXT_SKIP_DRAW, descriptionBuffer);
     }
 
@@ -2977,7 +2972,7 @@ static void Overview_DrawCards(void)
 
 static void Overview_DrawCard(struct BattleInfoCard *card)
 {
-    s32 contentYOffset = (card->y == B_INFO_ROW_Y_ENEMY) ? -2 : 0;
+    s32 contentYOffset = (card->y == B_INFO_ROW_Y_ENEMY) ? -2 : -2;
     struct Pokemon *mon = GetBattlerMon(card->battler);
     enum Species species = GetMonData(mon, MON_DATA_SPECIES);
 
@@ -3012,9 +3007,9 @@ static void Overview_PrintMonAndGender(struct BattleInfoCard *card, struct Pokem
     };
 
     text.font = GetFontIdToFit(name, FONT_NORMAL, 0, maxNameWidth);
-    text.top = localY + 2 + contentYOffset;
+    text.top = localY + 3 + contentYOffset;
     text.left = localX + 6;
-    text.color = sTextColor_BattleInfo_OverviewDefault;
+    text.color = sTextColor_BattleInfo_Default;
     text.string = name;
     PrintTextOnWindow(&text);
 
@@ -3183,29 +3178,23 @@ static void Overview_DrawStatusCard(u32 x, u32 y, bool32 isActive, bool32 isBott
 {
     u32 topLeftTile    = GetCardTile(isActive, B_INFO_CARD_ROLE_TOP_LEFT);
     u32 topEdgeTile    = GetCardTile(isActive, B_INFO_CARD_ROLE_TOP_EDGE);
-    u32 sideEdgeTile   = GetCardTile(isActive, B_INFO_CARD_ROLE_SIDE_EDGE);
+    u32 topRightTile    = GetCardTile(isActive, B_INFO_CARD_ROLE_TOP_RIGHT);
+    u32 sideLeftTile   = GetCardTile(isActive, B_INFO_CARD_ROLE_SIDE_LEFT);
     u32 fillTile       = GetCardTile(isActive, B_INFO_CARD_ROLE_INTERIOR);
+    u32 sideRightTile   = GetCardTile(isActive, B_INFO_CARD_ROLE_SIDE_RIGHT);
     u32 bottomLeftTile = GetCardTile(isActive, B_INFO_CARD_ROLE_BOTTOM_LEFT);
     u32 bottomEdgeTile = GetCardTile(isActive, B_INFO_CARD_ROLE_BOTTOM_EDGE);
+    u32 bottomRightTile = GetCardTile(isActive, B_INFO_CARD_ROLE_BOTTOM_RIGHT);
 
     u32 width = B_INFO_CARD_TILE_W;
     u32 height = B_INFO_CARD_TILE_H;
     u32 topAttrs = 0;
     u32 bottomAttrs = 0;
 
-    if (isBottomRow)
-    {
-        u32 tmp;
-        SWAP(topLeftTile, bottomLeftTile, tmp);
-        SWAP(topEdgeTile, bottomEdgeTile, tmp);
-        topAttrs = B_INFO_BG_ATTR_VFLIP;
-        bottomAttrs = B_INFO_BG_ATTR_VFLIP;
-    }
-
-    Overview_DrawHeaderBoxRow(topLeftTile, topEdgeTile, topAttrs, x, y, width);
+    Overview_DrawHeaderBoxRow(topLeftTile, topEdgeTile, topRightTile, topAttrs, x, y, width);
     for (u32 yi = y + 1; yi < y + height - 1; yi++)
-        Overview_DrawHeaderBoxRow(sideEdgeTile, fillTile, 0, x, yi, width);
-    Overview_DrawHeaderBoxRow(bottomLeftTile, bottomEdgeTile, bottomAttrs, x, y + height - 1, width);
+        Overview_DrawHeaderBoxRow(sideLeftTile, fillTile, sideRightTile, 0, x, yi, width);
+    Overview_DrawHeaderBoxRow(bottomLeftTile, bottomEdgeTile, bottomRightTile, bottomAttrs, x, y + height - 1, width);
 }
 
 static void Overview_DrawHeaderBoxWidth(s32 x, u32 y, u32 width)
@@ -3213,15 +3202,15 @@ static void Overview_DrawHeaderBoxWidth(s32 x, u32 y, u32 width)
     if (max(0, x) + width > B_INFO_TILEMAP_WIDTH)
         x = B_INFO_TILEMAP_WIDTH - width;
 
-    Overview_DrawHeaderBoxRow(B_INFO_BG_TILE_HEADER_CORNER, B_INFO_BG_TILE_HEADER_TOP, 0, x, y, width);
-    Overview_DrawHeaderBoxRow(B_INFO_BG_TILE_HEADER_SIDE, B_INFO_BG_TILE_HEADER_FILL, 0, x, y + 1, width);
-    Overview_DrawHeaderBoxRow(B_INFO_BG_TILE_HEADER_CORNER, B_INFO_BG_TILE_HEADER_TOP, B_INFO_BG_ATTR_VFLIP, x, y + 2, width);
+    Overview_DrawHeaderBoxRow(B_INFO_BG_TILE_HEADER_TOP_LEFT, B_INFO_BG_TILE_HEADER_TOP_EDGE, B_INFO_BG_TILE_HEADER_TOP_RIGHT, 0, x, y, width);
+    Overview_DrawHeaderBoxRow(B_INFO_BG_TILE_HEADER_SIDE_LEFT, B_INFO_BG_TILE_HEADER_FILL, B_INFO_BG_TILE_HEADER_SIDE_RIGHT, 0, x, y + 1, width);
+    Overview_DrawHeaderBoxRow(B_INFO_BG_TILE_HEADER_BOTTOM_LEFT, B_INFO_BG_TILE_HEADER_BOTTOM_EDGE, B_INFO_BG_TILE_HEADER_BOTTOM_RIGHT, 0, x, y + 2, width);
 }
 
-static void Overview_DrawHeaderBoxRow(u32 cornerTile, u32 fillTile, u32 baseAttrs, s32 x, u32 y, u32 width)
+static void Overview_DrawHeaderBoxRow(u32 cornerLeftTile, u32 fillTile, u32 cornerRightTile, u32 baseAttrs, s32 x, u32 y, u32 width)
 {
-    Overview_SetBgTile(x, y, cornerTile, baseAttrs);
-    Overview_SetBgTile(x + width - 1, y, cornerTile, baseAttrs | B_INFO_BG_ATTR_HFLIP);
+    Overview_SetBgTile(x, y, cornerLeftTile, baseAttrs);
+    Overview_SetBgTile(x + width - 1, y, cornerRightTile, baseAttrs);
     for (u32 xi = x + 1; xi < x + width - 1; xi++)
         Overview_SetBgTile(xi, y, fillTile, baseAttrs);
 }
@@ -3686,11 +3675,10 @@ static void DrawHpBarSprite(struct BattleInfoCard *card)
     struct Sprite *sprite;
     u32 hp = gBattleMons[card->battler].hp;
     u32 maxHp = gBattleMons[card->battler].maxHP;
-    s32 contentYOffset = (card->y == B_INFO_ROW_Y_ENEMY) ? -2 : 0;
 
     sprite = &gSprites[card->hpBarSpriteId];
     sprite->x = card->x + (B_INFO_CARD_W / 2) - 16;
-    sprite->y = card->y + 46 + contentYOffset;
+    sprite->y = card->y + 44;
 
     UpdateHpBarTiles(card->hpBarSpriteId, hp, maxHp);
     UpdateHpBarEndcaps(
@@ -3838,10 +3826,14 @@ static void Overview_TryMoveCursor(u32 direction)
     case B_INFO_CURSOR_LEFT:
     case B_INFO_CURSOR_RIGHT:
         if (IsDoubleBattle())
+        {
+            PlaySE(SE_SELECT);
             sData->selectedCard ^= 1;
+        }
         break;
     case B_INFO_CURSOR_UP:
     case B_INFO_CURSOR_DOWN:
+        PlaySE(SE_SELECT);
         if (IsDoubleBattle())
             sData->selectedCard ^= 2;
         else
