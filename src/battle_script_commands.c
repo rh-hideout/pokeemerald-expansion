@@ -2447,6 +2447,19 @@ static u32 CountAliveMonsForBattlerSide(enum BattlerId battler)
             aliveMons++;
     }
 
+    if (BattleSideHasTwoTrainers(GetBattlerSide(battler)))
+    {
+        struct Pokemon *partnerParty = GetBattlerParty(GetPartnerBattler(battler));
+
+        for (u32 partyMon = 0; partyMon < PARTY_SIZE; partyMon++)
+        {
+            if (GetMonData(&partnerParty[partyMon], MON_DATA_SPECIES)
+             && GetMonData(&partnerParty[partyMon], MON_DATA_HP) > 0
+             && !GetMonData(&partnerParty[partyMon], MON_DATA_IS_EGG))
+                aliveMons++;
+        }
+    }
+
     return aliveMons;
 }
 
