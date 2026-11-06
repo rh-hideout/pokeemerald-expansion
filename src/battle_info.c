@@ -1938,7 +1938,7 @@ static void Detail_RefreshIcon(void)
     species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG);
     personality = GetMonData(mon, MON_DATA_PERSONALITY);
 
-    sData->iconSpriteId = CreateMonIcon(species, SpriteCallbackDummy, 33, 52, 0, personality);
+    sData->iconSpriteId = CreateMonIcon(species, SpriteCB_MonIcon, 33, 52, 0, personality);
     if (sData->iconSpriteId != SPRITE_NONE)
         gSprites[sData->iconSpriteId].oam.priority = 0;
 }
@@ -3066,7 +3066,7 @@ static void CreateMonAndStatusIcon(struct BattleInfoCard *card, enum Species spe
     u32 iconCenterX = card->x + (B_INFO_CARD_W / 2);
     u32 iconCenterY = card->y + 28 + contentYOffset;
 
-    card->monIconSpriteId = CreateMonIcon(species, SpriteCallbackDummy, iconCenterX, iconCenterY, 0, personality);
+    card->monIconSpriteId = CreateMonIcon(species, SpriteCB_MonIcon, iconCenterX, iconCenterY, 0, personality);
     gSprites[card->monIconSpriteId].oam.priority = 0;
 
     u32 ailment = GetAilmentFromBattler(card->battler);
