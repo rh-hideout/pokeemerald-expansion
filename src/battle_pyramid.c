@@ -1327,7 +1327,7 @@ u16 LocalIdToPyramidTrainerId(u8 localId)
 
 bool8 GetBattlePyramidTrainerFlag(u8 eventId)
 {
-    return gSaveBlock2Ptr->frontier.pyramidTrainerFlags & ((1u << gObjectEvents[eventId].localId) - 1);
+    return gSaveBlock2Ptr->frontier.pyramidTrainerFlags & (1u << (gObjectEvents[eventId].localId - 1));
 }
 
 void MarkApproachingPyramidTrainersAsBattled(void)
