@@ -120,8 +120,8 @@ SINGLE_BATTLE_TEST("Beak Blast doesn't burn when charging a two turn move")
     GIVEN {
         ASSUME(MoveMakesContact(MOVE_BOUNCE));
         ASSUME(MoveMakesContact(MOVE_DIG));
-        ASSUME(gBattleMoveEffects[GetMoveEffect(MOVE_BOUNCE)].twoTurnEffect);
-        ASSUME(gBattleMoveEffects[GetMoveEffect(MOVE_DIG)].twoTurnEffect);
+        ASSUME(IsTwoTurnMove(MOVE_BOUNCE));
+        ASSUME(IsTwoTurnMove(MOVE_DIG));
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

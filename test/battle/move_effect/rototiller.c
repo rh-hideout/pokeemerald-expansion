@@ -79,7 +79,7 @@ SINGLE_BATTLE_TEST("Rototiller doesn't affect Pokémon that are semi-invulnerabl
 {
     GIVEN {
         ASSUME(GetSpeciesType(SPECIES_TANGELA, 0) == TYPE_GRASS);
-        ASSUME(GetMoveEffect(MOVE_DIG) == EFFECT_SEMI_INVULNERABLE);
+        ASSUME(IsTwoTurnSemiInvulnerableMove(MOVE_DIG));
         PLAYER(SPECIES_TANGELA);
         OPPONENT(SPECIES_TANGELA);
     } WHEN {
@@ -103,7 +103,7 @@ SINGLE_BATTLE_TEST("Rototiller fails if the only valid target is semi-invulnerab
         ASSUME(GetSpeciesType(SPECIES_TANGELA, 0) == TYPE_GRASS);
         ASSUME(GetSpeciesType(SPECIES_WOBBUFFET, 0) != TYPE_GRASS);
         ASSUME(GetSpeciesType(SPECIES_WOBBUFFET, 1) != TYPE_GRASS);
-        ASSUME(GetMoveEffect(MOVE_DIG) == EFFECT_SEMI_INVULNERABLE);
+        ASSUME(IsTwoTurnSemiInvulnerableMove(MOVE_DIG));
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_TANGELA);
     } WHEN {

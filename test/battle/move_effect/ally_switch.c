@@ -218,7 +218,7 @@ DOUBLE_BATTLE_TEST("Ally Switch increases the Protect-like moves counter (Gen9+)
 DOUBLE_BATTLE_TEST("Ally Switch works if ally used two-turn move like Dig")
 {
     GIVEN {
-        ASSUME(gBattleMoveEffects[GetMoveEffect(MOVE_DIG)].twoTurnEffect);
+        ASSUME(IsTwoTurnMove(MOVE_DIG));
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);

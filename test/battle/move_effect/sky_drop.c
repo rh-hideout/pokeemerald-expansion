@@ -334,7 +334,7 @@ DOUBLE_BATTLE_TEST("Sky Drop user and target can't activate Eject items while th
 SINGLE_BATTLE_TEST("Sky Drop does not mistake a replacement using Fly for its original target")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_FLY) == EFFECT_SEMI_INVULNERABLE);
+        ASSUME(IsTwoTurnSemiInvulnerableMove(MOVE_FLY));
         ASSUME(GetTwoTurnMoveSemiInvulnerability(MOVE_FLY) == STATE_ON_AIR);
         PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(2); HP(1); Status1(STATUS1_BURN); }

@@ -48,7 +48,6 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleTvScore = 0, // TODO: Assign points
         // .battleFactoryStyle = FACTORY_STYLE_PREPARATION,
         .encourageEncore = TRUE,
-        .twoTurnEffect = TRUE,
     },
 
     [EFFECT_NON_VOLATILE_STATUS] =
@@ -191,7 +190,6 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     [EFFECT_TWO_TURNS_ATTACK] =
     {
         .battleTvScore = 3,
-        .twoTurnEffect = TRUE,
     },
 
     [EFFECT_SUBSTITUTE] =
@@ -549,7 +547,6 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     [EFFECT_SOLAR_BEAM] =
     {
         .battleTvScore = 1,
-        .twoTurnEffect = TRUE,
     },
 
     [EFFECT_TELEPORT] =
@@ -560,13 +557,6 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     [EFFECT_BEAT_UP] =
     {
         .battleTvScore = 2,
-    },
-
-    [EFFECT_SEMI_INVULNERABLE] =
-    {
-        .battleTvScore = 3,
-        .twoTurnEffect = TRUE,
-        .semiInvulnerableEffect = TRUE,
     },
 
     [EFFECT_FIRST_TURN_ONLY] =
@@ -1383,8 +1373,6 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     [EFFECT_SKY_DROP] =
     {
         .battleTvScore = 0, // TODO: Assign points
-        .twoTurnEffect = TRUE,
-        .semiInvulnerableEffect = TRUE,
     },
 
     [EFFECT_BEAK_BLAST] =

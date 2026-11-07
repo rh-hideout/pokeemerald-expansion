@@ -287,7 +287,7 @@ static void DoublesWhen(enum Move move, struct BattlePokemon *attacker, struct B
         else if (variation == 4)
             TURN { MOVE(attacker, MOVE_MISTY_TERRAIN); }
     }
-    else if (gBattleMoveEffects[gMovesInfo[move].effect].twoTurnEffect)
+    else if (IsTwoTurnMove(move))
     {
         TURN { MOVE(attacker, move, target: target); }
     }
@@ -345,7 +345,7 @@ static void DoublesWhen(enum Move move, struct BattlePokemon *attacker, struct B
         {
             MOVE(attacker, move, target: attacker);
         }
-        else if (gBattleMoveEffects[gMovesInfo[move].effect].twoTurnEffect)
+        else if (IsTwoTurnMove(move))
         {
             MOVE(target, MOVE_LAST_RESORT, target: attacker);
             SKIP_TURN(attacker);
@@ -519,7 +519,7 @@ static void WhenSingles(enum Move move, struct BattlePokemon *attacker, struct B
         else if (variation == 4)
             TURN { MOVE(attacker, MOVE_MISTY_TERRAIN); }
     }
-    else if (gBattleMoveEffects[gMovesInfo[move].effect].twoTurnEffect)
+    else if (IsTwoTurnMove(move))
     {
         TURN { MOVE(attacker, move); }
     }
@@ -570,7 +570,7 @@ static void WhenSingles(enum Move move, struct BattlePokemon *attacker, struct B
         {
             MOVE(attacker, move, target: attacker);
         }
-        else if (gBattleMoveEffects[gMovesInfo[move].effect].twoTurnEffect)
+        else if (IsTwoTurnMove(move))
         {
             MOVE(defender, MOVE_HELPING_HAND);
             SKIP_TURN(attacker);

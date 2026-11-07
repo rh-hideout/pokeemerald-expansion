@@ -327,7 +327,7 @@ SINGLE_BATTLE_TEST("Parental Bond does not trigger on semi-invulnerable moves")
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_FLY) != DAMAGE_CATEGORY_STATUS);
         ASSUME(GetMoveStrikeCount(MOVE_FLY) < 2);
-        ASSUME(GetMoveEffect(MOVE_FLY) == EFFECT_SEMI_INVULNERABLE);
+        ASSUME(IsTwoTurnSemiInvulnerableMove(MOVE_FLY));
         PLAYER(SPECIES_KANGASKHAN) { Item(ITEM_KANGASKHANITE); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

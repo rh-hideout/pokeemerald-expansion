@@ -1104,7 +1104,7 @@ BattleScript_TwoTurnMovesSecondTurnRet:
 	setbyte sB_ANIM_TURN, 1
 	setbyte sB_ANIM_TARGETS_HIT, 0
 	clearvolatile BS_ATTACKER, VOLATILE_MULTIPLETURNS
-	clearsemiinvulnerablebit @ only for moves with EFFECT_SEMI_INVULNERABLE/EFFECT_SKY_DROP
+	clearsemiinvulnerablebit @ for two turn moves
 	return
 
 BattleScript_SkyDropTargetTooHeavy::

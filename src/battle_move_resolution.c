@@ -1788,8 +1788,7 @@ static void SetValuesForTwoTurnMoveFire(struct BattleCalcValues *cv)
     gBattleScripting.battler = cv->battlerAtk;
     gBattleMons[cv->battlerAtk].volatiles.multipleTurns = FALSE;
     gBattleMons[cv->battlerAtk].volatiles.chargeTurn = FALSE;
-    if (gBattleMoveEffects[cv->moveEffect].semiInvulnerableEffect)
-        gBattleMons[cv->battlerAtk].volatiles.semiInvulnerable = STATE_NONE;
+    gBattleMons[cv->battlerAtk].volatiles.semiInvulnerable = STATE_NONE;
 }
 
 static enum CancelerResult CancelerCharging(struct BattleCalcValues *cv)
@@ -1833,7 +1832,7 @@ static enum CancelerResult CancelerCharging(struct BattleCalcValues *cv)
         gBattleStruct->setChargeTurnAdditionalEffects = FALSE;
     }
 
-    if (!gBattleMoveEffects[cv->moveEffect].twoTurnEffect)
+    if (!IsTwoTurnMove(cv->move))
         return CANCELER_RESULT_SUCCESS;
 
     if (gBattleMons[cv->battlerAtk].volatiles.multipleTurns) // Second turn
@@ -1879,8 +1878,7 @@ static enum CancelerResult CancelerCharging(struct BattleCalcValues *cv)
         gLockedMoves[cv->battlerAtk] = cv->move;
         gBattleMons[cv->battlerAtk].volatiles.chargeTurn = TRUE;
         gBattleStruct->setChargeTurnAdditionalEffects = TRUE;
-        if (gBattleMoveEffects[cv->moveEffect].semiInvulnerableEffect)
-            gBattleMons[cv->battlerAtk].volatiles.semiInvulnerable = GetTwoTurnMoveSemiInvulnerability(cv->move);
+        gBattleMons[cv->battlerAtk].volatiles.semiInvulnerable = GetTwoTurnMoveSemiInvulnerability(cv->move);
 
         if (isSkyDrop)
         {
@@ -2344,7 +2342,7 @@ static bool32 IsMoveParentalBondAffected(struct BattleCalcValues *cv)
      || gBattleStruct->numSpreadTargets > 1
      || IsMoveParentalBondBanned(cv->move)
      || cv->isStatusMove
-     || gBattleMoveEffects[cv->moveEffect].twoTurnEffect
+     || IsTwoTurnMove(cv->move)
      || cv->moveEffect == EFFECT_OHKO
      || GetActiveGimmick(cv->battlerAtk) == GIMMICK_Z_MOVE
      || cv->move == MOVE_STRUGGLE)
@@ -6915,8 +6913,8 @@ static enum Move GetSleepTalkMove(void)
 
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
-        if (IsMoveSleepTalkBanned(gBattleMons[gBattlerAttacker].moves[i])
-            || gBattleMoveEffects[GetMoveEffect(gBattleMons[gBattlerAttacker].moves[i])].twoTurnEffect)
+        enum Move move = gBattleMons[gBattlerAttacker].moves[i];
+        if (IsMoveSleepTalkBanned(move) || IsTwoTurnMove(move))
             unusableMovesBits |= (1 << (i));
     }
 

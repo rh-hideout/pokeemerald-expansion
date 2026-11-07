@@ -40,9 +40,7 @@ SINGLE_BATTLE_TEST("Hurricane can hit airborne targets (Fly, Bounce)")
     PARAMETRIZE { move = MOVE_FLY; }
     PARAMETRIZE { move = MOVE_BOUNCE; }
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_FLY) == EFFECT_SEMI_INVULNERABLE);
         ASSUME(GetTwoTurnMoveSemiInvulnerability(MOVE_FLY) == STATE_ON_AIR);
-        ASSUME(GetMoveEffect(MOVE_BOUNCE) == EFFECT_SEMI_INVULNERABLE);
         ASSUME(GetTwoTurnMoveSemiInvulnerability(MOVE_BOUNCE) == STATE_ON_AIR);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Moves(move); }
