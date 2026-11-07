@@ -1556,8 +1556,8 @@ static void Task_UpdateLvlInHealthbox(u8 taskId)
         u8 monIndex = gTasks[taskId].tExpTask_monId;
 
         if (IsDoubleBattle()
-            && monIndex == gBattlerPartyIndexes[GetPartnerBattler(battler)]
-            && !HasPartnerTrainer(battler))
+         && monIndex == gBattlerPartyIndexes[GetPartnerBattler(battler)]
+         && !HasPartnerTrainer(battler))
         {
             UpdateHealthboxAttribute(gHealthboxSpriteIds[GetPartnerBattler(battler)], &gParties[B_TRAINER_PLAYER][monIndex], HEALTHBOX_ALL);
         }
