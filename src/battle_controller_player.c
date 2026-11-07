@@ -1537,8 +1537,8 @@ static void Task_LaunchLvlUpAnim(u8 taskId)
     u8 monIndex = gTasks[taskId].tExpTask_monId;
 
     if (IsDoubleBattle()
-        && monIndex == gBattlerPartyIndexes[GetPartnerBattler(battler)]
-        && !HasPartnerTrainer(battler))
+     && monIndex == gBattlerPartyIndexes[GetPartnerBattler(battler)]
+     && !HasPartnerTrainer(battler))
     {
         battler ^= BIT_FLANK;
     }
