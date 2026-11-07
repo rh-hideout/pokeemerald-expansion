@@ -132,11 +132,11 @@ static void Overview_SetBgTile(s32 x, u32 y, u32 tileNum, u32 attrs);
 static void BackdropLoadBaseTilemap(void);
 static void LoadBackdropAssets(void);
 static void Overview_ComputeTrainerNameBoxLayout(u32 labelWidth, u32 centerRow, u32 *outTextLenTiles, u32 *outHeaderX, u32 *outHeaderWidth);
-static void Overview_DrawStatusCard(u32 x, u32 y, bool32 isActive, bool32 isBottomRow);
+static void Overview_DrawStatusCard(u32 x, u32 y, enum BattlerId battler, bool32 isActive, bool32 isBottomRow);
 static void Overview_DrawHeaderBoxRow(u32 cornerLeftTile, u32 fillTile, u32 cornerRightTile, u32 baseAttrs, s32 x, u32 y, u32 width);
 static void Overview_DrawBackground(void);
 static void Overview_DrawTrainerNameBox(enum BattleSide side);
-static void Overview_DrawTrainerNameBoxHelper(u32 labelWidth, u32 top, u32 centerRow);
+static void Overview_DrawTrainerNameBoxHelper(u32 labelWidth, u32 top, u32 centerRow, u8 side);
 static void Overview_FillBgRect(u32 x, u32 y, u32 width, u32 height, u32 tileNum, u32 attrs);
 static void Overview_DrawCardBackground(const struct BattleInfoCard *card, bool32 isActive);
 static void Overview_UpdateCardSelectionHighlight(u32 oldSelectedIndex);
@@ -151,7 +151,7 @@ static void Overview_FlushLabelWindow(u32 windowId);
 static void Overview_DrawMultiTrainerNameBoxes(enum BattleSide side);
 static void Overview_ComputeHeaderBoxAtCard(const struct BattleInfoCard *card, const u8 *label, u32 *outHeaderX, u32 *outWidth);
 static void Overview_DrawHeaderBoxAtCard(const struct BattleInfoCard *card, u32 top, const u8 *label);
-static void Overview_DrawHeaderBoxWidth(s32 x, u32 y, u32 width);
+static void Overview_DrawHeaderBoxWidth(s32 x, u32 y, u32 width, u8 side);
 static const u8 *GetTrainerNameForBattler(enum BattlerId battler);
 static void Overview_CreateWindows(void);
 static void Overview_ClearWindows(void);
@@ -192,6 +192,7 @@ static void Detail_DisplayGimmickIndicator(struct PrintText text);
 static void Detail_RefreshIcon(void);
 static void Detail_RefreshTypeIcons(void);
 static void Detail_DestroyTypeIcons(void);
+static void Detail_DrawBoxRow(void);
 static void Detail_CreateStatPips(void);
 static void Detail_DestroyStatPips(void);
 static void Detail_RefreshStatPips(void);
@@ -806,7 +807,8 @@ static const struct BattleInfoEffectData sBattleInfoEffects[INFO_COUNT] =
 static const u8 sBattleInfoHpBarTiles[8 * TILE_SIZE_4BPP] = {0};
 static const u8 sBattleInfoHpBarLeftEndcapGfx[] = INCBIN_U8("graphics/battle_interface/hpbar_left_endcap.4bpp");
 static const u8 sBattleInfoHpBarRightEndcapGfx[] = INCBIN_U8("graphics/battle_interface/hpbar_right_endcap.4bpp");
-static const u16 sBattleInfoMenuBgPalette[] = INCBIN_U16("graphics/battle_interface/battle_status_menu.gbapal");
+static const u16 sBattleInfoMenuPlayerBgPalette[] = INCBIN_U16("graphics/battle_interface/battle_status_menu_player.gbapal");
+static const u16 sBattleInfoMenuOpponentBgPalette[] = INCBIN_U16("graphics/battle_interface/battle_status_menu_opponent.gbapal");
 static const u32 sBattleInfoMenuBgTiles[] = INCBIN_U32("graphics/battle_interface/battle_status_menu.4bpp");
 static const u16 sBattleInfoMenuOverviewBaseTilemap[] = INCBIN_U16("graphics/battle_interface/active_battlers_overview.bin");
 static const u16 sBattleInfoMenuDetailsBaseTilemap[] = INCBIN_U16("graphics/battle_interface/active_battlers_details.bin");
@@ -1361,7 +1363,8 @@ static void BattleInfoInitBgs(void)
 
     ResetAllBgsCoordinates();
     LoadBgTiles(B_INFO_BACKDROP_BG, sBattleInfoMenuBgTiles, sizeof(sBattleInfoMenuBgTiles), 0);
-    LoadPalette(sBattleInfoMenuBgPalette, BG_PLTT_ID(0), sizeof(sBattleInfoMenuBgPalette));
+    LoadPalette(sBattleInfoMenuPlayerBgPalette, BG_PLTT_ID(0), sizeof(sBattleInfoMenuPlayerBgPalette));
+    LoadPalette(sBattleInfoMenuOpponentBgPalette, BG_PLTT_ID(1), sizeof(sBattleInfoMenuOpponentBgPalette));
     LoadPalette(gBattleInfoTextPalette, BG_PLTT_ID(B_INFO_TEXT_PAL), PLTT_SIZE_4BPP);
 
     SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_OBJ_ON | DISPCNT_OBJ_1D_MAP);
@@ -1461,6 +1464,7 @@ static void Detail_Enter(void)
     Detail_RefreshTypeIcons();
     ShowBg(B_INFO_BACKDROP_BG);
     ShowBg(B_INFO_TEXT_BG);
+    Detail_DrawBoxRow();
 }
 
 static void Detail_Exit(void)
@@ -1989,6 +1993,27 @@ static void Detail_RefreshTypeIcons(void)
     sData->typeIconSpriteIds[1] = spriteId;
 }
 
+static void Detail_DrawBoxRow(void)
+{
+    u8 side = GetBattlerSide(GetSelectedBattler());
+    u32 width = 15;
+
+    if (side == B_SIDE_OPPONENT)
+    {
+        Overview_DrawHeaderBoxRow(B_INFO_BG_TILE_DETAIL_OPPONENT_TOP_LEFT, B_INFO_BG_TILE_DETAIL_OPPONENT_TOP_EDGE, B_INFO_BG_TILE_DETAIL_OPPONENT_TOP_RIGHT, 0, 1, 0, width);
+        Overview_DrawHeaderBoxRow(B_INFO_BG_TILE_DETAIL_OPPONENT_SIDE_LEFT, B_INFO_BG_TILE_DETAIL_OPPONENT_FILL, B_INFO_BG_TILE_DETAIL_OPPONENT_SIDE_RIGHT, 0, 1, 1, width);
+        for (u32 i = 10; i < 19; i++)
+            Overview_DrawHeaderBoxRow(B_INFO_BG_TILE_DETAIL_OPPONENT_SIDE_LEFT, B_INFO_BG_TILE_DETAIL_OPPONENT_FILL, B_INFO_BG_TILE_DETAIL_OPPONENT_SIDE_RIGHT, 0, 1, i, width);
+        Overview_DrawHeaderBoxRow(B_INFO_BG_TILE_DETAIL_OPPONENT_BOTTOM_LEFT, B_INFO_BG_TILE_DETAIL_OPPONENT_BOTTOM_EDGE, B_INFO_BG_TILE_DETAIL_OPPONENT_BOTTOM_RIGHT, 0, 1, 19, width);
+    } else {
+        Overview_DrawHeaderBoxRow(B_INFO_BG_TILE_DETAIL_PLAYER_TOP_LEFT, B_INFO_BG_TILE_DETAIL_PLAYER_TOP_EDGE, B_INFO_BG_TILE_DETAIL_PLAYER_TOP_RIGHT, 0, 1, 0, width);
+        Overview_DrawHeaderBoxRow(B_INFO_BG_TILE_DETAIL_PLAYER_SIDE_LEFT, B_INFO_BG_TILE_DETAIL_PLAYER_FILL, B_INFO_BG_TILE_DETAIL_PLAYER_SIDE_RIGHT, 0, 1, 1, width);
+        for (u32 i = 10; i < 19; i++)
+            Overview_DrawHeaderBoxRow(B_INFO_BG_TILE_DETAIL_PLAYER_SIDE_LEFT, B_INFO_BG_TILE_DETAIL_PLAYER_FILL, B_INFO_BG_TILE_DETAIL_PLAYER_SIDE_RIGHT, 0, 1, i, width);
+        Overview_DrawHeaderBoxRow(B_INFO_BG_TILE_DETAIL_PLAYER_BOTTOM_LEFT, B_INFO_BG_TILE_DETAIL_PLAYER_BOTTOM_EDGE, B_INFO_BG_TILE_DETAIL_PLAYER_BOTTOM_RIGHT, 0, 1, 19, width);
+    }
+}
+
 static s32 Detail_GetStatRowTextY(u32 row)
 {
     u32 y = 15 + row * 9;
@@ -2118,6 +2143,7 @@ static void Detail_CycleBattler(s32 direction)
     Detail_RefreshItemAbilityWindow();
     Detail_RefreshStatPips();
     Detail_InitEffectsList();
+    Detail_DrawBoxRow();
 }
 
 static void Detail_PreviousBattler(void)
@@ -3096,7 +3122,8 @@ static void Overview_SetBgTile(s32 x, u32 y, u32 tileNum, u32 attrs)
 static void LoadBackdropAssets(void)
 {
     LoadBgTiles(B_INFO_BACKDROP_BG, sBattleInfoMenuBgTiles, sizeof(sBattleInfoMenuBgTiles), 0);
-    LoadPalette(sBattleInfoMenuBgPalette, BG_PLTT_ID(0), sizeof(sBattleInfoMenuBgPalette));
+    LoadPalette(sBattleInfoMenuPlayerBgPalette, BG_PLTT_ID(0), sizeof(sBattleInfoMenuPlayerBgPalette));
+    LoadPalette(sBattleInfoMenuOpponentBgPalette, BG_PLTT_ID(1), sizeof(sBattleInfoMenuOpponentBgPalette));
 }
 
 static void BackdropLoadBaseTilemap(void)
@@ -3167,24 +3194,32 @@ static void Overview_ComputeTrainerNameBoxLayout(u32 labelWidth, u32 centerRow, 
     *outHeaderWidth = headerWidth;
 }
 
-static u32 GetCardTile(bool32 isActive, u32 role)
+static u32 GetCardTile(u8 side, bool32 isActive, u32 role)
 {
-    if (isActive)
-        return B_INFO_BG_TILE_CARD_BASE_ACTIVE + role;
-    return B_INFO_BG_TILE_CARD_BASE_INACTIVE + role;
+    if (side == B_SIDE_OPPONENT)
+    {
+        if (isActive)
+            return B_INFO_BG_TILE_CARD_OPPONENT_BASE_ACTIVE + role;
+        return B_INFO_BG_TILE_CARD_OPPONENT_BASE_INACTIVE + role;
+    } else {
+        if (isActive)
+            return B_INFO_BG_TILE_CARD_PLAYER_BASE_ACTIVE + role;
+        return B_INFO_BG_TILE_CARD_PLAYER_BASE_INACTIVE + role;
+    }
 }
 
-static void Overview_DrawStatusCard(u32 x, u32 y, bool32 isActive, bool32 isBottomRow)
+static void Overview_DrawStatusCard(u32 x, u32 y, enum BattlerId battler, bool32 isActive, bool32 isBottomRow)
 {
-    u32 topLeftTile    = GetCardTile(isActive, B_INFO_CARD_ROLE_TOP_LEFT);
-    u32 topEdgeTile    = GetCardTile(isActive, B_INFO_CARD_ROLE_TOP_EDGE);
-    u32 topRightTile    = GetCardTile(isActive, B_INFO_CARD_ROLE_TOP_RIGHT);
-    u32 sideLeftTile   = GetCardTile(isActive, B_INFO_CARD_ROLE_SIDE_LEFT);
-    u32 fillTile       = GetCardTile(isActive, B_INFO_CARD_ROLE_INTERIOR);
-    u32 sideRightTile   = GetCardTile(isActive, B_INFO_CARD_ROLE_SIDE_RIGHT);
-    u32 bottomLeftTile = GetCardTile(isActive, B_INFO_CARD_ROLE_BOTTOM_LEFT);
-    u32 bottomEdgeTile = GetCardTile(isActive, B_INFO_CARD_ROLE_BOTTOM_EDGE);
-    u32 bottomRightTile = GetCardTile(isActive, B_INFO_CARD_ROLE_BOTTOM_RIGHT);
+    u8 side = GetBattlerSide(battler);
+    u32 topLeftTile    = GetCardTile(side, isActive, B_INFO_CARD_ROLE_TOP_LEFT);
+    u32 topEdgeTile    = GetCardTile(side, isActive, B_INFO_CARD_ROLE_TOP_EDGE);
+    u32 topRightTile    = GetCardTile(side, isActive, B_INFO_CARD_ROLE_TOP_RIGHT);
+    u32 sideLeftTile   = GetCardTile(side, isActive, B_INFO_CARD_ROLE_SIDE_LEFT);
+    u32 fillTile       = GetCardTile(side, isActive, B_INFO_CARD_ROLE_INTERIOR);
+    u32 sideRightTile   = GetCardTile(side, isActive, B_INFO_CARD_ROLE_SIDE_RIGHT);
+    u32 bottomLeftTile = GetCardTile(side, isActive, B_INFO_CARD_ROLE_BOTTOM_LEFT);
+    u32 bottomEdgeTile = GetCardTile(side, isActive, B_INFO_CARD_ROLE_BOTTOM_EDGE);
+    u32 bottomRightTile = GetCardTile(side, isActive, B_INFO_CARD_ROLE_BOTTOM_RIGHT);
 
     u32 width = B_INFO_CARD_TILE_W;
     u32 height = B_INFO_CARD_TILE_H;
@@ -3197,14 +3232,21 @@ static void Overview_DrawStatusCard(u32 x, u32 y, bool32 isActive, bool32 isBott
     Overview_DrawHeaderBoxRow(bottomLeftTile, bottomEdgeTile, bottomRightTile, bottomAttrs, x, y + height - 1, width);
 }
 
-static void Overview_DrawHeaderBoxWidth(s32 x, u32 y, u32 width)
+static void Overview_DrawHeaderBoxWidth(s32 x, u32 y, u32 width, u8 side)
 {
     if (max(0, x) + width > B_INFO_TILEMAP_WIDTH)
         x = B_INFO_TILEMAP_WIDTH - width;
 
-    Overview_DrawHeaderBoxRow(B_INFO_BG_TILE_HEADER_TOP_LEFT, B_INFO_BG_TILE_HEADER_TOP_EDGE, B_INFO_BG_TILE_HEADER_TOP_RIGHT, 0, x, y, width);
-    Overview_DrawHeaderBoxRow(B_INFO_BG_TILE_HEADER_SIDE_LEFT, B_INFO_BG_TILE_HEADER_FILL, B_INFO_BG_TILE_HEADER_SIDE_RIGHT, 0, x, y + 1, width);
-    Overview_DrawHeaderBoxRow(B_INFO_BG_TILE_HEADER_BOTTOM_LEFT, B_INFO_BG_TILE_HEADER_BOTTOM_EDGE, B_INFO_BG_TILE_HEADER_BOTTOM_RIGHT, 0, x, y + 2, width);
+    if (side == B_SIDE_OPPONENT)
+    {
+        Overview_DrawHeaderBoxRow(B_INFO_BG_TILE_HEADER_OPPONENT_TOP_LEFT, B_INFO_BG_TILE_HEADER_OPPONENT_TOP_EDGE, B_INFO_BG_TILE_HEADER_OPPONENT_TOP_RIGHT, 0, x, y, width);
+        Overview_DrawHeaderBoxRow(B_INFO_BG_TILE_HEADER_OPPONENT_SIDE_LEFT, B_INFO_BG_TILE_HEADER_OPPONENT_FILL, B_INFO_BG_TILE_HEADER_OPPONENT_SIDE_RIGHT, 0, x, y + 1, width);
+        Overview_DrawHeaderBoxRow(B_INFO_BG_TILE_HEADER_OPPONENT_BOTTOM_LEFT, B_INFO_BG_TILE_HEADER_OPPONENT_BOTTOM_EDGE, B_INFO_BG_TILE_HEADER_OPPONENT_BOTTOM_RIGHT, 0, x, y + 2, width);
+    } else {
+        Overview_DrawHeaderBoxRow(B_INFO_BG_TILE_HEADER_PLAYER_TOP_LEFT, B_INFO_BG_TILE_HEADER_PLAYER_TOP_EDGE, B_INFO_BG_TILE_HEADER_PLAYER_TOP_RIGHT, 0, x, y, width);
+        Overview_DrawHeaderBoxRow(B_INFO_BG_TILE_HEADER_PLAYER_SIDE_LEFT, B_INFO_BG_TILE_HEADER_PLAYER_FILL, B_INFO_BG_TILE_HEADER_PLAYER_SIDE_RIGHT, 0, x, y + 1, width);
+        Overview_DrawHeaderBoxRow(B_INFO_BG_TILE_HEADER_PLAYER_BOTTOM_LEFT, B_INFO_BG_TILE_HEADER_PLAYER_BOTTOM_EDGE, B_INFO_BG_TILE_HEADER_PLAYER_BOTTOM_RIGHT, 0, x, y + 2, width);
+    }
 }
 
 static void Overview_DrawHeaderBoxRow(u32 cornerLeftTile, u32 fillTile, u32 cornerRightTile, u32 baseAttrs, s32 x, u32 y, u32 width)
@@ -3227,7 +3269,7 @@ static void Overview_DrawCardBackground(const struct BattleInfoCard *card, bool3
         B_INFO_BG_TILE_FILL,
         0
     );
-    Overview_DrawStatusCard(cardTileX, cardTileY, isActive, card->y == B_INFO_ROW_Y_PLAYER);
+    Overview_DrawStatusCard(cardTileX, cardTileY, card->battler, isActive, card->y == B_INFO_ROW_Y_PLAYER);
 }
 
 static void Overview_DrawBackground(void)
@@ -3267,7 +3309,7 @@ static void Overview_DrawTrainerNameBox(enum BattleSide side)
 {
     u32 labelWidth = GetStringWidth(FONT_SMALL, GetSideTrainerName(side), 0);
     u32 top = (side == B_SIDE_PLAYER) ? B_INFO_LABEL_BOTTOM_TILE_TOP : 0;
-    Overview_DrawTrainerNameBoxHelper(labelWidth, top, GetSideCenterRow(side));
+    Overview_DrawTrainerNameBoxHelper(labelWidth, top, GetSideCenterRow(side), side);
 }
 
 static const u8 *GetTrainerNameForBattler(enum BattlerId battler)
@@ -3336,18 +3378,19 @@ static void Overview_DrawHeaderBoxAtCard(const struct BattleInfoCard *card, u32 
 {
     u32 headerX = 0;
     u32 boxWidth = 0;
+    u8 side = GetBattlerSide(card->battler);
     Overview_ComputeHeaderBoxAtCard(card, label, &headerX, &boxWidth);
-    Overview_DrawHeaderBoxWidth(headerX, top, boxWidth);
+    Overview_DrawHeaderBoxWidth(headerX, top, boxWidth, side);
 }
 
-static void Overview_DrawTrainerNameBoxHelper(u32 labelWidth, u32 top, u32 centerRow)
+static void Overview_DrawTrainerNameBoxHelper(u32 labelWidth, u32 top, u32 centerRow, u8 side)
 {
     u32 textLenTiles = 0;
     u32 headerX = 0;
     u32 headerWidth = 0;
 
     Overview_ComputeTrainerNameBoxLayout(labelWidth, centerRow, &textLenTiles, &headerX, &headerWidth);
-    Overview_DrawHeaderBoxWidth(headerX, top, min(B_INFO_TILEMAP_WIDTH, MakeEven(textLenTiles) + 2));
+    Overview_DrawHeaderBoxWidth(headerX, top, min(B_INFO_TILEMAP_WIDTH, MakeEven(textLenTiles) + 2), side);
 }
 
 static void Overview_FillBgRect(u32 x, u32 y, u32 width, u32 height, u32 tileNum, u32 attrs)
