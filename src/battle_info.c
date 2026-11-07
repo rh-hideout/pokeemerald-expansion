@@ -133,7 +133,7 @@ static void BackdropLoadBaseTilemap(void);
 static void LoadBackdropAssets(void);
 static void Overview_ComputeTrainerNameBoxLayout(u32 labelWidth, u32 centerRow, u32 *outTextLenTiles, u32 *outHeaderX, u32 *outHeaderWidth);
 static void Overview_DrawStatusCard(u32 x, u32 y, enum BattlerId battler, bool32 isActive, bool32 isBottomRow);
-static void Overview_DrawHeaderBoxRow(u32 cornerLeftTile, u32 fillTile, u32 cornerRightTile, u32 baseAttrs, s32 x, u32 y, u32 width);
+static void DrawHeaderBoxRow(u32 cornerLeftTile, u32 fillTile, u32 cornerRightTile, u32 baseAttrs, s32 x, u32 y, u32 width);
 static void Overview_DrawBackground(void);
 static void Overview_DrawTrainerNameBox(enum BattleSide side);
 static void Overview_DrawTrainerNameBoxHelper(u32 labelWidth, u32 top, u32 centerRow, u8 side);
@@ -807,8 +807,7 @@ static const struct BattleInfoEffectData sBattleInfoEffects[INFO_COUNT] =
 static const u8 sBattleInfoHpBarTiles[8 * TILE_SIZE_4BPP] = {0};
 static const u8 sBattleInfoHpBarLeftEndcapGfx[] = INCBIN_U8("graphics/battle_interface/hpbar_left_endcap.4bpp");
 static const u8 sBattleInfoHpBarRightEndcapGfx[] = INCBIN_U8("graphics/battle_interface/hpbar_right_endcap.4bpp");
-static const u16 sBattleInfoMenuPlayerBgPalette[] = INCBIN_U16("graphics/battle_interface/battle_status_menu_player.gbapal");
-static const u16 sBattleInfoMenuOpponentBgPalette[] = INCBIN_U16("graphics/battle_interface/battle_status_menu_opponent.gbapal");
+static const u16 sBattleInfoMenuBgPalette[] = INCBIN_U16("graphics/battle_interface/battle_status_menu.gbapal");
 static const u32 sBattleInfoMenuBgTiles[] = INCBIN_U32("graphics/battle_interface/battle_status_menu.4bpp");
 static const u16 sBattleInfoMenuOverviewBaseTilemap[] = INCBIN_U16("graphics/battle_interface/active_battlers_overview.bin");
 static const u16 sBattleInfoMenuDetailsBaseTilemap[] = INCBIN_U16("graphics/battle_interface/active_battlers_details.bin");
@@ -1363,8 +1362,7 @@ static void BattleInfoInitBgs(void)
 
     ResetAllBgsCoordinates();
     LoadBgTiles(B_INFO_BACKDROP_BG, sBattleInfoMenuBgTiles, sizeof(sBattleInfoMenuBgTiles), 0);
-    LoadPalette(sBattleInfoMenuPlayerBgPalette, BG_PLTT_ID(0), sizeof(sBattleInfoMenuPlayerBgPalette));
-    LoadPalette(sBattleInfoMenuOpponentBgPalette, BG_PLTT_ID(1), sizeof(sBattleInfoMenuOpponentBgPalette));
+    LoadPalette(sBattleInfoMenuBgPalette, BG_PLTT_ID(0), sizeof(sBattleInfoMenuBgPalette));
     LoadPalette(gBattleInfoTextPalette, BG_PLTT_ID(B_INFO_TEXT_PAL), PLTT_SIZE_4BPP);
 
     SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_OBJ_ON | DISPCNT_OBJ_1D_MAP);
@@ -1451,6 +1449,7 @@ static void Detail_Enter(void)
     FillBgTilemapBufferRect(B_INFO_TEXT_BG, 0, 0, 0, B_INFO_TILEMAP_WIDTH, B_INFO_TILEMAP_HEIGHT, 0);
     CopyBgTilemapBufferToVram(B_INFO_TEXT_BG);
     Detail_CreateWindows();
+    Detail_DrawBoxRow();
     Detail_DrawStatLabels();
     Detail_DrawItemAbilityWindow();
     Detail_InitEffectsList();
@@ -1464,7 +1463,6 @@ static void Detail_Enter(void)
     Detail_RefreshTypeIcons();
     ShowBg(B_INFO_BACKDROP_BG);
     ShowBg(B_INFO_TEXT_BG);
-    Detail_DrawBoxRow();
 }
 
 static void Detail_Exit(void)
@@ -2000,17 +1998,17 @@ static void Detail_DrawBoxRow(void)
 
     if (side == B_SIDE_OPPONENT)
     {
-        Overview_DrawHeaderBoxRow(B_INFO_BG_TILE_DETAIL_OPPONENT_TOP_LEFT, B_INFO_BG_TILE_DETAIL_OPPONENT_TOP_EDGE, B_INFO_BG_TILE_DETAIL_OPPONENT_TOP_RIGHT, 0, 1, 0, width);
-        Overview_DrawHeaderBoxRow(B_INFO_BG_TILE_DETAIL_OPPONENT_SIDE_LEFT, B_INFO_BG_TILE_DETAIL_OPPONENT_FILL, B_INFO_BG_TILE_DETAIL_OPPONENT_SIDE_RIGHT, 0, 1, 1, width);
+        DrawHeaderBoxRow(B_INFO_BG_TILE_DETAIL_OPPONENT_TOP_LEFT, B_INFO_BG_TILE_DETAIL_OPPONENT_TOP_EDGE, B_INFO_BG_TILE_DETAIL_OPPONENT_TOP_RIGHT, 0, 1, 0, width);
+        DrawHeaderBoxRow(B_INFO_BG_TILE_DETAIL_OPPONENT_SIDE_LEFT, B_INFO_BG_TILE_DETAIL_OPPONENT_FILL, B_INFO_BG_TILE_DETAIL_OPPONENT_SIDE_RIGHT, 0, 1, 1, width);
         for (u32 i = 10; i < 19; i++)
-            Overview_DrawHeaderBoxRow(B_INFO_BG_TILE_DETAIL_OPPONENT_SIDE_LEFT, B_INFO_BG_TILE_DETAIL_OPPONENT_FILL, B_INFO_BG_TILE_DETAIL_OPPONENT_SIDE_RIGHT, 0, 1, i, width);
-        Overview_DrawHeaderBoxRow(B_INFO_BG_TILE_DETAIL_OPPONENT_BOTTOM_LEFT, B_INFO_BG_TILE_DETAIL_OPPONENT_BOTTOM_EDGE, B_INFO_BG_TILE_DETAIL_OPPONENT_BOTTOM_RIGHT, 0, 1, 19, width);
+            DrawHeaderBoxRow(B_INFO_BG_TILE_DETAIL_OPPONENT_SIDE_LEFT, B_INFO_BG_TILE_DETAIL_OPPONENT_FILL, B_INFO_BG_TILE_DETAIL_OPPONENT_SIDE_RIGHT, 0, 1, i, width);
+        DrawHeaderBoxRow(B_INFO_BG_TILE_DETAIL_OPPONENT_BOTTOM_LEFT, B_INFO_BG_TILE_DETAIL_OPPONENT_BOTTOM_EDGE, B_INFO_BG_TILE_DETAIL_OPPONENT_BOTTOM_RIGHT, 0, 1, 19, width);
     } else {
-        Overview_DrawHeaderBoxRow(B_INFO_BG_TILE_DETAIL_PLAYER_TOP_LEFT, B_INFO_BG_TILE_DETAIL_PLAYER_TOP_EDGE, B_INFO_BG_TILE_DETAIL_PLAYER_TOP_RIGHT, 0, 1, 0, width);
-        Overview_DrawHeaderBoxRow(B_INFO_BG_TILE_DETAIL_PLAYER_SIDE_LEFT, B_INFO_BG_TILE_DETAIL_PLAYER_FILL, B_INFO_BG_TILE_DETAIL_PLAYER_SIDE_RIGHT, 0, 1, 1, width);
+        DrawHeaderBoxRow(B_INFO_BG_TILE_DETAIL_PLAYER_TOP_LEFT, B_INFO_BG_TILE_DETAIL_PLAYER_TOP_EDGE, B_INFO_BG_TILE_DETAIL_PLAYER_TOP_RIGHT, 0, 1, 0, width);
+        DrawHeaderBoxRow(B_INFO_BG_TILE_DETAIL_PLAYER_SIDE_LEFT, B_INFO_BG_TILE_DETAIL_PLAYER_FILL, B_INFO_BG_TILE_DETAIL_PLAYER_SIDE_RIGHT, 0, 1, 1, width);
         for (u32 i = 10; i < 19; i++)
-            Overview_DrawHeaderBoxRow(B_INFO_BG_TILE_DETAIL_PLAYER_SIDE_LEFT, B_INFO_BG_TILE_DETAIL_PLAYER_FILL, B_INFO_BG_TILE_DETAIL_PLAYER_SIDE_RIGHT, 0, 1, i, width);
-        Overview_DrawHeaderBoxRow(B_INFO_BG_TILE_DETAIL_PLAYER_BOTTOM_LEFT, B_INFO_BG_TILE_DETAIL_PLAYER_BOTTOM_EDGE, B_INFO_BG_TILE_DETAIL_PLAYER_BOTTOM_RIGHT, 0, 1, 19, width);
+            DrawHeaderBoxRow(B_INFO_BG_TILE_DETAIL_PLAYER_SIDE_LEFT, B_INFO_BG_TILE_DETAIL_PLAYER_FILL, B_INFO_BG_TILE_DETAIL_PLAYER_SIDE_RIGHT, 0, 1, i, width);
+        DrawHeaderBoxRow(B_INFO_BG_TILE_DETAIL_PLAYER_BOTTOM_LEFT, B_INFO_BG_TILE_DETAIL_PLAYER_BOTTOM_EDGE, B_INFO_BG_TILE_DETAIL_PLAYER_BOTTOM_RIGHT, 0, 1, 19, width);
     }
 }
 
@@ -2140,10 +2138,10 @@ static void Detail_CycleBattler(s32 direction)
     Detail_RefreshStatusIcon();
     Detail_RefreshTypeIcons();
     Detail_RefreshHeader();
+    Detail_DrawBoxRow();
     Detail_RefreshItemAbilityWindow();
     Detail_RefreshStatPips();
     Detail_InitEffectsList();
-    Detail_DrawBoxRow();
 }
 
 static void Detail_PreviousBattler(void)
@@ -3122,8 +3120,7 @@ static void Overview_SetBgTile(s32 x, u32 y, u32 tileNum, u32 attrs)
 static void LoadBackdropAssets(void)
 {
     LoadBgTiles(B_INFO_BACKDROP_BG, sBattleInfoMenuBgTiles, sizeof(sBattleInfoMenuBgTiles), 0);
-    LoadPalette(sBattleInfoMenuPlayerBgPalette, BG_PLTT_ID(0), sizeof(sBattleInfoMenuPlayerBgPalette));
-    LoadPalette(sBattleInfoMenuOpponentBgPalette, BG_PLTT_ID(1), sizeof(sBattleInfoMenuOpponentBgPalette));
+    LoadPalette(sBattleInfoMenuBgPalette, BG_PLTT_ID(0), sizeof(sBattleInfoMenuBgPalette));
 }
 
 static void BackdropLoadBaseTilemap(void)
@@ -3226,10 +3223,10 @@ static void Overview_DrawStatusCard(u32 x, u32 y, enum BattlerId battler, bool32
     u32 topAttrs = 0;
     u32 bottomAttrs = 0;
 
-    Overview_DrawHeaderBoxRow(topLeftTile, topEdgeTile, topRightTile, topAttrs, x, y, width);
+    DrawHeaderBoxRow(topLeftTile, topEdgeTile, topRightTile, topAttrs, x, y, width);
     for (u32 yi = y + 1; yi < y + height - 1; yi++)
-        Overview_DrawHeaderBoxRow(sideLeftTile, fillTile, sideRightTile, 0, x, yi, width);
-    Overview_DrawHeaderBoxRow(bottomLeftTile, bottomEdgeTile, bottomRightTile, bottomAttrs, x, y + height - 1, width);
+        DrawHeaderBoxRow(sideLeftTile, fillTile, sideRightTile, 0, x, yi, width);
+    DrawHeaderBoxRow(bottomLeftTile, bottomEdgeTile, bottomRightTile, bottomAttrs, x, y + height - 1, width);
 }
 
 static void Overview_DrawHeaderBoxWidth(s32 x, u32 y, u32 width, u8 side)
@@ -3239,17 +3236,17 @@ static void Overview_DrawHeaderBoxWidth(s32 x, u32 y, u32 width, u8 side)
 
     if (side == B_SIDE_OPPONENT)
     {
-        Overview_DrawHeaderBoxRow(B_INFO_BG_TILE_HEADER_OPPONENT_TOP_LEFT, B_INFO_BG_TILE_HEADER_OPPONENT_TOP_EDGE, B_INFO_BG_TILE_HEADER_OPPONENT_TOP_RIGHT, 0, x, y, width);
-        Overview_DrawHeaderBoxRow(B_INFO_BG_TILE_HEADER_OPPONENT_SIDE_LEFT, B_INFO_BG_TILE_HEADER_OPPONENT_FILL, B_INFO_BG_TILE_HEADER_OPPONENT_SIDE_RIGHT, 0, x, y + 1, width);
-        Overview_DrawHeaderBoxRow(B_INFO_BG_TILE_HEADER_OPPONENT_BOTTOM_LEFT, B_INFO_BG_TILE_HEADER_OPPONENT_BOTTOM_EDGE, B_INFO_BG_TILE_HEADER_OPPONENT_BOTTOM_RIGHT, 0, x, y + 2, width);
+        DrawHeaderBoxRow(B_INFO_BG_TILE_HEADER_OPPONENT_TOP_LEFT, B_INFO_BG_TILE_HEADER_OPPONENT_TOP_EDGE, B_INFO_BG_TILE_HEADER_OPPONENT_TOP_RIGHT, 0, x, y, width);
+        DrawHeaderBoxRow(B_INFO_BG_TILE_HEADER_OPPONENT_SIDE_LEFT, B_INFO_BG_TILE_HEADER_OPPONENT_FILL, B_INFO_BG_TILE_HEADER_OPPONENT_SIDE_RIGHT, 0, x, y + 1, width);
+        DrawHeaderBoxRow(B_INFO_BG_TILE_HEADER_OPPONENT_BOTTOM_LEFT, B_INFO_BG_TILE_HEADER_OPPONENT_BOTTOM_EDGE, B_INFO_BG_TILE_HEADER_OPPONENT_BOTTOM_RIGHT, 0, x, y + 2, width);
     } else {
-        Overview_DrawHeaderBoxRow(B_INFO_BG_TILE_HEADER_PLAYER_TOP_LEFT, B_INFO_BG_TILE_HEADER_PLAYER_TOP_EDGE, B_INFO_BG_TILE_HEADER_PLAYER_TOP_RIGHT, 0, x, y, width);
-        Overview_DrawHeaderBoxRow(B_INFO_BG_TILE_HEADER_PLAYER_SIDE_LEFT, B_INFO_BG_TILE_HEADER_PLAYER_FILL, B_INFO_BG_TILE_HEADER_PLAYER_SIDE_RIGHT, 0, x, y + 1, width);
-        Overview_DrawHeaderBoxRow(B_INFO_BG_TILE_HEADER_PLAYER_BOTTOM_LEFT, B_INFO_BG_TILE_HEADER_PLAYER_BOTTOM_EDGE, B_INFO_BG_TILE_HEADER_PLAYER_BOTTOM_RIGHT, 0, x, y + 2, width);
+        DrawHeaderBoxRow(B_INFO_BG_TILE_HEADER_PLAYER_TOP_LEFT, B_INFO_BG_TILE_HEADER_PLAYER_TOP_EDGE, B_INFO_BG_TILE_HEADER_PLAYER_TOP_RIGHT, 0, x, y, width);
+        DrawHeaderBoxRow(B_INFO_BG_TILE_HEADER_PLAYER_SIDE_LEFT, B_INFO_BG_TILE_HEADER_PLAYER_FILL, B_INFO_BG_TILE_HEADER_PLAYER_SIDE_RIGHT, 0, x, y + 1, width);
+        DrawHeaderBoxRow(B_INFO_BG_TILE_HEADER_PLAYER_BOTTOM_LEFT, B_INFO_BG_TILE_HEADER_PLAYER_BOTTOM_EDGE, B_INFO_BG_TILE_HEADER_PLAYER_BOTTOM_RIGHT, 0, x, y + 2, width);
     }
 }
 
-static void Overview_DrawHeaderBoxRow(u32 cornerLeftTile, u32 fillTile, u32 cornerRightTile, u32 baseAttrs, s32 x, u32 y, u32 width)
+static void DrawHeaderBoxRow(u32 cornerLeftTile, u32 fillTile, u32 cornerRightTile, u32 baseAttrs, s32 x, u32 y, u32 width)
 {
     Overview_SetBgTile(x, y, cornerLeftTile, baseAttrs);
     Overview_SetBgTile(x + width - 1, y, cornerRightTile, baseAttrs);
