@@ -1428,16 +1428,12 @@ static void Task_GiveExpToMon(u8 taskId)
             gainedExp -= nextLvlExp - currExp;
             BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, RET_VALUE_LEVELED_UP, (B_LEVEL_UP_NOTIFICATION >= GEN_9) ? 0 : gainedExp);
 
-            if (IsDoubleBattle()
-                && (monId == gBattlerPartyIndexes[battler]
-                || (monId == gBattlerPartyIndexes[GetPartnerBattler(battler)] && !HasPartnerTrainer(battler))))
-            {
+            bool32 playerCheck = (monId == gBattlerPartyIndexes[battler]);
+            bool32 partnerCheck = (monId == gBattlerPartyIndexes[GetPartnerBattler(battler)] && !HasPartnerTrainer(battler));
+            if (playerCheck || (IsDoubleBattle() && partnerCheck))
                 gTasks[taskId].func = Task_LaunchLvlUpAnim;
-            }
             else
-            {
                 gTasks[taskId].func = Task_SetControllerToWaitForString;
-            }
         }
         else
         {
