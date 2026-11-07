@@ -956,7 +956,6 @@ static void DoAIScoreProcessing(enum BattlerId battlerAtk, enum BattlerId battle
     u64 flags = gAiThinkingStruct->aiFlags[battlerAtk];
     gAiThinkingStruct->aiLogicId = 0;
     gAiThinkingStruct->movesetIndex = MOVESLOT_0;
-    gBattlerTarget = battlerDef;
 
     if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
         BattleAI_SetupAIData(gBattleStruct->palaceFlags >> 4, battlerAtk);
