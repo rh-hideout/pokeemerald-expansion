@@ -5805,7 +5805,7 @@ static enum MoveEndResult MoveEndNaturalGiftItemRemoval(struct BattleCalcValues 
 
     if (cv->moveEffect != EFFECT_NATURAL_GIFT
      || gBattleMons[cv->battlerAtk].item == ITEM_NONE
-     || gBattleStruct->battlerState[cv->battlerAtk].originalBattlerPartyId == PARTY_SIZE)
+     || gBattleStruct->battlerState[cv->battlerAtk].originalBattlerPartyId != PARTY_SIZE)
         return MOVEEND_RESULT_CONTINUE;
 
     gLastUsedItem = gBattleMons[cv->battlerAtk].item;
