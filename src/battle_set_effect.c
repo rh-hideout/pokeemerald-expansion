@@ -4433,6 +4433,7 @@ static inline bool32 IgnoreTargetingForMoveEffect(enum MoveEffect moveEffect) //
     case MOVE_EFFECT_VOLCALITH:
     case MOVE_EFFECT_SAND_TOMB_SIDE:
     case MOVE_EFFECT_FIRE_SPIN_SIDE:
+    case MOVE_EFFECT_CORE_ENFORCER:
     case MOVE_EFFECT_RAINBOW:
     case MOVE_EFFECT_SEA_OF_FIRE:
     case MOVE_EFFECT_SWAMP:
