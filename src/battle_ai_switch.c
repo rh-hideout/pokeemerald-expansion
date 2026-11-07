@@ -913,8 +913,7 @@ static bool32 IsOpponentPhysicalAttacker(enum BattlerId battler, enum BattlerId 
         return TRUE;
 
     enum Move incomingMove = GetIncomingMove(battler, opposingBattler, gAiLogicData);
-    return incomingMove != MOVE_NONE
-        && incomingMove != MOVE_UNAVAILABLE
+    return IsMoveValid(incomingMove)
         && GetBattleMoveCategory(incomingMove) == DAMAGE_CATEGORY_PHYSICAL;
 }
 

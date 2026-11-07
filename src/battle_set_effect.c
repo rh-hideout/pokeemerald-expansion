@@ -1112,7 +1112,7 @@ static void HandleSetEffectHealTeam(struct BattleCalcValues *cv, struct SetEffec
 
 static void HandleSetEffectSpite(struct BattleCalcValues *cv, struct SetEffect *se)
 {
-    if (gLastMoves[se->effectBattler] != MOVE_NONE && gLastMoves[se->effectBattler] != MOVE_UNAVAILABLE)
+    if (IsMoveValid(gLastMoves[se->effectBattler]))
     {
         BattleScriptPush(se->script);
         gBattlescriptCurrInstr = BattleScript_MoveEffectSpite;
