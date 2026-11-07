@@ -9310,8 +9310,8 @@ void BS_ItemRestoreHP(void)
             battler = gBattlerAttacker;
         }
         else if (IsDoubleBattle()
-            && gBattleStruct->itemPartyIndex[gBattlerAttacker] == gBattlerPartyIndexes[GetPartnerBattler(gBattlerAttacker)]
-            && !HasPartnerTrainer(gBattlerAttacker))
+             && gBattleStruct->itemPartyIndex[gBattlerAttacker] == gBattlerPartyIndexes[GetPartnerBattler(gBattlerAttacker)]
+             && !HasPartnerTrainer(gBattlerAttacker))
         {
             battler = GetPartnerBattler(gBattlerAttacker);
         }
