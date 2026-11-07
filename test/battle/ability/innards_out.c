@@ -128,7 +128,7 @@ SINGLE_BATTLE_TEST("Innards Out should not include Substitute damage in accumula
 SINGLE_BATTLE_TEST("Innards Out does not trigger when Core Enforcer suppresses it after target has acted")
 {
     GIVEN {
-        ASSUME(MoveHasAdditionalEffect(MOVE_CORE_ENFORCER, MOVE_EFFECT_CORE_ENFORCER));
+        ASSUME(MoveHasAdditionalEffect(MOVE_CORE_ENFORCER, MOVE_EFFECT_GASTRO_ACID));
         PLAYER(SPECIES_PYUKUMUKU) { HP(1); Ability(ABILITY_INNARDS_OUT); Speed(3); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(2); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
