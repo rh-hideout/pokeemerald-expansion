@@ -233,7 +233,7 @@ static bool32 HasLightSensitiveMove(enum BattlerId battler)
 
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
-        if (moves[moveIndex] != MOVE_NONE && moves[moveIndex] != MOVE_UNAVAILABLE && IsLightSensitiveMove(moves[moveIndex]))
+        if (IsMoveValid(moves[moveIndex]) && IsLightSensitiveMove(moves[moveIndex]))
             return TRUE;
     }
 

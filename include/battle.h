@@ -1183,6 +1183,11 @@ static inline bool32 IsDoubleBattle(void)
     return !!(gBattleTypeFlags & BATTLE_TYPE_MORE_THAN_TWO_BATTLERS);
 }
 
+static inline bool32 IsMoveValid(enum Move move)
+{
+    return move != MOVE_NONE && move != MOVE_UNAVAILABLE;
+}
+
 static inline bool32 IsSpreadMove(enum MoveTarget moveTarget)
 {
     if (!IsDoubleBattle())
