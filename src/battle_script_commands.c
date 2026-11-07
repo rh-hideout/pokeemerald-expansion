@@ -6298,7 +6298,7 @@ static void Cmd_copymovepermanently(void)
     gChosenMove = MOVE_UNAVAILABLE;
 
     if (!(gBattleMons[gBattlerAttacker].volatiles.transformed)
-        && gLastPrintedMoves[gBattlerTarget] != MOVE_UNAVAILABLE
+        && IsMoveValid(gLastPrintedMoves[gBattlerTarget])
         && !IsMoveSketchBanned(gLastPrintedMoves[gBattlerTarget]))
     {
         s32 i;
@@ -6365,8 +6365,7 @@ static void Cmd_tryspiteppreduce(void)
 {
     CMD_ARGS(const u8 *failInstr);
 
-    if (gLastMoves[gBattlerTarget] != MOVE_NONE
-     && gLastMoves[gBattlerTarget] != MOVE_UNAVAILABLE)
+    if (IsMoveValid(gLastMoves[gBattlerTarget]))
     {
         s32 i;
 
