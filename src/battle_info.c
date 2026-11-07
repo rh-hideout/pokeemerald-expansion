@@ -2762,7 +2762,7 @@ static void Detail_RefreshEffectsScrollbar(void)
     u32 windowId = sData->windowIds[WIN_DETAIL_EFFECTS];
     u32 windowLeftPx = GetWindowAttribute(windowId, WINDOW_TILEMAP_LEFT) * 8;
     u32 windowTopPx = GetWindowAttribute(windowId, WINDOW_TILEMAP_TOP) * 8;
-    u32 scrollbarX = windowLeftPx + WindowWidthPx(windowId) - 6;
+    u32 scrollbarX = windowLeftPx + WindowWidthPx(windowId) - 5;
     u32 scrollbarMinY = windowTopPx + 16 + 7;
     u32 scrollbarMaxY = scrollbarMinY + 3 + (B_INFO_DETAIL_EFFECTS_VISIBLE_ROWS - 1) * 12;
     u32 maxScroll = sData->activeEffectsCount - B_INFO_DETAIL_EFFECTS_VISIBLE_ROWS;
@@ -2805,7 +2805,7 @@ static void Detail_UpdateScrollbarLane(bool32 hasScrollbar)
         return;
 
     s32 laneYStart = (GetWindowAttribute(windowId, WINDOW_TILEMAP_TOP) + (16 / 8)) + 1;
-    s32 laneTileCount = (((B_INFO_DETAIL_EFFECTS_VISIBLE_ROWS * 12) + 7) / 8) + 1;
+    s32 laneTileCount = (((B_INFO_DETAIL_EFFECTS_VISIBLE_ROWS * 12)) / 8) - 1;
 
     if (laneTileCount <= 0)
         return;
@@ -2817,19 +2817,14 @@ static void Detail_UpdateScrollbarLane(bool32 hasScrollbar)
         if (tileY < 0 || tileY >= B_INFO_TILEMAP_HEIGHT)
             continue;
 
-        SetBg1Tilemap(tileY, laneX, B_INFO_BG_TILE_SCROLLBAR_BOTTOM, hasScrollbar);
+        SetBg1Tilemap(tileY, laneX, B_INFO_BG_TILE_SCROLLBAR_LANE, hasScrollbar);
     }
 
     if (laneTileCount > 0)
     {
         s32 topTileY = laneYStart - 1;
-        s32 bottomTileY = laneYStart + laneTileCount;
-
         if (topTileY >= 0 && topTileY < B_INFO_TILEMAP_HEIGHT)
-            SetBg1Tilemap(topTileY, laneX, B_INFO_BG_TILE_SCROLLBAR_BOTTOM, hasScrollbar);
-
-        if (bottomTileY >= 0 && bottomTileY < B_INFO_TILEMAP_HEIGHT)
-            SetBg1Tilemap(bottomTileY, laneX, B_INFO_BG_TILE_SCROLLBAR_BOTTOM, hasScrollbar);
+            SetBg1Tilemap(topTileY, laneX, B_INFO_BG_TILE_SCROLLBAR_TOP, hasScrollbar);
     }
 
     CopyBgTilemapBufferToVram(B_INFO_BACKDROP_BG);
