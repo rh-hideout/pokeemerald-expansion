@@ -567,6 +567,44 @@ static void HandleSetEffectCelebrate(struct BattleCalcValues *cv, struct SetEffe
     BattleScriptPushAndSet(se->script, BattleScript_WaitMessage);
 }
 
+static void SetGastroAcid(struct BattleCalcValues *cv, struct SetEffect *se)
+{
+    if (gBattleMons[se->effectBattler].volatiles.gastroAcid
+     || gAbilitiesInfo[gBattleMons[se->effectBattler].ability].cantBeSuppressed)
+    {
+        SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
+    }
+    else if (GetBattlerHoldEffectIgnoreAbility(se->effectBattler) == HOLD_EFFECT_ABILITY_SHIELD)
+    {
+        SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
+        if (!cv->onlyChecking)
+            RecordItemEffectBattle(se->effectBattler, HOLD_EFFECT_ABILITY_SHIELD);
+    }
+    else if (!cv->onlyChecking)
+    {
+        if (gBattleMons[se->effectBattler].volatiles.neutralizingGas)
+            gSpecialStatuses[se->effectBattler].neutralizingGasRemoved = TRUE;
+
+        RemoveRuinAbilityFlags(se->effectBattler);
+        gBattleMons[se->effectBattler].volatiles.gastroAcid = TRUE;
+        ResetTruantToggleOnAbilitySuppression(se->effectBattler);
+        BattleScriptPushAndSet(se->script, BattleScript_MoveEffectGastroAcid);
+    }
+}
+
+static void HandleSetEffectCoreEnforcer(struct BattleCalcValues *cv, struct SetEffect *se)
+{
+    if (!HasBattlerActedThisTurn(se->effectBattler)
+     || BattlerJustSwitchedIn(se->effectBattler))
+    {
+        SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
+    }
+    else
+    {
+        SetGastroAcid(cv, se);
+    }
+}
+
 static void HandleSetEffectThroatChop(struct BattleCalcValues *cv, struct SetEffect *se)
 {
     if (gBattleMons[se->effectBattler].volatiles.throatChopTimer == 0)
@@ -3038,28 +3076,7 @@ static void HandleSetEffectPowerTrick(struct BattleCalcValues *cv, struct SetEff
 
 static void HandleSetEffectGastroAcid(struct BattleCalcValues *cv, struct SetEffect *se)
 {
-    if (gBattleMons[se->effectBattler].volatiles.gastroAcid
-     || gAbilitiesInfo[gBattleMons[se->effectBattler].ability].cantBeSuppressed)
-    {
-        SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
-    }
-    else if (GetBattlerHoldEffectIgnoreAbility(se->effectBattler) == HOLD_EFFECT_ABILITY_SHIELD)
-    {
-        SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
-        if (!cv->onlyChecking)
-            RecordItemEffectBattle(se->effectBattler, HOLD_EFFECT_ABILITY_SHIELD);
-    }
-    else if (!cv->onlyChecking)
-    {
-        if (gBattleMons[se->effectBattler].volatiles.neutralizingGas)
-            gSpecialStatuses[se->effectBattler].neutralizingGasRemoved = TRUE;
-
-        RemoveRuinAbilityFlags(se->effectBattler);
-        gBattleMons[se->effectBattler].volatiles.gastroAcid = TRUE;
-        ResetTruantToggleOnAbilitySuppression(se->effectBattler);
-        BattleScriptPushAndSet(se->script, BattleScript_MoveEffectGastroAcid);
-    }
-
+    SetGastroAcid(cv, se);
 }
 
 static void HandleSetEffectLuckyChant(struct BattleCalcValues *cv, struct SetEffect *se)
@@ -4165,6 +4182,7 @@ static void (*const sSetEffectHandlers[])(struct BattleCalcValues *cv, struct Se
     [MOVE_EFFECT_HAPPY_HOUR] = HandleSetEffectHappyHour,
     [MOVE_EFFECT_DO_NOTHING] = HandleSetEffectDoNothing,
     [MOVE_EFFECT_CELEBRATE] = HandleSetEffectCelebrate,
+    [MOVE_EFFECT_CORE_ENFORCER] = HandleSetEffectCoreEnforcer,
     [MOVE_EFFECT_THROAT_CHOP] = HandleSetEffectThroatChop,
     [MOVE_EFFECT_INCINERATE] = HandleSetEffectIncinerate,
     [MOVE_EFFECT_BUG_BITE] = HandleSetEffectBugBite,

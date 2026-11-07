@@ -17858,8 +17858,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .category = DAMAGE_CATEGORY_SPECIAL,
         .zMove = { .powerOverride = 140 },
         .additionalEffects = ADDITIONAL_EFFECTS({
-            .moveEffect = MOVE_EFFECT_GASTRO_ACID,
-            .onlyIfTargetAlreadyMoved = TRUE,
+            .moveEffect = MOVE_EFFECT_CORE_ENFORCER,
         }),
         .contestEffect = CONTEST_EFFECT_SHIFT_JUDGE_ATTENTION,
         .contestCategory = CONTEST_CATEGORY_TOUGH,

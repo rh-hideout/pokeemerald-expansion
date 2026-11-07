@@ -3966,11 +3966,6 @@ static bool32 CanApplyAdditionalEffect(enum BattlerId battlerAtk, enum BattlerId
     if (additionalEffect->onlyIfTargetRaisedStats && !gProtectStructs[effectBattler].statRaised)
         return FALSE;
 
-    // Certain move effects only apply if the target already moved this turn (e.g. Core Enforcer)
-    if (additionalEffect->onlyIfTargetAlreadyMoved
-     && (!HasBattlerActedThisTurn(effectBattler) || BattlerJustSwitchedIn(effectBattler)))
-        return FALSE;
-
     // Don't apply chargeTurnOnly effects here
     if (additionalEffect->onChargeTurnOnly || gBattleMons[battlerAtk].volatiles.chargeTurn)
         return FALSE;
