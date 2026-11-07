@@ -231,6 +231,7 @@ enum MoveEndState
     MOVEEND_PICKPOCKET,
     MOVEEND_ITEMS_EFFECTS_ALL,
     MOVEEND_OPPORTUNIST,
+    MOVEEND_NATURAL_GIFT_ITEM_REMOVAL,
     MOVEEND_THIRD_MOVE_BLOCK,
     MOVEEND_RAMPAGE,
     MOVEEND_CONFUSION_AFTER_SKY_DROP, // If target was previously rampaging, it should be confused when dropped
