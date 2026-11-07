@@ -3968,7 +3968,7 @@ static bool32 CanApplyAdditionalEffect(enum BattlerId battlerAtk, enum BattlerId
 
     // Certain move effects only apply if the target already moved this turn (e.g. Core Enforcer)
     if (additionalEffect->onlyIfTargetAlreadyMoved
-     && (!HasBattlerActedThisTurn(se->effectBattler) || BattlerJustSwitchedIn(se->effectBattler)))
+     && (!HasBattlerActedThisTurn(effectBattler) || BattlerJustSwitchedIn(effectBattler)))
         return FALSE;
 
     // Don't apply chargeTurnOnly effects here
