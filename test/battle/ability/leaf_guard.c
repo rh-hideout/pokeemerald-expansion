@@ -141,7 +141,7 @@ SINGLE_BATTLE_TEST("Leaf Guard prevents Rest during sun (Gen 5+)")
         }
         else {
             STATUS_ICON(player, sleep: TRUE);
-            ANIMATION(ANIM_TYPE_MOVE, MOVE_REST, player);
+            ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, player);
             HP_BAR(player);
         }
     }
@@ -164,7 +164,7 @@ SINGLE_BATTLE_TEST("Leaf Guard doesn't prevent Rest if Cloud Nine/Air Lock is on
         TURN { MOVE(opponent, MOVE_SUNNY_DAY); MOVE(player, MOVE_REST); }
     } SCENE {
         STATUS_ICON(player, sleep: TRUE);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_REST, player);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, player);
         HP_BAR(player);
     }
 }

@@ -44,14 +44,15 @@ void CB2_EndSpecialTrainerBattle(void)
         CopyEReaderTrainerFarewellMessage();
         break;
     case SPECIAL_BATTLE_MULTI:
-        if (!AreMultiPartiesFullTeams())
+        if (AreMultiPartiesHalfTeams())
         {
-            for (i = 0; i < 3; i++)
+            for (i = 0; i < MULTI_PARTY_SIZE; i++)
             {
                 if (GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES))
                     gSaveBlock1Ptr->playerParty[i] = gParties[B_TRAINER_PLAYER][i];
             }
         }
+        gSpecialVar_Result = gBattleOutcome;
         break;
     }
 

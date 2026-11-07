@@ -253,7 +253,7 @@ static void BXPY_ErrorCheck_ClauseSpecialPokemon(void)
         if (species == SPECIES_NONE || species == SPECIES_EGG)
             continue;
 
-        if (!gSpeciesInfo[species].isMythical && !gSpeciesInfo[species].isFrontierBanned)
+        if (!gSpeciesInfo[species].isFrontierBanned)
             continue;
 
         bool32 alreadyAdded = FALSE;

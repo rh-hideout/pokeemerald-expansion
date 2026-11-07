@@ -394,18 +394,18 @@ void BattleArena_AddSkillPoints(enum BattlerId battlerAtk)
     {
         if (IsBattlerUnaffectedByMove(battlerDef))
         {
-            if (!(gBattleStruct->moveResultFlags[battlerDef] & MOVE_RESULT_MISSED))
+            if (IsBattlerMoveResultSet(battlerDef, MOVE_RESULT_MISSED))
                 skillPoints[battlerAtk] -= 2;
         }
-        else if ((gBattleStruct->moveResultFlags[battlerDef] & MOVE_RESULT_HIGH_EFFECTIVENESS) && (gBattleStruct->moveResultFlags[battlerDef] & MOVE_RESULT_LOW_EFFECTIVENESS))
+        else if (IsBattlerMoveResultSet(battlerDef, (MOVE_RESULT_HIGH_EFFECTIVENESS | MOVE_RESULT_LOW_EFFECTIVENESS)))
         {
             skillPoints[battlerAtk] += 1;
         }
-        else if (gBattleStruct->moveResultFlags[battlerDef] & MOVE_RESULT_HIGH_EFFECTIVENESS)
+        else if (IsBattlerMoveResultSet(battlerDef, MOVE_RESULT_HIGH_EFFECTIVENESS))
         {
             skillPoints[battlerAtk] += 2;
         }
-        else if (gBattleStruct->moveResultFlags[battlerDef] & MOVE_RESULT_LOW_EFFECTIVENESS)
+        else if (IsBattlerMoveResultSet(battlerDef, MOVE_RESULT_LOW_EFFECTIVENESS))
         {
             skillPoints[battlerAtk] -= 1;
         }

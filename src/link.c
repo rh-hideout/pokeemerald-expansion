@@ -1878,7 +1878,7 @@ u32 LinkMain1(u8 *shouldAdvanceLinkState, u16 *sendCmd, u16 (*recvCmds)[CMD_LENG
     case LINK_STATE_INIT_TIMER:
         InitTimer();
         gLink.state = LINK_STATE_CONN_ESTABLISHED;
-        // fallthrough
+        [[fallthrough]];
     case LINK_STATE_CONN_ESTABLISHED:
         EnqueueSendCmd(sendCmd);
         DequeueRecvCmds(recvCmds);

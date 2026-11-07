@@ -29,7 +29,6 @@ SINGLE_BATTLE_TEST("Synchronize will mirror back non volatile status back at opp
 
 SINGLE_BATTLE_TEST("Synchronize won't show ability pop up if it fails")
 {
-    KNOWN_FAILING; // Message depends on gBattlerTarget and calls MoveEnd; #10696
     GIVEN {
         WITH_CONFIG(B_PARALYZE_ELECTRIC, GEN_6);
         ASSUME(MoveMakesContact(MOVE_TACKLE));
@@ -243,7 +242,7 @@ DOUBLE_BATTLE_TEST("Synchronize activation won't spill over to next status on th
         ASSUME(MoveHasAdditionalEffect(MOVE_MORTAL_SPIN, MOVE_EFFECT_POISON));
         ASSUME(GetSpeciesType(SPECIES_METAGROSS, 0) == TYPE_STEEL || GetSpeciesType(SPECIES_METAGROSS, 1) == TYPE_STEEL);
         ASSUME(GetMoveEffect(MOVE_SKILL_SWAP) == EFFECT_SKILL_SWAP);
-        ASSUME(GetMoveEffect(MOVE_SOAK) == EFFECT_SOAK);
+        ASSUME(GetMoveEffect(MOVE_SOAK) == EFFECT_OVERWRITE_TYPE);
         PLAYER(SPECIES_METAGROSS) { Item(ITEM_LUM_BERRY); }
         PLAYER(SPECIES_ABRA) { Ability(ABILITY_SYNCHRONIZE); }
         OPPONENT(SPECIES_ABRA) { Item(ITEM_LUM_BERRY); Ability(ABILITY_SYNCHRONIZE); }

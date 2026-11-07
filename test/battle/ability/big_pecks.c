@@ -1,4 +1,5 @@
 #include "global.h"
+#include "constants/battle_move_effects.h"
 #include "test/battle.h"
 
 SINGLE_BATTLE_TEST("Big Pecks prevents Defense stage reduction from moves")
@@ -77,7 +78,7 @@ SINGLE_BATTLE_TEST("Big Pecks doesn't prevent Spectral Thief from resetting posi
     GIVEN {
         ASSUME_STAT_CHANGE(MOVE_HARDEN, defense: +1);
         ASSUME(MoveHasAdditionalEffect(MOVE_SPECTRAL_THIEF, MOVE_EFFECT_STEAL_STATS));
-        ASSUME(GetMoveEffect(MOVE_SOAK) == EFFECT_SOAK);
+        ASSUME(GetMoveEffect(MOVE_SOAK) == EFFECT_OVERWRITE_TYPE);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_PIDGEY) { Ability(ABILITY_BIG_PECKS); }
     } WHEN {

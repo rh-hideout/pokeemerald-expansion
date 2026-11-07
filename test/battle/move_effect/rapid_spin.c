@@ -119,10 +119,11 @@ SINGLE_BATTLE_TEST("Rapid Spin blows away Wrap and hazards but doesn't raise Spe
     }
 }
 
-SINGLE_BATTLE_TEST("Sheer Force boosted Rapid Spin doesn't trigger Eject Button or Emergency Exit (Gen 8)")
+SINGLE_BATTLE_TEST("Sheer Force boosted Rapid Spin doesn't trigger Eject Button or Emergency Exit (Gen9-)")
 {
     GIVEN {
-        WITH_CONFIG(B_SPEED_BUFFING_RAPID_SPIN, GEN_8);
+        WITH_CONFIG(B_SPEED_BUFFING_RAPID_SPIN, GEN_9);
+        WITH_CONFIG(B_SHEER_FORCE_TIMING, GEN_9);
         ASSUME(GetMoveEffect(MOVE_RAPID_SPIN) == EFFECT_RAPID_SPIN);
         ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_RAPID_SPIN, self: TRUE, speed: 1);
         ASSUME(GetItemHoldEffect(ITEM_EJECT_BUTTON) == HOLD_EFFECT_EJECT_BUTTON);

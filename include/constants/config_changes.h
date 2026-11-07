@@ -12,6 +12,7 @@
     F(B_WHITEOUT_MONEY,            whiteoutMoney,           (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_LIGHT_BALL_ATTACK_BOOST,   lightBallAttackBoost,    (u32, GEN_COUNT - 1)) \
     F(B_PARALYSIS_CHANCE,          paralysisChance,         (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
+    F(B_HP_RESTORATION_ROUNDING,   hpRestorationRounding,   (u32, GEN_COUNT - 1)) \
     /* Experience settings */ \
     F(B_EXP_CATCH,                 expCatch,                (u32, GEN_COUNT - 1)) \
     F(B_TRAINER_EXP_MULTIPLIER,    trainerExpMultiplier,    (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
@@ -199,7 +200,9 @@
     F(B_INFILTRATOR_SUBSTITUTE,    infiltratorSubstitute,   (u32, GEN_COUNT - 1)) \
     F(B_DANCER_ORDER,              dancerOrder,             (u32, GEN_COUNT - 1)) \
     F(B_UNSEEN_FIST_PIERCING_DRILL,unseenFistPiercingDrill, (u32, GEN_COUNT - 1)) \
-    F(B_SHEER_FORCE_AGAINST_ABILITIES, sheerForceAgainstAbilities, (u32, GEN_COUNT - 1)) \
+    F(B_SHEER_FORCE_TIMING,        sheerForceTiming,        (u32, GEN_COUNT - 1)) \
+    F(B_RUN_AWAY,                  runAway,                 (u32, GEN_COUNT - 1)) \
+    F(B_EMERGENCY_EXIT,            emergencyExit,           (u32, GEN_COUNT - 1)) \
     /* Item settings */ \
     F(B_CONFUSE_BERRIES_HEAL,      confuseBerriesHeal,      (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_X_ITEMS_BUFF,              xItemsBuff,              (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
@@ -219,11 +222,10 @@
     F(B_LURE_BALL_MODIFIER,        lureBallModifier,        (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_HEAVY_BALL_MODIFIER,       heavyBallModifier,       (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_DREAM_BALL_MODIFIER,       dreamBallModifier,       (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
-    F(B_SPORT_BALL_MODIFIER,       sportBallModifier,       (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
-    F(B_SAFARI_BALL_MODIFIER,      safariBallModifier,      (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_FRIEND_BALL_MODIFIER,      friendBallModifier,      (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_SERENE_GRACE_BOOST,        sereneGraceBoost,        (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
-    F(B_IRON_BALL,                 ironBall,                (u32, GEN_COUNT - 1)) \
+    F(B_IRON_BALL,                 ironBall,                (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
+    F(B_QUEUED_SWITCH_TIMINGS,     queuedSwitchTimings,     (u32, GEN_COUNT - 1)) \
     /* Weather settings */ \
     F(B_ABILITY_WEATHER,           abilityWeather,          (u32, GEN_COUNT - 1)) \
     F(B_SANDSTORM_SPDEF_BOOST,     sandstormSpDefBoost,     (u32, GEN_COUNT - 1)) \
@@ -251,6 +253,7 @@
     F(B_USE_FROSTBITE,             useFrostbite,            (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_SANDSTORM_SOLAR_BEAM,      standstormSolarBeam,     (u32, GEN_COUNT - 1)) \
     F(B_MULTI_BATTLE_WHITEOUT,     multiBattleWhiteout,     (u32, GEN_COUNT - 1)) \
+    F(B_FAINTING_KEEPS_FORM,       faintingKeepsForm,       (u32, GEN_COUNT - 1)) \
 
 
 #define POKEMON_CONFIG_DEFINITIONS(F) \

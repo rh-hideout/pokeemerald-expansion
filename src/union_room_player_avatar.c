@@ -271,7 +271,7 @@ static bool32 AnimateUnionRoomPlayerSpawn(s8 *state, u32 leaderId, struct UnionR
         CreateUnionRoomPlayerObjectEvent(leaderId);
         ShowUnionRoomPlayer(leaderId);
         (*state)++;
-        // fallthrough
+        [[fallthrough]];
     case 3: // incorrect?
         if (SetUnionRoomPlayerEnterExitMovement(leaderId, sMovement_UnionPlayerEnter) == TRUE)
             (*state)++;

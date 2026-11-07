@@ -131,13 +131,13 @@ struct Trainer
     enum Item items[MAX_TRAINER_ITEMS];
     struct StartingStatuses startingStatus; // this trainer starts a battle with a given status. see include/constants/battle.h for values
     u8 trainerClass;
-    u16 encounterMusic:4;
+    u16 encounterMusic:5;
     u16 multiTeamSize:1;
     u16 gender:1;
     u16 battleType:2;
     u16 mugshotColor:3;
     u16 partySize:3;
-    u16 padding:2;
+    u16 padding:1;
     enum TrainerPicID trainerPic;
     u8 trainerName[TRAINER_NAME_LENGTH + 1];
     u8 poolSize;
@@ -221,6 +221,8 @@ extern const struct Trainer gTrainers[DIFFICULTY_COUNT][TRAINERS_COUNT];
 extern const struct Trainer gBattlePartners[DIFFICULTY_COUNT][PARTNER_COUNT];
 
 extern const struct TrainerClass gTrainerClasses[TRAINER_CLASS_COUNT];
+
+extern const u16 gTrainerApproachMusicStyles[TRAINER_ENCOUNTER_MUSIC_COUNT];
 
 extern const struct EggData gEggDatas[EGG_ID_COUNT];
 

@@ -19141,8 +19141,9 @@ MatchaGotchaDoubleProjectile:
 
 @@@@@@@@@@@@@@@@@@@@@@@ GEN 1-3 @@@@@@@@@@@@@@@@@@@@@@@
 gBattleAnimMove_None::
-gBattleAnimMove_Count:: @Unused?
 gBattleAnimMove_MirrorMove::
+	end
+	
 gBattleAnimMove_Pound::
 	monbg ANIM_TARGET
 	setalpha 12, 8
@@ -21809,16 +21810,16 @@ gBattleAnimMove_Swagger::
 
 gBattleAnimMove_MilkDrink::
 	monbg ANIM_TARGET
-	createsprite gMilkBottleSpriteTemplate, ANIM_ATTACKER, 2
+	createsprite gMilkBottleSpriteTemplate, ANIM_TARGET, 2
 	delay 40
-	playsewithpan SE_M_CRABHAMMER, SOUND_PAN_ATTACKER
+	playsewithpan SE_M_CRABHAMMER, SOUND_PAN_TARGET
 	delay 12
-	playsewithpan SE_M_CRABHAMMER, SOUND_PAN_ATTACKER
+	playsewithpan SE_M_CRABHAMMER, SOUND_PAN_TARGET
 	delay 20
-	playsewithpan SE_M_CRABHAMMER, SOUND_PAN_ATTACKER
+	playsewithpan SE_M_CRABHAMMER, SOUND_PAN_TARGET
 	waitforvisualfinish
-	createsprite gThinRingExpandingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 1, 0
-	playsewithpan SE_M_MILK_DRINK, SOUND_PAN_ATTACKER
+	createsprite gThinRingExpandingSpriteTemplate, ANIM_TARGET, 3, 0, 0, 1, 0
+	playsewithpan SE_M_MILK_DRINK, SOUND_PAN_TARGET
 	waitforvisualfinish
 	clearmonbg ANIM_TARGET
 	call HealingEffect2
@@ -23093,13 +23094,6 @@ CreateIceSpiral:
 	return
 
 gBattleAnimMove_Rest::
-	playsewithpan SE_M_SNORE, SOUND_PAN_ATTACKER
-	createsprite gSleepLetterZSpriteTemplate, ANIM_ATTACKER, 2, 4, -10, 16, 0, 0
-	delay 20
-	createsprite gSleepLetterZSpriteTemplate, ANIM_ATTACKER, 2, 4, -10, 16, 0, 0
-	delay 20
-	createsprite gSleepLetterZSpriteTemplate, ANIM_ATTACKER, 2, 4, -10, 16, 0, 0
-	waitforvisualfinish
 	end
 
 gBattleAnimMove_Confusion::

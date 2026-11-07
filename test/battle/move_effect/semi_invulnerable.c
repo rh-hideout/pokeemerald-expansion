@@ -283,3 +283,19 @@ SINGLE_BATTLE_TEST("Semi-invulnerable moves apply a status that won't block cert
         HP_BAR(player);
     }
 }
+
+SINGLE_BATTLE_TEST("Semi-invulnerable moves don't error in weather")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_RAIN_DANCE); MOVE(opponent, MOVE_DIG); }
+        TURN { SKIP_TURN(opponent); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_RAIN_DANCE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DIG, opponent);
+        HP_BAR(player);
+    }
+}

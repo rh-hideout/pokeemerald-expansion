@@ -3242,7 +3242,7 @@ static bool8 ClosePromptAfterDeleteAll(void)
         PrintEasyChatStdMessage(MSG_INSTRUCTIONS);
         PrintCurrentPhrase();
         sScreenControl->funcState++;
-        // Fall through
+        [[fallthrough]];
     case 1:
         return IsDma3ManagerBusyWithBgCopy();
     }
@@ -3312,7 +3312,7 @@ static bool8 CloseKeyboard(void)
 
         InitLowerWindowAnim(WINANIM_CLOSE_KEYBOARD);
         sScreenControl->funcState++;
-        // Fall through
+        [[fallthrough]];
     case 2:
         if (!UpdateLowerWindowAnim())
             sScreenControl->funcState++;
@@ -3387,7 +3387,7 @@ static bool8 GroupNamesScrollDown(void)
     case 0:
         InitLowerWindowScroll(1, 4);
         sScreenControl->funcState++;
-        // Fall through
+        [[fallthrough]];
     case 1:
         if (!UpdateLowerWindowScroll())
         {
@@ -3408,7 +3408,7 @@ static bool8 GroupNamesScrollUp(void)
     case 0:
         InitLowerWindowScroll(-1, 4);
         sScreenControl->funcState++;
-        // Fall through
+        [[fallthrough]];
     case 1:
         if (!UpdateLowerWindowScroll())
         {

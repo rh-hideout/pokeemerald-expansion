@@ -251,6 +251,32 @@ struct NPCFollower
     u8 battlePartner; // If you have more than 255 total battle partners defined, change this to a u16
 };
 
+#include "constants/safaris.h"
+
+struct Pokeblock
+{
+    u8 color;
+    u8 spicy;
+    u8 dry;
+    u8 sweet;
+    u8 bitter;
+    u8 sour;
+    u8 feel;
+};
+
+struct PokeblockFeeder
+{
+    s16 x;
+    s16 y;
+    s8 mapNum;
+    s8 mapGroup;
+    u8 stepCounter;
+    u8 padding;
+    struct Pokeblock pokeblock;
+};
+
+#define NUM_POKEBLOCK_FEEDERS 10
+
 #include "constants/items.h"
 #define ITEM_FLAGS_COUNT ((ITEMS_COUNT / 8) + ((ITEMS_COUNT % 8) ? 1 : 0))
 
@@ -272,6 +298,16 @@ struct SaveBlock3
 #if APRICORN_TREE_COUNT > 0
     u8 apricornTrees[NUM_APRICORN_TREE_BYTES];
 #endif
+#if OW_ALLOW_SAFARI_SAVING
+    enum SafariEvents activeSafari:8;
+    u8 numSafariBalls;
+    u8 safariZoneCaughtMons;
+    u8 safariZonePkblkUses;
+    u16 safariZoneStepCounter;
+#if !OW_DISABLE_POKEFEEDERS
+    struct PokeblockFeeder pokeblockFeeders[NUM_POKEBLOCK_FEEDERS];
+#endif // !OW_DISABLE_POKEFEEDERS
+#endif // OW_ALLOW_SAFARI_SAVING
 }; /* max size 1624 bytes */
 
 extern struct SaveBlock3 *gSaveBlock3Ptr;
@@ -677,17 +713,6 @@ struct ItemSlot
 {
     enum Item itemId;
     u16 quantity;
-};
-
-struct Pokeblock
-{
-    u8 color;
-    u8 spicy;
-    u8 dry;
-    u8 sweet;
-    u8 bitter;
-    u8 sour;
-    u8 feel;
 };
 
 struct Roamer
@@ -1220,6 +1245,20 @@ struct MapPosition
     s16 x;
     s16 y;
     s8 elevation;
+};
+
+struct FacilityMonGenerator
+{
+    const struct TrainerMon *facilityMonList;
+    const struct BattleFrontierTrainer *frontierTrainerList;
+    u32 otId;
+    u32 fixedIV:6;
+    u32 partyLevel:7;
+    u32 facility:4;
+    u32 partySize:3;
+    u32 battleMode:3;
+    enum FrontierLevelMode lvlMode:2;
+    u32 padding:7;
 };
 
 #if TESTING

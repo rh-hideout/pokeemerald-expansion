@@ -560,7 +560,7 @@ int EReaderHandleTransfer(u8 mode, size_t size, const void *data, void *recvBuff
         OpenSerial32();
         SetUpTransferManager(size, data, recvBuffer);
         sSendRecvMgr.state = EREADER_XFR_STATE_TRANSFER;
-        // fall through
+        [[fallthrough]];
     case EREADER_XFR_STATE_TRANSFER:
         if (gShouldAdvanceLinkState == 2)
         {

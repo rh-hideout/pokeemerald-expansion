@@ -132,6 +132,7 @@ static void WallyHandleActions(enum BattlerId battler)
     case 0:
         gBattleStruct->wallyWaitFrames = B_WAIT_TIME_LONG;
         gBattleStruct->wallyBattleState++;
+        [[fallthrough]];
     case 1:
         if (--gBattleStruct->wallyWaitFrames == 0)
         {
@@ -220,7 +221,7 @@ static void Intro_TryShinyAnimShowHealthbox(enum BattlerId battler)
         && gSprites[gBattleControllerData[battler]].callback == SpriteCallbackDummy
         && gSprites[gBattlerSpriteIds[battler]].callback == SpriteCallbackDummy)
     {
-        if (IsDoubleBattle() && !(gBattleTypeFlags & BATTLE_TYPE_MULTI))
+        if (IsDoubleBattle() && !HasAnyBattleFlags(BATTLE_TYPE_MULTI))
         {
             DestroySprite(&gSprites[gBattleControllerData[GetPartnerBattler(battler)]]);
             UpdateHealthboxAttribute(gHealthboxSpriteIds[GetPartnerBattler(battler)], GetBattlerMon(GetPartnerBattler(battler)), HEALTHBOX_ALL);
@@ -265,7 +266,7 @@ static void Intro_WaitForShinyAnimAndHealthbox(enum BattlerId battler)
 void WallyBufferExecCompleted(enum BattlerId battler)
 {
     gBattlerControllerFuncs[battler] = WallyBufferRunCommand;
-    if (gBattleTypeFlags & BATTLE_TYPE_LINK)
+    if (HasAnyBattleFlags(BATTLE_TYPE_LINK))
     {
         u8 playerId = GetMultiplayerId();
 
@@ -382,6 +383,6 @@ static void WallyHandleEndLinkBattle(enum BattlerId battler)
     BeginFastPaletteFade(3);
     BtlController_Complete(battler);
 
-    if (!(gBattleTypeFlags & BATTLE_TYPE_IS_MASTER) && gBattleTypeFlags & BATTLE_TYPE_LINK)
+    if (!HasAnyBattleFlags(BATTLE_TYPE_IS_MASTER) && HasAnyBattleFlags(BATTLE_TYPE_LINK))
         gBattlerControllerFuncs[battler] = SetBattleEndCallbacks;
 }

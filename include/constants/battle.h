@@ -121,7 +121,7 @@ enum BattleSide
 #define BATTLE_TYPE_PIKE               (1 << 20)
 #define BATTLE_TYPE_PYRAMID            (1 << 21)
 #define BATTLE_TYPE_INGAME_PARTNER     (1 << 22)
-#define BATTLE_TYPE_TOWER_LINK_MULTI   (1 << 23)
+#define BATTLE_TYPE_23                 (1 << 23)
 #define BATTLE_TYPE_RECORDED           (1 << 24)
 #define BATTLE_TYPE_RECORDED_LINK      (1 << 25)
 #define BATTLE_TYPE_TRAINER_HILL       (1 << 26)
@@ -133,21 +133,11 @@ enum BattleSide
 #define BATTLE_TYPE_RECORDED_IS_MASTER (1 << 31)
 #define BATTLE_TYPE_FRONTIER                (BATTLE_TYPE_BATTLE_TOWER | BATTLE_TYPE_DOME | BATTLE_TYPE_PALACE | BATTLE_TYPE_ARENA | BATTLE_TYPE_FACTORY | BATTLE_TYPE_PIKE | BATTLE_TYPE_PYRAMID)
 #define BATTLE_TYPE_FRONTIER_NO_PYRAMID     (BATTLE_TYPE_BATTLE_TOWER | BATTLE_TYPE_DOME | BATTLE_TYPE_PALACE | BATTLE_TYPE_ARENA | BATTLE_TYPE_FACTORY | BATTLE_TYPE_PIKE)
+#define BATTLE_TYPE_TOWER_LINK_MULTI        (BATTLE_TYPE_BATTLE_TOWER | BATTLE_TYPE_LINK | BATTLE_TYPE_MULTI)
 #define BATTLE_TYPE_RECORDED_INVALID        ((BATTLE_TYPE_LINK | BATTLE_TYPE_SAFARI | BATTLE_TYPE_FIRST_BATTLE                  \
                                              | BATTLE_TYPE_CATCH_TUTORIAL | BATTLE_TYPE_ROAMER | BATTLE_TYPE_EREADER_TRAINER    \
                                              | BATTLE_TYPE_LEGENDARY                                                            \
                                              | BATTLE_TYPE_RECORDED | BATTLE_TYPE_TRAINER_HILL | BATTLE_TYPE_SECRET_BASE))
-
-#define WILD_DOUBLE_BATTLE                  ((gBattleTypeFlags & BATTLE_TYPE_DOUBLE && !(gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_TRAINER))))
-#define RECORDED_WILD_BATTLE                ((gBattleTypeFlags & BATTLE_TYPE_RECORDED) && !(gBattleTypeFlags & (BATTLE_TYPE_TRAINER | BATTLE_TYPE_FRONTIER)))
-#define BATTLE_TWO_VS_ONE_OPPONENT          ((gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER && TRAINER_BATTLE_PARAM.opponentB == 0xFFFF))
-#define BATTLE_TYPE_HAS_AI                  (BATTLE_TYPE_TRAINER | BATTLE_TYPE_FIRST_BATTLE | BATTLE_TYPE_SAFARI | BATTLE_TYPE_ROAMER | BATTLE_TYPE_INGAME_PARTNER)
-#define BATTLE_TYPE_MORE_THAN_TWO_BATTLERS  (BATTLE_TYPE_DOUBLE | BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_TWO_OPPONENTS)
-#define BATTLE_TYPE_PLAYER_HAS_PARTNER      (BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_TOWER_LINK_MULTI)
-
-// Multibattle test composite flags
-#define BATTLE_MULTI_TEST                   (BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_TRAINER | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_MULTI | BATTLE_TYPE_TWO_OPPONENTS)
-#define BATTLE_TWO_VS_ONE_TEST              (BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_TRAINER | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_MULTI)
 
 #define RIVAL_BATTLE_HEAL_AFTER  1
 #define RIVAL_BATTLE_TUTORIAL    3
@@ -197,6 +187,13 @@ enum VolatileFlags
     V_BATON_PASSABLE = (1 << 0),
 };
 
+enum CriticalHitBoost
+{
+    CRIT_BOOST_NONE,
+    CRIT_BOOST_ONE_STAGE,
+    CRIT_BOOST_TWO_STAGES,
+};
+
 /* Volatile status ailments
  * These are removed after exiting the battle or switching
  *  Enum,                                   Type                           Type, max value, flags */
@@ -208,6 +205,7 @@ enum VolatileFlags
     F(VOLATILE_BIDE,                        bideTurns,                     (u32, 3)) \
     F(VOLATILE_RAMPAGE_TURNS,               rampageTurns,                  (u32, B_RAMPAGE_TURNS + 1)) \
     F(VOLATILE_MULTIPLETURNS,               multipleTurns,                 (u32, 1)) \
+    F(VOLATILE_CHARGE_TURN,                 chargeTurn,                    (u32, 1)) \
     F(VOLATILE_SKY_DROP_TARGET,             skyDropTarget,                 (enum BattlerId, MAX_BATTLERS_COUNT)) \
     F(VOLATILE_CONFUSE_AFTER_DROP,          confuseAfterDrop,              (u32, 1)) \
     F(VOLATILE_WRAPPED,                     wrapped,                       (u32, 1)) \
@@ -223,11 +221,11 @@ enum VolatileFlags
     F(VOLATILE_SUBSTITUTE,                  substitute,                    (u32, 1), V_BATON_PASSABLE) \
     F(VOLATILE_DESTINY_BOND,                destinyBond,                   (u32, 2)) \
     F(VOLATILE_ESCAPE_PREVENTION,           escapePrevention,              (u32, 1), V_BATON_PASSABLE) \
+    F(VOLATILE_JAW_LOCK,                    jawLock,                       (u32, MAX_BATTLERS_COUNT)) \
     F(VOLATILE_NIGHTMARE,                   nightmare,                     (u32, 1)) \
     F(VOLATILE_CURSED,                      cursed,                        (u32, 1), V_BATON_PASSABLE) \
     F(VOLATILE_FORESIGHT,                   foresight,                     (u32, 1)) \
-    F(VOLATILE_DRAGON_CHEER,                dragonCheer,                   (u32, 1), V_BATON_PASSABLE) \
-    F(VOLATILE_FOCUS_ENERGY,                focusEnergy,                   (u32, 1), V_BATON_PASSABLE) \
+    F(VOLATILE_CRITICAL_HIT_BOOST,          criticalHitBoost,              (enum CriticalHitBoost, CRIT_BOOST_TWO_STAGES), V_BATON_PASSABLE) \
     F(VOLATILE_BONUS_CRIT_STAGES,           bonusCritStages,               (u32, 4)) \
     F(VOLATILE_SEMI_INVULNERABLE,           semiInvulnerable,              (enum SemiInvulnerableState, SEMI_INVULNERABLE_COUNT)) \
     F(VOLATILE_ELECTRIFIED,                 electrified,                   (u32, 1)) \
@@ -297,7 +295,7 @@ enum VolatileFlags
     F(VOLATILE_TRUANT_SWITCH_IN_HACK,       truantSwitchInHack,            (u32, 1)) \
     F(VOLATILE_TAR_SHOT,                    tarShot,                       (u32, 1)) \
     F(VOLATILE_OCTOLOCK,                    octolock,                      (u32, 1)) \
-    F(VOLATILE_CUD_CHEW,                    cudChew,                       (u32, 1)) \
+    F(VOLATILE_CUD_CHEW,                    cudChewTimer,                  (u32, 2)) \
     F(VOLATILE_WEATHER_ABILITY_DONE,        weatherAbilityDone,            (u32, 1)) \
     F(VOLATILE_TERRAIN_ABILITY_DONE,        terrainAbilityDone,            (u32, 1)) \
     F(VOLATILE_SYRUP_BOMB_IS_SHINY,         syrupBombIsShiny,              (u32, 1)) \
@@ -435,6 +433,13 @@ enum BattleTerrain
     B_TERRAIN_COUNT,
 };
 
+enum BattleRoom
+{
+    B_ROOM_MAGIC,
+    B_ROOM_TRICK,
+    B_ROOM_WONDER,
+};
+
 // Field affecting statuses.
 #define STATUS_FIELD_NONE                           0
 #define STATUS_FIELD_MAGIC_ROOM                     (1 << 0)
@@ -446,32 +451,36 @@ enum BattleTerrain
 #define STATUS_FIELD_ION_DELUGE                     (1 << 6)
 #define STATUS_FIELD_FAIRY_LOCK                     (1 << 7)
 
-// Flags describing move's result
-#define MOVE_RESULT_MISSED                 (1 << 0)
-#define MOVE_RESULT_SUPER_EFFECTIVE        (1 << 1)
-#define MOVE_RESULT_NOT_VERY_EFFECTIVE     (1 << 2)
-#define MOVE_RESULT_DOESNT_AFFECT_FOE      (1 << 3)
-#define MOVE_RESULT_ONE_HIT_KO             (1 << 4)
-#define MOVE_RESULT_ONE_HIT_KO_NO_AFFECT   (1 << 5)
-#define MOVE_RESULT_ONE_HIT_KO_STURDY      (1 << 6)
-#define MOVE_RESULT_FAILED                 (1 << 7)
-#define MOVE_RESULT_FOE_ENDURED            (1 << 8)
-#define MOVE_RESULT_FOE_HUNG_ON            (1 << 9)
-#define MOVE_RESULT_STURDIED               (1 << 10)
-#define MOVE_RESULT_FOE_ENDURED_AFFECTION  (1 << 11)
-#define MOVE_RESULT_ATTEMPT_STAT_CHANGE    (1 << 12)
-#define MOVE_RESULT_STAT_CHANGE_PREVENTED  (1 << 13)
-#define MOVE_RESULT_MIRROR_ARMOR_PENDING   (1 << 14)
-#define MOVE_RESULT_STAT_CHANGED           (1 << 15)
-#define MOVE_RESULT_PROTECTED              (1 << 16)
-#define MOVE_RESULT_EXTREMELY_EFFECTIVE    (1 << 17)
-#define MOVE_RESULT_MOSTLY_INEFFECTIVE     (1 << 18)
-#define MOVE_RESULT_NOT_PRESENT            (1 << 19) // Battler not present at the start of move resolution
-#define MOVE_RESULT_AVOIDED_ATTACK         (MOVE_RESULT_MISSED | MOVE_RESULT_FAILED | MOVE_RESULT_PROTECTED)
-#define MOVE_RESULT_NO_EFFECT              (MOVE_RESULT_MISSED | MOVE_RESULT_FAILED | MOVE_RESULT_PROTECTED | MOVE_RESULT_DOESNT_AFFECT_FOE)
-#define MOVE_RESULT_HIGH_EFFECTIVENESS     (MOVE_RESULT_SUPER_EFFECTIVE | MOVE_RESULT_EXTREMELY_EFFECTIVE)
-#define MOVE_RESULT_LOW_EFFECTIVENESS      (MOVE_RESULT_NOT_VERY_EFFECTIVE | MOVE_RESULT_MOSTLY_INEFFECTIVE)
-#define MOVE_RESULT_INVALID_TARGET         (MOVE_RESULT_NO_EFFECT | MOVE_RESULT_NOT_PRESENT)
+enum MoveResultFlags
+{
+    MOVE_RESULT_MISSED                 = (1 << 0),
+    MOVE_RESULT_SUPER_EFFECTIVE        = (1 << 1),
+    MOVE_RESULT_NOT_VERY_EFFECTIVE     = (1 << 2),
+    MOVE_RESULT_DOESNT_AFFECT_FOE      = (1 << 3),
+    MOVE_RESULT_ONE_HIT_KO_NO_AFFECT   = (1 << 4),
+    MOVE_RESULT_ONE_HIT_KO_STURDY      = (1 << 5),
+    MOVE_RESULT_FAILED                 = (1 << 6),
+    MOVE_RESULT_FOE_ENDURED            = (1 << 7),
+    MOVE_RESULT_FOE_HUNG_ON            = (1 << 8),
+    MOVE_RESULT_STURDIED               = (1 << 9),
+    MOVE_RESULT_FOE_ENDURED_AFFECTION  = (1 << 10),
+    MOVE_RESULT_ATTEMPT_STAT_CHANGE    = (1 << 11),
+    MOVE_RESULT_STAT_CHANGE_PREVENTED  = (1 << 12),
+    MOVE_RESULT_MIRROR_ARMOR_PENDING   = (1 << 13),
+    MOVE_RESULT_STAT_CHANGED           = (1 << 14),
+    MOVE_RESULT_PROTECTED              = (1 << 15),
+    MOVE_RESULT_EXTREMELY_EFFECTIVE    = (1 << 16),
+    MOVE_RESULT_MOSTLY_INEFFECTIVE     = (1 << 17),
+    MOVE_RESULT_NOT_TARGETED           = (1 << 18),
+    MOVE_RESULT_IGNORE_SELF            = (1 << 19),
+    MOVE_RESULT_VALID_STATUS_TARGET    = (1 << 20),
+
+    MOVE_RESULT_AVOIDED_ATTACK         = (MOVE_RESULT_MISSED | MOVE_RESULT_FAILED | MOVE_RESULT_PROTECTED),
+    MOVE_RESULT_NO_EFFECT              = (MOVE_RESULT_MISSED | MOVE_RESULT_FAILED | MOVE_RESULT_PROTECTED | MOVE_RESULT_DOESNT_AFFECT_FOE),
+    MOVE_RESULT_HIGH_EFFECTIVENESS     = (MOVE_RESULT_SUPER_EFFECTIVE | MOVE_RESULT_EXTREMELY_EFFECTIVE),
+    MOVE_RESULT_LOW_EFFECTIVENESS      = (MOVE_RESULT_NOT_VERY_EFFECTIVE | MOVE_RESULT_MOSTLY_INEFFECTIVE),
+    MOVE_RESULT_INVALID_TARGET         = (MOVE_RESULT_NO_EFFECT | MOVE_RESULT_NOT_TARGETED),
+};
 
 // These select from gBattleWeather, which is a u16.
 enum BattleWeather
@@ -627,7 +636,7 @@ enum MoveTarget
     TARGET_USER,
     TARGET_ALLY,
     TARGET_USER_AND_ALLY,
-    TARGET_USER_OR_ALLY, // Acupressure
+    TARGET_USER_OR_ALLY,
     TARGET_FOES_AND_ALLY,
     TARGET_FIELD, // Moves that target the field, e.g. Rain Dance
     TARGET_OPPONENTS_FIELD, // Targets all other battlers and self, e.g. Teatime

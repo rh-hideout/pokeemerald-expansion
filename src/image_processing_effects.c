@@ -82,6 +82,7 @@ void ApplyImageProcessingEffects(struct ImageProcessingContext *context)
         ApplyImageEffect_BlackOutline();
         ApplyImageEffect_Invert();
         ApplyImageEffect_BlackAndWhite();
+        [[fallthrough]];
     case IMAGE_EFFECT_INVERT:
         ApplyImageEffect_Invert();
         break;

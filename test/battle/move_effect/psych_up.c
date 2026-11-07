@@ -96,8 +96,8 @@ SINGLE_BATTLE_TEST("Psych Up does not copy the target's critical hit ratio (Gen5
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PSYCH_UP, player);
         MESSAGE("Tornadus copied the opposing Landorus's stat changes!");
     } THEN {
-        EXPECT(opponent->volatiles.focusEnergy);
-        EXPECT(!player->volatiles.focusEnergy);
+        EXPECT(opponent->volatiles.criticalHitBoost);
+        EXPECT(!player->volatiles.criticalHitBoost);
     }
 }
 
@@ -116,7 +116,7 @@ SINGLE_BATTLE_TEST("Psych Up copies the target's critical hit ratio (Gen6+)")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PSYCH_UP, player);
         MESSAGE("Tornadus copied the opposing Landorus's stat changes!");
     } THEN {
-        EXPECT(opponent->volatiles.focusEnergy);
-        EXPECT(player->volatiles.focusEnergy);
+        EXPECT(opponent->volatiles.criticalHitBoost);
+        EXPECT(player->volatiles.criticalHitBoost);
     }
 }

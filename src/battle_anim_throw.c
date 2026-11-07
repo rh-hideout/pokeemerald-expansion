@@ -713,7 +713,7 @@ void AnimTask_ThrowBall_StandingTrainer(u8 taskId)
     u8 subpriority;
     u8 spriteId;
 
-    if (gBattleTypeFlags & BATTLE_TYPE_CATCH_TUTORIAL)
+    if (HasAnyBattleFlags(BATTLE_TYPE_CATCH_TUTORIAL))
     {
         x = 32;
         y = 11;
@@ -1131,7 +1131,7 @@ static void SpriteCB_Ball_Wobble_Step(struct Sprite *sprite)
             ChangeSpriteAffineAnim(sprite, BALL_ROTATE_LEFT);
         else
             ChangeSpriteAffineAnim(sprite, BALL_ROTATE_RIGHT);
-        // fall through
+        [[fallthrough]];
     case BALL_ROLL_3:
         if (gBattleSpritesDataPtr->animationData->ballSubpx > 0xFF)
         {

@@ -448,7 +448,7 @@ static enum StatChangeResult IncreaseStat(struct BattleCalcValues *cv, struct St
 
 static void StatChanged(struct BattleCalcValues *cv, struct StatChange *st, bool32 isMaxStage)
 {
-    gBattleStruct->moveResultFlags[cv->battlerDef] |= MOVE_RESULT_STAT_CHANGED;
+    AddBattlerMoveResultFlag(cv->battlerDef, MOVE_RESULT_STAT_CHANGED);
     gBattleScripting.battler = cv->battlerDef;
     gBattleMons[cv->battlerDef].statStages[st->stat] += st->stage;
 
@@ -609,7 +609,7 @@ static bool32 IsFlowerVeilBlocked(struct BattleCalcValues *cv, struct StatChange
 
     if (!st->onlyChecking)
     {
-        st->script = BattleScript_FlowerVeilProtectsRet;
+        st->script = BattleScript_FlowerVeilProtects;
         gBattleScripting.battler = cv->battlerDef;
         gBattlerAbility = flowerVeilBattler;
         gLastUsedAbility = ABILITY_FLOWER_VEIL;
@@ -732,7 +732,7 @@ static bool32 IsMirrorArmorReflected(struct BattleCalcValues *cv, struct StatCha
     if (st->onlyChecking && !st->ignoreCertainFailure)
         return TRUE;
 
-    if (gBattleStruct->moveResultFlags[cv->battlerDef] & MOVE_RESULT_MIRROR_ARMOR_PENDING || !st->ignoreCertainFailure)
+    if (IsBattlerMoveResultSet(cv->battlerDef, MOVE_RESULT_MIRROR_ARMOR_PENDING) || !st->ignoreCertainFailure)
     {
         st->silentFailure = FALSE; // Mirror Armor still deflects damaging move stat drops
         st->script = BattleScript_MirrorArmorReflect;
@@ -824,6 +824,7 @@ static bool32 AbilityPreventsSpecificStatDrop(enum Ability ability, enum Stat st
     case ABILITY_ILLUMINATE:
         if (B_ILLUMINATE_EFFECT < GEN_9)
             return FALSE;
+        [[fallthrough]];
     case ABILITY_KEEN_EYE:
     case ABILITY_MINDS_EYE:
         return stat == STAT_ACC;
@@ -1009,7 +1010,7 @@ static void SetAdditionalEffectsOnStatChange(struct BattleCalcValues *cv, struct
         gBattleMons[cv->battlerDef].volatiles.defenseCurl = TRUE;
         break;
     case EFFECT_MINIMIZE: // Write a tests that fails on max stat
-        if (gBattleStruct->moveResultFlags[cv->battlerDef] & MOVE_RESULT_STAT_CHANGED)
+        if (IsBattlerMoveResultSet(cv->battlerDef, MOVE_RESULT_STAT_CHANGED))
             gBattleMons[cv->battlerDef].volatiles.minimize = TRUE;
         break;
     case EFFECT_NO_RETREAT:
@@ -1021,7 +1022,7 @@ static void SetAdditionalEffectsOnStatChange(struct BattleCalcValues *cv, struct
         }
         break;
     case EFFECT_AUTOTOMIZE:
-        if (gBattleStruct->moveResultFlags[cv->battlerDef] & MOVE_RESULT_STAT_CHANGED
+        if (IsBattlerMoveResultSet(cv->battlerDef, MOVE_RESULT_STAT_CHANGED)
          && GetBattlerWeight(cv->battlerDef, cv->abilities[cv->battlerDef], cv->holdEffects[cv->battlerDef]) > 1)
         {
             gBattleMons[cv->battlerDef].volatiles.autotomizeCount++;
@@ -1029,7 +1030,7 @@ static void SetAdditionalEffectsOnStatChange(struct BattleCalcValues *cv, struct
         }
         break;
     case EFFECT_STAT_CHANGE_HALF_HP:
-        if (gBattleStruct->moveResultFlags[cv->battlerDef] & MOVE_RESULT_STAT_CHANGED)
+        if (IsBattlerMoveResultSet(cv->battlerDef, MOVE_RESULT_STAT_CHANGED))
             st->moveScript = BattleScript_StatChangeHalfHp;
         break;
     default:
