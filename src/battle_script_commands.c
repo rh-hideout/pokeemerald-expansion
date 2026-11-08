@@ -5539,8 +5539,8 @@ static void Cmd_forcerandomswitch(void)
             if (GetMonData(&party[slot], MON_DATA_HP) == 0
              || GetMonData(&party[slot], MON_DATA_SPECIES) == SPECIES_NONE
              || GetMonData(&party[slot], MON_DATA_IS_EGG)
-             || (slot == gBattlerPartyIndexes[battlerIn1] && BattlersShareParty(battlerIn1 , battlerIn1))
-             || (slot == gBattlerPartyIndexes[battlerIn2] && BattlersShareParty(battlerIn1 , battlerIn2)))
+             || (slot == gBattlerPartyIndexes[battlerIn1])
+             || (slot == gBattlerPartyIndexes[battlerIn2] && BattlersShareParty(battlerIn1, battlerIn2)))
             {
                 continue;
             }
