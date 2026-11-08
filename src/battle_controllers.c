@@ -297,7 +297,7 @@ static void InitBtlControllersInternal(void)
             else if (gBattleTypeFlags & BATTLE_TYPE_CATCH_TUTORIAL)
                 SetBattlerControllerFunc(GetBattlerPosition(B_BATTLER_0), IS_FRLG ? SetControllerToOakOrOldMan : SetControllerToWally);
             else if (IS_FRLG && (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE))
-                SetBattlerControllerFunc(gBattlerPositions[B_BATTLER_0], SetControllerToOakOrOldMan);
+                SetBattlerControllerFunc(GetBattlerPosition(B_BATTLER_0), SetControllerToOakOrOldMan);
             else if (isAIvsAI)
                 SetBattlerControllerFunc(GetBattlerPosition(B_BATTLER_0), SetControllerToPlayerPartner);
             else
@@ -488,9 +488,7 @@ static inline bool32 IsControllerSafari(enum BattlerId battler)
 
 bool32 ShouldUpdateTvData(enum BattlerId battler)
 {
-    return (IsControllerPlayer(battler)
-         || IsControllerLinkPartner(battler)
-         || IsControllerLinkOpponent(battler));
+    return (IsControllerPlayer(battler) || BattlerIsLink(battler));
 }
 
 static void SetBattlePartyIds(void)
@@ -2401,7 +2399,7 @@ void BtlController_HandleLoadMonSprite(enum BattlerId battler)
     if (!(gBattleTypeFlags & BATTLE_TYPE_GHOST))
         SetBattlerShadowSpriteCallback(battler, species);
 
-    if (IsControllerOpponent(battler) || IsControllerLinkOpponent(battler) || IsControllerRecordedOpponent(battler))
+    if (BattlerIsOpponent(battler))
         gBattlerControllerFuncs[battler] = TryShinyAnimAfterMonAnim;
     else
         gBattlerControllerFuncs[battler] = WaitForMonAnimAfterLoad;
@@ -2409,11 +2407,7 @@ void BtlController_HandleLoadMonSprite(enum BattlerId battler)
 
 void BtlController_HandleSwitchInAnim(enum BattlerId battler)
 {
-    bool32 isPlayerSide = (IsControllerPlayer(battler)
-                        || IsControllerPlayerPartner(battler)
-                        || IsControllerRecordedPlayer(battler)
-                        || IsControllerRecordedPartner(battler)
-                        || IsControllerLinkPartner(battler));
+    bool32 isPlayerSide = (BattlerIsPlayer(battler) || BattlerIsPartner(battler));
 
     if (IsControllerPlayer(battler))
     {
@@ -2734,8 +2728,7 @@ void BtlController_HandleHealthBarUpdate(enum BattlerId battler)
     else
     {
         SetBattleBarStruct(battler, gHealthboxSpriteIds[battler], maxHP, 0, hpVal);
-        if (IsControllerPlayer(battler)
-         || IsControllerRecordedPlayer(battler)
+        if (BattlerIsPlayer(battler)
          || IsControllerRecordedPartner(battler)
          || IsControllerOakOldMan(battler)
          || IsControllerWally(battler))
