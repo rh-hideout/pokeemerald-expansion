@@ -3158,9 +3158,7 @@ void BtlController_HandleSwitchInShowSubstitute(enum BattlerId battler)
         if (gBattleSpritesDataPtr->battlerData[battler].behindSubstitute)
             InitAndLaunchSpecialAnimation(battler, battler, battler, B_ANIM_MON_TO_SUBSTITUTE);
 
-        if (IsControllerOpponent(battler)
-         && IsControllerLinkOpponent(battler)
-         && IsControllerRecordedOpponent(battler))
+        if (BattlerIsOpponent(battler))
             gBattlerControllerFuncs[battler] = BtlController_HandleSwitchInSoundAndEnd;
         else
             gBattlerControllerFuncs[battler] = BtlController_HandleSwitchInWaitAndEnd;
