@@ -132,11 +132,11 @@ static void Overview_SetBgTile(s32 x, u32 y, u32 tileNum, u32 attrs);
 static void BackdropLoadBaseTilemap(void);
 static void LoadBackdropAssets(void);
 static void Overview_ComputeTrainerNameBoxLayout(u32 labelWidth, u32 centerRow, u32 *outTextLenTiles, u32 *outHeaderX, u32 *outHeaderWidth);
-static void Overview_DrawStatusCard(u32 x, u32 y, enum BattlerId battler, bool32 isActive, bool32 isBottomRow);
+static void Overview_DrawStatusCard(u32 x, u32 y, enum BattlerId battler, bool32 isActive);
 static void DrawHeaderBoxRow(u32 cornerLeftTile, u32 fillTile, u32 cornerRightTile, u32 baseAttrs, s32 x, u32 y, u32 width);
 static void Overview_DrawBackground(void);
 static void Overview_DrawTrainerNameBox(enum BattleSide side);
-static void Overview_DrawTrainerNameBoxHelper(u32 labelWidth, u32 top, u32 centerRow, u8 side);
+static void Overview_DrawTrainerNameBoxHelper(u32 labelWidth, u32 top, u32 centerRow, enum BattleSide side);
 static void Overview_FillBgRect(u32 x, u32 y, u32 width, u32 height, u32 tileNum, u32 attrs);
 static void Overview_DrawCardBackground(const struct BattleInfoCard *card, bool32 isActive);
 static void Overview_UpdateCardSelectionHighlight(u32 oldSelectedIndex);
@@ -151,7 +151,7 @@ static void Overview_FlushLabelWindow(u32 windowId);
 static void Overview_DrawMultiTrainerNameBoxes(enum BattleSide side);
 static void Overview_ComputeHeaderBoxAtCard(const struct BattleInfoCard *card, const u8 *label, u32 *outHeaderX, u32 *outWidth);
 static void Overview_DrawHeaderBoxAtCard(const struct BattleInfoCard *card, u32 top, const u8 *label);
-static void Overview_DrawHeaderBoxWidth(s32 x, u32 y, u32 width, u8 side);
+static void Overview_DrawHeaderBoxWidth(s32 x, u32 y, u32 width, enum BattleSide side);
 static const u8 *GetTrainerNameForBattler(enum BattlerId battler);
 static void Overview_CreateWindows(void);
 static void Overview_ClearWindows(void);
@@ -1993,7 +1993,7 @@ static void Detail_RefreshTypeIcons(void)
 
 static void Detail_DrawBoxRow(void)
 {
-    u8 side = GetBattlerSide(GetSelectedBattler());
+    enum BattleSide side = GetBattlerSide(GetSelectedBattler());
     u32 width = 15;
 
     if (side == B_SIDE_OPPONENT)
@@ -2003,7 +2003,9 @@ static void Detail_DrawBoxRow(void)
         for (u32 i = 10; i < 19; i++)
             DrawHeaderBoxRow(B_INFO_BG_TILE_DETAIL_OPPONENT_SIDE_LEFT, B_INFO_BG_TILE_DETAIL_OPPONENT_FILL, B_INFO_BG_TILE_DETAIL_OPPONENT_SIDE_RIGHT, 0, 1, i, width);
         DrawHeaderBoxRow(B_INFO_BG_TILE_DETAIL_OPPONENT_BOTTOM_LEFT, B_INFO_BG_TILE_DETAIL_OPPONENT_BOTTOM_EDGE, B_INFO_BG_TILE_DETAIL_OPPONENT_BOTTOM_RIGHT, 0, 1, 19, width);
-    } else {
+    }
+    else
+    {
         DrawHeaderBoxRow(B_INFO_BG_TILE_DETAIL_PLAYER_TOP_LEFT, B_INFO_BG_TILE_DETAIL_PLAYER_TOP_EDGE, B_INFO_BG_TILE_DETAIL_PLAYER_TOP_RIGHT, 0, 1, 0, width);
         DrawHeaderBoxRow(B_INFO_BG_TILE_DETAIL_PLAYER_SIDE_LEFT, B_INFO_BG_TILE_DETAIL_PLAYER_FILL, B_INFO_BG_TILE_DETAIL_PLAYER_SIDE_RIGHT, 0, 1, 1, width);
         for (u32 i = 10; i < 19; i++)
@@ -3186,23 +3188,25 @@ static void Overview_ComputeTrainerNameBoxLayout(u32 labelWidth, u32 centerRow, 
     *outHeaderWidth = headerWidth;
 }
 
-static u32 GetCardTile(u8 side, bool32 isActive, u32 role)
+static u32 GetCardTile(enum BattleSide side, bool32 isActive, u32 role)
 {
     if (side == B_SIDE_OPPONENT)
     {
         if (isActive)
             return B_INFO_BG_TILE_CARD_OPPONENT_BASE_ACTIVE + role;
         return B_INFO_BG_TILE_CARD_OPPONENT_BASE_INACTIVE + role;
-    } else {
+    }
+    else
+    {
         if (isActive)
             return B_INFO_BG_TILE_CARD_PLAYER_BASE_ACTIVE + role;
         return B_INFO_BG_TILE_CARD_PLAYER_BASE_INACTIVE + role;
     }
 }
 
-static void Overview_DrawStatusCard(u32 x, u32 y, enum BattlerId battler, bool32 isActive, bool32 isBottomRow)
+static void Overview_DrawStatusCard(u32 x, u32 y, enum BattlerId battler, bool32 isActive)
 {
-    u8 side = GetBattlerSide(battler);
+    enum BattleSide side = GetBattlerSide(battler);
     u32 topLeftTile    = GetCardTile(side, isActive, B_INFO_CARD_ROLE_TOP_LEFT);
     u32 topEdgeTile    = GetCardTile(side, isActive, B_INFO_CARD_ROLE_TOP_EDGE);
     u32 topRightTile    = GetCardTile(side, isActive, B_INFO_CARD_ROLE_TOP_RIGHT);
@@ -3224,7 +3228,7 @@ static void Overview_DrawStatusCard(u32 x, u32 y, enum BattlerId battler, bool32
     DrawHeaderBoxRow(bottomLeftTile, bottomEdgeTile, bottomRightTile, bottomAttrs, x, y + height - 1, width);
 }
 
-static void Overview_DrawHeaderBoxWidth(s32 x, u32 y, u32 width, u8 side)
+static void Overview_DrawHeaderBoxWidth(s32 x, u32 y, u32 width, enum BattleSide side)
 {
     if (max(0, x) + width > B_INFO_TILEMAP_WIDTH)
         x = B_INFO_TILEMAP_WIDTH - width;
@@ -3234,7 +3238,9 @@ static void Overview_DrawHeaderBoxWidth(s32 x, u32 y, u32 width, u8 side)
         DrawHeaderBoxRow(B_INFO_BG_TILE_HEADER_OPPONENT_TOP_LEFT, B_INFO_BG_TILE_HEADER_OPPONENT_TOP_EDGE, B_INFO_BG_TILE_HEADER_OPPONENT_TOP_RIGHT, 0, x, y, width);
         DrawHeaderBoxRow(B_INFO_BG_TILE_HEADER_OPPONENT_SIDE_LEFT, B_INFO_BG_TILE_HEADER_OPPONENT_FILL, B_INFO_BG_TILE_HEADER_OPPONENT_SIDE_RIGHT, 0, x, y + 1, width);
         DrawHeaderBoxRow(B_INFO_BG_TILE_HEADER_OPPONENT_BOTTOM_LEFT, B_INFO_BG_TILE_HEADER_OPPONENT_BOTTOM_EDGE, B_INFO_BG_TILE_HEADER_OPPONENT_BOTTOM_RIGHT, 0, x, y + 2, width);
-    } else {
+    }
+    else
+    {
         DrawHeaderBoxRow(B_INFO_BG_TILE_HEADER_PLAYER_TOP_LEFT, B_INFO_BG_TILE_HEADER_PLAYER_TOP_EDGE, B_INFO_BG_TILE_HEADER_PLAYER_TOP_RIGHT, 0, x, y, width);
         DrawHeaderBoxRow(B_INFO_BG_TILE_HEADER_PLAYER_SIDE_LEFT, B_INFO_BG_TILE_HEADER_PLAYER_FILL, B_INFO_BG_TILE_HEADER_PLAYER_SIDE_RIGHT, 0, x, y + 1, width);
         DrawHeaderBoxRow(B_INFO_BG_TILE_HEADER_PLAYER_BOTTOM_LEFT, B_INFO_BG_TILE_HEADER_PLAYER_BOTTOM_EDGE, B_INFO_BG_TILE_HEADER_PLAYER_BOTTOM_RIGHT, 0, x, y + 2, width);
@@ -3261,7 +3267,7 @@ static void Overview_DrawCardBackground(const struct BattleInfoCard *card, bool3
         B_INFO_BG_TILE_FILL,
         0
     );
-    Overview_DrawStatusCard(cardTileX, cardTileY, card->battler, isActive, card->y == B_INFO_ROW_Y_PLAYER);
+    Overview_DrawStatusCard(cardTileX, cardTileY, card->battler, isActive);
 }
 
 static void Overview_DrawBackground(void)
@@ -3370,12 +3376,12 @@ static void Overview_DrawHeaderBoxAtCard(const struct BattleInfoCard *card, u32 
 {
     u32 headerX = 0;
     u32 boxWidth = 0;
-    u8 side = GetBattlerSide(card->battler);
+    enum BattleSide side = GetBattlerSide(card->battler);
     Overview_ComputeHeaderBoxAtCard(card, label, &headerX, &boxWidth);
     Overview_DrawHeaderBoxWidth(headerX, top, boxWidth, side);
 }
 
-static void Overview_DrawTrainerNameBoxHelper(u32 labelWidth, u32 top, u32 centerRow, u8 side)
+static void Overview_DrawTrainerNameBoxHelper(u32 labelWidth, u32 top, u32 centerRow, enum BattleSide side)
 {
     u32 textLenTiles = 0;
     u32 headerX = 0;
