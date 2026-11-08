@@ -1634,8 +1634,7 @@ static void HandleSetEffectSpite(struct BattleCalcValues *cv, struct SetEffect *
     u32 moveSlot = MAX_MON_MOVES;
     enum Move lastMove = gLastMoves[se->effectBattler];
 
-    if (lastMove == MOVE_NONE
-     || lastMove == MOVE_UNAVAILABLE
+    if (!IsMoveValid(gLastMoves[se->effectBattler]) 
      || !HasValidMoveToReducePP(se->effectBattler, &moveSlot, lastMove))
     {
         SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);

@@ -1329,8 +1329,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
 
     // Don't use moves that miss if a faster foe is predicted to enter a semi-invulnerable state this turn.
     if (!IsSemiInvulnerable(battlerDef, CHECK_ALL)
-     && predictedMove != MOVE_NONE
-     && predictedMove != MOVE_UNAVAILABLE
+     && IsMoveValid(predictedMove)
      && (GetMoveEffect(predictedMove) == EFFECT_SEMI_INVULNERABLE || GetMoveEffect(predictedMove) == EFFECT_SKY_DROP)
      && AI_IsSlower(battlerAtk, battlerDef, move, predictedMove, CONSIDER_PRIORITY)
      && moveEffect != EFFECT_SEMI_INVULNERABLE
@@ -2387,7 +2386,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
 
             if (decreased)
                 break;
-            if (incomingMove != MOVE_NONE && incomingMove != MOVE_UNAVAILABLE)
+            if (IsMoveValid(incomingMove))
             {
                 if (MoveIgnoresProtect(incomingMove))
                 {
@@ -2870,7 +2869,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
              || IsMoveInstructBanned(instructedMove)
              || MoveHasAdditionalEffectSelf(instructedMove, MOVE_EFFECT_RECHARGE)
              || IsZMove(instructedMove)
-             || (gLockedMoves[battlerDef] != MOVE_NONE && gLockedMoves[battlerDef] != MOVE_UNAVAILABLE)
+             || IsMoveValid(gLockedMoves[battlerDef])
              || gBattleMons[battlerDef].volatiles.multipleTurns
              || PartnerMoveIsSameAsAttacker(GetPartnerBattler(battlerAtk), battlerDef, move, aiData->partnerMove))
             {

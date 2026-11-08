@@ -62,6 +62,7 @@
   - [How to use the Battle Status Menu](tutorials/how_to_battle_status_menu.md)
 - [Changelog](./CHANGELOG.md)
     - [1.17.x]()
+        - [Version 1.17.2](changelogs/1.17.x/1.17.2.md)
         - [Version 1.17.1](changelogs/1.17.x/1.17.1.md)
         - [Version 1.17.0](changelogs/1.17.x/1.17.0.md)
     - [1.16.x]()
