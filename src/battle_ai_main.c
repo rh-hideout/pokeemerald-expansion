@@ -1090,7 +1090,6 @@ static void BattleAI_DeepPartnerThinking(enum BattlerId battler, enum BattlerId 
             }
         }
     }
-    return;
 }
 
 static struct ChosenAction ChooseMoveOrAction_Doubles(enum BattlerId battlerAtk)
@@ -5600,7 +5599,6 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
                 ADJUST_SCORE(DECENT_EFFECT);
         }
         break;
-    case EFFECT_PLEDGE:
         break;
     case EFFECT_TRICK_ROOM:
         if (!(gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_POWERFUL_STATUS))
