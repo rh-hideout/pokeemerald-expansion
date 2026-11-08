@@ -1972,12 +1972,31 @@ static u32 CountAliveMonsForBattlerSide(enum BattlerId battler)
     u32 aliveMons = 0;
     struct Pokemon *party = GetBattlerParty(battler);
 
-    for (enum PartySlot partyMon = PARTY_SLOT_0; partyMon < PARTY_SIZE; partyMon++)
+    for (enum PartySlot slot = 0; slot < PARTY_SIZE; slot++)
     {
-        if (GetMonData(&party[partyMon], MON_DATA_SPECIES)
-         && GetMonData(&party[partyMon], MON_DATA_HP) > 0
-         && !GetMonData(&party[partyMon], MON_DATA_IS_EGG))
+        if (GetMonData(&party[slot], MON_DATA_SPECIES) == SPECIES_NONE
+         || GetMonData(&party[slot], MON_DATA_HP) == 0
+         || GetMonData(&party[slot], MON_DATA_IS_EGG))
+        {
+            continue;
+        }
+        aliveMons++;
+    }
+
+    if (BattleSideHasTwoTrainers(GetBattlerSide(battler)))
+    {
+        struct Pokemon *partnerParty = GetBattlerParty(GetPartnerBattler(battler));
+
+        for (u32 slot = 0; slot < PARTY_SIZE; slot++)
+        {
+            if (GetMonData(&partnerParty[slot], MON_DATA_SPECIES) == SPECIES_NONE
+             || GetMonData(&partnerParty[slot], MON_DATA_HP) == 0
+             || GetMonData(&partnerParty[slot], MON_DATA_IS_EGG))
+            {
+                continue;
+            }
             aliveMons++;
+        }
     }
 
     return aliveMons;
@@ -4672,15 +4691,6 @@ static void Cmd_forcerandomswitch(void)
 {
     CMD_ARGS(const u8 *failInstr);
 
-    enum PartySlot battler1PartyId = PARTY_SLOT_0;
-    enum PartySlot battler2PartyId = PARTY_SLOT_0;
-
-    enum PartySlot firstMonId;
-    s32 lastMonId = 0; // + 1
-    struct Pokemon *party = NULL;
-    enum PartySlot validMons[PARTY_SIZE];
-    s32 validMonsCount = 0;
-
     bool32 redCardForcedSwitch = FALSE;
 
     // Red card checks against wild Pokémon. If we have reached here, the player has a mon to switch into
@@ -4726,88 +4736,26 @@ static void Cmd_forcerandomswitch(void)
         || redCardForcedSwitch
        )
     {
-        party = GetBattlerParty(gBattlerTarget);
+        enum PartySlot validMons[PARTY_SIZE];
+        s32 validMonsCount = 0;
 
-        if (IsMultiVsOneOpponentBattle() && !IsOnPlayerSide(gBattlerTarget))
-        {
-            firstMonId = PARTY_SLOT_0;
-            lastMonId = 6;
-            battler2PartyId = gBattlerPartyIndexes[gBattlerTarget];
-            battler1PartyId = gBattlerPartyIndexes[GetPartnerBattler(gBattlerTarget)];
-        }
-        else if (HasAllBattleFlags(BATTLE_TYPE_BATTLE_TOWER | BATTLE_TYPE_LINK)
-            || HasAllBattleFlags(BATTLE_TYPE_BATTLE_TOWER | BATTLE_TYPE_RECORDED_LINK)
-            || HasAnyBattleFlags(BATTLE_TYPE_INGAME_PARTNER))
-        {
-            if ((gBattlerTarget & BIT_FLANK) != B_FLANK_LEFT)
-            {
-                firstMonId = PARTY_SLOT_3;
-                lastMonId = PARTY_SIZE;
-            }
-            else
-            {
-                firstMonId = PARTY_SLOT_0;
-                lastMonId = PARTY_SIZE / 2;
-            }
-            battler2PartyId = gBattlerPartyIndexes[gBattlerTarget];
-            battler1PartyId = gBattlerPartyIndexes[GetPartnerBattler(gBattlerTarget)];
-        }
-        else if (HasAllBattleFlags(BATTLE_TYPE_MULTI | BATTLE_TYPE_LINK)
-                 || HasAllBattleFlags(BATTLE_TYPE_MULTI | BATTLE_TYPE_RECORDED_LINK))
-        {
-            firstMonId = PARTY_SLOT_0;
-            lastMonId = PARTY_SIZE / 2;
-            battler2PartyId = gBattlerPartyIndexes[gBattlerTarget];
-            battler1PartyId = gBattlerPartyIndexes[GetPartnerBattler(gBattlerTarget)];
-        }
-        else if (HasAnyBattleFlags(BATTLE_TYPE_TWO_OPPONENTS))
-        {
-            if (IsOnPlayerSide(gBattlerTarget))
-            {
-                firstMonId = PARTY_SLOT_0;
-                lastMonId = PARTY_SIZE;
-            }
-            else
-            {
-                if ((gBattlerTarget & BIT_FLANK) != B_FLANK_LEFT)
-                {
-                    firstMonId = PARTY_SLOT_3;
-                    lastMonId = PARTY_SIZE;
-                }
-                else
-                {
-                    firstMonId = PARTY_SLOT_0;
-                    lastMonId = PARTY_SIZE / 2;
-                }
-            }
-            battler2PartyId = gBattlerPartyIndexes[gBattlerTarget];
-            battler1PartyId = gBattlerPartyIndexes[GetPartnerBattler(gBattlerTarget)];
-        }
-        else if (IsDoubleBattle())
-        {
-            firstMonId = PARTY_SLOT_0;
-            lastMonId = PARTY_SIZE;
-            battler2PartyId = gBattlerPartyIndexes[gBattlerTarget];
-            battler1PartyId = gBattlerPartyIndexes[GetPartnerBattler(gBattlerTarget)];
-        }
-        else
-        {
-            firstMonId = PARTY_SLOT_0;
-            lastMonId = PARTY_SIZE;
-            battler2PartyId = gBattlerPartyIndexes[gBattlerTarget]; // there is only one Pokémon out in single battles
-            battler1PartyId = gBattlerPartyIndexes[gBattlerTarget];
-        }
+        enum BattlerId battlerIn1 = gBattlerTarget;
+        enum BattlerId battlerIn2 = IsDoubleBattle() ? GetPartnerBattler(battlerIn1) : battlerIn1;
 
-        for (enum PartySlot i = firstMonId; i < lastMonId; i++)
+        struct Pokemon *party = GetBattlerParty(battlerIn1);
+
+        for (enum PartySlot slot = 0; slot < PARTY_SIZE; slot++)
         {
-            if (GetMonData(&party[i], MON_DATA_SPECIES) != SPECIES_NONE
-             && !GetMonData(&party[i], MON_DATA_IS_EGG)
-             && GetMonData(&party[i], MON_DATA_HP) != 0
-             && i != battler1PartyId
-             && i != battler2PartyId)
-             {
-                 validMons[validMonsCount++] = i;
-             }
+            if (GetMonData(&party[slot], MON_DATA_HP) == 0
+             || GetMonData(&party[slot], MON_DATA_SPECIES) == SPECIES_NONE
+             || GetMonData(&party[slot], MON_DATA_IS_EGG)
+             || (slot == gBattlerPartyIndexes[battlerIn1])
+             || (slot == gBattlerPartyIndexes[battlerIn2] && BattlersShareParty(battlerIn1, battlerIn2)))
+            {
+                continue;
+            }
+
+            validMons[validMonsCount++] = slot;
         }
 
         if (validMonsCount == 0)
@@ -7168,9 +7116,15 @@ void BS_ItemRestoreHP(void)
 
         // Check if the recipient is an active battler.
         if (gBattleStruct->itemPartyIndex[gBattlerAttacker] == gBattlerPartyIndexes[gBattlerAttacker])
+        {
             battler = gBattlerAttacker;
-        else if (IsDoubleBattle() && gBattleStruct->itemPartyIndex[gBattlerAttacker] == gBattlerPartyIndexes[GetPartnerBattler(gBattlerAttacker)])
+        }
+        else if (IsDoubleBattle()
+             && gBattleStruct->itemPartyIndex[gBattlerAttacker] == gBattlerPartyIndexes[GetPartnerBattler(gBattlerAttacker)]
+             && !HasPartnerTrainer(gBattlerAttacker))
+        {
             battler = GetPartnerBattler(gBattlerAttacker);
+        }
 
         // Get amount to heal.
         switch (healParam)
@@ -7233,7 +7187,8 @@ void BS_ItemCureStatus(void)
         targetBattler = gBattlerAttacker;
     }
     else if (IsDoubleBattle()
-     && gBattleStruct->itemPartyIndex[gBattlerAttacker] == gBattlerPartyIndexes[GetPartnerBattler(gBattlerAttacker)])
+        && gBattleStruct->itemPartyIndex[gBattlerAttacker] == gBattlerPartyIndexes[GetPartnerBattler(gBattlerAttacker)]
+        && !HasPartnerTrainer(gBattlerAttacker))
     {
         statusChanged = ItemHealMonVolatile(GetPartnerBattler(gBattlerAttacker), gLastUsedItem);
         targetBattler = GetPartnerBattler(gBattlerAttacker);
@@ -7312,10 +7267,15 @@ void BS_ItemRestorePP(void)
 
     // Check if the recipient is an active battler.
     if (gBattleStruct->itemPartyIndex[gBattlerAttacker] == gBattlerPartyIndexes[gBattlerAttacker])
+    {
         battler = gBattlerAttacker;
+    }
     else if (IsDoubleBattle()
-                && gBattleStruct->itemPartyIndex[gBattlerAttacker] == gBattlerPartyIndexes[GetPartnerBattler(gBattlerAttacker)])
+        && gBattleStruct->itemPartyIndex[gBattlerAttacker] == gBattlerPartyIndexes[GetPartnerBattler(gBattlerAttacker)]
+        && !HasPartnerTrainer(gBattlerAttacker))
+    {
         battler = GetPartnerBattler(gBattlerAttacker);
+    }
 
     // Heal PP!
     for (; i < loopEnd; i++)
@@ -7886,10 +7846,10 @@ void BS_CancelMultiTurnMoves(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-void BS_GetMoveTarget(void)
+void BS_IsRunningImpossible(void)
 {
     NATIVE_ARGS();
-    gBattlerTarget = GetBattleMoveTarget(gCurrentMove, TARGET_NONE);
+    gBattleCommunication[0] = IsRunningFromBattleImpossible(gBattlerAttacker);
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 

@@ -1252,6 +1252,11 @@ static inline bool32 IsDoubleBattle(void)
     return HasAnyBattleFlags(BATTLE_TYPE_DOUBLE | BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_TWO_OPPONENTS) != 0;
 }
 
+static inline bool32 IsMoveValid(enum Move move)
+{
+    return move != MOVE_NONE && move != MOVE_UNAVAILABLE;
+}
+
 static inline bool32 IsSpreadMove(enum MoveTarget moveTarget)
 {
     if (!IsDoubleBattle())
