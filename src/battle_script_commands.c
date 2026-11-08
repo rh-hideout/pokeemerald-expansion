@@ -2439,24 +2439,30 @@ static u32 CountAliveMonsForBattlerSide(enum BattlerId battler)
     u32 aliveMons = 0;
     struct Pokemon *party = GetBattlerParty(battler);
 
-    for (u32 partyMon = 0; partyMon < PARTY_SIZE; partyMon++)
+    for (u32 slot = 0; slot < PARTY_SIZE; slot++)
     {
-        if (GetMonData(&party[partyMon], MON_DATA_SPECIES)
-         && GetMonData(&party[partyMon], MON_DATA_HP) > 0
-         && !GetMonData(&party[partyMon], MON_DATA_IS_EGG))
-            aliveMons++;
+        if (GetMonData(&party[slot], MON_DATA_SPECIES) == SPECIES_NONE
+         || GetMonData(&party[slot], MON_DATA_HP) == 0
+         || GetMonData(&party[slot], MON_DATA_IS_EGG))
+        {
+            continue;
+        }
+        aliveMons++;
     }
 
     if (BattleSideHasTwoTrainers(GetBattlerSide(battler)))
     {
         struct Pokemon *partnerParty = GetBattlerParty(GetPartnerBattler(battler));
 
-        for (u32 partyMon = 0; partyMon < PARTY_SIZE; partyMon++)
+        for (u32 slot = 0; slot < PARTY_SIZE; slot++)
         {
-            if (GetMonData(&partnerParty[partyMon], MON_DATA_SPECIES)
-             && GetMonData(&partnerParty[partyMon], MON_DATA_HP) > 0
-             && !GetMonData(&partnerParty[partyMon], MON_DATA_IS_EGG))
-                aliveMons++;
+            if (GetMonData(&partnerParty[slot], MON_DATA_SPECIES) == SPECIES_NONE
+             || GetMonData(&partnerParty[slot], MON_DATA_HP) == 0
+             || GetMonData(&partnerParty[slot], MON_DATA_IS_EGG))
+            {
+                continue;
+            }
+            aliveMons++;
         }
     }
 
@@ -5523,21 +5529,23 @@ static void Cmd_forcerandomswitch(void)
         || redCardForcedSwitch
        )
     {
-        enum BattlerId battlerIn1 = GetBattlerAtPosition(GetBattlerPosition(gBattlerTarget));
+        enum BattlerId battlerIn1 = gBattlerTarget;
         enum BattlerId battlerIn2 = IsDoubleBattle() ? GetPartnerBattler(battlerIn1) : battlerIn1;
 
-        struct Pokemon *party = GetBattlerParty(gBattlerTarget);
+        struct Pokemon *party = GetBattlerParty(battlerIn1);
 
-        for (u32 i = 0; i < PARTY_SIZE; i++)
+        for (u32 slot = 0; slot < PARTY_SIZE; slot++)
         {
-            if (GetMonData(&party[i], MON_DATA_HP) == 0
-             || GetMonData(&party[i], MON_DATA_SPECIES) == SPECIES_NONE
-             || GetMonData(&party[i], MON_DATA_IS_EGG)
-             || (i == gBattlerPartyIndexes[battlerIn1] && BattlersShareParty(gBattlerTarget, battlerIn1))
-             || (i == gBattlerPartyIndexes[battlerIn2] && BattlersShareParty(gBattlerTarget, battlerIn2)))
+            if (GetMonData(&party[slot], MON_DATA_HP) == 0
+             || GetMonData(&party[slot], MON_DATA_SPECIES) == SPECIES_NONE
+             || GetMonData(&party[slot], MON_DATA_IS_EGG)
+             || (slot == gBattlerPartyIndexes[battlerIn1] && BattlersShareParty(battlerIn1 , battlerIn1))
+             || (slot == gBattlerPartyIndexes[battlerIn2] && BattlersShareParty(battlerIn1 , battlerIn2)))
+            {
                 continue;
+            }
 
-            validMons[validMonsCount++] = i;
+            validMons[validMonsCount++] = slot;
         }
 
         if (validMonsCount == 0)
