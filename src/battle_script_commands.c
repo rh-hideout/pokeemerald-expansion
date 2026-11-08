@@ -5523,32 +5523,21 @@ static void Cmd_forcerandomswitch(void)
         || redCardForcedSwitch
        )
     {
-        u32 battler1PartyId = 0;
-        u32 battler2PartyId = 0;
+        enum BattlerId battlerIn1 = GetBattlerAtPosition(GetBattlerPosition(gBattlerTarget));
+        enum BattlerId battlerIn2 = IsDoubleBattle() ? GetPartnerBattler(battlerIn1) : battlerIn1;
 
         struct Pokemon *party = GetBattlerParty(gBattlerTarget);
 
-        if (IsDoubleBattle())
-        {
-            battler2PartyId = gBattlerPartyIndexes[gBattlerTarget];
-            battler1PartyId = gBattlerPartyIndexes[GetPartnerBattler(gBattlerTarget)];
-        }
-        else // singles
-        {
-            battler2PartyId = gBattlerPartyIndexes[gBattlerTarget];
-            battler1PartyId = gBattlerPartyIndexes[gBattlerTarget];
-        }
-
         for (u32 i = 0; i < PARTY_SIZE; i++)
         {
-            if (GetMonData(&party[i], MON_DATA_SPECIES) != SPECIES_NONE
-             && !GetMonData(&party[i], MON_DATA_IS_EGG)
-             && GetMonData(&party[i], MON_DATA_HP) != 0
-             && i != battler1PartyId
-             && i != battler2PartyId)
-             {
-                 validMons[validMonsCount++] = i;
-             }
+            if (GetMonData(&party[i], MON_DATA_HP) == 0
+             || GetMonData(&party[i], MON_DATA_SPECIES) == SPECIES_NONE
+             || GetMonData(&party[i], MON_DATA_IS_EGG)
+             || (i == gBattlerPartyIndexes[battlerIn1] && BattlersShareParty(gBattlerTarget, battlerIn1))
+             || (i == gBattlerPartyIndexes[battlerIn2] && BattlersShareParty(gBattlerTarget, battlerIn2)))
+                continue;
+
+            validMons[validMonsCount++] = i;
         }
 
         if (validMonsCount == 0)
