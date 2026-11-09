@@ -2850,7 +2850,7 @@ static bool8 ShouldUseChooseMonText(void)
     if (gPartyMenu.action == PARTY_ACTION_SEND_OUT)
         return TRUE;
 
-    for (u32 slot = 0; slot < PARTY_SIZE; slot++)
+    for (enum PartySlot slot = 0; slot < PARTY_SIZE; slot++)
     {
         struct Pokemon *mon = GetPartyMonFromPartyMenuId(slot);
 
@@ -8572,7 +8572,7 @@ static void RestoreMultiPartyFromSummaryScreen(void)
     gParties[B_TRAINER_PLAYER][2] = gParties[B_TRAINER_PLAYER][3];
 
     // Clear partner mons from back of player party
-    for (u32 i = MULTI_PARTY_SIZE; i < PARTY_SIZE; i++)
+    for (enum PartySlot i = MULTI_PARTY_SIZE; i < PARTY_SIZE; i++)
     {
         ZeroMonData(&gParties[B_TRAINER_PLAYER][i]);
     }

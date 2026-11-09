@@ -40,7 +40,7 @@ void RandomlyGivePartyPokerus(void)
         u32 validTargetsCount = 0;
         s32 validTargets[PARTY_SIZE];
 
-        for (u32 i = 0; i < PARTY_SIZE; i++)
+        for (enum PartySlot i = 0; i < PARTY_SIZE; i++)
         {
             mon = &gParties[B_TRAINER_PLAYER][i];
             if (!GetMonData(mon, MON_DATA_SPECIES))
@@ -75,7 +75,7 @@ bool32 IsPokerusInParty(void)
     if (!GetConfig(POKERUS_ENABLED))
         return FALSE;
 
-    for (u32 i = 0; i < PARTY_SIZE; i++)
+    for (enum PartySlot i = 0; i < PARTY_SIZE; i++)
     {
         if (!GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES))
             continue;
@@ -137,7 +137,7 @@ void UpdatePartyPokerusTime(u32 days)
     if (!GetConfig(POKERUS_ENABLED))
         return;
 
-    for (u32 i = 0; i < PARTY_SIZE; i++)
+    for (enum PartySlot i = 0; i < PARTY_SIZE; i++)
     {
         if (!GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES))
             continue;
@@ -187,7 +187,7 @@ void PartySpreadPokerus(void)
     if (RandomUniform(RNG_POKERUS_SPREAD, 0, MAX_u16) >= P_POKERUS_SPREAD_ODDS)
         return;
 
-    for (u32 i = 0; i < PARTY_SIZE; i++)
+    for (enum PartySlot i = 0; i < PARTY_SIZE; i++)
     {
         if (!GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES))
             continue;

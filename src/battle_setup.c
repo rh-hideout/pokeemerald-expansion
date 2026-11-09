@@ -851,16 +851,12 @@ static enum TransitionType GetBattleTransitionTypeByMap(void)
 
 static u16 GetSumOfPlayerPartyLevel(u8 numMons)
 {
-    u8 sum = 0;
-    int i;
-
-    for (i = 0; i < PARTY_SIZE; i++)
+    u32 sum = 0;
+    for (enum PartySlot slot = 0; slot < PARTY_SIZE; slot++)
     {
-        enum Species species = GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES_OR_EGG);
-
-        if (species != SPECIES_EGG && species != SPECIES_NONE && GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_HP) != 0)
+        if (IsMonValidAndAliveForBattle(&gParties[B_TRAINER_PLAYER][slot]))
         {
-            sum += GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_LEVEL);
+            sum += GetMonData(&gParties[B_TRAINER_PLAYER][slot], MON_DATA_LEVEL);
             if (--numMons == 0)
                 break;
         }

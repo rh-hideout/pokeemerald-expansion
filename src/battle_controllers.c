@@ -413,23 +413,6 @@ static void InitBtlControllersInternal(void)
     }
 }
 
-bool32 IsValidForBattle(struct Pokemon *mon)
-{
-    enum Species species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG);
-    return (species != SPECIES_NONE
-         && species != SPECIES_EGG
-         && GetMonData(mon, MON_DATA_HP) != 0
-         && GetMonData(mon, MON_DATA_IS_EGG) == FALSE);
-}
-
-bool32 IsValidForBattleButDead(struct Pokemon *mon)
-{
-    enum Species species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG);
-    return (species != SPECIES_NONE
-         && species != SPECIES_EGG
-         && GetMonData(mon, MON_DATA_IS_EGG) == FALSE);
-}
-
 static inline bool32 IsControllerPlayer(enum BattlerId battler)
 {
     return (gBattlerBattleController[battler] == BATTLE_CONTROLLER_PLAYER);
@@ -503,7 +486,7 @@ static void SetBattlePartyIds(void)
             {
                 if (i < 2)
                 {
-                    if (IsValidForBattle(&GetBattlerParty(i)[j]))
+                    if (IsMonValidAndAliveForBattle(&GetBattlerParty(i)[j]))
                     {
                         gBattlerPartyIndexes[i] = j;
                         foundValidMon = TRUE;
@@ -516,13 +499,13 @@ static void SetBattlePartyIds(void)
                     {
                         // Exclude already assigned Pokémon;
                     }
-                    else if (IsValidForBattle(&GetBattlerParty(i)[j]))
+                    else if (IsMonValidAndAliveForBattle(&GetBattlerParty(i)[j]))
                     {
                         gBattlerPartyIndexes[i] = j;
                         foundValidMon = TRUE;
                         break;
                     }
-                    else if (IsValidForBattleButDead(&GetBattlerParty(i)[j]) && faintedMon == PARTY_SLOT_NONE)
+                    else if (IsMonValidForBattle(&GetBattlerParty(i)[j]) && faintedMon == PARTY_SLOT_NONE)
                     {
                         // Put an "option" on a dead mon that can be revived;
                         faintedMon = j;
@@ -2857,14 +2840,14 @@ void BtlController_HandleSpriteInvisibility(enum BattlerId battler)
 
 bool32 TwoPlayerIntroMons(enum BattlerId battler) // Double battle with both player Pokémon active.
 {
-    return (IsDoubleBattle() && IsValidForBattle(GetBattlerMon(battler ^ BIT_FLANK)));
+    return (IsDoubleBattle() && IsMonValidAndAliveForBattle(GetBattlerMon(battler ^ BIT_FLANK)));
 }
 
 bool32 TwoOpponentIntroMons(enum BattlerId battler) // Double battle with both opponent Pokémon active.
 {
     return (IsDoubleBattle()
-            && IsValidForBattle(GetBattlerMon(battler))
-            && IsValidForBattle(GetBattlerMon(GetPartnerBattler(battler))));
+            && IsMonValidAndAliveForBattle(GetBattlerMon(battler))
+            && IsMonValidAndAliveForBattle(GetBattlerMon(GetPartnerBattler(battler))));
 }
 
 // Task data for Task_StartSendOutAnim

@@ -1352,7 +1352,7 @@ static void SetMultiPartnerMenuParty(enum BattleTrainer trainer)
     struct Pokemon *mon = NULL;
     struct MultiPartnerMenuPokemon *partnerMon = NULL;
 
-    for (s32 i = 0; i < PARTY_SIZE; i++)
+    for (enum PartySlot i = 0; i < PARTY_SIZE; i++)
     {
         partnerMon = &gMultiPartnerParty[i];
         mon = &gParties[trainer][i];
@@ -3239,9 +3239,7 @@ static void DoBattleIntro(void)
 
                 for (i = 0; i < PARTY_SIZE; i++)
                 {
-                    if (GetMonData(&gParties[trainer][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_NONE
-                     || GetMonData(&gParties[trainer][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_EGG
-                     || i >= lastId)
+                    if (!IsMonValidForBattle(&gParties[trainer][i]) || i >= lastId)
                     {
                         hpStatus[trainer][i].hp = HP_EMPTY_SLOT;
                         hpStatus[trainer][i].status = 0;

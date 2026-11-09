@@ -4610,10 +4610,9 @@ s32 CountUsablePartyMons(enum BattlerId battlerId)
     s32 lastId = GetAILastPartyIndex(battlerId); // + 1
     for (enum PartySlot monIndex = PARTY_SLOT_0; monIndex < lastId; monIndex++)
     {
-        if (monIndex != battlerOnField1 && monIndex != battlerOnField2
-         && GetMonData(&party[monIndex], MON_DATA_HP) != 0
-         && GetMonData(&party[monIndex], MON_DATA_SPECIES_OR_EGG) != SPECIES_NONE
-         && GetMonData(&party[monIndex], MON_DATA_SPECIES_OR_EGG) != SPECIES_EGG)
+        if (monIndex != battlerOnField1
+         && monIndex != battlerOnField2
+         && IsMonValidAndAliveForBattle(&party[monIndex]))
         {
             ret++;
         }
@@ -4637,9 +4636,7 @@ bool32 IsPartyFullyHealedExceptBattler(enum BattlerId battlerId)
     for (enum PartySlot monIndex = PARTY_SLOT_0; monIndex < PARTY_SIZE; monIndex++)
     {
         if (monIndex != gBattlerPartyIndexes[battlerId]
-         && GetMonData(&party[monIndex], MON_DATA_HP) != 0
-         && GetMonData(&party[monIndex], MON_DATA_SPECIES_OR_EGG) != SPECIES_NONE
-         && GetMonData(&party[monIndex], MON_DATA_SPECIES_OR_EGG) != SPECIES_EGG
+         && IsMonValidAndAliveForBattle(&party[monIndex])
          && GetMonData(&party[monIndex], MON_DATA_HP) < GetMonData(&party[monIndex], MON_DATA_MAX_HP))
             return FALSE;
     }
@@ -5458,11 +5455,10 @@ enum AIConsiderGimmick ShouldTeraFromCalcs(enum BattlerId battler, enum BattlerI
     int numPossibleTera = 0;
     for (enum PartySlot monIndex = PARTY_SLOT_0; monIndex < PARTY_SIZE; monIndex++)
     {
-        if (GetMonData(&party[monIndex], MON_DATA_HP) != 0
-         && GetMonData(&party[monIndex], MON_DATA_SPECIES_OR_EGG) != SPECIES_NONE
-         && GetMonData(&party[monIndex], MON_DATA_SPECIES_OR_EGG) != SPECIES_EGG
-         && GetMonData(&party[monIndex], MON_DATA_TERA_TYPE) > 0)
+        if (IsMonValidAndAliveForBattle(&party[monIndex]) && GetMonData(&party[monIndex], MON_DATA_TERA_TYPE) > 0)
+        {
             numPossibleTera++;
+        }
     }
 
     u32 aiHp = gBattleMons[battler].hp;

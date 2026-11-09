@@ -532,7 +532,7 @@ void AI_TrySwitchOrUseItem(enum BattlerId battler)
                     {
                         enum PartySlot partyCandidate = (enum PartySlot)candidate;
 
-                        if (!IsValidForBattle(&party[partyCandidate]))
+                        if (!IsMonValidAndAliveForBattle(&party[partyCandidate]))
                             continue;
                         if (IsPartyMonOnFieldOrChosenToSwitch(battler, partyCandidate, battlerIn1, battlerIn2))
                             continue;
@@ -560,7 +560,7 @@ void AI_TrySwitchOrUseItem(enum BattlerId battler)
 
                         for (enum PartySlot candidate = PARTY_SLOT_0; candidate < lastId; candidate++)
                         {
-                            if (IsValidForBattle(&gParties[GetBattlerTrainer(battler)][candidate])
+                            if (IsMonValidAndAliveForBattle(&gParties[GetBattlerTrainer(battler)][candidate])
                              && !IsPartyMonOnFieldOrChosenToSwitch(battler, candidate, battler1, battler2))
                             {
                                 monToSwitchId = candidate;

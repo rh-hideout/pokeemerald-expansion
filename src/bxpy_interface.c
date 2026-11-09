@@ -851,10 +851,10 @@ static void Task_WaitFadeAndExitGracefully(u8 taskId)
 
     u8 playerEnteredMons[PARTY_SIZE];
 
-    for (u32 partyIndex = 0; partyIndex < PARTY_SIZE; partyIndex++)
+    for (enum PartySlot partyIndex = 0; partyIndex < PARTY_SIZE; partyIndex++)
         playerEnteredMons[partyIndex] = BXPY_EMPTY_MON;
 
-    for (u32 partyIndex = 0; partyIndex < PARTY_SIZE; partyIndex++)
+    for (enum PartySlot partyIndex = 0; partyIndex < PARTY_SIZE; partyIndex++)
         playerEnteredMons[partyIndex] = BXPY_GetSelectedMons(partyIndex);
 
     u8 enemyEnteredMons[MAX_BATTLE_TRAINERS][PARTY_SIZE];
@@ -1051,12 +1051,7 @@ static void BXPY_DisplayParty(enum BattleSide side, bool32 cursorMove)
     {
         struct Pokemon *mon = &gParties[trainer][partyMonIndex];
 
-        u32 species = GetMonData(mon,MON_DATA_SPECIES_OR_EGG);
-
-        if (species == SPECIES_NONE)
-            continue;
-
-        if (species == SPECIES_EGG)
+        if (!IsMonValidForBattle(mon))
             continue;
 
         BXPY_DisplayPartyMonText(windowId, mon, side, partyMonIndex);
@@ -1064,7 +1059,7 @@ static void BXPY_DisplayParty(enum BattleSide side, bool32 cursorMove)
         if (cursorMove == TRUE)
             continue;
 
-        BXPY_DisplayPartyMonIcons(windowId, mon, partyMonIndex, side, species);
+        BXPY_DisplayPartyMonIcons(windowId, mon, partyMonIndex, side, GetMonData(mon, MON_DATA_SPECIES_OR_EGG));
     }
 
     CopyWindowToVram(windowId, COPYWIN_GFX);
@@ -1742,7 +1737,7 @@ static void BXPY_ResetCursorSprite(void)
 
 static void BXPY_ResetAllSpriteIds(void)
 {
-    for (u32 partyIndex = 0; partyIndex < PARTY_SIZE; partyIndex++)
+    for (enum PartySlot partyIndex = 0; partyIndex < PARTY_SIZE; partyIndex++)
     {
         BXPY_SetPlayerSelectedTailSpriteId(partyIndex,SPRITE_NONE);
         BXPY_SetPlayerSelectedSpriteId(partyIndex,SPRITE_NONE);
@@ -1884,7 +1879,7 @@ void BXPY_InitializeAndSaveCallback(u32 bringSize, u32 pickSize, u32 battleFlags
     BXPY_SetPage(page);
     BXPY_SetMusicFlag(isFirstTime);
 
-    for (u32 partyIndex = 0; partyIndex < PARTY_SIZE; partyIndex++)
+    for (enum PartySlot partyIndex = 0; partyIndex < PARTY_SIZE; partyIndex++)
          BXPY_SetSelectedMons(partyIndex,playerEnteredMons[partyIndex]);
 
     SetMainCallback2(BXPY_SetupCallback);
@@ -2102,7 +2097,7 @@ static void BXPY_RemovePlayerSelectedTailSprites(u32 partyIndex)
 
 static void BXPY_RemoveAllSprites(void)
 {
-    for (u32 partyIndex = 0; partyIndex < PARTY_SIZE; partyIndex++)
+    for (enum PartySlot partyIndex = 0; partyIndex < PARTY_SIZE; partyIndex++)
     {
         BXPY_RemovePlayerSelectedTailSprites(partyIndex);
         BXPY_RemovePlayerSelectedSprites(partyIndex);
