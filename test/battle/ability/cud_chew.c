@@ -140,3 +140,27 @@ SINGLE_BATTLE_TEST("Cud Chew does not trigger if the Berry is eaten while Neutra
         EXPECT_EQ(opponent->statStages[STAT_DEF], DEFAULT_STAT_STAGE + 1);
     }
 }
+
+SINGLE_BATTLE_TEST("Cud Chew does not activate after consuming a non-Berry item")
+{
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_WHITE_HERB].holdEffect == HOLD_EFFECT_WHITE_HERB);
+        ASSUME_STAT_CHANGE(MOVE_LEER, defense: -1);
+        ASSUME(GetMoveEffect(MOVE_RECYCLE) == EFFECT_RECYCLE);
+        PLAYER(SPECIES_TAUROS_PALDEA_COMBAT) { Ability(ABILITY_CUD_CHEW); Item(ITEM_WHITE_HERB); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_LEER); }
+        TURN {}
+        TURN {}
+        TURN {}
+        TURN { MOVE(player, MOVE_RECYCLE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        NOT ABILITY_POPUP(player, ABILITY_CUD_CHEW);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_RECYCLE, player);
+        MESSAGE("Tauros found one White Herb!");
+    } THEN {
+        EXPECT_EQ(player->item, ITEM_WHITE_HERB);
+    }
+}
