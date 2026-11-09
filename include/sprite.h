@@ -181,8 +181,8 @@ struct SpriteTemplate
     const struct SpriteFrameImage *images;
     const union AffineAnimCmd *const *affineAnims;
     SpriteCallback callback;
-    bool16 compressedFast:1;
-    bool16 freeable:1;
+    u16 compressedFast:1;
+    u16 freeable:1;
     u16 padding1:14;
     u16 padding2;
     void (*freeFunction)(struct Sprite *);
@@ -241,7 +241,7 @@ struct Sprite
 
     /*0x40*/ u16 sheetTileStart:10;
              bool16 compressedFast:1;
-             bool16 freeable:1;
+             u16 freeable:1;
              u16 unused:4;
 
     /*0x42*/ u8 subspriteTableNum:6;
