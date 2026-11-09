@@ -123,3 +123,31 @@ SINGLE_BATTLE_TEST("Grassy Terrain does not heal levitating Pokémon")
         NOT HP_BAR(opponent);
     }
 }
+
+SINGLE_BATTLE_TEST("Grassy Terrain does not weaken Earthquake against airborne Ring Target holders", s16 damage)
+{
+    bool32 terrain;
+    PARAMETRIZE { terrain = FALSE; }
+    PARAMETRIZE { terrain = TRUE; }
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_EARTHQUAKE) == EFFECT_EARTHQUAKE);
+        ASSUME(GetMoveEffect(MOVE_GRASSY_TERRAIN) == EFFECT_TERRAIN);
+        ASSUME(GetMoveTerrainType(MOVE_GRASSY_TERRAIN) == B_TERRAIN_GRASSY);
+        ASSUME(gItemsInfo[ITEM_RING_TARGET].holdEffect == HOLD_EFFECT_RING_TARGET);
+        ASSUME(IsSpeciesOfType(SPECIES_PIDGEY, TYPE_FLYING));
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_PIDGEY) { Item(ITEM_RING_TARGET); }
+    } WHEN {
+        if (terrain)
+            TURN { MOVE(player, MOVE_GRASSY_TERRAIN); }
+        TURN { MOVE(player, MOVE_EARTHQUAKE); }
+    } SCENE {
+        if (terrain)
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_GRASSY_TERRAIN, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, player);
+        HP_BAR(opponent, captureDamage: &results[i].damage);
+    } FINALLY {
+        EXPECT_EQ(results[0].damage, results[1].damage);
+    }
+}
