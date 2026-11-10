@@ -1593,7 +1593,6 @@ static void Terrain_DrawLayerTileToScreen(u32 x, u32 y, u32 layer, u16 *ptr)
 
 static void DrawItemSprite(u32 x, u32 y, enum MiningId miningId, u32 itemNumPalTag, u32 itemStateId)
 {
-    struct SpriteTemplate gSpriteTemplate;
     u32 posX = 16 * x;
     u32 posY = 16 * (y + STRESS_LEVEL_OFFSET);
 
