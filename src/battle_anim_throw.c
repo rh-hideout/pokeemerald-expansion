@@ -713,7 +713,7 @@ void AnimTask_ThrowBall_StandingTrainer(u8 taskId)
     u8 subpriority;
     u8 spriteId;
 
-    if (gBattleTypeFlags & BATTLE_TYPE_CATCH_TUTORIAL)
+    if (HasAnyBattleFlags(BATTLE_TYPE_CATCH_TUTORIAL))
     {
         x = 32;
         y = 11;

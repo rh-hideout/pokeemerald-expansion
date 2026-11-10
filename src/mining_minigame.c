@@ -1047,6 +1047,7 @@ static void MiningUi_Shake(u8 taskId)
             sMiningUiState->toggleShakeDuringAnimation = FALSE;
             break;
         }
+
         if (MINING_DEBUG_ENABLE && MINING_DEBUG_INFINITE_HITS)
         {
             gSprites[sMiningUiState->cursorSpriteIndex].invisible = FALSE;
@@ -1058,6 +1059,7 @@ static void MiningUi_Shake(u8 taskId)
             else
                 gSprites[sMiningUiState->cursorSpriteIndex].invisible = FALSE;
         }
+
         sMiningUiState->shakeStepCounter = 0;
         sMiningUiState->shouldShake = FALSE;
         sMiningUiState->toggleShakeDuringAnimation = FALSE;
@@ -2216,7 +2218,7 @@ static void GetItemOrPrintError(u8 taskId, u32 itemIndex, enum Item itemId)
 {
     sMiningUiState->loadGameState++;
 
-    if (itemId == ITEM_NONE)
+    if (itemId == ITEM_NONE || !GetBuriedItemStatus(itemIndex))
         return;
 
     if (AddBagItem(itemId, 1))

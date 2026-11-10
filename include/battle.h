@@ -15,6 +15,7 @@
 #include "battle_message.h"
 #include "battle_util.h"
 #include "battle_script_commands.h"
+#include "battle_setup.h"
 #include "battle_gfx_sfx_util.h"
 #include "battle_util2.h"
 #include "battle_bg.h"
@@ -665,8 +666,10 @@ struct BattleStruct
         struct BattleVideo battleVideo;
     } multiBuffer;
     u8 battlerKOAnimsRunning:3;
+    u8 ignoreOrbFailure:1; // Toxic / Flame orb aren't prevented by Safeguard / Flower Veil
+    u8 toxicChainPriority:1; // If Toxic Chain will trigger on target, all other non volatiles will be blocked
     u8 messagePrinted:1; // To prevented repeated attackmessages (Perish Song)
-    u8 unused1:4;
+    u8 padding4:2;
     struct BattleTvMovePoints tvMovePoints;
     struct BattleTv tv;
     enum PartySlot AI_monToSwitchIntoId[MAX_BATTLERS_COUNT];
@@ -1137,6 +1140,58 @@ enum BattlerPosition GetOppositePosition(enum BattlerPosition position);
 enum BattlerId GetBattlerLeftFoe(enum BattlerId battler);
 enum BattlerId GetBattlerRightFoe(enum BattlerId battler);
 enum BattlerId GetDefaultSelectionTarget(enum BattlerId battler, enum MoveTarget moveTarget);
+bool32 IsHalfTeamMultiBattle(void);
+bool32 IsFullTeamMultiBattle(void);
+
+static inline bool32 HasAnyBattleFlags(u32 flags)
+{
+    return (gBattleTypeFlags & flags) != 0;
+}
+
+static inline bool32 HasAllBattleFlags(u32 flags)
+{
+    return (gBattleTypeFlags & flags) == flags;
+}
+
+static inline bool32 BattleTypeHasAi(void)
+{
+    return HasAnyBattleFlags(BATTLE_TYPE_TRAINER | BATTLE_TYPE_FIRST_BATTLE | BATTLE_TYPE_SAFARI | BATTLE_TYPE_ROAMER | BATTLE_TYPE_INGAME_PARTNER);
+}
+
+static inline bool32 IsWildDoubleBattle(void)
+{
+    return (HasAnyBattleFlags(BATTLE_TYPE_DOUBLE) && !HasAnyBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_TRAINER));
+}
+
+static inline bool32 IsRecordedWildBattle(void)
+{
+    return (HasAnyBattleFlags(BATTLE_TYPE_RECORDED) && !HasAnyBattleFlags(BATTLE_TYPE_TRAINER | BATTLE_TYPE_FRONTIER));
+}
+
+static inline bool32 IsTrainerBattle(void)
+{
+    return HasAnyBattleFlags(BATTLE_TYPE_TRAINER);
+}
+
+static inline bool32 IsMultiBattle(void)
+{
+    return HasAnyBattleFlags(BATTLE_TYPE_MULTI);
+}
+
+static inline bool32 IsMultiVsOneOpponentBattle(void)
+{
+    return (HasAnyBattleFlags(BATTLE_TYPE_INGAME_PARTNER) && TRAINER_BATTLE_PARAM.opponentB == 0xFFFF);
+}
+
+static inline bool32 IsTowerLinkMulti(void)
+{
+    return HasAllBattleFlags(BATTLE_TYPE_TOWER_LINK_MULTI);
+}
+
+static inline bool32 IsLinkMultiBattle(void)
+{
+    return HasAllBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_MULTI);
+}
 
 static inline bool32 IsBattlerAlive(enum BattlerId battler)
 {
@@ -1194,7 +1249,12 @@ static inline bool32 IsBattlerAlly(enum BattlerId battlerAtk, enum BattlerId bat
 
 static inline bool32 IsDoubleBattle(void)
 {
-    return !!(gBattleTypeFlags & BATTLE_TYPE_MORE_THAN_TWO_BATTLERS);
+    return HasAnyBattleFlags(BATTLE_TYPE_DOUBLE | BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_TWO_OPPONENTS) != 0;
+}
+
+static inline bool32 IsMoveValid(enum Move move)
+{
+    return move != MOVE_NONE && move != MOVE_UNAVAILABLE;
 }
 
 static inline bool32 IsSpreadMove(enum MoveTarget moveTarget)

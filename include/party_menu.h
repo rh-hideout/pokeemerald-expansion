@@ -24,7 +24,7 @@ enum PartyMenuType
     PARTY_MENU_TYPE_IN_BATTLE,
     PARTY_MENU_TYPE_CONTEST,
     PARTY_MENU_TYPE_CHOOSE_MON,
-    PARTY_MENU_TYPE_CHOOSE_HALF,                // multi battles, eReader battles, and some battle facilities
+    PARTY_MENU_TYPE_CHOOSE_NUMBER,                // multi battles, eReader battles, and some battle facilities
     PARTY_MENU_TYPE_MULTI_SHOWCASE,
     PARTY_MENU_TYPE_DAYCARE,
     PARTY_MENU_TYPE_MOVE_RELEARNER,
@@ -68,7 +68,6 @@ extern void (*gItemUseCB)(u8, TaskFunc);
 extern const struct SpriteTemplate gSpriteTemplate_StatusIcons;
 
 void AnimatePartySlot(u8 slot, u8 animNum);
-bool8 IsMultiBattle(void);
 u8 GetCursorSelectionMonId(void);
 u8 GetPartyMenuType(void);
 void Task_HandleChooseMonInput(u8 taskId);
@@ -113,7 +112,7 @@ enum ItemEffectType GetItemEffectType(enum Item item);
 void CB2_PartyMenuFromStartMenu(void);
 void CB2_ChooseMonToGiveItem(void);
 void ChooseMonToGiveMailFromMailbox(void);
-void InitChooseHalfPartyForBattle(u8 unused);
+void InitChoosePartyForBattle(u8 unused);
 void ClearSelectedPartyOrder(void);
 void ChooseMonForTradingBoard(enum PartyMenuType menuType, MainCallback callback);
 void ChooseMonForMoveTutor(void);
@@ -140,6 +139,7 @@ void MoveDeleterForgetMove(void);
 void BufferMoveDeleterNicknameAndMove(void);
 void GetNumMovesSelectedMonHas(void);
 void MoveDeleterChooseMoveToForget(void);
+bool32 IsAFusedMon(enum Species species);
 
 bool32 SetUpFieldMove_Surf(void);
 bool32 SetUpFieldMove_Fly(void);
@@ -148,7 +148,7 @@ bool32 SetUpFieldMove_Dive(void);
 bool32 SetUpFieldMove_RockClimb(void);
 
 #if TESTING
-s8 Test_UpdatePartySelectionSingleLayout(s8 slotId, s8 movementDir, bool8 chooseHalf, u8 lastSelectedSlot);
+s8 Test_UpdatePartySelectionSingleLayout(s8 slotId, s8 movementDir, bool8 chooseNumber, u8 lastSelectedSlot);
 #endif
 
 #endif // GUARD_PARTY_MENU_H

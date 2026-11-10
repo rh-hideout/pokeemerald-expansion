@@ -70,7 +70,7 @@ bool32 ShouldTrainerBattlerUseGimmick(enum BattlerId battler, enum Gimmick gimmi
     return gimmick == TestRunner_Battle_GetChosenGimmick(GetBattlerTrainer(battler), gBattlerPartyIndexes[battler]);
     #else
     // The player can bypass these checks because they can choose through the controller.
-    if (IsOnPlayerSide(battler) && !((gBattleTypeFlags & BATTLE_TYPE_MULTI) && GetBattlerPosition(battler) == B_POSITION_PLAYER_RIGHT))
+    if (IsOnPlayerSide(battler) && !(HasAnyBattleFlags(BATTLE_TYPE_MULTI) && GetBattlerPosition(battler) == B_POSITION_PLAYER_RIGHT))
         return TRUE;
 
     // When reading trainer party data, we load invalid values in struct Pokemon to indicate the gimmick should not be used
@@ -398,6 +398,24 @@ void CreateIndicatorSprite(enum BattlerId battler)
     gSprites[spriteId].tBattler = battler;
     gSprites[spriteId].tPosX = x;
     gSprites[spriteId].invisible = FALSE;
+}
+
+bool32 HasPlayerUnlockedGimmick(enum Gimmick gimmick)
+{
+    switch (gimmick)
+    {
+    default:
+        return FALSE;
+    case GIMMICK_MEGA:
+        return CheckBagHasItem(ITEM_MEGA_RING, 1);
+    case GIMMICK_ULTRA_BURST:
+    case GIMMICK_Z_MOVE:
+        return CheckBagHasItem(ITEM_Z_POWER_RING, 1);
+    case GIMMICK_DYNAMAX:
+        return CheckBagHasItem(ITEM_DYNAMAX_BAND, 1);
+    case GIMMICK_TERA:
+        return CheckBagHasItem(ITEM_TERA_ORB, 1);
+    }
 }
 
 #undef tBattler
