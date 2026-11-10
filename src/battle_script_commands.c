@@ -7806,7 +7806,7 @@ static void ComputeBallData(u32 wildMonBattler, u32 playerBattler, struct BallDa
         return;
     }
 
-    if (gSpeciesInfo[battleMon->species].isUltraBeast)
+    if (gSpeciesInfo[battleMon->species].isUltraBeast && ballId != BALL_MASTER)
     {
         if (ballId == BALL_BEAST)
             ball->multiplier = 500;
