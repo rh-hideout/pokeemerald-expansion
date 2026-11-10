@@ -222,6 +222,7 @@ AI_DOUBLE_BATTLE_TEST("AI values moves above Splash, 201-300")
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_POUND, move); Item(ITEM_STARF_BERRY); }
         OPPONENT(SPECIES_WOBBUFFET) { Status1(STATUS1_BURN); }
         OPPONENT(SPECIES_WOBBUFFET);
+        WITH_CONFIG(AI_REVERSE_BATTLER_LOGIC_ORDER_CHANCE, 0);
     } WHEN {
         switch (GetMoveEffect(move))
         {
