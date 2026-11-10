@@ -406,6 +406,7 @@ extern const u8 Debug_ShowExpansionVersion[];
 extern const u8 Debug_EventScript_EWRAMCounters[];
 extern const u8 Debug_Follower_NPC_Event_Script[];
 extern const u8 Debug_Follower_NPC_Not_Enabled[];
+extern const u8 Debug_EventScript_Mining_Minigame[];
 extern const u8 Debug_EventScript_Steven_Multi[];
 extern const u8 Debug_EventScript_WallyTutorial[];
 extern const u8 Debug_EventScript_PrintTimeOfDay[];
@@ -604,6 +605,7 @@ static const struct DebugMenuOption sDebugMenu_Actions_Utilities[] =
     { COMPOUND_STRING("Follower NPC…"),             DebugAction_OpenSubMenu, sDebugMenu_Actions_FollowerNPCMenu },
     { COMPOUND_STRING("Test Species Randomizer"),   DebugAction_Selection_Init, &sSpeciesGeneratorSelection },
     { COMPOUND_STRING("Test Item Randomizer"),      DebugAction_Selection_Init, &sItemGeneratorSelection },
+    { COMPOUND_STRING("Mining Minigame"),           DebugAction_ExecuteScript, Debug_EventScript_Mining_Minigame },
     { COMPOUND_STRING("Wally Tutorial"),            DebugAction_ExecuteScript, Debug_EventScript_WallyTutorial },
     { COMPOUND_STRING("Steven Multi"),              DebugAction_ExecuteScript, Debug_EventScript_Steven_Multi },
     { NULL }
@@ -3472,6 +3474,7 @@ static bool32 DebugSelection_GiveComplexPokemon_OnComplete(u8 taskId)
 
     u8 evs[NUM_STATS];
     ResolveEVs(rawEvs, evs, FALSE);
+
     for (u32 i = 0; i < NUM_STATS; i++)
     {
         SetMonData(&mon, MON_DATA_HP_EV + i, &evs[i]);
