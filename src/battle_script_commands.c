@@ -7800,12 +7800,6 @@ static void ComputeBallData(u32 wildMonBattler, u32 playerBattler, struct BallDa
     ball->flatBonus = 0;
     ball->guaranteedCapture = FALSE;
 
-    if (ballId == BALL_MASTER)
-    {
-        ball->guaranteedCapture = TRUE;
-        return;
-    }
-
     if (gSpeciesInfo[battleMon->species].isUltraBeast && ballId != BALL_MASTER)
     {
         if (ballId == BALL_BEAST)
@@ -7825,6 +7819,9 @@ static void ComputeBallData(u32 wildMonBattler, u32 playerBattler, struct BallDa
         break;
     case BALL_ULTRA:
         ball->multiplier = 200;
+        break;
+    case BALL_MASTER:
+        ball->guaranteedCapture = TRUE;
         break;
     case BALL_NET:
         if (IS_BATTLER_ANY_TYPE(wildMonBattler, TYPE_WATER, TYPE_BUG))
