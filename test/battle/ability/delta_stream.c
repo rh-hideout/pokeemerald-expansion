@@ -1,6 +1,96 @@
 #include "global.h"
 #include "test/battle.h"
 
+DOUBLE_BATTLE_TEST("Delta Stream ends before Drizzle starts rain")
+{
+    enum Move move;
+    PARAMETRIZE { move = MOVE_ENTRAINMENT; }
+    PARAMETRIZE { move = MOVE_ROLE_PLAY; }
+    PARAMETRIZE { move = MOVE_DOODLE; }
+
+    GIVEN {
+        PLAYER(SPECIES_RAYQUAZA) { Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE, move); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_PELIPPER) { Ability(ABILITY_DRIZZLE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {
+            MOVE(playerLeft, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA);
+        }
+
+        if (move == MOVE_ENTRAINMENT) {
+            TURN { MOVE(opponentLeft, move, target: playerLeft); }
+        } else {
+            TURN { MOVE(playerLeft, move, target: opponentLeft); }
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, playerLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STRONG_WINDS);
+        if (move == MOVE_ENTRAINMENT) {
+            ANIMATION(ANIM_TYPE_MOVE, move, opponentLeft);
+        } else {
+            ANIMATION(ANIM_TYPE_MOVE, move, playerLeft);
+        }
+
+        MESSAGE("The mysterious strong winds have dissipated!");
+        ABILITY_POPUP(playerLeft, ABILITY_DRIZZLE);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_RAIN_CONTINUES);
+        if (move == MOVE_DOODLE) {
+            ABILITY_POPUP(playerRight);
+        }
+
+        // The second rain animation is the end-of-turn continuation.
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_RAIN_CONTINUES);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Delta Stream persists when another holder sustains it during an Ability replacement")
+{
+    enum Move move;
+    PARAMETRIZE { move = MOVE_ENTRAINMENT; }
+    PARAMETRIZE { move = MOVE_ROLE_PLAY; }
+    PARAMETRIZE { move = MOVE_DOODLE; }
+
+    GIVEN {
+        PLAYER(SPECIES_RAYQUAZA) { Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE, move); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_PELIPPER) { Ability(ABILITY_DRIZZLE); }
+        OPPONENT(SPECIES_RAYQUAZA) { Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE); }
+    } WHEN {
+        TURN {
+            MOVE(playerLeft, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA);
+            MOVE(opponentRight, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA);
+        }
+
+        if (move == MOVE_ENTRAINMENT) {
+            TURN { MOVE(opponentLeft, move, target: playerLeft); }
+        } else {
+            TURN { MOVE(playerLeft, move, target: opponentLeft); }
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, playerLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STRONG_WINDS);
+        if (move == MOVE_ENTRAINMENT) {
+            ANIMATION(ANIM_TYPE_MOVE, move, opponentLeft);
+        } else {
+            ANIMATION(ANIM_TYPE_MOVE, move, playerLeft);
+        }
+
+        NOT MESSAGE("The mysterious strong winds have dissipated!");
+        ABILITY_POPUP(playerLeft, ABILITY_DRIZZLE);
+        if (move == MOVE_DOODLE) {
+            NOT MESSAGE("The mysterious strong winds have dissipated!");
+            ABILITY_POPUP(playerRight, ABILITY_DRIZZLE);
+        }
+
+        NOT MESSAGE("The mysterious strong winds have dissipated!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STRONG_WINDS);
+        NOT MESSAGE("The mysterious strong winds have dissipated!");
+    }
+}
+
 // Effects of strong winds are handled in test/battle/weather/strong_winds.c
 
 //TO_DO_BATTLE_TEST("Delta Stream doesn't activate if is sent-out in a rotated-out position (Rotation)")

@@ -187,8 +187,7 @@ static void Select_Task_FadeSpeciesName(u8);
 static void Select_Task_OpenChosenMonPics(u8);
 static void Select_Task_HandleChooseMons(u8);
 static void Select_Task_HandleMenu(u8);
-static void CreateFrontierFactorySelectableMons(u8);
-static void CreateSlateportTentSelectableMons(u8);
+static void CreateFrontierFactorySelectableMons();
 static void Select_SetBallSpritePaletteNum(u8);
 static void Select_ErasePopupMenu(u8);
 static u8 Select_RunMenuOptionFunc(void);
@@ -1274,10 +1273,7 @@ static void Select_InitMonsData(void)
     for (i = 0; i < SELECTABLE_MONS_COUNT; i++)
         sFactorySelectScreen->mons[i].selectedId = 0;
 
-    if (gSaveBlock2Ptr->frontier.lvlMode != FRONTIER_LVL_TENT)
-        CreateFrontierFactorySelectableMons(0);
-    else
-        CreateSlateportTentSelectableMons(0);
+    CreateFrontierFactorySelectableMons();
 }
 
 static void Select_InitAllSprites(void)
@@ -1707,57 +1703,17 @@ static void Select_Task_HandleChooseMons(u8 taskId)
 #undef STATE_MENU_REINIT
 #undef STATE_MENU_RESHOW
 
-static void CreateFrontierFactorySelectableMons(u8 firstMonId)
+static void CreateFrontierFactorySelectableMons()
 {
-    u8 i = 0;
-    u8 ivs = 0;
-    u8 level = 0;
-    u32 otId = 0;
-    u8 battleMode = VarGet(VAR_FRONTIER_BATTLE_MODE);
-    enum FrontierLevelMode lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
-    u8 challengeNum = gSaveBlock2Ptr->frontier.factoryWinStreaks[battleMode][lvlMode] / FRONTIER_STAGES_PER_CHALLENGE;
-    u8 rentalRank = 0;
+    struct FacilityMonGenerator generator = GetFacilityMonGenerator(0xFFFF);
 
-    gFacilityTrainerMons = gBattleFrontierMons;
-    if (gSaveBlock2Ptr->frontier.lvlMode != FRONTIER_LVL_50)
-        level = FRONTIER_MAX_LEVEL_OPEN;
-    else
-        level = FRONTIER_MAX_LEVEL_50;
-
-    rentalRank = GetNumPastRentalsRank(battleMode, lvlMode);
-    otId = READ_OTID_FROM_SAVE;
-
-    for (i = 0; i < SELECTABLE_MONS_COUNT; i++)
+    for (u32 i = 0; i < SELECTABLE_MONS_COUNT; i++)
     {
         u16 monId = gSaveBlock2Ptr->frontier.rentalMons[i].monId;
-        sFactorySelectScreen->mons[i + firstMonId].monId = monId;
-        if (i < rentalRank)
-            ivs = GetFactoryMonFixedIV(challengeNum + 1, FALSE);
-        else
-            ivs = GetFactoryMonFixedIV(challengeNum, FALSE);
-
-        CreateFacilityMon(&gFacilityTrainerMons[monId],
-                level, ivs, otId, FLAG_FRONTIER_MON_FACTORY,
-                &sFactorySelectScreen->mons[i + firstMonId].monData);
+        sFactorySelectScreen->mons[i].monId = monId;
+        CreateFacilityMon(&sFactorySelectScreen->mons[i].monData, &generator, monId);
     }
-}
-
-static void CreateSlateportTentSelectableMons(u8 firstMonId)
-{
-    u8 i;
-    u8 ivs = 0;
-    u8 level = TENT_MIN_LEVEL;
-    u32 otId = 0;
-
-    gFacilityTrainerMons = gSlateportBattleTentMons;
-    otId = READ_OTID_FROM_SAVE;
-
-    for (i = 0; i < SELECTABLE_MONS_COUNT; i++)
-    {
-        u16 monId = gSaveBlock2Ptr->frontier.rentalMons[i].monId;
-        sFactorySelectScreen->mons[i + firstMonId].monId = monId;
-        CreateFacilityMon(&gFacilityTrainerMons[monId], level, ivs, otId, 0, &sFactorySelectScreen->mons[i + firstMonId].monData);
-    }
+    gFacilityTrainerMons = generator.facilityMonList;
 }
 
 static void Select_CopyMonsToPlayerParty(void)
@@ -3790,6 +3746,7 @@ static void Swap_PrintActionStrings(void)
     {
     case TRUE:
         Swap_PrintActionString(gText_PkmnForSwap, 0, SWAP_WIN_ACTION_FADE);
+        [[fallthrough]];
     case FALSE:
         Swap_PrintActionString(gText_Cancel3, 24, SWAP_WIN_ACTION_FADE);
         break;
@@ -3804,6 +3761,7 @@ static void Swap_PrintActionStrings2(void)
     {
     case TRUE:
         Swap_PrintActionString(gText_PkmnForSwap, 8, SWAP_WIN_OPTIONS);
+        [[fallthrough]];
     case FALSE:
         Swap_PrintActionString(gText_Cancel3, 32, SWAP_WIN_OPTIONS);
         break;

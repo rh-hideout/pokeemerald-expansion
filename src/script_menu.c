@@ -205,14 +205,20 @@ static void MultichoiceDynamicEventShowItem_OnSelectionChanged(struct DynamicLis
 {
     FreeSpriteIfUsed();
     sSpriteId = AddItemIconSprite(TAG_CB_SPRITE_ICON, TAG_CB_SPRITE_ICON, eventArgs->selectedItem);
-    ChangeSpriteOnSelection(eventArgs, 36, 20);
+    if (sSpriteId != MAX_SPRITES)
+    {
+        ChangeSpriteOnSelection(eventArgs, 36, 20);
+    }
 }
 
 static void MultichoiceDynamicEventShowPkmn_OnSelectionChanged(struct DynamicListMenuEventArgs *eventArgs)
 {
     FreeSpriteIfUsed();
     sSpriteId = CreateTaggedMonIcon(TAG_CB_SPRITE_ICON, TAG_CB_SPRITE_ICON, eventArgs->selectedItem);
-    ChangeSpriteOnSelection(eventArgs, 32, 14);
+    if (sSpriteId != MAX_SPRITES)
+    {
+        ChangeSpriteOnSelection(eventArgs, 32, 14);
+    }
 }
 
 static void MultichoiceDynamicEventShowSprite_OnDestroy(struct DynamicListMenuEventArgs *eventArgs)

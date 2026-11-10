@@ -309,9 +309,9 @@ u32 FldEff_ORASDowsing(void)
     FlagSet(I_ORAS_DOWSING_FLAG);
     SetSpritePosToOffsetMapCoords((s16 *)&fPlayerX, (s16 *)&fPlayerY, 8, 0);
     if (gPlayerAvatar.gender == MALE)
-        spriteId = CreateSpriteAtEnd(gFieldEffectObjectTemplatePointers[FLDEFFOBJ_ORAS_DOWSE_BRENDAN], fPlayerX, fPlayerY, 1);
+        spriteId = CreateSpriteAtEndUnchecked(gFieldEffectObjectTemplatePointers[FLDEFFOBJ_ORAS_DOWSE_BRENDAN], fPlayerX, fPlayerY, 1);
     else
-        spriteId = CreateSpriteAtEnd(gFieldEffectObjectTemplatePointers[FLDEFFOBJ_ORAS_DOWSE_MAY], fPlayerX, fPlayerY, 1);
+        spriteId = CreateSpriteAtEndUnchecked(gFieldEffectObjectTemplatePointers[FLDEFFOBJ_ORAS_DOWSE_MAY], fPlayerX, fPlayerY, 1);
 
     if (spriteId != MAX_SPRITES)
     {
@@ -457,6 +457,7 @@ static void ChangeDowsingColor(enum Direction direction, struct Sprite *sprite)
             sprite->sDowseState = ORASD_WIGGLE_FASTER;
             break;
         }
+        [[fallthrough]];
     case 2:
         color = I_ORAS_DOWSING_COLOR_FAST;
         sprite->sDowseState = ORASD_WIGGLE_FAST;

@@ -8,7 +8,6 @@ ASSUMPTIONS
 
 SINGLE_BATTLE_TEST("Leech Seed doesn't affect Grass-type Pokémon")
 {
-    PASSES_RANDOMLY(90, 100, RNG_ACCURACY);
     GIVEN {
         ASSUME(GetSpeciesType(SPECIES_ODDISH, 0) == TYPE_GRASS);
         PLAYER(SPECIES_WYNAUT);
@@ -103,6 +102,35 @@ SINGLE_BATTLE_TEST("Leech Seeded recovers health through Substitute")
         HP_BAR(player);
         HP_BAR(opponent);
         HP_BAR(player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Leech Seed is blocked by Substitute")
+{
+    GIVEN {
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SUBSTITUTE); }
+        TURN { MOVE(player, MOVE_LEECH_SEED); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, opponent);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_LEECH_SEED, player);
+        MESSAGE("But it failed!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Leech Seed's accuracy is 90%")
+{
+    PASSES_RANDOMLY(90, 100, RNG_ACCURACY);
+    GIVEN {
+        ASSUME(GetMoveAccuracy(MOVE_LEECH_SEED) == 90);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_LEECH_SEED); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_LEECH_SEED, player);
     }
 }
 

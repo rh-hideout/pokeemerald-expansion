@@ -1290,7 +1290,7 @@
 #define SYS_FLAGS (TRAINER_FLAGS_END + 1) // 0x800
 
 // Temporary system flags
-#define FLAG_SYS_SAFARI_MODE                                        (SYS_FLAGS + 0x0)
+#define FLAG_SYS_SAFARI_MODE                                        (SYS_FLAGS + 0x0) // Unused flag
 #define FLAG_SYS_VS_SEEKER_CHARGING                                 (SYS_FLAGS + 0x1)
 #define FLAG_SYS_CRUISE_MODE                                        (SYS_FLAGS + 0x2)
 #define FLAG_SYS_ENC_UP_ITEM                                        (SYS_FLAGS + 0x3)

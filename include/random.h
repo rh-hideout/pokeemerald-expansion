@@ -45,7 +45,11 @@ static inline u32 _SFC32_Next(struct Sfc32State *state)
 
 static inline u32 LocalRandom32(rng_value_t *val)
 {
+#if TESTING
+    return 0;
+#else
     return _SFC32_Next(val);
+#endif
 }
 
 static inline u16 LocalRandom(rng_value_t *val)
@@ -132,6 +136,8 @@ enum RandomTag
     RNG_CURSED_BODY,
     RNG_CUTE_CHARM,
     RNG_DAMAGE_MODIFIER,
+    RNG_DISABLE_MOVE,
+    RNG_DISABLE_TURNS,
     RNG_EFFECT_SPORE,
     RNG_FLAME_BODY,
     RNG_FORCE_RANDOM_SWITCH,
@@ -248,6 +254,8 @@ enum RandomTag
     RNG_WILD_MON_TARGET,
     RNG_AI_FAKE_OUT_SAVE_ALLY,
     RNG_AI_DMG_ROLL_RANDOM,
+    RNG_POKEBLOCK_FEEDER_FORCE_NATURE,
+    RNG_ROCK_SMASH_ITEM_DROP,
     RNG_RANDOM_BERRY,
     RNG_DAYCARE_MAKE_EGG,
     RNG_DAYCARE_PICK_NATURE_PARENT,
@@ -273,22 +281,23 @@ enum RandomTag
 
 #define RandomPercentage(tag, t) \
     ({ \
+        s32 p = (t); \
         u32 r; \
-        if_comptime (t == 50) \
+        if_comptime (p == 50) \
         { \
             r = RandomUniform(tag, FALSE, TRUE); \
         } \
-        else if (t <= 0) \
+        else if (p <= 0) \
         { \
             r = FALSE; \
         } \
-        else if (t >= 100) \
+        else if (p >= 100) \
         { \
             r = TRUE; \
         } \
         else \
         { \
-          const u16 weights[] = { 100 - t, t }; \
+          const u16 weights[] = { 100 - p, p }; \
           r = RandomWeightedArray(tag, 100, ARRAY_COUNT(weights), weights); \
         } \
         r; \

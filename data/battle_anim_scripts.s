@@ -19141,8 +19141,9 @@ MatchaGotchaDoubleProjectile:
 
 @@@@@@@@@@@@@@@@@@@@@@@ GEN 1-3 @@@@@@@@@@@@@@@@@@@@@@@
 gBattleAnimMove_None::
-gBattleAnimMove_Count:: @Unused?
 gBattleAnimMove_MirrorMove::
+	end
+	
 gBattleAnimMove_Pound::
 	monbg ANIM_TARGET
 	setalpha 12, 8
@@ -20759,17 +20760,17 @@ gBattleAnimMove_BubbleBeam::
 	splitbgprio ANIM_TARGET
 	setalpha 12, 8
 	delay 1
-	call BulbblebeamCreateBubbles
+	call BubblebeamCreateBubbles
 	createvisualtask AnimTask_SwayMon, 5, 0, 3, 3072, 8, ANIM_TARGET
-	call BulbblebeamCreateBubbles
-	call BulbblebeamCreateBubbles
+	call BubblebeamCreateBubbles
+	call BubblebeamCreateBubbles
 	waitforvisualfinish
 	call WaterBubblesEffectShort
 	waitforvisualfinish
 	clearmonbg ANIM_TARGET
 	blendoff
 	end
-BulbblebeamCreateBubbles:
+BubblebeamCreateBubbles:
 	createsprite gWaterBubbleProjectileSpriteTemplate, ANIM_ATTACKER, 2, 18, 0, 35, 70, 0, 256, 50
 	playsewithpan SE_M_BUBBLE, SOUND_PAN_ATTACKER
 	delay 3
@@ -21809,16 +21810,16 @@ gBattleAnimMove_Swagger::
 
 gBattleAnimMove_MilkDrink::
 	monbg ANIM_TARGET
-	createsprite gMilkBottleSpriteTemplate, ANIM_ATTACKER, 2
+	createsprite gMilkBottleSpriteTemplate, ANIM_TARGET, 2
 	delay 40
-	playsewithpan SE_M_CRABHAMMER, SOUND_PAN_ATTACKER
+	playsewithpan SE_M_CRABHAMMER, SOUND_PAN_TARGET
 	delay 12
-	playsewithpan SE_M_CRABHAMMER, SOUND_PAN_ATTACKER
+	playsewithpan SE_M_CRABHAMMER, SOUND_PAN_TARGET
 	delay 20
-	playsewithpan SE_M_CRABHAMMER, SOUND_PAN_ATTACKER
+	playsewithpan SE_M_CRABHAMMER, SOUND_PAN_TARGET
 	waitforvisualfinish
-	createsprite gThinRingExpandingSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, 1, 0
-	playsewithpan SE_M_MILK_DRINK, SOUND_PAN_ATTACKER
+	createsprite gThinRingExpandingSpriteTemplate, ANIM_TARGET, 3, 0, 0, 1, 0
+	playsewithpan SE_M_MILK_DRINK, SOUND_PAN_TARGET
 	waitforvisualfinish
 	clearmonbg ANIM_TARGET
 	call HealingEffect2
@@ -23093,13 +23094,6 @@ CreateIceSpiral:
 	return
 
 gBattleAnimMove_Rest::
-	playsewithpan SE_M_SNORE, SOUND_PAN_ATTACKER
-	createsprite gSleepLetterZSpriteTemplate, ANIM_ATTACKER, 2, 4, -10, 16, 0, 0
-	delay 20
-	createsprite gSleepLetterZSpriteTemplate, ANIM_ATTACKER, 2, 4, -10, 16, 0, 0
-	delay 20
-	createsprite gSleepLetterZSpriteTemplate, ANIM_ATTACKER, 2, 4, -10, 16, 0, 0
-	waitforvisualfinish
 	end
 
 gBattleAnimMove_Confusion::
@@ -35046,4 +35040,14 @@ gBattleAnimGeneral_DynamaxGrowth:: @ PORTED FROM CFRU
 	delay 8
 	createvisualtask AnimTask_DynamaxGrowth, 5, 1, 0
 	waitforvisualfinish
+	end
+
+gBattleAnimGeneral_ProtectedItself::
+	monbg ANIM_ATTACKER
+	splitbgprio ANIM_TARGET
+	playsewithpan SE_ICE_STAIRS, SOUND_PAN_ATTACKER
+	createsprite gProtectTemplate, ANIM_TARGET, 2, 0x0, 0x0
+	createvisualtask AnimTask_ShakeMon2, 2, ANIM_TARGET, 2, 0, 10, 1
+	waitforvisualfinish
+	clearmonbg ANIM_ATTACKER
 	end

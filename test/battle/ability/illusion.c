@@ -88,6 +88,26 @@ ONE_VS_TWO_BATTLE_TEST("Illusion works for the second opponent trainer in a batt
     }
 }
 
+MULTI_BATTLE_TEST("Illusion works when the user's partner and disguise are in the same party slot")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_ZOROARK) { Ability(ABILITY_ILLUSION); }
+        PLAYER(SPECIES_WYNAUT);
+        PARTNER(SPECIES_WOBBUFFET);
+        PARTNER(SPECIES_WOBBUFFET);
+        PARTNER(SPECIES_WOBBUFFET);
+        OPPONENT_A(SPECIES_WOBBUFFET);
+        OPPONENT_B(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { SWITCH(playerRight, 2); }
+        TURN { SWITCH(playerLeft, 1); }
+    } THEN {
+        EXPECT_EQ(gBattleStruct->illusion[B_POSITION_PLAYER_LEFT].state, ILLUSION_ON);
+        EXPECT(&gParties[B_TRAINER_PLAYER][2] == gBattleStruct->illusion[B_POSITION_PLAYER_LEFT].mon);
+    }
+}
+
 SINGLE_BATTLE_TEST("Illusion breaks in Neutralizing Gas")
 {
     GIVEN {
@@ -99,6 +119,25 @@ SINGLE_BATTLE_TEST("Illusion breaks in Neutralizing Gas")
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_NEUTRALIZING_GAS);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ILLUSION_OFF, player);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Illusion breaks in Neutralizing Gas by speed")
+{
+    GIVEN {
+        PLAYER(SPECIES_ZOROARK) { Speed(1); }
+        PLAYER(SPECIES_ZOROARK) { Speed(3); }
+        PLAYER(SPECIES_WYNAUT) { Speed(10); }
+        OPPONENT(SPECIES_ZOROARK) { Speed(2); }
+        OPPONENT(SPECIES_WEEZING) { Speed(5); Ability(ABILITY_NEUTRALIZING_GAS); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(15); }
+    } WHEN {
+        TURN {}
+    } SCENE {
+        ABILITY_POPUP(opponentRight, ABILITY_NEUTRALIZING_GAS);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ILLUSION_OFF, playerRight);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ILLUSION_OFF, opponentLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ILLUSION_OFF, playerLeft);
     }
 }
 

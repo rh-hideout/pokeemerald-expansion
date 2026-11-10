@@ -6,6 +6,20 @@ ASSUMPTIONS
     ASSUME(MoveHasAdditionalEffect(MOVE_THUNDER_SHOCK, MOVE_EFFECT_PARALYSIS) == TRUE);
 }
 
+SINGLE_BATTLE_TEST("Thunder Wave inflicts paralysis")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_THUNDER_WAVE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_THUNDER_WAVE, player);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PRZ, opponent);
+        STATUS_ICON(opponent, paralysis: TRUE);
+    }
+}
+
 SINGLE_BATTLE_TEST("Thunder Shock inflicts paralysis")
 {
     GIVEN {

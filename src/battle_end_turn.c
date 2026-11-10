@@ -8,6 +8,7 @@
 #include "battle_stat_change.h"
 #include "battle_gimmick.h"
 #include "battle_scripts.h"
+#include "battle_move_resolution.h"
 #include "constants/battle.h"
 #include "constants/battle_string_ids.h"
 #include "constants/abilities.h"
@@ -27,7 +28,7 @@ static enum BattlerId GetBattlerSideForMessage(enum BattleSide side)
     return battler;
 }
 
-static bool32 HandleEndTurnOrder(enum BattlerId battler)
+static bool32 HandleEndTurnOrder(struct BattleCalcValues *cv, enum BattlerId battler)
 {
     bool32 effect = FALSE;
 
@@ -41,7 +42,7 @@ static bool32 HandleEndTurnOrder(enum BattlerId battler)
     return effect;
 }
 
-static bool32 HandleEndTurnVarious(enum BattlerId battler)
+static bool32 HandleEndTurnVarious(struct BattleCalcValues *cv, enum BattlerId battler)
 {
     bool32 effect = FALSE;
 
@@ -91,17 +92,17 @@ static bool32 HandleEndTurnVarious(enum BattlerId battler)
     return effect;
 }
 
-static bool32 HandleEndTurnWeather(enum BattlerId battler)
+static bool32 HandleEndTurnWeather(struct BattleCalcValues *cv, enum BattlerId battler)
 {
     gBattleStruct->eventState.endTurn++;
     return EndOrContinueWeather();
 }
 
-static bool32 HandleEndTurnWeatherDamage(enum BattlerId battler)
+static bool32 HandleEndTurnWeatherDamage(struct BattleCalcValues *cv, enum BattlerId battler)
 {
     bool32 effect = FALSE;
 
-    enum Ability ability = GetBattlerAbility(battler);
+    enum Ability ability = cv->abilities[battler];
     enum BattleWeather currBattleWeather = GetBattleWeather(gBattleWeather);
 
     if (currBattleWeather == BATTLE_WEATHER_NONE)
@@ -148,7 +149,7 @@ static bool32 HandleEndTurnWeatherDamage(enum BattlerId battler)
          && !IS_BATTLER_ANY_TYPE(battler, TYPE_ROCK, TYPE_GROUND, TYPE_STEEL)
          && gBattleMons[battler].volatiles.semiInvulnerable != STATE_UNDERGROUND
          && gBattleMons[battler].volatiles.semiInvulnerable != STATE_UNDERWATER
-         && GetBattlerHoldEffect(battler) != HOLD_EFFECT_SAFETY_GOGGLES
+         && cv->holdEffects[battler] != HOLD_EFFECT_SAFETY_GOGGLES
          && !IsAbilityAndRecord(battler, ability, ABILITY_MAGIC_GUARD))
         {
             SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 16);
@@ -171,7 +172,7 @@ static bool32 HandleEndTurnWeatherDamage(enum BattlerId battler)
              && !IS_BATTLER_OF_TYPE(battler, TYPE_ICE)
              && gBattleMons[battler].volatiles.semiInvulnerable != STATE_UNDERGROUND
              && gBattleMons[battler].volatiles.semiInvulnerable != STATE_UNDERWATER
-             && GetBattlerHoldEffect(battler) != HOLD_EFFECT_SAFETY_GOGGLES
+             && cv->holdEffects[battler] != HOLD_EFFECT_SAFETY_GOGGLES
              && !IsAbilityAndRecord(battler, ability, ABILITY_MAGIC_GUARD))
             {
                 SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 16);
@@ -189,7 +190,7 @@ static bool32 HandleEndTurnWeatherDamage(enum BattlerId battler)
     return effect;
 }
 
-static bool32 HandleEndTurnSendOutReplacements(enum BattlerId battler)
+static bool32 HandleEndTurnSendOutReplacements(struct BattleCalcValues *cv, enum BattlerId battler)
 {
     gBattleStruct->eventState.endTurnBattler++;
 
@@ -212,7 +213,7 @@ static bool32 HandleEndTurnSendOutReplacements(enum BattlerId battler)
     return FALSE;
 }
 
-static bool32 HandleEndTurnAffection(enum BattlerId battler)
+static bool32 HandleEndTurnAffection(struct BattleCalcValues *cv, enum BattlerId battler)
 {
     bool32 effect = FALSE;
 
@@ -238,7 +239,7 @@ static bool32 IsFutureSightAttackerInParty(enum BattlerId battlerAtk, enum Battl
     if (IsDoubleBattle())
     {
         return &party[gBattleStruct->futureSight[battlerDef].partyIndex] != &party[gBattlerPartyIndexes[battlerAtk]]
-            && &party[gBattleStruct->futureSight[battlerDef].partyIndex] != &party[gBattlerPartyIndexes[BATTLE_PARTNER(battlerAtk)]];
+            && &party[gBattleStruct->futureSight[battlerDef].partyIndex] != &party[gBattlerPartyIndexes[GetPartnerBattler(battlerAtk)]];
     }
 
     return &party[gBattleStruct->futureSight[battlerDef].partyIndex] != &party[gBattlerPartyIndexes[battlerAtk]];
@@ -246,18 +247,14 @@ static bool32 IsFutureSightAttackerInParty(enum BattlerId battlerAtk, enum Battl
 
 // Note: Technically Future Sight, Doom Desire and Wish need a queue but
 // I think we should accept this slight inconsistency so custom moves don't have to touch this code
-static bool32 HandleEndTurnFutureSight(enum BattlerId battler)
+static bool32 HandleEndTurnFutureSight(struct BattleCalcValues *cv, enum BattlerId battler)
 {
     bool32 effect = FALSE;
 
     gBattleStruct->eventState.endTurnBattler++;
 
-    if (gBattleStruct->futureSight[battler].counter > 0
-     && --gBattleStruct->futureSight[battler].counter == 0)
+    if (gBattleStruct->futureSight[battler].counter > 0 && --gBattleStruct->futureSight[battler].counter == 0)
     {
-        if (!IsBattlerPresent(battler)) // Looks like a bug in doubles?
-            return effect;
-
         if (gBattleStruct->futureSight[battler].move == MOVE_FUTURE_SIGHT)
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_FUTURE_SIGHT;
         else
@@ -268,12 +265,21 @@ static bool32 HandleEndTurnFutureSight(enum BattlerId battler)
         gBattlerTarget = battler;
         gBattlerAttacker = gBattleStruct->futureSight[battler].battlerIndex;
         gCurrentMove = gBattleStruct->futureSight[battler].move;
-        gBattleStruct->eventState.atkCanceler = CANCELER_TARGET_FAILURE;
+
+        if (!IsBattlerPresent(gBattlerTarget))
+        {
+            gBattlerTarget = GetPartnerBattler(gBattlerTarget);
+            if (!IsBattlerPresent(gBattlerTarget))
+                return effect;
+        }
+
+        gBattleStruct->eventState.atkCanceler = CANCELER_NO_TARGET;
+        SetTargetMoveFailureFlags(gBattlerAttacker, GetMoveTarget(gCurrentMove));
 
         if (IsFutureSightAttackerInParty(gBattlerAttacker, gBattlerTarget))
             gSpecialStatuses[gBattlerAttacker].attackerInParty = TRUE;
         else
-            SetTypeBeforeUsingMove(gCurrentMove, gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker));
+            SetTypeBeforeUsingMove(gCurrentMove, gBattlerAttacker, cv->abilities[gBattlerAttacker], cv->holdEffects[gBattlerAttacker]);
 
         gBattleScripting.animTurn = 1; // to play correct anim
         BattleScriptCall(BattleScript_MonTookFutureAttack);
@@ -283,7 +289,7 @@ static bool32 HandleEndTurnFutureSight(enum BattlerId battler)
     return effect;
 }
 
-static bool32 HandleEndTurnWish(enum BattlerId battler)
+static bool32 HandleEndTurnWish(struct BattleCalcValues *cv, enum BattlerId battler)
 {
     bool32 effect = FALSE;
 
@@ -303,7 +309,7 @@ static bool32 HandleEndTurnWish(enum BattlerId battler)
 
         SetHealAmount(battler, wishHeal);
 
-        if (gBattleMons[battler].volatiles.healBlock)
+        if (gBattleMons[battler].volatiles.healBlockTimer)
             BattleScriptCall(BattleScript_WishButHealBlocked);
         else if (gBattleMons[battler].hp == gBattleMons[battler].maxHP)
             BattleScriptCall(BattleScript_WishButFullHp);
@@ -316,7 +322,7 @@ static bool32 HandleEndTurnWish(enum BattlerId battler)
     return effect;
 }
 
-static bool32 HandleEndTurnFirstEventBlock(enum BattlerId battler)
+static bool32 HandleEndTurnFirstEventBlock(struct BattleCalcValues *cv, enum BattlerId battler)
 {
     bool32 effect = FALSE;
     enum BattleSide side;
@@ -349,7 +355,7 @@ static bool32 HandleEndTurnFirstEventBlock(enum BattlerId battler)
         if (gSideStatuses[side] & SIDE_STATUS_DAMAGE_NON_TYPES)
         {
             if (!IS_BATTLER_OF_TYPE(battler, gSideTimers[side].damageNonTypesType)
-             && !IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
+             && !IsAbilityAndRecord(battler, cv->abilities[battler], ABILITY_MAGIC_GUARD))
             {
                 SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 6);
                 ChooseDamageNonTypesString(gSideTimers[side].damageNonTypesType);
@@ -363,7 +369,7 @@ static bool32 HandleEndTurnFirstEventBlock(enum BattlerId battler)
         side = GetBattlerSide(battler);
         if ((gSideStatuses[side] & SIDE_STATUS_SEA_OF_FIRE)
          && !IS_BATTLER_OF_TYPE(battler, TYPE_FIRE)
-         && !IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
+         && !IsAbilityAndRecord(battler, cv->abilities[battler], ABILITY_MAGIC_GUARD))
         {
             gBattlerAttacker = battler;
             SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 8);
@@ -401,9 +407,9 @@ static bool32 HandleEndTurnFirstEventBlock(enum BattlerId battler)
     case FIRST_EVENT_BLOCK_GRASSY_TERRAIN_HEAL:
         if (gFieldTimers.terrain == B_TERRAIN_GRASSY
          && !IsBattlerAtMaxHp(battler)
-         && !gBattleMons[battler].volatiles.healBlock
+         && !gBattleMons[battler].volatiles.healBlockTimer
          && !IsSemiInvulnerable(battler, CHECK_ALL)
-         && IsBattlerGrounded(battler, GetBattlerAbility(battler), GetBattlerHoldEffect(battler)))
+         && IsBattlerGrounded(battler, cv->abilities[battler], cv->holdEffects[battler]))
         {
             SetHealAmount(battler, GetNonDynamaxMaxHP(battler) / 16);
             BattleScriptCall(BattleScript_GrassyTerrainHeals);
@@ -413,7 +419,7 @@ static bool32 HandleEndTurnFirstEventBlock(enum BattlerId battler)
         break;
     case FIRST_EVENT_BLOCK_ABILITIES:
     {
-        enum Ability ability = GetBattlerAbility(battler);
+        enum Ability ability = cv->abilities[battler];
         switch (ability)
         {
         case ABILITY_HEALER:
@@ -429,7 +435,7 @@ static bool32 HandleEndTurnFirstEventBlock(enum BattlerId battler)
         break;
     }
     case FIRST_EVENT_BLOCK_HEAL_ITEMS:
-        if (ItemBattleEffects(battler, 0, GetBattlerHoldEffect(battler), IsLeftoversActivation))
+        if (ItemBattleEffects(battler, 0, cv->holdEffects[battler], IsLeftoversActivation))
             effect = TRUE;
         gBattleStruct->eventState.endTurnBlock = 0;
         gBattleStruct->eventState.endTurnBattler++;
@@ -439,14 +445,14 @@ static bool32 HandleEndTurnFirstEventBlock(enum BattlerId battler)
     return effect;
 }
 
-static bool32 HandleEndTurnAquaRing(enum BattlerId battler)
+static bool32 HandleEndTurnAquaRing(struct BattleCalcValues *cv, enum BattlerId battler)
 {
     bool32 effect = FALSE;
 
     gBattleStruct->eventState.endTurnBattler++;
 
     if (gBattleMons[battler].volatiles.aquaRing
-     && !gBattleMons[battler].volatiles.healBlock
+     && !gBattleMons[battler].volatiles.healBlockTimer
      && !IsBattlerAtMaxHp(battler)
      && IsBattlerPresent(battler))
     {
@@ -458,14 +464,14 @@ static bool32 HandleEndTurnAquaRing(enum BattlerId battler)
     return effect;
 }
 
-static bool32 HandleEndTurnIngrain(enum BattlerId battler)
+static bool32 HandleEndTurnIngrain(struct BattleCalcValues *cv, enum BattlerId battler)
 {
     bool32 effect = FALSE;
 
     gBattleStruct->eventState.endTurnBattler++;
 
     if (gBattleMons[battler].volatiles.root
-     && !gBattleMons[battler].volatiles.healBlock
+     && !gBattleMons[battler].volatiles.healBlockTimer
      && !IsBattlerAtMaxHp(battler)
      && IsBattlerPresent(battler))
     {
@@ -477,7 +483,7 @@ static bool32 HandleEndTurnIngrain(enum BattlerId battler)
     return effect;
 }
 
-static bool32 HandleEndTurnLeechSeed(enum BattlerId battler)
+static bool32 HandleEndTurnLeechSeed(struct BattleCalcValues *cv, enum BattlerId battler)
 {
     bool32 effect = FALSE;
     enum BattlerId drainedBattler = battler;
@@ -492,7 +498,7 @@ static bool32 HandleEndTurnLeechSeed(enum BattlerId battler)
 
     if (IsBattlerPresent(drainedBattler)
      && IsBattlerPresent(receiverBattler)
-     && !IsAbilityAndRecord(drainedBattler, GetBattlerAbility(drainedBattler), ABILITY_MAGIC_GUARD))
+     && !IsAbilityAndRecord(drainedBattler, cv->abilities[drainedBattler], ABILITY_MAGIC_GUARD))
     {
         gBattlerAttacker = receiverBattler;
         gBattlerAbility = gBattleScripting.battler = drainedBattler;
@@ -502,14 +508,14 @@ static bool32 HandleEndTurnLeechSeed(enum BattlerId battler)
         s32 drainAmount = GetNonDynamaxMaxHP(drainedBattler) / 8;
         s32 healAmount = GetDrainedBigRootHp(receiverBattler, drainAmount);
 
-        if (GetBattlerAbility(drainedBattler) == ABILITY_LIQUID_OOZE)
+        if (cv->abilities[drainedBattler] == ABILITY_LIQUID_OOZE)
         {
             SetPassiveDamageAmount(drainedBattler, drainAmount);
             SetPassiveDamageAmount(receiverBattler, healAmount);
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_LEECH_SEED_OOZE;
             BattleScriptCall(BattleScript_LeechSeedTurnDrainLiquidOoze);
         }
-        else if (gBattleMons[receiverBattler].volatiles.healBlock)
+        else if (gBattleMons[receiverBattler].volatiles.healBlockTimer)
         {
             BattleScriptCall(BattleScript_LeechSeedTurnDrainHealBlock);
         }
@@ -526,11 +532,11 @@ static bool32 HandleEndTurnLeechSeed(enum BattlerId battler)
     return effect;
 }
 
-static bool32 HandleEndTurnPoison(enum BattlerId battler)
+static bool32 HandleEndTurnPoison(struct BattleCalcValues *cv, enum BattlerId battler)
 {
     bool32 effect = FALSE;
 
-    enum Ability ability = GetBattlerAbility(battler);
+    enum Ability ability = cv->abilities[battler];
     bool32 isToxicPoison = gBattleMons[battler].status1 & STATUS1_TOXIC_POISON;
 
     gBattleStruct->eventState.endTurnBattler++;
@@ -547,7 +553,7 @@ static bool32 HandleEndTurnPoison(enum BattlerId battler)
             if (isToxicPoison && (gBattleMons[battler].status1 & STATUS1_TOXIC_COUNTER) != STATUS1_TOXIC_TURN(15)) // not 16 turns
                 gBattleMons[battler].status1 += STATUS1_TOXIC_TURN(1);
 
-            if (!IsBattlerAtMaxHp(battler) && !gBattleMons[battler].volatiles.healBlock)
+            if (!IsBattlerAtMaxHp(battler) && !gBattleMons[battler].volatiles.healBlockTimer)
             {
                 SetHealAmount(battler, GetNonDynamaxMaxHP(battler) / 8);
                 BattleScriptCall(BattleScript_PoisonHealActivates);
@@ -574,11 +580,11 @@ static bool32 HandleEndTurnPoison(enum BattlerId battler)
     return effect;
 }
 
-static bool32 HandleEndTurnBurn(enum BattlerId battler)
+static bool32 HandleEndTurnBurn(struct BattleCalcValues *cv, enum BattlerId battler)
 {
     bool32 effect = FALSE;
 
-    enum Ability ability = GetBattlerAbility(battler);
+    enum Ability ability = cv->abilities[battler];
 
     gBattleStruct->eventState.endTurnBattler++;
 
@@ -601,7 +607,7 @@ static bool32 HandleEndTurnBurn(enum BattlerId battler)
     return effect;
 }
 
-static bool32 HandleEndTurnFrostbite(enum BattlerId battler)
+static bool32 HandleEndTurnFrostbite(struct BattleCalcValues *cv, enum BattlerId battler)
 {
     bool32 effect = FALSE;
 
@@ -609,7 +615,7 @@ static bool32 HandleEndTurnFrostbite(enum BattlerId battler)
 
     if (gBattleMons[battler].status1 & STATUS1_FROSTBITE
      && IsBattlerPresent(battler)
-     && !IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
+     && !IsAbilityAndRecord(battler, cv->abilities[battler], ABILITY_MAGIC_GUARD))
     {
         SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / ((GetConfig(B_BURN_DAMAGE) >= GEN_7 || GetConfig(B_BURN_DAMAGE) == GEN_1) ? 16 : 8));
         BattleScriptCall(BattleScript_FrostbiteTurnDmg);
@@ -619,7 +625,7 @@ static bool32 HandleEndTurnFrostbite(enum BattlerId battler)
     return effect;
 }
 
-static bool32 HandleEndTurnNightmare(enum BattlerId battler)
+static bool32 HandleEndTurnNightmare(struct BattleCalcValues *cv, enum BattlerId battler)
 {
     bool32 effect = FALSE;
 
@@ -627,9 +633,9 @@ static bool32 HandleEndTurnNightmare(enum BattlerId battler)
 
     if (gBattleMons[battler].volatiles.nightmare
      && IsBattlerPresent(battler)
-     && !IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
+     && !IsAbilityAndRecord(battler, cv->abilities[battler], ABILITY_MAGIC_GUARD))
     {
-        if (IsAsleepOrComatose(battler, GetBattlerAbility(battler)))
+        if (IsAsleepOrComatose(battler, cv->abilities[battler]))
         {
             SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 4);
             BattleScriptCall(BattleScript_NightmareTurnDmg);
@@ -644,7 +650,7 @@ static bool32 HandleEndTurnNightmare(enum BattlerId battler)
     return effect;
 }
 
-static bool32 HandleEndTurnCurse(enum BattlerId battler)
+static bool32 HandleEndTurnCurse(struct BattleCalcValues *cv, enum BattlerId battler)
 {
     bool32 effect = FALSE;
 
@@ -652,7 +658,7 @@ static bool32 HandleEndTurnCurse(enum BattlerId battler)
 
     if (gBattleMons[battler].volatiles.cursed
      && IsBattlerPresent(battler)
-     && !IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
+     && !IsAbilityAndRecord(battler, cv->abilities[battler], ABILITY_MAGIC_GUARD))
     {
         SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 4);
         BattleScriptCall(BattleScript_CurseTurnDmg);
@@ -662,7 +668,7 @@ static bool32 HandleEndTurnCurse(enum BattlerId battler)
     return effect;
 }
 
-static bool32 HandleEndTurnWrap(enum BattlerId battler)
+static bool32 HandleEndTurnWrap(struct BattleCalcValues *cv, enum BattlerId battler)
 {
     bool32 effect = FALSE;
 
@@ -674,7 +680,7 @@ static bool32 HandleEndTurnWrap(enum BattlerId battler)
         if (gBattleMons[battler].volatiles.wrapTurns != 0)
         {
             gBattleMons[battler].volatiles.wrapTurns--;
-            if (IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
+            if (IsAbilityAndRecord(battler, cv->abilities[battler], ABILITY_MAGIC_GUARD))
                 return effect;
 
             gBattleScripting.animArg1 = gBattleMons[battler].volatiles.wrappedMove;
@@ -700,7 +706,7 @@ static bool32 HandleEndTurnWrap(enum BattlerId battler)
     return effect;
 }
 
-static bool32 HandleEndTurnSaltCure(enum BattlerId battler)
+static bool32 HandleEndTurnSaltCure(struct BattleCalcValues *cv, enum BattlerId battler)
 {
     bool32 effect = FALSE;
 
@@ -708,7 +714,7 @@ static bool32 HandleEndTurnSaltCure(enum BattlerId battler)
 
     if (gBattleMons[battler].volatiles.saltCure
      && IsBattlerPresent(battler)
-     && !IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
+     && !IsAbilityAndRecord(battler, cv->abilities[battler], ABILITY_MAGIC_GUARD))
     {
         s32 saltCureDamage = 0;
         if (IS_BATTLER_ANY_TYPE(battler, TYPE_STEEL, TYPE_WATER))
@@ -724,7 +730,7 @@ static bool32 HandleEndTurnSaltCure(enum BattlerId battler)
     return effect;
 }
 
-static bool32 HandleEndTurnOctolock(enum BattlerId battler)
+static bool32 HandleEndTurnOctolock(struct BattleCalcValues *cv, enum BattlerId battler)
 {
     bool32 effect = FALSE;
 
@@ -743,7 +749,7 @@ static bool32 HandleEndTurnOctolock(enum BattlerId battler)
     return effect;
 }
 
-static bool32 HandleEndTurnSyrupBomb(enum BattlerId battler)
+static bool32 HandleEndTurnSyrupBomb(struct BattleCalcValues *cv, enum BattlerId battler)
 {
     bool32 effect = FALSE;
 
@@ -765,7 +771,7 @@ static bool32 HandleEndTurnSyrupBomb(enum BattlerId battler)
     return effect;
 }
 
-static bool32 HandleEndTurnTaunt(enum BattlerId battler)
+static bool32 HandleEndTurnTaunt(struct BattleCalcValues *cv, enum BattlerId battler)
 {
     bool32 effect = FALSE;
 
@@ -782,7 +788,7 @@ static bool32 HandleEndTurnTaunt(enum BattlerId battler)
     return effect;
 }
 
-static bool32 HandleEndTurnTorment(enum BattlerId battler)
+static bool32 HandleEndTurnTorment(struct BattleCalcValues *cv, enum BattlerId battler)
 {
     bool32 effect = FALSE;
 
@@ -799,7 +805,7 @@ static bool32 HandleEndTurnTorment(enum BattlerId battler)
     return effect;
 }
 
-static bool32 HandleEndTurnEncore(enum BattlerId battler)
+static bool32 HandleEndTurnEncore(struct BattleCalcValues *cv, enum BattlerId battler)
 {
     bool32 effect = FALSE;
 
@@ -826,26 +832,28 @@ static bool32 HandleEndTurnEncore(enum BattlerId battler)
     return effect;
 }
 
-static bool32 HandleEndTurnDisable(enum BattlerId battler)
+static bool32 HandleEndTurnDisable(struct BattleCalcValues *cv, enum BattlerId battler)
 {
     bool32 effect = FALSE;
 
     u32 moveIndex = 0;
     gBattleStruct->eventState.endTurnBattler++;
 
-    if (gBattleMons[battler].volatiles.disableTimer != 0)
+    if (gBattleMons[battler].volatiles.disabledMove != MOVE_NONE)
     {
         for (moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
         {
             if (gBattleMons[battler].volatiles.disabledMove == gBattleMons[battler].moves[moveIndex])
                 break;
         }
+        if (GetConfig(B_DISABLE_TURNS) >= GEN_3 && gBattleMons[battler].volatiles.disableTimer != 0)
+            gBattleMons[battler].volatiles.disableTimer--;
         if (moveIndex == MAX_MON_MOVES)  // Pokémon does not have the disabled move anymore
         {
             gBattleMons[battler].volatiles.disabledMove = 0;
             gBattleMons[battler].volatiles.disableTimer = 0;
         }
-        else if (--gBattleMons[battler].volatiles.disableTimer == 0)  // disable ends
+        else if (gBattleMons[battler].volatiles.disableTimer == 0)  // disable ends
         {
             gBattleMons[battler].volatiles.disabledMove = 0;
             gBattleScripting.battler = battler;
@@ -857,7 +865,7 @@ static bool32 HandleEndTurnDisable(enum BattlerId battler)
     return effect;
 }
 
-static bool32 HandleEndTurnMagnetRise(enum BattlerId battler)
+static bool32 HandleEndTurnMagnetRise(struct BattleCalcValues *cv, enum BattlerId battler)
 {
     bool32 effect = FALSE;
 
@@ -873,7 +881,7 @@ static bool32 HandleEndTurnMagnetRise(enum BattlerId battler)
     return effect;
 }
 
-static bool32 HandleEndTurnTelekinesis(enum BattlerId battler)
+static bool32 HandleEndTurnTelekinesis(struct BattleCalcValues *cv, enum BattlerId battler)
 {
     bool32 effect = FALSE;
 
@@ -889,7 +897,7 @@ static bool32 HandleEndTurnTelekinesis(enum BattlerId battler)
     return effect;
 }
 
-static bool32 HandleEndTurnHealBlock(enum BattlerId battler)
+static bool32 HandleEndTurnHealBlock(struct BattleCalcValues *cv, enum BattlerId battler)
 {
     bool32 effect = FALSE;
 
@@ -897,7 +905,6 @@ static bool32 HandleEndTurnHealBlock(enum BattlerId battler)
 
     if (gBattleMons[battler].volatiles.healBlockTimer > 0 && --gBattleMons[battler].volatiles.healBlockTimer == 0)
     {
-        gBattleMons[battler].volatiles.healBlock = FALSE;
         gBattleScripting.battler = battler;
         BattleScriptCall(BattleScript_HealBlockEndTurn);
         effect = TRUE;
@@ -906,7 +913,7 @@ static bool32 HandleEndTurnHealBlock(enum BattlerId battler)
     return effect;
 }
 
-static bool32 HandleEndTurnEmbargo(enum BattlerId battler)
+static bool32 HandleEndTurnEmbargo(struct BattleCalcValues *cv, enum BattlerId battler)
 {
     bool32 effect = FALSE;
 
@@ -914,7 +921,6 @@ static bool32 HandleEndTurnEmbargo(enum BattlerId battler)
 
     if (gBattleMons[battler].volatiles.embargoTimer > 0 && --gBattleMons[battler].volatiles.embargoTimer == 0)
     {
-        gBattleMons[battler].volatiles.embargo = FALSE;
         BattleScriptCall(BattleScript_EmbargoEndTurn);
         effect = TRUE;
     }
@@ -922,11 +928,11 @@ static bool32 HandleEndTurnEmbargo(enum BattlerId battler)
     return effect;
 }
 
-static bool32 HandleEndTurnYawn(enum BattlerId battler)
+static bool32 HandleEndTurnYawn(struct BattleCalcValues *cv, enum BattlerId battler)
 {
     bool32 effect = FALSE;
 
-    enum Ability ability = GetBattlerAbility(battler);
+    enum Ability ability = cv->abilities[battler];
 
     gBattleStruct->eventState.endTurnBattler++;
 
@@ -941,7 +947,7 @@ static bool32 HandleEndTurnYawn(enum BattlerId battler)
          && !IsLeafGuardProtected(battler, ability))
         {
             gEffectBattler = gBattlerTarget = battler;
-            enum HoldEffect holdEffect = GetBattlerHoldEffect(battler);
+            enum HoldEffect holdEffect = cv->holdEffects[battler];
             if (IsElectricTerrainAffected(battler, ability, holdEffect, gFieldTimers.terrain))
             {
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAINPREVENTS_ELECTRIC;
@@ -962,7 +968,7 @@ static bool32 HandleEndTurnYawn(enum BattlerId battler)
                 gLastUsedAbility = ABILITY_SWEET_VEIL;
                 gBattlerAbility = gBattleScripting.battler;
                 RecordAbilityBattle(gBattleScripting.battler, ABILITY_SWEET_VEIL);
-                BattleScriptCall(BattleScript_ImmunityProtectedRet);
+                BattleScriptCall(BattleScript_AbilityProtectedTarget);
             }
             else
             {
@@ -993,7 +999,7 @@ static bool32 HandleEndTurnYawn(enum BattlerId battler)
     return effect;
 }
 
-static bool32 HandleEndTurnPerishSong(enum BattlerId battler)
+static bool32 HandleEndTurnPerishSong(struct BattleCalcValues *cv, enum BattlerId battler)
 {
     bool32 effect = FALSE;
 
@@ -1020,7 +1026,7 @@ static bool32 HandleEndTurnPerishSong(enum BattlerId battler)
     return effect;
 }
 
-static bool32 HandleEndTurnRoost(enum BattlerId battler)
+static bool32 HandleEndTurnRoost(struct BattleCalcValues *cv, enum BattlerId battler)
 {
     bool32 effect = FALSE;
 
@@ -1032,7 +1038,7 @@ static bool32 HandleEndTurnRoost(enum BattlerId battler)
     return effect;
 }
 
-static bool32 HandleEndTurnSecondEventBlock(enum BattlerId battler)
+static bool32 HandleEndTurnSecondEventBlock(struct BattleCalcValues *cv, enum BattlerId battler)
 {
     bool32 effect = FALSE;
 
@@ -1155,7 +1161,7 @@ static bool32 HandleEndTurnSecondEventBlock(enum BattlerId battler)
     return effect;
 }
 
-static bool32 HandleEndTurnTrickRoom(enum BattlerId battler)
+static bool32 HandleEndTurnTrickRoom(struct BattleCalcValues *cv, enum BattlerId battler)
 {
     bool32 effect = FALSE;
 
@@ -1171,7 +1177,7 @@ static bool32 HandleEndTurnTrickRoom(enum BattlerId battler)
     return effect;
 }
 
-static bool32 HandleEndTurnGravity(enum BattlerId battler)
+static bool32 HandleEndTurnGravity(struct BattleCalcValues *cv, enum BattlerId battler)
 {
     bool32 effect = FALSE;
 
@@ -1187,7 +1193,7 @@ static bool32 HandleEndTurnGravity(enum BattlerId battler)
     return effect;
 }
 
-static bool32 HandleEndTurnWaterSport(enum BattlerId battler)
+static bool32 HandleEndTurnWaterSport(struct BattleCalcValues *cv, enum BattlerId battler)
 {
     bool32 effect = FALSE;
 
@@ -1203,7 +1209,7 @@ static bool32 HandleEndTurnWaterSport(enum BattlerId battler)
     return effect;
 }
 
-static bool32 HandleEndTurnMudSport(enum BattlerId battler)
+static bool32 HandleEndTurnMudSport(struct BattleCalcValues *cv, enum BattlerId battler)
 {
     bool32 effect = FALSE;
 
@@ -1219,7 +1225,7 @@ static bool32 HandleEndTurnMudSport(enum BattlerId battler)
     return effect;
 }
 
-static bool32 HandleEndTurnWonderRoom(enum BattlerId battler)
+static bool32 HandleEndTurnWonderRoom(struct BattleCalcValues *cv, enum BattlerId battler)
 {
     bool32 effect = FALSE;
 
@@ -1235,7 +1241,7 @@ static bool32 HandleEndTurnWonderRoom(enum BattlerId battler)
     return effect;
 }
 
-static bool32 HandleEndTurnMagicRoom(enum BattlerId battler)
+static bool32 HandleEndTurnMagicRoom(struct BattleCalcValues *cv, enum BattlerId battler)
 {
     bool32 effect = FALSE;
 
@@ -1251,7 +1257,7 @@ static bool32 HandleEndTurnMagicRoom(enum BattlerId battler)
     return effect;
 }
 
-static bool32 HandleEndTurnTerrain(enum BattlerId battler)
+static bool32 HandleEndTurnTerrain(struct BattleCalcValues *cv, enum BattlerId battler)
 {
     gBattleStruct->eventState.endTurn++;
 
@@ -1268,7 +1274,7 @@ static bool32 HandleEndTurnTerrain(enum BattlerId battler)
     return FALSE;
 }
 
-static bool32 HandleEndTurnThirdEventBlock(enum BattlerId battler)
+static bool32 HandleEndTurnThirdEventBlock(struct BattleCalcValues *cv, enum BattlerId battler)
 {
     bool32 effect = FALSE;
 
@@ -1288,7 +1294,7 @@ static bool32 HandleEndTurnThirdEventBlock(enum BattlerId battler)
                 if (GetConfig(B_UPROAR) >= GEN_5) // This effect is only present in pre-Gen 5 Uproar
                     break;
 
-                bool32 hasSoundproof = GetConfig(B_UPROAR_IGNORE_SOUNDPROOF) < GEN_5 && GetBattlerAbility(gEffectBattler) == ABILITY_SOUNDPROOF;
+                bool32 hasSoundproof = GetConfig(B_UPROAR_IGNORE_SOUNDPROOF) < GEN_5 && cv->abilities[gEffectBattler] == ABILITY_SOUNDPROOF;
 
                 if ((gBattleMons[gEffectBattler].status1 & STATUS1_SLEEP)
                  && !hasSoundproof)
@@ -1330,10 +1336,14 @@ static bool32 HandleEndTurnThirdEventBlock(enum BattlerId battler)
         break;
     case THIRD_EVENT_BLOCK_ABILITIES:
     {
-        enum Ability ability = GetBattlerAbility(battler);
+        enum Ability ability = cv->abilities[battler];
         switch (ability)
         {
-        case ABILITY_TRUANT: // Not fully accurate but it has to be handled somehow. TODO: Find a better way.
+        case ABILITY_TRUANT:
+            if (GetConfig(B_TRUANT) <= GEN_4
+             && AbilityBattleEffects(ABILITYEFFECT_ENDTURN, battler, ability, MOVE_NONE, TRUE))
+                effect = TRUE;
+            break;
         case ABILITY_CUD_CHEW:
         case ABILITY_SLOW_START:
         case ABILITY_BAD_DREAMS:
@@ -1352,34 +1362,39 @@ static bool32 HandleEndTurnThirdEventBlock(enum BattlerId battler)
         break;
     }
     case THIRD_EVENT_BLOCK_ITEMS:
-    {
-        // TODO: simplify
-        enum HoldEffect holdEffect = GetBattlerHoldEffect(battler);
-        switch (holdEffect)
-        {
-        case HOLD_EFFECT_FLAME_ORB:
-        case HOLD_EFFECT_STICKY_BARB:
-        case HOLD_EFFECT_TOXIC_ORB:
-            if (ItemBattleEffects(battler, 0, holdEffect, IsOrbsActivation))
-                effect = TRUE;
-            break;
-        case HOLD_EFFECT_WHITE_HERB:
-            if (ItemBattleEffects(battler, 0, holdEffect, IsWhiteHerbEndTurnActivation))
-                effect = TRUE;
-            break;
-        default:
-            break;
-        }
+        if (ItemBattleEffects(battler, 0, cv->holdEffects[battler], IsOrbsWhiteHerbActivation))
+            effect = TRUE;
         gBattleStruct->eventState.endTurnBlock = 0;
         gBattleStruct->eventState.endTurnBattler++;
         break;
-    }
     }
 
     return effect;
 }
 
-static bool32 HandleEndTurnFormChange(enum BattlerId battler)
+static bool32 HandleEndTurnOpportunist(struct BattleCalcValues *cv, enum BattlerId battler)
+{
+    bool32 effect = FALSE;
+
+    if (IsBattlerPresent(battler) && AbilityBattleEffects(ABILITYEFFECT_OPPORTUNIST, battler, cv->abilities[battler], MOVE_NONE, TRUE))
+        effect = TRUE;
+
+    gBattleStruct->eventState.endTurnBattler++;
+    return effect;
+}
+
+static bool32 HandleEndTurnMirrorHerb(struct BattleCalcValues *cv, enum BattlerId battler)
+{
+    bool32 effect = FALSE;
+
+    if (IsBattlerPresent(battler) && ItemBattleEffects(battler, 0, cv->holdEffects[battler], IsMirrorHerbActivation))
+        effect = TRUE;
+
+    gBattleStruct->eventState.endTurnBattler++;
+    return effect;
+}
+
+static bool32 HandleEndTurnFormChange(struct BattleCalcValues *cv, enum BattlerId battler)
 {
     bool32 effect = FALSE;
 
@@ -1388,7 +1403,7 @@ static bool32 HandleEndTurnFormChange(enum BattlerId battler)
     if (!IsBattlerAlive(battler))
         return FALSE;
 
-    enum Ability ability = GetBattlerAbility(battler);
+    enum Ability ability = cv->abilities[battler];
 
     if (TryBattleFormChange(battler, FORM_CHANGE_BATTLE_TURN_END, ability)
         || TryBattleFormChange(battler, FORM_CHANGE_BATTLE_HP_PERCENT_TURN_END, ability))
@@ -1421,7 +1436,7 @@ static bool32 HandleEndTurnFormChange(enum BattlerId battler)
     return effect;
 }
 
-static bool32 HandleEndTurnEjectPack(enum BattlerId battler)
+static bool32 HandleEndTurnEjectPack(struct BattleCalcValues *cv, enum BattlerId battler)
 {
     gBattleStruct->eventState.endTurn++;
     return TrySwitchInEjectPack(END_TURN);
@@ -1439,11 +1454,11 @@ static bool32 TryEndTurnTrainerSlide(enum BattlerId battler)
          || (ShouldDoTrainerSlide(battler, TRAINER_SLIDE_ATTACKER_LANDS_FIRST_SUPER_EFFECTIVE_HIT) != TRAINER_SLIDE_TARGET_NONE)
          || (ShouldDoTrainerSlide(battler, TRAINER_SLIDE_DEFENDER_TAKES_FIRST_STAB_MOVE) != TRAINER_SLIDE_TARGET_NONE)
          || (ShouldDoTrainerSlide(battler, TRAINER_SLIDE_ATTACKER_LANDS_FIRST_STAB_MOVE) != TRAINER_SLIDE_TARGET_NONE)
-         || (ShouldDoTrainerSlide(battler, TRAINER_SLIDE_OPPONENT_MON_UNAFFECTED) != TRAINER_SLIDE_TARGET_NONE)
-         || (ShouldDoTrainerSlide(battler, TRAINER_SLIDE_SELF_MON_UNAFFECTED) != TRAINER_SLIDE_TARGET_NONE));
+         || (ShouldDoTrainerSlide(battler, TRAINER_SLIDE_ATTACKER_LANDS_FIRST_INEFFECTIVE) != TRAINER_SLIDE_TARGET_NONE)
+         || (ShouldDoTrainerSlide(battler, TRAINER_SLIDE_DEFENDER_TAKES_FIRST_INEFFECTIVE) != TRAINER_SLIDE_TARGET_NONE));
 }
 
-static bool32 HandleEndTurnTrainerASlides(enum BattlerId battler)
+static bool32 HandleEndTurnTrainerASlides(struct BattleCalcValues *cv, enum BattlerId battler)
 {
     gBattleStruct->eventState.endTurnBattler++;
     bool32 slide = TryEndTurnTrainerSlide(B_BATTLER_1);
@@ -1452,7 +1467,7 @@ static bool32 HandleEndTurnTrainerASlides(enum BattlerId battler)
     return slide;
 }
 
-static bool32 HandleEndTurnTrainerBSlides(enum BattlerId battler)
+static bool32 HandleEndTurnTrainerBSlides(struct BattleCalcValues *cv, enum BattlerId battler)
 {
     gBattleStruct->eventState.endTurnBattler++;
 
@@ -1474,7 +1489,7 @@ static bool32 HandleEndTurnTrainerBSlides(enum BattlerId battler)
     return slide;
 }
 
-static bool32 HandleEndTurnTrainerPartnerSlides(enum BattlerId battler)
+static bool32 HandleEndTurnTrainerPartnerSlides(struct BattleCalcValues *cv, enum BattlerId battler)
 {
     gBattleStruct->eventState.endTurnBattler++;
 
@@ -1503,7 +1518,7 @@ static bool32 HandleEndTurnTrainerPartnerSlides(enum BattlerId battler)
             return
  */
 
-static bool32 HandleEndTurnArenaTurnEnd(enum BattlerId battler)
+static bool32 HandleEndTurnArenaTurnEnd(struct BattleCalcValues *cv, enum BattlerId battler)
 {
     gBattleStruct->eventState.endTurn++;
 
@@ -1520,7 +1535,7 @@ static bool32 HandleEndTurnArenaTurnEnd(enum BattlerId battler)
     return FALSE;
 }
 
-static bool32 HandleEndTurnFaintedMonActions(enum BattlerId battler)
+static bool32 HandleEndTurnFaintedMonActions(struct BattleCalcValues *cv, enum BattlerId battler)
 {
     if (HandleFaintedMonActions())
         return TRUE;
@@ -1528,7 +1543,7 @@ static bool32 HandleEndTurnFaintedMonActions(enum BattlerId battler)
     return FALSE;
 }
 
-static bool32 HandleEndTurnDynamax(enum BattlerId battler)
+static bool32 HandleEndTurnDynamax(struct BattleCalcValues *cv, enum BattlerId battler)
 {
     bool32 effect = FALSE;
 
@@ -1551,7 +1566,7 @@ static bool32 HandleEndTurnDynamax(enum BattlerId battler)
     return effect;
 }
 
-static bool32 (*const sEndTurnEffectHandlers[])(enum BattlerId battler) =
+static bool32 (*const sEndTurnEffectHandlers[])(struct BattleCalcValues *cv, enum BattlerId battler) =
 {
     [ENDTURN_ORDER] = HandleEndTurnOrder,
     [ENDTURN_VARIOUS] = HandleEndTurnVarious,
@@ -1596,6 +1611,8 @@ static bool32 (*const sEndTurnEffectHandlers[])(enum BattlerId battler) =
     [ENDTURN_MAGIC_ROOM] = HandleEndTurnMagicRoom,
     [ENDTURN_TERRAIN] = HandleEndTurnTerrain,
     [ENDTURN_THIRD_EVENT_BLOCK] = HandleEndTurnThirdEventBlock,
+    [ENDTURN_OPPORTUNIST] = HandleEndTurnOpportunist,
+    [ENDTURN_MIRROR_HERB] = HandleEndTurnMirrorHerb,
     [ENDTURN_SEND_OUT_REPLACEMENTS_4] = HandleEndTurnSendOutReplacements,
     [ENDTURN_FORM_CHANGE] = HandleEndTurnFormChange,
     [ENDTURN_EJECT_PACK] = HandleEndTurnEjectPack,
@@ -1608,10 +1625,9 @@ static bool32 (*const sEndTurnEffectHandlers[])(enum BattlerId battler) =
     [ENDTURN_TRAINER_PARTNER_SLIDES] = HandleEndTurnTrainerPartnerSlides,
 };
 
-static bool32 HandleEndTurnEmergencyExit(enum BattlerId battler)
+static bool32 HandleEndTurnEmergencyExit(enum BattlerId battler, enum Ability ability)
 {
     bool32 effect = FALSE;
-    enum Ability ability = GetBattlerAbility(battler);
 
     if (EmergencyExitCanBeTriggered(battler, ability))
     {
@@ -1632,6 +1648,13 @@ bool32 DoEndTurnEffects(void)
     if (gBattleOutcome != 0 && gBattleStruct->eventState.endTurn < ENDTURN_TRAINER_A_SLIDES) // Skip most stuff if battle's outcome is determined
         gBattleStruct->eventState.endTurn = ENDTURN_TRAINER_A_SLIDES;
 
+    struct BattleCalcValues cv = {0};
+    for (battler = 0; battler < gBattlersCount; battler++)
+    {
+        cv.abilities[battler] = GetBattlerAbility(battler);
+        cv.holdEffects[battler] = GetBattlerHoldEffect(battler);
+    }
+
     for (;;)
     {
         // Activate any battler's Emergency Exit if possible (otherwise reset wasAboveHalfHp bit)
@@ -1644,7 +1667,7 @@ bool32 DoEndTurnEffects(void)
                 if (!IsBattlerPresent(battler))
                     continue;
 
-                bool32 effect = HandleEndTurnEmergencyExit(battler);
+                bool32 effect = HandleEndTurnEmergencyExit(battler, cv.abilities[battler]);
 
                 gBattleStruct->battlerState[battler].wasAboveHalfHp = gBattleMons[battler].hp > gBattleMons[battler].maxHP / 2;
 
@@ -1667,7 +1690,7 @@ bool32 DoEndTurnEffects(void)
 
         battler = gBattlerAttacker = gBattlerByTurnOrder[gBattleStruct->eventState.endTurnBattler];
 
-        if (sEndTurnEffectHandlers[gBattleStruct->eventState.endTurn](battler))
+        if (sEndTurnEffectHandlers[gBattleStruct->eventState.endTurn](&cv, battler))
             return TRUE;
     }
 }

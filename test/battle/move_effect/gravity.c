@@ -8,12 +8,56 @@ ASSUMPTIONS
 
 TO_DO_BATTLE_TEST("Gravity causes certain moves to fail") // Fly, Jump Kick, High Jump Kick, Splash, Bounce, Magnet Rise, Telekinesis, Sky Drop, Flying Press, Floaty Fall
 TO_DO_BATTLE_TEST("Gravity increases accuracy of all moves by 5/3 (~1.67)")
-TO_DO_BATTLE_TEST("Gravity causes all battlers to become grounded")
+
+DOUBLE_BATTLE_TEST("Gravity causes all battlers to become grounded")
+{
+    GIVEN {
+        ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == TARGET_FOES_AND_ALLY);
+        ASSUME(GetMoveType(MOVE_EARTHQUAKE) == TYPE_GROUND);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_PIDGEY);
+        OPPONENT(SPECIES_PIDGEY);
+        OPPONENT(SPECIES_FLYGON) { Ability(ABILITY_LEVITATE); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_GRAVITY); }
+        TURN { MOVE(playerLeft, MOVE_EARTHQUAKE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_GRAVITY, playerLeft);
+        MESSAGE("Pidgey fell from the sky due to the gravity!");
+        MESSAGE("The opposing Pidgey fell from the sky due to the gravity!");
+        MESSAGE("The opposing Flygon fell from the sky due to the gravity!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, playerLeft);
+        HP_BAR(opponentLeft);
+        HP_BAR(playerRight);
+        HP_BAR(opponentRight);
+    }
+}
+
+SINGLE_BATTLE_TEST("Gravity causes a Pokemon in the sky to fall down")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_FLY) == EFFECT_SEMI_INVULNERABLE);
+        ASSUME(GetMoveEffect(MOVE_TELEKINESIS) == EFFECT_TELEKINESIS);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_PIDGEY);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_TELEKINESIS); }
+        TURN { MOVE(opponent, MOVE_FLY); MOVE(player, MOVE_GRAVITY); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLY, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_GRAVITY, player);
+        MESSAGE("Gravity intensified!");
+        MESSAGE("Wobbuffet fell from the sky due to the gravity!");
+        MESSAGE("The opposing Pidgey fell from the sky due to the gravity!");
+    }
+}
 
 DOUBLE_BATTLE_TEST("Gravity cancels Fly and Sky Drop if they are in the air")
 {
     u8 visibility;
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_FLY) == EFFECT_SEMI_INVULNERABLE);
+        ASSUME(GetMoveEffect(MOVE_SKY_DROP) == EFFECT_SKY_DROP);
         PLAYER(SPECIES_WOBBUFFET) { Speed(100); }
         PLAYER(SPECIES_WYNAUT) { Speed(90); }
         OPPONENT(SPECIES_PIDGEY) { Speed(50); }

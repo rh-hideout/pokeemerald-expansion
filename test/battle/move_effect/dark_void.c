@@ -38,6 +38,64 @@ SINGLE_BATTLE_TEST("Dark Void inflicts 1-3 turns of sleep (Gen9-)")
     }
 }
 
-TO_DO_BATTLE_TEST("Dark Void can only be used by Darkrai (Gen7+)");
-TO_DO_BATTLE_TEST("Dark Void can be used by Pokémon other than Darkrai (Gen4-6)");
-TO_DO_BATTLE_TEST("Dark Void can be used by a Pokémon transformed into Darkrai");
+SINGLE_BATTLE_TEST("Dark Void can only be used by Darkrai in Gen 7+")
+{
+    enum Species species;
+    bool32 succeeds;
+
+    PARAMETRIZE { species = SPECIES_DARKRAI; succeeds = TRUE; }
+    PARAMETRIZE { species = SPECIES_SMEARGLE; succeeds = FALSE; }
+
+    GIVEN {
+        WITH_CONFIG(B_DARK_VOID_FAIL, GEN_7);
+        PLAYER(species);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        if (succeeds)
+            TURN { MOVE(player, MOVE_DARK_VOID, hit: TRUE); }
+        else
+            TURN { MOVE(player, MOVE_DARK_VOID); }
+    } SCENE {
+        if (succeeds)
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_DARK_VOID, player);
+        else
+            NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_DARK_VOID, player);
+    } THEN {
+        if (succeeds)
+            EXPECT_NE(opponent->status1 & STATUS1_SLEEP, 0);
+        else
+            EXPECT_EQ(opponent->status1, STATUS1_NONE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Dark Void can be used by Pokémon other than Darkrai in Gen 4-6")
+{
+    GIVEN {
+        WITH_CONFIG(B_DARK_VOID_FAIL, GEN_6);
+        PLAYER(SPECIES_SMEARGLE);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_DARK_VOID, hit: TRUE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DARK_VOID, player);
+    } THEN {
+        EXPECT_NE(opponent->status1 & STATUS1_SLEEP, 0);
+    }
+}
+
+SINGLE_BATTLE_TEST("Dark Void can be used by a Pokémon transformed into Darkrai")
+{
+    GIVEN {
+        WITH_CONFIG(B_DARK_VOID_FAIL, GEN_7);
+        PLAYER(SPECIES_DITTO);
+        OPPONENT(SPECIES_DARKRAI) { Moves(MOVE_CELEBRATE, MOVE_DARK_VOID); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TRANSFORM); }
+        TURN { MOVE(player, MOVE_DARK_VOID, hit: TRUE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TRANSFORM, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DARK_VOID, player);
+    } THEN {
+        EXPECT_NE(opponent->status1 & STATUS1_SLEEP, 0);
+    }
+}

@@ -127,4 +127,41 @@ SINGLE_BATTLE_TEST("Ingrain's effect is passed by Baton Pass")
     }
 }
 
-TO_DO_BATTLE_TEST("Red Card and forced switch moves (Roar/Whirlwind) cannot force out a rooted Pokémon");
+SINGLE_BATTLE_TEST("Ingrain prevents Red Card and forced switch moves from switching out the user")
+{
+    enum Move move;
+    bool32 redCard;
+
+    PARAMETRIZE { move = MOVE_SCRATCH; redCard = TRUE; }
+    PARAMETRIZE { move = MOVE_ROAR; redCard = FALSE; }
+    PARAMETRIZE { move = MOVE_WHIRLWIND; redCard = FALSE; }
+    PARAMETRIZE { move = MOVE_DRAGON_TAIL; redCard = FALSE; }
+    PARAMETRIZE { move = MOVE_CIRCLE_THROW; redCard = FALSE; }
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_ROAR) == EFFECT_ROAR);
+        ASSUME(GetMoveEffect(MOVE_WHIRLWIND) == EFFECT_ROAR);
+        ASSUME(GetMoveEffect(MOVE_DRAGON_TAIL) == EFFECT_HIT_SWITCH_TARGET);
+        ASSUME(GetMoveEffect(MOVE_CIRCLE_THROW) == EFFECT_HIT_SWITCH_TARGET);
+        ASSUME(gItemsInfo[ITEM_RED_CARD].holdEffect == HOLD_EFFECT_RED_CARD);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET) { Item(redCard ? ITEM_RED_CARD : ITEM_NONE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_INGRAIN); }
+        if (redCard)
+            TURN { MOVE(player, move); }
+        else
+            TURN { MOVE(opponent, move); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_INGRAIN, player);
+        if (redCard) {
+            ANIMATION(ANIM_TYPE_MOVE, move, player);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        }
+    } THEN {
+        EXPECT_EQ(player->species, SPECIES_WOBBUFFET);
+        if (redCard)
+            EXPECT_EQ(opponent->item, ITEM_NONE);
+    }
+}

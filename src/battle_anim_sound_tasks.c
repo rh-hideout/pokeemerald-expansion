@@ -161,10 +161,10 @@ void SoundTask_PlayCryHighPitch(u8 taskId)
             battler = gBattleAnimTarget;
             break;
         case ANIM_ATK_PARTNER:
-            battler = BATTLE_PARTNER(gBattleAnimAttacker);
+            battler = GetPartnerBattler(gBattleAnimAttacker);
             break;
         default:
-            battler = BATTLE_PARTNER(gBattleAnimTarget);
+            battler = GetPartnerBattler(gBattleAnimTarget);
             break;
         }
 
@@ -214,10 +214,10 @@ void SoundTask_PlayDoubleCry(u8 taskId)
             battler = gBattleAnimTarget;
             break;
         case ANIM_ATK_PARTNER:
-            battler = BATTLE_PARTNER(gBattleAnimAttacker);
+            battler = GetPartnerBattler(gBattleAnimAttacker);
             break;
         default:
-            battler = BATTLE_PARTNER(gBattleAnimTarget);
+            battler = GetPartnerBattler(gBattleAnimTarget);
             break;
         }
 
@@ -354,6 +354,7 @@ static void SoundTask_PlayCryWithEcho_Step(u8 taskId)
     case 5:
         if (IsCryPlaying())
             break;
+        [[fallthrough]];
     case 0:
         StopCryAndClearCrySongs();
         gTasks[taskId].tState++;

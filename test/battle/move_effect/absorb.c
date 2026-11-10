@@ -223,3 +223,32 @@ SINGLE_BATTLE_TEST("Absorb does not play the draining message at full HP in Gen5
             NOT MESSAGE("The opposing Wobbuffet had its energy drained!");
     }
 }
+
+SINGLE_BATTLE_TEST("Absorb rounds up healing (gen5+)")
+{
+    s16 damage;
+    s16 recoveredHP;
+    u32 gen;
+
+    PARAMETRIZE { gen = GEN_4; }
+    PARAMETRIZE { gen = GEN_5; }
+
+    GIVEN {
+        WITH_CONFIG(B_HP_RESTORATION_ROUNDING, gen);
+        ASSUME(MoveHasAdditionalEffect(MOVE_GIGA_DRAIN, MOVE_EFFECT_ABSORB));
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(SPECIES_SQUIRTLE) { HP(5); };
+    } WHEN {
+        TURN { MOVE(player, MOVE_GIGA_DRAIN); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_GIGA_DRAIN, player);
+        HP_BAR(opponent, captureDamage: &damage);
+        HP_BAR(player, captureDamage: &recoveredHP);
+    } THEN {
+        if (gen == GEN_5) {
+            EXPECT_EQ(-1 * recoveredHP, 3);
+        } else {
+            EXPECT_EQ(-1 * recoveredHP, 2);
+        }
+    }
+}

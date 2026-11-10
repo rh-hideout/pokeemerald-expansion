@@ -161,7 +161,7 @@ DOUBLE_BATTLE_TEST("Sleep Clause: Rest does not activate sleep clause (Doubles)"
         TURN { MOVE(opponentLeft, MOVE_REST); MOVE(playerLeft, MOVE_SPORE, target: opponentRight); }
     } SCENE {
         STATUS_ICON(opponentLeft, sleep: TRUE);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_REST, opponentLeft);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, opponentLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPORE, playerLeft);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, opponentRight);
         MESSAGE("The opposing Wobbuffet fell asleep!");
@@ -190,7 +190,7 @@ SINGLE_BATTLE_TEST("Sleep Clause: Rest can still be used when sleep clause is ac
         STATUS_ICON(opponent, sleep: TRUE);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, opponent);
         STATUS_ICON(opponent, sleep: TRUE);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_REST, opponent);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, opponent);
     }
 }
 
@@ -213,7 +213,7 @@ DOUBLE_BATTLE_TEST("Sleep Clause: Rest can still be used when sleep clause is ac
         MESSAGE("The opposing Wobbuffet fell asleep!");
         STATUS_ICON(opponentRight, sleep: TRUE);
         STATUS_ICON(opponentLeft, sleep: TRUE);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_REST, opponentLeft);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, opponentLeft);
     }
 }
 
@@ -541,7 +541,8 @@ DOUBLE_BATTLE_TEST("Sleep Clause: G-Max Befuddle can only sleep one opposing mon
 {
     GIVEN {
         FLAG_SET(B_FLAG_SLEEP_CLAUSE);
-        ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_BEFUDDLE, MOVE_EFFECT_EFFECT_SPORE_SIDE));
+        ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_BEFUDDLE, MOVE_EFFECT_RANDOM_FROM_LIST));
+        ASSUME(MoveHasAdditionalEffectOnSide(MOVE_G_MAX_BEFUDDLE, MOVE_EFFECT_RANDOM_FROM_LIST));
         PLAYER(SPECIES_BUTTERFREE) { GigantamaxFactor(TRUE); }
         PLAYER(SPECIES_CATERPIE);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -1365,7 +1366,6 @@ SINGLE_BATTLE_TEST("Sleep Clause: Waking up after Rest doesn't deactivate sleep 
     } SCENE {
         MESSAGE("Zigzagoon slept and restored its HP!");
         STATUS_ICON(player, sleep: TRUE);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_REST, player);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, player);
         MESSAGE("Zigzagoon woke up!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPORE, opponent);
@@ -1403,7 +1403,7 @@ DOUBLE_BATTLE_TEST("Sleep Clause: Waking up after Rest doesn't deactivate sleep 
     } SCENE {
         MESSAGE("Zigzagoon slept and restored its HP!");
         STATUS_ICON(playerLeft, sleep: TRUE);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_REST, playerLeft);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, playerLeft);
         MESSAGE("The opposing Zigzagoon used Spore!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPORE, opponentRight);
         MESSAGE("Zigzagoon fell asleep!");
@@ -1884,5 +1884,39 @@ DOUBLE_BATTLE_TEST("Sleep Clause: Opponent Spore'ing player's partner after part
             STATUS_ICON(playerLeft, sleep: TRUE);
         }
         MESSAGE("Sleep Clause kept Zigzagoon awake!");
+    }
+}
+
+MULTI_BATTLE_TEST("Sleep Clause remains active when a partner's Chesto Berry cures sleep")
+{
+    GIVEN {
+        FLAG_SET(B_FLAG_SLEEP_CLAUSE);
+        ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_NON_VOLATILE_STATUS);
+        ASSUME(GetMoveNonVolatileStatus(MOVE_SPORE) == MOVE_EFFECT_SLEEP);
+        ASSUME(GetMoveEffect(MOVE_REST) == EFFECT_REST);
+        ASSUME(gItemsInfo[ITEM_CHESTO_BERRY].holdEffect == HOLD_EFFECT_CURE_SLP);
+        PLAYER(SPECIES_WOBBUFFET);
+        PARTNER(SPECIES_WOBBUFFET) { HP(1); Item(ITEM_CHESTO_BERRY); }
+        OPPONENT_A(SPECIES_WOBBUFFET);
+        OPPONENT_B(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_SPORE, target: playerLeft); }
+        TURN { MOVE(playerRight, MOVE_REST); }
+        TURN { MOVE(opponentLeft, MOVE_SPORE, target: playerRight); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPORE, opponentLeft);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, playerLeft);
+        STATUS_ICON(playerLeft, sleep: TRUE);
+
+        STATUS_ICON(playerRight, sleep: TRUE);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, playerRight);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, playerRight);
+        STATUS_ICON(playerRight, sleep: FALSE);
+
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_SPORE, opponentLeft);
+            ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, playerRight);
+            STATUS_ICON(playerRight, sleep: TRUE);
+        }
     }
 }

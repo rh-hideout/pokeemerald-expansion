@@ -6,6 +6,21 @@ ASSUMPTIONS
     ASSUME(GetMoveEffect(MOVE_QUASH) == EFFECT_QUASH);
 }
 
+SINGLE_BATTLE_TEST("Quash fails if the target has already moved")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_QUASH); MOVE(opponent, MOVE_CELEBRATE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        MESSAGE("Wobbuffet used Quash!");
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_QUASH, player);
+        MESSAGE("But it failed!");
+    }
+}
+
 DOUBLE_BATTLE_TEST("Quash-affected target will move last in the priority bracket")
 {
     GIVEN {

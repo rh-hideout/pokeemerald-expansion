@@ -51,6 +51,8 @@ enum
     RECORDED_ITEM_MOVE,
 };
 
+#define RECORDED_TARGET_DEFAULT 0xF
+
 extern rng_value_t gRecordedBattleRngSeed;
 extern rng_value_t gBattlePalaceMoveSelectionRngValue;
 extern u8 gRecordedBattleMultiplayerId;

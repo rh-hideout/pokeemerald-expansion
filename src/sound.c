@@ -454,7 +454,7 @@ void PlayCryInternal(enum Species species, s8 pan, s8 volume, u8 priority, u8 mo
     case CRY_MODE_WEAK_DOUBLES:
         length = 20;
         release = 225;
-        // fallthrough
+        [[fallthrough]];
     case CRY_MODE_WEAK:
         pitch = 15000;
         break;

@@ -18,7 +18,6 @@
 #include "constants/battle_frontier.h"
 #include "constants/battle_special.h"
 
-static void HandleSpecialTrainerBattleEnd(void);
 static void Task_StartBattleAfterTransition(u8 taskId);
 static void UNUSED FillEReaderTrainerWithPlayerData(void);
 static void CopyEReaderTrainerFarewellMessage(void);
@@ -27,7 +26,7 @@ static void CopyEReaderTrainerFarewellMessage(void);
 static void SetEReaderTrainerChecksum(struct BattleTowerEReaderTrainer *ereaderTrainer);
 #endif //FREE_BATTLE_TOWER_E_READER
 
-static void HandleSpecialTrainerBattleEnd(void)
+void CB2_EndSpecialTrainerBattle(void)
 {
     s32 i;
 
@@ -53,6 +52,7 @@ static void HandleSpecialTrainerBattleEnd(void)
                     gSaveBlock1Ptr->playerParty[i] = gParties[B_TRAINER_PLAYER][i];
             }
         }
+        gSpecialVar_Result = gBattleOutcome;
         break;
     }
 
@@ -63,7 +63,7 @@ static void Task_StartBattleAfterTransition(u8 taskId)
 {
     if (IsBattleTransitionDone() == TRUE)
     {
-        gMain.savedCallback = HandleSpecialTrainerBattleEnd;
+        gMain.savedCallback = CB2_EndSpecialTrainerBattle;
         SetMainCallback2(CB2_InitBattle);
         DestroyTask(taskId);
     }

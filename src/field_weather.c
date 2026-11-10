@@ -788,6 +788,7 @@ void FadeSelectedPals(u8 mode, s8 delay, u32 selectedPalettes)
         // For cases like that, use fadescreenswapbuffers
         CpuFastCopy(gPlttBufferFaded, gPlttBufferUnfaded, PLTT_BUFFER_SIZE * 2);
 
+        gPaletteFade.simultaneousFade = TRUE;
         BeginNormalPaletteFade(selectedPalettes, delay, 0, 16, fadeColor);
         gWeatherPtr->palProcessingState = WEATHER_PAL_STATE_SCREEN_FADING_OUT;
     }

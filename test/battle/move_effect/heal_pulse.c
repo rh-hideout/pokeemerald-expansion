@@ -50,6 +50,22 @@ SINGLE_BATTLE_TEST("Heal Pulse is boosted by Mega Launcher")
     }
 }
 
+SINGLE_BATTLE_TEST("Heal Pulse boosted by Mega Launcher rounds half-down")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { MaxHP(98); HP(1); }
+        OPPONENT(SPECIES_CLAWITZER);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_HEAL_PULSE); }
+    } SCENE {
+        s32 maxHP = GetMonData(&PLAYER_PARTY[0], MON_DATA_MAX_HP);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_HEAL_PULSE, opponent);
+        HP_BAR(player, damage: -maxHP * 75 / 100);
+    } THEN {
+        EXPECT_EQ(player->hp, 74);
+    }
+}
+
 SINGLE_BATTLE_TEST("Heal Pulse ignores accurace checks")
 {
     GIVEN {
@@ -87,10 +103,10 @@ SINGLE_BATTLE_TEST("Floral Healing heals the target by 2/3rd of it's maxHP if Gr
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_FLORAL_HEALING) == EFFECT_HEAL_PULSE);
-        ASSUME(GetMoveEffectArg_MoveProperty(MOVE_FLORAL_HEALING) == MOVE_EFFECT_FLORAL_HEALING);
+        ASSUME(MoveHasAdditionalEffect(MOVE_FLORAL_HEALING, MOVE_EFFECT_FLORAL_HEALING));
         ASSUME(GetMoveEffect(MOVE_GRASSY_TERRAIN) == EFFECT_TERRAIN);
         ASSUME(GetMoveTerrainType(MOVE_GRASSY_TERRAIN) == B_TERRAIN_GRASSY);
-        PLAYER(SPECIES_WOBBUFFET) { MaxHP(100); HP(1); }
+        PLAYER(SPECIES_WOBBUFFET) { MaxHP(300); HP(1); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_GRASSY_TERRAIN); MOVE(opponent, MOVE_FLORAL_HEALING); }

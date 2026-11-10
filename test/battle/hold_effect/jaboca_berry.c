@@ -25,13 +25,13 @@ SINGLE_BATTLE_TEST("Jaboca Berry causes the attacker to lose 1/8 of its max HP i
         ANIMATION(ANIM_TYPE_MOVE, move, player);
         HP_BAR(opponent);
         if (move == MOVE_SCRATCH) {
+            ITEM_POPUP(opponent, ITEM_JABOCA_BERRY);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
             HP_BAR(player, captureDamage: &damage);
-            MESSAGE("Wobbuffet was hurt by the opposing Wobbuffet's Jaboca Berry!");
         } else {
             NONE_OF {
+                ITEM_POPUP(opponent, ITEM_JABOCA_BERRY);
                 ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
-                MESSAGE("Wobbuffet was hurt by the opposing Wobbuffet's Jaboca Berry!");
             }
         }
     } THEN {
@@ -51,9 +51,9 @@ SINGLE_BATTLE_TEST("Jaboca Berry triggers before Bug Bite can steal it")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BUG_BITE, player);
         HP_BAR(opponent);
+        ITEM_POPUP(opponent, ITEM_JABOCA_BERRY);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
         HP_BAR(player);
-        MESSAGE("Wynaut was hurt by the opposing Wobbuffet's Jaboca Berry!");
         NOT MESSAGE("Wynaut stole and ate the opposing Wobbuffet's Jaboca Berry!");
     }
 }
@@ -68,7 +68,7 @@ SINGLE_BATTLE_TEST("Jaboca Berry is triggered even if berry user faints")
         TURN { MOVE(player, MOVE_TACKLE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, player);
+        ITEM_POPUP(opponent, ITEM_JABOCA_BERRY);
         HP_BAR(player);
-        MESSAGE("Wobbuffet was hurt by the opposing Wobbuffet's Jaboca Berry!");
     }
 }

@@ -677,7 +677,7 @@ void AnimTask_Rollout(u8 taskId)
     var2 = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
     var3 = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y) + 24;
 
-    if (BATTLE_PARTNER(gBattleAnimAttacker) == gBattleAnimTarget)
+    if (GetPartnerBattler(gBattleAnimAttacker) == gBattleAnimTarget)
         var3 = var1;
 
     rolloutCounter = GetRolloutCounter();
@@ -724,7 +724,7 @@ void AnimTask_TectonicRageRollout(u8 taskId)
     var2 = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
     var3 = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y) + 24;
 
-    if (BATTLE_PARTNER(gBattleAnimAttacker) == gBattleAnimTarget)
+    if (GetPartnerBattler(gBattleAnimAttacker) == gBattleAnimTarget)
         var3 = var1;
 
     task->data[8] = 48 - (rolloutCounter * 8);  //rollout speed
@@ -862,7 +862,7 @@ static void CreateRolloutDirtSprite(struct Task *task)
     y = task->data[3] >> 3;
     x += (task->data[12] * 4);
 
-    spriteId = CreateSprite(spriteTemplate, x, y, 35);
+    spriteId = CreateSpriteUnchecked(spriteTemplate, x, y, 35);
     if (spriteId != MAX_SPRITES)
     {
         gSprites[spriteId].data[0] = 18;

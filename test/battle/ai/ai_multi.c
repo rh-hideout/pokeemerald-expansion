@@ -58,7 +58,7 @@ AI_ONE_VS_TWO_BATTLE_TEST("AI will only explode and kill everything on the field
         OPPONENT_B(SPECIES_VOLTORB) { Moves(MOVE_EXPLOSION, MOVE_ELECTRO_BALL); HP(1); }
     } WHEN {
         if (aiFlags == 0)
-            TURN { EXPECT_MOVE(opponentLeft, MOVE_ELECTRO_BALL, target: playerLeft); EXPECT_MOVE(opponentRight, MOVE_ELECTRO_BALL, target: playerLeft); }
+            TURN { EXPECT_MOVE(opponentLeft, MOVE_ELECTRO_BALL); EXPECT_MOVE(opponentRight, MOVE_ELECTRO_BALL); }
         else
             TURN { EXPECT_MOVE(partner, MOVE_ELECTRO_BALL, target: playerLeft); EXPECT_MOVE(battler, MOVE_EXPLOSION); }
     }
@@ -149,7 +149,7 @@ AI_MULTI_BATTLE_TEST("Partner will not steal your pokemon when running out")
         TURN { EXPECT_MOVE(playerRight, MOVE_MEMENTO, target:opponentLeft); }
         TURN {}
     } THEN {
-        EXPECT_EQ(gAbsentBattlerFlags, (1u << GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT)));
+        EXPECT_EQ(IsBattlerAlive(GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT)), FALSE);
     }
 }
 

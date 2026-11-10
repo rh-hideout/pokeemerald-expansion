@@ -3,9 +3,12 @@ FuchsiaCity_SafariZone_Entrance_Frlg_MapScripts::
 	.byte 0
 
 FuchsiaCity_SafariZone_Entrance_OnFrame::
-	map_script_2 VAR_MAP_SCENE_FUCHSIA_CITY_SAFARI_ZONE_ENTRANCE, 1, FuchsiaCity_SafariZone_Entrance_EventScript_ExitWarpIn
-	map_script_2 VAR_MAP_SCENE_FUCHSIA_CITY_SAFARI_ZONE_ENTRANCE, 2, FuchsiaCity_SafariZone_Entrance_EventScript_ExitEarly
-	map_script_2 VAR_MAP_SCENE_FUCHSIA_CITY_SAFARI_ZONE_ENTRANCE, 3, FuchsiaCity_SafariZone_Entrance_EventScript_ExitWalkIn
+	map_script_2 VAR_SAFARI_WARP_STATE, SAFARI_WARP_MANUAL_EXIT, FuchsiaCity_SafariZone_Entrance_EventScript_ExitEarly
+	map_script_2 VAR_SAFARI_WARP_STATE, SAFARI_WARP_NO_BALLS, FuchsiaCity_SafariZone_Entrance_EventScript_ExitWarpIn
+	map_script_2 VAR_SAFARI_WARP_STATE, SAFARI_WARP_NO_STEPS, FuchsiaCity_SafariZone_Entrance_EventScript_ExitWarpIn
+	map_script_2 VAR_SAFARI_WARP_STATE, SAFARI_WARP_NO_BALLS_MID_BATTLE, FuchsiaCity_SafariZone_Entrance_EventScript_ExitWalkIn
+	map_script_2 VAR_SAFARI_WARP_STATE, SAFARI_WARP_RETIRING, FuchsiaCity_SafariZone_Entrance_EventScript_ExitWarpIn
+	map_script_2 VAR_SAFARI_WARP_STATE, SAFARI_WARP_WHITEOUT, FuchsiaCity_SafariZone_Entrance_EventScript_ExitWarpIn
 	.2byte 0
 
 @ When player runs out of balls mid-battle
@@ -18,8 +21,7 @@ FuchsiaCity_SafariZone_Entrance_EventScript_ExitWalkIn::
 	closemessage
 	applymovement LOCALID_PLAYER, FuchsiaCity_SafariZone_Entrance_Movement_Exit2
 	waitmovement 0
-	special ExitSafariMode
-	setvar VAR_MAP_SCENE_FUCHSIA_CITY_SAFARI_ZONE_ENTRANCE, 0
+	setvar VAR_SAFARI_WARP_STATE, 0
 	releaseall
 	end
 
@@ -31,8 +33,7 @@ FuchsiaCity_SafariZone_Entrance_EventScript_ExitWarpIn::
 	closemessage
 	applymovement LOCALID_PLAYER, FuchsiaCity_SafariZone_Entrance_Movement_Exit
 	waitmovement 0
-	special ExitSafariMode
-	setvar VAR_MAP_SCENE_FUCHSIA_CITY_SAFARI_ZONE_ENTRANCE, 0
+	setvar VAR_SAFARI_WARP_STATE, 0
 	releaseall
 	end
 
@@ -46,8 +47,8 @@ FuchsiaCity_SafariZone_Entrance_EventScript_ExitEarly::
 	closemessage
 	applymovement LOCALID_PLAYER, FuchsiaCity_SafariZone_Entrance_Movement_Exit
 	waitmovement 0
-	special ExitSafariMode
-	setvar VAR_MAP_SCENE_FUCHSIA_CITY_SAFARI_ZONE_ENTRANCE, 0
+	safari_exitnowarp
+	setvar VAR_SAFARI_WARP_STATE, 0
 	releaseall
 	end
 
@@ -127,8 +128,7 @@ FuchsiaCity_SafariZone_Entrance_EventScript_TryEnterSafariZone::
 	call_if_eq VAR_TEMP_2, 0, FuchsiaCity_SafariZone_Entrance_EventScript_EnterSafariZoneMid
 	call_if_eq VAR_TEMP_2, 1, FuchsiaCity_SafariZone_Entrance_EventScript_EnterSafariZoneRight
 	call_if_eq VAR_TEMP_2, 2, FuchsiaCity_SafariZone_Entrance_EventScript_EnterSafariZoneLeft
-	special EnterSafariMode
-	setvar VAR_MAP_SCENE_FUCHSIA_CITY_SAFARI_ZONE_ENTRANCE, 2
+	safari_enter SAFARI_EVENT_KANTO
 	warp MAP_SAFARI_ZONE_CENTER, 255, 26, 30
 	waitstate
 	end

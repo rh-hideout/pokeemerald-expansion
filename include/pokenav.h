@@ -136,6 +136,7 @@ enum
 enum
 {
     POKENAV_MENU_TYPE_DEFAULT,
+    POKENAV_MENU_TYPE_UNLOCK_RIBBONS,
     POKENAV_MENU_TYPE_UNLOCK_MC,
     POKENAV_MENU_TYPE_UNLOCK_MC_RIBBONS,
     POKENAV_MENU_TYPE_CONDITION,
@@ -327,7 +328,7 @@ void SetPokenavVBlankCallback(void);
 void SetVBlankCallback_(IntrCallback callback);
 
 // pokenav_list.c
-bool32 CreatePokenavList(const struct BgTemplate *bgTemplate, struct PokenavListTemplate *listTemplate, s32 tileOffset);
+bool32 CreatePokenavList(const struct BgTemplate *bgTemplate, struct PokenavListTemplate *listTemplate, u32 tileOffset);
 bool32 IsCreatePokenavListTaskActive(void);
 void DestroyPokenavList(void);
 u32 PokenavList_GetSelectedIndex(void);

@@ -389,7 +389,7 @@ void AnimTask_CentredFrozenIceCube(u8 taskId)
     s16 x, y;
     u8 spriteId;
     enum BattlerId battler1 = gBattleAnimTarget;
-    enum BattlerId battler2 = BATTLE_PARTNER(battler1);
+    enum BattlerId battler2 = GetPartnerBattler(battler1);
 
     if (!IsDoubleBattle() || IsBattlerAlly(gBattleAnimAttacker, gBattleAnimTarget))
     {

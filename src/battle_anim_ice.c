@@ -1121,7 +1121,7 @@ static void AnimTask_HazeScrollingFog_Step(u8 taskId)
         ClearBattleAnimBg(1);
         ClearBattleAnimBg(2);
         gTasks[taskId].data[12]++;
-        // fall through
+        [[fallthrough]];
     case 4:
         if (!IsContest())
             SetAnimBgAttribute(1, BG_ANIM_CHAR_BASE_BLOCK, 0);
@@ -1223,7 +1223,7 @@ static void AnimTask_MistBallFog_Step(u8 taskId)
 
         gTasks[taskId].data[12]++;
 
-        // fall through
+        [[fallthrough]];
     case 4:
         if (!IsContest())
             SetAnimBgAttribute(1, BG_ANIM_CHAR_BASE_BLOCK, 0);
@@ -1530,7 +1530,7 @@ static bool8 GenerateHailParticle(u8 hailStructId, u8 affineAnimNum, u8 taskId, 
         battlerY = sHailCoordData[hailStructId].y;
     }
     spriteX = battlerX - ((battlerY + 8) / 2);
-    id = CreateSprite(&gHailParticleSpriteTemplate, spriteX, -8, 18);
+    id = CreateSpriteUnchecked(&gHailParticleSpriteTemplate, spriteX, -8, 18);
     if (id == MAX_SPRITES)
     {
         return FALSE;
@@ -1566,7 +1566,7 @@ static void AnimHailBegin(struct Sprite *sprite)
 
     if (sprite->sSpawnImpactEffect == 1 && sprite->sAffineAnimNum == 0)
     {
-        spriteId = CreateSprite(&gIceCrystalHitLargeSpriteTemplate,
+        spriteId = CreateSpriteUnchecked(&gIceCrystalHitLargeSpriteTemplate,
                                 sprite->sTargetX, sprite->sTargetY, sprite->subpriority);
 
         sprite->data[0] = spriteId;

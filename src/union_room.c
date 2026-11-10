@@ -1774,6 +1774,7 @@ static void Task_RunScriptAndFadeToActivity(u8 taskId)
         case ACTIVITY_CONTEST_TOUGH:
             SaveLinkTrainerNames();
             DestroyTask(taskId);
+            [[fallthrough]];
         default:
             ScriptContext_Enable();
             data[0] = 1;
@@ -2138,6 +2139,7 @@ static void Task_CardOrNewsWithFriend(u8 taskId)
         {
         case 1:
             PlaySE(SE_PC_LOGIN);
+            [[fallthrough]];
         default:
             RedrawListMenu(data->listTaskId);
             break;
@@ -2296,6 +2298,7 @@ static void Task_CardOrNewsOverWireless(u8 taskId)
         {
         case 1:
             PlaySE(SE_PC_LOGIN);
+            [[fallthrough]];
         default:
             if (data->showListMenu)
                 RedrawListMenu(data->listTaskId);
@@ -2611,6 +2614,7 @@ static void Task_RunUnionRoom(u8 taskId)
             {
             case PLIST_NEW_PLAYER:
                 PlaySE(SE_PC_LOGIN);
+                [[fallthrough]];
             case PLIST_RECENT_UPDATE:
                 ScheduleUnionRoomPlayerRefresh(uroom);
                 break;

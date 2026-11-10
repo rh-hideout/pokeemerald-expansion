@@ -207,6 +207,7 @@ SINGLE_BATTLE_TEST("Gulp Missile: Transformed Cramorant Gulping lowers defense a
         HP_BAR(opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
         HP_BAR(player);
+        HP_BAR(opponent); // Rocky Helmet
         ABILITY_POPUP(player, ABILITY_GULP_MISSILE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE_INSTANT, player);
         HP_BAR(opponent);
@@ -216,7 +217,6 @@ SINGLE_BATTLE_TEST("Gulp Missile: Transformed Cramorant Gulping lowers defense a
         } else {
             ABILITY_POPUP(opponent, ABILITY_CLEAR_BODY);
         }
-        HP_BAR(opponent);
     }
 }
 

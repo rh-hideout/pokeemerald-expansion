@@ -868,10 +868,10 @@ void AnimTask_InitMementoShadow(u8 taskId)
     MoveBattlerSpriteToBG(gBattleAnimAttacker, toBG2, TRUE);
     gSprites[gBattlerSpriteIds[gBattleAnimAttacker]].invisible = FALSE;
 
-    if (IsBattlerSpriteVisible(BATTLE_PARTNER(gBattleAnimAttacker)))
+    if (IsBattlerSpriteVisible(GetPartnerBattler(gBattleAnimAttacker)))
     {
-        MoveBattlerSpriteToBG(BATTLE_PARTNER(gBattleAnimAttacker), toBG2 ^ 1, TRUE);
-        gSprites[gBattlerSpriteIds[BATTLE_PARTNER(gBattleAnimAttacker)]].invisible = FALSE;
+        MoveBattlerSpriteToBG(GetPartnerBattler(gBattleAnimAttacker), toBG2 ^ 1, TRUE);
+        gSprites[gBattlerSpriteIds[GetPartnerBattler(gBattleAnimAttacker)]].invisible = FALSE;
     }
 
     DestroyAnimVisualTask(taskId);
@@ -882,7 +882,7 @@ void AnimTask_MementoHandleBg(u8 taskId)
     bool8 toBG2 = GetBattlerSpriteBGPriorityRank(gBattleAnimAttacker) ^ 1 ? TRUE : FALSE;
     ResetBattleAnimBg(toBG2);
 
-    if (IsBattlerSpriteVisible(BATTLE_PARTNER(gBattleAnimAttacker)))
+    if (IsBattlerSpriteVisible(GetPartnerBattler(gBattleAnimAttacker)))
         ResetBattleAnimBg(toBG2 ^ 1);
 
     DestroyAnimVisualTask(taskId);
@@ -930,9 +930,9 @@ void AnimTask_MetallicShine(u8 taskId)
     {
         if (GetBattlerPosition(gBattleAnimAttacker) == B_POSITION_OPPONENT_RIGHT || GetBattlerPosition(gBattleAnimAttacker) == B_POSITION_PLAYER_LEFT)
         {
-            if (IsBattlerSpriteVisible(BATTLE_PARTNER(gBattleAnimAttacker)) == TRUE)
+            if (IsBattlerSpriteVisible(GetPartnerBattler(gBattleAnimAttacker)) == TRUE)
             {
-                gSprites[gBattlerSpriteIds[BATTLE_PARTNER(gBattleAnimAttacker)]].oam.priority--;
+                gSprites[gBattlerSpriteIds[GetPartnerBattler(gBattleAnimAttacker)]].oam.priority--;
                 SetAnimBgAttribute(1, BG_ANIM_PRIORITY, 1);
                 priorityChanged = TRUE;
             }
@@ -993,7 +993,7 @@ static void AnimTask_MetallicShine_Step(u8 taskId)
             GetBattleAnimBg1Data(&animBg);
             ClearBattleAnimBg(animBg.bgId);
             if (gTasks[taskId].data[6] == 1)
-                gSprites[gBattlerSpriteIds[BATTLE_PARTNER(gBattleAnimAttacker)]].oam.priority++;
+                gSprites[gBattlerSpriteIds[GetPartnerBattler(gBattleAnimAttacker)]].oam.priority++;
         }
         else if (gTasks[taskId].data[11] == 3)
         {

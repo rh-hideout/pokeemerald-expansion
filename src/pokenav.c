@@ -453,6 +453,7 @@ static void Task_Pokenav(u8 taskId)
         if (IsActiveMenuLoopTaskActive())
             break;
         tState = 3;
+        [[fallthrough]];
     case 3:
         menuId = GetCurrentMenuCB();
         if (menuId == POKENAV_MENU_FUNC_EXIT)

@@ -22,7 +22,7 @@ void SetFrontierBrainObjEventGfx_2(void);
 void CreateFrontierBrainPokemon(void);
 enum Species GetFrontierBrainMonSpecies(u8 monId);
 void SetFrontierBrainObjEventGfx(u8 facility);
-u16 GetFrontierBrainMonMove(u8 monId, u8 moveSlotId);
+u16 GetFrontierBrainMonMove(u8 monId, enum MoveSlot moveSlotId);
 u8 GetFrontierBrainMonNature(u8 monId);
 u8 GetFrontierBrainMonEvs(u8 monId, u8 evStatId);
 s32 GetFronterBrainSymbol(void);

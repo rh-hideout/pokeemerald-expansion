@@ -2019,7 +2019,7 @@ void TryPutLotteryWinnerReportOnAir(void)
     }
 }
 
-void TryPutBattleSeminarOnAir(enum Species foeSpecies, enum Species species, u8 moveIndex, const u16 *movePtr, enum Move betterMove)
+void TryPutBattleSeminarOnAir(enum Species foeSpecies, enum Species species, enum MoveSlot moveIndex, const u16 *movePtr, enum Move betterMove)
 {
     TVShow *show;
     u8 i;
@@ -2594,6 +2594,9 @@ void ConvertIntToDecimalString(u8 varIdx, int value)
 size_t CountDigits(int value)
 {
     u32 count = 0;
+
+    if (value == 0)
+        return 1;
 
     while (value > 0)
     {
@@ -4427,6 +4430,7 @@ static void DoTVShowTheNameRaterShow(void)
     case 12:
         state = 18;
         sTVShowState = 18;
+        [[fallthrough]];
     case 18:
         TVShowConvertInternationalString(gStringVar1, show->nameRaterShow.pokemonName, show->nameRaterShow.pokemonNameLanguage);
         TVShowDone();
@@ -6545,6 +6549,7 @@ static void DoTVShowLilycoveContestLady(void)
     case CONTESTLADYLIVE_STATE_WON:
     case CONTESTLADYLIVE_STATE_LOST:
         TVShowConvertInternationalString(gStringVar3, show->contestLady.playerName, show->contestLady.language);
+        [[fallthrough]];
     case CONTESTLADYLIVE_STATE_LOST_BADLY:
         TVShowConvertInternationalString(gStringVar2, show->contestLady.nickname, show->contestLady.pokemonNameLanguage);
         TVShowDone();
