@@ -136,7 +136,7 @@ enum MiningId
 #define MINING_ZONE_4_Y_DOWN_BOUNDARY   MINING_WALL_HEIGHT - 1
 
 /*********** DEBUG FLAGS ************/
-#define MINING_DEBUG_ENABLE                                 TRUE
+#define MINING_DEBUG_ENABLE                                 FALSE
 
 #if MINING_DEBUG_ENABLE == TRUE
     #define MINING_DEBUG_ALL_SPRITES_VISIBLE                TRUE
