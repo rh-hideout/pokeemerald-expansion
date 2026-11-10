@@ -1236,10 +1236,9 @@ static void Mining_LoadSpriteGraphics(void)
         enum MiningId stone;
         for (u32 i = 0; i < MINING_NUM_BURIED_STONES; i++)
         {
-            stone = MININGID_NONE;
-            while (!DoesStoneFitInItemMap(stone))
-                stone = ((Random() % MINING_COUNT_ID_STONE) + MININGID_STONE_1x4);
-
+            do {
+                stone = RandomUniform(RNG_NONE, MININGID_STONE_START, MINING_COUNT_ID_STONE);
+            } while (!DoesStoneFitInItemMap(stone));
             DoDrawRandomStone(stone);
         }
     }

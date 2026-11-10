@@ -466,7 +466,7 @@ $(C_BUILDDIR)/graphics.o: override CFLAGS += -Wno-missing-braces
 # Have to be explicit or else missing files won't be reported.
 $(C_BUILDDIR)/move_relearner.o: $(C_SUBDIR)/move_relearner.c $(DATA_SRC_SUBDIR)/tutor_moves.h
 $(C_BUILDDIR)/pokemon.o: $(C_SUBDIR)/pokemon.c $(DATA_SRC_SUBDIR)/pokemon/teachable_learnsets.h
-$(C_BUILDDIR)/mining_minigame.o: $(C_SUBDIR)/mining_minigame.c $(DATA_SRC_SUBDIR)/mining_minigame/enums.h $(DATA_SRC_SUBDIR)/mining_minigame/objects.h $(DATA_SRC_SUBDIR)/mining_minigame/tile_data.h
+$(C_SUBDIR)/mining_minigame.c: $(DATA_SRC_SUBDIR)/mining_minigame/enums.h $(DATA_SRC_SUBDIR)/mining_minigame/objects.h $(DATA_SRC_SUBDIR)/mining_minigame/tile_data.h
 
 # As a side effect, they're evaluated immediately instead of when the rule is invoked.
 # It doesn't look like $(shell) can be deferred so there might not be a better way (Icedude_907: there is soon).
@@ -577,6 +577,8 @@ $(DATA_SRC_SUBDIR)/mining_minigame/enums.h: $(DATA_SRC_SUBDIR)/mining_minigame/o
 
 $(DATA_SRC_SUBDIR)/mining_minigame/objects.h: $(DATA_SRC_SUBDIR)/mining_minigame/object_tables.json tools/mining_minigame/mining_objects.json.txt
 	$(JSONPROC) $^ $@
+
+AUTO_GEN_TARGETS += $(DATA_SRC_SUBDIR)/mining_minigame/tile_data.h $(DATA_SRC_SUBDIR)/mining_minigame/enums.h $(DATA_SRC_SUBDIR)/mining_minigame/objects.h
 
 # Linker script
 LD_SCRIPT := ld_script_modern.ld

@@ -5,6 +5,7 @@ enum MiningId
 ## for stone in stones
     MININGID_{{ stone.id }},
 ## endfor
+    MININGID_STONE_START = MININGID_{{ first(stones).id }},
     MINING_COUNT_ID_STONE = MININGID_{{ last(stones).id }},
 ## for item in items
     MININGID_{{ item.id }},
