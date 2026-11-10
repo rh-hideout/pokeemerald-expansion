@@ -9,7 +9,7 @@ ASSUMPTIONS
     ASSUME(GetSpeciesType(SPECIES_PIDGEY, 0) == TYPE_FLYING || GetSpeciesType(SPECIES_PIDGEY, 1) == TYPE_FLYING);
 }
 
-DOUBLE_BATTLE_TEST("Strong winds remove Flying-type weaknesses of all battlers")
+DOUBLE_BATTLE_TEST("Strong Winds remove Flying-type weaknesses of all battlers")
 {
     enum Move move;
     PARAMETRIZE { move = MOVE_THUNDER_SHOCK; }
@@ -38,7 +38,7 @@ DOUBLE_BATTLE_TEST("Strong winds remove Flying-type weaknesses of all battlers")
     }
 }
 
-DOUBLE_BATTLE_TEST("Strong winds remove Flying-type weaknesses of all battlers - Inverse Battle")
+DOUBLE_BATTLE_TEST("Strong Winds remove Flying-type weaknesses of all battlers - Inverse Battle")
 {
     enum Move move;
     PARAMETRIZE { move = MOVE_BUG_BITE; }
@@ -75,7 +75,7 @@ DOUBLE_BATTLE_TEST("Strong winds remove Flying-type weaknesses of all battlers -
     }
 }
 
-SINGLE_BATTLE_TEST("Strong winds prevent Weakness Policy from activating on Flying-type weaknesses")
+SINGLE_BATTLE_TEST("Strong Winds prevent Weakness Policy from activating on Flying-type weaknesses")
 {
     GIVEN {
         ASSUME(GetItemHoldEffect(ITEM_WEAKNESS_POLICY) == HOLD_EFFECT_WEAKNESS_POLICY);
@@ -128,7 +128,7 @@ SINGLE_BATTLE_TEST("Anticipation still triggers with Strong Winds active - Inver
     }
 }
 
-SINGLE_BATTLE_TEST("Strong winds don't affect Stealth Rock's damage")
+SINGLE_BATTLE_TEST("Strong Winds don't affect Stealth Rock's damage")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_STEALTH_ROCK) == EFFECT_STEALTH_ROCK);
@@ -146,7 +146,7 @@ SINGLE_BATTLE_TEST("Strong winds don't affect Stealth Rock's damage")
     }
 }
 
-SINGLE_BATTLE_TEST("Strong winds block weather-setting moves")
+SINGLE_BATTLE_TEST("Strong Winds block weather-setting moves")
 {
     enum Move move;
     PARAMETRIZE { move = MOVE_SUNNY_DAY; }
@@ -175,7 +175,7 @@ SINGLE_BATTLE_TEST("Strong winds block weather-setting moves")
     }
 }
 
-SINGLE_BATTLE_TEST("Strong winds prevent other weather abilities")
+SINGLE_BATTLE_TEST("Strong Winds prevent other weather abilities")
 {
     enum Ability ability;
     enum Species species;
@@ -198,7 +198,7 @@ SINGLE_BATTLE_TEST("Strong winds prevent other weather abilities")
     }
 }
 
-SINGLE_BATTLE_TEST("Strong winds can be replaced by Desolate Land")
+SINGLE_BATTLE_TEST("Strong Winds can be replaced by Desolate Land")
 {
     GIVEN {
         PLAYER(SPECIES_RAYQUAZA) { Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE); }
@@ -215,7 +215,7 @@ SINGLE_BATTLE_TEST("Strong winds can be replaced by Desolate Land")
     }
 }
 
-SINGLE_BATTLE_TEST("Strong winds can be replaced by Primordial Sea")
+SINGLE_BATTLE_TEST("Strong Winds can be replaced by Primordial Sea")
 {
     GIVEN {
         PLAYER(SPECIES_RAYQUAZA) { Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE); }
@@ -232,7 +232,7 @@ SINGLE_BATTLE_TEST("Strong winds can be replaced by Primordial Sea")
     }
 }
 
-SINGLE_BATTLE_TEST("Strong winds don't reduce Synthesis, Morning Sun or Moonlight recovery")
+SINGLE_BATTLE_TEST("Strong Winds don't reduce Synthesis, Morning Sun or Moonlight recovery")
 {
     enum Move move;
     enum BattleMoveEffects effect;
@@ -250,5 +250,22 @@ SINGLE_BATTLE_TEST("Strong winds don't reduce Synthesis, Morning Sun or Moonligh
     } SCENE {
         ABILITY_POPUP(player, ABILITY_DELTA_STREAM);
         HP_BAR(player, damage: -100);
+    }
+}
+
+SINGLE_BATTLE_TEST("Strong Winds does not protect Flying-type Pokémon from weaknesses associated with other types")
+{
+    GIVEN {
+        ASSUME(GetMoveType(MOVE_DRAGON_PULSE) == TYPE_DRAGON);
+        PLAYER(SPECIES_RAYQUAZA) { Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA), MOVE(opponent, MOVE_DRAGON_PULSE); }
+    } SCENE {
+        ABILITY_POPUP(player, ABILITY_DELTA_STREAM);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_PULSE, opponent);
+        NOT MESSAGE("The mysterious strong winds weakened the attack!");
+        EFFECTIVENESS_SE(player, SE_SUPER_EFFECTIVE);
+        HP_BAR(player);
     }
 }

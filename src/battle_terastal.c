@@ -74,14 +74,14 @@ bool32 CanTerastallize(enum BattlerId battler)
         return FALSE;
 
     // Prevents Zigzagoon from terastalizing in vanilla.
-    if (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE && !IsOnPlayerSide(battler))
+    if (HasAnyBattleFlags(BATTLE_TYPE_FIRST_BATTLE) && !IsOnPlayerSide(battler))
         return FALSE;
 
     if (TESTING || !IsOnPlayerSide(battler))
     {
         // Skip all other checks in this block, go to HasTrainerUsedGimmick
     }
-    else if (!CheckBagHasItem(ITEM_TERA_ORB, 1))
+    else if (!HasPlayerUnlockedGimmick(GIMMICK_TERA))
     {
         return FALSE;
     }

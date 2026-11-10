@@ -786,26 +786,14 @@
 
 	@ Starts a single trainer battle. Takes a trainer, intro text, loss text, and an optional event script.
 	@ When used with an event script, you can also pass in an optional flag to disable music
-	.macro trainerbattle_single trainer:req, intro_text:req, lose_text:req, event_script=FALSE, music=TRUE
-	.if \event_script == FALSE
-	trainerbattle LOCALID_NONE, \trainer, \intro_text, \lose_text, NULL, LOCALID_NONE, TRAINER_NONE, NULL, NULL, NULL, NULL, NULL, FALSE, TRUE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE
-	.elseif \music == TRUE
-	trainerbattle LOCALID_NONE, \trainer, \intro_text, \lose_text, \event_script, LOCALID_NONE, TRAINER_NONE, NULL, NULL, NULL, NULL, NULL, FALSE, TRUE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE
-	.else
-	trainerbattle LOCALID_NONE, \trainer, \intro_text, \lose_text, \event_script, LOCALID_NONE, TRAINER_NONE, NULL, NULL, NULL, NULL, NULL, FALSE, TRUE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE
-	.endif
+	.macro trainerbattle_single trainer:req, intro_text:req, lose_text:req, event_script=NULL, music=TRUE
+	trainerbattle LOCALID_NONE, \trainer, \intro_text, \lose_text, \event_script, LOCALID_NONE, TRAINER_NONE, NULL, NULL, NULL, NULL, NULL, FALSE, \music, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE
 	.endm
 
 	@ Starts a double trainer battle. Takes a trainer, intro text, loss text, text for when you have too few pokemon
 	@ and an optional event script. When used with an event script you can pass in an optional flag to disable music
-	.macro trainerbattle_double trainer:req, intro_text:req, lose_text:req, not_enough_pkmn_text:req, event_script=FALSE, music=TRUE
-	.if \event_script == FALSE
-	trainerbattle LOCALID_NONE, \trainer, \intro_text, \lose_text, NULL, LOCALID_NONE, TRAINER_NONE, NULL, NULL, NULL, NULL, \not_enough_pkmn_text, TRUE, TRUE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE
-	.elseif \music == TRUE
-	trainerbattle LOCALID_NONE, \trainer, \intro_text, \lose_text, \event_script, LOCALID_NONE, TRAINER_NONE, NULL, NULL, NULL, NULL, \not_enough_pkmn_text, TRUE, TRUE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE
-	.else
-	trainerbattle LOCALID_NONE, \trainer, \intro_text, \lose_text, \event_script, LOCALID_NONE, TRAINER_NONE, NULL, NULL, NULL, NULL, \not_enough_pkmn_text, TRUE, FALSE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE
-	.endif
+	.macro trainerbattle_double trainer:req, intro_text:req, lose_text:req, not_enough_pkmn_text:req, event_script=NULL, music=TRUE
+	trainerbattle LOCALID_NONE, \trainer, \intro_text, \lose_text, \event_script, LOCALID_NONE, TRAINER_NONE, NULL, NULL, NULL, NULL, \not_enough_pkmn_text, TRUE, \music, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE
 	.endm
 
 	@ Starts a rematch battle. Takes a trainer, intro text and loss text
@@ -826,7 +814,7 @@
 	@ Starts a double battle with the player against two trainers
 	@ Takes two trainers and defeat text for each
 	.macro trainerbattle_two_trainers trainer_a:req, lose_text_a:req, trainer_b:req, lose_text_b:req
-	trainerbattle OBJ_ID_NONE, \trainer_a, NULL, \lose_text_a, NULL, OBJ_ID_NONE, \trainer_b, NULL, \lose_text_b, NULL, NULL, NULL, FALSE, TRUE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE
+	trainerbattle OBJ_ID_NONE, \trainer_a, NULL, \lose_text_a, NULL, OBJ_ID_NONE, \trainer_b, NULL, \lose_text_b, NULL, NULL, NULL, FALSE, TRUE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE
 	.endm
 
 	@ Starts a trainer battle with victory text if the player loses. If flags is nonzero, the player will be healed after battle (and its assumed to be the tutorial battle)
@@ -2632,6 +2620,9 @@
 	.byte \difficulty
 	.endm
 
+	@ Forces a save in the middle of scripting.
+	@ Requires `release` or `closemessage` immediately
+	@ after to clear the Save Dialogue and Save Info Window.
 	.macro forcesave
 	callnative Script_ForceSaveGame
 	waitstate
@@ -3060,6 +3051,32 @@
 	braillemessage \text
 	getbraillestringwidth \text
 	call EventScript_BrailleCursorWaitButton
+	.endm
+
+	@ Opens party menu to select up to a maximum team size for battle (outside of Frontier)
+	.macro choosepartyforbattle size=MULTI_PARTY_SIZE
+	.if 1 <= \size && \size < PARTY_SIZE
+	setvar VAR_0x8005, \size
+	special ChoosePartyForBattle
+	.elseif \size == PARTY_SIZE
+	setvar VAR_RESULT, 1
+	.else
+	.error "choosepartyforbattle must use a value between 1 and PARTY_SIZE"
+	.endif
+	.endm
+
+	@ Opens party menu to select up to a maximum team size for battle (Frontier)
+	.macro choosepartyforbattlefrontier size:req
+	.if \size == 0 || \size >= PARTY_SIZE
+		.error "choosepartyforbattlefrontier must use a value between 1 and 5"
+	.endif
+	setvar VAR_0x8005, \size
+	special ChoosePartyForBattleFrontier
+	.endm
+
+	@ Reduces player party in line with order set in choosepartyforbattle or choosepartyforbattlefrontier 
+	.macro reduceplayerpartytoselectedmons
+	special ReducePlayerPartyToSelectedMons
 	.endm
 
 	@ Opens a UI that has the player choose a number of Pokemon (bringSize) in their party

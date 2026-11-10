@@ -38,21 +38,21 @@ void BXPY_SetupAIData()
 
 void BXPY_SetupBattlers()
 {
-    bool32 isLink = (gBattleTypeFlags & BATTLE_TYPE_LINK);
+    bool32 isLink = (HasAnyBattleFlags(BATTLE_TYPE_LINK));
     bool32 isDouble = IsDoubleBattle();
-    bool32 isMaster =  (gBattleTypeFlags & BATTLE_TYPE_IS_MASTER);
-    bool32 isRecorded = (gBattleTypeFlags & BATTLE_TYPE_RECORDED);
-    bool32 isRecordedMaster = (gBattleTypeFlags & BATTLE_TYPE_RECORDED_IS_MASTER);
-    bool32 isRecordedLink = (gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK);
-    bool32 isMulti = (gBattleTypeFlags & BATTLE_TYPE_MULTI);
-    bool32 isInGamePartner = (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER);
+    bool32 isMaster =  HasAnyBattleFlags(BATTLE_TYPE_IS_MASTER);
+    bool32 isRecorded = HasAnyBattleFlags(BATTLE_TYPE_RECORDED);
+    bool32 isRecordedMaster = HasAnyBattleFlags(BATTLE_TYPE_RECORDED_IS_MASTER);
+    bool32 isRecordedLink = HasAnyBattleFlags(BATTLE_TYPE_RECORDED_LINK);
+    bool32 isMulti = HasAnyBattleFlags(BATTLE_TYPE_MULTI);
+    bool32 isInGamePartner = HasAnyBattleFlags(BATTLE_TYPE_INGAME_PARTNER);
 
     if (!isDouble)
         gBattlersCount = 2;
     else
         gBattlersCount = MAX_BATTLERS_COUNT;
 
-    if ((gBattleTypeFlags & BATTLE_TYPE_BATTLE_TOWER)
+    if (HasAnyBattleFlags(BATTLE_TYPE_BATTLE_TOWER)
         || !isMulti
         || (!isLink && !isRecorded)
         || (isLink && !isDouble))
@@ -87,7 +87,7 @@ void BXPY_SetupAIFlags(void)
     else
         gAiThinkingStruct->aiFlags[B_BATTLER_3] = gAiThinkingStruct->aiFlags[B_BATTLER_1];
 
-    if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
+    if (HasAnyBattleFlags(BATTLE_TYPE_INGAME_PARTNER))
     {
         gAiThinkingStruct->aiFlags[B_BATTLER_2] = GetAiFlags(gPartnerTrainerId, B_BATTLER_2);
     }
