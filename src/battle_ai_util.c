@@ -2417,6 +2417,7 @@ bool32 CanLowerStat(enum BattlerId battlerAtk, enum BattlerId battlerDef, struct
 enum AIScore IncreaseStatDownScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Stat stat)
 {
     enum AIScore tempScore = NO_INCREASE;
+    enum BattlerId partnerAtk = GetPartnerBattler(battlerAtk);
 
     // Don't increase score if target is already -3 stat stage
     if (stat != STAT_SPEED && gBattleMons[battlerDef].statStages[stat] <= DEFAULT_STAT_STAGE - 3)
@@ -2445,14 +2446,14 @@ enum AIScore IncreaseStatDownScore(enum BattlerId battlerAtk, enum BattlerId bat
         break;
     case STAT_DEF:
         if (HasMoveWithCategory(battlerAtk, DAMAGE_CATEGORY_PHYSICAL)
-         || HasMoveWithCategory(GetPartnerBattler(battlerAtk), DAMAGE_CATEGORY_PHYSICAL))
+         || (IsBattlerAlive(partnerAtk) && HasMoveWithCategory(partnerAtk, DAMAGE_CATEGORY_PHYSICAL)))
             tempScore += DECENT_EFFECT;
         break;
     case STAT_SPEED:
     {
         enum Move predictedMove = GetPredictedMove(battlerAtk, battlerDef, gAiLogicData);
         if (AI_IsSlower(battlerAtk, battlerDef, MOVE_NONE, predictedMove, DONT_CONSIDER_PRIORITY)
-        || AI_IsSlower(GetPartnerBattler(battlerAtk), battlerDef, MOVE_NONE, predictedMove, DONT_CONSIDER_PRIORITY))
+        || (IsBattlerAlive(partnerAtk) && AI_IsSlower(partnerAtk, battlerDef, MOVE_NONE, predictedMove, DONT_CONSIDER_PRIORITY)))
             tempScore += DECENT_EFFECT;
         break;
     }
@@ -2462,7 +2463,7 @@ enum AIScore IncreaseStatDownScore(enum BattlerId battlerAtk, enum BattlerId bat
         break;
     case STAT_SPDEF:
         if (HasMoveWithCategory(battlerAtk, DAMAGE_CATEGORY_SPECIAL)
-         || HasMoveWithCategory(GetPartnerBattler(battlerAtk), DAMAGE_CATEGORY_SPECIAL))
+         || (IsBattlerAlive(partnerAtk) && HasMoveWithCategory(partnerAtk, DAMAGE_CATEGORY_SPECIAL)))
             tempScore += DECENT_EFFECT;
         break;
     case STAT_ACC:
