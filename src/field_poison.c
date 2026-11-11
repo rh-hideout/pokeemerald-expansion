@@ -21,9 +21,10 @@
 
 static bool32 AllMonsFainted(void)
 {
-    struct Pokemon *pokemon = gParties[B_TRAINER_PLAYER];
-    for (u32 i = 0; i < PARTY_SIZE; i++, pokemon++)
+    for (enum PartySlot slot = 0; slot < PARTY_SIZE; slot++)
     {
+        struct Pokemon *pokemon = &gParties[B_TRAINER_PLAYER][slot];
+
         if (IsMonValidAndAliveForBattle(pokemon))
             return FALSE;
     }
@@ -43,10 +44,12 @@ static void FaintFromFieldPoison(u8 partyIdx)
     StringGet_Nickname(gStringVar1);
 }
 
-static bool32 MonFaintedFromPoison(u8 partyIdx)
+static bool32 MonFaintedFromPoison(enum PartySlot slot)
 {
-    struct Pokemon *pokemon = &gParties[B_TRAINER_PLAYER][partyIdx];
-    if (IsMonValidForBattle(pokemon) && GetMonData(pokemon, MON_DATA_HP) == ((OW_POISON_DAMAGE < GEN_4) ? 0 : 1) && GetAilmentFromStatus(GetMonData(pokemon, MON_DATA_STATUS)) == AILMENT_PSN)
+    u32 remainingHealth = (OW_POISON_DAMAGE < GEN_4) ? 0 : 1;
+    struct Pokemon *pokemon = &gParties[B_TRAINER_PLAYER][slot];
+
+    if (IsMonValidForBattle(pokemon) && GetMonData(pokemon, MON_DATA_HP) == remainingHealth && GetAilmentFromStatus(GetMonData(pokemon, MON_DATA_STATUS)) == AILMENT_PSN)
         return TRUE;
 
     return FALSE;
