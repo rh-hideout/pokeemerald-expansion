@@ -746,6 +746,7 @@ struct AILogLine
     u16 line:15;
     u16 set:1; // Whether score was set, or added/subtracted
     s16 score;
+    enum BattlerId target;
 };
 
 enum ScoreTieResolution

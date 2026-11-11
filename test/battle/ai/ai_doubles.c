@@ -50,8 +50,8 @@ AI_DOUBLE_BATTLE_TEST("AI will not use Helping Hand if partner does not have any
             NOT_EXPECT_MOVE(opponentLeft, MOVE_HELPING_HAND);
             SCORE_LT_VAL(opponentLeft, MOVE_HELPING_HAND, AI_SCORE_DEFAULT, target:playerLeft);
             SCORE_LT_VAL(opponentLeft, MOVE_HELPING_HAND, AI_SCORE_DEFAULT, target:playerRight);
-            SCORE_LT_VAL(opponentLeft, MOVE_HELPING_HAND, AI_SCORE_DEFAULT, target:opponentLeft);
-        }
+            SCORE_LT_VAL(opponentLeft, MOVE_HELPING_HAND, AI_SCORE_DEFAULT, target:opponentRight);
+         }
     } SCENE {
         NOT MESSAGE("The opposing Wobbuffet used Helping Hand!");
     }
