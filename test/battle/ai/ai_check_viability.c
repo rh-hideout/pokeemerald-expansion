@@ -629,3 +629,21 @@ AI_DOUBLE_BATTLE_TEST("AI scores Order Up's stat boost only with Commander")
         }
     }
 }
+
+AI_SINGLE_BATTLE_TEST("AI uses speed lowering moves only if slower")
+{
+    u32 speed;
+    PARAMETRIZE { speed = 10; }
+    PARAMETRIZE { speed = 20; }
+
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(11); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(speed); Moves(MOVE_TACKLE, MOVE_SCARY_FACE); }
+    } WHEN {
+        if (speed == 10)
+            TURN { EXPECT_MOVE(opponent, MOVE_SCARY_FACE); }
+        else
+            TURN { NOT_EXPECT_MOVE(opponent, MOVE_SCARY_FACE); }
+    }
+}
