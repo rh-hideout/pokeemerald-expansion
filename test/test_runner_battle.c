@@ -70,17 +70,10 @@ STATIC_ASSERT(sizeof(struct BattleTestRunnerState) <= sizeof(sBackupMapData), sB
 
 static void CB2_BattleTest_NextParameter(void);
 static void CB2_BattleTest_NextTrial(void);
-<<<<<<< HEAD
-static void PushBattlerAction(u32 sourceLine, s32 battlerId, u32 actionType, u32 byte);
-static void PrintAiMoveLog(u32 battlerId, u32 moveSlot, u32 moveId, s32 totalScore, u32 target);
-static void ClearAiLog(u32 battlerId);
-static const char *BattlerIdentifier(s32 battlerId);
-=======
 static void PushBattlerAction(u32 sourceLine, enum BattlerId battlerId, u32 actionType, u32 byte);
-static void PrintAiMoveLog(enum BattlerId battlerId, enum MoveSlot moveSlot, enum Move moveId, s32 totalScore);
+static void PrintAiMoveLog(enum BattlerId battlerId, enum MoveSlot moveSlot, enum BattlerId targetId, enum Move moveId, s32 totalScore);
 static void ClearAiLog(enum BattlerId battlerId);
 static const char *BattlerIdentifier(enum BattlerId battlerId);
->>>>>>> 608049fbb0cdcaf147367437c370c351b08f4427
 
 NAKED static void InvokeSingleTestFunctionWithStack(void *results, u32 i, struct BattlePokemon *player, struct BattlePokemon *opponent, SingleBattleTestFunction function, void *stack)
 {
@@ -1363,7 +1356,7 @@ static u32 CountAiExpectMoves(struct ExpectedAIAction *expectedAction, enum Batt
         if ((1u << i) & expectedAction->moveSlots)
         {
             if (printLog)
-                PrintAiMoveLog(battlerId, i, gBattleMons[battlerId].moves[i], gAiBattleData->finalScore[battlerId][expectedAction->target][i], expectedAction->target);
+                PrintAiMoveLog(battlerId, i, expectedAction->target, gBattleMons[battlerId].moves[i], gAiBattleData->finalScore[battlerId][expectedAction->target][i]);
             countExpected++;
         }
     }
@@ -1427,13 +1420,8 @@ void TestRunner_Battle_CheckChosenMove(enum BattlerId battlerId, enum Move moveI
 
         if (!expectedAction->notMove && !movePasses)
         {
-<<<<<<< HEAD
-            u32 moveSlot = GetMoveSlot(gBattleMons[battlerId].moves, moveId);
-            PrintAiMoveLog(battlerId, moveSlot, moveId, gAiBattleData->finalScore[battlerId][expectedAction->target][moveSlot], expectedAction->target);
-=======
             enum MoveSlot moveSlot = GetMoveSlot(gBattleMons[battlerId].moves, moveId);
-            PrintAiMoveLog(battlerId, moveSlot, moveId, gAiBattleData->finalScore[battlerId][expectedAction->target][moveSlot]);
->>>>>>> 608049fbb0cdcaf147367437c370c351b08f4427
+            PrintAiMoveLog(battlerId, moveSlot, expectedAction->target, moveId, gAiBattleData->finalScore[battlerId][expectedAction->target][moveSlot]);
             if (countExpected > 1)
                 Test_ExitWithResult(TEST_RESULT_FAIL, SourceLine(0), "%s:%d: Unmatched EXPECT_MOVES %S, got %S", filename, expectedAction->sourceLine, GetMoveName(expectedMoveId), GetMoveName(moveId));
             else
@@ -1537,7 +1525,7 @@ static void CheckIfMaxScoreEqualExpectMove(enum BattlerId battlerId, s32 target,
     }
 }
 
-static void PrintAiMoveLog(enum BattlerId battlerId, enum MoveSlot moveSlot, u32 target, enum Move moveId, s32 totalScore)
+static void PrintAiMoveLog(enum BattlerId battlerId, enum MoveSlot moveSlot, enum BattlerId targetId, enum Move moveId, s32 totalScore)
 {
     s32 i;
     s32 scoreFromLogs = AI_SCORE_DEFAULT;
@@ -1548,7 +1536,7 @@ static void PrintAiMoveLog(enum BattlerId battlerId, enum MoveSlot moveSlot, u32
     for (i = 0; i < MAX_AI_LOG_LINES; i++)
     {
         struct AILogLine *log = &DATA.aiLogLines[battlerId][moveSlot][i];
-        if (target != log->target)
+        if (targetId != log->target)
             continue;
         if (log->file)
         {
@@ -1610,7 +1598,7 @@ void TestRunner_Battle_CheckAiMoveScores(enum BattlerId battlerId)
 
             if (scoreCtx->toValue)
             {
-                PrintAiMoveLog(battlerId, scoreCtx->moveSlot1, moveId1, scores[scoreCtx->moveSlot1], target);
+                PrintAiMoveLog(battlerId, scoreCtx->moveSlot1, moveId1, target, scores[scoreCtx->moveSlot1]);
                 if (!CheckComparision(scores[scoreCtx->moveSlot1], scoreCtx->value, scoreCtx->cmp))
                 {
                     Test_ExitWithResult(TEST_RESULT_FAIL, SourceLine(0), "%s:%d: Unmatched SCORE_%s_VAL %S %d, got %d",
@@ -1620,8 +1608,8 @@ void TestRunner_Battle_CheckAiMoveScores(enum BattlerId battlerId)
             else
             {
                 enum Move moveId2 = gBattleMons[battlerId].moves[scoreCtx->moveSlot2];
-                PrintAiMoveLog(battlerId, scoreCtx->moveSlot1, target, moveId1, scores[scoreCtx->moveSlot1]);
-                PrintAiMoveLog(battlerId, scoreCtx->moveSlot2, target, moveId2, scores[scoreCtx->moveSlot2]);
+                PrintAiMoveLog(battlerId, scoreCtx->moveSlot1, moveId1, target, scores[scoreCtx->moveSlot1]);
+                PrintAiMoveLog(battlerId, scoreCtx->moveSlot2, moveId2, target, scores[scoreCtx->moveSlot2]);
                 if (!CheckComparision(scores[scoreCtx->moveSlot1], scores[scoreCtx->moveSlot2], scoreCtx->cmp))
                 {
                     Test_ExitWithResult(TEST_RESULT_FAIL, SourceLine(0), "%s:%d: Unmatched SCORE_%s, got %S: %d, %S: %d",
@@ -3916,7 +3904,7 @@ void TestRunner_Battle_AILogScore(const char *file, u32 line, enum BattlerId bat
 
 void TestRunner_Battle_AISetScore(const char *file, u32 line, enum BattlerId battlerId, enum MoveSlot moveIndex, s32 score)
 {
-    TestRunner_Battle_AILogScore(file, line, battlerId, 0xFF, moveIndex, score, TRUE);
+    TestRunner_Battle_AILogScore(file, line, battlerId, moveIndex, 0xFF, score, TRUE);
 }
 
 void TestRunner_Battle_AIAdjustScore(const char *file, u32 line, enum BattlerId battlerId, enum MoveSlot moveIndex, enum BattlerId targetId, s32 score)
