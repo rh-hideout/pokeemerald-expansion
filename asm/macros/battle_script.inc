@@ -295,10 +295,6 @@
 	.2byte \frames
 	.endm
 
-	.macro setchargingturn
-	.byte B_SCR_OP_SETCHARGINGTURN
-	.endm
-
 	.macro waitstate
 	.byte B_SCR_OP_WAITSTATE
 	.endm
