@@ -1598,7 +1598,7 @@ void TestRunner_Battle_CheckAiMoveScores(enum BattlerId battlerId)
 
             if (scoreCtx->toValue)
             {
-                PrintAiMoveLog(battlerId, scoreCtx->moveSlot1, moveId1, target, scores[scoreCtx->moveSlot1]);
+                PrintAiMoveLog(battlerId, scoreCtx->moveSlot1, target, moveId1, scores[scoreCtx->moveSlot1]);
                 if (!CheckComparision(scores[scoreCtx->moveSlot1], scoreCtx->value, scoreCtx->cmp))
                 {
                     Test_ExitWithResult(TEST_RESULT_FAIL, SourceLine(0), "%s:%d: Unmatched SCORE_%s_VAL %S %d, got %d",
@@ -1608,8 +1608,8 @@ void TestRunner_Battle_CheckAiMoveScores(enum BattlerId battlerId)
             else
             {
                 enum Move moveId2 = gBattleMons[battlerId].moves[scoreCtx->moveSlot2];
-                PrintAiMoveLog(battlerId, scoreCtx->moveSlot1, moveId1, target, scores[scoreCtx->moveSlot1]);
-                PrintAiMoveLog(battlerId, scoreCtx->moveSlot2, moveId2, target, scores[scoreCtx->moveSlot2]);
+                PrintAiMoveLog(battlerId, scoreCtx->moveSlot1, target, moveId1, scores[scoreCtx->moveSlot1]);
+                PrintAiMoveLog(battlerId, scoreCtx->moveSlot2, target, moveId2, scores[scoreCtx->moveSlot2]);
                 if (!CheckComparision(scores[scoreCtx->moveSlot1], scores[scoreCtx->moveSlot2], scoreCtx->cmp))
                 {
                     Test_ExitWithResult(TEST_RESULT_FAIL, SourceLine(0), "%s:%d: Unmatched SCORE_%s, got %S: %d, %S: %d",

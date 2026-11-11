@@ -732,7 +732,7 @@ struct ExpectedAiScore
     // We can compare AI's move score to a value or to another move's score.
     enum MoveSlot moveSlot1:2;
     enum MoveSlot moveSlot2:2;
-    enum BattlerId target:2;
+    u8 target:2;
     s8 value; // value
     u8 cmp:3; // Uses battle script command's CMP_ macros
     u8 toValue:1; // compare to value, not to move

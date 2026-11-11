@@ -35,7 +35,7 @@ void TestRunner_Battle_CheckBattleRecordActionType(enum BattlerId battlerId, u32
 u32 TestRunner_Battle_GetForcedAbility(enum BattleTrainer trainer, enum PartySlot partyIndex);
 u32 TestRunner_Battle_GetChosenGimmick(enum BattleTrainer trainer, enum PartySlot partyIndex);
 u32 TestRunner_Battle_GetForcedEnvironment(void);
-void TestRunner_Battle_RecordEffectivenessSound(u32 battlerId, u32 soundId);
+void TestRunner_Battle_RecordEffectivenessSound(enum BattlerId battlerId, u32 soundId);
 
 #else
 
