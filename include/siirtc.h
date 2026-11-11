@@ -25,9 +25,6 @@ bool8 SiiRtcReset(void);
 bool8 SiiRtcGetStatus(struct SiiRtcInfo *rtc);
 bool8 SiiRtcSetStatus(struct SiiRtcInfo *rtc);
 bool8 SiiRtcGetDateTime(struct SiiRtcInfo *rtc);
-bool8 SiiRtcSetDateTime(struct SiiRtcInfo *rtc);
 bool8 SiiRtcGetTime(struct SiiRtcInfo *rtc);
-bool8 SiiRtcSetTime(struct SiiRtcInfo *rtc);
-bool8 SiiRtcSetAlarm(struct SiiRtcInfo *rtc);
 
 #endif // GUARD_RTC_H

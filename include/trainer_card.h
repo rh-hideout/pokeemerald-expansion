@@ -1,23 +1,8 @@
 #ifndef GUARD_TRAINER_CARD_H
 #define GUARD_TRAINER_CARD_H
 
-#define TRAINER_CARD_PROFILE_LENGTH  4
-#define TRAINER_CARD_STICKER_TYPES   3
-
-enum
-{
-    CARD_TYPE_FRLG,
-    CARD_TYPE_RS,
-    CARD_TYPE_EMERALD,
-};
-
-enum
-{
-    MON_ICON_TINT_NORMAL,
-    MON_ICON_TINT_BLACK,
-    MON_ICON_TINT_PINK,
-    MON_ICON_TINT_SEPIA,
-};
+#include "constants/trainer_card.h"
+#include "constants/species.h"
 
 struct TrainerCard
 {
@@ -55,7 +40,7 @@ struct TrainerCard
     /*0x4E*/ u8 monIconTint; // FRLG only
     /*0x4F*/ u8 unionRoomClass;
     /*0x50*/ u8 stickers[TRAINER_CARD_STICKER_TYPES]; // FRLG only
-    /*0x54*/ u16 monSpecies[PARTY_SIZE]; // FRLG only
+    /*0x54*/ enum Species monSpecies[PARTY_SIZE]; // FRLG only
              // Note: Link players use linkHasAllFrontierSymbols, not the field below,
              // which they use for a Wonder Card flag id instead (see CreateTrainerCardInBuffer)
     /*0x60*/ bool16 hasAllFrontierSymbols;

@@ -7,7 +7,7 @@ SINGLE_BATTLE_TEST("Tera Shell makes all moves against Terapagos not very effect
     PARAMETRIZE { hp = 100; }
     PARAMETRIZE { hp = 99; }
     GIVEN {
-        PLAYER(SPECIES_TERAPAGOS_TERASTAL) { Ability(ABILITY_TERA_SHELL); HP(hp); MaxHP(100);}
+        PLAYER(SPECIES_TERAPAGOS_TERASTAL) { Ability(ABILITY_TERA_SHELL); HP(hp); MaxHP(100); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_SCRATCH); }
@@ -42,9 +42,9 @@ SINGLE_BATTLE_TEST("Tera Shell makes all hits of multi-hit moves against Terapag
     } SCENE {
         MESSAGE("The opposing Wobbuffet used Double Hit!");
         ABILITY_POPUP(player, ABILITY_TERA_SHELL);
-        MESSAGE("Terapagos made its shell gleam! It's distorting type matchups!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DOUBLE_HIT, opponent);
         HP_BAR(player, captureDamage: &firstHit);
+        NOT ABILITY_POPUP(player, ABILITY_TERA_SHELL);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DOUBLE_HIT, opponent);
         HP_BAR(player, captureDamage: &secondHit);
         MESSAGE("It's not very effective…");
@@ -93,8 +93,8 @@ DOUBLE_BATTLE_TEST("Tera Shell only makes the first hit against Terapagos from a
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BLIZZARD, opponentLeft);
         HP_BAR(playerLeft);
         HP_BAR(playerRight);
-        MESSAGE("It's not very effective…");
-        NOT MESSAGE("It's not very effective…");
+        MESSAGE("It's not very effective on Terapagos.");
+        NOT MESSAGE("It's not very effective on Wobbuffet.");
     }
 }
 

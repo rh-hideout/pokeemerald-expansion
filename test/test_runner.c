@@ -1,19 +1,23 @@
 #include <stdarg.h>
-#include "fake_rtc.h"
 #include "global.h"
+#include "fake_rtc.h"
 #include "gpu_regs.h"
 #include "load_save.h"
 #include "main.h"
 #include "malloc.h"
 #include "random.h"
 #include "task.h"
+#include "union_room_chat.h"
 #include "constants/characters.h"
 #include "test_runner.h"
 #include "test/test.h"
+#include "test/battle.h"
 
 #define TIMEOUT_SECONDS 60
 
 void CB2_TestRunner(void);
+static void ReinitCallbacks(void);
+static void ResetGlobalVariables(void);
 
 EWRAM_DATA struct TestRunnerState gTestRunnerState;
 EWRAM_DATA struct FunctionTestRunnerState *gFunctionTestRunnerState;
@@ -134,6 +138,8 @@ void TestRunner_CheckMemory(void)
     if (gTestRunnerState.result == TEST_RESULT_PASS
      && !gTestRunnerState.expectLeaks)
     {
+        TestFreeConfigData();
+
         int i;
         const struct MemBlock *head = HeapHead();
         const struct MemBlock *block = head;
@@ -153,21 +159,19 @@ void TestRunner_CheckMemory(void)
                 const char *location = MemBlockLocation(block);
                 if (location)
                 {
-                    const char *cmpString = "src/generational_changes.c";
-                    for (u32 charIndex = 0; charIndex < 26; charIndex++)
-                    {
-                        if (cmpString[charIndex] != location[charIndex])
-                        {
-                            Test_MgbaPrintf("%s: %d bytes not freed", location, block->size);
-                            gTestRunnerState.result = TEST_RESULT_FAIL;
-                            break;
-                        }
-                    }
+                    Test_MgbaPrintf("%s: %d bytes not freed", location, block->size);
+                    gTestRunnerState.result = TEST_RESULT_FAIL;
+
+                    if (gTestRunnerState.expectedFailState == EXPECT_FAIL_OPEN)
+                        gTestRunnerState.expectedFailState = EXPECT_FAIL_SUCCESS;
                 }
                 else
                 {
                     Test_MgbaPrintf("<unknown>: %d bytes not freed", block->size);
                     gTestRunnerState.result = TEST_RESULT_FAIL;
+
+                    if (gTestRunnerState.expectedFailState == EXPECT_FAIL_OPEN)
+                        gTestRunnerState.expectedFailState = EXPECT_FAIL_SUCCESS;
                 }
             }
             block = block->next;
@@ -178,8 +182,11 @@ void TestRunner_CheckMemory(void)
         {
             if (gTasks[i].isActive)
             {
-                Test_MgbaPrintf(":L%s:%d - %p: task not freed", gTestRunnerState.test->filename, SourceLine(0), gTasks[i].func);
+                Test_MgbaPrintf("%s:%d: %p: task not freed", gTestRunnerState.test->filename, SourceLine(0), gTasks[i].func);
                 gTestRunnerState.result = TEST_RESULT_FAIL;
+
+                if (gTestRunnerState.expectedFailState == EXPECT_FAIL_OPEN)
+                    gTestRunnerState.expectedFailState = EXPECT_FAIL_SUCCESS;
             }
         }
     }
@@ -190,6 +197,8 @@ static void ClearSaveBlocks(void)
     ClearSav1();
     ClearSav2();
     ClearSav3();
+    // Game strings use EOS, so a zeroed player name is not terminated.
+    gSaveBlock2Ptr->playerName[0] = EOS;
 }
 
 void CB2_TestRunner(void)
@@ -247,6 +256,9 @@ top:
 
             if (gPersistentTestRunnerState.expectCrash)
                 gTestRunnerState.expectedResult = TEST_RESULT_CRASH;
+
+            gTestRunnerState.expectedFailLine = 0;
+            gTestRunnerState.expectedFailState = NO_EXPECT_FAIL;
         }
         else
         {
@@ -267,11 +279,21 @@ top:
                 gTestRunnerState.state = STATE_EXIT;
                 return;
             }
-            if (gTestRunnerState.test->runner != &gAssumptionsRunner)
+            if (gTestRunnerState.filterMode == TEST_FILTER_MODE_FILENAME_EXACT
+             && !ExactMatch(gTestRunnerArgv, gTestRunnerState.test->filename))
+            {
+                ++gTestRunnerState.test;
+                continue;
+            }
+            // Run all assumption blocks when filtering on test name
+            // because it's possible that a test in this file could
+            // match.
+            // TODO: Delay running the assumptions block until we find a
+            // test name that matches.
+            else if (gTestRunnerState.test->runner != &gAssumptionsRunner)
             {
                 if ((gTestRunnerState.filterMode == TEST_FILTER_MODE_TEST_NAME_PREFIX && !PrefixMatch(gTestRunnerArgv, gTestRunnerState.test->name))
-                 || (gTestRunnerState.filterMode == TEST_FILTER_MODE_TEST_NAME_INFIX && !InfixMatch(gTestRunnerArgv, gTestRunnerState.test->name))
-                 || (gTestRunnerState.filterMode == TEST_FILTER_MODE_FILENAME_EXACT && !ExactMatch(gTestRunnerArgv, gTestRunnerState.test->filename)))
+                 || (gTestRunnerState.filterMode == TEST_FILTER_MODE_TEST_NAME_INFIX && !InfixMatch(gTestRunnerArgv, gTestRunnerState.test->name)))
                 {
                     ++gTestRunnerState.test;
                     continue;
@@ -281,10 +303,12 @@ top:
         }
 
         Test_MgbaPrintf(":N%s", gTestRunnerState.test->name);
-        Test_MgbaPrintf(":L%s:%d", gTestRunnerState.test->filename);
+        Test_MgbaPrintf(":L%s:%d", gTestRunnerState.test->filename, SourceLine(0));
         gTestRunnerState.result = TEST_RESULT_PASS;
         gTestRunnerState.expectedResult = TEST_RESULT_PASS;
         gTestRunnerState.expectLeaks = FALSE;
+        gTestRunnerState.expectedFailLine = 0;
+        gTestRunnerState.expectedFailState = NO_EXPECT_FAIL;
         if (gTestRunnerHeadless)
             gTestRunnerState.timeoutSeconds = TIMEOUT_SECONDS;
         else
@@ -311,13 +335,12 @@ top:
         gTestRunnerState.state = STATE_REPORT_RESULT;
         gPersistentTestRunnerState.state = CURRENT_TEST_STATE_RUN;
         gPersistentTestRunnerState.expectCrash = FALSE;
+        ResetGlobalVariables();
         SeedRng(0);
         SeedRng2(0);
         if (gTestRunnerState.test->runner->setUp)
-        {
             gTestRunnerState.test->runner->setUp(gTestRunnerState.test->data);
-            gTestRunnerState.tearDown = TRUE;
-        }
+        gTestRunnerState.tearDown = TRUE;
         // NOTE: Assumes that the compiler interns __FILE__.
         if (gTestRunnerState.skipFilename == gTestRunnerState.test->filename) // Assumption fails for tests in this file.
         {
@@ -337,10 +360,8 @@ top:
         gTestRunnerState.state = STATE_NEXT_TEST;
 
         if (gTestRunnerState.tearDown && gTestRunnerState.test->runner->tearDown)
-        {
             gTestRunnerState.test->runner->tearDown(gTestRunnerState.test->data);
-            gTestRunnerState.tearDown = FALSE;
-        }
+        gTestRunnerState.tearDown = FALSE;
 
         TestRunner_CheckMemory();
 
@@ -355,8 +376,23 @@ top:
         {
             const char *color;
             const char *result;
+            bool32 expectedFailOnCorrectLine = FALSE;
 
-            if (gTestRunnerState.result == gTestRunnerState.expectedResult
+            if (gTestRunnerState.expectedFailState == EXPECT_FAIL_SUCCESS)
+            {
+                // Failed within expected block; pass
+                expectedFailOnCorrectLine = TRUE;
+                color = "\e[32m";
+                Test_MgbaPrintf(":N%s", gTestRunnerState.test->name);
+            }
+            else if (gTestRunnerState.expectedFailState == EXPECT_FAIL_CLOSED
+             && gTestRunnerState.result == TEST_RESULT_FAIL)
+            {
+                // Failed outside expected block; fail
+                gTestRunnerState.exitCode = 1;
+                color = "\e[31m";
+            }
+            else if (gTestRunnerState.result == gTestRunnerState.expectedResult
              || (gTestRunnerState.result == TEST_RESULT_FAIL
               && gTestRunnerState.expectedResult == TEST_RESULT_KNOWN_FAIL))
             {
@@ -381,14 +417,29 @@ top:
                     result = "KNOWN_FAILING";
                     color = "\e[33m";
                 }
+                else if (expectedFailOnCorrectLine)
+                {
+                    color = "\e[32m";
+                    result = "EXPECTED_FAIL";
+                }
+                else if (gTestRunnerState.expectedResult == TEST_RESULT_FAIL
+                 && gTestRunnerState.expectedFailState != EXPECT_FAIL_SUCCESS)
+                {
+                    // Failed on wrong line
+                    result = "UNEXPECTED_FAIL_LINE";
+                }
                 else
                 {
                     result = "FAIL";
                 }
                 break;
             case TEST_RESULT_PASS:
-                if (gTestRunnerState.result != gTestRunnerState.expectedResult)
+                if (gTestRunnerState.result != gTestRunnerState.expectedResult
+                 && gTestRunnerState.expectedFailLine == 0)
                     result = "KNOWN_FAILING_PASS";
+                else if (gTestRunnerState.result != gTestRunnerState.expectedResult
+                 && gTestRunnerState.expectedFailLine != 0)
+                    result = "EXPECTED_FAIL_PASS";
                 else
                     result = "PASS";
                 break;
@@ -412,6 +463,9 @@ top:
             case TEST_RESULT_CRASH:
                 result = "CRASH";
                 break;
+            case TEST_RESULT_FLAKY:
+                result = "FLAKY";
+                break;
             default:
                 result = "UNKNOWN";
                 break;
@@ -422,25 +476,39 @@ top:
                 if (gTestRunnerState.result != gTestRunnerState.expectedResult)
                 {
                     Test_MgbaPrintf(":L%s:%d", gTestRunnerState.test->filename, SourceLine(0));
-                    Test_MgbaPrintf(":U%s%s\e[0m", color, result);
+                    if (gTestRunnerState.expectedFailLine == 0)
+                        Test_MgbaPrintf(":U%s%s\e[0m", color, result);
+                    else
+                        Test_MgbaPrintf(":V%s%s\e[0m", color, result);
                 }
                 else
                 {
                     Test_MgbaPrintf(":P%s%s\e[0m", color, result);
                 }
             }
+            else if (expectedFailOnCorrectLine)
+                Test_MgbaPrintf(":E%s%s\e[0m", color, result);
             else if (gTestRunnerState.result == TEST_RESULT_ASSUMPTION_FAIL)
                 Test_MgbaPrintf(":A%s%s\e[0m", color, result);
             else if (gTestRunnerState.result == TEST_RESULT_TODO)
                 Test_MgbaPrintf(":T%s%s\e[0m", color, result);
             else if (gTestRunnerState.expectedResult == gTestRunnerState.result
+                 && gTestRunnerState.result == TEST_RESULT_CRASH)
+                Test_MgbaPrintf(":E%s%s\e[0m", color, result);
+            else if (gTestRunnerState.expectedResult == gTestRunnerState.result
+                 && gTestRunnerState.result == TEST_RESULT_FAIL
+                 && gTestRunnerState.expectedFailLine == 0)
+                Test_MgbaPrintf(":K%s%s\e[0m", color, result);
+            else if ((gTestRunnerState.expectedResult == gTestRunnerState.result
+                  && gTestRunnerState.expectedFailState == NO_EXPECT_FAIL)
                  || (gTestRunnerState.result == TEST_RESULT_FAIL
                   && gTestRunnerState.expectedResult == TEST_RESULT_KNOWN_FAIL))
                 Test_MgbaPrintf(":K%s%s\e[0m", color, result);
             else
                 Test_MgbaPrintf(":F%s%s\e[0m", color, result);
         }
-
+        gTestRunnerState.expectedFailLine = 0;
+        gTestRunnerState.expectedFailState = NO_EXPECT_FAIL;
         break;
 
     case STATE_NEXT_TEST:
@@ -479,9 +547,37 @@ void Test_ExpectCrash(bool32 expectCrash)
         Test_ExpectedResult(TEST_RESULT_CRASH);
 }
 
+void Test_ExpectFail(u32 failLine)
+{
+    // If expecting a fail and fail has not already been encountered
+    if ((gTestRunnerState.expectedFailState != EXPECT_FAIL_SUCCESS)
+     && (gTestRunnerState.expectedFailState != EXPECT_FAIL_TURN_OPEN)
+     && (gTestRunnerState.expectedFailState != EXPECT_FAIL_SCENE_OPEN))
+    {
+        if (failLine == -1)
+        {
+            Test_ExpectedResult(TEST_RESULT_FAIL);
+            gTestRunnerState.expectedFailState = EXPECT_FAIL_OPEN;
+        }
+        else
+        {
+            gTestRunnerState.expectedFailLine = failLine;
+            gTestRunnerState.expectedFailState = EXPECT_FAIL_CLOSED;
+        }
+    }
+}
+
+static void ResetGlobalVariables(void)
+{
+    ReinitCallbacks();
+    gBattleTypeFlags = 0;
+}
+
 static void FunctionTest_SetUp(void *data)
 {
     (void)data;
+    TestInitConfigData();
+    ClearRiggedRng();
     gFunctionTestRunnerState = AllocZeroed(sizeof(*gFunctionTestRunnerState));
     SeedRng(0);
 }
@@ -501,6 +597,7 @@ static void FunctionTest_Run(void *data)
 static void FunctionTest_TearDown(void *data)
 {
     (void)data;
+    TestFreeConfigData();
     FREE_AND_SET_NULL(gFunctionTestRunnerState);
 }
 
@@ -513,12 +610,84 @@ static bool32 FunctionTest_CheckProgress(void *data)
     return madeProgress;
 }
 
+static u32 FunctionTest_RandomUniform(enum RandomTag tag, u32 lo, u32 hi, bool32 (*reject)(u32), void *caller)
+{
+    //rigged
+    for (u32 i = 0; i < RIGGED_RNG_COUNT; i++)
+    {
+        if (gFunctionTestRunnerState->rngList[i].tag == tag)
+        {
+            if (reject && reject(gFunctionTestRunnerState->rngList[i].value))
+                Test_ExitWithResult(TEST_RESULT_INVALID, SourceLine(0), "WITH_RNG specified a rejected value (%d)", gFunctionTestRunnerState->rngList[i].value);
+            return gFunctionTestRunnerState->rngList[i].value;
+        }
+    }
+    //trials
+    /*
+    if (tag == STATE->rngTag)
+        return RandomUniformTrials(tag, lo, hi, reject);
+    */
+
+    //default
+    return RandomUniformDefaultValue(tag, lo, hi, reject, caller);
+}
+
+static u32 FunctionTest_RandomWeightedArray(enum RandomTag tag, u32 sum, u32 n, const u16 *weights, void *caller)
+{
+    //rigged
+    for (u32 i = 0; i < RIGGED_RNG_COUNT; i++)
+    {
+        if (gFunctionTestRunnerState->rngList[i].tag == tag)
+            return gFunctionTestRunnerState->rngList[i].value;
+    }
+
+    //trials
+    /*
+    if (tag == STATE->rngTag)
+        return RandomWeightedArrayTrials(tag, sum, n, weights);
+    */
+
+    //default
+    return RandomWeightedArrayDefaultValue(tag, n, weights, caller);
+}
+
+static const void* FunctionTest_RandomElementArray(enum RandomTag tag, const void *array, size_t size, size_t count, void *caller)
+{
+    //rigged
+    for (u32 i = 0; i < RIGGED_RNG_COUNT; i++)
+    {
+        if (gFunctionTestRunnerState->rngList[i].tag == tag)
+        {
+            u32 element = 0;
+            for (u32 index = 0; index < count; index++)
+            {
+                memcpy(&element, (const u8 *)array + size * index, size);
+                if (element == gFunctionTestRunnerState->rngList[i].value)
+                    return (const u8 *)array + size * index;
+            }
+            Test_ExitWithResult(TEST_RESULT_ERROR, SourceLine(0), "%s: RandomElement illegal value requested: %d", gTestRunnerState.test->filename, gFunctionTestRunnerState->rngList[i].value);
+        }
+    }
+
+    //trials
+    /*
+    if (tag == STATE->rngTag)
+        return RandomElementTrials(tag, array, size, count);
+    */
+
+    //default
+    return RandomElementArrayDefaultValue(tag, array, size, count, caller);
+}
+
 const struct TestRunner gFunctionTestRunner =
 {
     .setUp = FunctionTest_SetUp,
     .run = FunctionTest_Run,
     .tearDown = FunctionTest_TearDown,
     .checkProgress = FunctionTest_CheckProgress,
+    .randomUniform = FunctionTest_RandomUniform,
+    .randomWeightedArray = FunctionTest_RandomWeightedArray,
+    .randomElementArray = FunctionTest_RandomElementArray,
 };
 
 static void Assumptions_Run(void *data)
@@ -551,7 +720,7 @@ static NAKED void JumpToAgbMainLoop(void)
          .pool");
 }
 
-void ReinitCallbacks(void)
+static void ReinitCallbacks(void)
 {
     gMain.callback1 = NULL;
     SetMainCallback2(CB2_TestRunner);
@@ -573,17 +742,43 @@ static void Intr_Timer2(void)
             if (gTestRunnerState.state == STATE_RUN_TEST)
                 gTestRunnerState.state = STATE_REPORT_RESULT;
             gTestRunnerState.result = TEST_RESULT_TIMEOUT;
-            Test_MgbaPrintf(":L%s:%d - TIMEOUT", gTestRunnerState.test->filename, SourceLine(0));
+            Test_MgbaPrintf("%s:%d: TIMEOUT", gTestRunnerState.test->filename, SourceLine(0));
             ReinitCallbacks();
             IRQ_LR = ((uintptr_t)JumpToAgbMainLoop & ~1) + 4;
         }
     }
 }
 
-void Test_ExitWithResult(enum TestResult result, u32 stopLine, const char *fmt, ...)
+void Test_ExitWithResult_(enum TestResult result, u32 stopLine, const void *return1, const char *fmt, ...)
 {
     gTestRunnerState.result = result;
     gTestRunnerState.failedAssumptionsBlockLine = stopLine;
+
+    if (result == TEST_RESULT_FAIL)
+    {
+        switch (gTestRunnerState.expectedFailState)
+        {
+            case EXPECT_FAIL_OPEN:
+            case EXPECT_FAIL_TURN_OPEN:
+                gTestRunnerState.expectedFailState = EXPECT_FAIL_SUCCESS;
+                break;
+            case EXPECT_FAIL_SCENE_OPEN: // EXPECT_FAIL_SUCCESS set in individual Queue functions
+                gTestRunnerState.expectedFailState = EXPECT_FAIL_CLOSED;
+                break;
+            default:
+                break;
+        }
+    }
+
+    if (gTestRunnerState.expectedFailState == EXPECT_FAIL_CLOSED
+     && gTestRunnerState.expectedResult == TEST_RESULT_FAIL
+     && result == TEST_RESULT_FAIL)
+    {
+        Test_MgbaPrintf("%s:%d: Expected failure in block from line %d, but failed on line %d",
+         gTestRunnerState.test->filename, stopLine,
+         gTestRunnerState.expectedFailLine, stopLine);
+    }
+
     ReinitCallbacks();
     if (gTestRunnerState.state == STATE_REPORT_RESULT
      && gTestRunnerState.result != gTestRunnerState.expectedResult)
@@ -591,6 +786,13 @@ void Test_ExitWithResult(enum TestResult result, u32 stopLine, const char *fmt, 
         if (!gTestRunnerState.test->runner->handleExitWithResult
          || !gTestRunnerState.test->runner->handleExitWithResult(gTestRunnerState.test->data, result))
         {
+            if (result == TEST_RESULT_INVALID)
+            {
+                const void *return0 = __builtin_return_address(0);
+                Test_MgbaPrintf("in %p\nin %p", return1, return0);
+            }
+            // TODO: If 'fmt' starts with ':', insert a space to prevent
+            // Hydra interpreting it as a command.
             va_list va;
             va_start(va, fmt);
             MgbaVPrintf_(fmt, va);
@@ -635,12 +837,22 @@ static s32 MgbaPutchar_(s32 i, s32 c)
     return i;
 }
 
-extern const u8 gWireless_RSEtoASCIITable[];
-
-// Bare-bones, only supports plain %s, %S, and %d.
+// Bare-bones, supports:
+// - %c: print an ASCII character.
+// - %C: print a GF-encoded character.
+// - %s, %.*s: print an ASCII string.
+// - %S, %.*S: print a GF-encoded string.
+// - %U: print a GF-encoded upper-case string.
+// - %d: print a signed integer.
+// - %q: print a Q20.12 fixed-point number.
+// - %p: print a pointer (which mgba-rom-test-hydra will convert into a
+//   symbol, if possible).
 static s32 MgbaVPrintf_(const char *fmt, va_list va)
 {
+    extern char mini_pchar_decode(u8);
+
     s32 i = 0;
+    s32 n;
     s32 c, d;
     u32 p;
     const char *s;
@@ -650,10 +862,28 @@ static s32 MgbaVPrintf_(const char *fmt, va_list va)
         switch ((c = *fmt++))
         {
         case '%':
+            if (fmt[0] == '.' && fmt[1] == '*')
+            {
+                fmt += 2;
+                n = va_arg(va, int);
+            }
+            else
+            {
+                n = INT_MAX;
+            }
+
             switch (*fmt++)
             {
             case '%':
                 i = MgbaPutchar_(i, '%');
+                break;
+            case 'c':
+                c = va_arg(va, int);
+                i = MgbaPutchar_(i, c);
+                break;
+            case 'C':
+                c = va_arg(va, unsigned);
+                i = MgbaPutchar_(i, mini_pchar_decode(c));
                 break;
             case 'd':
                 d = va_arg(va, int);
@@ -731,7 +961,9 @@ static s32 MgbaVPrintf_(const char *fmt, va_list va)
                         if (++n == 2)
                         {
                             u *= 10;
-                            i = MgbaPutchar_(i, '0' + ((u + UQ_4_12_ROUND) >> 12));
+                            // TODO: 'min' is a hack, we should have
+                            // rounded up the previous number.
+                            i = MgbaPutchar_(i, min('0' + ((u + UQ_4_12_ROUND) >> 12), '9'));
                             break;
                         }
                     }
@@ -739,7 +971,7 @@ static s32 MgbaVPrintf_(const char *fmt, va_list va)
                 break;
             case 's':
                 s = va_arg(va, const char *);
-                while ((c = *s++) != '\0')
+                while ((c = *s++) != '\0' && n-- > 0)
                     i = MgbaPutchar_(i, c);
                 break;
             case 'S':
@@ -753,12 +985,30 @@ static s32 MgbaVPrintf_(const char *fmt, va_list va)
                 }
                 else
                 {
-                    while ((c = *pokeS++) != EOS)
+                    while ((c = *pokeS++) != EOS && n-- > 0)
+                        i = MgbaPutchar_(i, mini_pchar_decode(c));
+                }
+                break;
+            case 'U':
+                pokeS = va_arg(va, const u8 *);
+                bool32 wasUnderscore = FALSE;
+                while (*pokeS != EOS)
+                {
+                    u8 c = *pokeS++;
+                    if (CHAR_a <= c && c <= CHAR_z)
                     {
-                        if ((c = gWireless_RSEtoASCIITable[c]) != '\0')
-                            i = MgbaPutchar_(i, c);
-                        else
-                            i = MgbaPutchar_(i, '?');
+                        i = MgbaPutchar_(i, mini_pchar_decode(gCaseToggleTable[c]));
+                        wasUnderscore = FALSE;
+                    }
+                    else if (CHAR_A <= c && c <= CHAR_Z)
+                    {
+                        i = MgbaPutchar_(i, mini_pchar_decode(c));
+                        wasUnderscore = FALSE;
+                    }
+                    else if (!wasUnderscore)
+                    {
+                        i = MgbaPutchar_(i, '_');
+                        wasUnderscore = TRUE;
                     }
                 }
                 break;
@@ -825,4 +1075,103 @@ u32 SourceLineOffset(u32 sourceLine)
         return 0;
     else
         return sourceLine - test->sourceLine;
+}
+
+u32 RandomUniform(enum RandomTag tag, u32 lo, u32 hi)
+{
+    void *caller = __builtin_extract_return_addr(__builtin_return_address(0));
+    if (gTestRunnerState.test->runner->randomUniform)
+        return gTestRunnerState.test->runner->randomUniform(tag, lo, hi, NULL, caller);
+    else
+        return RandomUniformDefault(tag, lo, hi);
+}
+
+u32 RandomUniformExcept(enum RandomTag tag, u32 lo, u32 hi, bool32 (*reject)(u32))
+{
+    void *caller = __builtin_extract_return_addr(__builtin_return_address(0));
+    if (gTestRunnerState.test->runner->randomUniform)
+        return gTestRunnerState.test->runner->randomUniform(tag, lo, hi, reject, caller);
+    else
+        return RandomUniformExceptDefault(tag, lo, hi, reject);
+}
+
+u32 RandomWeightedArray(enum RandomTag tag, u32 sum, u32 n, const u16 *weights)
+{
+    void *caller = __builtin_extract_return_addr(__builtin_return_address(0));
+    if (gTestRunnerState.test->runner->randomWeightedArray)
+        return gTestRunnerState.test->runner->randomWeightedArray(tag, sum, n, weights, caller);
+    else
+        return RandomWeightedArrayDefault(tag, sum, n, weights);
+}
+
+const void *RandomElementArray(enum RandomTag tag, const void *array, size_t size, size_t count)
+{
+    void *caller = __builtin_extract_return_addr(__builtin_return_address(0));
+    if (gTestRunnerState.test->runner->randomElementArray)
+        return gTestRunnerState.test->runner->randomElementArray(tag, array, size, count, caller);
+    else
+        return RandomElementArrayDefault(tag, array, size, count);
+}
+
+u32 RandomUniformDefaultValue(enum RandomTag tag, u32 lo, u32 hi, bool32 (*reject)(u32), void *caller)
+{
+    u32 default_ = hi;
+    if (reject)
+    {
+        while (reject(default_))
+        {
+            if (default_ == lo)
+                Test_ExitWithResult(TEST_RESULT_ERROR, SourceLine(0), "RandomUniformExcept called from %p with tag %d rejected all values", caller, tag);
+            default_--;
+        }
+    }
+    return default_;
+}
+
+u32 RandomWeightedArrayDefaultValue(enum RandomTag tag, u32 n, const u16 *weights, void *caller)
+{
+    while (weights[n-1] == 0)
+    {
+        if (n == 1)
+            Test_ExitWithResult(TEST_RESULT_ERROR, SourceLine(0), "RandomWeightedArray called from %p with tag %d and all zero weights", caller, tag);
+        n--;
+    }
+    return n-1;
+}
+
+const void *RandomElementArrayDefaultValue(enum RandomTag tag, const void *array, size_t size, size_t count, void *caller)
+{
+    return (const u8 *)array + size * (count - 1);
+}
+
+void ClearRiggedRng(void)
+{
+    struct RiggedRNG zeroRng = {.tag = RNG_NONE, .value = 0};
+    for (u32 i = 0; i < RIGGED_RNG_COUNT; i++)
+        memcpy(&gFunctionTestRunnerState->rngList[i], &zeroRng, sizeof(zeroRng));
+}
+
+void SetupRiggedRng(u32 sourceLine, enum RandomTag randomTag, u32 value)
+{
+    struct RiggedRNG rng = {.tag = randomTag, .value = value};
+    u32 i;
+    for (i = 0; i < RIGGED_RNG_COUNT; i++)
+    {
+        if (gFunctionTestRunnerState->rngList[i].tag == randomTag)
+        {
+            memcpy(&gFunctionTestRunnerState->rngList[i], &rng, sizeof(rng));
+            break;
+        }
+        else if (gFunctionTestRunnerState->rngList[i].tag > RNG_NONE)
+        {
+            continue;
+        }
+        else
+        {
+            memcpy(&gFunctionTestRunnerState->rngList[i], &rng, sizeof(rng));
+            break;
+        }
+    }
+    if (i == RIGGED_RNG_COUNT)
+        Test_ExitWithResult(TEST_RESULT_FAIL, __LINE__, "%s:%d: Too many rigged RNGs to set up", gTestRunnerState.test->filename, sourceLine);
 }

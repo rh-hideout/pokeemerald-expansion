@@ -5,8 +5,8 @@ AI_DOUBLE_BATTLE_TEST("AI prefers Entrainment'ing good abilities onto partner wi
 {
     GIVEN {
         AI_FLAGS(AI_FLAG_SMART_TRAINER);
-        PLAYER(SPECIES_QUAXWELL) { Level(18); Ability(ABILITY_TORRENT); Moves(MOVE_WATER_GUN); };
-        PLAYER(SPECIES_CORPHISH) { Level(18); Moves(MOVE_WATER_GUN); };
+        PLAYER(SPECIES_QUAXWELL) { Level(18); Ability(ABILITY_TORRENT); Moves(MOVE_WATER_GUN); }
+        PLAYER(SPECIES_CORPHISH) { Level(18); Moves(MOVE_WATER_GUN); }
         OPPONENT(SPECIES_SMEARGLE) { Level(17); Ability(ABILITY_TECHNICIAN); Moves(MOVE_AERIAL_ACE, MOVE_ENTRAINMENT, MOVE_FLAME_WHEEL, MOVE_MAGICAL_LEAF); }
         OPPONENT(SPECIES_ARCHEN) { Level(17); Ability(ABILITY_DEFEATIST); Moves(MOVE_DUAL_WINGBEAT, MOVE_ROCK_TOMB); }
     } WHEN {
@@ -73,4 +73,19 @@ SINGLE_BATTLE_TEST("Entrainment causes primal weather to revert")
     }
 }
 
-TO_DO_BATTLE_TEST("Entrainment fails on Dynamaxed Pokémon");
+SINGLE_BATTLE_TEST("Entrainment fails on Dynamaxed Pokémon")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_ENTRAINMENT) == EFFECT_ENTRAINMENT);
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_SHADOW_TAG); }
+        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_DYNAMAX); MOVE(opponent, MOVE_ENTRAINMENT); }
+    } SCENE {
+        MESSAGE("Wobbuffet used Max Strike!");
+        MESSAGE("The opposing Wobbuffet used Entrainment!");
+        MESSAGE("But it failed!");
+    } THEN {
+        EXPECT_EQ(player->ability, ABILITY_SHADOW_TAG);
+    }
+}

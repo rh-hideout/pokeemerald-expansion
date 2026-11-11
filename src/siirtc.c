@@ -258,33 +258,6 @@ bool8 SiiRtcGetDateTime(struct SiiRtcInfo *rtc)
     return TRUE;
 }
 
-bool8 SiiRtcSetDateTime(struct SiiRtcInfo *rtc)
-{
-    u8 i;
-
-    if (sLocked == TRUE)
-        return FALSE;
-
-    sLocked = TRUE;
-
-    GPIO_PORT_DATA = SCK_HI;
-    GPIO_PORT_DATA = SCK_HI | CS_HI;
-
-    GPIO_PORT_DIRECTION = DIR_ALL_OUT;
-
-    WriteCommand(CMD_DATETIME | WR);
-
-    for (i = 0; i < DATETIME_BUF_LEN; i++)
-        WriteData(DATETIME_BUF(rtc, i));
-
-    GPIO_PORT_DATA = SCK_HI;
-    GPIO_PORT_DATA = SCK_HI;
-
-    sLocked = FALSE;
-
-    return TRUE;
-}
-
 bool8 SiiRtcGetTime(struct SiiRtcInfo *rtc)
 {
     u8 i;
@@ -316,34 +289,7 @@ bool8 SiiRtcGetTime(struct SiiRtcInfo *rtc)
     return TRUE;
 }
 
-bool8 SiiRtcSetTime(struct SiiRtcInfo *rtc)
-{
-    u8 i;
-
-    if (sLocked == TRUE)
-        return FALSE;
-
-    sLocked = TRUE;
-
-    GPIO_PORT_DATA = SCK_HI;
-    GPIO_PORT_DATA = SCK_HI | CS_HI;
-
-    GPIO_PORT_DIRECTION = DIR_ALL_OUT;
-
-    WriteCommand(CMD_TIME | WR);
-
-    for (i = 0; i < TIME_BUF_LEN; i++)
-        WriteData(TIME_BUF(rtc, i));
-
-    GPIO_PORT_DATA = SCK_HI;
-    GPIO_PORT_DATA = SCK_HI;
-
-    sLocked = FALSE;
-
-    return TRUE;
-}
-
-bool8 SiiRtcSetAlarm(struct SiiRtcInfo *rtc)
+static bool8 UNUSED SiiRtcSetAlarm(struct SiiRtcInfo *rtc)
 {
     u8 i;
     u8 alarmData[2];

@@ -1,5 +1,8 @@
 	.section .rodata
 
+	.include "asm/macros.inc"
+	.include "constants/constants.inc"
+
 	.include "asm/macros/m4a.inc"
 	.include "asm/macros/music_voice.inc"
 	.include "include/config/general.h"

@@ -27,9 +27,10 @@ SINGLE_BATTLE_TEST("Eject Button is not triggered when there is nothing to switc
     }
 }
 
-SINGLE_BATTLE_TEST("Eject Button is not activated by a Sheer Force boosted move")
+SINGLE_BATTLE_TEST("Eject Button is not activated by a Sheer Force boosted move (Gen9-)")
 {
     GIVEN {
+        WITH_CONFIG(B_SHEER_FORCE_TIMING, GEN_9);
         PLAYER(SPECIES_NIDOKING) { Ability(ABILITY_SHEER_FORCE); }
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_BUTTON); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -45,6 +46,27 @@ SINGLE_BATTLE_TEST("Eject Button is not activated by a Sheer Force boosted move"
             MESSAGE("The opposing Wobbuffet is switched out with the Eject Button!");
         }
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
+    }
+}
+
+SINGLE_BATTLE_TEST("Eject Button activates by a Sheer Force boosted move (Champions)")
+{
+    GIVEN {
+        WITH_CONFIG(B_SHEER_FORCE_TIMING, GEN_CHAMPIONS);
+        PLAYER(SPECIES_NIDOKING) { Ability(ABILITY_SHEER_FORCE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_BUTTON); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {
+            MOVE(player, MOVE_FLAMETHROWER);
+            MOVE(opponent, MOVE_SCRATCH);
+            SEND_OUT(opponent, 1);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLAMETHROWER, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        MESSAGE("The opposing Wobbuffet is switched out with the Eject Button!");
+        MESSAGE("2 sent out Wobbuffet!");
     }
 }
 
@@ -111,7 +133,7 @@ SINGLE_BATTLE_TEST("Eject Button is not triggered after the mon loses Eject Butt
     }
 }
 
-SINGLE_BATTLE_TEST("Eject Button is not triggered after given to player by Picketpocket")
+SINGLE_BATTLE_TEST("Eject Button is not triggered after given to player by Pickpocket")
 {
     GIVEN {
         PLAYER(SPECIES_REGIELEKI) { Item(ITEM_EJECT_BUTTON); }
@@ -152,9 +174,10 @@ SINGLE_BATTLE_TEST("Eject Button has no chance to activate after Dragon Tail")
     }
 }
 
-SINGLE_BATTLE_TEST("Eject Button prevents Volt Switch / U-Turn from activating")
+SINGLE_BATTLE_TEST("Eject Button prevents Volt Switch / U-Turn from activating (Gen9-)")
 {
     GIVEN {
+        WITH_CONFIG(B_QUEUED_SWITCH_TIMINGS, GEN_9);
         PLAYER(SPECIES_MANECTRIC);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_BUTTON); }
@@ -167,6 +190,27 @@ SINGLE_BATTLE_TEST("Eject Button prevents Volt Switch / U-Turn from activating")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_VOLT_SWITCH, player);
         MESSAGE("The opposing Wobbuffet is switched out with the Eject Button!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Eject Button does not prevent Volt Switch / U-Turn from activating (Champions)")
+{
+    GIVEN {
+        WITH_CONFIG(B_QUEUED_SWITCH_TIMINGS, GEN_CHAMPIONS);
+        PLAYER(SPECIES_MANECTRIC);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_BUTTON); }
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN {
+            MOVE(player, MOVE_VOLT_SWITCH);
+            SEND_OUT(opponent, 1);
+            SEND_OUT(player, 1);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_VOLT_SWITCH, player);
+        MESSAGE("The opposing Wobbuffet is switched out with the Eject Button!");
+        MESSAGE("Manectric went back to 1!");
     }
 }
 
@@ -209,31 +253,7 @@ SINGLE_BATTLE_TEST("Eject Button is not triggered after High Jump Kick crash dam
     }
 }
 
-DOUBLE_BATTLE_TEST("Eject Button activation will not trigger an attack from the incoming mon")
-{
-    GIVEN {
-        PLAYER(SPECIES_TATSUGIRI) { Speed(10); Ability(ABILITY_COMMANDER); }
-        PLAYER(SPECIES_WOBBUFFET) { Speed(100); Item(ITEM_EJECT_BUTTON); }
-        PLAYER(SPECIES_DONDOZO) { Speed(20); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(50); Item(ITEM_EJECT_PACK); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(10); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(1); }
-    } WHEN {
-        TURN { MOVE(opponentRight, MOVE_MAKE_IT_RAIN); SEND_OUT(playerRight, 2); SEND_OUT(opponentRight, 2); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_MAKE_IT_RAIN, opponentRight);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerRight);
-        MESSAGE("Wobbuffet is switched out with the Eject Button!");
-        ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
-        MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
-        NONE_OF {
-            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
-            MESSAGE("Wobbuffet is switched out with the Eject Pack!");
-        }
-    }
-}
-
-SINGLE_BATTLE_TEST("Eject Button activates after Wandring Spirit")
+SINGLE_BATTLE_TEST("Eject Button activates after Wandering Spirit")
 {
     GIVEN {
         PLAYER(SPECIES_EKANS) { Ability(ABILITY_INTIMIDATE); }
@@ -248,5 +268,67 @@ SINGLE_BATTLE_TEST("Eject Button activates after Wandring Spirit")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_CLAW, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Eject Button will activate before Red Card if holder is faster")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Speed(20); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(10); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(5); };
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(30); Item(ITEM_EJECT_BUTTON); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(25); Item(ITEM_RED_CARD); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(5); }
+    } WHEN {
+        TURN {
+            MOVE(playerLeft, MOVE_HYPER_VOICE);
+            SEND_OUT(opponentLeft, 2);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, playerLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentRight);
+    }
+}
+
+SINGLE_BATTLE_TEST("Eject Button activates and the attacker takes Life Orb recoil before replacement comes out")
+{
+    GIVEN {
+        ASSUME(GetItemHoldEffect(ITEM_LIFE_ORB) == HOLD_EFFECT_LIFE_ORB);
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_LIFE_ORB); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_BUTTON); }
+        OPPONENT(SPECIES_EKANS) { Ability(ABILITY_INTIMIDATE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); SEND_OUT(opponent, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        HP_BAR(opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        HP_BAR(player);
+        ABILITY_POPUP(opponent, ABILITY_INTIMIDATE);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Eject Button only activates once per move")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
+        PLAYER(SPECIES_WYNAUT) { Item(ITEM_EJECT_BUTTON); Speed(1); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_BUTTON); Speed(3); }
+        OPPONENT(SPECIES_WYNAUT) { Item(ITEM_EJECT_BUTTON); Speed(2); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_BRUTAL_SWING); SEND_OUT(opponentLeft, 2); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BRUTAL_SWING, playerLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
+        MESSAGE("The opposing Wobbuffet is switched out with the Eject Button!");
+        MESSAGE("2 sent out Wobbuffet!");
+        NONE_OF {
+            MESSAGE("The opposing Wynaut is switched out with the Eject Button!");
+            MESSAGE("Wynaut is switched out with the Eject Button!");
+        }
     }
 }

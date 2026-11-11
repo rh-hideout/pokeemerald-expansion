@@ -38,10 +38,17 @@
 #define AI_FLAG_ASSUME_STAB                 AI_FLAG(28)  // AI knows player's STAB moves, but nothing else. Restricted version of AI_FLAG_OMNISCIENT.
 #define AI_FLAG_ASSUME_STATUS_MOVES         AI_FLAG(29)  // AI has a chance to know certain non-damaging moves, and also Fake Out and Super Fang. Restricted version of AI_FLAG_OMNISCIENT.
 #define AI_FLAG_ATTACKS_PARTNER             AI_FLAG(30)  // AI specific to double battles; AI can deliberately attack its 'partner.'
+#define AI_FLAG_KNOW_OPPONENT_PARTY         AI_FLAG(31)  // AI knows all the species in the player's party, but not moves/items/abilities unless they've been seen.
+#define AI_FLAG_RANDOMIZE_SWITCHIN          AI_FLAG(32)  // AI will randomly choose between eligible switchin candidates of a given category instead of picking the last one in the party.
+#define AI_FLAG_RANDOMIZE_PARTY_INDICES     AI_FLAG(33)  // AI will randomize the order of the mons in its party, including the lead. Not an AI flag really, just a way to trigger TPP functionality
+#define AI_FLAG_ABILITY_OMNISCIENCE         AI_FLAG(34)  // AI knows the player's ability
+#define AI_FLAG_ITEM_OMNISCIENCE            AI_FLAG(35)  // AI knows the player's item
+#define AI_FLAG_MOVE_OMNISCIENCE            AI_FLAG(36)  // AI knows the player's moves
+#define AI_FLAG_DEEP_PARTNER_THINKING       AI_FLAG(37)  // AI will consider its partner's highest scoring moves as determined by looping partner scoring with each of its own moves assumed to be clicked (high impact on AI thinking time).
 
 // The following options are enough to have a basic/smart trainer. Any other addtion could make the trainer worse/better depending on the flag
 #define AI_FLAG_BASIC_TRAINER         (AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY)
-#define AI_FLAG_SMART_TRAINER         (AI_FLAG_BASIC_TRAINER | AI_FLAG_OMNISCIENT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_PP_STALL_PREVENTION | AI_FLAG_SMART_TERA)
+#define AI_FLAG_SMART_TRAINER         (AI_FLAG_BASIC_TRAINER | AI_FLAG_OMNISCIENT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_PP_STALL_PREVENTION | AI_FLAG_SMART_TERA | AI_FLAG_RANDOMIZE_SWITCHIN)
 #define AI_FLAG_PREDICTION            (AI_FLAG_PREDICT_SWITCH | AI_FLAG_PREDICT_INCOMING_MON | AI_FLAG_PREDICT_MOVE)
 #define AI_FLAG_ASSUMPTIONS           (AI_FLAG_ASSUME_STAB | AI_FLAG_ASSUME_STATUS_MOVES | AI_FLAG_WEIGH_ABILITY_PREDICTION)
 

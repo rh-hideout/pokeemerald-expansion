@@ -9,7 +9,7 @@ ASSUMPTIONS
 
 SINGLE_BATTLE_TEST("Protective Pads protected moves still make direct contact", s16 damage)
 {
-    u32 ability;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_KLUTZ; }
     PARAMETRIZE { ability = ABILITY_FLUFFY; }
     GIVEN {
@@ -27,7 +27,7 @@ SINGLE_BATTLE_TEST("Protective Pads protected moves still make direct contact", 
 
 SINGLE_BATTLE_TEST("Protective Pads doesn't reduce tough claws damage", s16 damage)
 {
-    u32 item;
+    enum Item item;
     PARAMETRIZE { item = ITEM_NONE; }
     PARAMETRIZE { item = ITEM_PROTECTIVE_PADS; }
     GIVEN {
@@ -57,7 +57,7 @@ SINGLE_BATTLE_TEST("Protective Pads doesn't invalid unseen fist")
     }
 }
 
-SINGLE_BATTLE_TEST("Protective Pads protects from Rocly Helmet Damage")
+SINGLE_BATTLE_TEST("Protective Pads protects from Rocky Helmet damage")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_PROTECTIVE_PADS); }
@@ -68,15 +68,15 @@ SINGLE_BATTLE_TEST("Protective Pads protects from Rocly Helmet Damage")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         HP_BAR(opponent);
         NONE_OF {
+            ITEM_POPUP(opponent, ITEM_ROCKY_HELMET);
             HP_BAR(player);
-            MESSAGE("Wobbuffet was hurt by the opposing Wobbuffet's Rocky Helmet!");
         }
     }
 }
 
 SINGLE_BATTLE_TEST("Protective Pads protects from Protect's secondary effects")
 {
-    u32 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_SPIKY_SHIELD; }
     PARAMETRIZE { move = MOVE_BANEFUL_BUNKER; }

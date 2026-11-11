@@ -13,8 +13,8 @@ ASSUMPTIONS
 
 SINGLE_BATTLE_TEST("Revelation Dance changes its type depending on the user's 1st Type")
 {
-    u16 speciesPlayer;
-    u16 speciesOpponent;
+    enum Species speciesPlayer;
+    enum Species speciesOpponent;
 
     PARAMETRIZE { speciesPlayer = SPECIES_ORICORIO_POM_POM; speciesOpponent = SPECIES_DUGTRIO; }
     PARAMETRIZE { speciesPlayer = SPECIES_ORICORIO_BAILE; speciesOpponent = SPECIES_BLASTOISE; }
@@ -84,7 +84,7 @@ SINGLE_BATTLE_TEST("Revelation Dance changes its type depending on the user's 3r
 
 SINGLE_BATTLE_TEST("Revelation Dance becomes Typeless if its user is Typeless")
 {
-    u16 speciesOpponent;
+    enum Species speciesOpponent;
 
     PARAMETRIZE { speciesOpponent = SPECIES_BLISSEY; }
     PARAMETRIZE { speciesOpponent = SPECIES_BLASTOISE; }
@@ -113,7 +113,7 @@ SINGLE_BATTLE_TEST("Revelation Dance becomes Typeless if its user is Typeless")
 
 SINGLE_BATTLE_TEST("Revelation Dance becomes Normal type if used by a Typeless Pokemon due to Roost")
 {
-    u16 speciesOpponent;
+    enum Species speciesOpponent;
 
     PARAMETRIZE { speciesOpponent = SPECIES_SABLEYE; }
     PARAMETRIZE { speciesOpponent = SPECIES_AGGRON; }
@@ -136,13 +136,13 @@ SINGLE_BATTLE_TEST("Revelation Dance becomes Normal type if used by a Typeless P
         if (speciesOpponent == SPECIES_AGGRON) {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_REVELATION_DANCE, player);
             HP_BAR(opponent);
-            MESSAGE("It's not very effective…");
+            MESSAGE("It's mostly ineffective…");
         }
         else {
             NONE_OF {
                 ANIMATION(ANIM_TYPE_MOVE, MOVE_REVELATION_DANCE, player);
                 HP_BAR(opponent);
-                MESSAGE("It's not very effective…");
+                MESSAGE("It's mostly ineffective…");
             }
         }
     }

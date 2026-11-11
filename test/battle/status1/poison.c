@@ -19,7 +19,7 @@ SINGLE_BATTLE_TEST("Poison deals 1/8th damage per turn")
 
 SINGLE_BATTLE_TEST("Poison can't bad poison a poison or steel type")
 {
-    u32 species;
+    enum Species species;
 
     PARAMETRIZE { species = SPECIES_BELDUM; }
     PARAMETRIZE { species = SPECIES_BULBASAUR; }

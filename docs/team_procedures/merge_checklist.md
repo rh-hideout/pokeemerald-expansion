@@ -18,7 +18,7 @@ Contributors are asked to make sure tests pass locally, but maintainers should a
 ## Have you verified that the functionality works in game without any problems?
 If functionality cannot be verified with an automated test, proof of an in game test is required. Do not be afraid to reach out to the contributor or the community to make sure something works in game as it should.
 
-## If the branch ports behavior from another Pokémon game, have you verified that the behavior functions as faithfully as possible? 
+## If the branch ports behavior from another Pokémon game, have you verified that the behavior functions as faithfully as possible?
 We have always tried to make sure we can mimic the original functionality as closely as possible so as to avoid confusion with users and players. Do not be afraid to ask the contributor / community for proof if you cannot personally verify.
 
 ## If the branch is a popular feature within the community with an established feature branch, is this using that established branch as a base?
@@ -28,7 +28,7 @@ There are situations where this should and should not happen, and should be disc
 Not everything needs a migration script - if you're unsure, start a discussion.
 
 ## Should new functionality introduced by this branch be gated behind a config?
-We don't have a strict definition of when configs should be used, but you can start with 
+We don't have a strict definition of when configs should be used, but you can start with
 
 > Why SHOULDN'T this be a config?
 

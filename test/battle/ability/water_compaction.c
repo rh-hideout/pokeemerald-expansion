@@ -29,13 +29,13 @@ SINGLE_BATTLE_TEST("Water Compaction raises Defense 2 stages on each hit of a mu
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SURGING_STRIKES, opponent);
         ABILITY_POPUP(player, ABILITY_WATER_COMPACTION);
-        MESSAGE("Sandygast's Defense sharply rose!");
+        MESSAGE("Sandygast's Defense rose sharply!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SURGING_STRIKES, opponent);
         ABILITY_POPUP(player, ABILITY_WATER_COMPACTION);
-        MESSAGE("Sandygast's Defense sharply rose!");
+        MESSAGE("Sandygast's Defense rose sharply!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SURGING_STRIKES, opponent);
         ABILITY_POPUP(player, ABILITY_WATER_COMPACTION);
-        MESSAGE("Sandygast's Defense sharply rose!");
+        MESSAGE("Sandygast's Defense rose sharply!");
     } THEN {
         EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE + 6);
     }
@@ -43,7 +43,7 @@ SINGLE_BATTLE_TEST("Water Compaction raises Defense 2 stages on each hit of a mu
 
 SINGLE_BATTLE_TEST("Water Compaction does not affect damage taken from Water type moves", s16 damage)
 {
-    u16 ability;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_SAND_VEIL; }
     PARAMETRIZE { ability = ABILITY_WATER_COMPACTION; }
     GIVEN {

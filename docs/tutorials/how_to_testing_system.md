@@ -67,10 +67,10 @@ The test runner rigs the RNG so that unless otherwise specified, moves always hi
 ### Example 2
 As a second example, to manually test that Stun Spore does not effect Grass-types you might:
 1. Put a Wobbuffet that knows Stun Spore in your party.
-2. Battle a wild Oddish.
+2. Battle an opponent with Oddish.
 3. Use Stun Spore.
 4. Check that the move animation does not play.
-5. Check that a "It doesn't affect Foe Oddish…" message is shown.
+5. Check that a "It doesn't affect the opposing Oddish…" message is shown.
 
 This can again be translated as follows:
 
@@ -80,7 +80,7 @@ SINGLE_BATTLE_TEST("Stun Spore does not affect Grass-types")
     GIVEN {
         ASSUME(IsPowderMove(MOVE_STUN_SPORE));
         ASSUME(GetSpeciesType(SPECIES_ODDISH, 0) == TYPE_GRASS);
-        PLAYER(SPECIES_ODDISH); // 1.
+        PLAYER(SPECIES_WOBBUFFET); // 1.
         OPPONENT(SPECIES_ODDISH); // 2.
     } WHEN {
         TURN { MOVE(player, MOVE_STUN_SPORE); } // 3.
@@ -139,7 +139,7 @@ The `HP_BAR` command's `captureDamage` causes the change in HP to be stored in a
 You might notice that all the tests check the outputs the player could see rather than the internal battle state. e.g. the Meditate test could have used `gBattleMons[B_POSITION_OPPONENT_LEFT].hp` instead of using `HP_BAR` to capture the damage. This is a deliberate choice, by checking what the player can observe the tests are more robust to refactoring, e.g. if `gBattleMons` got moved into `gBattleStruct` then any test that used it would need to be updated.
 
 ### Note on Overworld Tests
-The overworld is not available, so it is only possible to test commands which don't affect the overworld itself, e.g. `givemon` can be tested because it only alters `gPlayerParty`, but `addobject` cannot because it affects object events (which aren't loaded).
+The overworld is not available, so it is only possible to test commands which don't affect the overworld itself, e.g. `givemon` can be tested because it only alters `gParties[B_TRAINER_PLAYER]`, but `addobject` cannot because it affects object events (which aren't loaded).
 
 ## REFERENCE
 
@@ -164,17 +164,17 @@ ASSUMPTIONS
 ```
 
 ### `SINGLE_BATTLE_TEST`
-`SINGLE_BATTLE_TEST(name, results...)` and `DOUBLE_BATTLE_TEST(name, results...)`
-Define single- and double- battles. The names should start with the name of the mechanic being tested so that it is easier to run all the related tests. `results` contains variable declarations to be placed into the `results` array which is available in tests using `PARAMETRIZE` commands.
-The main differences for doubles are:
+`SINGLE_BATTLE_TEST(name, results...)`, `DOUBLE_BATTLE_TEST(name, results...)`, `MULTI_BATTLE_TEST(name, results...)`, `TWO_VS_ONE_BATTLE_TEST(name, results...)`, and `ONE_VS_TWO_BATTLE_TEST(name, results...)`
+Define single-, double-, 2v2-multi-, 2v1-multi-, and 1v2- battles. The names should start with the name of the mechanic being tested so that it is easier to run all the related tests. `results` contains variable declarations to be placed into the `results` array which is available in tests using `PARAMETRIZE` commands.
+The main differences for doubles, 2v2, 2v1, and 1v2 are:
  - Move targets sometimes need to be explicit.
  - Instead of `player` and `opponent` there is `playerLeft`, `playerRight`, `opponentLeft`, and `opponentRight`.
 
 ### `AI_SINGLE_BATTLE_TEST`
-`AI_SINGLE_BATTLE_TEST(name, results...)` and `AI_DOUBLE_BATTLE_TEST(name, results...)`
+`AI_SINGLE_BATTLE_TEST(name, results...)`, `AI_DOUBLE_BATTLE_TEST(name, results...)`, `AI_MULTI_BATTLE_TEST(name, results...)`, `AI_TWO_VS_ONE_BATTLE_TEST(name, results...)`, and `AI_ONE_VS_TWO_BATTLE_TEST(name, results...)`
 Define battles where opponent mons are controlled by AI, the same that runs
 when battling regular Trainers. The flags for AI should be specified by the `AI_FLAGS` command.
-The rules remain the same as with the `SINGLE` and `DOUBLE` battle tests with some differences:
+The rules remain the same as with the `SINGLE`, `DOUBLE`, `MULTI`, `TWO_VS_ONE`, and `ONE_VS_TWO` battle tests with some differences:
  - opponent's action is specified by the `EXPECT_MOVE` / `EXPECT_SEND_OUT` / `EXPECT_SWITCH` commands
  - we don't control what opponent actually does, instead we make sure the opponent does what we expect it to do
  - we still control the player's action the same way
@@ -268,7 +268,7 @@ GIVEN {
 ```
 
 ### `PLAYER` and `OPPONENT`
-`PLAYER(species)` and `OPPONENT(species`
+`PLAYER(species)` and `OPPONENT(species)`
 Adds the species to the player's or opponent's party respectively.
 The Pokémon can be further customized with the following functions:
  - `Gender(MON_MALE | MON_FEMALE)`
@@ -285,10 +285,25 @@ For example to create a level 42 Wobbuffet that is poisoned:
 **Note if Speed is specified for any Pokémon then it must be specified for all Pokémon.**
 **Note if Moves is specified then MOVE will not automatically add moves to the moveset.**
 
+### `PARTNER`, `OPPONENT_A`, and `OPPONENT_B`
+For tests using `MULTI_BATTLE_TEST`, `AI_MULTI_BATTLE_TEST`, `TWO_VS_ONE_BATTLE_TEST`, `AI_TWO_VS_ONE_BATTLE_TEST`, `ONE_VS_TWO_BATTLE_TEST`, and `AI_ONE_VS_TWO_BATTLE_TEST`, the below must be used.
+`PLAYER(species)`, `PARTNER(species)`, `OPPONENT_A(species)`, and `OPPONENT_B(species)`
+Adds the species to the player's (`B_TRAINER_PLAYER`), player partner's (`B_TRAINER_PARTNER`), opponent A's (`B_TRAINER_OPPONENT_A`), or opponent B's (`B_TRAINER_OPPONENT_B`), party, respectively.
+Pokemon can be customised as per the guidance for `PLAYER(species)` and `OPPONENT(species)`.
+The functions assign the Pokémon to the party of the trainer at `B_POSITION_PLAYER_LEFT`, `B_POSITION_PLAYER_RIGHT`, `B_POSITION_OPPONENT_LEFT`, and `B_POSITION_OPPONENT_RIGHT`, respectively.
+For `ONE_VS_TWO` tests, `PLAYER(species)` must be used for all player-side Pokémon, and for `TWO_VS_ONE` tests, `OPPONENT_A(species)` must be used for all opponent-side Pokémon.
+
 ### `AI_FLAGS`
 `AI_FLAGS(flags)`
-Specifies which AI flags are run during the test. Has use only for AI tests.
+Specifies which AI flags are run for all battlers during the test. Has use only for AI tests.
 The most common combination is `AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT)` which is the general 'smart' AI.
+
+### `BATTLER_AI_FLAGS`
+`BATTLER_AI_FLAGS(battler, flags)`
+Specifies additional AI flags to be applied to specific battlers (battler 0/1/2/3). Has use only for AI tests.
+Must be used strictly after `AI_FLAGS(flags)`, which overwrites all existing flags.
+Example: `BATTLER_AI_FLAGS(3, AI_FLAG_RISKY)` used after `AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT)`
+will set `AI_FLAG_RISKY` to only `battler3` (Opponent B), in addition to the flags set by `AI_FLAGS`.
 
 ### `WHEN`
 ```
@@ -446,6 +461,28 @@ If the expected status icon is parametrized the corresponding `STATUS1` constant
      STATUS_ICON(player, status1);
 ```
 
+### `SUB_HIT`
+`SUB_HIT(battler, captureDamage: | subBreak:)`
+Causes the test to fail the test to fail if a Substitute for the specified battler doesn't take damage.
+If `captureDamage` is used, the damage the substitute takes is written to the supplied pointer.
+```
+u16 damage;
+...
+SUB_HIT(player, captureDamage: &damage);
+```
+If `subBreak` is set to `TRUE`, the test will fail unless the substitute breaks. And if set to `FALSE`, the test will fail unless the substitute survives.
+```
+SUB_HIT(player, subBreak: TRUE);
+```
+
+### `CATCHING_CHANCE`
+`CATCHING_CHANCE(address)`
+Causes the test to fail if no catching attempt is made and then writes the computed catch chance in the `address` pointer.
+```
+    u32 recordedCatchChance;
+    CATCHING_CHANCE(&recordedCatchChance);
+```
+
 ### `NOT`
 `NOT sceneCommand`
 Causes the test to fail if the `SCENE` command succeeds before the following command succeeds.
@@ -465,10 +502,10 @@ Causes the test to fail if the `SCENE` command succeeds before the following com
 ```
 Causes the test to fail unless one of the `SCENE` commands succeeds.
 ```
-     ONE_OF {
-         MESSAGE("Wobbuffet used Celebrate!");
-         MESSAGE("Wobbuffet couldn't move because it's paralyzed!");
-     }
+    ONE_OF {
+        MESSAGE("Wobbuffet used Celebrate!");
+        MESSAGE("Wobbuffet couldn't move because it's paralyzed!");
+    }
 ```
 
 ### `NONE_OF`
@@ -479,12 +516,12 @@ Causes the test to fail unless one of the `SCENE` commands succeeds.
 ```
 Causes the test to fail if one of the `SCENE` commands succeeds before the command after the `NONE_OF` succeeds.
 ```
-     // Our Wobbuffet does not move before the foe's.
-     NONE_OF {
-         MESSAGE("Wobbuffet used Celebrate!");
-         MESSAGE("Wobbuffet couldn't move because it's paralyzed!");
-     }
-     MESSAGE("The opposing Wobbuffet used Celebrate!");
+    // Our Wobbuffet does not move before the foe's.
+    NONE_OF {
+        MESSAGE("Wobbuffet used Celebrate!");
+        MESSAGE("Wobbuffet couldn't move because it's paralyzed!");
+    }
+    MESSAGE("The opposing Wobbuffet used Celebrate!");
 ```
 
 ### `PLAYER_PARTY`

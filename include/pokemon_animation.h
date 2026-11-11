@@ -190,9 +190,10 @@ enum AnimFunctionIDs
     ANIM_SHAKE_GLOW_BLACK_SLOW,
     ANIM_SHAKE_GLOW_WHITE_SLOW,
     ANIM_SHAKE_GLOW_PURPLE_SLOW,
+    ANIM_COUNT,
 };
 
-enum BackAnim GetSpeciesBackAnimSet(u16 species);
+enum BackAnim GetSpeciesBackAnimSet(enum Species species);
 void LaunchAnimationTaskForFrontSprite(struct Sprite *sprite, enum AnimFunctionIDs frontAnimId);
 void StartMonSummaryAnimation(struct Sprite *sprite, enum AnimFunctionIDs frontAnimId);
 void LaunchAnimationTaskForBackSprite(struct Sprite *sprite, enum BackAnim backAnimSet);

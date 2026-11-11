@@ -28,7 +28,7 @@ DOUBLE_BATTLE_TEST("Dragon Cheer increases critical hit ratio by 1 on non-Dragon
     }
     PASSES_RANDOMLY(1, chance, RNG_CRITICAL_HIT);
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_CRIT_CHANCE, genConfig);
+        WITH_CONFIG(B_CRIT_CHANCE, genConfig);
         ASSUME(GetMoveCriticalHitStage(MOVE_SCRATCH) == 0);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
@@ -47,6 +47,8 @@ DOUBLE_BATTLE_TEST("Dragon Cheer increases critical hit ratio by 1 on non-Dragon
         }
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerRight);
         MESSAGE("A critical hit!");
+    } THEN {
+        EXPECT_EQ((u32)playerRight->volatiles.criticalHitBoost, useDragonCheer ? CRIT_BOOST_ONE_STAGE : CRIT_BOOST_NONE);
     }
 }
 
@@ -62,7 +64,7 @@ DOUBLE_BATTLE_TEST("Dragon Cheer increases critical hit ratio by 2 on Dragon typ
     }
     PASSES_RANDOMLY(passes, trials, RNG_CRITICAL_HIT);
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_CRIT_CHANCE, genConfig);
+        WITH_CONFIG(B_CRIT_CHANCE, genConfig);
         ASSUME(GetMoveCriticalHitStage(MOVE_SCRATCH) == 0);
         ASSUME(GetSpeciesBaseSpeed(SPECIES_DRATINI) == 50);
         PLAYER(SPECIES_WOBBUFFET);
@@ -82,6 +84,8 @@ DOUBLE_BATTLE_TEST("Dragon Cheer increases critical hit ratio by 2 on Dragon typ
         }
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerRight);
         MESSAGE("A critical hit!");
+    } THEN {
+        EXPECT_EQ((u32)playerRight->volatiles.criticalHitBoost, useDragonCheer ? CRIT_BOOST_TWO_STAGES : CRIT_BOOST_NONE);
     }
 }
 
@@ -102,11 +106,31 @@ DOUBLE_BATTLE_TEST("Dragon Cheer fails if critical hit stage was already increas
     }
 }
 
-TO_DO_BATTLE_TEST("Baton Pass passes Dragon Cheer's effect");
+DOUBLE_BATTLE_TEST("Baton Pass passes Dragon Cheer's effect")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_BATON_PASS) == EFFECT_BATON_PASS);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        PLAYER(SPECIES_CATERPIE);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(playerRight, MOVE_DRAGON_CHEER, target: playerLeft); }
+        TURN { MOVE(playerLeft, MOVE_BATON_PASS); SEND_OUT(playerLeft, 2); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_CHEER, playerRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BATON_PASS, playerLeft);
+        SEND_IN_MESSAGE("Caterpie");
+    } THEN {
+        EXPECT_EQ(playerLeft->species, SPECIES_CATERPIE);
+        EXPECT_EQ((u32)playerLeft->volatiles.criticalHitBoost, CRIT_BOOST_ONE_STAGE);
+    }
+}
 
 AI_DOUBLE_BATTLE_TEST("AI uses Dragon Cheer")
 {
-    u32 species;
+    enum Species species;
     PARAMETRIZE { species = SPECIES_DRATINI; }
     PARAMETRIZE { species = SPECIES_WOBBUFFET; }
 
@@ -121,11 +145,8 @@ AI_DOUBLE_BATTLE_TEST("AI uses Dragon Cheer")
         OPPONENT(species) { Moves(MOVE_DRAGON_CHEER, MOVE_POUND); }
     } WHEN {
         if (species == SPECIES_DRATINI)
-            TURN {  EXPECT_MOVE(opponentLeft, MOVE_DRAGON_CHEER); }
+            TURN { EXPECT_MOVE(opponentLeft, MOVE_DRAGON_CHEER); }
         else
             TURN {  NOT_EXPECT_MOVE(opponentLeft, MOVE_DRAGON_CHEER); }
     }
 }
-
-
-

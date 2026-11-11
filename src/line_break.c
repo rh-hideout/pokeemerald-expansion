@@ -6,10 +6,17 @@
 void StripLineBreaks(u8 *src)
 {
     u32 currIndex = 0;
+    u32 prevChar = EOS;
     while (src[currIndex] != EOS)
     {
         if (src[currIndex] == CHAR_PROMPT_SCROLL || src[currIndex] == CHAR_NEWLINE)
-            src[currIndex] = CHAR_SPACE;
+        {
+            if (prevChar == CHAR_HYPHEN)
+                src[currIndex] = CHAR_ZWS;
+            else
+                src[currIndex] = CHAR_SPACE;
+        }
+        prevChar = src[currIndex];
         currIndex++;
     }
 }
@@ -295,7 +302,7 @@ void BreakSubStringAutomatic(u8 *src, u32 maxWidth, u32 screenLines, u8 fontId, 
             currWordIndex++;
             while (currWordIndex < numWords)
             {
-                if (currLineWidth + spaceWidth + allWords[currWordIndex].width > maxWidth)
+                if (currLineWidth + spaceWidth + allWords[currWordIndex].width + ((toggleScrollPrompt == SHOW_SCROLL_PROMPT) ? SCROLL_PROMPT_WIDTH : 0) > maxWidth)
                 {
                     //  go to next line
                     currLineIndex++;
@@ -350,10 +357,11 @@ bool32 IsWordSplittingChar(const u8 *src, u32 index)
 {
     switch (src[index])
     {
-        case CHAR_SPACE:
-            return TRUE;
-        default:
-            return FALSE;
+    case CHAR_ZWS:
+    case CHAR_SPACE:
+        return TRUE;
+    default:
+        return FALSE;
     }
 }
 

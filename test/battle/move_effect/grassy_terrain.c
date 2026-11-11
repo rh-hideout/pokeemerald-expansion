@@ -5,7 +5,7 @@ SINGLE_BATTLE_TEST("Grassy Terrain recovers 1/16th HP at end of turn")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { MaxHP(100); HP(1); }
-        OPPONENT(SPECIES_WOBBUFFET) { MaxHP(100); HP(1); };
+        OPPONENT(SPECIES_WOBBUFFET) { MaxHP(100); HP(1); }
     } WHEN {
         TURN { MOVE(player, MOVE_GRASSY_TERRAIN); }
         TURN {}
@@ -85,7 +85,7 @@ SINGLE_BATTLE_TEST("Grassy Terrain heals the Pokémon on the field for the durat
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { HP(1); };
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_GRASSY_TERRAIN); }
         TURN {}
@@ -102,5 +102,24 @@ SINGLE_BATTLE_TEST("Grassy Terrain heals the Pokémon on the field for the durat
         MESSAGE("The opposing Wobbuffet is healed by the grassy terrain!");
         MESSAGE("The opposing Wobbuffet is healed by the grassy terrain!");
         MESSAGE("The grass disappeared from the battlefield.");
+    }
+}
+
+SINGLE_BATTLE_TEST("Grassy Terrain does not heal levitating Pokémon")
+{
+    u16 species;
+    enum Ability ability;
+    PARAMETRIZE { species = SPECIES_PIDGEOT; ability = ABILITY_KEEN_EYE; }
+    PARAMETRIZE { species = SPECIES_FLYGON; ability = ABILITY_LEVITATE; }
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(species) { Ability(ability); HP(1); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_GRASSY_TERRAIN); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_GRASSY_TERRAIN, player);
+        MESSAGE("Grass grew to cover the battlefield!");
+        NOT HP_BAR(opponent);
     }
 }

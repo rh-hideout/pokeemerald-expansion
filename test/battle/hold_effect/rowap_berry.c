@@ -9,7 +9,7 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Rowap Berry causes the attacker to lose 1/8 of its max HP if a special move was used")
 {
     s16 damage;
-    u16 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_SWIFT; }
     PARAMETRIZE { move = MOVE_SCRATCH; }
@@ -25,12 +25,13 @@ SINGLE_BATTLE_TEST("Rowap Berry causes the attacker to lose 1/8 of its max HP if
         ANIMATION(ANIM_TYPE_MOVE, move, player);
         HP_BAR(opponent);
         if (move == MOVE_SWIFT) {
-            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+            ITEM_POPUP(opponent, ITEM_ROWAP_BERRY);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
             HP_BAR(player, captureDamage: &damage);
-            MESSAGE("Wobbuffet was hurt by the opposing Wobbuffet's Rowap Berry!");
         } else {
             NONE_OF {
-                ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+                ITEM_POPUP(opponent, ITEM_ROWAP_BERRY);
+                ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
                 MESSAGE("Wobbuffet was hurt by the opposing Wobbuffet's Rowap Berry!");
             }
         }
@@ -52,13 +53,13 @@ SINGLE_BATTLE_TEST("Rowap Berry is not triggered by a physical move")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         HP_BAR(opponent);
         NONE_OF {
-            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
             MESSAGE("Wobbuffet was hurt by the opposing Wobbuffet's Rowap Berry!");
         }
     }
 }
 
-SINGLE_BATTLE_TEST("Rowap Berry is triggered even if berry user dies")
+SINGLE_BATTLE_TEST("Rowap Berry is triggered even if berry user faints")
 {
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_TACKLE) == DAMAGE_CATEGORY_PHYSICAL);
@@ -68,7 +69,7 @@ SINGLE_BATTLE_TEST("Rowap Berry is triggered even if berry user dies")
         TURN { MOVE(player, MOVE_SWIFT); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SWIFT, player);
+        ITEM_POPUP(opponent, ITEM_ROWAP_BERRY);
         HP_BAR(player);
-        MESSAGE("Wobbuffet was hurt by the opposing Wobbuffet's Rowap Berry!");
     }
 }

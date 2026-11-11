@@ -122,9 +122,7 @@ BattleFrontier_BattlePikeLobby_EventScript_TryEnterChallenge::
 	callnative RemoveFollowingPokemon
 	call BattleFrontier_EventScript_GetLvlMode
 	copyvar VAR_0x8004, VAR_RESULT
-	setvar VAR_0x8005, FRONTIER_PARTY_SIZE
-	special ChoosePartyForBattleFrontier
-	waitstate
+	choosepartyforbattlefrontier FRONTIER_PARTY_SIZE
 	goto_if_eq VAR_RESULT, 0, BattleFrontier_BattlePikeLobby_EventScript_LoadPartyAndCancelChallenge
 	msgbox BattleFrontier_BattlePikeLobby_Text_SaveBeforeChallenge, MSGBOX_YESNO
 	switch VAR_RESULT
@@ -172,10 +170,14 @@ BattleFrontier_BattlePikeLobby_EventScript_NotEnoughValidMons::
 
 BattleFrontier_BattlePikeLobby_EventScript_NotEnoughValidMonsLv50::
 	msgbox BattleFrontier_BattlePikeLobby_Text_NotEnoughValidMonsLv50, MSGBOX_DEFAULT
+	call BattleFrontier_ShowCaughtBannedSpecies
+	msgbox BattleFrontier_BattlePikeLobby_Text_NotEnoughValidMonsEnd, MSGBOX_DEFAULT
 	goto BattleFrontier_BattlePikeLobby_EventScript_EndCancelChallenge
 
 BattleFrontier_BattlePikeLobby_EventScript_NotEnoughValidMonsLvOpen::
 	msgbox BattleFrontier_BattlePikeLobby_Text_NotEnoughValidMonsLvOpen, MSGBOX_DEFAULT
+	call BattleFrontier_ShowCaughtBannedSpecies
+	msgbox BattleFrontier_BattlePikeLobby_Text_NotEnoughValidMonsEnd, MSGBOX_DEFAULT
 	goto BattleFrontier_BattlePikeLobby_EventScript_EndCancelChallenge
 
 BattleFrontier_BattlePikeLobby_EventScript_CancelChallengeSaveFailed::
@@ -265,7 +267,6 @@ BattleFrontier_BattlePikeLobby_EventScript_ExitRules::
 BattleFrontier_BattlePike_EventScript_CloseCurtain::
 	playse SE_PIKE_CURTAIN_CLOSE
 	special CloseBattlePikeCurtain
-	waitstate
 	waitse
 	return
 
@@ -315,7 +316,9 @@ BattleFrontier_BattlePikeLobby_Text_NotEnoughValidMonsLv50:
 	.string "of Level 50 or less to enter.\p"
 	.string "They also must be holding different\n"
 	.string "kinds of items.\p"
-	.string "EGGS{STR_VAR_1} ineligible.\p"
+	.string "EGGS{STR_VAR_1}.$"
+
+BattleFrontier_BattlePikeLobby_Text_NotEnoughValidMonsEnd:
 	.string "Please come see me when\n"
 	.string "you are ready…$"
 
@@ -327,9 +330,7 @@ BattleFrontier_BattlePikeLobby_Text_NotEnoughValidMonsLvOpen:
 	.string "POKéMON to enter.\p"
 	.string "They also must be holding different\n"
 	.string "kinds of items.\p"
-	.string "EGGS{STR_VAR_1} ineligible.\p"
-	.string "Please come see me when\n"
-	.string "you are ready…$"
+	.string "EGGS{STR_VAR_1}.$"
 
 BattleFrontier_BattlePikeLobby_Text_PleaseChooseThreeMons:
 	.string "Please choose the three POKéMON\n"

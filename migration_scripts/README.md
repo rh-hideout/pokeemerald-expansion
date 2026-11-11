@@ -91,7 +91,7 @@ Refactors all battle animation move scripts, removing the list from `data/battle
         .type = TYPE_NORMAL,
         .accuracy = 100,
         .pp = 35,
-        .target = MOVE_TARGET_SELECTED,
+        .target = TARGET_SELECTED,
         .priority = 0,
         .category = DAMAGE_CATEGORY_PHYSICAL,
         .makesContact = TRUE,

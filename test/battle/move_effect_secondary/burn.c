@@ -43,7 +43,7 @@ DOUBLE_BATTLE_TEST("Lava Plume inflicts burn to all adjacent battlers")
 {
     GIVEN {
         ASSUME(MoveHasAdditionalEffect(MOVE_LAVA_PLUME, MOVE_EFFECT_BURN) == TRUE);
-        ASSUME(GetMoveTarget(MOVE_LAVA_PLUME) == MOVE_TARGET_FOES_AND_ALLY);
+        ASSUME(GetMoveTarget(MOVE_LAVA_PLUME) == TARGET_FOES_AND_ALLY);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -55,18 +55,18 @@ DOUBLE_BATTLE_TEST("Lava Plume inflicts burn to all adjacent battlers")
         HP_BAR(opponentLeft);
         HP_BAR(playerRight);
         HP_BAR(opponentRight);
-        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_BRN, opponentLeft);
-        STATUS_ICON(opponentLeft, burn: TRUE);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_BRN, playerRight);
         STATUS_ICON(playerRight, burn: TRUE);
-        STATUS_ICON(opponentRight, burn: TRUE);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_BRN, opponentLeft);
+        STATUS_ICON(opponentLeft, burn: TRUE);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_BRN, opponentRight);
+        STATUS_ICON(opponentRight, burn: TRUE);
     }
 }
 
 SINGLE_BATTLE_TEST("Matcha Gotcha inflicts burn 20% of the time")
 {
-    PASSES_RANDOMLY(20, 100, RNG_SECONDARY_EFFECT);
+    PASSES_RANDOMLY(20, 100, RNG_SECONDARY_EFFECT_2);
     GIVEN {
         ASSUME(MoveHasAdditionalEffect(MOVE_MATCHA_GOTCHA, MOVE_EFFECT_BURN) == TRUE);
         PLAYER(SPECIES_WOBBUFFET);

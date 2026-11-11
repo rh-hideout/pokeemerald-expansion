@@ -21,7 +21,7 @@ SINGLE_BATTLE_TEST("Psychic Noise blocks healing moves for 2 turns")
         MESSAGE("The opposing Wobbuffet was prevented from healing!");
         MESSAGE("The opposing Wobbuffet was prevented from healing!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STRUGGLE, opponent);
-        MESSAGE("The opposing Wobbuffet's Heal Block wore off!");
+        MESSAGE("The opposing Wobbuffet is no longer prevented from healing!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_RECOVER, opponent);
     }
 }
@@ -35,7 +35,7 @@ SINGLE_BATTLE_TEST("Psychic Noise is blocked by Soundproof")
         TURN { MOVE(player, MOVE_PSYCHIC_NOISE); MOVE(opponent, MOVE_RECOVER); }
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_SOUNDPROOF);
-        MESSAGE("The opposing Voltorb's Soundproof blocks Psychic Noise!");
+        MESSAGE("It doesn't affect the opposing Voltorb…");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_RECOVER, opponent);
     }
 }

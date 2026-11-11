@@ -6,11 +6,11 @@ BattleFrontier_Lounge5_EventScript_NatureGirl::
 	faceplayer
 	msgbox BattleFrontier_Lounge5_Text_NatureGirlGreeting, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, BattleFrontier_Lounge5_EventScript_NatureGirlNoneShown
-	special ChoosePartyMon
+	chooseboxmon
 	waitstate
 	lock
 	faceplayer
-	goto_if_eq VAR_0x8004, PARTY_NOTHING_CHOSEN, BattleFrontier_Lounge5_EventScript_NatureGirlNoneShown
+	goto_if_eq VAR_0x8004, PARTY_SLOT_CANCEL, BattleFrontier_Lounge5_EventScript_NatureGirlNoneShown
 	specialvar VAR_RESULT, ScriptGetPartyMonSpecies
 	goto_if_eq VAR_RESULT, SPECIES_EGG, BattleFrontier_Lounge5_EventScript_NatureGirlEgg
 	special ShowNatureGirlMessage

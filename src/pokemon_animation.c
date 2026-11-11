@@ -5,6 +5,7 @@
 #include "pokemon_animation.h"
 #include "sprite.h"
 #include "task.h"
+#include "test/battle.h"
 #include "test_runner.h"
 #include "trig.h"
 #include "util.h"
@@ -468,7 +469,7 @@ static void SetPosForRotation(struct Sprite *sprite, u16 index, s16 amplitudeX, 
     sprite->y2 = yAdder + amplitudeY;
 }
 
-enum BackAnim GetSpeciesBackAnimSet(u16 species)
+enum BackAnim GetSpeciesBackAnimSet(enum Species species)
 {
     if (gSpeciesInfo[species].backAnimId != BACK_ANIM_NONE)
         return gSpeciesInfo[species].backAnimId - 1;
@@ -501,7 +502,7 @@ static void Task_HandleMonAnimation(u8 taskId)
 
     if (gTasks[taskId].tState == 0)
     {
-        gTasks[taskId].tBattlerId = sprite->data[0];
+        gTasks[taskId].tBattlerId = sprite->oam.paletteNum;
         gTasks[taskId].tSpeciesId = sprite->data[2];
         sprite->sDontFlip = TRUE;
         sprite->data[0] = 0;
@@ -509,7 +510,7 @@ static void Task_HandleMonAnimation(u8 taskId)
         for (i = 2; i < ARRAY_COUNT(sprite->data); i++)
             sprite->data[i] = 0;
 
-        if (gTestRunnerHeadless)
+        if (gTestRunnerHeadless && !gBattleTestRunnerState->forceMoveAnim)
             sprite->callback = WaitAnimEnd;
         else
             sprite->callback = sMonAnimFunctions[gTasks[taskId].tAnimId];
@@ -1945,7 +1946,7 @@ static void FrontFlip_2(struct Sprite *sprite)
 {
     TryFlipX(sprite);
     sprite->x2++;
-    sprite->y2--;;
+    sprite->y2--;
 
     if (sprite->x2 >= 0)
     {
@@ -3164,6 +3165,8 @@ static void Anim_RapidHorizontalHops(struct Sprite *sprite)
     TryFlipX(sprite);
     if (sprite->data[2] > 2048)
     {
+        sprite->x2 = 0;
+        sprite->y2 = 0;
         sprite->callback = WaitAnimEnd;
         sprite->data[6] = 0;
     }

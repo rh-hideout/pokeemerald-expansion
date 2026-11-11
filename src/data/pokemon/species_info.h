@@ -1,4 +1,5 @@
 #include "constants/abilities.h"
+#include "constants/teaching_types.h"
 #include "species_info/shared_dex_text.h"
 #include "species_info/shared_front_pic_anims.h"
 
@@ -26,8 +27,7 @@
 #define SIZE_32x32 1
 #define SIZE_64x64 0
 
-// Set .compressed = OW_GFX_COMPRESS
-#define COMP OW_GFX_COMPRESS
+#define COMP (OW_GFX_COMPRESS == OGC_SMALL ? OBJECT_EVENT_COMPRESSION_SLOW : (OW_GFX_COMPRESS == OGC_FAST ? OBJECT_EVENT_COMPRESSION_FAST : OBJECT_EVENT_COMPRESSION_NONE))
 
 #if OW_POKEMON_OBJECT_EVENTS
 #if OW_PKMN_OBJECTS_SHARE_PALETTES == FALSE
@@ -57,13 +57,12 @@
     .paletteSlot = PALSLOT_NPC_1,                                                                                                       \
     .shadowSize = shadow,                                                                                                               \
     .inanimate = FALSE,                                                                                                                 \
-    .compressed = COMP,                                                                                                                 \
     .tracks = _tracks,                                                                                                                  \
+    .compressionMode = COMP,                                                                                                            \
     .oam = (_size == SIZE_32x32 ? &gObjectEventBaseOam_32x32 : &gObjectEventBaseOam_64x64),                                             \
     .subspriteTables = (_size == SIZE_32x32 ? sOamTables_32x32 : sOamTables_64x64),                                                     \
     .anims = _anims,                                                                                                                    \
     .images = picTable,                                                                                                                 \
-    .affineAnims = gDummySpriteAffineAnimTable,                                                                                         \
 }
 
 #define OVERWORLD(objEventPic, _size, shadow, _tracks, _anims, ...)                                 \
@@ -100,7 +99,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
     [SPECIES_NONE] =
     {
         .speciesName = _("??????????"),
-        .cryId = CRY_NONE,
+        .cryId = CRY_PORYGON,
         .natDexNum = NATIONAL_DEX_NONE,
         .categoryName = _("Unknown"),
         .height = 0,
@@ -137,13 +136,12 @@ const struct SpeciesInfo gSpeciesInfo[] =
             .paletteSlot = PALSLOT_NPC_1,
             .shadowSize = SHADOW_SIZE_M,
             .inanimate = FALSE,
-            .compressed = COMP,
             .tracks = TRACKS_FOOT,
+            .compressionMode = COMP,
             .oam = &gObjectEventBaseOam_32x32,
             .subspriteTables = sOamTables_32x32,
             .anims = sAnimTable_Following,
             .images = sPicTable_Substitute,
-            .affineAnims = gDummySpriteAffineAnimTable,
         },
     #endif
         .levelUpLearnset = sNoneLevelUpLearnset,
@@ -247,4 +245,9 @@ const struct SpeciesInfo gSpeciesInfo[] =
         //.perfectIVCount = NUM_STATS,
     },
     */
+};
+
+const struct EggData gEggDatas[EGG_ID_COUNT] =
+{
+#include "egg_data.h"
 };

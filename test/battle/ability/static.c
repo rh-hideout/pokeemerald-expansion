@@ -3,7 +3,7 @@
 
 SINGLE_BATTLE_TEST("Static inflicts paralysis on contact")
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_SCRATCH; }
     PARAMETRIZE { move = MOVE_SWIFT; }
     GIVEN {
@@ -17,24 +17,27 @@ SINGLE_BATTLE_TEST("Static inflicts paralysis on contact")
         if (MoveMakesContact(move)) {
             ABILITY_POPUP(opponent, ABILITY_STATIC);
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PRZ, player);
-            MESSAGE("The opposing Pikachu's Static paralyzed Wobbuffet, so it may be unable to move!");
+            MESSAGE("Wobbuffet is paralyzed, so it may be unable to move!");
             STATUS_ICON(player, paralysis: TRUE);
         } else {
             NONE_OF {
                 ABILITY_POPUP(opponent, ABILITY_STATIC);
                 ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PRZ, player);
-                MESSAGE("The opposing Pikachu's Static paralyzed Wobbuffet, so it may be unable to move!");
+                MESSAGE("Wobbuffet is paralyzed, so it may be unable to move!");
                 STATUS_ICON(player, paralysis: TRUE);
             }
         }
     }
 }
 
-SINGLE_BATTLE_TEST("Static triggers 30% of the time")
+SINGLE_BATTLE_TEST("Static triggers 1/3 times (Gen3) or 30% (Gen4+) of the time")
 {
-    PASSES_RANDOMLY(3, 10, RNG_STATIC);
+    u32 config, passes, trials;
+    PARAMETRIZE { config = GEN_3; passes = 1; trials = 3; }  // 33.3%
+    PARAMETRIZE { config = GEN_4; passes = 3; trials = 10; } // 30%
+    PASSES_RANDOMLY(passes, trials, RNG_STATIC);
     GIVEN {
-        ASSUME(B_ABILITY_TRIGGER_CHANCE >= GEN_4);
+        WITH_CONFIG(B_ABILITY_TRIGGER_CHANCE, config);
         ASSUME(MoveMakesContact(MOVE_SCRATCH));
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_PIKACHU) { Ability(ABILITY_STATIC); }
@@ -43,7 +46,7 @@ SINGLE_BATTLE_TEST("Static triggers 30% of the time")
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_STATIC);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PRZ, player);
-        MESSAGE("The opposing Pikachu's Static paralyzed Wobbuffet, so it may be unable to move!");
+        MESSAGE("Wobbuffet is paralyzed, so it may be unable to move!");
         STATUS_ICON(player, paralysis: TRUE);
     }
 }

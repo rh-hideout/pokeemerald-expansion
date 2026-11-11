@@ -92,7 +92,22 @@ SINGLE_BATTLE_TEST("Bestow fails if the user's held item is a Z-Crystal")
     }
 }
 
-SINGLE_BATTLE_TEST("Bestow fails if the target is behind a Substitute (Gen 6+)")
+SINGLE_BATTLE_TEST("Bestow doesn't fail if the user has Sticky Hold")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_STICKY_HOLD); Item(ITEM_SITRUS_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_BESTOW); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BESTOW, player);
+    } THEN {
+        EXPECT(player->item == ITEM_NONE);
+        EXPECT(opponent->item == ITEM_SITRUS_BERRY);
+    }
+}
+
+SINGLE_BATTLE_TEST("Bestow does not fail if the target is behind a Substitute (Gen 6+)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_SITRUS_BERRY); Speed(50); }
@@ -101,9 +116,9 @@ SINGLE_BATTLE_TEST("Bestow fails if the target is behind a Substitute (Gen 6+)")
         TURN { MOVE(opponent, MOVE_SUBSTITUTE); MOVE(player, MOVE_BESTOW); }
     } SCENE {
         if (B_UPDATED_MOVE_FLAGS >= GEN_6) {
-            NOT MESSAGE("But it failed!");
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_BESTOW, player);
         } else {
-            MESSAGE("But it failed!");
+            NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_BESTOW, player);
         }
     } THEN {
         if (B_UPDATED_MOVE_FLAGS >= GEN_6) {
@@ -130,4 +145,3 @@ SINGLE_BATTLE_TEST("Bestow fails if the user's held item changes its form")
         EXPECT(opponent->item == ITEM_NONE);
     }
 }
-

@@ -3,7 +3,7 @@
 
 SINGLE_BATTLE_TEST("Purifying Salt halves damage from Ghost-type moves", s16 damage)
 {
-    u16 ability;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_STURDY; }
     PARAMETRIZE { ability = ABILITY_PURIFYING_SALT; }
     GIVEN {
@@ -21,7 +21,7 @@ SINGLE_BATTLE_TEST("Purifying Salt halves damage from Ghost-type moves", s16 dam
 
 SINGLE_BATTLE_TEST("Purifying Salt halves damage from dynamic Ghost-type moves", s16 damage)
 {
-    u16 ability;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_STURDY; }
     PARAMETRIZE { ability = ABILITY_PURIFYING_SALT; }
     GIVEN {
@@ -40,20 +40,20 @@ SINGLE_BATTLE_TEST("Purifying Salt halves damage from dynamic Ghost-type moves",
 SINGLE_BATTLE_TEST("Purifying Salt makes Rest fail")
 {
     GIVEN {
-        PLAYER(SPECIES_GARGANACL) { Ability(ABILITY_PURIFYING_SALT); HP(1); MaxHP(100);}
+        PLAYER(SPECIES_GARGANACL) { Ability(ABILITY_PURIFYING_SALT); HP(1); MaxHP(100); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_REST); }
     } SCENE {
         NONE_OF {
-            MESSAGE("Garganacl went to sleep!");
+            MESSAGE("Garganacl slept and restored its HP!");
         }
     }
 }
 
 SINGLE_BATTLE_TEST("Purifying Salt grants immunity to status effects")
 {
-    u32 move;
+    enum Move move;
     u16 status;
     PARAMETRIZE { move = MOVE_WILL_O_WISP; status = STATUS1_BURN; }
     PARAMETRIZE { move = MOVE_HYPNOSIS; status = STATUS1_SLEEP; }

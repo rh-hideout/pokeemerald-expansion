@@ -3,6 +3,7 @@
 
 #include "main.h"
 #include "config/summary_screen.h"
+#include "constants/move_relearner.h"
 
 extern u8 gLastViewedMonIndex;
 
@@ -13,11 +14,12 @@ extern const struct SpritePalette gSpritePal_CategoryIcons;
 extern const struct SpriteTemplate gSpriteTemplate_CategoryIcons;
 extern MainCallback gInitialSummaryScreenCallback;
 
-void ShowPokemonSummaryScreen(u8 mode, void *mons, u8 monIndex, u8 maxMonIndex, void (*callback)(void));
-void ShowSelectMovePokemonSummaryScreen(struct Pokemon *mons, u8 monIndex, u8 maxMonIndex, void (*callback)(void), u16 newMove);
-void ShowPokemonSummaryScreenHandleDeoxys(u8 mode, struct BoxPokemon *mons, u8 monIndex, u8 maxMonIndex, void (*callback)(void));
-u8 GetMoveSlotToReplace(void);
-void SummaryScreen_SetAnimDelayTaskId(u8 taskId);
+enum IncrDecrUpdateValues
+{
+    TRY_SET_UPDATE,
+    TRY_INCREMENT,
+    TRY_DECREMENT,
+};
 
 // The Pokémon Summary Screen can operate in different modes. Certain features,
 // such as move re-ordering, are available in the different modes.
@@ -30,6 +32,7 @@ enum PokemonSummaryScreenMode
     SUMMARY_MODE_SELECT_MOVE,
     SUMMARY_MODE_RELEARNER_BATTLE, // returning from move relearner initiated from battle moves page
     SUMMARY_MODE_RELEARNER_CONTEST, // returning from move relearner initiated from contest moves page
+    SUMMARY_MODE_BXPY,
 };
 
 enum PokemonSummaryScreenPage
@@ -47,5 +50,23 @@ enum PokemonSummarySkillsMode
     SUMMARY_SKILLS_MODE_IVS,
     SUMMARY_SKILLS_MODE_EVS,
 };
+#define MOVE_SELECTOR_SPRITES_COUNT 10
+#define TYPE_ICON_SPRITE_COUNT (MAX_MON_MOVES + 1)
+enum
+{
+    SPRITE_ARR_ID_MON,
+    SPRITE_ARR_ID_BALL,
+    SPRITE_ARR_ID_STATUS,
+    SPRITE_ARR_ID_TERATYPE,
+    SPRITE_ARR_ID_TYPE, // 2 for mon types, 5 for move types(4 moves and 1 to learn), used interchangeably, because mon types and move types aren't shown on the same screen
+    SPRITE_ARR_ID_MOVE_SELECTOR1 = SPRITE_ARR_ID_TYPE + TYPE_ICON_SPRITE_COUNT, // 10 sprites that make up the selector
+    SPRITE_ARR_ID_MOVE_SELECTOR2 = SPRITE_ARR_ID_MOVE_SELECTOR1 + MOVE_SELECTOR_SPRITES_COUNT,
+    SPRITE_ARR_ID_COUNT = SPRITE_ARR_ID_MOVE_SELECTOR2 + MOVE_SELECTOR_SPRITES_COUNT
+};
+
+void ShowPokemonSummaryScreen(u8 mode, void *mons, u8 monIndex, u8 maxMonIndex, void (*callback)(void));
+void ShowSelectMovePokemonSummaryScreen(struct Pokemon *mons, u8 monIndex, void (*callback)(void), u16 newMove);
+u8 GetMoveSlotToReplace(void);
+void SummaryScreen_SetAnimDelayTaskId(u8 taskId);
 
 #endif // GUARD_POKEMON_SUMMARY_SCREEN_H

@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_DOUBLE_TEAM) == EFFECT_EVASION_UP);
+    ASSUME_STAT_CHANGE(MOVE_DOUBLE_TEAM, evasion: +1);
 }
 
 SINGLE_BATTLE_TEST("Double Team raises Evasion by 1 stage")

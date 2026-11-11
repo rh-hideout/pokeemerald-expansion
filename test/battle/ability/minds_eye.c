@@ -3,12 +3,12 @@
 
 SINGLE_BATTLE_TEST("Mind's Eye allows to hit Ghost-type Pokémon with Normal- and Fighting-type moves")
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_SCRATCH; }
     PARAMETRIZE { move = MOVE_KARATE_CHOP; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_MINDS_EYE); };
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_MINDS_EYE); }
         OPPONENT(SPECIES_GASTLY);
     } WHEN {
         TURN { MOVE(player, move); }
@@ -21,13 +21,13 @@ SINGLE_BATTLE_TEST("Mind's Eye allows to hit Ghost-type Pokémon with Normal- an
 // No current official way to test this, effect based on Smogon's NatDex format.
 SINGLE_BATTLE_TEST("Mind's Eye doesn't bypass a Ghost-type's Wonder Guard")
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_SCRATCH; }
     PARAMETRIZE { move = MOVE_KARATE_CHOP; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_SCRAPPY); };
-        OPPONENT(SPECIES_SHEDINJA) { Ability(ABILITY_WONDER_GUARD); };
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_SCRAPPY); }
+        OPPONENT(SPECIES_SHEDINJA) { Ability(ABILITY_WONDER_GUARD); }
     } WHEN {
         TURN { MOVE(player, move); }
     } SCENE {
@@ -36,7 +36,6 @@ SINGLE_BATTLE_TEST("Mind's Eye doesn't bypass a Ghost-type's Wonder Guard")
             HP_BAR(opponent);
         }
         ABILITY_POPUP(opponent, ABILITY_WONDER_GUARD);
-        MESSAGE("The opposing Shedinja avoided damage with Wonder Guard!");
     }
 }
 
@@ -44,13 +43,13 @@ SINGLE_BATTLE_TEST("Mind's Eye doesn't bypass a Ghost-type's Wonder Guard")
 
 AI_SINGLE_BATTLE_TEST("AI doesn't use accuracy-lowering moves if it knows that the foe has Mind's Eye")
 {
-    u32 abilityAI = ABILITY_NONE;
+    enum Ability abilityAI = ABILITY_NONE;
 
     PARAMETRIZE { abilityAI = ABILITY_SWIFT_SWIM; }
     PARAMETRIZE { abilityAI = ABILITY_MOLD_BREAKER; }
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_SAND_ATTACK) == EFFECT_ACCURACY_DOWN);
+        ASSUME_STAT_CHANGE(MOVE_SAND_ATTACK, accuracy: -1);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_URSALUNA_BLOODMOON) { Ability(ABILITY_MINDS_EYE); }
         OPPONENT(SPECIES_BASCULEGION) { Moves(MOVE_CELEBRATE, MOVE_SAND_ATTACK); Ability(abilityAI); }
@@ -60,7 +59,7 @@ AI_SINGLE_BATTLE_TEST("AI doesn't use accuracy-lowering moves if it knows that t
                if (abilityAI == ABILITY_MOLD_BREAKER) {
                    SCORE_GT(opponent, MOVE_SAND_ATTACK, MOVE_CELEBRATE);
                } else {
-                   SCORE_EQ(opponent, MOVE_SAND_ATTACK, MOVE_CELEBRATE);
+                   SCORE_LT_VAL(opponent, MOVE_SAND_ATTACK, AI_SCORE_DEFAULT);
                }
         }
     } SCENE {

@@ -12,8 +12,8 @@ static const u16 terrainData[][2] =
 SINGLE_BATTLE_TEST("Mimicry changes the battler's type based on Terrain")
 {
     u32 j;
-    u32 terrainMove = MOVE_NONE;
-    u32 terrainType = TYPE_NONE;
+    enum Move terrainMove = MOVE_NONE;
+    enum Type terrainType = TYPE_NONE;
 
     for (j = 0; j < ARRAY_COUNT(terrainData); j++)
         PARAMETRIZE { terrainMove = terrainData[j][0]; terrainType = terrainData[j][1]; }
@@ -31,6 +31,7 @@ SINGLE_BATTLE_TEST("Mimicry changes the battler's type based on Terrain")
         case MOVE_PSYCHIC_TERRAIN:  MESSAGE("The opposing Stunfisk's type changed to Psychic!"); break;
         case MOVE_GRASSY_TERRAIN:   MESSAGE("The opposing Stunfisk's type changed to Grass!"); break;
         case MOVE_MISTY_TERRAIN:    MESSAGE("The opposing Stunfisk's type changed to Fairy!"); break;
+        default: break;
         }
     } THEN {
         EXPECT_EQ(gBattleMons[B_POSITION_OPPONENT_LEFT].types[0], terrainType);
@@ -41,8 +42,8 @@ SINGLE_BATTLE_TEST("Mimicry changes the battler's type based on Terrain")
 SINGLE_BATTLE_TEST("Mimicry restores the battler's types when terrain is removed by Steel Roller and Ice Spinner")
 {
     u32 j;
-    u32 terrainMove = MOVE_NONE;
-    u32 removeTerrainMove = MOVE_NONE;
+    enum Move terrainMove = MOVE_NONE;
+    enum Move removeTerrainMove = MOVE_NONE;
 
     for (j = 0; j < ARRAY_COUNT(terrainData); j++)
     {
@@ -53,7 +54,7 @@ SINGLE_BATTLE_TEST("Mimicry restores the battler's types when terrain is removed
     GIVEN {
         ASSUME(GetSpeciesType(SPECIES_STUNFISK_GALAR, 0) == TYPE_GROUND);
         ASSUME(GetSpeciesType(SPECIES_STUNFISK_GALAR, 1) == TYPE_STEEL);
-        PLAYER(SPECIES_WOBBUFFET); 
+        PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_STUNFISK_GALAR) { Ability(ABILITY_MIMICRY); }
     } WHEN {
         TURN { MOVE(opponent, terrainMove); MOVE(player, removeTerrainMove); }
@@ -64,6 +65,7 @@ SINGLE_BATTLE_TEST("Mimicry restores the battler's types when terrain is removed
         case MOVE_PSYCHIC_TERRAIN:  MESSAGE("The weirdness disappeared from the battlefield!"); break;
         case MOVE_GRASSY_TERRAIN:   MESSAGE("The grass disappeared from the battlefield."); break;
         case MOVE_MISTY_TERRAIN:    MESSAGE("The mist disappeared from the battlefield."); break;
+        default: break;
         }
     } THEN {
         EXPECT_EQ(gBattleMons[B_POSITION_OPPONENT_LEFT].types[0], TYPE_GROUND);
@@ -122,5 +124,37 @@ DOUBLE_BATTLE_TEST("Mimicry triggers after Skill Swap")
         EXPECT_EQ(playerLeft->types[1], TYPE_GRASS);
         EXPECT_EQ(playerRight->types[0], TYPE_GRASS);
         EXPECT_EQ(playerRight->types[1], TYPE_GRASS);
+    }
+}
+
+MULTI_BATTLE_TEST("Mimicry does not activate if there is no terrain active")
+{
+    GIVEN {
+        PLAYER(SPECIES_STUNFISK_GALAR);
+        PARTNER(SPECIES_STUNFISK_GALAR);
+        OPPONENT_A(SPECIES_STUNFISK_GALAR);
+        OPPONENT_B(SPECIES_STUNFISK_GALAR);
+    } WHEN {
+        TURN {}
+    } SCENE {
+        NONE_OF {
+            ABILITY_POPUP(playerLeft, ABILITY_MIMICRY);
+            ABILITY_POPUP(opponentLeft, ABILITY_MIMICRY);
+            ABILITY_POPUP(playerRight, ABILITY_MIMICRY);
+            ABILITY_POPUP(opponentRight, ABILITY_MIMICRY);
+        }
+    } THEN {
+        EXPECT_EQ(playerLeft->types[0], TYPE_GROUND);
+        EXPECT_EQ(playerLeft->types[1], TYPE_STEEL);
+        EXPECT_EQ(playerLeft->types[2], TYPE_MYSTERY);
+        EXPECT_EQ(opponentLeft->types[0], TYPE_GROUND);
+        EXPECT_EQ(opponentLeft->types[1], TYPE_STEEL);
+        EXPECT_EQ(opponentLeft->types[2], TYPE_MYSTERY);
+        EXPECT_EQ(playerRight->types[0], TYPE_GROUND);
+        EXPECT_EQ(playerRight->types[1], TYPE_STEEL);
+        EXPECT_EQ(playerRight->types[2], TYPE_MYSTERY);
+        EXPECT_EQ(opponentRight->types[0], TYPE_GROUND);
+        EXPECT_EQ(opponentRight->types[1], TYPE_STEEL);
+        EXPECT_EQ(opponentRight->types[2], TYPE_MYSTERY);
     }
 }

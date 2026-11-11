@@ -4,6 +4,7 @@
 #include "battle_controllers.h"
 #include "battle_interface.h"
 #include "battle_message.h"
+#include "battle_safari.h"
 #include "bg.h"
 #include "data.h"
 #include "item_menu.h"
@@ -19,6 +20,7 @@
 #include "sound.h"
 #include "task.h"
 #include "text.h"
+#include "trainer.h"
 #include "util.h"
 #include "window.h"
 #include "line_break.h"
@@ -28,22 +30,19 @@
 #include "constants/trainers.h"
 #include "constants/rgb.h"
 
-static void SafariHandleDrawTrainerPic(u32 battler);
-static void SafariHandleSuccessBallThrowAnim(u32 battler);
-static void SafariHandleBallThrowAnim(u32 battler);
-static void SafariHandleChooseAction(u32 battler);
-static void SafariHandleChooseItem(u32 battler);
-static void SafariHandleChoosePokemon(u32 battler);
-static void SafariHandleStatusIconUpdate(u32 battler);
-static void SafariHandleFaintingCry(u32 battler);
-static void SafariHandleIntroTrainerBallThrow(u32 battler);
-static void SafariHandleEndLinkBattle(u32 battler);
+static void SafariHandleDrawTrainerPic(enum BattlerId battler);
+static void SafariHandleChooseAction(enum BattlerId battler);
+static void SafariHandleChooseItem(enum BattlerId battler);
+static void SafariHandleChoosePokemon(enum BattlerId battler);
+static void SafariHandleFaintingCry(enum BattlerId battler);
+static void SafariHandleIntroTrainerBallThrow(enum BattlerId battler);
+static void SafariHandleEndLinkBattle(enum BattlerId battler);
 
-static void SafariBufferRunCommand(u32 battler);
-static void CompleteWhenChosePokeblock(u32 battler);
-static void WaitForMonSelection(u32 battler);
+static void SafariBufferRunCommand(enum BattlerId battler);
+static void CompleteWhenChosePokeblock(enum BattlerId battler);
+static void WaitForMonSelection(enum BattlerId battler);
 
-static void (*const sSafariBufferCommands[CONTROLLER_CMDS_COUNT])(u32 battler) =
+static void (*const sSafariBufferCommands[CONTROLLER_CMDS_COUNT])(enum BattlerId battler) =
 {
     [CONTROLLER_GETMONDATA]               = BtlController_Empty,
     [CONTROLLER_GETRAWMONDATA]            = BtlController_Empty,
@@ -57,8 +56,7 @@ static void (*const sSafariBufferCommands[CONTROLLER_CMDS_COUNT])(u32 battler) =
     [CONTROLLER_TRAINERSLIDEBACK]         = BtlController_Empty,
     [CONTROLLER_FAINTANIMATION]           = BtlController_Empty,
     [CONTROLLER_PALETTEFADE]              = BtlController_Empty,
-    [CONTROLLER_SUCCESSBALLTHROWANIM]     = SafariHandleSuccessBallThrowAnim,
-    [CONTROLLER_BALLTHROWANIM]            = SafariHandleBallThrowAnim,
+    [CONTROLLER_BALLTHROWANIM]            = BtlController_HandleBallThrowAnim,
     [CONTROLLER_PAUSE]                    = BtlController_Empty,
     [CONTROLLER_MOVEANIMATION]            = BtlController_Empty,
     [CONTROLLER_PRINTSTRING]              = BtlController_HandlePrintString,
@@ -71,7 +69,7 @@ static void (*const sSafariBufferCommands[CONTROLLER_CMDS_COUNT])(u32 battler) =
     [CONTROLLER_23]                       = BtlController_Empty,
     [CONTROLLER_HEALTHBARUPDATE]          = BtlController_Empty,
     [CONTROLLER_EXPUPDATE]                = BtlController_Empty,
-    [CONTROLLER_STATUSICONUPDATE]         = SafariHandleStatusIconUpdate,
+    [CONTROLLER_STATUSICONUPDATE]         = BtlController_HandleStatusIconUpdate,
     [CONTROLLER_STATUSANIMATION]          = BtlController_Empty,
     [CONTROLLER_STATUSXOR]                = BtlController_Empty,
     [CONTROLLER_DATATRANSFER]             = BtlController_Empty,
@@ -101,13 +99,14 @@ static void (*const sSafariBufferCommands[CONTROLLER_CMDS_COUNT])(u32 battler) =
     [CONTROLLER_TERMINATOR_NOP]           = BtlController_TerminatorNop
 };
 
-void SetControllerToSafari(u32 battler)
+void SetControllerToSafari(enum BattlerId battler)
 {
+    gBattlerBattleController[battler] = BATTLE_CONTROLLER_SAFARI;
     gBattlerControllerEndFuncs[battler] = SafariBufferExecCompleted;
     gBattlerControllerFuncs[battler] = SafariBufferRunCommand;
 }
 
-static void SafariBufferRunCommand(u32 battler)
+static void SafariBufferRunCommand(enum BattlerId battler)
 {
     if (IsBattleControllerActiveOnLocal(battler))
     {
@@ -118,27 +117,13 @@ static void SafariBufferRunCommand(u32 battler)
     }
 }
 
-static void HandleInputChooseAction(u32 battler)
+static void HandleInputChooseAction(enum BattlerId battler)
 {
     if (JOY_NEW(A_BUTTON))
     {
         PlaySE(SE_SELECT);
-
-        switch (gActionSelectionCursor[battler])
-        {
-        case 0:
-            BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_SAFARI_BALL, 0);
-            break;
-        case 1:
-            BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_SAFARI_POKEBLOCK, 0);
-            break;
-        case 2:
-            BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_SAFARI_GO_NEAR, 0);
-            break;
-        case 3:
-            BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_SAFARI_RUN, 0);
-            break;
-        }
+        const u8 *actions = GetSafariControllerActions();
+        BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, actions[gActionSelectionCursor[battler]], 0);
         BtlController_Complete(battler);
     }
     else if (JOY_NEW(DPAD_LEFT))
@@ -190,13 +175,13 @@ static void HandleInputChooseAction(u32 battler)
     }
 }
 
-static void Controller_WaitForHealthbox(u32 battler)
+static void Controller_WaitForHealthbox(enum BattlerId battler)
 {
     if (gSprites[gHealthboxSpriteIds[battler]].callback == SpriteCallbackDummy)
         BtlController_Complete(battler);
 }
 
-static void SafariSetBattleEndCallbacks(u32 battler)
+static void SafariSetBattleEndCallbacks(enum BattlerId battler)
 {
     if (!gPaletteFade.active)
     {
@@ -206,17 +191,17 @@ static void SafariSetBattleEndCallbacks(u32 battler)
     }
 }
 
-static void SafariOpenPokeblockCase(u32 battler)
+static void SafariOpenPokeblockCase(enum BattlerId battler)
 {
     if (!gPaletteFade.active)
     {
         gBattlerControllerFuncs[battler] = CompleteWhenChosePokeblock;
-        FreeAllWindowBuffers();
+        CloseMainBattleScreen();
         OpenPokeblockCaseInBattle();
     }
 }
 
-static void CompleteWhenChosePokeblock(u32 battler)
+static void CompleteWhenChosePokeblock(enum BattlerId battler)
 {
     if (gMain.callback2 == BattleMainCB2 && !gPaletteFade.active)
     {
@@ -225,30 +210,30 @@ static void CompleteWhenChosePokeblock(u32 battler)
     }
 }
 
-static void OpenPartyMenuToChooseMon(u32 battler)
+static void OpenPartyMenuToChooseMon(enum BattlerId battler)
 {
     if (!gPaletteFade.active)
     {
         gBattlerControllerFuncs[battler] = WaitForMonSelection;
         u8 caseId = gTasks[gBattleControllerData[battler]].data[0];
         DestroyTask(gBattleControllerData[battler]);
-        FreeAllWindowBuffers();
+        CloseMainBattleScreen();
         OpenPartyMenuInBattle(caseId);
     }
 }
 
-static void WaitForMonSelection(u32 battler)
+static void WaitForMonSelection(enum BattlerId battler)
 {
     if (gMain.callback2 == BattleMainCB2 && !gPaletteFade.active)
     {
         if (gPartyMenuUseExitCallback == TRUE)
             BtlController_EmitChosenMonReturnValue(battler, B_COMM_TO_ENGINE, gSelectedMonPartyId, gBattlePartyCurrentOrder);
         else
-            BtlController_EmitChosenMonReturnValue(battler, B_COMM_TO_ENGINE, PARTY_SIZE, NULL);
+            BtlController_EmitChosenMonReturnValue(battler, B_COMM_TO_ENGINE, PARTY_SLOT_NONE, NULL);
 
         if ((gBattleResources->bufferA[battler][1] & 0xF) == 1)
         {
-            if (gBattleTypeFlags & BATTLE_TYPE_LINK)
+            if (HasAnyBattleFlags(BATTLE_TYPE_LINK))
             {
                 gBattle_BG0_X = 0;
                 gBattle_BG0_Y = 0;
@@ -260,10 +245,10 @@ static void WaitForMonSelection(u32 battler)
     }
 }
 
-void SafariBufferExecCompleted(u32 battler)
+void SafariBufferExecCompleted(enum BattlerId battler)
 {
     gBattlerControllerFuncs[battler] = SafariBufferRunCommand;
-    if (gBattleTypeFlags & BATTLE_TYPE_LINK)
+    if (HasAnyBattleFlags(BATTLE_TYPE_LINK))
     {
         u8 playerId = GetMultiplayerId();
 
@@ -276,26 +261,16 @@ void SafariBufferExecCompleted(u32 battler)
     }
 }
 
-static void SafariHandleDrawTrainerPic(u32 battler)
+static void SafariHandleDrawTrainerPic(enum BattlerId battler)
 {
-    u32 trainerPicId = gSaveBlock2Ptr->playerGender + TRAINER_BACK_PIC_BRENDAN;
+    enum TrainerPicID trainerPicId = GetPlayerTrainerPic(gSaveBlock2Ptr->playerGender, GAME_VERSION);
 
     BtlController_HandleDrawTrainerPic(battler, trainerPicId, FALSE,
-                                       80, 80 + 4 * (8 - gTrainerBacksprites[trainerPicId].coordinates.size),
+                                       80, 80 + 4 * (8 - GetTrainerBackPicCoords(trainerPicId)->size),
                                        30);
 }
 
-static void SafariHandleSuccessBallThrowAnim(u32 battler)
-{
-    BtlController_HandleSuccessBallThrowAnim(battler, GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT), B_ANIM_BALL_THROW_WITH_TRAINER, FALSE);
-}
-
-static void SafariHandleBallThrowAnim(u32 battler)
-{
-    BtlController_HandleBallThrowAnim(battler, GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT), B_ANIM_BALL_THROW_WITH_TRAINER, FALSE);
-}
-
-static void HandleChooseActionAfterDma3(u32 battler)
+static void HandleChooseActionAfterDma3(enum BattlerId battler)
 {
     if (!IsDma3ManagerBusyWithBgCopy())
     {
@@ -305,12 +280,12 @@ static void HandleChooseActionAfterDma3(u32 battler)
     }
 }
 
-static void SafariHandleChooseAction(u32 battler)
+static void SafariHandleChooseAction(enum BattlerId battler)
 {
     s32 i;
 
     gBattlerControllerFuncs[battler] = HandleChooseActionAfterDma3;
-    BattlePutTextOnWindow(gText_SafariZoneMenu, B_WIN_ACTION_MENU);
+    BattlePutTextOnWindow(GetSafariControllerMenu(), B_WIN_ACTION_MENU);
 
     for (i = 0; i < 4; i++)
         ActionSelectionDestroyCursorAt(i);
@@ -320,23 +295,23 @@ static void SafariHandleChooseAction(u32 battler)
     BattlePutTextOnWindow(gDisplayedStringBattle, B_WIN_ACTION_PROMPT);
 }
 
-static void SafariHandleChooseItem(u32 battler)
+static void SafariHandleChooseItem(enum BattlerId battler)
 {
     BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 0x10, RGB_BLACK);
     gBattlerControllerFuncs[battler] = SafariOpenPokeblockCase;
     gBattlerInMenuId = battler;
 }
 
-static void SafariHandleChoosePokemon(u32 battler)
+static void SafariHandleChoosePokemon(enum BattlerId battler)
 {
     for (s32 i = 0; i < ARRAY_COUNT(gBattlePartyCurrentOrder); i++)
         gBattlePartyCurrentOrder[i] = gBattleResources->bufferA[battler][4 + i];
 
-    if (gBattleTypeFlags & BATTLE_TYPE_ARENA && (gBattleResources->bufferA[battler][1] & 0xF) != PARTY_ACTION_CANT_SWITCH
+    if (HasAnyBattleFlags(BATTLE_TYPE_ARENA) && (gBattleResources->bufferA[battler][1] & 0xF) != PARTY_ACTION_CANT_SWITCH
         && (gBattleResources->bufferA[battler][1] & 0xF) != PARTY_ACTION_CHOOSE_FAINTED_MON
         && (gBattleResources->bufferA[battler][1] & 0xF) != PARTY_ACTION_SEND_MON_TO_BOX)
     {
-        BtlController_EmitChosenMonReturnValue(battler, B_COMM_TO_ENGINE, gBattlerPartyIndexes[battler] + 1, gBattlePartyCurrentOrder);
+        BtlController_EmitChosenMonReturnValue(battler, B_COMM_TO_ENGINE, (enum PartySlot)(gBattlerPartyIndexes[battler] + 1), gBattlePartyCurrentOrder);
         SafariBufferExecCompleted(battler);
     }
     else
@@ -344,7 +319,7 @@ static void SafariHandleChoosePokemon(u32 battler)
         gBattleControllerData[battler] = CreateTask(TaskDummy, 0xFF);
         gTasks[gBattleControllerData[battler]].data[0] = gBattleResources->bufferA[battler][1] & 0xF;
         *(&gBattleStruct->battlerPreventingSwitchout) = gBattleResources->bufferA[battler][1] >> 4;
-        *(&gBattleStruct->prevSelectedPartySlot) = gBattleResources->bufferA[battler][2];
+        gBattleStruct->prevSelectedPartySlot = (enum PartySlot)gBattleResources->bufferA[battler][2];
         *(&gBattleStruct->abilityPreventingSwitchout) = (gBattleResources->bufferA[battler][3] & 0xFF) | (gBattleResources->bufferA[battler][7] << 8);
         BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 0x10, RGB_BLACK);
         gBattlerControllerFuncs[battler] = OpenPartyMenuToChooseMon;
@@ -352,24 +327,18 @@ static void SafariHandleChoosePokemon(u32 battler)
     }
 }
 
-static void SafariHandleStatusIconUpdate(u32 battler)
-{
-    UpdateHealthboxAttribute(gHealthboxSpriteIds[battler], GetBattlerMon(battler), HEALTHBOX_SAFARI_BALLS_TEXT);
-    BtlController_Complete(battler);
-}
-
 // All of the other controllers(except Wally's) use CRY_MODE_FAINT.
-// Player is not a pokemon, so it can't really faint in the Safari anyway.
-static void SafariHandleFaintingCry(u32 battler)
+// Player is not a Pokémon, so it can't really faint in the Safari anyway.
+static void SafariHandleFaintingCry(enum BattlerId battler)
 {
-    u16 species = GetMonData(GetBattlerMon(battler), MON_DATA_SPECIES);
+    enum Species species = GetMonData(GetBattlerMon(battler), MON_DATA_SPECIES);
 
     PlayCry_Normal(species, 25);
     BtlController_Complete(battler);
     BtlController_Complete(battler);
 }
 
-static void SafariHandleIntroTrainerBallThrow(u32 battler)
+static void SafariHandleIntroTrainerBallThrow(enum BattlerId battler)
 {
     UpdateHealthboxAttribute(gHealthboxSpriteIds[battler], GetBattlerMon(battler), HEALTHBOX_SAFARI_ALL_TEXT);
     StartHealthboxSlideIn(battler);
@@ -377,12 +346,12 @@ static void SafariHandleIntroTrainerBallThrow(u32 battler)
     gBattlerControllerFuncs[battler] = Controller_WaitForHealthbox;
 }
 
-static void SafariHandleEndLinkBattle(u32 battler)
+static void SafariHandleEndLinkBattle(enum BattlerId battler)
 {
     gBattleOutcome = gBattleResources->bufferA[battler][1];
     FadeOutMapMusic(5);
     BeginFastPaletteFade(3);
     BtlController_Complete(battler);
-    if ((gBattleTypeFlags & BATTLE_TYPE_LINK) && !(gBattleTypeFlags & BATTLE_TYPE_IS_MASTER))
+    if (HasAnyBattleFlags(BATTLE_TYPE_LINK) && !HasAnyBattleFlags(BATTLE_TYPE_IS_MASTER))
         gBattlerControllerFuncs[battler] = SafariSetBattleEndCallbacks;
 }

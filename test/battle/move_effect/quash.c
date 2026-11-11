@@ -6,6 +6,21 @@ ASSUMPTIONS
     ASSUME(GetMoveEffect(MOVE_QUASH) == EFFECT_QUASH);
 }
 
+SINGLE_BATTLE_TEST("Quash fails if the target has already moved")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_QUASH); MOVE(opponent, MOVE_CELEBRATE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        MESSAGE("Wobbuffet used Quash!");
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_QUASH, player);
+        MESSAGE("But it failed!");
+    }
+}
+
 DOUBLE_BATTLE_TEST("Quash-affected target will move last in the priority bracket")
 {
     GIVEN {
@@ -26,7 +41,7 @@ DOUBLE_BATTLE_TEST("Quash-affected target will move last in the priority bracket
 DOUBLE_BATTLE_TEST("Quash is not affected by dynamic speed")
 {
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_RECALC_TURN_AFTER_ACTIONS, GEN_8);
+        WITH_CONFIG(B_RECALC_TURN_AFTER_ACTIONS, GEN_8);
         ASSUME(GetMoveEffect(MOVE_TAILWIND) == EFFECT_TAILWIND);
         PLAYER(SPECIES_VOLBEAT) { Speed(10); Ability(ABILITY_PRANKSTER); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(30); }
@@ -112,7 +127,7 @@ DOUBLE_BATTLE_TEST("Quash-affected targets move from fastest to slowest (Gen 8+)
 DOUBLE_BATTLE_TEST("Quash-affected mon that acted early via After You is not affected by dynamic speed")
 {
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_RECALC_TURN_AFTER_ACTIONS, GEN_8);
+        WITH_CONFIG(B_RECALC_TURN_AFTER_ACTIONS, GEN_8);
         ASSUME(GetMoveEffect(MOVE_TAILWIND) == EFFECT_TAILWIND);
         ASSUME(GetMoveEffect(MOVE_AFTER_YOU) == EFFECT_AFTER_YOU);
         PLAYER(SPECIES_VOLBEAT) { Speed(20); Ability(ABILITY_PRANKSTER); }

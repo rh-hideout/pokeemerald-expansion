@@ -22,6 +22,22 @@ SINGLE_BATTLE_TEST("Role Play copies target's ability")
     }
 }
 
+SINGLE_BATTLE_TEST("Ability Shield prevents Role Play from changing the user's ability")
+{
+    GIVEN {
+        ASSUME(GetItemHoldEffect(ITEM_ABILITY_SHIELD) == HOLD_EFFECT_ABILITY_SHIELD);
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Item(ITEM_ABILITY_SHIELD); Speed(2); }
+        OPPONENT(SPECIES_CHARMANDER) { Ability(ABILITY_BLAZE); Speed(1); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_ROLE_PLAY); }
+    } SCENE {
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_ROLE_PLAY, player);
+        MESSAGE("Wobbuffet's Ability is protected by the effects of its Ability Shield!");
+    } THEN {
+        EXPECT_EQ(player->ability, ABILITY_TELEPATHY);
+    }
+}
+
 DOUBLE_BATTLE_TEST("Role Play copies target's current ability even if it changed during that turn")
 {
     GIVEN {
@@ -50,7 +66,8 @@ DOUBLE_BATTLE_TEST("Role Play copies target's current ability even if it changed
 
 SINGLE_BATTLE_TEST("Role Play and Doodle fail if target's ability can't be copied'")
 {
-    u32 species, ability;
+    enum Species species;
+    enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_SHEDINJA; ability = ABILITY_WONDER_GUARD; }
     PARAMETRIZE { species = SPECIES_CASTFORM; ability = ABILITY_FORECAST; }
@@ -69,7 +86,6 @@ SINGLE_BATTLE_TEST("Role Play and Doodle fail if target's ability can't be copie
     PARAMETRIZE { species = SPECIES_ZYGARDE; ability = ABILITY_POWER_CONSTRUCT; }
     PARAMETRIZE { species = SPECIES_GRENINJA_BATTLE_BOND; ability = ABILITY_BATTLE_BOND; }
     PARAMETRIZE { species = SPECIES_EISCUE; ability = ABILITY_ICE_FACE; }
-    PARAMETRIZE { species = SPECIES_CRAMORANT; ability = ABILITY_GULP_MISSILE; }
     PARAMETRIZE { species = SPECIES_KOFFING; ability = ABILITY_NEUTRALIZING_GAS; }
     PARAMETRIZE { species = SPECIES_PALAFIN_ZERO; ability = ABILITY_ZERO_TO_HERO; }
     PARAMETRIZE { species = SPECIES_TATSUGIRI; ability = ABILITY_COMMANDER; }
@@ -90,7 +106,8 @@ SINGLE_BATTLE_TEST("Role Play and Doodle fail if target's ability can't be copie
 
 SINGLE_BATTLE_TEST("Role Play fails if user's ability can't be suppressed")
 {
-    u32 species, ability;
+    enum Species species;
+    enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_ARCEUS; ability = ABILITY_MULTITYPE; }
     if (B_UPDATED_ABILITY_DATA >= GEN_7)
@@ -108,7 +125,6 @@ SINGLE_BATTLE_TEST("Role Play fails if user's ability can't be suppressed")
     PARAMETRIZE { species = SPECIES_CALYREX_ICE; ability = ABILITY_AS_ONE_ICE_RIDER; }
     PARAMETRIZE { species = SPECIES_CALYREX_SHADOW; ability = ABILITY_AS_ONE_SHADOW_RIDER; }
     PARAMETRIZE { species = SPECIES_PALAFIN_ZERO; ability = ABILITY_ZERO_TO_HERO; }
-    PARAMETRIZE { species = SPECIES_TATSUGIRI; ability = ABILITY_COMMANDER; }
 
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }

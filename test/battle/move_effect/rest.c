@@ -35,6 +35,23 @@ SINGLE_BATTLE_TEST("Rest fails if the user is at full HP")
     }
 }
 
+SINGLE_BATTLE_TEST("Rest fails if the user is protected by Leaf Guard")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SUNNY_DAY) == EFFECT_WEATHER);
+        ASSUME(GetMoveWeatherType(MOVE_SUNNY_DAY) == BATTLE_WEATHER_SUN);
+        ASSUME(B_LEAF_GUARD_PREVENTS_REST >= GEN_5);
+        PLAYER(SPECIES_CHIKORITA) { Ability(ABILITY_LEAF_GUARD); HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SUNNY_DAY); MOVE(player, MOVE_REST); }
+    } SCENE {
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_REST, player);
+    } THEN {
+        EXPECT(!(player->status1 & STATUS1_SLEEP));
+    }
+}
+
 SINGLE_BATTLE_TEST("Rest fails if the user is protected by Shields Down")
 {
     GIVEN {
@@ -51,12 +68,15 @@ SINGLE_BATTLE_TEST("Rest fails if the user is protected by Shields Down")
 
 SINGLE_BATTLE_TEST("Rest fails if the user is protected by Electric/Misty Terrain")
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_ELECTRIC_TERRAIN; }
     PARAMETRIZE { move = MOVE_MISTY_TERRAIN; }
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_ELECTRIC_TERRAIN) == EFFECT_ELECTRIC_TERRAIN);
-        ASSUME(GetMoveEffect(MOVE_MISTY_TERRAIN) == EFFECT_MISTY_TERRAIN);
+        ASSUME(GetMoveEffect(move) == EFFECT_TERRAIN);
+
+        ASSUME(GetMoveTerrainType(MOVE_ELECTRIC_TERRAIN) == B_TERRAIN_ELECTRIC);
+        ASSUME(GetMoveTerrainType(MOVE_MISTY_TERRAIN) == B_TERRAIN_MISTY);
+
         ASSUME(GetSpeciesType(SPECIES_WYNAUT, 0) != TYPE_FLYING && GetSpeciesType(SPECIES_WYNAUT, 1) != TYPE_FLYING);
         PLAYER(SPECIES_WYNAUT) { HP(1); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -66,6 +86,36 @@ SINGLE_BATTLE_TEST("Rest fails if the user is protected by Electric/Misty Terrai
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_REST, player);
     } THEN {
         EXPECT(!(player->status1 & STATUS1_SLEEP));
+    }
+}
+
+SINGLE_BATTLE_TEST("Rest fails if the user is protected by Sweet Veil")
+{
+    GIVEN {
+        PLAYER(SPECIES_BOUNSWEET) { Ability(ABILITY_SWEET_VEIL); HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_REST); }
+    } SCENE {
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_REST, player);
+    } THEN {
+        EXPECT(!(player->status1 & STATUS1_SLEEP));
+    }
+}
+
+DOUBLE_BATTLE_TEST("Rest fails if the user is protected by ally's Sweet Veil")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER(SPECIES_BOUNSWEET) { Ability(ABILITY_SWEET_VEIL); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_REST); }
+    } SCENE {
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_REST, playerLeft);
+    } THEN {
+        EXPECT(!(playerLeft->status1 & STATUS1_SLEEP));
     }
 }
 

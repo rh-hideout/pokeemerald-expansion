@@ -2,11 +2,14 @@
 #include "pokemon.h"
 #include "battle.h"
 #include "battle_anim.h"
+#include "battle_controllers.h"
+#include "battle_stat_change.h"
 #include "battle_tv.h"
 #include "constants/battle_string_ids.h"
 #include "constants/battle_anim.h"
 #include "constants/moves.h"
 #include "battle_message.h"
+#include "battle_anim_scripts.h"
 #include "tv.h"
 #include "constants/battle_move_effects.h"
 
@@ -14,9 +17,9 @@
 static bool8 IsNotSpecialBattleString(enum StringID stringId);
 static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3);
 static void TrySetBattleSeminarShow(void);
-static void AddPointsOnFainting(bool8 targetFainted);
-static void AddPointsBasedOnWeather(u16 weatherFlags, u16 move, u8 moveSlot);
-static bool8 ShouldCalculateDamage(u16 move, s32 *dmg, u16 *powerOverride);
+static void AddPointsOnFainting(void);
+static void AddPointsBasedOnWeather(u16 weatherFlags, enum Move move, enum MoveSlot moveSlot);
+static bool8 ShouldCalculateDamage(enum Move move, s32 *dmg, u16 *powerOverride);
 
 #define TABLE_END ((u16)-1)
 
@@ -124,12 +127,23 @@ static const u16 *const sPointsArray[] =
 // even if current Pokémon does not have corresponding move
 static const u16 sSpecialBattleStrings[] =
 {
-    STRINGID_PKMNPERISHCOUNTFELL, STRINGID_PKMNWISHCAMETRUE, STRINGID_PKMNLOSTPPGRUDGE,
-    STRINGID_PKMNTOOKFOE, STRINGID_PKMNABSORBEDNUTRIENTS, STRINGID_PKMNANCHOREDITSELF,
-    STRINGID_PKMNAFFLICTEDBYCURSE, STRINGID_PKMNSAPPEDBYLEECHSEED, STRINGID_PKMNLOCKEDINNIGHTMARE,
-    STRINGID_PKMNHURTBY, STRINGID_PKMNHURTBYBURN, STRINGID_PKMNHURTBYPOISON,
-    STRINGID_PKMNHURTBYSPIKES, STRINGID_ATTACKERFAINTED, STRINGID_TARGETFAINTED,
-    STRINGID_PKMNHITWITHRECOIL, STRINGID_PKMNCRASHED, TABLE_END
+    STRINGID_PKMNPERISHCOUNTFELL,
+    STRINGID_PKMNWISHCAMETRUE,
+    STRINGID_PKMNLOSTPPGRUDGE,
+    STRINGID_PKMNTOOKFOE,
+    STRINGID_PKMNABSORBEDNUTRIENTS,
+    STRINGID_PKMNANCHOREDITSELF,
+    STRINGID_PKMNAFFLICTEDBYCURSE,
+    STRINGID_PKMNSAPPEDBYLEECHSEED,
+    STRINGID_PKMNLOCKEDINNIGHTMARE,
+    STRINGID_PKMNHURTBY,
+    STRINGID_PKMNHURTBYBURN,
+    STRINGID_PKMNHURTBYPOISON,
+    STRINGID_PKMNHURTBYSPIKES,
+    STRINGID_BATTLERFAINTED,
+    STRINGID_PKMNHITWITHRECOIL,
+    STRINGID_PKMNCRASHED,
+    TABLE_END
 };
 
 // code
@@ -139,11 +153,16 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
     u32 atkSide, defSide, effSide, scriptingSide;
     struct Pokemon *atkMon, *defMon;
     u8 moveSlot;
-    u32 atkFlank, defFlank, effFlank;
+    u32 atkFlank, defFlank, effFlank, flank;
     u8 *perishCount;
     u16 *statStringId, *finishedMoveId;
+    u32 atkPartyIndex = gBattlerPartyIndexes[gBattlerAttacker];
+    u32 effPartyIndex = gBattlerPartyIndexes[gEffectBattler];
 
-    if (!(gBattleTypeFlags & BATTLE_TYPE_LINK) && stringId != STRINGID_ITDOESNTAFFECT && stringId != STRINGID_NOTVERYEFFECTIVE)
+    if (!HasAnyBattleFlags(BATTLE_TYPE_LINK)
+     && stringId != STRINGID_ITDOESNTAFFECT
+     && stringId != STRINGID_NOTVERYEFFECTIVE
+     && stringId != STRINGID_MOSTLYINEFFECTIVE)
         return;
 
     tvPtr = &gBattleStruct->tv;
@@ -155,6 +174,16 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
     atkMon = GetBattlerMon(gBattlerAttacker);
     defMon = GetBattlerMon(gBattlerTarget);
     moveSlot = GetBattlerMoveSlotId(gBattlerAttacker, gBattleMsgDataPtr->currentMove);
+
+    if (BattleSideHasTwoTrainers(atkSide) && gBattlerAttacker & BIT_FLANK)
+    {
+        atkPartyIndex += MULTI_PARTY_SIZE;
+    }
+
+    if (BattleSideHasTwoTrainers(effSide) && gEffectBattler & BIT_FLANK)
+    {
+        effPartyIndex += MULTI_PARTY_SIZE;
+    }
 
     if (moveSlot >= MAX_MON_MOVES && IsNotSpecialBattleString(stringId) && stringId > STRINGID_TABLE_START)
     {
@@ -173,31 +202,34 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
     switch (stringId)
     {
     case STRINGID_ITDOESNTAFFECT:
-    case STRINGID_ITDOESNTAFFECTTWOFOES:
         AddMovePoints(PTS_EFFECTIVENESS, moveSlot, 2, 0);
-        if (!(gBattleTypeFlags & BATTLE_TYPE_LINK))
+        if (!HasAnyBattleFlags(BATTLE_TYPE_LINK))
             TrySetBattleSeminarShow();
         break;
     case STRINGID_NOTVERYEFFECTIVE:
     case STRINGID_NOTVERYEFFECTIVETWOFOES:
+    case STRINGID_MOSTLYINEFFECTIVE:
+    case STRINGID_MOSTLYINEFFECTIVETWOFOES:
         AddMovePoints(PTS_EFFECTIVENESS, moveSlot, 1, 0);
-        if (!(gBattleTypeFlags & BATTLE_TYPE_LINK) && GetMonData(defMon, MON_DATA_HP, NULL) != 0)
+        if (!HasAnyBattleFlags(BATTLE_TYPE_LINK) && GetMonData(defMon, MON_DATA_HP) != 0)
             TrySetBattleSeminarShow();
         break;
     case STRINGID_SUPEREFFECTIVE:
     case STRINGID_SUPEREFFECTIVETWOFOES:
+    case STRINGID_EXTREMELYEFFECTIVE:
+    case STRINGID_EXTREMELYEFFECTIVETWOFOES:
         AddMovePoints(PTS_EFFECTIVENESS, moveSlot, 0, 0);
         break;
     case STRINGID_PKMNFORESAWATTACK:
-        tvPtr->side[atkSide].futureSightMonId = gBattlerPartyIndexes[gBattlerAttacker] + 1;
+        tvPtr->side[atkSide].futureSightMonId = atkPartyIndex + 1;
         tvPtr->side[atkSide].futureSightMoveSlot = moveSlot;
         break;
     case STRINGID_PKMNCHOSEXASDESTINY:
-        tvPtr->side[atkSide].doomDesireMonId = gBattlerPartyIndexes[gBattlerAttacker] + 1;
+        tvPtr->side[atkSide].doomDesireMonId = atkPartyIndex + 1;
         tvPtr->side[atkSide].doomDesireMoveSlot = moveSlot;
         break;
     case STRINGID_FAINTINTHREE:
-        tvPtr->side[atkSide].perishSongMonId = gBattlerPartyIndexes[gBattlerAttacker] + 1;
+        tvPtr->side[atkSide].perishSongMonId = atkPartyIndex + 1;
         tvPtr->side[atkSide].perishSongMoveSlot = moveSlot;
         tvPtr->side[atkSide].perishSong = 1;
         break;
@@ -213,7 +245,7 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
         }
         break;
     case STRINGID_PKMNWANTSGRUDGE:
-        tvPtr->side[atkSide].grudgeMonId = gBattlerPartyIndexes[gBattlerAttacker] + 1;
+        tvPtr->side[atkSide].grudgeMonId = atkPartyIndex + 1;
         tvPtr->side[atkSide].grudgeMoveSlot = moveSlot;
         break;
     case STRINGID_PKMNLOSTPPGRUDGE:
@@ -224,7 +256,7 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
         }
         break;
     case STRINGID_PKMNTRYINGTOTAKEFOE:
-        tvPtr->side[atkSide].destinyBondMonId = gBattlerPartyIndexes[gBattlerAttacker] + 1;
+        tvPtr->side[atkSide].destinyBondMonId = atkPartyIndex + 1;
         tvPtr->side[atkSide].destinyBondMoveSlot = moveSlot;
         break;
     case STRINGID_PKMNTOOKFOE:
@@ -232,7 +264,7 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
             tvPtr->side[atkSide].faintCause = FNT_DESTINY_BOND;
         break;
     case STRINGID_PKMNPLANTEDROOTS:
-        tvPtr->pos[atkSide][atkFlank].ingrainMonId = gBattlerPartyIndexes[gBattlerAttacker] + 1;
+        tvPtr->pos[atkSide][atkFlank].ingrainMonId = atkPartyIndex + 1;
         tvPtr->pos[atkSide][atkFlank].ingrainMoveSlot = moveSlot;
         break;
     case STRINGID_PKMNABSORBEDNUTRIENTS:
@@ -253,20 +285,10 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
         gBattleStruct->anyMonHasTransformed = TRUE;
         break;
     case STRINGID_CRITICALHIT:
+    case STRINGID_CRITICALHITONDEF:
         AddMovePoints(PTS_CRITICAL_HIT, moveSlot, 0, 0);
         break;
-    case STRINGID_ATTACKERSSTATROSE:
-        if (gBattleTextBuff1[2] != 0)
-        {
-            if (*statStringId == STRINGID_DRASTICALLY)
-                AddMovePoints(PTS_STAT_INCREASE_3, moveSlot, gBattleTextBuff1[2] - 1, 0);
-            else if (*statStringId == STRINGID_STATSHARPLY)
-                AddMovePoints(PTS_STAT_INCREASE_2, moveSlot, gBattleTextBuff1[2] - 1, 0);
-            else
-                AddMovePoints(PTS_STAT_INCREASE_1, moveSlot, gBattleTextBuff1[2] - 1, 0);
-        }
-        break;
-    case STRINGID_DEFENDERSSTATROSE:
+    case STRINGID_STATROSE:
         if (gBattleTextBuff1[2] != 0)
         {
             if (gBattlerAttacker == gBattlerTarget)
@@ -284,27 +306,30 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
             }
         }
         break;
-    case STRINGID_ATTACKERSSTATFELL:
-        if (gBattleTextBuff1[2] != 0)
-            AddMovePoints(PTS_STAT_DECREASE_SELF, moveSlot, gBattleTextBuff1[2] - 1, 0);
-        break;
-    case STRINGID_DEFENDERSSTATFELL:
+    case STRINGID_STATFELL:
         if (gBattleTextBuff1[2] != 0)
         {
-            if (*statStringId == STRINGID_SEVERELY)
-                AddMovePoints(PTS_STAT_DECREASE_3, moveSlot, gBattleTextBuff1[2] - 1, 0);
-            else if (*statStringId == STRINGID_STATHARSHLY)
-                AddMovePoints(PTS_STAT_DECREASE_2, moveSlot, gBattleTextBuff1[2] - 1, 0);
+            if (gBattlerAttacker != gBattlerTarget)
+            {
+                if (*statStringId == STRINGID_SEVERELY)
+                    AddMovePoints(PTS_STAT_DECREASE_3, moveSlot, gBattleTextBuff1[2] - 1, 0);
+                else if (*statStringId == STRINGID_STATHARSHLY)
+                    AddMovePoints(PTS_STAT_DECREASE_2, moveSlot, gBattleTextBuff1[2] - 1, 0);
+                else
+                    AddMovePoints(PTS_STAT_DECREASE_1, moveSlot, gBattleTextBuff1[2] - 1, 0);
+            }
             else
-                AddMovePoints(PTS_STAT_DECREASE_1, moveSlot, gBattleTextBuff1[2] - 1, 0);
+            {
+                AddMovePoints(PTS_STAT_DECREASE_SELF, moveSlot, gBattleTextBuff1[2] - 1, 0);
+            }
         }
         break;
     case STRINGID_PKMNLAIDCURSE:
-        tvPtr->pos[defSide][defFlank].curseMonId = gBattlerPartyIndexes[gBattlerAttacker] + 1;
+        tvPtr->pos[defSide][defFlank].curseMonId = atkPartyIndex + 1;
         tvPtr->pos[defSide][defFlank].curseMoveSlot = moveSlot;
         break;
     case STRINGID_PKMNAFFLICTEDBYCURSE:
-        if (GetMonData(atkMon, MON_DATA_HP, NULL)
+        if (GetMonData(atkMon, MON_DATA_HP)
             && tvPtr->pos[atkSide][atkFlank].curseMonId != 0)
         {
             AddMovePoints(PTS_STATUS_DMG, 0, tvPtr->pos[atkSide][atkFlank].curseMonId - 1, tvPtr->pos[atkSide][atkFlank].curseMoveSlot);
@@ -313,7 +338,7 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
         }
         break;
     case STRINGID_PKMNSEEDED:
-        tvPtr->pos[defSide][defFlank].leechSeedMonId = gBattlerPartyIndexes[gBattlerAttacker] + 1;
+        tvPtr->pos[defSide][defFlank].leechSeedMonId = atkPartyIndex + 1;
         tvPtr->pos[defSide][defFlank].leechSeedMoveSlot = moveSlot;
         break;
     case STRINGID_PKMNSAPPEDBYLEECHSEED:
@@ -325,11 +350,11 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
         }
         break;
     case STRINGID_PKMNFELLINTONIGHTMARE:
-        tvPtr->pos[defSide][defFlank].nightmareMonId = gBattlerPartyIndexes[gBattlerAttacker] + 1;
+        tvPtr->pos[defSide][defFlank].nightmareMonId = atkPartyIndex + 1;
         tvPtr->pos[defSide][defFlank].nightmareMoveSlot = moveSlot;
         break;
     case STRINGID_PKMNLOCKEDINNIGHTMARE:
-        if (GetMonData(atkMon, MON_DATA_HP, NULL) != 0
+        if (GetMonData(atkMon, MON_DATA_HP) != 0
             && tvPtr->pos[atkSide][atkFlank].nightmareMonId != 0)
         {
             AddMovePoints(PTS_STATUS_DMG, 5, tvPtr->pos[atkSide][atkFlank].nightmareMonId - 1, tvPtr->pos[atkSide][atkFlank].nightmareMoveSlot);
@@ -342,11 +367,11 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
     case STRINGID_PKMNWRAPPEDBY:
     case STRINGID_PKMNCLAMPED:
     case STRINGID_PKMNTRAPPEDBYSANDTOMB:
-        tvPtr->pos[defSide][defFlank].wrapMonId = gBattlerPartyIndexes[gBattlerAttacker] + 1;
+        tvPtr->pos[defSide][defFlank].wrapMonId = atkPartyIndex + 1;
         tvPtr->pos[defSide][defFlank].wrapMoveSlot = moveSlot;
         break;
     case STRINGID_PKMNHURTBY:
-        if (GetMonData(atkMon, MON_DATA_HP, NULL) != 0
+        if (GetMonData(atkMon, MON_DATA_HP) != 0
             && tvPtr->pos[atkSide][atkFlank].wrapMonId != 0)
         {
             AddMovePoints(PTS_STATUS_DMG, 6, tvPtr->pos[atkSide][atkFlank].wrapMonId - 1, tvPtr->pos[atkSide][atkFlank].wrapMoveSlot);
@@ -355,39 +380,39 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
         }
         break;
     case STRINGID_PKMNWASBURNED:
-        tvPtr->mon[effSide][gBattlerPartyIndexes[gEffectBattler]].brnMonId = gBattlerPartyIndexes[gBattlerAttacker] + 1;
-        tvPtr->mon[effSide][gBattlerPartyIndexes[gEffectBattler]].brnMoveSlot = moveSlot;
+        tvPtr->mon[effSide][effPartyIndex].brnMonId = atkPartyIndex + 1;
+        tvPtr->mon[effSide][effPartyIndex].brnMoveSlot = moveSlot;
         break;
     case STRINGID_PKMNHURTBYBURN:
-        if (GetMonData(atkMon, MON_DATA_HP, NULL) != 0)
+        if (GetMonData(atkMon, MON_DATA_HP) != 0)
         {
-            if (tvPtr->mon[atkSide][gBattlerPartyIndexes[gBattlerAttacker]].brnMonId != 0)
-                AddMovePoints(PTS_STATUS_DMG, 4, tvPtr->mon[atkSide][gBattlerPartyIndexes[gBattlerAttacker]].brnMonId - 1, tvPtr->mon[atkSide][gBattlerPartyIndexes[gBattlerAttacker]].brnMoveSlot);
+            if (tvPtr->mon[atkSide][atkPartyIndex].brnMonId != 0)
+                AddMovePoints(PTS_STATUS_DMG, 4, tvPtr->mon[atkSide][atkPartyIndex].brnMonId - 1, tvPtr->mon[atkSide][atkPartyIndex].brnMoveSlot);
             tvPtr->side[atkSide].faintCause = FNT_BURN;
-            tvPtr->side[atkSide].faintCauseMonId = gBattlerPartyIndexes[gBattlerAttacker];
+            tvPtr->side[atkSide].faintCauseMonId = atkPartyIndex;
         }
         break;
     case STRINGID_PKMNWASPOISONED:
-        tvPtr->mon[effSide][gBattlerPartyIndexes[gEffectBattler]].psnMonId = gBattlerPartyIndexes[gBattlerAttacker] + 1;
-        tvPtr->mon[effSide][gBattlerPartyIndexes[gEffectBattler]].psnMoveSlot = moveSlot;
+        tvPtr->mon[effSide][effPartyIndex].psnMonId = atkPartyIndex + 1;
+        tvPtr->mon[effSide][effPartyIndex].psnMoveSlot = moveSlot;
         break;
     case STRINGID_PKMNBADLYPOISONED:
-        tvPtr->mon[effSide][gBattlerPartyIndexes[gEffectBattler]].badPsnMonId = gBattlerPartyIndexes[gBattlerAttacker] + 1;
-        tvPtr->mon[effSide][gBattlerPartyIndexes[gEffectBattler]].badPsnMoveSlot = moveSlot;
+        tvPtr->mon[effSide][effPartyIndex].badPsnMonId = atkPartyIndex + 1;
+        tvPtr->mon[effSide][effPartyIndex].badPsnMoveSlot = moveSlot;
         break;
     case STRINGID_PKMNHURTBYPOISON:
-        if (GetMonData(atkMon, MON_DATA_HP, NULL) != 0)
+        if (GetMonData(atkMon, MON_DATA_HP) != 0)
         {
-            if (tvPtr->mon[atkSide][gBattlerPartyIndexes[gBattlerAttacker]].psnMonId != 0)
-                AddMovePoints(PTS_STATUS_DMG, 2, tvPtr->mon[atkSide][gBattlerPartyIndexes[gBattlerAttacker]].psnMonId - 1, tvPtr->mon[atkSide][gBattlerPartyIndexes[gBattlerAttacker]].psnMoveSlot);
-            if (tvPtr->mon[atkSide][gBattlerPartyIndexes[gBattlerAttacker]].badPsnMonId != 0)
-                AddMovePoints(PTS_STATUS_DMG, 3, tvPtr->mon[atkSide][gBattlerPartyIndexes[gBattlerAttacker]].badPsnMonId - 1, tvPtr->mon[atkSide][gBattlerPartyIndexes[gBattlerAttacker]].badPsnMoveSlot);
+            if (tvPtr->mon[atkSide][atkPartyIndex].psnMonId != 0)
+                AddMovePoints(PTS_STATUS_DMG, 2, tvPtr->mon[atkSide][atkPartyIndex].psnMonId - 1, tvPtr->mon[atkSide][atkPartyIndex].psnMoveSlot);
+            if (tvPtr->mon[atkSide][atkPartyIndex].badPsnMonId != 0)
+                AddMovePoints(PTS_STATUS_DMG, 3, tvPtr->mon[atkSide][atkPartyIndex].badPsnMonId - 1, tvPtr->mon[atkSide][atkPartyIndex].badPsnMoveSlot);
             tvPtr->side[atkSide].faintCause = FNT_POISON;
-            tvPtr->side[atkSide].faintCauseMonId = gBattlerPartyIndexes[gBattlerAttacker];
+            tvPtr->side[atkSide].faintCauseMonId = atkPartyIndex;
         }
         break;
     case STRINGID_PKMNFELLINLOVE:
-        tvPtr->pos[defSide][defFlank].attractMonId = gBattlerPartyIndexes[gBattlerAttacker] + 1;
+        tvPtr->pos[defSide][defFlank].attractMonId = atkPartyIndex + 1;
         tvPtr->pos[defSide][defFlank].attractMoveSlot = moveSlot;
         break;
     case STRINGID_PKMNIMMOBILIZEDBYLOVE:
@@ -395,33 +420,33 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
             AddMovePoints(PTS_STATUS_SKIP_TURN, 0, tvPtr->pos[atkSide][atkFlank].attractMonId - 1, tvPtr->pos[atkSide][atkFlank].attractMoveSlot);
         break;
     case STRINGID_PKMNWASPARALYZED:
-        tvPtr->mon[effSide][gBattlerPartyIndexes[gEffectBattler]].prlzMonId = gBattlerPartyIndexes[gBattlerAttacker] + 1;
-        tvPtr->mon[effSide][gBattlerPartyIndexes[gEffectBattler]].prlzMoveSlot = moveSlot;
+        tvPtr->mon[effSide][effPartyIndex].prlzMonId = atkPartyIndex + 1;
+        tvPtr->mon[effSide][effPartyIndex].prlzMoveSlot = moveSlot;
         break;
     case STRINGID_PKMNISPARALYZED:
-        if (tvPtr->mon[atkSide][gBattlerPartyIndexes[gBattlerAttacker]].prlzMonId != 0)
-            AddMovePoints(PTS_STATUS_SKIP_TURN, 2, tvPtr->mon[atkSide][gBattlerPartyIndexes[gBattlerAttacker]].prlzMonId - 1, tvPtr->mon[atkSide][gBattlerPartyIndexes[gBattlerAttacker]].prlzMoveSlot);
+        if (tvPtr->mon[atkSide][atkPartyIndex].prlzMonId != 0)
+            AddMovePoints(PTS_STATUS_SKIP_TURN, 2, tvPtr->mon[atkSide][atkPartyIndex].prlzMonId - 1, tvPtr->mon[atkSide][atkPartyIndex].prlzMoveSlot);
         break;
     case STRINGID_PKMNFELLASLEEP:
-        tvPtr->mon[effSide][gBattlerPartyIndexes[gEffectBattler]].slpMonId = gBattlerPartyIndexes[gBattlerAttacker] + 1;
-        tvPtr->mon[effSide][gBattlerPartyIndexes[gEffectBattler]].slpMoveSlot = moveSlot;
+        tvPtr->mon[effSide][effPartyIndex].slpMonId = atkPartyIndex + 1;
+        tvPtr->mon[effSide][effPartyIndex].slpMoveSlot = moveSlot;
         break;
     case STRINGID_PKMNFASTASLEEP:
-        if (tvPtr->mon[atkSide][gBattlerPartyIndexes[gBattlerAttacker]].slpMonId != 0
+        if (tvPtr->mon[atkSide][atkPartyIndex].slpMonId != 0
             && GetMoveEffect(gBattleMsgDataPtr->currentMove) != EFFECT_SNORE
             && GetMoveEffect(gBattleMsgDataPtr->currentMove) != EFFECT_SLEEP_TALK)
-            AddMovePoints(PTS_STATUS_SKIP_TURN, 3, tvPtr->mon[atkSide][gBattlerPartyIndexes[gBattlerAttacker]].slpMonId - 1, tvPtr->mon[atkSide][gBattlerPartyIndexes[gBattlerAttacker]].slpMoveSlot);
+            AddMovePoints(PTS_STATUS_SKIP_TURN, 3, tvPtr->mon[atkSide][atkPartyIndex].slpMonId - 1, tvPtr->mon[atkSide][atkPartyIndex].slpMoveSlot);
         break;
     case STRINGID_PKMNWASFROZEN:
-        tvPtr->mon[effSide][gBattlerPartyIndexes[gEffectBattler]].frzMonId = gBattlerPartyIndexes[gBattlerAttacker] + 1;
-        tvPtr->mon[effSide][gBattlerPartyIndexes[gEffectBattler]].frzMoveSlot = moveSlot;
+        tvPtr->mon[effSide][effPartyIndex].frzMonId = atkPartyIndex + 1;
+        tvPtr->mon[effSide][effPartyIndex].frzMoveSlot = moveSlot;
         break;
     case STRINGID_PKMNISFROZEN:
-        if (tvPtr->mon[atkSide][gBattlerPartyIndexes[gBattlerAttacker]].frzMonId != 0)
-            AddMovePoints(PTS_STATUS_SKIP_TURN, 4, tvPtr->mon[atkSide][gBattlerPartyIndexes[gBattlerAttacker]].frzMonId - 1, tvPtr->mon[atkSide][gBattlerPartyIndexes[gBattlerAttacker]].frzMoveSlot);
+        if (tvPtr->mon[atkSide][atkPartyIndex].frzMonId != 0)
+            AddMovePoints(PTS_STATUS_SKIP_TURN, 4, tvPtr->mon[atkSide][atkPartyIndex].frzMonId - 1, tvPtr->mon[atkSide][atkPartyIndex].frzMoveSlot);
         break;
     case STRINGID_PKMNWASCONFUSED:
-        tvPtr->pos[effSide][effFlank].confusionMonId = gBattlerPartyIndexes[gBattlerAttacker] + 1;
+        tvPtr->pos[effSide][effFlank].confusionMonId = atkPartyIndex + 1;
         tvPtr->pos[effSide][effFlank].confusionMoveSlot = moveSlot;
         break;
     case STRINGID_ITHURTCONFUSION:
@@ -430,7 +455,7 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
         tvPtr->side[atkSide].faintCause = FNT_CONFUSION;
         break;
     case STRINGID_SPIKESSCATTERED:
-        tvPtr->side[defSide].spikesMonId = gBattlerPartyIndexes[gBattlerAttacker] + 1;
+        tvPtr->side[defSide].spikesMonId = atkPartyIndex + 1;
         tvPtr->side[defSide].spikesMoveSlot = moveSlot;
         break;
     case STRINGID_PKMNHURTBYSPIKES:
@@ -445,15 +470,13 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
         tvPtr->side[atkSide].spikesMoveSlot = 0;
         break;
     case STRINGID_FIREWEAKENED:
-        tvPtr->pos[atkSide][atkFlank].waterSportMonId = gBattlerPartyIndexes[gBattlerAttacker] + 1;
+        tvPtr->pos[atkSide][atkFlank].waterSportMonId = atkPartyIndex + 1;
         tvPtr->pos[atkSide][atkFlank].waterSportMoveSlot = moveSlot;
         break;
     case STRINGID_ELECTRICITYWEAKENED:
-        tvPtr->pos[atkSide][atkFlank].mudSportMonId = gBattlerPartyIndexes[gBattlerAttacker] + 1;
+        tvPtr->pos[atkSide][atkFlank].mudSportMonId = atkPartyIndex + 1;
         tvPtr->pos[atkSide][atkFlank].mudSportMoveSlot = moveSlot;
         break;
-    case STRINGID_ATTACKERFAINTED:
-        AddPointsOnFainting(FALSE);
     case STRINGID_RETURNMON:
         if (tvPtr->pos[atkSide][atkFlank].waterSportMonId != 0)
         {
@@ -466,27 +489,30 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
             tvPtr->pos[atkSide][atkFlank].mudSportMoveSlot = 0;
         }
         break;
-    case STRINGID_TARGETFAINTED:
-        AddPointsOnFainting(TRUE);
-        if (tvPtr->pos[atkSide][defFlank].waterSportMonId != 0)
+    case STRINGID_BATTLERFAINTED:
+        AddPointsOnFainting();
+        if (gBattlerAttacker == gBattleScripting.battler)
+            flank = atkFlank;
+        else
+            flank = defFlank;
+
+        if (tvPtr->pos[atkSide][flank].waterSportMonId != 0)
         {
-            tvPtr->pos[atkSide][defFlank].waterSportMonId = 0;
-            tvPtr->pos[atkSide][defFlank].waterSportMoveSlot = 0;
+            tvPtr->pos[atkSide][flank].waterSportMonId = 0;
+            tvPtr->pos[atkSide][flank].waterSportMoveSlot = 0;
         }
-        if (tvPtr->pos[atkSide][defFlank].mudSportMonId != 0)
+        if (tvPtr->pos[atkSide][flank].mudSportMonId != 0)
         {
-            tvPtr->pos[atkSide][defFlank].mudSportMonId = 0;
-            tvPtr->pos[atkSide][defFlank].mudSportMoveSlot = 0;
+            tvPtr->pos[atkSide][flank].mudSportMonId = 0;
+            tvPtr->pos[atkSide][flank].mudSportMoveSlot = 0;
         }
         break;
     case STRINGID_PKMNRAISEDDEF:
-    case STRINGID_PKMNRAISEDDEFALITTLE:
-        tvPtr->side[atkSide].reflectMonId = gBattlerPartyIndexes[gBattlerAttacker] + 1;
+        tvPtr->side[atkSide].reflectMonId = atkPartyIndex + 1;
         tvPtr->side[atkSide].reflectMoveSlot = moveSlot;
         break;
     case STRINGID_PKMNRAISEDSPDEF:
-    case STRINGID_PKMNRAISEDSPDEFALITTLE:
-        tvPtr->side[atkSide].lightScreenMonId = gBattlerPartyIndexes[gBattlerAttacker] + 1;
+        tvPtr->side[atkSide].lightScreenMonId = atkPartyIndex + 1;
         tvPtr->side[atkSide].lightScreenMoveSlot = moveSlot;
         break;
     case STRINGID_PKMNSXWOREOFF:
@@ -507,7 +533,7 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
         }
         break;
     case STRINGID_PKMNCOVEREDBYVEIL:
-        tvPtr->side[atkSide].safeguardMonId = gBattlerPartyIndexes[gBattlerAttacker] + 1;
+        tvPtr->side[atkSide].safeguardMonId = atkPartyIndex + 1;
         tvPtr->side[atkSide].safeguardMoveSlot = moveSlot;
         break;
     case STRINGID_PKMNUSEDSAFEGUARD:
@@ -519,7 +545,7 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
         tvPtr->side[atkSide].safeguardMoveSlot = 0;
         break;
     case STRINGID_PKMNSHROUDEDINMIST:
-        tvPtr->side[atkSide].mistMonId = gBattlerPartyIndexes[gBattlerAttacker] + 1;
+        tvPtr->side[atkSide].mistMonId = atkPartyIndex + 1;
         tvPtr->side[atkSide].mistMoveSlot = moveSlot;
         break;
     case STRINGID_PKMNPROTECTEDBYMIST:
@@ -531,7 +557,7 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
         tvPtr->side[defSide].reflectMoveSlot = 0;
         tvPtr->side[defSide].lightScreenMonId = 0;
         tvPtr->side[defSide].lightScreenMoveSlot = 0;
-        AddMovePoints(PTS_BREAK_WALL, 0, gBattlerPartyIndexes[gBattlerAttacker], moveSlot);
+        AddMovePoints(PTS_BREAK_WALL, 0, atkPartyIndex, moveSlot);
         break;
     case STRINGID_PKMNFLINCHED:
         if (tvPtr->pos[atkSide][0].attackedByMonId != 0)
@@ -565,13 +591,13 @@ static bool8 IsNotSpecialBattleString(enum StringID stringId)
         return FALSE;
 }
 
-void BattleTv_SetDataBasedOnMove(u16 move, u16 weatherFlags, struct DisableStruct *disableStructPtr)
+void BattleTv_SetDataBasedOnMove(enum Move move, u16 weatherFlags)
 {
     struct BattleTv *tvPtr;
     u32 atkSide, defSide;
     u8 moveSlot;
 
-    if (!(gBattleTypeFlags & BATTLE_TYPE_LINK))
+    if (!HasAnyBattleFlags(BATTLE_TYPE_LINK))
         return;
 
     tvPtr = &gBattleStruct->tv;
@@ -580,29 +606,36 @@ void BattleTv_SetDataBasedOnMove(u16 move, u16 weatherFlags, struct DisableStruc
     defSide = GetBattlerSide(gBattlerTarget);
     moveSlot = GetBattlerMoveSlotId(gBattlerAttacker, move);
 
+    u32 atkPartyIndex = gBattlerPartyIndexes[gBattlerAttacker];
+
+    if (BattleSideHasTwoTrainers(atkSide) && gBattlerAttacker & BIT_FLANK)
+    {
+        atkPartyIndex += MULTI_PARTY_SIZE;
+    }
+
     if (moveSlot >= MAX_MON_MOVES)
     {
         tvPtr->side[atkSide].faintCause = FNT_OTHER;
         return;
     }
 
-    tvPtr->pos[defSide][GetBattlerPosition(gBattlerAttacker) / 2].attackedByMonId = gBattlerPartyIndexes[gBattlerAttacker] + 1;
+    tvPtr->pos[defSide][GetBattlerPosition(gBattlerAttacker) / 2].attackedByMonId = atkPartyIndex + 1;
     tvPtr->pos[defSide][GetBattlerPosition(gBattlerAttacker) / 2].attackedByMoveSlot = moveSlot;
     tvPtr->side[atkSide].usedMoveSlot = moveSlot;
     AddMovePoints(PTS_MOVE_EFFECT, moveSlot, move, 0);
     AddPointsBasedOnWeather(weatherFlags, move, moveSlot);
-    if (gBattleMons[gBattlerAttacker].volatiles.charge)
+    if (gBattleMons[gBattlerAttacker].volatiles.chargeTimer > 0)
         AddMovePoints(PTS_ELECTRIC, move, moveSlot, 0);
 
     if (move == MOVE_WISH)
     {
-        tvPtr->side[atkSide].wishMonId = gBattlerPartyIndexes[gBattlerAttacker] + 1;
+        tvPtr->side[atkSide].wishMonId = atkPartyIndex + 1;
         tvPtr->side[atkSide].wishMoveSlot = moveSlot;
     }
-    enum BattleMoveEffects effect = GetMoveEffect(move);
-    if (effect == EFFECT_EXPLOSION || effect == EFFECT_MISTY_EXPLOSION)
+
+    if (IsExplosionMove(move))
     {
-        tvPtr->side[atkSide ^ BIT_SIDE].explosionMonId = gBattlerPartyIndexes[gBattlerAttacker] + 1;
+        tvPtr->side[atkSide ^ BIT_SIDE].explosionMonId = atkPartyIndex + 1;
         tvPtr->side[atkSide ^ BIT_SIDE].explosionMoveSlot = moveSlot;
         tvPtr->side[atkSide ^ BIT_SIDE].faintCause = FNT_EXPLOSION;
         tvPtr->side[atkSide ^ BIT_SIDE].explosion = TRUE;
@@ -620,44 +653,47 @@ void BattleTv_SetDataBasedOnAnimation(u8 animationId)
     struct BattleTv *tvPtr;
     u32 atkSide;
 
-    if (!(gBattleTypeFlags & BATTLE_TYPE_LINK))
+    if (!HasAnyBattleFlags(BATTLE_TYPE_LINK))
         return;
 
     tvPtr = &gBattleStruct->tv;
     atkSide = GetBattlerSide(gBattlerAttacker);
-    switch (animationId)
+    if (GetMoveAnimationScript(gCurrentMove) == gBattleAnimMove_FutureSight)
     {
-    case B_ANIM_FUTURE_SIGHT_HIT:
-        if (tvPtr->side[atkSide].futureSightMonId != 0)
+        if (tvPtr->side[atkSide].futureSightMonId != 0 && gBattleScripting.animTurn > 0)
         {
             AddMovePoints(PTS_SET_UP, 0, atkSide,
                         (tvPtr->side[atkSide].futureSightMonId - 1) * 4 + tvPtr->side[atkSide].futureSightMoveSlot);
             tvPtr->side[atkSide].faintCause = FNT_FUTURE_SIGHT;
         }
-        break;
-    case B_ANIM_DOOM_DESIRE_HIT:
-        if (tvPtr->side[atkSide].doomDesireMonId != 0)
+    }
+    else if (GetMoveAnimationScript(gCurrentMove) == gBattleAnimMove_DoomDesire)
+    {
+        if (tvPtr->side[atkSide].doomDesireMonId != 0 && gBattleScripting.animTurn > 0)
         {
             AddMovePoints(PTS_SET_UP, 1, atkSide,
                         (tvPtr->side[atkSide].doomDesireMonId - 1) * 4 + tvPtr->side[atkSide].doomDesireMoveSlot);
             tvPtr->side[atkSide].faintCause = FNT_DOOM_DESIRE;
         }
-        break;
     }
 }
 
 void TryPutLinkBattleTvShowOnAir(void)
 {
-    u16 playerBestSpecies = 0, opponentBestSpecies = 0;
+    enum Species playerBestSpecies = 0, opponentBestSpecies = 0;
     s16 playerBestSum = 0, opponentBestSum = SHRT_MAX;
     u8 playerBestMonId = 0, opponentBestMonId = 0;
     struct BattleTvMovePoints *movePoints = NULL;
     u8 countPlayer = 0, countOpponent = 0;
     s16 sum = 0;
-    u16 species = 0;
-    u16 move = MOVE_NONE;
+    enum Species species = SPECIES_NONE;
+    enum Move move = MOVE_NONE;
     s32 i, j;
     int zero = 0, one = 1; //needed for matching
+    enum BattleTrainer playerTrainer = B_TRAINER_PLAYER;
+    enum BattleTrainer oppTrainer = B_TRAINER_OPPONENT_A;
+    enum PartySlot playerSlot = PARTY_SLOT_0;
+    enum PartySlot oppSlot = PARTY_SLOT_0;
 
     if (gBattleStruct->anyMonHasTransformed)
         return;
@@ -665,19 +701,44 @@ void TryPutLinkBattleTvShowOnAir(void)
     movePoints = &gBattleStruct->tvMovePoints;
     for (i = 0; i < PARTY_SIZE; i++)
     {
-        if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES, NULL) != SPECIES_NONE)
+        if (GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES) != SPECIES_NONE)
             countPlayer++;
-        if (GetMonData(&gEnemyParty[i], MON_DATA_SPECIES, NULL) != SPECIES_NONE)
+
+        if (GetMonData(&gParties[B_TRAINER_OPPONENT_A][i], MON_DATA_SPECIES) != SPECIES_NONE)
             countOpponent++;
+
+        if (BattleSideHasTwoTrainers(B_SIDE_PLAYER)
+            && GetMonData(&gParties[B_TRAINER_PARTNER][i], MON_DATA_SPECIES) != SPECIES_NONE)
+        {
+            countPlayer++;
+        }
+
+        if (BattleSideHasTwoTrainers(B_SIDE_OPPONENT)
+            && GetMonData(&gParties[B_TRAINER_OPPONENT_B][i], MON_DATA_SPECIES) != SPECIES_NONE)
+        {
+            countOpponent++;
+        }
     }
 
-    if (!(gBattleTypeFlags & BATTLE_TYPE_LINK) || countPlayer != countOpponent)
+    if (!HasAnyBattleFlags(BATTLE_TYPE_LINK) || countPlayer != countOpponent)
         return;
 
     for (i = 0; i < PARTY_SIZE; i++)
     {
-        species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES, NULL);
-        if (species != SPECIES_NONE && !GetMonData(&gPlayerParty[i], MON_DATA_IS_EGG, NULL))
+        struct Pokemon *playerMon;
+        struct Pokemon *oppMon;
+        playerTrainer = B_TRAINER_PLAYER;
+        playerSlot = i;
+
+        if (BattleSideHasTwoTrainers(B_SIDE_PLAYER) && i >= MULTI_PARTY_SIZE)
+        {
+            playerTrainer = B_TRAINER_PARTNER;
+            playerSlot = i - MULTI_PARTY_SIZE;
+        }
+
+        playerMon = &gParties[playerTrainer][playerSlot];
+        species = GetMonData(playerMon, MON_DATA_SPECIES);
+        if (species != SPECIES_NONE && !GetMonData(playerMon, MON_DATA_IS_EGG))
         {
             for (sum = 0, j = 0; j < MAX_MON_MOVES; j++)
                 sum += movePoints->points[zero][i * 4 + j];
@@ -690,15 +751,33 @@ void TryPutLinkBattleTvShowOnAir(void)
             }
         }
 
-        species = GetMonData(&gEnemyParty[i], MON_DATA_SPECIES, NULL);
-        if (species != SPECIES_NONE && !GetMonData(&gEnemyParty[i], MON_DATA_IS_EGG, NULL))
+        oppTrainer = B_TRAINER_OPPONENT_A;
+        oppSlot = i;
+
+        if (BattleSideHasTwoTrainers(B_SIDE_OPPONENT) && i >= MULTI_PARTY_SIZE)
+        {
+            oppTrainer = B_TRAINER_OPPONENT_B;
+            oppSlot = i - MULTI_PARTY_SIZE;
+        }
+
+        oppMon = &gParties[oppTrainer][oppSlot];
+        species = GetMonData(oppMon, MON_DATA_SPECIES);
+        if (species != SPECIES_NONE && !GetMonData(oppMon, MON_DATA_IS_EGG))
         {
             for (sum = 0, j = 0; j < MAX_MON_MOVES; j++)
                 sum += movePoints->points[one][i * 4 + j];
 
             if (opponentBestSum == sum)
             {
-                if (GetMonData(&gEnemyParty[i], MON_DATA_EXP, NULL) > GetMonData(&gEnemyParty[opponentBestMonId], MON_DATA_EXP, NULL))
+                oppTrainer = B_TRAINER_OPPONENT_A;
+                oppSlot = opponentBestMonId;
+
+                if (BattleSideHasTwoTrainers(B_SIDE_OPPONENT) && opponentBestMonId >= MULTI_PARTY_SIZE)
+                {
+                    oppTrainer = B_TRAINER_OPPONENT_B;
+                    oppSlot = opponentBestMonId - MULTI_PARTY_SIZE;
+                }
+                if (GetMonData(oppMon, MON_DATA_EXP) > GetMonData(&gParties[oppTrainer][oppSlot], MON_DATA_EXP))
                 {
                     opponentBestMonId = i;
                     opponentBestSum = sum;
@@ -723,23 +802,23 @@ void TryPutLinkBattleTvShowOnAir(void)
         }
     }
 
-    move = GetMonData(&gPlayerParty[playerBestMonId], MON_DATA_MOVE1 + i, NULL);
+    playerTrainer = B_TRAINER_PLAYER;
+    playerSlot = playerBestMonId;
+
+    if (BattleSideHasTwoTrainers(B_SIDE_PLAYER) && playerBestMonId >= MULTI_PARTY_SIZE)
+    {
+        playerTrainer = B_TRAINER_PARTNER;
+        playerSlot = playerBestMonId - MULTI_PARTY_SIZE;
+    }
+
+    move = GetMonData(&gParties[playerTrainer][playerSlot], MON_DATA_MOVE1 + i);
     if (playerBestSum == 0 || move == MOVE_NONE)
         return;
 
-    if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
-    {
-        if ((playerBestMonId < MULTI_PARTY_SIZE && !GetLinkTrainerFlankId(gBattleScripting.multiplayerId))
-         || (playerBestMonId >= MULTI_PARTY_SIZE && GetLinkTrainerFlankId(gBattleScripting.multiplayerId)))
-        {
-            j = (opponentBestMonId < MULTI_PARTY_SIZE) ? FALSE : TRUE;
-            PutBattleUpdateOnTheAir(GetOpposingLinkMultiBattlerId(j, gBattleScripting.multiplayerId), move, playerBestSpecies, opponentBestSpecies);
-        }
-    }
-    else
-    {
-        PutBattleUpdateOnTheAir(gBattleScripting.multiplayerId ^ 1, move, playerBestSpecies, opponentBestSpecies);
-    }
+    bool32 rightOpponent = BattleSideHasTwoTrainers(B_SIDE_OPPONENT) && opponentBestMonId >= MULTI_PARTY_SIZE;
+    enum BattlerId opposingBattler = GetOpposingLinkMultiBattlerId(rightOpponent, gBattleScripting.multiplayerId);
+
+    PutBattleUpdateOnTheAir(opposingBattler, move, playerBestSpecies, opponentBestSpecies);
 }
 
 static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
@@ -749,6 +828,12 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
     u32 atkSide = GetBattlerSide(gBattlerAttacker);
     u32 defSide = GetBattlerSide(gBattlerTarget);
     s32 i;
+    u32 atkPartyIndex = gBattlerPartyIndexes[gBattlerAttacker];
+
+    if (BattleSideHasTwoTrainers(atkSide) && gBattlerAttacker & BIT_FLANK)
+    {
+        atkPartyIndex += MULTI_PARTY_SIZE;
+    }
 
     switch (caseId)
     {
@@ -764,53 +849,28 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
         case EFFECT_FIXED_HP_DAMAGE:
             baseFromEffect *= (GetMoveFixedHPDamage(move) / 20);
             break;
-        case EFFECT_TWO_TURNS_ATTACK:
-            for (i = 0; i < GetMoveAdditionalEffectCount(move); i++)
-            {
-                const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(move, i);
-                switch ((enum MoveEffect)additionalEffect->moveEffect)
-                {
-                case MOVE_EFFECT_ATK_PLUS_1:
-                case MOVE_EFFECT_DEF_PLUS_1:
-                case MOVE_EFFECT_SP_ATK_PLUS_1:
-                case MOVE_EFFECT_SP_DEF_PLUS_1:
-                case MOVE_EFFECT_SPD_PLUS_1:
-                case MOVE_EFFECT_ACC_PLUS_1:
-                case MOVE_EFFECT_EVS_PLUS_1:
-                    if (additionalEffect->self == TRUE && (additionalEffect->chance == 100 || additionalEffect->chance == 0))
-                        baseFromEffect += 2;
-                    break;
-                case MOVE_EFFECT_ATK_PLUS_2:
-                case MOVE_EFFECT_DEF_PLUS_2:
-                case MOVE_EFFECT_SP_ATK_PLUS_2:
-                case MOVE_EFFECT_SP_DEF_PLUS_2:
-                case MOVE_EFFECT_SPD_PLUS_2:
-                case MOVE_EFFECT_ACC_PLUS_2:
-                case MOVE_EFFECT_EVS_PLUS_2:
-                    if (additionalEffect->self == TRUE && (additionalEffect->chance == 100 || additionalEffect->chance == 0))
-                        baseFromEffect += 3;
-                    break;
-                case MOVE_EFFECT_FLINCH:
-                    if (additionalEffect->self == FALSE)
-                        baseFromEffect += 3;
-                    break;
-                default:
-                    break;
-                }
-            }
-            break;
         case EFFECT_FIRST_TURN_ONLY:
             if (MoveHasAdditionalEffectWithChance(move, MOVE_EFFECT_FLINCH, 100))
                 baseFromEffect += 3;
             break;
         case EFFECT_CONFUSE:
-            if (GetMoveTarget(move) == MOVE_TARGET_FOES_AND_ALLY)
+            if (GetBattlerMoveTargetType(gBattlerAttacker, move) == TARGET_FOES_AND_ALLY)
                 baseFromEffect += 2;
+            break;
+        case EFFECT_REFLECT_DAMAGE: // 5 for Counter, 6 for Mirror Coat
+            if (GetMoveReflectDamage_DamageCategories(move) == 1u << DAMAGE_CATEGORY_SPECIAL) // Mirror Coat
+                baseFromEffect++;
+            break;
+        case EFFECT_RECOIL:
+            if (GetMoveRecoil(move) > 0)
+                baseFromEffect++;
             break;
         default:
             break;
         }
-        switch(GetMoveNonVolatileStatus(arg2))
+
+        // Non-volatile statuses
+        switch (GetMoveNonVolatileStatus(arg2))
         {
         case MOVE_EFFECT_SLEEP:
             baseFromEffect++;
@@ -825,14 +885,16 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
         case MOVE_EFFECT_TOXIC:
             baseFromEffect += 5;
             break;
+        default:
+            break;
         }
 
         // Guaranteed hit but without negative priority
         if (GetMoveAccuracy(move) == 0 && GetMovePriority(move) >= 0)
             baseFromEffect++;
-        // User recoil damage
-        if (GetMoveRecoil(move) > 0)
-            baseFromEffect++;
+        // // Explosion moves get 0 points in vanilla, so we deduct here from EFFECT_HIT's score of 1
+        if (IsExplosionMove(move) && baseFromEffect > 0)
+            baseFromEffect--;
 
         // Additional move effects in any move
         for (i = 0; i < GetMoveAdditionalEffectCount(move); i++)
@@ -840,6 +902,12 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
             const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(move, i);
             switch (additionalEffect->moveEffect)
             {
+            case MOVE_EFFECT_ABSORB:
+                baseFromEffect += 4;
+                break;
+            case MOVE_EFFECT_BREAK_SCREEN:
+                baseFromEffect += 1;
+                break;
             case MOVE_EFFECT_THRASH:
                 if (additionalEffect->self == TRUE)
                     baseFromEffect += 3;
@@ -852,47 +920,63 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
                 if (additionalEffect->self == TRUE)
                     baseFromEffect += 4;
                 break;
-            case MOVE_EFFECT_ATK_DEF_DOWN:
-            case MOVE_EFFECT_ATK_MINUS_2:
-            case MOVE_EFFECT_DEF_MINUS_2:
-            case MOVE_EFFECT_SP_ATK_MINUS_2:
-            case MOVE_EFFECT_SP_DEF_MINUS_2:
-            case MOVE_EFFECT_SPD_MINUS_2:
-            case MOVE_EFFECT_ACC_MINUS_2:
-            case MOVE_EFFECT_EVS_MINUS_2:
-                if (additionalEffect->self == TRUE && (additionalEffect->chance == 100 || additionalEffect->chance == 0))
-                    baseFromEffect += 2;
+            case MOVE_EFFECT_UPROAR:
+                if (additionalEffect->self == TRUE)
+                    baseFromEffect += 3;
+                break;
+            case MOVE_EFFECT_STAT_PLUS:
+                for (enum Stat i = STAT_ATK; i < NUM_BATTLE_STATS; i++)
+                {
+                    enum Stat stat = sAccurateStatOrder[i];
+                    s32 stage = GetStatStage(stat, additionalEffect);
+
+                    if (stage == 0)
+                        continue;
+
+                    if (additionalEffect->self == TRUE && (additionalEffect->chance == 100 || additionalEffect->chance == 0))
+                    {
+                        switch (stage)
+                        {
+                        case 1:
+                            baseFromEffect += 2;
+                            break;
+                        case 2:
+                            baseFromEffect += 3;
+                            break;
+                        }
+                    }
+                }
                 break;
             default:
                 break;
             }
         }
 
-        movePoints->points[atkSide][gBattlerPartyIndexes[gBattlerAttacker] * 4 + arg1] += baseFromEffect;
+        movePoints->points[atkSide][atkPartyIndex * 4 + arg1] += baseFromEffect;
         break;
     }
 #undef move
     case PTS_EFFECTIVENESS:
-        movePoints->points[atkSide][gBattlerPartyIndexes[gBattlerAttacker] * 4 + arg1] += sPointsArray[caseId][arg2];
+        movePoints->points[atkSide][atkPartyIndex * 4 + arg1] += sPointsArray[caseId][arg2];
         break;
     case PTS_STAT_INCREASE_1:
     case PTS_STAT_DECREASE_1:
-        movePoints->points[atkSide][gBattlerPartyIndexes[gBattlerAttacker] * 4 + arg1] += 2;
+        movePoints->points[atkSide][atkPartyIndex * 4 + arg1] += 2;
         break;
     case PTS_STAT_INCREASE_2:
     case PTS_STAT_DECREASE_2:
-        movePoints->points[atkSide][gBattlerPartyIndexes[gBattlerAttacker] * 4 + arg1] += 4;
+        movePoints->points[atkSide][atkPartyIndex * 4 + arg1] += 4;
         break;
     case PTS_STAT_INCREASE_3:
     case PTS_STAT_DECREASE_3:
     case PTS_CRITICAL_HIT:
-        movePoints->points[atkSide][gBattlerPartyIndexes[gBattlerAttacker] * 4 + arg1] += 6;
+        movePoints->points[atkSide][atkPartyIndex * 4 + arg1] += 6;
         break;
     case PTS_STAT_DECREASE_SELF:
-        movePoints->points[atkSide][gBattlerPartyIndexes[gBattlerAttacker] * 4 + arg1] -= 1;
+        movePoints->points[atkSide][atkPartyIndex * 4 + arg1] -= 1;
         break;
     case PTS_STAT_INCREASE_NOT_SELF:
-        movePoints->points[atkSide][gBattlerPartyIndexes[gBattlerAttacker] * 4 + arg1] -= 2;
+        movePoints->points[atkSide][atkPartyIndex * 4 + arg1] -= 2;
         break;
 
 #define move arg1
@@ -929,7 +1013,7 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
         if (MoveAlwaysHitsInRain(move))
             points += 3;
 
-        movePoints->points[atkSide][gBattlerPartyIndexes[gBattlerAttacker] * 4 + arg2] += points;
+        movePoints->points[atkSide][atkPartyIndex * 4 + arg2] += points;
         break;
     }
     case PTS_SUN:
@@ -953,7 +1037,7 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
         default:
             break;
         }
-        movePoints->points[atkSide][gBattlerPartyIndexes[gBattlerAttacker] * 4 + arg2] += points;
+        movePoints->points[atkSide][atkPartyIndex * 4 + arg2] += points;
         break;
     }
     case PTS_SANDSTORM:
@@ -971,12 +1055,12 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
         default:
             break;
         }
-        movePoints->points[atkSide][gBattlerPartyIndexes[gBattlerAttacker] * 4 + arg2] += points;
+        movePoints->points[atkSide][atkPartyIndex * 4 + arg2] += points;
         break;
     }
     case PTS_ELECTRIC:
         if (!IsBattleMoveStatus(move) && GetMoveType(move) == TYPE_ELECTRIC)
-            movePoints->points[atkSide][gBattlerPartyIndexes[gBattlerAttacker] * 4 + arg2] += 3;
+            movePoints->points[atkSide][atkPartyIndex * 4 + arg2] += 3;
         break;
 #undef move
 
@@ -1066,13 +1150,19 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
     }
 }
 
-static void AddPointsOnFainting(bool8 targetFainted)
+static void AddPointsOnFainting(void)
 {
     struct BattleTv *tvPtr = &gBattleStruct->tv;
     u32 atkSide = GetBattlerSide(gBattlerAttacker);
     u32 defSide = GetBattlerSide(gBattlerTarget);
     u32 atkArrId = tvPtr->side[atkSide].faintCauseMonId;
     s32 i;
+    u32 atkPartyIndex = gBattlerPartyIndexes[gBattlerAttacker];
+
+    if (BattleSideHasTwoTrainers(atkSide) && gBattlerAttacker & BIT_FLANK)
+    {
+        atkPartyIndex += MULTI_PARTY_SIZE;
+    }
 
     if (tvPtr->side[atkSide].faintCause != FNT_NONE)
     {
@@ -1148,7 +1238,7 @@ static void AddPointsOnFainting(bool8 targetFainted)
             break;
         case FNT_PERISH_SONG:
             if (tvPtr->side[atkSide].perishSong
-                && tvPtr->side[atkSide].perishSongMonId - 1 != gBattlerPartyIndexes[gBattlerAttacker])
+                && tvPtr->side[atkSide].perishSongMonId - 1 != atkPartyIndex)
             {
                 AddMovePoints(PTS_FAINT, 0, atkSide,
                 (tvPtr->side[atkSide].perishSongMonId - 1) * 4 + tvPtr->side[atkSide].perishSongMoveSlot);
@@ -1189,10 +1279,10 @@ static void AddPointsOnFainting(bool8 targetFainted)
             }
             break;
         case FNT_RECOIL:
-            if (targetFainted == TRUE)
+            if (gBattlerAttacker == gBattleScripting.battler)
             {
                 AddMovePoints(PTS_FAINT_SET_UP, 0, atkSide,
-                (gBattlerPartyIndexes[gBattlerAttacker]) * 4 + tvPtr->side[atkSide].usedMoveSlot);
+                (atkPartyIndex) * 4 + tvPtr->side[atkSide].usedMoveSlot);
             }
             break;
         case FNT_OTHER:
@@ -1212,7 +1302,7 @@ static void AddPointsOnFainting(bool8 targetFainted)
         else
         {
             AddMovePoints(PTS_FAINT_SET_UP, 0, atkSide,
-            (gBattlerPartyIndexes[gBattlerAttacker]) * 4 + tvPtr->side[atkSide].usedMoveSlot);
+            (atkPartyIndex) * 4 + tvPtr->side[atkSide].usedMoveSlot);
         }
     }
 }
@@ -1224,7 +1314,7 @@ static void TrySetBattleSeminarShow(void)
     u16 powerOverride;
     u16 currMoveSaved;
 
-    if (gBattleTypeFlags & (BATTLE_TYPE_DOUBLE | BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
+    if (HasAnyBattleFlags(BATTLE_TYPE_DOUBLE | BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
         return;
     else if (!IsOnPlayerSide(gBattlerAttacker))
         return;
@@ -1234,7 +1324,7 @@ static void TrySetBattleSeminarShow(void)
         return;
     else if (gCurrentMove == MOVE_HIDDEN_POWER || gCurrentMove == MOVE_WEATHER_BALL)
         return;
-    else if (gBattleTypeFlags & (BATTLE_TYPE_PALACE | BATTLE_TYPE_PIKE | BATTLE_TYPE_PYRAMID))
+    else if (HasAnyBattleFlags(BATTLE_TYPE_PALACE | BATTLE_TYPE_PIKE | BATTLE_TYPE_PYRAMID))
         return;
     else if (IsBattleMoveStatus(gBattleMons[gBattlerAttacker].moves[gMoveSelectionCursor[gBattlerAttacker]]))
         return;
@@ -1253,24 +1343,31 @@ static void TrySetBattleSeminarShow(void)
 
     dmgByMove[gMoveSelectionCursor[gBattlerAttacker]] = gBattleStruct->moveDamage[gBattlerTarget]; // TODO: Not sure
     currMoveSaved = gCurrentMove;
+    u16 storedMoveResultFlags = gBattleStruct->moveResultFlags[gBattlerTarget];
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
         gCurrentMove = gBattleMons[gBattlerAttacker].moves[i];
         powerOverride = 0;
         if (ShouldCalculateDamage(gCurrentMove, &dmgByMove[i], &powerOverride))
         {
-            struct DamageContext ctx;
+            struct DamageContext ctx = {0};
             ctx.battlerAtk = gBattlerAttacker;
             ctx.battlerDef = gBattlerTarget;
-            ctx.move = gCurrentMove;
+            ctx.move = ctx.chosenMove = ctx.baseMove = gCurrentMove;
             ctx.moveType = GetMoveType(gCurrentMove);
             ctx.isCrit = FALSE;
             ctx.randomFactor = FALSE;
             ctx.updateFlags = FALSE;
+            ctx.isSelfInflicted = FALSE;
             ctx.fixedBasePower = powerOverride;
-            gBattleStruct->moveDamage[gBattlerTarget] = CalculateMoveDamage(&ctx);
-            dmgByMove[i] = gBattleStruct->moveDamage[gBattlerTarget];
-            if (dmgByMove[i] == 0 && !(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT))
+            ctx.weather = GetWeather();
+            ctx.terrain = gFieldTimers.terrain;
+            ctx.abilities[gBattlerAttacker] = GetBattlerAbility(gBattlerAttacker);
+            ctx.abilities[gBattlerTarget] = GetBattlerAbility(gBattlerTarget);
+            ctx.holdEffects[gBattlerAttacker] = GetBattlerHoldEffect(gBattlerAttacker);
+            ctx.holdEffects[gBattlerTarget] = GetBattlerHoldEffect(gBattlerTarget);
+            dmgByMove[i] = CalculateMoveDamage(&ctx);
+            if (dmgByMove[i] == 0 && !IsBattlerUnaffectedByMove(gBattlerTarget))
                 dmgByMove[i] = 1;
         }
     }
@@ -1279,7 +1376,7 @@ static void TrySetBattleSeminarShow(void)
     {
         if (i != gMoveSelectionCursor[gBattlerAttacker] && dmgByMove[i] > dmgByMove[gMoveSelectionCursor[gBattlerAttacker]])
         {
-            u16 opponentSpecies, playerSpecies;
+            enum Species opponentSpecies, playerSpecies;
             s32 bestMoveId;
 
             if (gMoveSelectionCursor[gBattlerAttacker] != 0)
@@ -1293,18 +1390,18 @@ static void TrySetBattleSeminarShow(void)
                     bestMoveId = i;
             }
 
-            opponentSpecies = GetMonData(GetBattlerMon(gBattlerTarget),   MON_DATA_SPECIES, NULL);
-            playerSpecies   = GetMonData(GetBattlerMon(gBattlerAttacker), MON_DATA_SPECIES, NULL);
+            opponentSpecies = GetMonData(GetBattlerMon(gBattlerTarget),   MON_DATA_SPECIES);
+            playerSpecies   = GetMonData(GetBattlerMon(gBattlerAttacker), MON_DATA_SPECIES);
             TryPutBattleSeminarOnAir(opponentSpecies, playerSpecies, gMoveSelectionCursor[gBattlerAttacker], gBattleMons[gBattlerAttacker].moves, gBattleMons[gBattlerAttacker].moves[bestMoveId]);
             break;
         }
     }
 
-    gBattleStruct->moveDamage[gBattlerTarget] = dmgByMove[gMoveSelectionCursor[gBattlerAttacker]];
     gCurrentMove = currMoveSaved;
+    gBattleStruct->moveResultFlags[gBattlerTarget] = storedMoveResultFlags;
 }
 
-static bool8 ShouldCalculateDamage(u16 move, s32 *dmg, u16 *powerOverride)
+static bool8 ShouldCalculateDamage(enum Move move, s32 *dmg, u16 *powerOverride)
 {
     if (IsBattleMoveStatus(move))
     {
@@ -1346,7 +1443,7 @@ static bool8 ShouldCalculateDamage(u16 move, s32 *dmg, u16 *powerOverride)
 
 void BattleTv_ClearExplosionFaintCause(void)
 {
-    if (gBattleTypeFlags & BATTLE_TYPE_LINK)
+    if (HasAnyBattleFlags(BATTLE_TYPE_LINK))
     {
         struct BattleTv *tvPtr = &gBattleStruct->tv;
 
@@ -1367,7 +1464,7 @@ void BattleTv_ClearExplosionFaintCause(void)
     }
 }
 
-u8 GetBattlerMoveSlotId(u8 battler, u16 move)
+u8 GetBattlerMoveSlotId(enum BattlerId battler, enum Move move)
 {
     s32 i;
     struct Pokemon *mon = GetBattlerMon(battler);
@@ -1377,7 +1474,7 @@ u8 GetBattlerMoveSlotId(u8 battler, u16 move)
     {
         if (i >= MAX_MON_MOVES)
             break;
-        if (GetMonData(mon, MON_DATA_MOVE1 + i, NULL) == move)
+        if (GetMonData(mon, MON_DATA_MOVE1 + i) == move)
             break;
         i++;
     }
@@ -1385,7 +1482,7 @@ u8 GetBattlerMoveSlotId(u8 battler, u16 move)
     return i;
 }
 
-static void AddPointsBasedOnWeather(u16 weatherFlags, u16 move, u8 moveSlot)
+static void AddPointsBasedOnWeather(u16 weatherFlags, enum Move move, enum MoveSlot moveSlot)
 {
     if (weatherFlags & B_WEATHER_RAIN)
         AddMovePoints(PTS_RAIN, move, moveSlot, 0);
@@ -1393,6 +1490,6 @@ static void AddPointsBasedOnWeather(u16 weatherFlags, u16 move, u8 moveSlot)
         AddMovePoints(PTS_SUN, move, moveSlot, 0);
     else if (weatherFlags & B_WEATHER_SANDSTORM)
         AddMovePoints(PTS_SANDSTORM, move, moveSlot, 0);
-    else if (weatherFlags & (B_WEATHER_HAIL | B_WEATHER_SNOW))
+    else if (weatherFlags & B_WEATHER_ICY_ANY)
         AddMovePoints(PTS_HAIL_SNOW, move, moveSlot, 0);
 }

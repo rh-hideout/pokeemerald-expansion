@@ -1,6 +1,7 @@
 #include "global.h"
 #include "battle.h"
 #include "battle_anim.h"
+#include "battle_environment.h"
 #include "battle_main.h"
 #include "battle_setup.h"
 #include "bg.h"
@@ -13,91 +14,12 @@
 #include "constants/battle_partner.h"
 #include "constants/trainers.h"
 
-static void BattleIntroSlide1(u8);
-static void BattleIntroSlide2(u8);
-static void BattleIntroSlide3(u8);
+void BattleIntroSlide1(u8);
+void BattleIntroSlide2(u8);
+void BattleIntroSlide3(u8);
 static void BattleIntroSlideLink(u8);
 static void BattleIntroSlidePartner(u8);
 static void BattleIntroNoSlide(u8);
-
-static const u8 sBattleAnimBgCnts[] = {REG_OFFSET_BG0CNT, REG_OFFSET_BG1CNT, REG_OFFSET_BG2CNT, REG_OFFSET_BG3CNT};
-
-static const TaskFunc sBattleIntroSlideFuncs[] =
-{
-    [BATTLE_ENVIRONMENT_GRASS]      = BattleIntroSlide1,
-    [BATTLE_ENVIRONMENT_LONG_GRASS] = BattleIntroSlide1,
-    [BATTLE_ENVIRONMENT_SAND]       = BattleIntroSlide2,
-    [BATTLE_ENVIRONMENT_UNDERWATER] = BattleIntroSlide2,
-    [BATTLE_ENVIRONMENT_WATER]      = BattleIntroSlide2,
-    [BATTLE_ENVIRONMENT_POND]       = BattleIntroSlide1,
-    [BATTLE_ENVIRONMENT_MOUNTAIN]   = BattleIntroSlide1,
-    [BATTLE_ENVIRONMENT_CAVE]       = BattleIntroSlide1,
-    [BATTLE_ENVIRONMENT_BUILDING]   = BattleIntroSlide3,
-    [BATTLE_ENVIRONMENT_PLAIN]      = BattleIntroSlide3,
-};
-
-void SetAnimBgAttribute(u8 bgId, u8 attributeId, u8 value)
-{
-    if (bgId < 4)
-    {
-        u32 bgCnt = GetGpuReg(sBattleAnimBgCnts[bgId]);
-        switch (attributeId)
-        {
-        case BG_ANIM_SCREEN_SIZE:
-            ((vBgCnt *)&bgCnt)->screenSize = value;
-            break;
-        case BG_ANIM_AREA_OVERFLOW_MODE:
-            ((vBgCnt *)&bgCnt)->areaOverflowMode = value;
-            break;
-        case BG_ANIM_MOSAIC:
-            ((vBgCnt *)&bgCnt)->mosaic = value;
-            break;
-        case BG_ANIM_CHAR_BASE_BLOCK:
-            ((vBgCnt *)&bgCnt)->charBaseBlock = value;
-            break;
-        case BG_ANIM_PRIORITY:
-            ((vBgCnt *)&bgCnt)->priority = value;
-            break;
-        case BG_ANIM_PALETTES_MODE:
-            ((vBgCnt *)&bgCnt)->palettes = value;
-            break;
-        case BG_ANIM_SCREEN_BASE_BLOCK:
-            ((vBgCnt *)&bgCnt)->screenBaseBlock = value;
-            break;
-        }
-
-        SetGpuReg(sBattleAnimBgCnts[bgId], bgCnt);
-    }
-}
-
-int GetAnimBgAttribute(u8 bgId, u8 attributeId)
-{
-    u32 bgCnt;
-
-    if (bgId < 4)
-    {
-        bgCnt = GetGpuReg(sBattleAnimBgCnts[bgId]);
-        switch (attributeId)
-        {
-        case BG_ANIM_SCREEN_SIZE:
-            return ((vBgCnt *)&bgCnt)->screenSize;
-        case BG_ANIM_AREA_OVERFLOW_MODE:
-            return ((vBgCnt *)&bgCnt)->areaOverflowMode;
-        case BG_ANIM_MOSAIC:
-            return ((vBgCnt *)&bgCnt)->mosaic;
-        case BG_ANIM_CHAR_BASE_BLOCK:
-            return ((vBgCnt *)&bgCnt)->charBaseBlock;
-        case BG_ANIM_PRIORITY:
-            return ((vBgCnt *)&bgCnt)->priority;
-        case BG_ANIM_PALETTES_MODE:
-            return ((vBgCnt *)&bgCnt)->palettes;
-        case BG_ANIM_SCREEN_BASE_BLOCK:
-            return ((vBgCnt *)&bgCnt)->screenBaseBlock;
-        }
-    }
-
-    return 0;
-}
 
 #define tState data[0]
 #define tEnvironment data[1]
@@ -106,26 +28,24 @@ void HandleIntroSlide(u8 environment)
 {
     u8 taskId;
 
-    if ((gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER) && gPartnerTrainerId < TRAINER_PARTNER(PARTNER_NONE))
+    if (HasAnyBattleFlags(BATTLE_TYPE_INGAME_PARTNER) && gPartnerTrainerId < TRAINER_PARTNER(PARTNER_NONE))
     {
         taskId = CreateTask(BattleIntroSlidePartner, 0);
     }
-    else if (gBattleTypeFlags & BATTLE_TYPE_LINK)
+    else if (HasAnyBattleFlags(BATTLE_TYPE_LINK))
     {
         taskId = CreateTask(BattleIntroSlideLink, 0);
     }
-    else if (gBattleTypeFlags & BATTLE_TYPE_FRONTIER)
+    else if (HasAnyBattleFlags(BATTLE_TYPE_FRONTIER))
     {
         taskId = CreateTask(BattleIntroSlide3, 0);
     }
-    else if (GetMonData(&gEnemyParty[0], MON_DATA_SPECIES, NULL) == SPECIES_KYOGRE)
-    {
-        environment = BATTLE_ENVIRONMENT_UNDERWATER;
-        taskId = CreateTask(BattleIntroSlide2, 0);
-    }
     else
     {
-        taskId = CreateTask(sBattleIntroSlideFuncs[environment], 0);
+        if (environment >= NELEMS(gBattleEnvironmentInfo)
+         || gBattleEnvironmentInfo[environment].battleIntroSlide == NULL)
+            environment = BATTLE_ENVIRONMENT_PLAIN;
+        taskId = CreateTask(gBattleEnvironmentInfo[environment].battleIntroSlide, 0);
     }
 
     gTasks[taskId].tState = 0;
@@ -156,7 +76,7 @@ static void BattleIntroNoSlide(u8 taskId)
     switch (gTasks[taskId].tState)
     {
     case 0:
-        if (gBattleTypeFlags & BATTLE_TYPE_LINK)
+        if (HasAnyBattleFlags(BATTLE_TYPE_LINK))
         {
             gTasks[taskId].data[2] = 16;
             gTasks[taskId].tState++;
@@ -199,7 +119,7 @@ static void BattleIntroNoSlide(u8 taskId)
     }
 }
 
-static void BattleIntroSlide1(u8 taskId)
+void BattleIntroSlide1(u8 taskId)
 {
     int i;
     if (B_FAST_INTRO_NO_SLIDE || gTestRunnerHeadless)
@@ -209,7 +129,7 @@ static void BattleIntroSlide1(u8 taskId)
     switch (gTasks[taskId].tState)
     {
     case 0:
-        if (gBattleTypeFlags & BATTLE_TYPE_LINK)
+        if (HasAnyBattleFlags(BATTLE_TYPE_LINK))
         {
             gTasks[taskId].data[2] = 16;
             gTasks[taskId].tState++;
@@ -286,7 +206,7 @@ static void BattleIntroSlide1(u8 taskId)
     }
 }
 
-static void BattleIntroSlide2(u8 taskId)
+void BattleIntroSlide2(u8 taskId)
 {
     int i;
     if (B_FAST_INTRO_NO_SLIDE || gTestRunnerHeadless)
@@ -299,6 +219,7 @@ static void BattleIntroSlide2(u8 taskId)
         gBattle_BG1_X += 8;
         break;
     case BATTLE_ENVIRONMENT_UNDERWATER:
+    case BATTLE_ENVIRONMENT_KYOGRE:
         gBattle_BG1_X += 6;
         break;
     }
@@ -319,7 +240,7 @@ static void BattleIntroSlide2(u8 taskId)
     {
     case 0:
         gTasks[taskId].data[4] = 16;
-        if (gBattleTypeFlags & BATTLE_TYPE_LINK)
+        if (HasAnyBattleFlags(BATTLE_TYPE_LINK))
         {
             gTasks[taskId].data[2] = 16;
             gTasks[taskId].tState++;
@@ -400,7 +321,7 @@ static void BattleIntroSlide2(u8 taskId)
         SetGpuReg(REG_OFFSET_BLDALPHA, BLDALPHA_BLEND(gTasks[taskId].data[4], 0));
 }
 
-static void BattleIntroSlide3(u8 taskId)
+void BattleIntroSlide3(u8 taskId)
 {
     int i;
     if (B_FAST_INTRO_NO_SLIDE || gTestRunnerHeadless)
@@ -414,7 +335,7 @@ static void BattleIntroSlide3(u8 taskId)
         SetGpuReg(REG_OFFSET_BLDALPHA, BLDALPHA_BLEND(8, 8));
         SetGpuReg(REG_OFFSET_BLDY, 0);
         gTasks[taskId].data[4] = BLDALPHA_BLEND(8, 8);
-        if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
+        if (HasAnyBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
         {
             gTasks[taskId].data[2] = 16;
             gTasks[taskId].tState++;
@@ -638,7 +559,7 @@ static void BattleIntroSlidePartner(u8 taskId)
     }
 }
 
-void DrawBattlerOnBg(int bgId, u8 x, u8 y, u8 battlerPosition, u8 paletteId, u8 *tiles, u16 *tilemap, u16 tilesOffset)
+void DrawBattlerOnBg(int bgId, u8 x, u8 y, enum BattlerPosition battlerPosition, u8 paletteId, u8 *tiles, u16 *tilemap, u16 tilesOffset)
 {
     int i, j;
     int offset = tilesOffset;
@@ -655,7 +576,7 @@ void DrawBattlerOnBg(int bgId, u8 x, u8 y, u8 battlerPosition, u8 paletteId, u8 
     LoadBgTilemap(bgId, tilemap, BG_SCREEN_SIZE, 0);
 }
 
-static void UNUSED DrawBattlerOnBgDMA(u8 x, u8 y, u8 battlerPosition, u8 arg3, u8 paletteId, u16 arg5, u8 arg6, u8 arg7)
+static void UNUSED DrawBattlerOnBgDMA(u8 x, u8 y, enum BattlerPosition battlerPosition, u8 arg3, u8 paletteId, u16 arg5, u8 arg6, u8 arg7)
 {
     int i, j, offset;
 

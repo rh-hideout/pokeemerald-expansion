@@ -3,7 +3,7 @@
 
 SINGLE_BATTLE_TEST("Steam Engine raises speed when hit by a Fire or Water move")
 {
-    u16 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_EMBER; }
     PARAMETRIZE { move = MOVE_WATER_GUN; }
@@ -16,7 +16,7 @@ SINGLE_BATTLE_TEST("Steam Engine raises speed when hit by a Fire or Water move")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, move, opponent);
         ABILITY_POPUP(player, ABILITY_STEAM_ENGINE);
-        MESSAGE("Coalossal's Speed drastically rose!");
+        MESSAGE("Coalossal's Speed rose drastically!");
     } THEN {
         EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + 6);
     }

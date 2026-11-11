@@ -9,7 +9,7 @@ ASSUMPTIONS
 
 SINGLE_BATTLE_TEST("Acrobatics doubles in power if the user has no held item", s16 damage)
 {
-    u16 heldItem;
+    enum Item heldItem;
     PARAMETRIZE { heldItem = ITEM_POTION; }
     PARAMETRIZE { heldItem = ITEM_NONE; }
     GIVEN {
@@ -20,13 +20,13 @@ SINGLE_BATTLE_TEST("Acrobatics doubles in power if the user has no held item", s
     } SCENE {
         HP_BAR(player, captureDamage: &results[i].damage);
     } FINALLY {
-        EXPECT_MUL_EQ(results[0].damage, Q_4_12(2), results[1].damage);
+        EXPECT_MUL_EQ(results[0].damage, Q_4_12(2.0), results[1].damage);
     }
 }
 
 SINGLE_BATTLE_TEST("Acrobatics still doubles in power when Flying Gem is consumed", s16 damage)
 {
-    u16 heldItem;
+    enum Item heldItem;
     PARAMETRIZE { heldItem = ITEM_NONE; }
     PARAMETRIZE { heldItem = ITEM_FLYING_GEM; }
     GIVEN {

@@ -8,6 +8,7 @@
 #include "new_game.h"
 #include "overworld.h"
 #include "malloc.h"
+#include "text.h"
 
 // Reloads the game, continuing from the point of the last save
 // Used to gracefully exit after a link connection error
@@ -21,6 +22,7 @@ void ReloadSave(void)
     REG_IME = imeBackup;
     gMain.inBattle = FALSE;
     SetSaveBlocksPointers(GetSaveBlocksPointersBaseOffset());
+    SetDefaultFontsPointer();
     ResetMenuAndMonGlobals();
     Save_ResetSaveCounters();
     LoadGameSave(SAVE_NORMAL);

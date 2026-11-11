@@ -29,13 +29,13 @@ This section lists all of expansion’s AI Flags and briefly describes the effec
 
 ## Composite AI Flags
 
-Expansion has a few "composite" AI flags. This means that these flags have no unique functionality themselves, and can instead be thought of as groups of other flags that are all enabled when this flag is enabled. The idea behind these flags is that if you don't care to manage the detailed behaviour of a particular trainer, you can use these as a baseline instead, and expansion will keep them updated for you. 
+Expansion has a few "composite" AI flags. This means that these flags have no unique functionality themselves, and can instead be thought of as groups of other flags that are all enabled when this flag is enabled. The idea behind these flags is that if you don't care to manage the detailed behaviour of a particular trainer, you can use these as a baseline instead, and expansion will keep them updated for you.
 
 `AI_FLAG_BASIC_TRAINER` is expansion's version of generic, normal AI behaviour. It includes `AI_FLAG_CHECK_BAD_MOVE` (don't use bad moves), `AI_FLAG_TRY_TO_FAINT` (faint the player where possible), and `AI_FLAG_CHECK_VIABILITY` (choose the most effective move to use in the current context). Trainers with this flag will still be smarter than they are in vanilla as there have been dramatic improvements made to move selection, but not incredibly so. Trainers with this flag should feel like normal trainers. In general we recommend these three flags be used in all cases, unless you specifically want a trainer who makes obvious mistakes in battle.
 
 `AI_FLAG_SMART_TRAINER` is expansion's version of a "smart AI". It includes everything in `AI_FLAG_BASIC_TRAINER` along with `AI_FLAG_SMART_SWITCHING` (make smart decisions about when to switch), `AI_FLAG_SMART_MON_CHOICES` (make smart decisions about what mon to send in after a switch / KO), `AI_FLAG_OMNISCIENT` (awareness of what moves, items, and abilities the player's mons have to better inform decisions), and `AI_FLAG_SMART_TERA` (make smart decisions about when to terastalize). Expansion will keep this updated to represent the most objectively intelligent behaviour our flags are capable of producing.
 
-`AI_FLAG_PREDICTION` will enable all of the prediction flags at once, so the AI can perform as well as possible. It is best paired with the flags in `AI_FLAG_SMART_TRAINER` for optimal behaviour. This currently includes `AI_FLAG_PREDICT_SWITCH` and `AI_FLAG_PREDICT_INCOMING_MON`, but will likely be expanded in the future. 
+`AI_FLAG_PREDICTION` will enable all of the prediction flags at once, so the AI can perform as well as possible. It is best paired with the flags in `AI_FLAG_SMART_TRAINER` for optimal behaviour. This currently includes `AI_FLAG_PREDICT_SWITCH` and `AI_FLAG_PREDICT_INCOMING_MON`, but will likely be expanded in the future.
 
 Expansion has LOADS of flags, which will be covered in the rest of this guide. If you don't want to engage with detailed trainer AI tuning though, you can just use these two composite flags, and trust that expansion will keep their contents updated to always represent the most standard and the smartest behaviour we can.
 
@@ -87,6 +87,30 @@ This flag is automatically set in double battles, and controls much of the doubl
 * Prioritize using weather move if it benefits partner
 * Prioritize triggering partner’s good abilities if possible (Motor Drive, Storm Drain, Beat Up -> Justified, etc.)
 * Handle Skill Swap smartly, both with the partner and against the player
+
+`AI_DOUBLE_TARGET_COORDINATION` in `include/config/ai.h` enables coordination of
+single-target attacks. Once an AI ally commits to a move expected to KO a foe,
+the other ally lowers the score of redundant attacks on that foe by 10 points.
+This preserves existing move preferences and allows double-targeting when it
+is still the best option. Set the config to `FALSE` for independent targeting.
+
+Coordination requires a KO even at minimum damage and no known
+survival effect such as Focus Sash, Sturdy, or a Substitute blocking the move.
+Accuracy follows the deciding ally's existing risk policy: normal AI requires
+at least `LOW_ACCURACY_THRESHOLD`, conservative AI requires 100%, and risky AI
+skips the accuracy check. Confusion, paralysis, and a chosen Sucker Punch do not
+independently disable coordination; the partner's normal move selection still
+applies.
+
+It does not reserve targets for simulated choices, switching allies, or delayed
+attacks such as Future Sight. Two-turn moves can reserve a KO on their attacking
+turn, or immediately when Power Herb or applicable weather skips charging.
+Locked attacks use their original move and target.
+Known faster threats that can KO an ally also prevent the penalty.
+Status moves, spread moves, and attacks on allies keep their existing scoring.
+The AI uses its existing knowledge of foes, without reading the player's
+selected action. The first ally still chooses independently; this is not a
+joint search over both allies' possible turns.
 
 ## `AI_FLAG_HP_AWARE`
 Lets the AI make decisions based on how much remaining HP its mon(s) and the player’s mon(s) have.
@@ -145,7 +169,10 @@ Marks the last Pokemon in the party as the Ace Pokemon. It will not be used unle
 Marks the last two Pokémon in the party as Ace Pokémon, with the same behaviour as `AI_FLAG_ACE_POKEMON`. Intented for double battles where you battle one trainer id that represents two trainers, ie Twins, Couples. If you apply this flag to trainers outside of double battles or in cases where two trainers can challenge you at the same time, it has the same behaviour. For example vs two trainers with `AI_FLAG_DOUBLE_ACE_POKEMON` there will be a total of 4 Ace Pokémon.
 
 ## `AI_FLAG_OMNISCIENT`
-AI has full knowledge of player moves, abilities, and hold items, and can use this knowledge when making decisions.
+AI has full knowledge of player moves, abilities, and hold items, and can use this knowledge when making decisions. More modular omniscience settings are included in the flags `AI_FLAG_ABILITY_OMNISCIENCE`, `AI_FLAG_ITEM_OMNISCIENCE`, and `AI_FLAG_MOVE_OMNISCIENCE `.
+
+## `AI_FLAG_KNOW_OPPONENT_PARTY`
+AI has full knowledge of the species in the player's party, as well as their fainted status; no other omniscient knowledge is included. Functions similarly to a team preview.
 
 ## `AI_FLAG_ASSUME_STAB`
 A significantly more restricted version of `AI_FLAG_OMNISCIENT`, the AI only knows the player's STAB moves, as their existence would be reasonable to assume in almost any case.
@@ -201,3 +228,9 @@ AI will predict what move the player is going to use based on what move it would
 
 ## `AI_FLAG_PP_STALL_PREVENTION`
 This flag aims to prevent the player from PP stalling the AI by switching between immunities. The AI mon's move scores will slowly decay for absorbed moves over time, eventually making its moves unpredictable. More detailed control for this behaviour can be customized in the `ai.h` config file.
+
+## `AI_FLAG_RANDOMIZE_SWITCHIN`
+AI will randomly choose between eligible switchin candidates rather than always picking the last one in the party. For example, if the AI has two mons that can revenge kill the player's mon after a KO, by default the AI will only track the most recent eligible candidate, and will always send in the last one in party order as a result. With this flag, it will instead track all of the eligible mons, and randomly choose between them when deciding which to send out.
+
+## `AI_FLAG_RANDOMIZE_PARTY_INDICES`
+AI will randomize the order of the mons in their party before battle starts. This means that lead choice is randommized, but so is the last mon for things like Illusion or the Ace flag, so be mindful when using it.

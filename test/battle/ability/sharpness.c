@@ -3,8 +3,8 @@
 
 SINGLE_BATTLE_TEST("Sharpness increases the power of slicing moves by 50%", s16 damage)
 {
-    u32 move;
-    u16 ability;
+    enum Move move;
+    enum Ability ability;
     PARAMETRIZE { move = MOVE_AERIAL_ACE; ability = ABILITY_SHARPNESS; }
     PARAMETRIZE { move = MOVE_AERIAL_ACE; ability = ABILITY_STEADFAST; }
     PARAMETRIZE { move = MOVE_SCRATCH; ability = ABILITY_SHARPNESS; }

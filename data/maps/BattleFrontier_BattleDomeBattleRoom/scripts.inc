@@ -75,7 +75,6 @@ BattleFrontier_BattleDomeBattleRoom_EventScript_BattleOpponent::
 	tower_getopponentintro 0
 	msgbox gStringVar4, MSGBOX_DEFAULT
 	closemessage
-	dome_initopponentparty
 	call BattleFrontier_BattleDomeBattleRoom_EventScript_DoDomeBattle
 	setvar VAR_TEMP_2, NO_DRAW
 	switch VAR_RESULT
@@ -445,10 +444,8 @@ BattleFrontier_BattleDomeBattleRoom_EventScript_TuckerDraw::
 BattleFrontier_BattleDomeBattleRoom_EventScript_DoDomeBattle::
 	frontier_set FRONTIER_DATA_RECORD_DISABLED, FALSE
 	special HealPlayerParty
-	setvar VAR_0x8004, SPECIAL_BATTLE_DOME
-	setvar VAR_0x8005, 0
 	setvar VAR_TEMP_9, 1
-	special DoSpecialTrainerBattle
+	dofacilitytrainerbattle FACILITY_BATTLE_DOME
 	waitstate
 	setvar VAR_TEMP_9, 0
 	dome_restorehelditems
