@@ -205,6 +205,7 @@ bool32 HasMoveWithType(enum BattlerId battler, enum Type type);
 bool32 HasMoveWithEffect(enum BattlerId battler, enum BattleMoveEffects moveEffect);
 bool32 HasMoveWithAIEffect(enum BattlerId battler, u32 aiEffect);
 bool32 HasBattlerSideMoveWithEffect(enum BattlerId battler, enum BattleMoveEffects effect);
+bool32 HasBattlerSideMoveSuperEffectiveAgainstType(enum BattlerId battler, enum Type defType);
 bool32 HasBattlerSideMoveWithAIEffect(enum BattlerId battler, u32 effect);
 bool32 HasBattlerSideUsedMoveWithEffect(enum BattlerId battler, enum BattleMoveEffects effect);
 bool32 HasNonVolatileMoveEffect(enum BattlerId battlerId, enum MoveEffect effect);

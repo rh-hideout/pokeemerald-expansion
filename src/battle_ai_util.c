@@ -2779,6 +2779,35 @@ bool32 HasBattlerSideMoveWithEffect(enum BattlerId battler, enum BattleMoveEffec
     return FALSE;
 }
 
+static bool32 HasDamagingMoveSuperEffectiveAgainstType(enum BattlerId battler, enum Type defType)
+{
+    enum Move *moves = GetMovesArray(battler);
+
+    for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
+    {
+        enum Move move = moves[moveIndex];
+
+        if (!IsMoveValid(move) || IsBattleMoveStatus(move))
+            continue;
+        if (GetTypeModifier(GetMoveType(move), defType) >= UQ_4_12(2.0))
+            return TRUE;
+        if (GetMoveEffect(move) == EFFECT_SUPER_EFFECTIVE_ON_ARG && GetMoveArgType(move) == defType) //Super effective moves that overwrite type chart (Freeze Dry)
+            return TRUE;
+    }
+
+    return FALSE;
+}
+
+// Checks if the user or its partner has a damaging super-effective move against the given type 
+bool32 HasBattlerSideMoveSuperEffectiveAgainstType(enum BattlerId battler, enum Type defType)
+{
+    if (HasDamagingMoveSuperEffectiveAgainstType(battler, defType))
+        return TRUE;
+    if (HasPartnerIgnoreFlags(battler) && HasDamagingMoveSuperEffectiveAgainstType(GetPartnerBattler(battler), defType))
+        return TRUE;
+    return FALSE;
+}
+
 bool32 HasBattlerSideMoveWithAIEffect(enum BattlerId battler, u32 aiEffect)
 {
     if (HasMoveWithAIEffect(battler, aiEffect))
