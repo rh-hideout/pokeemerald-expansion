@@ -488,7 +488,7 @@ void SetPartiesFromRecordedSave(struct RecordedBattleSave *src)
     for (enum BattleTrainer trainer = B_TRAINER_PLAYER; trainer < MAX_BATTLE_TRAINERS; trainer++)
     {
         ZeroPartyMons(gParties[trainer]);
-        for (s32 i = 0; i < PARTY_SIZE; i++)
+        for (enum PartySlot i = 0; i < PARTY_SIZE; i++)
             gParties[trainer][i] = src->parties[trainer][i];
     }
 }

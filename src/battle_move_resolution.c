@@ -2426,14 +2426,10 @@ static enum CancelerResult CancelerMultihitMoves(struct BattleCalcValues *cv)
 
         for (i = 0; i < PARTY_SIZE; i++)
         {
-            enum Species species = GetMonData(&party[i], MON_DATA_SPECIES);
-            if (species != SPECIES_NONE
-             && GetMonData(&party[i], MON_DATA_HP)
-             && !GetMonData(&party[i], MON_DATA_IS_EGG)
-             && !GetMonData(&party[i], MON_DATA_STATUS))
+            if (IsMonValidAndAliveForBattle(&party[i]) && !GetMonData(&party[i], MON_DATA_STATUS))
             {
                 if (GetConfig(B_BEAT_UP) >= GEN_5)
-                    gBattleStruct->beatUpSpecies[gMultiHitCounter] = species;
+                    gBattleStruct->beatUpSpecies[gMultiHitCounter] = GetMonData(&party[i], MON_DATA_SPECIES);
                 else
                     gBattleStruct->beatUpSpecies[gMultiHitCounter] = i;
                 gMultiHitCounter++;
@@ -6862,9 +6858,7 @@ static enum Move GetAssistMove(void)
     {
         if (monId == gBattlerPartyIndexes[gBattlerAttacker])
             continue;
-        if (GetMonData(&party[monId], MON_DATA_SPECIES_OR_EGG) == SPECIES_NONE)
-            continue;
-        if (GetMonData(&party[monId], MON_DATA_SPECIES_OR_EGG) == SPECIES_EGG)
+        if (!IsMonValidForBattle(&party[monId]))
             continue;
 
         for (u32 moveId = 0; moveId < MAX_MON_MOVES; moveId++)

@@ -4864,7 +4864,7 @@ void DebugNative_Party_SetPokerus(void)
 
 static void DebugAction_Party_ClearPokerus(u8 taskId)
 {
-    for (u32 i = 0; i < PARTY_SIZE; i++)
+    for (enum PartySlot i = 0; i < PARTY_SIZE; i++)
     {
         if (!GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES))
             continue;

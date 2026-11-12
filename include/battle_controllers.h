@@ -304,7 +304,6 @@ extern u8 gBattlerBattleController[MAX_BATTLERS_COUNT];
 void HandleLinkBattleSetup(void);
 void SetUpBattleVarsAndBirchZigzagoon(void);
 void InitBattleControllers(void);
-bool32 IsValidForBattle(struct Pokemon *mon);
 void TryReceiveLinkBattleData(void);
 void PrepareBufferDataTransferLink(enum BattlerId battler, u32 bufferId, u16 size, u8 *data);
 void UpdateFriendshipFromXItem(enum BattlerId battler);

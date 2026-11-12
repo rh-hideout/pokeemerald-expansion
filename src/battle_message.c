@@ -2512,7 +2512,7 @@ void BufferStringBattle(enum StringID stringID, enum BattlerId battler)
                 stringPtr = sText_TheGhostAppeared;
             else if (HasAnyBattleFlags(BATTLE_TYPE_LEGENDARY))
                 stringPtr = sText_LegendaryPkmnAppeared;
-            else if (IsDoubleBattle() && IsValidForBattle(GetBattlerMon(GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT))))
+            else if (IsDoubleBattle() && IsMonValidAndAliveForBattle(GetBattlerMon(GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT))))
                 stringPtr = sText_TwoWildPkmnAppeared;
             else if (HasAnyBattleFlags(BATTLE_TYPE_CATCH_TUTORIAL))
                 stringPtr = sText_WildPkmnAppearedPause;
@@ -2523,7 +2523,7 @@ void BufferStringBattle(enum StringID stringID, enum BattlerId battler)
     case STRINGID_INTROSENDOUT: // poke first send-out
         if (IsOnPlayerSide(battler))
         {
-            if (IsDoubleBattle() && IsValidForBattle(GetBattlerMon(GetPartnerBattler(battler))))
+            if (IsDoubleBattle() && IsMonValidAndAliveForBattle(GetBattlerMon(GetPartnerBattler(battler))))
             {
                 if (HasAnyBattleFlags(BATTLE_TYPE_MULTI) && (HasAnyBattleFlags(BATTLE_TYPE_RECORDED_LINK) || HasAnyBattleFlags(BATTLE_TYPE_LINK)))
                 {
@@ -2555,7 +2555,7 @@ void BufferStringBattle(enum StringID stringID, enum BattlerId battler)
         }
         else
         {
-            if (IsDoubleBattle() && IsValidForBattle(GetBattlerMon(GetPartnerBattler(battler))))
+            if (IsDoubleBattle() && IsMonValidAndAliveForBattle(GetBattlerMon(GetPartnerBattler(battler))))
             {
                 if (HasAnyBattleFlags(BATTLE_TYPE_RECORDED_LINK) && IsMultiVsOneOpponentBattle())
                     stringPtr = sText_LinkTrainerSentOutTwoPkmn;
