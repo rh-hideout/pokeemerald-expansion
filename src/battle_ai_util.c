@@ -2796,7 +2796,7 @@ static bool32 HasDamagingMoveSuperEffectiveAgainstType(enum BattlerId battlerAtk
     {
         enum Move move = moves[moveIndex];
 
-        if (IsMoveUnusable(moveIndex, moves[moveIndex], moveLimitations) || IsBattleMoveStatus(move))
+        if (IsMoveUnusable(moveIndex, move, moveLimitations) || IsBattleMoveStatus(move))
             continue;
         if (AI_GetMoveEffectiveness(move, battlerAtk, battlerDef) >= UQ_4_12(2.0))
         {
