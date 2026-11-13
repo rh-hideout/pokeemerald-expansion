@@ -59,9 +59,6 @@ The `additionalEffects` field represents effects that are applied at the `setadd
 ### src/data/battle_move_effects.h
 Effects are listed here along with the `battleScript` that governs each one. Said scripts are defined in [`data/battle_scripts_1.s`](#databattle_scripts_1s). The indices/names of the effects (e.g. `EFFECT_FIRST_TURN_ONLY`) are enums defined in [`include/constants/battle_move_effects.h`](#includeconstantsbattle_move_effectsh).
 
-### include/battle_scripts.h
-Contains references to scripts [`data/battle_scripts_1.s`](#databattle_scripts_1s), allowing them to be referenced in C. Any new scripts must be added here.
-
 ### include/constants/battle_move_effects.h
 Simply an enum list of possible effects for moves. Any new effects would be added here, with a definition for them (including defining a script) would then also be added to [`src/data/battle_move_effects.h`](#srcdatabattle_move_effectsh).
 
@@ -93,8 +90,31 @@ As an example, the resulting changes should look like this:
     MOVE_ALL_OUT_PUMMELING,
 ```
 ## C files
-### src/battle_script_commands.c
-This is where a lot of the commands referred to in scripts are defined. For example, the `jumpifnotfirstturn` command above is defined by the function `Cmd_jumpifnotfirstturn` and you can see how it works in C. It's possible that any move editing or updating you have in mind can be done with existing commands, but if you wanted to add a new function that could be called in a script above, this is where you would define it.
+### src/battle_set_effect.c
+This is where the majority of effects are defined (e.g. Absorb). Exceptions are moves with damage modifiers (e.g. Round), with specific failure conditions (e.g. Poltergeist), two turn moves (sky drop). Let's examine a move effect function.
+```C
+// effectBattler -> the battler that will be seeded
+static void HandleSetEffectLeechSeed(struct BattleCalcValues *cv, struct SetEffect *se)
+{
+    if (gBattleMons[se->effectBattler].volatiles.leechSeed)
+    {
+        SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
+    }
+    else if (IS_BATTLER_OF_TYPE(se->effectBattler, TYPE_GRASS))
+    {
+        SetEffectFail(BattleScript_ItDoesntAffectEffBattler, cv->isStatusMove);
+    }
+    else if (!cv->onlyChecking)
+    {
+        gBattleMons[se->effectBattler].volatiles.leechSeed = LEECHSEEDED_BY(cv->battlerAtk);
+        PrepareStringBattleWithWait(STRINGID_PKMNSEEDED, se->effectBattler);
+        BattleScriptPushAndSet(se->script, BattleScript_WaitMessage);
+    }
+}
+```
+The function has 2 parts. A "failure" part and a "set effect" part. The failure part checks if a move effect can be applied. For status moves this means that a failure message will be printed (Leech Seed). For damage moves the failure is silent (Sappy Seed).
+For status moves specifically we want to check the failure first before we apply any effec. This is where `cv->onlyChecking` comes into play. It postpones the "set effect" part to after the animation. 
+We also want to execute an effect. In this case a general `BattleScript_WaitMessage` is used. We already seeeded the battle and we just want to print the message. A general script can be used in most cases but not always. 
 
 ### src/battle_util.c
 This contains a lot of the "utility" functions used to determine things like a move's dynamic typing or power. It's also where damage calculation takes place, and a lot of that will naturally take a move's effect into account. For example, a move with the effect `EFFECT_SOLAR_BEAM` would have its damage halved in sandstorm. If you wanted to add a move with an effect which gave it variable BP or typing, this is the file you would encode that effect.
@@ -104,31 +124,6 @@ Contains string defines and functions that print messages during the battle. If 
 
 ### src/battle_main.c
 Contains more fundamental functions that control the flow of the battle. Functions here determine move order, dynamic typing, animations, priority, speed calculations and more.
-
-## Script files
-### data/battle_scripts_1.s
-Each move's effect is governed by a script defined here. For a simple example, let's look at the script for Fake Out/First Impression:
-
-TODO: New Script
-```
-BattleScript_EffectTaunt::
-	attackcanceler
-	jumpifability BS_TARGET_SIDE, ABILITY_AROMA_VEIL, BattleScript_AromaVeilProtects
-	accuracycheck BattleScript_ButItFailed, ACC_CURR_MOVE
-	settaunt BattleScript_ButItFailed
-	attackanimation
-	waitanimation
-	printstring STRINGID_PKMNFELLFORTAUNT
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-```
-
-`attackcanceler` is a command that covers all cases that could cause a move to fail before it's even attempted (e.g. paralysis). The next command is a jump command. A jump command can check anything and usually comes with a jump instruction. Usually it jumps to a place from where the move should pick up because of certain conditions. The next one is an accuracy check. Accuracy checks happen after all prior move failure checks happened. The next set of commands are unique to a certain move, they are mostly the same for damaging moves but can widely differ for status moves. Lastly there is `BattleScript_MoveEnd` which the move after a succesful hit. An ability activation or specific move effect like Burn, Freeze, Absorb etc.
-
-This is the most advanced part of the ROM. There are dozens upon dozens of commands and hundreds of scripts so this guide would go on forever if I were to go into more detail. To learn how these scripts work, it's best to look at a few examples of moves you know.
-
-### asm/macros/battle_script.inc
-The "link" between [`data/battle_scripts_1.s`](#databattle_scripts_1s) and [`src/battle_script_commands.c`](#srcbattle_script_commandsc). Each command is represented by a hex byte which represents its index in the `gBattleScriptingCommandsTable` array at the top of [`src/battle_script_commands.c`](#srcbattle_script_commandsc). However, this file also contains macros which perform combinations of other commands, or just calculations in assembly. In addition to commands, it is also possible to call functions in [`src/battle_script_commands.c`](#srcbattle_script_commandsc) using the `various` (now gradually being deprecated) and the `callnative` functionality. The `various` macros will point to a case under the `Cmd_various` function in [`src/battle_script_commands.c`](#srcbattle_script_commandsc), whereas `callnative` will let you directly call a function in [`src/battle_script_commands.c`](#srcbattle_script_commandsc) by name.
 
 ### data/battle_anim_scripts.s
 This is the place where move animations are defined. The array at the top, `gBattleAnims_Moves`, is in move index order and determines which animation goes with which move.
@@ -158,7 +153,7 @@ To change the main effect of a move to an existing effect, you need only change 
 Note: A generic function for calculating category does not currently exist - Photon Geyser's script in [`data/battle_scripts_1.s`](#databattle_scripts_1s) uses a special `callnative` function `BS_SetPhotonGeyserCategory`.
 
 ### Changing a move's additional effects
-If you look at the example [here](#srcdatamoves_infoh), you can see that Thunder Shock has an additional effects array that contains a single move effect `MOVE_EFFECT_PARALYSIS` with a 10% chance of applying. Thanks to this field, you can add and remove primary and secondary effects (so long as they are defined by a `MOVE_EFFECT`) to a move without having to change its effect or script. You can also make an effect apply to the attacker rather than the target (for, say, a stat boost) with `.self = TRUE` and you can set the probability to whatever you want with the `chance` field.
+If you look at the example [here](#src/data/moves_info.h), you can see that Thunder Shock has an additional effects array that contains a single move effect `MOVE_EFFECT_PARALYSIS` with a 10% chance of applying. Thanks to this field, you can add and remove primary and secondary effects (so long as they are defined by a `MOVE_EFFECT`) to a move without having to change its effect or script. You can also make an effect apply to the attacker rather than the target (for, say, a stat boost) with `.self = TRUE` and you can set the probability to whatever you want with the `chance` field.
 
 All additional effects with a defined chance (even 100%) are treated as "secondary effects". This means that they are nullified by Sheer Force, blocked by Shield Dust or the Covert Cloak, and have their chance modified by Serene Grace. Additional effects without a chance field (effectively setting it to 0) are treated as "primary effects", which means that they cannot be blocked by the aforementioned items and abilities and their chance to occur cannot be modified; they will *always* happen.
 
@@ -216,6 +211,39 @@ To add a new move, you need to create an entry in three locations:
 - a define in [`include/constants/moves.h`](#includeconstantsmovesh)
 - an info entry in [`src/data/battle_moves.h`](#srcdatamoves_infoh)
 - an animation entry in [data/battle_anim_scripts.s](#databattle_anim_scriptss)
+
+Now let's create a Stone Blade move 
+```C
+    [MOVE_STONE_BLADE] =
+    {
+        .name = COMPOUND_STRING("Stone Blade"),
+        .description = COMPOUND_STRING("A strong slice with a high crit ratio"),
+        .effect = EFFECT_HIT,
+        .power = 70, // 70 Base Power
+        .type = TYPE_ROCK, // Rock type
+        .accuracy = 0, // 0: no accuracy check
+        .pp = 10, // 10 Power Points
+        .target = TARGET_SELECTED, // Target needs to be selected
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .criticalHitStage = 1,
+        .makesContact = TRUE, // added the contact flag so can activate effects like static 
+        .slicingMove = TRUE, // will be boosted by Sharpness
+        .battleAnimScript = gBattleAnimMove_None, // replace with new anim
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_STAT_MINUS,
+            .speed = 1,
+            .chance = 100,
+        }, {
+            .moveEffect = MOVE_EFFECT_STAT_PLUS,
+            .speed = 1,
+            .self = TRUE,
+            .chance = 100,
+        }),
+    },
+```
+We created a basic rock type move with a high critical hit ratio. The move also has 2 additional effectt. An effect that drops the speed of the target and a `self` effect that increases speed
+
 
 And that's it! You can use an existing animation or effect for your move - or you can add your own, but I'll leave figuring that out to you.
 
