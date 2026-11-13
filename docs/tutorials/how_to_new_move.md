@@ -56,6 +56,15 @@ The `effect` represents how the move actually works when called in battle - it c
 
 The `additionalEffects` field represents effects that are applied at the `setadditionaleffects` stage of the move script (for most moves, see `BattleScript_Hit_RetFromAtkAnimation`). These are effects that can be encapsulated by any of the `MOVE_EFFECT_X` defined in [`include/constants/battle.h`](#includeconstantsbattleh) and encoded under `SetMoveEffect` in [`src/battle_script_commands.c`](#srcbattle_script_commandsc). These can vary from applying a status, such as `MOVE_EFFECT_PARALYSIS`, or lowering/raising stats etc. The move effect could target the user by setting `self = TRUE`, such as Overheat lowering the user's own Sp. Atk. What's more, definining a `chance`, such as for Thunder Shock, not only limits the effect to applying only `chance`% of the time, but it also turns it into a *secondary effect.* This difference is important because secondary effects are nullified by Sheer Force (which in turn will boost the move's power) and they are blocked by Shield Dust. These two limitations do not apply to *primary effects* which do not a chance field defined and by definition will *always* happen when the move is executed.
 
+### src/battle_move_resolution.c
+As the name implies this is where the move resolution happens for a move. In the majority of cases this can be ignored but if a move needs to have very specific failure checks there are a couple functions that help with that. 
+* `CancelerMoveFailure` Handles moves that would fail because of certain user conditions. For example Fake Out `EFFECT_FIRST_TURN_ONLY`. The move will fail independent of the target if it isn't the first turn
+* `CancelerMoveEffectFailureTarget` Looks at target specific failure such as Poltergeist when target has no item. Note: the function is build in a way to handle spread moves meaning if one check is successfulthe move wont fail 
+* `CancelerStatusEffects` This can be largely treated as a blackbox but noteworthy is that for status move the decision whether the move fails or not is handled here. When the move fails no animation is played and we handle the failure later. 
+* A couple other things notable things are `CancelerCharging`, `CancelerExplosion`, `CancelerPledgeAttack`. For more information see the correspondings functions or that table `sMoveSuccessOrderCancelers`. 
+
+You could call the file the heart of a move. It can be ignored but it can be useful to know how it works when a move needs to be more complicated like the pledges.
+
 ### src/data/battle_move_effects.h
 Effects are listed here along with the `battleScript` that governs each one. Said scripts are defined in [`data/battle_scripts_1.s`](#databattle_scripts_1s). The indices/names of the effects (e.g. `EFFECT_FIRST_TURN_ONLY`) are enums defined in [`include/constants/battle_move_effects.h`](#includeconstantsbattle_move_effectsh).
 
@@ -91,9 +100,9 @@ As an example, the resulting changes should look like this:
 ```
 ## C files
 ### src/battle_set_effect.c
-This is where the majority of effects are defined (e.g. Absorb). Exceptions are moves with damage modifiers (e.g. Round), with specific failure conditions (e.g. Poltergeist), two turn moves (sky drop). Let's examine a move effect function.
+This is where the majority of effects are defined (e.g. Absorb). Exceptions are moves with damage modifiers (e.g. Round), with specific failure conditions (e.g. Poltergeist), two turn moves (e.g. Sky Drop). Let's examine a move effect function.
 ```C
-// effectBattler -> the battler that will be seeded
+// se->effectBattler -> the battler that will be seeded
 static void HandleSetEffectLeechSeed(struct BattleCalcValues *cv, struct SetEffect *se)
 {
     if (gBattleMons[se->effectBattler].volatiles.leechSeed)
@@ -113,8 +122,8 @@ static void HandleSetEffectLeechSeed(struct BattleCalcValues *cv, struct SetEffe
 }
 ```
 The function has 2 parts. A "failure" part and a "set effect" part. The failure part checks if a move effect can be applied. For status moves this means that a failure message will be printed (Leech Seed). For damage moves the failure is silent (Sappy Seed).
-For status moves specifically we want to check the failure first before we apply any effec. This is where `cv->onlyChecking` comes into play. It postpones the "set effect" part to after the animation. 
-We also want to execute an effect. In this case a general `BattleScript_WaitMessage` is used. We already seeeded the battle and we just want to print the message. A general script can be used in most cases but not always. 
+For status moves specifically we want to check the failure first before we apply any effect. This is where `cv->onlyChecking` comes into play. It postpones the "set effect" part to after the animation. 
+We also want to execute an effect. In this case a general `BattleScript_WaitMessage` is used. We already seeded the battler and we just want to print the message. A general script can be used in most cases but not always. A dedicated script is usually needed when the move is more sophisticated then usual (a move like Skill Swap that has a lot of moving parts). An other edge case is `BattleScript_PrintSavedMessage`. It has almost the same functionality as `BattleScript_WaitMessage` but it saves the string to delay the usage of `PrepareStringBattleWithWait`. This is required because we mark the battler for execution twice but need to delay it by one frame so the first execution isn't overwritten.
 
 ### src/battle_util.c
 This contains a lot of the "utility" functions used to determine things like a move's dynamic typing or power. It's also where damage calculation takes place, and a lot of that will naturally take a move's effect into account. For example, a move with the effect `EFFECT_SOLAR_BEAM` would have its damage halved in sandstorm. If you wanted to add a move with an effect which gave it variable BP or typing, this is the file you would encode that effect.
@@ -242,7 +251,7 @@ Now let's create a Stone Blade move
         }),
     },
 ```
-We created a basic rock type move with a high critical hit ratio. The move also has 2 additional effectt. An effect that drops the speed of the target and a `self` effect that increases speed
+We created a basic rock type move with a high critical hit ratio. The move also has 2 additional effects. An effect that drops the speed of the target and an effect that increases speed
 
 
 And that's it! You can use an existing animation or effect for your move - or you can add your own, but I'll leave figuring that out to you.
