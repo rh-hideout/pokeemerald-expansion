@@ -1361,6 +1361,12 @@ static void DebugSelectionStep_ReturnToTrainersMenu(u8 taskId)
     Debug_ShowMenu(DebugTask_HandleMenuInput_General, sDebugMenu_Actions_Trainers);
 }
 
+static void DebugSelectionStep_ReturnToFollowersMenu(u8 taskId)
+{
+    Debug_RemoveCallbackMenu();
+    DebugAction_OpenSubMenu(taskId, sDebugMenu_Actions_FollowerNPCMenu_Create);
+}
+
 static u32 Debug_GenerateListTrainerMenu(const struct DebugMenuOption *items)
 {
     u32 trainer1Id = sDebugMenuListData->data[0];
@@ -3994,6 +4000,21 @@ static void DebugAction_Sound_MUS_SelectId(u8 taskId)
     }
 }
 
+static bool32 DebugSelection_FollowerPartner_Complete(u8 taskId) 
+{
+    SetFollowerNPCData(FNPC_DATA_BATTLE_PARTNER, DebugSelection_GetData(taskId, 0));
+    Debug_DestroyMenu_Full(taskId);
+    return TRUE;
+}
+
+static const struct DebugSelection sFollowerPartnerSelection = {
+    .onInit = DebugSelection_Partner_Init,
+    .onCancel = DebugSelectionStep_ReturnToFollowersMenu,
+    .onComplete = DebugSelection_FollowerPartner_Complete,
+    .steps = {&sPartnerSelectionStep},
+    .maxSteps = 1,
+};
+
 static const u32 gDebugFollowerNPCGraphics[] =
 {
     OBJ_EVENT_GFX_RIVAL_BRENDAN_NORMAL,
@@ -4009,12 +4030,9 @@ static void DebugAction_CreateFollowerNPC(u8 taskId)
     u32 input = ListMenu_ProcessInput(gTasks[taskId].tMenuTaskId);
     u32 gfx = gDebugFollowerNPCGraphics[input];
 
-    Debug_DestroyMenu_Full(taskId);
-    LockPlayerFieldControls();
     DestroyFollowerNPC();
-    SetFollowerNPCData(FNPC_DATA_BATTLE_PARTNER, PARTNER_STEVEN);
     CreateFollowerNPC(gfx, FNPC_ALL, Debug_Follower_NPC_Event_Script);
-    UnlockPlayerFieldControls();
+    DebugAction_Selection_Init(taskId, &sFollowerPartnerSelection);
 }
 
 static void DebugAction_DestroyFollowerNPC(u8 taskId)
