@@ -290,14 +290,15 @@ bool32 HasPartnerIgnoreFlags(enum BattlerId battler);
 bool32 AreMovesEquivalent(enum BattlerId battlerAtk, enum BattlerId battlerAtkPartner, enum Move move, enum Move partnerMove);
 bool32 DoesPartnerHaveSameMoveEffect(enum BattlerId battlerAtkPartner, enum BattlerId battlerDef, enum Move move, enum Move partnerMove);
 bool32 PartnerMoveEffectIsStatusSameTarget(enum BattlerId battlerAtkPartner, enum BattlerId battlerDef, enum Move partnerMove);
-bool32 PartnerMoveEffectIs(enum BattlerId battlerAtkPartner, enum Move partnerMove, enum BattleMoveEffects effectCheck);
-bool32 PartnerMoveIs(enum BattlerId battlerAtkPartner, enum Move partnerMove, enum Move moveCheck);
+bool32 PartnerMoveEffectIs(enum BattlerId battlerAtkPartner,  enum BattleMoveEffects effectCheck);
+bool32 PartnerMoveIs(enum BattlerId battlerAtkPartner, enum Move moveCheck);
 bool32 PartnerMoveIsSameAsAttacker(enum BattlerId battlerAtkPartner, enum BattlerId battlerDef, enum Move move, enum Move partnerMove);
 bool32 PartnerMoveIsSameNoTarget(enum BattlerId battlerAtkPartner, enum Move move, enum Move partnerMove);
 bool32 PartnerMoveActivatesSleepClause(enum Move partnerMove);
 bool32 ShouldUseWishAromatherapy(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move);
 u32 GetFriendlyFireKOThreshold(enum BattlerId battler);
 bool32 IsAllyProtectingFromMove(enum BattlerId battlerAtk, enum Move attackerMove, enum Move allyMove);
+bool32 IsThinkingBeforePartner(enum BattlerId battlerAtk, enum BattlerId battlerAtkPartner);
 
 // party logic
 struct BattlePokemon *AllocSaveBattleMons(void);
@@ -309,8 +310,8 @@ s32 CountUsableSideMons(enum BattlerId battlerId);
 bool32 IsPartyFullyHealedExceptBattler(enum BattlerId battler);
 s32 GetAILastPartyIndex(enum BattlerId battler);
 u32 GetActiveBattlerIds(enum BattlerId battler, enum BattlerId *battlerIn1, enum BattlerId *battlerIn2);
-bool32 IsPartyMonOnFieldOrChosenToSwitch(enum BattlerId battler, enum PartyMon partyIndex, enum BattlerId battlerIn1, enum BattlerId battlerIn2);
-bool32 IsPartyMonPlannedToBeSwitchedInByPartner(enum PartyMon partyIndex, enum BattlerId battler);
+bool32 IsPartyMonOnFieldOrChosenToSwitch(enum BattlerId battler, enum PartySlot partyIndex, enum BattlerId battlerIn1, enum BattlerId battlerIn2);
+bool32 IsPartyMonPlannedToBeSwitchedInByPartner(enum PartySlot partyIndex, enum BattlerId battler);
 s32 AI_GetAdjustedStatStage(enum BattlerId battler, enum Move move, s32 stage);
 s32 GetStatChangeScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move);
 s32 GetSelfStatChangeScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move);

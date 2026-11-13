@@ -209,7 +209,6 @@ extern const u8 BattleScript_BerryCureStatusRet[];
 extern const u8 BattleScript_BerryCureStatusAndConfusionRet[];
 extern const u8 BattleScript_BerryCureConfusionRet[];
 extern const u8 BattleScript_WhiteHerbRet[];
-extern const u8 BattleScript_WhiteHerbFling[];
 extern const u8 BattleScript_ItemHealHP_RemoveItem[];
 extern const u8 BattleScript_ItemHealHP_RemoveBerry[];
 extern const u8 BattleScript_BerryPPHeal[];
@@ -462,8 +461,6 @@ extern const u8 BattleScript_CouldntFullyProtect[];
 extern const u8 BattleScript_TargetAvoidsAttack[];
 extern const u8 BattleScript_BattlerAvoidedAttack[];
 extern const u8 BattleScript_EffBattlerAvoidedAttack[];
-extern const u8 BattleScript_TargetProtectedConsumeFlingItem[];
-extern const u8 BattleScript_TargetAvoidsAttackConsumeFlingItem[];
 extern const u8 BattleScript_MoveEffectStockpileWoreOff[];
 extern const u8 BattleScript_BerserkGene[];
 extern const u8 BattleScript_TargetFormChangeWithStringNoPopup[];
@@ -611,6 +608,11 @@ extern const u8 BattleScript_Instruct[];
 extern const u8 BattleScript_StuffCheeks[];
 extern const u8 BattleScript_MoveEffectIonDeluge[];
 extern const u8 BattleScript_WaitMessage[];
+
+// Used for when a battler was already marked for controller execution.
+// It not possible not use PrepareStringBattleWithWait because the write would get out of synch
+extern const u8 BattleScript_PrintSavedMessage[];
+
 extern const u8 BattleScript_MoveEffectTeatime[];
 extern const u8 BattleScript_RestoreHpEffectBattler[];
 extern const u8 BattleScript_Purify[];

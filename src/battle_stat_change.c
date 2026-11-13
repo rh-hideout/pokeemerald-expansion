@@ -509,7 +509,11 @@ static void TryPlayStatChangeAnimation(struct BattleCalcValues *cv, struct StatC
         bool32 isStatChangeByTwo = abs(st->stage) > 1;
 
         gBattleStruct->negativeAnimPlayed = TRUE;
-        numNegativeStats = GetNumNegativeStats(st);
+
+        if (cv->abilities[cv->battlerDef] == ABILITY_CONTRARY)
+            numNegativeStats = GetNumPositiveStats(st);
+        else
+            numNegativeStats = GetNumNegativeStats(st);
 
         statAnimId += isStatChangeByTwo ? STAT_ANIM_MINUS2 : STAT_ANIM_MINUS1;
 
@@ -528,7 +532,11 @@ static void TryPlayStatChangeAnimation(struct BattleCalcValues *cv, struct StatC
         bool32 isStatChangeByTwo = st->stage > 1;
 
         gBattleStruct->positiveAnimPlayed = TRUE;
-        numPositiveStats = GetNumPositiveStats(st);
+
+        if (cv->abilities[cv->battlerDef] == ABILITY_CONTRARY)
+            numPositiveStats = GetNumNegativeStats(st);
+        else
+            numPositiveStats = GetNumPositiveStats(st);
 
         statAnimId += isStatChangeByTwo ? STAT_ANIM_PLUS2 : STAT_ANIM_PLUS1;
 

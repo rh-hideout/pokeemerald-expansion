@@ -19,23 +19,13 @@
 #include "constants/form_change_types.h"
 #include "constants/party_menu.h"
 
-static bool32 IsMonValidSpecies(struct Pokemon *pokemon)
-{
-    enum Species species = GetMonData(pokemon, MON_DATA_SPECIES_OR_EGG);
-    if (species == SPECIES_NONE || species == SPECIES_EGG)
-        return FALSE;
-
-    return TRUE;
-}
-
 static bool32 AllMonsFainted(void)
 {
-    int i;
-    struct Pokemon *pokemon = gParties[B_TRAINER_PLAYER];
-
-    for (i = 0; i < PARTY_SIZE; i++, pokemon++)
+    for (enum PartySlot slot = 0; slot < PARTY_SIZE; slot++)
     {
-        if (IsMonValidSpecies(pokemon) && GetMonData(pokemon, MON_DATA_HP) != 0)
+        struct Pokemon *pokemon = &gParties[B_TRAINER_PLAYER][slot];
+
+        if (IsMonValidAndAliveForBattle(pokemon))
             return FALSE;
     }
     return TRUE;
@@ -54,10 +44,12 @@ static void FaintFromFieldPoison(u8 partyIdx)
     StringGet_Nickname(gStringVar1);
 }
 
-static bool32 MonFaintedFromPoison(u8 partyIdx)
+static bool32 MonFaintedFromPoison(enum PartySlot slot)
 {
-    struct Pokemon *pokemon = &gParties[B_TRAINER_PLAYER][partyIdx];
-    if (IsMonValidSpecies(pokemon) && GetMonData(pokemon, MON_DATA_HP) == ((OW_POISON_DAMAGE < GEN_4) ? 0 : 1) && GetAilmentFromStatus(GetMonData(pokemon, MON_DATA_STATUS)) == AILMENT_PSN)
+    u32 remainingHealth = (OW_POISON_DAMAGE < GEN_4) ? 0 : 1;
+    struct Pokemon *pokemon = &gParties[B_TRAINER_PLAYER][slot];
+
+    if (IsMonValidForBattle(pokemon) && GetMonData(pokemon, MON_DATA_HP) == remainingHealth && GetAilmentFromStatus(GetMonData(pokemon, MON_DATA_STATUS)) == AILMENT_PSN)
         return TRUE;
 
     return FALSE;

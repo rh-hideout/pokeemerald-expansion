@@ -40,7 +40,7 @@ enum __attribute__((packed)) MoveEffect
     MOVE_EFFECT_INCINERATE,
     MOVE_EFFECT_BUG_BITE,
     MOVE_EFFECT_RECOIL_HP_25,
-    MOVE_EFFECT_TRAP_BOTH,
+    MOVE_EFFECT_JAW_LOCK,
     MOVE_EFFECT_ROUND,
     MOVE_EFFECT_SYRUP_BOMB,
     MOVE_EFFECT_SECRET_POWER,
@@ -56,7 +56,7 @@ enum __attribute__((packed)) MoveEffect
     MOVE_EFFECT_LIGHT_SCREEN,
     MOVE_EFFECT_SALT_CURE,
     MOVE_EFFECT_EERIE_SPELL,
-    MOVE_EFFECT_FLING, // If used without EFFECT_FLING, the move will be a regular damage move with fling as an additional effect without the failure and dmg modifier parts
+    MOVE_EFFECT_FLING, // If used without EFFECT_FLING, the move will be a regular damage move with fling as an additional effect without the failure, item consumption and dmg modifier parts
     MOVE_EFFECT_RAINBOW,
     MOVE_EFFECT_SEA_OF_FIRE,
     MOVE_EFFECT_SWAMP,

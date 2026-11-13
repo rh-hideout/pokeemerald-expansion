@@ -201,7 +201,11 @@ static void HandleSetEffectAbsorb(struct BattleCalcValues *cv, struct SetEffect 
             return;
         }
 
-        s32 healAmount = (gBattleStruct->moveDamage[cv->battlerDef] * absorbPercentage / 100);
+        s32 rounding = GetConfig(B_HP_RESTORATION_ROUNDING) >= GEN_5 ? 1 : 0;
+        s32 damage = gBattleStruct->moveDamage[cv->battlerDef];
+
+        s32 healAmount = (damage + rounding) * absorbPercentage / 100;
+
         healAmount = GetDrainedBigRootHp(cv->battlerAtk, healAmount);
         gEffectBattler = cv->battlerAtk;
         gBattlerAbility = gBattleScripting.battler = cv->battlerDef;
@@ -360,7 +364,7 @@ static void HandleSetEffectRemoveArgType(struct BattleCalcValues *cv, struct Set
 
 static void HandleSetEffectRecharge(struct BattleCalcValues *cv, struct SetEffect *se)
 {
-    if (B_SKIP_RECHARGE == GEN_1 && !IsBattlerAlive(cv->battlerDef))  // Skip recharge if gen 1 and foe is KO'd
+    if (GetConfig(B_SKIP_RECHARGE) == GEN_1 && !IsBattlerAlive(gBattlerTarget))  // Skip recharge if gen 1 and foe is KO'd
         return;
 
     gBattleMons[se->effectBattler].volatiles.rechargeTimer = 2;
@@ -563,12 +567,9 @@ static void HandleSetEffectCelebrate(struct BattleCalcValues *cv, struct SetEffe
     BattleScriptPushAndSet(se->script, BattleScript_WaitMessage);
 }
 
-static void HandleSetEffectCoreEnforcer(struct BattleCalcValues *cv, struct SetEffect *se)
+static void SetGastroAcid(struct BattleCalcValues *cv, struct SetEffect *se)
 {
-    if (!HasBattlerActedThisTurn(se->effectBattler)
-     || BattlerJustSwitchedIn(se->effectBattler)
-     || NoAliveMonsForEitherParty()
-     || gBattleMons[se->effectBattler].volatiles.gastroAcid
+    if (gBattleMons[se->effectBattler].volatiles.gastroAcid
      || gAbilitiesInfo[gBattleMons[se->effectBattler].ability].cantBeSuppressed)
     {
         SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
@@ -586,7 +587,21 @@ static void HandleSetEffectCoreEnforcer(struct BattleCalcValues *cv, struct SetE
 
         RemoveRuinAbilityFlags(se->effectBattler);
         gBattleMons[se->effectBattler].volatiles.gastroAcid = TRUE;
+        ResetTruantToggleOnAbilitySuppression(se->effectBattler);
         BattleScriptPushAndSet(se->script, BattleScript_MoveEffectGastroAcid);
+    }
+}
+
+static void HandleSetEffectCoreEnforcer(struct BattleCalcValues *cv, struct SetEffect *se)
+{
+    if (!HasBattlerActedThisTurn(se->effectBattler)
+     || BattlerJustSwitchedIn(se->effectBattler))
+    {
+        SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
+    }
+    else
+    {
+        SetGastroAcid(cv, se);
     }
 }
 
@@ -665,19 +680,18 @@ static void HandleSetEffectRecoilHp25(struct BattleCalcValues *cv, struct SetEff
     gBattlescriptCurrInstr = BattleScript_MoveEffectRecoilHP25;
 }
 
-static void HandleSetEffectTrapBoth(struct BattleCalcValues *cv, struct SetEffect *se)
+static void HandleSetEffectJawLock(struct BattleCalcValues *cv, struct SetEffect *se)
 {
-    if (!(gBattleMons[se->effectBattler].volatiles.escapePrevention || gBattleMons[cv->battlerAtk].volatiles.escapePrevention))
+    if (gBattleMons[cv->battlerAtk].volatiles.escapePrevention
+     || gBattleMons[se->effectBattler].volatiles.escapePrevention
+     || IsBattlerJawLocked(cv->battlerAtk)
+     || IsBattlerJawLocked(se->effectBattler))
     {
-        if (!gBattleMons[se->effectBattler].volatiles.escapePrevention)
-            gBattleMons[se->effectBattler].volatiles.battlerPreventingEscape = cv->battlerAtk;
-
-        if (!gBattleMons[cv->battlerAtk].volatiles.escapePrevention)
-            gBattleMons[cv->battlerAtk].volatiles.battlerPreventingEscape = se->effectBattler;
-
-        gBattleMons[se->effectBattler].volatiles.escapePrevention = TRUE;
-        gBattleMons[cv->battlerAtk].volatiles.escapePrevention = TRUE;
-
+        SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
+    }
+    else if (!cv->onlyChecking)
+    {
+        gBattleMons[cv->battlerAtk].volatiles.jawLock |= 1u << se->effectBattler;
         BattleScriptPush(se->script);
         gBattlescriptCurrInstr = BattleScript_BothCanNoLongerEscape;
     }
@@ -1049,8 +1063,8 @@ static void HandleSetEffectEerieSpell(struct BattleCalcValues *cv, struct SetEff
         if (gBattleMons[se->effectBattler].pp[i] == 0)
             CancelMultiTurnMoves(se->effectBattler);
 
-        PrepareStringBattleWithWait(STRINGID_PKMNREDUCEDPP, cv->battlerAtk);
-        BattleScriptPushAndSet(se->script, BattleScript_WaitMessage);
+        gBattleScripting.savedStringId = STRINGID_PKMNREDUCEDPP;
+        BattleScriptPushAndSet(se->script, BattleScript_PrintSavedMessage);
     }
 }
 
@@ -1060,69 +1074,50 @@ static void HandleSetEffectFling(struct BattleCalcValues *cv, struct SetEffect *
     {
         enum Item item = ITEM_NONE;
 
-        switch (gBattleStruct->flungItem)
-        {
-        case FLUNG_ITEM_NONE:
-            gBattleStruct->flungItem = FLUNG_ITEM_REMOVE;
-            item = gLastUsedItem = gBattleStruct->flingItem = gBattleMons[cv->battlerAtk].item;
-            break;
-        case FLUNG_ITEM_REMOVE:
-        case FLUNG_ITEM_REMOVED:
-            gBattleStruct->flungItem = FLUNG_ITEM_REMOVED;
-            item = gLastUsedItem = gBattleStruct->flingItem;
-            break;
-        }
+        item = gLastUsedItem = gBattleStruct->flingItem;
 
         enum HoldEffect holdEffect = GetItemHoldEffect(item);
 
         if (IsMoveEffectBlockedByTarget(cv->abilities[se->effectBattler]))
         {
-            BattleScriptPush(se->script);
-            gBattlescriptCurrInstr = BattleScript_FlingBlockedByShieldDust;
+            BattleScriptPushAndSet(se->script, BattleScript_FlingBlockedByShieldDust);
             return;
         }
 
         if (GetItemPocket(item) == POCKET_BERRIES)
         {
-            BattleScriptPush(se->script);
-            gBattlescriptCurrInstr = BattleScript_FlingConsumeBerry;
+            BattleScriptPushAndSet(se->script, BattleScript_FlingConsumeBerry);
             return;
         }
-
-        BattleScriptPush(se->script);
-        gBattlescriptCurrInstr = BattleScript_RemoveItem;
-
-        struct SetEffect flingEffect = {0};
-        flingEffect.script = gBattlescriptCurrInstr;
-        flingEffect.effectBattler = se->effectBattler;
 
         switch (holdEffect)
         {
         case HOLD_EFFECT_FLAME_ORB:
-            flingEffect.moveEffect = MOVE_EFFECT_BURN;
-            SetMoveEffect(cv, &flingEffect);
+            se->moveEffect = MOVE_EFFECT_BURN;
+            SetMoveEffect(cv, se);
             break;
         case HOLD_EFFECT_TOXIC_ORB:
-            flingEffect.moveEffect = MOVE_EFFECT_TOXIC;
-            SetMoveEffect(cv, &flingEffect);
+            se->moveEffect = MOVE_EFFECT_TOXIC;
+            SetMoveEffect(cv, se);
             break;
         case HOLD_EFFECT_LIGHT_BALL:
-            flingEffect.moveEffect = MOVE_EFFECT_PARALYSIS;
-            SetMoveEffect(cv, &flingEffect);
+            se->moveEffect = MOVE_EFFECT_PARALYSIS;
+            SetMoveEffect(cv, se);
             break;
         case HOLD_EFFECT_TYPE_POWER:
             if (GetItemSecondaryId(item) == TYPE_POISON)
             {
-                flingEffect.moveEffect = MOVE_EFFECT_POISON;
-                SetMoveEffect(cv, &flingEffect);
+                se->moveEffect = MOVE_EFFECT_POISON;
+                SetMoveEffect(cv, se);
             }
             break;
         case HOLD_EFFECT_FLINCH:
-            flingEffect.moveEffect = MOVE_EFFECT_FLINCH;
-            SetMoveEffect(cv, &flingEffect);
+            se->moveEffect = MOVE_EFFECT_FLINCH;
+            SetMoveEffect(cv, se);
             break;
         case HOLD_EFFECT_MENTAL_HERB:
         case HOLD_EFFECT_WHITE_HERB:
+            BattleScriptPush(se->script);
             ItemBattleEffects(se->effectBattler, 0, holdEffect, IsOnFlingActivation);
             break;
         default:
@@ -1597,8 +1592,8 @@ static void HandleSetEffectRecycle(struct BattleCalcValues *cv, struct SetEffect
             );
         MarkBattlerForControllerExec(se->effectBattler);
 
-        PrepareStringBattleWithWait(STRINGID_XFOUNDONEY, se->effectBattler);
-        BattleScriptPushAndSet(se->script, BattleScript_WaitMessage);
+        gBattleScripting.savedStringId = STRINGID_XFOUNDONEY;
+        BattleScriptPushAndSet(se->script, BattleScript_PrintSavedMessage);
     }
 }
 
@@ -1639,8 +1634,7 @@ static void HandleSetEffectSpite(struct BattleCalcValues *cv, struct SetEffect *
     u32 moveSlot = MAX_MON_MOVES;
     enum Move lastMove = gLastMoves[se->effectBattler];
 
-    if (lastMove == MOVE_NONE
-     || lastMove == MOVE_UNAVAILABLE
+    if (!IsMoveValid(gLastMoves[se->effectBattler]) 
      || !HasValidMoveToReducePP(se->effectBattler, &moveSlot, lastMove))
     {
         SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
@@ -1681,8 +1675,8 @@ static void HandleSetEffectSpite(struct BattleCalcValues *cv, struct SetEffect *
         if (gBattleMons[se->effectBattler].pp[moveSlot] == 0)
             CancelMultiTurnMoves(se->effectBattler);
 
-        PrepareStringBattleWithWait(STRINGID_PKMNREDUCEDPP, se->effectBattler);
-        BattleScriptPushAndSet(se->script, BattleScript_WaitMessage);
+        gBattleScripting.savedStringId = STRINGID_PKMNREDUCEDPP;
+        BattleScriptPushAndSet(se->script, BattleScript_PrintSavedMessage);
     }
 }
 
@@ -2375,7 +2369,7 @@ static void HandleSetEffectSubstitute(struct BattleCalcValues *cv, struct SetEff
 
 static void HandleSetEffectShedTail(struct BattleCalcValues *cv, struct SetEffect *se)
 {
-    if (gBattleTypeFlags & BATTLE_TYPE_ARENA
+    if (HasAnyBattleFlags(BATTLE_TYPE_ARENA)
      || gBattleStruct->battlerState[se->effectBattler].commanderSpecies != SPECIES_NONE
      || gBattleMons[se->effectBattler].volatiles.semiInvulnerable == STATE_COMMANDER
      || !CanBattlerSwitch(se->effectBattler))
@@ -2642,9 +2636,8 @@ static void HandleSetEffectSketch(struct BattleCalcValues *cv, struct SetEffect 
         MarkBattlerForControllerExec(cv->battlerAtk);
 
         PREPARE_MOVE_BUFFER(gBattleTextBuff1, moveToSketch)
-
-        PrepareStringBattleWithWait(STRINGID_PKMNSKETCHEDMOVE, cv->battlerAtk);
-        BattleScriptPushAndSet(se->script, BattleScript_WaitMessage);
+        gBattleScripting.savedStringId = STRINGID_PKMNSKETCHEDMOVE;
+        BattleScriptPushAndSet(se->script, BattleScript_PrintSavedMessage);
     }
 }
 
@@ -3082,28 +3075,7 @@ static void HandleSetEffectPowerTrick(struct BattleCalcValues *cv, struct SetEff
 
 static void HandleSetEffectGastroAcid(struct BattleCalcValues *cv, struct SetEffect *se)
 {
-    if (gBattleMons[se->effectBattler].volatiles.gastroAcid
-     || gAbilitiesInfo[gBattleMons[se->effectBattler].ability].cantBeSuppressed)
-    {
-        SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
-    }
-    else if (GetBattlerHoldEffectIgnoreAbility(se->effectBattler) == HOLD_EFFECT_ABILITY_SHIELD)
-    {
-        SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
-        if (!cv->onlyChecking)
-            RecordItemEffectBattle(se->effectBattler, HOLD_EFFECT_ABILITY_SHIELD);
-    }
-    else if (!cv->onlyChecking)
-    {
-        if (gBattleMons[se->effectBattler].volatiles.neutralizingGas)
-            gSpecialStatuses[se->effectBattler].neutralizingGasRemoved = TRUE;
-
-        RemoveRuinAbilityFlags(se->effectBattler);
-        gBattleMons[se->effectBattler].volatiles.gastroAcid = TRUE;
-        ResetTruantToggleOnAbilitySuppression(se->effectBattler);
-        BattleScriptPushAndSet(se->script, BattleScript_MoveEffectGastroAcid);
-    }
-
+    SetGastroAcid(cv, se);
 }
 
 static void HandleSetEffectLuckyChant(struct BattleCalcValues *cv, struct SetEffect *se)
@@ -3273,11 +3245,11 @@ static void HandleSetEffectTrick(struct BattleCalcValues *cv, struct SetEffect *
     bool32 notRegularBattleType = (BATTLE_TYPE_LINK | BATTLE_TYPE_EREADER_TRAINER | BATTLE_TYPE_FRONTIER | BATTLE_TYPE_SECRET_BASE | BATTLE_TYPE_RECORDED_LINK);
     bool32 battleTypeTrainer = (B_TRAINERS_KNOCK_OFF_ITEMS == TRUE ? BATTLE_TYPE_TRAINER : 0);
 
-    bool32 opponentCantSwapItems = (gBattleTypeFlags & BATTLE_TYPE_TRAINER_HILL)
-                                || (!IsOnPlayerSide(cv->battlerAtk) && !(gBattleTypeFlags & (notRegularBattleType | battleTypeTrainer)));
+    bool32 opponentCantSwapItems = (HasAnyBattleFlags(BATTLE_TYPE_TRAINER_HILL))
+                                || (!IsOnPlayerSide(cv->battlerAtk) && !HasAnyBattleFlags(notRegularBattleType | battleTypeTrainer));
 
     bool32 isKnockedOff = (GetBattlerPartyState(cv->battlerAtk)->isKnockedOff || GetBattlerPartyState(se->effectBattler)->isKnockedOff);
-    bool32 cantSwapIfKnockedOff = !(gBattleTypeFlags & (notRegularBattleType | battleTypeTrainer)) && isKnockedOff;
+    bool32 cantSwapIfKnockedOff = !HasAnyBattleFlags(notRegularBattleType | battleTypeTrainer) && isKnockedOff;
 
     if (opponentCantSwapItems || cantSwapIfKnockedOff)
     {
@@ -3629,7 +3601,6 @@ static void HandleSetEffectBestow(struct BattleCalcValues *cv, struct SetEffect 
     else if (!cv->onlyChecking)
     {
         BestowItem(cv->battlerAtk, se->effectBattler);
-        PrepareStringBattleWithWait(STRINGID_BESTOWITEMGIVING, cv->battlerAtk);
         BattleScriptPushAndSet(se->script, BattleScript_Bestow);
     }
 }
@@ -3648,23 +3619,23 @@ static void HandleSetEffectStickyWeb(struct BattleCalcValues *cv, struct SetEffe
         gSideTimers[effectSide].stickyWebBattlerId = cv->battlerAtk; // For Mirror Armor
         gSideTimers[effectSide].stickyWebBattlerSide = GetBattlerSide(cv->battlerAtk); // For Court Change/Defiant - set this to the user's side
 
-        PrepareStringBattle(STRINGID_STICKYWEBUSED, se->effectBattler);
+        PrepareStringBattleWithWait(STRINGID_STICKYWEBUSED, se->effectBattler);
         BattleScriptPushAndSet(se->script, BattleScript_WaitMessage);
     }
 }
 
 static bool32 DoesRoarFail(enum BattlerId battlerAtk, enum BattlerId effectBattler)
 {
-    if (gBattleTypeFlags & BATTLE_TYPE_ARENA)
+    if (HasAnyBattleFlags(BATTLE_TYPE_ARENA))
         return TRUE;
 
-    if (WILD_DOUBLE_BATTLE
+    if (IsWildDoubleBattle()
      && IsOnPlayerSide(battlerAtk)
      && !IsOnPlayerSide(effectBattler)
      && IsWholeSideAlive(effectBattler))
         return TRUE;
 
-    if (WILD_DOUBLE_BATTLE
+    if (IsWildDoubleBattle()
      && !IsOnPlayerSide(battlerAtk)
      && !IsOnPlayerSide(effectBattler))
         return TRUE;
@@ -3730,7 +3701,7 @@ static void HandleSetEffectTopsyTurvy(struct BattleCalcValues *cv, struct SetEff
             gBattleMons[se->effectBattler].statStages[stat] = MAX_STAT_STAGE - gBattleMons[se->effectBattler].statStages[stat] + MIN_STAT_STAGE;
         }
 
-        PrepareStringBattle(STRINGID_TOPSYTURVYSWITCHEDSTATS, se->effectBattler);
+        PrepareStringBattleWithWait(STRINGID_TOPSYTURVYSWITCHEDSTATS, se->effectBattler);
         BattleScriptPushAndSet(se->script, BattleScript_WaitMessage);
     }
 }
@@ -4215,7 +4186,7 @@ static void (*const sSetEffectHandlers[])(struct BattleCalcValues *cv, struct Se
     [MOVE_EFFECT_INCINERATE] = HandleSetEffectIncinerate,
     [MOVE_EFFECT_BUG_BITE] = HandleSetEffectBugBite,
     [MOVE_EFFECT_RECOIL_HP_25] = HandleSetEffectRecoilHp25,
-    [MOVE_EFFECT_TRAP_BOTH] = HandleSetEffectTrapBoth,
+    [MOVE_EFFECT_JAW_LOCK] = HandleSetEffectJawLock,
     [MOVE_EFFECT_ROUND] = HandleSetEffectRound,
     [MOVE_EFFECT_SYRUP_BOMB] = HandleSetEffectSyrupBomb,
     [MOVE_EFFECT_SECRET_POWER] = HandleSetEffectSecretPower,
@@ -4566,7 +4537,7 @@ enum StringID GetStatus1String(u32 status1)
 
 static s32 GetMaxHpWithRounding(enum BattlerId battler)
 {
-    if (B_UPDATED_MOVE_DATA >= GEN_5)
+    if (GetConfig(B_HP_RESTORATION_ROUNDING) >= GEN_5)
         return GetNonDynamaxMaxHP(battler) + 1;
     return GetNonDynamaxMaxHP(battler);
 }

@@ -160,6 +160,7 @@ static u8 GetReflectionTypeByMetatileBehavior(u32);
 static void InitObjectPriorityByElevation(struct Sprite *, u8);
 static void ObjectEventUpdateSubpriority(struct ObjectEvent *, struct Sprite *);
 static void DoTracksGroundEffect_None(struct ObjectEvent *, struct Sprite *, u8);
+static void DoTracksGroundEffect_Unused(struct ObjectEvent *, struct Sprite *, u8);
 static void DoTracksGroundEffect_Footprints(struct ObjectEvent *, struct Sprite *, u8);
 static void DoTracksGroundEffect_FootprintsB(struct ObjectEvent*, struct Sprite*, u8);
 static void DoTracksGroundEffect_FootprintsC(struct ObjectEvent*, struct Sprite*, u8);
@@ -1604,9 +1605,11 @@ static u8 InitObjectEventStateFromTemplate(const struct ObjectEventTemplate *tem
         y = template->y + MAP_OFFSET;
     }
     objectEvent->active = TRUE;
-    objectEvent->triggerGroundEffectsOnMove = TRUE;
+    objectEvent->triggerGroundEffectsOnMove = (template->localId != LOCALID_CAMERA);
+
     objectEvent->graphicsId = template->graphicsId;
     SetObjectEventDynamicGraphicsId(objectEvent);
+    objectEvent->disableFloorGroundEffects = (GetObjectEventGraphicsInfo(objectEvent->graphicsId)->tracks == TRACKS_NONE);
     if (IS_OW_MON_OBJ(objectEvent))
     {
         if (template->script && template->script[0] == 0x7d)
@@ -2241,6 +2244,7 @@ static void FollowerSetGraphics(struct ObjectEvent *objEvent, enum Species speci
     const struct ObjectEventGraphicsInfo *graphicsInfo = SpeciesToGraphicsInfo(species, shiny, female);
     ObjectEventSetGraphics(objEvent, graphicsInfo);
     objEvent->graphicsId = GetGraphicsIdForMon(species, shiny, female);
+    objEvent->disableFloorGroundEffects = (GetObjectEventGraphicsInfo(objEvent->graphicsId)->tracks == TRACKS_NONE);
     if (graphicsInfo->paletteTag == OBJ_EVENT_PAL_TAG_DYNAMIC) // Use palette from species palette table
     {
         struct Sprite *sprite = &gSprites[objEvent->spriteId];
@@ -2281,6 +2285,7 @@ static void RefreshFollowerGraphics(struct ObjectEvent *objEvent)
     sprite->compressedFast = graphicsInfo->compressionMode == OBJECT_EVENT_COMPRESSION_FAST;
     sprite->subspriteTables = graphicsInfo->subspriteTables;
     objEvent->inanimate = graphicsInfo->inanimate;
+    objEvent->disableFloorGroundEffects = (GetObjectEventGraphicsInfo(objEvent->graphicsId)->tracks == TRACKS_NONE);
     sprite->centerToCornerVecX = -(graphicsInfo->width >> 1);
     sprite->centerToCornerVecY = -(graphicsInfo->height >> 1);
 
@@ -7692,12 +7697,14 @@ static u8 LoadFillColorPalette(u16 color, u16 paletteTag, struct Sprite *sprite)
 static void ObjectEventSetPokeballGfx(struct ObjectEvent *objEvent)
 {
     #if OW_FOLLOWERS_POKEBALLS
-    enum PokeBall ball = BALL_STRANGE;
+    enum PokeBall ball = BALL_POKE;
     if (objEvent->localId == OBJ_EVENT_ID_FOLLOWER)
     {
         struct Pokemon *mon = GetFirstLiveMon();
         if (mon)
             ball = GetMonData(mon, MON_DATA_POKEBALL);
+        else
+            ball = BALL_STRANGE;
     }
 
     if (ball != BALL_POKE && ball < POKEBALL_COUNT)
@@ -7718,7 +7725,11 @@ static void ObjectEventSetPokeballGfx(struct ObjectEvent *objEvent)
 
 bool8 MovementAction_ExitPokeball_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
-    enum Direction direction = gObjectEvents[gPlayerAvatar.objectEventId].facingDirection;
+    enum Direction direction;
+    if (objectEvent->localId == OBJ_EVENT_ID_FOLLOWER)
+        direction = gObjectEvents[gPlayerAvatar.objectEventId].facingDirection;
+    else
+        direction = objectEvent->facingDirection;
     u16 graphicsId = objectEvent->graphicsId;
     objectEvent->invisible = FALSE;
     if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_DASH))
@@ -10139,12 +10150,13 @@ void GroundEffect_FlowingWater(struct ObjectEvent *objEvent, struct Sprite *spri
 }
 
 static void (*const sGroundEffectTracksFuncs[])(struct ObjectEvent *objEvent, struct Sprite *sprite, bool8 isDeepSand) = {
-    [TRACKS_NONE] = DoTracksGroundEffect_None,
+    [TRACKS_NONE] = DoTracksGroundEffect_Unused,// This is no longer called.
     [TRACKS_FOOT] = DoTracksGroundEffect_Footprints,
     [TRACKS_BIKE_TIRE] = DoTracksGroundEffect_BikeTireTracks,
     [TRACKS_SLITHER] = DoTracksGroundEffect_SlitherTracks,
     [TRACKS_SPOT] = DoTracksGroundEffect_FootprintsC,
     [TRACKS_BUG] = DoTracksGroundEffect_FootprintsB,
+    [TRACKS_NONE_WITH_GROUND_EFFECTS] = DoTracksGroundEffect_None,
 };
 
 void GroundEffect_SandTracks(struct ObjectEvent *objEvent, struct Sprite *sprite)
@@ -10162,6 +10174,12 @@ void GroundEffect_DeepSandTracks(struct ObjectEvent *objEvent, struct Sprite *sp
 static void DoTracksGroundEffect_None(struct ObjectEvent *objEvent, struct Sprite *sprite, bool8 isDeepSand)
 {
 }
+
+static void DoTracksGroundEffect_Unused(struct ObjectEvent *objEvent, struct Sprite *sprite, bool8 isDeepSand)
+{
+    errorf("Unused. Ordinarily TRACKS_NONE should already have filtered out all ground effects in FilterOutFloorGroundEffects");
+}
+
 
 static void DoTracksGroundEffect_Footprints(struct ObjectEvent *objEvent, struct Sprite *sprite, bool8 isDeepSand)
 {
@@ -10412,6 +10430,20 @@ void filters_out_some_ground_effects(struct ObjectEvent *objEvent, u32 *flags)
     }
 }
 
+void FilterOutFloorGroundEffects(struct ObjectEvent *objEvent, u32 *flags)
+{
+    if (objEvent->disableFloorGroundEffects)
+    {
+        objEvent->inShortGrass = 0;
+        objEvent->inSandPile = 0;
+        objEvent->inShallowFlowingWater = 0;
+        *flags &= (GROUND_EFFECT_FLAG_LONG_GRASS_ON_SPAWN 
+            | GROUND_EFFECT_FLAG_LONG_GRASS_ON_MOVE 
+            | GROUND_EFFECT_FLAG_HOT_SPRINGS 
+            | GROUND_EFFECT_FLAG_SEAWEED);// keep only the flags listed here
+    }
+}
+
 void FilterOutStepOnPuddleGroundEffectIfJumping(struct ObjectEvent *objEvent, u32 *flags)
 {
     if (objEvent->landingJump)
@@ -10422,11 +10454,7 @@ static void DoGroundEffects_OnSpawn(struct ObjectEvent *objEvent, struct Sprite 
 {
     u32 flags;
 
-#ifdef BUGFIX
-    if (objEvent->triggerGroundEffectsOnMove && objEvent->localId != OBJ_EVENT_ID_CAMERA)
-#else
     if (objEvent->triggerGroundEffectsOnMove)
-#endif
     {
         flags = 0;
         if (OW_LARGE_OW_SUPPORT && !sprite->oam.affineMode)
@@ -10434,6 +10462,7 @@ static void DoGroundEffects_OnSpawn(struct ObjectEvent *objEvent, struct Sprite 
         UpdateObjectEventElevationAndPriority(objEvent, sprite);
         GetAllGroundEffectFlags_OnSpawn(objEvent, &flags);
         SetObjectEventSpriteOamTableForLongGrass(objEvent, sprite);
+        FilterOutFloorGroundEffects(objEvent, &flags);
         DoFlaggedGroundEffects(objEvent, sprite, flags);
         objEvent->triggerGroundEffectsOnMove = FALSE;
         objEvent->disableCoveringGroundEffects = 0;
@@ -10444,11 +10473,7 @@ static void DoGroundEffects_OnBeginStep(struct ObjectEvent *objEvent, struct Spr
 {
     u32 flags;
 
-#ifdef BUGFIX
-    if (objEvent->triggerGroundEffectsOnMove && objEvent->localId != OBJ_EVENT_ID_CAMERA)
-#else
     if (objEvent->triggerGroundEffectsOnMove)
-#endif
     {
         flags = 0;
         if (OW_LARGE_OW_SUPPORT && !sprite->oam.affineMode)
@@ -10457,6 +10482,7 @@ static void DoGroundEffects_OnBeginStep(struct ObjectEvent *objEvent, struct Spr
         GetAllGroundEffectFlags_OnBeginStep(objEvent, &flags);
         SetObjectEventSpriteOamTableForLongGrass(objEvent, sprite);
         filters_out_some_ground_effects(objEvent, &flags);
+        FilterOutFloorGroundEffects(objEvent, &flags);
         DoFlaggedGroundEffects(objEvent, sprite, flags);
         objEvent->triggerGroundEffectsOnMove = FALSE;
         objEvent->disableCoveringGroundEffects = 0;
@@ -10467,17 +10493,14 @@ static void DoGroundEffects_OnFinishStep(struct ObjectEvent *objEvent, struct Sp
 {
     u32 flags;
 
-#ifdef BUGFIX
-    if (objEvent->triggerGroundEffectsOnStop && objEvent->localId != OBJ_EVENT_ID_CAMERA)
-#else
     if (objEvent->triggerGroundEffectsOnStop)
-#endif
     {
         flags = 0;
         UpdateObjectEventElevationAndPriority(objEvent, sprite);
         GetAllGroundEffectFlags_OnFinishStep(objEvent, &flags);
         SetObjectEventSpriteOamTableForLongGrass(objEvent, sprite);
         FilterOutStepOnPuddleGroundEffectIfJumping(objEvent, &flags);
+        FilterOutFloorGroundEffects(objEvent, &flags);
         DoFlaggedGroundEffects(objEvent, sprite, flags);
         objEvent->triggerGroundEffectsOnStop = 0;
         objEvent->landingJump = 0;

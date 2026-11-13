@@ -51,6 +51,7 @@ void UpdateIndicatorVisibilityAndType(u32 healthboxId, bool32 invisible);
 void UpdateIndicatorOamPriority(u32 healthboxId, u32 oamPriority);
 void UpdateIndicatorLevelData(u32 healthboxId, u32 level);
 void CreateIndicatorSprite(enum BattlerId battler);
+bool32 HasPlayerUnlockedGimmick(enum Gimmick gimmick);
 
 extern const struct GimmickInfo gGimmicksInfo[];
 

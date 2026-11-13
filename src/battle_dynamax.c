@@ -76,23 +76,21 @@ bool32 CanDynamax(enum BattlerId battler)
     enum HoldEffect holdEffect = GetBattlerHoldEffectIgnoreNegation(battler);
 
     // Prevents Zigzagoon from dynamaxing in vanilla.
-    if (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE && !IsOnPlayerSide(battler))
+    if (HasAnyBattleFlags(BATTLE_TYPE_FIRST_BATTLE) && !IsOnPlayerSide(battler))
         return FALSE;
 
     // Check if Player has a Dynamax Band.
     if (!TESTING && (GetBattlerPosition(battler) == B_POSITION_PLAYER_LEFT
-        || (!(gBattleTypeFlags & BATTLE_TYPE_MULTI) && GetBattlerPosition(battler) == B_POSITION_PLAYER_RIGHT)))
+        || (!HasAnyBattleFlags(BATTLE_TYPE_MULTI) && GetBattlerPosition(battler) == B_POSITION_PLAYER_RIGHT)))
     {
-        if (!CheckBagHasItem(ITEM_DYNAMAX_BAND, 1))
+        if (!HasPlayerUnlockedGimmick(GIMMICK_DYNAMAX))
             return FALSE;
         if (B_FLAG_DYNAMAX_BATTLE == 0 || (B_FLAG_DYNAMAX_BATTLE != 0 && !FlagGet(B_FLAG_DYNAMAX_BATTLE)))
             return FALSE;
     }
 
     // Check if species isn't allowed to Dynamax.
-    if (GetBaseSpecies(species) == SPECIES_ZACIAN
-        || GetBaseSpecies(species) == SPECIES_ZAMAZENTA
-        || GetBaseSpecies(species) == SPECIES_ETERNATUS)
+    if (gSpeciesInfo[species].isDynamaxBanned)
         return FALSE;
 
     // Check if Trainer has already Dynamaxed.
@@ -112,7 +110,7 @@ bool32 CanDynamax(enum BattlerId battler)
         return FALSE;
 
     // TODO: Cannot Dynamax in a Max Raid if you don't have Dynamax Energy.
-    // if (gBattleTypeFlags & BATTLE_TYPE_RAID && gBattleStruct->raid.dynamaxEnergy != battler)
+    // if (HasAnyBattleFlags(BATTLE_TYPE_RAID) && gBattleStruct->raid.dynamaxEnergy != battler)
     //    return FALSE;
 
     // No checks failed, all set!

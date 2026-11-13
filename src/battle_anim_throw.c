@@ -713,7 +713,7 @@ void AnimTask_ThrowBall_StandingTrainer(u8 taskId)
     u8 subpriority;
     u8 spriteId;
 
-    if (gBattleTypeFlags & BATTLE_TYPE_CATCH_TUTORIAL)
+    if (HasAnyBattleFlags(BATTLE_TYPE_CATCH_TUTORIAL))
     {
         x = 32;
         y = 11;
@@ -2163,7 +2163,7 @@ void TryShinyAnimation(enum BattlerId battler, struct Pokemon *mon)
     if (illusionMon != NULL)
         mon = illusionMon;
 
-    if (IsBattlerSpriteVisible(battler) && IsValidForBattle(mon) && (!gTestRunnerHeadless || gBattleTestRunnerState->forceMoveAnim))
+    if (IsBattlerSpriteVisible(battler) && IsMonValidAndAliveForBattle(mon) && (!gTestRunnerHeadless || gBattleTestRunnerState->forceMoveAnim))
     {
         if (isShiny)
         {
