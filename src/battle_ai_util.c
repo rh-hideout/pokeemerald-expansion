@@ -2779,6 +2779,49 @@ bool32 HasBattlerSideMoveWithEffect(enum BattlerId battler, enum BattleMoveEffec
     return FALSE;
 }
 
+static bool32 HasDamagingMoveSuperEffectiveAgainstType(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Type newType)
+{
+    enum Move *moves = GetMovesArray(battlerAtk);
+    enum Type savedTypes[3];
+    u32 moveLimitations = gAiLogicData->moveLimitations[battlerAtk];
+    bool32 result = FALSE;
+
+    // Change target to the new type
+    AI_StoreBattlerTypes(battlerDef, savedTypes);
+    gBattleMons[battlerDef].types[0] = newType;
+    gBattleMons[battlerDef].types[1] = newType;
+    gBattleMons[battlerDef].types[2] = TYPE_MYSTERY;
+
+    for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
+    {
+        enum Move move = moves[moveIndex];
+
+        if (IsMoveUnusable(moveIndex, move, moveLimitations) || IsBattleMoveStatus(move))
+            continue;
+        if (AI_GetMoveEffectiveness(move, battlerAtk, battlerDef) >= UQ_4_12(2.0))
+        {
+            result = TRUE;
+            break;
+        }
+    }
+
+    AI_RestoreBattlerTypes(battlerDef, savedTypes);
+
+    return result;
+}
+
+// Checks if the user or its partner has a damaging super-effective move against the given type
+bool32 HasBattlerSideMoveSuperEffectiveAgainstType(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Type newType)
+{
+    enum BattlerId partner = GetPartnerBattler(battlerAtk);
+
+    if (HasDamagingMoveSuperEffectiveAgainstType(battlerAtk, battlerDef, newType))
+        return TRUE;
+    if (IsBattlerAlive(partner) && HasDamagingMoveSuperEffectiveAgainstType(partner, battlerDef, newType))
+        return TRUE;
+    return FALSE;
+}
+
 bool32 HasBattlerSideMoveWithAIEffect(enum BattlerId battler, u32 aiEffect)
 {
     if (HasMoveWithAIEffect(battler, aiEffect))
