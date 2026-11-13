@@ -63,35 +63,40 @@ bool32 IsAiVsAiBattle(void)
 
 bool32 BattlerIsPlayer(enum BattlerId battlerId)
 {
-    return (gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_PLAYER
-         || gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_RECORDED_PLAYER);
+    enum BattleController controller = gBattlerBattleController[battlerId];
+    return (controller == BATTLE_CONTROLLER_PLAYER
+         || controller == BATTLE_CONTROLLER_RECORDED_PLAYER);
 }
 
 bool32 BattlerIsPartner(enum BattlerId battlerId)
 {
-    return (gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_PLAYER_PARTNER
-         || gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_RECORDED_PARTNER
-         || gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_LINK_PARTNER);
+    enum BattleController controller = gBattlerBattleController[battlerId];
+    return (controller == BATTLE_CONTROLLER_PLAYER_PARTNER
+         || controller == BATTLE_CONTROLLER_RECORDED_PARTNER
+         || controller == BATTLE_CONTROLLER_LINK_PARTNER);
 }
 
 bool32 BattlerIsOpponent(enum BattlerId battlerId)
 {
-    return (gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_OPPONENT
-         || gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_RECORDED_OPPONENT
-         || gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_LINK_OPPONENT);
+    enum BattleController controller = gBattlerBattleController[battlerId];
+    return (controller == BATTLE_CONTROLLER_OPPONENT
+         || controller == BATTLE_CONTROLLER_RECORDED_OPPONENT
+         || controller == BATTLE_CONTROLLER_LINK_OPPONENT);
 }
 
 bool32 BattlerIsRecorded(enum BattlerId battlerId)
 {
-    return (gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_RECORDED_PLAYER
-         || gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_RECORDED_PARTNER
-         || gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_RECORDED_OPPONENT);
+    enum BattleController controller = gBattlerBattleController[battlerId];
+    return (controller == BATTLE_CONTROLLER_RECORDED_PLAYER
+         || controller == BATTLE_CONTROLLER_RECORDED_PARTNER
+         || controller == BATTLE_CONTROLLER_RECORDED_OPPONENT);
 }
 
 bool32 BattlerIsLink(enum BattlerId battlerId)
 {
-    return (gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_LINK_PARTNER
-         || gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_LINK_OPPONENT);
+    enum BattleController controller = gBattlerBattleController[battlerId];
+    return (controller == BATTLE_CONTROLLER_LINK_PARTNER
+         || controller == BATTLE_CONTROLLER_LINK_OPPONENT);
 }
 
 bool32 BattlerIsWally(enum BattlerId battlerId)
@@ -115,9 +120,8 @@ bool32 BattlerHasAi(enum BattlerId battlerId)
     if (IsAiVsAiBattle())
         return TRUE;
 
-    if (gBattleTypeFlags & BATTLE_TYPE_RECORDED
-     && gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER
-     && !(gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK)
+    if (HasAllBattleFlags(BATTLE_TYPE_RECORDED | BATTLE_TYPE_INGAME_PARTNER)
+     && !HasAnyBattleFlags(BATTLE_TYPE_RECORDED_LINK)
      && battlerId == B_BATTLER_2)
     {
         return TRUE;
@@ -128,7 +132,7 @@ bool32 BattlerHasAi(enum BattlerId battlerId)
 
 void HandleLinkBattleSetup(void)
 {
-    if (gBattleTypeFlags & BATTLE_TYPE_LINK)
+    if (HasAnyBattleFlags(BATTLE_TYPE_LINK))
     {
         if (gWirelessCommType)
             SetWirelessCommType1();
@@ -159,7 +163,7 @@ void SetUpBattleVarsAndBirchZigzagoon(void)
     BattleAI_SetupItems();
     BattleAI_SetupFlags();
 
-    if (!IS_FRLG && gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE)
+    if (!IS_FRLG && HasAnyBattleFlags(BATTLE_TYPE_FIRST_BATTLE))
         CreateWildMon(SPECIES_ZIGZAGOON, 2);
 }
 
@@ -167,19 +171,19 @@ void InitBattleControllers(void)
 {
     s32 i;
 
-    if (!(gBattleTypeFlags & BATTLE_TYPE_RECORDED))
+    if (!HasAnyBattleFlags(BATTLE_TYPE_RECORDED))
         RecordedBattle_Init(B_RECORD_MODE_RECORDING);
     else
         RecordedBattle_Init(B_RECORD_MODE_PLAYBACK);
 
-    if (!(gBattleTypeFlags & BATTLE_TYPE_RECORDED))
+    if (!HasAnyBattleFlags(BATTLE_TYPE_RECORDED))
         RecordedBattle_SaveParties();
 
     InitBtlControllersInternal();
 
     SetBattlePartyIds();
 
-    if (!(gBattleTypeFlags & BATTLE_TYPE_MULTI))
+    if (!HasAnyBattleFlags(BATTLE_TYPE_MULTI))
     {
         for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
             BufferBattlePartyCurrentOrderBySide(battler, 0);
@@ -195,20 +199,20 @@ void InitBattleControllers(void)
 static void SetBattlerControllerFunc(enum BattlerPosition position, BattleControllerFunc func)
 {
     assertf(position < MAX_POSITION_COUNT, "invalid battler position: %d", position);
-    gBattlerControllerFuncs[position] = func;
+    gBattlerControllerFuncs[GetBattlerAtPosition(position)] = func;
 }
 
 static void InitBtlControllersInternal(void)
 {
     s32 i;
-    bool32 isLink = (gBattleTypeFlags & BATTLE_TYPE_LINK);
+    bool32 isLink = HasAnyBattleFlags(BATTLE_TYPE_LINK);
     bool32 isDouble = IsDoubleBattle();
-    bool32 isMaster = (gBattleTypeFlags & BATTLE_TYPE_IS_MASTER);
-    bool32 isRecorded = (gBattleTypeFlags & BATTLE_TYPE_RECORDED);
-    bool32 isRecordedMaster = (gBattleTypeFlags & BATTLE_TYPE_RECORDED_IS_MASTER);
-    bool32 isRecordedLink = (gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK);
-    bool32 isMulti = (gBattleTypeFlags & BATTLE_TYPE_MULTI);
-    bool32 isInGamePartner = (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER);
+    bool32 isMaster = HasAnyBattleFlags(BATTLE_TYPE_IS_MASTER);
+    bool32 isRecorded = HasAnyBattleFlags(BATTLE_TYPE_RECORDED);
+    bool32 isRecordedMaster = HasAnyBattleFlags(BATTLE_TYPE_RECORDED_IS_MASTER);
+    bool32 isRecordedLink = HasAnyBattleFlags(BATTLE_TYPE_RECORDED_LINK);
+    bool32 isMulti = HasAnyBattleFlags(BATTLE_TYPE_MULTI);
+    bool32 isInGamePartner = HasAnyBattleFlags(BATTLE_TYPE_INGAME_PARTNER);
     bool32 isAIvsAI = IsAiVsAiBattle();
 
     if (!isLink || isMaster)
@@ -219,7 +223,7 @@ static void InitBtlControllersInternal(void)
     else
         gBattlersCount = MAX_BATTLERS_COUNT;
 
-    if ((gBattleTypeFlags & BATTLE_TYPE_BATTLE_TOWER)
+    if (HasAnyBattleFlags(BATTLE_TYPE_BATTLE_TOWER)
         || !isMulti
         || (TESTING && isMulti)
         || (!isLink && !isRecorded)
@@ -287,12 +291,12 @@ static void InitBtlControllersInternal(void)
             // Player 1
             if (isRecorded)
                 SetBattlerControllerFunc(GetBattlerPosition(B_BATTLER_0), SetControllerToRecordedPlayer);
-            else if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
+            else if (HasAnyBattleFlags(BATTLE_TYPE_SAFARI))
                 SetBattlerControllerFunc(GetBattlerPosition(B_BATTLER_0), SetControllerToSafari);
-            else if (gBattleTypeFlags & BATTLE_TYPE_CATCH_TUTORIAL)
+            else if (HasAnyBattleFlags(BATTLE_TYPE_CATCH_TUTORIAL))
                 SetBattlerControllerFunc(GetBattlerPosition(B_BATTLER_0), IS_FRLG ? SetControllerToOakOrOldMan : SetControllerToWally);
-            else if (IS_FRLG && (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE))
-                SetBattlerControllerFunc(gBattlerPositions[B_BATTLER_0], SetControllerToOakOrOldMan);
+            else if (IS_FRLG && HasAnyBattleFlags(BATTLE_TYPE_FIRST_BATTLE))
+                SetBattlerControllerFunc(GetBattlerPosition(B_BATTLER_0), SetControllerToOakOrOldMan);
             else if (isAIvsAI)
                 SetBattlerControllerFunc(GetBattlerPosition(B_BATTLER_0), SetControllerToPlayerPartner);
             else
@@ -365,10 +369,10 @@ static void InitBtlControllersInternal(void)
             BufferBattlePartyCurrentOrderBySide(2, 1);
             BufferBattlePartyCurrentOrderBySide(3, 1);
 
-            gBattlerPartyIndexes[0] = PARTY_MON_0;
-            gBattlerPartyIndexes[1] = PARTY_MON_0;
-            gBattlerPartyIndexes[2] = BattleSideHasTwoTrainers(B_SIDE_PLAYER) ? PARTY_MON_0 : PARTY_MON_1;
-            gBattlerPartyIndexes[3] = BattleSideHasTwoTrainers(B_SIDE_OPPONENT) ? PARTY_MON_0 : PARTY_MON_1;
+            gBattlerPartyIndexes[0] = PARTY_SLOT_0;
+            gBattlerPartyIndexes[1] = PARTY_SLOT_0;
+            gBattlerPartyIndexes[2] = BattleSideHasTwoTrainers(B_SIDE_PLAYER) ? PARTY_SLOT_0 : PARTY_SLOT_1;
+            gBattlerPartyIndexes[3] = BattleSideHasTwoTrainers(B_SIDE_OPPONENT) ? PARTY_SLOT_0 : PARTY_SLOT_1;
         }
     }
     else
@@ -404,104 +408,85 @@ static void InitBtlControllersInternal(void)
 
             gBattlerPositions[gLinkPlayers[i].id] = gLinkPlayers[i].id & BIT_FLANK ? linkPositionRight : linkPositionLeft;
             BufferBattlePartyCurrentOrderBySide(gLinkPlayers[i].id, gLinkPlayers[i].id & BIT_FLANK);
-            gBattlerPartyIndexes[gLinkPlayers[i].id] = PARTY_MON_0;
+            gBattlerPartyIndexes[gLinkPlayers[i].id] = PARTY_SLOT_0;
         }
     }
 }
 
-bool32 IsValidForBattle(struct Pokemon *mon)
-{
-    enum Species species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG);
-    return (species != SPECIES_NONE
-         && species != SPECIES_EGG
-         && GetMonData(mon, MON_DATA_HP) != 0
-         && GetMonData(mon, MON_DATA_IS_EGG) == FALSE);
-}
-
-bool32 IsValidForBattleButDead(struct Pokemon *mon)
-{
-    enum Species species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG);
-    return (species != SPECIES_NONE
-         && species != SPECIES_EGG
-         && GetMonData(mon, MON_DATA_IS_EGG) == FALSE);
-}
-
 static inline bool32 IsControllerPlayer(enum BattlerId battler)
 {
-    return (gBattlerControllerEndFuncs[battler] == PlayerBufferExecCompleted);
+    return (gBattlerBattleController[battler] == BATTLE_CONTROLLER_PLAYER);
 }
 
 static inline bool32 IsControllerRecordedPlayer(enum BattlerId battler)
 {
-    return (gBattlerControllerEndFuncs[battler] == RecordedPlayerBufferExecCompleted);
+    return (gBattlerBattleController[battler] == BATTLE_CONTROLLER_RECORDED_PLAYER);
 }
 
 static inline bool32 IsControllerRecordedPartner(enum BattlerId battler)
 {
-    return (gBattlerControllerEndFuncs[battler] == RecordedPartnerBufferExecCompleted);
+    return (gBattlerBattleController[battler] == BATTLE_CONTROLLER_RECORDED_PARTNER);
 }
 
 static inline bool32 IsControllerOpponent(enum BattlerId battler)
 {
-    return (gBattlerControllerEndFuncs[battler] == OpponentBufferExecCompleted);
+    return (gBattlerBattleController[battler] == BATTLE_CONTROLLER_OPPONENT);
 }
 
 static inline bool32 IsControllerPlayerPartner(enum BattlerId battler)
 {
-    return (gBattlerControllerEndFuncs[battler] == PlayerPartnerBufferExecCompleted);
+    return (gBattlerBattleController[battler] == BATTLE_CONTROLLER_PLAYER_PARTNER);
 }
 
 static inline bool32 IsControllerWally(enum BattlerId battler)
 {
-    return (gBattlerControllerEndFuncs[battler] == WallyBufferExecCompleted);
+    return (gBattlerBattleController[battler] == BATTLE_CONTROLLER_WALLY);
 }
 
 static inline bool32 IsControllerOakOldMan(u32 battler)
 {
-    return (gBattlerControllerEndFuncs[battler] == OakOldManBufferExecCompleted);
+    return (gBattlerBattleController[battler] == BATTLE_CONTROLLER_OAK_OLD_MAN);
 }
 
 static inline bool32 IsControllerRecordedOpponent(enum BattlerId battler)
 {
-    return (gBattlerControllerEndFuncs[battler] == RecordedOpponentBufferExecCompleted);
+    return (gBattlerBattleController[battler] == BATTLE_CONTROLLER_RECORDED_OPPONENT);
 }
 
 static inline bool32 IsControllerLinkOpponent(enum BattlerId battler)
 {
-    return (gBattlerControllerEndFuncs[battler] == LinkOpponentBufferExecCompleted);
+    return (gBattlerBattleController[battler] == BATTLE_CONTROLLER_LINK_OPPONENT);
 }
 
 static inline bool32 IsControllerLinkPartner(enum BattlerId battler)
 {
-    return (gBattlerControllerEndFuncs[battler] == LinkPartnerBufferExecCompleted);
+    return (gBattlerBattleController[battler] == BATTLE_CONTROLLER_LINK_PARTNER);
 }
 
 static inline bool32 IsControllerSafari(enum BattlerId battler)
 {
-    return (gBattlerControllerEndFuncs[battler] == SafariBufferExecCompleted);
+    return (gBattlerBattleController[battler] == BATTLE_CONTROLLER_SAFARI);
 }
 
 bool32 ShouldUpdateTvData(enum BattlerId battler)
 {
-    return (IsControllerPlayer(battler)
-         || IsControllerLinkPartner(battler)
-         || IsControllerLinkOpponent(battler));
+    return (IsControllerPlayer(battler) || BattlerIsLink(battler));
 }
 
 static void SetBattlePartyIds(void)
 {
-    if (!(gBattleTypeFlags & BATTLE_TYPE_MULTI))
+    if (!HasAnyBattleFlags(BATTLE_TYPE_MULTI))
     {
         for (enum BattlerId i = 0; i < gBattlersCount; i++)
         {
-            enum PartyMon faintedMon = PARTY_MON_NONE;
+            enum PartySlot faintedMon = PARTY_SLOT_NONE;
             bool32 foundValidMon = FALSE;
 
-            for (enum PartyMon j = PARTY_MON_0; j < PARTY_MON_NONE; j++)
+            for (enum PartySlot j = PARTY_SLOT_0; j < PARTY_SIZE; j++)
             {
                 if (i < 2)
                 {
-                    if (IsValidForBattle(&GetBattlerParty(i)[j]))
+                    if (IsMonValidAndAliveForBattle(&GetBattlerParty(i)[j]))
                     {
                         gBattlerPartyIndexes[i] = j;
                         foundValidMon = TRUE;
@@ -514,33 +499,33 @@ static void SetBattlePartyIds(void)
                     {
                         // Exclude already assigned Pokémon;
                     }
-                    else if (IsValidForBattle(&GetBattlerParty(i)[j]))
+                    else if (IsMonValidAndAliveForBattle(&GetBattlerParty(i)[j]))
                     {
                         gBattlerPartyIndexes[i] = j;
                         foundValidMon = TRUE;
                         break;
                     }
-                    else if (IsValidForBattleButDead(&GetBattlerParty(i)[j]) && faintedMon == PARTY_MON_NONE)
+                    else if (IsMonValidForBattle(&GetBattlerParty(i)[j]) && faintedMon == PARTY_SLOT_NONE)
                     {
                         // Put an "option" on a dead mon that can be revived;
                         faintedMon = j;
                     }
 
-                    if (faintedMon != PARTY_MON_NONE)
+                    if (faintedMon != PARTY_SLOT_NONE)
                         continue;
                     // No valid mons were found. Add the empty slot.
-                    if (gBattlerPartyIndexes[i - 2] == PARTY_MON_0)
-                        gBattlerPartyIndexes[i] = PARTY_MON_1;
+                    if (gBattlerPartyIndexes[i - 2] == PARTY_SLOT_0)
+                        gBattlerPartyIndexes[i] = PARTY_SLOT_1;
                     else
-                        gBattlerPartyIndexes[i] = PARTY_MON_0;
+                        gBattlerPartyIndexes[i] = PARTY_SLOT_0;
                 }
             }
-            if (!foundValidMon && faintedMon != PARTY_MON_NONE)
+            if (!foundValidMon && faintedMon != PARTY_SLOT_NONE)
                 gBattlerPartyIndexes[i] = faintedMon;
         }
 
-        if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
-            gBattlerPartyIndexes[1] = PARTY_MON_0, gBattlerPartyIndexes[3] = PARTY_MON_0;
+        if (HasAnyBattleFlags(BATTLE_TYPE_TWO_OPPONENTS))
+            gBattlerPartyIndexes[1] = PARTY_SLOT_0, gBattlerPartyIndexes[3] = PARTY_SLOT_0;
     }
 }
 
@@ -548,7 +533,7 @@ static void PrepareBufferDataTransfer(enum BattlerId battler, u32 bufferId, u8 *
 {
     s32 i;
 
-    if (gBattleTypeFlags & BATTLE_TYPE_LINK)
+    if (HasAnyBattleFlags(BATTLE_TYPE_LINK))
     {
         PrepareBufferDataTransferLink(battler, bufferId, size, data);
     }
@@ -687,10 +672,10 @@ static void Task_HandleSendLinkBuffersData(u8 taskId)
         }
         else
         {
-            if (gBattleTypeFlags & BATTLE_TYPE_BATTLE_TOWER)
+            if (HasAnyBattleFlags(BATTLE_TYPE_BATTLE_TOWER))
                 numPlayers = 2;
             else
-                numPlayers = (gBattleTypeFlags & BATTLE_TYPE_MULTI) ? 4 : 2;
+                numPlayers = HasAnyBattleFlags(BATTLE_TYPE_MULTI) ? 4 : 2;
 
             if (GetLinkPlayerCount_2() >= numPlayers)
             {
@@ -763,7 +748,7 @@ void TryReceiveLinkBattleData(void)
     s32 j;
     u8 *recvBuffer;
 
-    if (gReceivedRemoteLinkPlayers && (gBattleTypeFlags & BATTLE_TYPE_LINK_IN_BATTLE))
+    if (gReceivedRemoteLinkPlayers && HasAnyBattleFlags(BATTLE_TYPE_LINK_IN_BATTLE))
     {
         DestroyTask_RfuIdle();
         for (i = 0; i < GetLinkPlayerCount(); i++)
@@ -824,7 +809,7 @@ static void Task_HandleCopyReceivedLinkBuffersData(u8 taskId)
             memcpy(gBattleResources->bufferA[battler], &BYTE_TO_RECEIVE(LINK_BUFF_DATA), blockSize);
             MarkBattlerReceivedLinkData(battler);
 
-            if (!(gBattleTypeFlags & BATTLE_TYPE_IS_MASTER))
+            if (!HasAnyBattleFlags(BATTLE_TYPE_IS_MASTER))
             {
                 gBattlerAttacker    = BYTE_TO_RECEIVE(LINK_BUFF_ATTACKER);
                 gBattlerTarget      = BYTE_TO_RECEIVE(LINK_BUFF_TARGET);
@@ -905,7 +890,7 @@ void BtlController_EmitLoadMonSprite(enum BattlerId battler, u32 bufferId)
     PrepareBufferDataTransfer(battler, bufferId, gBattleResources->transferBuffer, 4);
 }
 
-void BtlController_EmitSwitchInAnim(enum BattlerId battler, u32 bufferId, enum PartyMon partyId, bool8 dontClearTransform, bool8 dontClearSubstituteBit)
+void BtlController_EmitSwitchInAnim(enum BattlerId battler, u32 bufferId, enum PartySlot partyId, bool8 dontClearTransform, bool8 dontClearSubstituteBit)
 {
     gBattleResources->transferBuffer[0] = CONTROLLER_SWITCHINANIM;
     gBattleResources->transferBuffer[1] = partyId;
@@ -1129,7 +1114,7 @@ void BtlController_EmitChooseItem(enum BattlerId battler, u32 bufferId, u8 *batt
     PrepareBufferDataTransfer(battler, bufferId, gBattleResources->transferBuffer, 4);
 }
 
-void BtlController_EmitChoosePokemon(enum BattlerId battler, u32 bufferId, u8 caseId, enum PartyMon slotId, enum Ability abilityId, enum BattlerId battlerPreventingSwitchout, u8 *data)
+void BtlController_EmitChoosePokemon(enum BattlerId battler, u32 bufferId, u8 caseId, enum PartySlot slotId, enum Ability abilityId, enum BattlerId battlerPreventingSwitchout, u8 *data)
 {
     s32 i;
 
@@ -1163,7 +1148,7 @@ void BtlController_EmitHealthBarUpdate(enum BattlerId battler, u32 bufferId, u16
     PrepareBufferDataTransfer(battler, bufferId, gBattleResources->transferBuffer, 4);
 }
 
-void BtlController_EmitExpUpdate(enum BattlerId battler, u32 bufferId, enum PartyMon partyId, s32 expPoints)
+void BtlController_EmitExpUpdate(enum BattlerId battler, u32 bufferId, enum PartySlot partyId, s32 expPoints)
 {
     gBattleResources->transferBuffer[0] = CONTROLLER_EXPUPDATE;
     gBattleResources->transferBuffer[1] = partyId;
@@ -1269,7 +1254,7 @@ void BtlController_EmitTwoReturnValues(enum BattlerId battler, u32 bufferId, u8 
     PrepareBufferDataTransfer(battler, bufferId, gBattleResources->transferBuffer, 6);
 }
 
-void BtlController_EmitChosenMonReturnValue(enum BattlerId battler, u32 bufferId, enum PartyMon partyId, u8 *battlePartyOrder)
+void BtlController_EmitChosenMonReturnValue(enum BattlerId battler, u32 bufferId, enum PartySlot partyId, u8 *battlePartyOrder)
 {
     s32 i;
 
@@ -1467,7 +1452,7 @@ void BtlController_Complete(enum BattlerId battler)
     gBattlerControllerEndFuncs[battler](battler);
 }
 
-static u32 GetBattlerMonData(enum BattlerId battler, struct Pokemon *party, enum PartyMon monId, u8 *dst)
+static u32 GetBattlerMonData(enum BattlerId battler, struct Pokemon *party, enum PartySlot monId, u8 *dst)
 {
     struct BattlePokemon battleMon;
     struct MovePPInfo moveData;
@@ -1521,7 +1506,7 @@ static u32 GetBattlerMonData(enum BattlerId battler, struct Pokemon *party, enum
         if (gTestRunnerEnabled)
         {
             enum BattleTrainer trainer = GetBattlerTrainer(battler);
-            enum PartyMon partyIndex = gBattlerPartyIndexes[battler];
+            enum PartySlot partyIndex = gBattlerPartyIndexes[battler];
             if (TestRunner_Battle_GetForcedAbility(trainer, partyIndex))
                 gBattleMons[battler].ability = TestRunner_Battle_GetForcedAbility(trainer, partyIndex);
         }
@@ -1784,7 +1769,7 @@ static u32 GetBattlerMonData(enum BattlerId battler, struct Pokemon *party, enum
     return size;
 }
 
-static void SetBattlerMonData(enum BattlerId battler, struct Pokemon *party, enum PartyMon monId)
+static void SetBattlerMonData(enum BattlerId battler, struct Pokemon *party, enum PartySlot monId)
 {
     struct BattlePokemon *battlePokemon = (struct BattlePokemon *)&gBattleResources->bufferA[battler][3];
     struct MovePPInfo *moveData = (struct MovePPInfo *)&gBattleResources->bufferA[battler][3];
@@ -2010,7 +1995,7 @@ static bool8 ShouldDoSlideInAnim(enum BattlerId battler)
     if (!followerObj || followerObj->invisible)
         return FALSE;
 
-    if (gBattleTypeFlags & (
+    if (HasAnyBattleFlags(
         BATTLE_TYPE_LINK | BATTLE_TYPE_DOUBLE | BATTLE_TYPE_FRONTIER | BATTLE_TYPE_FIRST_BATTLE |
         BATTLE_TYPE_SAFARI | BATTLE_TYPE_CATCH_TUTORIAL | BATTLE_TYPE_EREADER_TRAINER | BATTLE_TYPE_TWO_OPPONENTS |
         BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_RECORDED | BATTLE_TYPE_TRAINER_HILL)
@@ -2042,7 +2027,7 @@ void StartSendOutAnim(enum BattlerId battler, bool32 dontClearTransform, bool32 
     }
 
     ClearTemporarySpeciesSpriteData(battler, dontClearTransform, dontClearSubstituteBit);
-    gBattlerPartyIndexes[battler] = (enum PartyMon)gBattleResources->bufferA[battler][1];
+    gBattlerPartyIndexes[battler] = (enum PartySlot)gBattleResources->bufferA[battler][1];
     species = GetBattlerVisualSpecies(battler);
     gBattleControllerData[battler] = CreateInvisibleSpriteWithCallback(SpriteCB_WaitForBattlerBallReleaseAnim);
     // Load sprite for opponent only, player sprite is expected to be already loaded.
@@ -2206,7 +2191,7 @@ void Controller_WaitForHealthBar(enum BattlerId battler)
         if (IsOnPlayerSide(battler))
             HandleLowHpMusicChange(GetBattlerMon(battler), battler);
 
-        if (IS_FRLG && GetBattlerSide(battler) == B_SIDE_OPPONENT && !BtlCtrl_OakOldMan_TestState2Flag(1) && (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE))
+        if (IS_FRLG && GetBattlerSide(battler) == B_SIDE_OPPONENT && !BtlCtrl_OakOldMan_TestState2Flag(1) && HasAnyBattleFlags(BATTLE_TYPE_FIRST_BATTLE))
         {
             BtlCtrl_OakOldMan_SetState2Flag(1);
             gBattlerControllerFuncs[battler] = PrintOakText_InflictingDamageIsKey;
@@ -2298,7 +2283,7 @@ void BtlController_HandleGetMonData(enum BattlerId battler)
     struct Pokemon *party = GetBattlerParty(battler);
     u32 size = 0;
     u8 monToCheck;
-    enum PartyMon i;
+    enum PartySlot i;
 
     if (gBattleResources->bufferA[battler][2] == 0)
     {
@@ -2307,7 +2292,7 @@ void BtlController_HandleGetMonData(enum BattlerId battler)
     else
     {
         monToCheck = gBattleResources->bufferA[battler][2];
-        for (i = PARTY_MON_0; i < PARTY_MON_NONE; i++)
+        for (i = PARTY_SLOT_0; i < PARTY_SIZE; i++)
         {
             if (monToCheck & 1)
                 size += GetBattlerMonData(battler, party, i, monData + size);
@@ -2337,7 +2322,7 @@ void BtlController_HandleGetRawMonData(enum BattlerId battler)
 void BtlController_HandleSetMonData(enum BattlerId battler)
 {
     struct Pokemon *party = GetBattlerParty(battler);
-    enum PartyMon i;
+    enum PartySlot i;
     u32 monToCheck;
 
     if (gBattleResources->bufferA[battler][2] == 0)
@@ -2347,7 +2332,7 @@ void BtlController_HandleSetMonData(enum BattlerId battler)
     else
     {
         monToCheck = gBattleResources->bufferA[battler][2];
-        for (i = PARTY_MON_0; i < PARTY_MON_NONE; i++)
+        for (i = PARTY_SLOT_0; i < PARTY_SIZE; i++)
         {
             if (monToCheck & 1)
                 SetBattlerMonData(battler, party, i);
@@ -2374,7 +2359,7 @@ void BtlController_HandleLoadMonSprite(enum BattlerId battler)
     struct Pokemon *mon = GetBattlerMon(battler);
     enum Species species = GetBattlerVisualSpecies(battler);
 
-    if (gBattleTypeFlags & BATTLE_TYPE_GHOST && GetBattlerSide(battler) == B_SIDE_OPPONENT)
+    if (HasAnyBattleFlags(BATTLE_TYPE_GHOST) && GetBattlerSide(battler) == B_SIDE_OPPONENT)
     {
         DecompressGhostFrontPic(battler);
         y = GetGhostSpriteDefault_Y(battler);
@@ -2399,10 +2384,10 @@ void BtlController_HandleLoadMonSprite(enum BattlerId battler)
     gSprites[gBattlerSpriteIds[battler]].oam.paletteNum = battler;
     StartSpriteAnim(&gSprites[gBattlerSpriteIds[battler]], 0);
 
-    if (!(gBattleTypeFlags & BATTLE_TYPE_GHOST))
+    if (!HasAnyBattleFlags(BATTLE_TYPE_GHOST))
         SetBattlerShadowSpriteCallback(battler, species);
 
-    if (IsControllerOpponent(battler) || IsControllerLinkOpponent(battler) || IsControllerRecordedOpponent(battler))
+    if (BattlerIsOpponent(battler))
         gBattlerControllerFuncs[battler] = TryShinyAnimAfterMonAnim;
     else
         gBattlerControllerFuncs[battler] = WaitForMonAnimAfterLoad;
@@ -2410,11 +2395,7 @@ void BtlController_HandleLoadMonSprite(enum BattlerId battler)
 
 void BtlController_HandleSwitchInAnim(enum BattlerId battler)
 {
-    bool32 isPlayerSide = (IsControllerPlayer(battler)
-                        || IsControllerPlayerPartner(battler)
-                        || IsControllerRecordedPlayer(battler)
-                        || IsControllerRecordedPartner(battler)
-                        || IsControllerLinkPartner(battler));
+    bool32 isPlayerSide = (BattlerIsPlayer(battler) || BattlerIsPartner(battler));
 
     if (IsControllerPlayer(battler))
     {
@@ -2423,12 +2404,12 @@ void BtlController_HandleSwitchInAnim(enum BattlerId battler)
     }
     else if (IsControllerOpponent(battler))
     {
-        gBattleStruct->monToSwitchIntoId[battler] = PARTY_MON_NONE;
+        gBattleStruct->monToSwitchIntoId[battler] = PARTY_SLOT_NONE;
     }
 
     if (isPlayerSide)
         ClearTemporarySpeciesSpriteData(battler, gBattleResources->bufferA[battler][2], gBattleResources->bufferA[battler][3]);
-    gBattlerPartyIndexes[battler] = (enum PartyMon)gBattleResources->bufferA[battler][1];
+    gBattlerPartyIndexes[battler] = (enum PartySlot)gBattleResources->bufferA[battler][1];
     if (isPlayerSide)
         BattleLoadMonSpriteGfx(GetBattlerMon(battler), battler);
     StartSendOutAnim(battler, gBattleResources->bufferA[battler][2], gBattleResources->bufferA[battler][3], FALSE);
@@ -2501,7 +2482,7 @@ void BtlController_HandleDrawTrainerPic(enum BattlerId battler, enum TrainerPicI
                                                              xPos,
                                                              yPos,
                                                              subpriority);
-            if ((gBattleTypeFlags & BATTLE_TYPE_SAFARI) && GetBattlerPosition(battler) == B_POSITION_PLAYER_LEFT)
+            if (HasAnyBattleFlags(BATTLE_TYPE_SAFARI) && GetBattlerPosition(battler) == B_POSITION_PLAYER_LEFT)
                 gBattlerSpriteIds[battler] = gBattleStruct->trainerSlideSpriteIds[battler];
 
             // Sets sprite priority to 1 so mons don't remain in foreground
@@ -2529,7 +2510,7 @@ void BtlController_HandleTrainerSlide(enum BattlerId battler, enum TrainerPicID 
                                                          80,
                                                          (8 - GetTrainerBackPicCoords(trainerPicId)->size) * 4 + 80,
                                                          30);
-        if ((gBattleTypeFlags & BATTLE_TYPE_SAFARI) && GetBattlerPosition(battler) == B_POSITION_PLAYER_LEFT)
+        if (HasAnyBattleFlags(BATTLE_TYPE_SAFARI) && GetBattlerPosition(battler) == B_POSITION_PLAYER_LEFT)
             gBattlerSpriteIds[battler] = gBattleStruct->trainerSlideSpriteIds[battler];
         // Sets sprite priority to 1 so mons don't remain in foreground
         gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].oam.priority = 1;
@@ -2687,7 +2668,7 @@ void BtlController_HandlePrintString(enum BattlerId battler)
     // else
         BattlePutTextOnWindow(gDisplayedStringBattle, B_WIN_MSG);
 
-    if (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE && GetBattlerSide(battler) == B_SIDE_OPPONENT)
+    if (HasAnyBattleFlags(BATTLE_TYPE_FIRST_BATTLE) && GetBattlerSide(battler) == B_SIDE_OPPONENT)
     {
         switch (*stringId)
         {
@@ -2735,8 +2716,7 @@ void BtlController_HandleHealthBarUpdate(enum BattlerId battler)
     else
     {
         SetBattleBarStruct(battler, gHealthboxSpriteIds[battler], maxHP, 0, hpVal);
-        if (IsControllerPlayer(battler)
-         || IsControllerRecordedPlayer(battler)
+        if (BattlerIsPlayer(battler)
          || IsControllerRecordedPartner(battler)
          || IsControllerOakOldMan(battler)
          || IsControllerWally(battler))
@@ -2860,14 +2840,14 @@ void BtlController_HandleSpriteInvisibility(enum BattlerId battler)
 
 bool32 TwoPlayerIntroMons(enum BattlerId battler) // Double battle with both player Pokémon active.
 {
-    return (IsDoubleBattle() && IsValidForBattle(GetBattlerMon(battler ^ BIT_FLANK)));
+    return (IsDoubleBattle() && IsMonValidAndAliveForBattle(GetBattlerMon(battler ^ BIT_FLANK)));
 }
 
 bool32 TwoOpponentIntroMons(enum BattlerId battler) // Double battle with both opponent Pokémon active.
 {
     return (IsDoubleBattle()
-            && IsValidForBattle(GetBattlerMon(battler))
-            && IsValidForBattle(GetBattlerMon(GetPartnerBattler(battler))));
+            && IsMonValidAndAliveForBattle(GetBattlerMon(battler))
+            && IsMonValidAndAliveForBattle(GetBattlerMon(GetPartnerBattler(battler))));
 }
 
 // Task data for Task_StartSendOutAnim
@@ -2927,16 +2907,16 @@ static bool32 TwoMonsAtSendOut(enum BattlerId battler)
 {
     if (IsOnPlayerSide(battler))
     {
-        if (TwoPlayerIntroMons(battler) && !(gBattleTypeFlags & BATTLE_TYPE_MULTI))
+        if (TwoPlayerIntroMons(battler) && !HasAnyBattleFlags(BATTLE_TYPE_MULTI))
             return TRUE;
         else
             return FALSE;
     }
     else
     {
-        if ((!TwoOpponentIntroMons(battler) || (gBattleTypeFlags & BATTLE_TYPE_MULTI)) && !BATTLE_TWO_VS_ONE_OPPONENT)
+        if ((!TwoOpponentIntroMons(battler) || (HasAnyBattleFlags(BATTLE_TYPE_MULTI))) && !IsMultiVsOneOpponentBattle())
             return FALSE;
-        else if ((gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS) || (BATTLE_TWO_VS_ONE_OPPONENT && !TwoOpponentIntroMons(battler)))
+        else if (HasAnyBattleFlags(BATTLE_TYPE_TWO_OPPONENTS) || (IsMultiVsOneOpponentBattle() && !TwoOpponentIntroMons(battler)))
             return FALSE;
         else
             return TRUE;
@@ -3048,7 +3028,7 @@ void BtlController_HandleHidePartyStatusSummary(enum BattlerId battler)
 
 void BtlController_HandleBattleAnimation(enum BattlerId battler)
 {
-    if ((gBattleTypeFlags & (BATTLE_TYPE_SAFARI | BATTLE_TYPE_CATCH_TUTORIAL))
+    if (HasAnyBattleFlags(BATTLE_TYPE_SAFARI | BATTLE_TYPE_CATCH_TUTORIAL)
         || IsControllerOakOldMan(battler)
         || !IsBattleSEPlaying(battler))
     {
@@ -3088,7 +3068,7 @@ static void AnimateMonAfterKnockout(enum BattlerId battler)
     if (IsBattlerAlive(oppositeBattler))
         LaunchKOAnimation(oppositeBattler, ReturnAnimIdForBattler(wasPlayerSideKnockedOut, oppositeBattler), wasPlayerSideKnockedOut);
 
-    if (gBattleTypeFlags & BATTLE_TYPE_DOUBLE && IsBattlerAlive(partnerBattler))
+    if (HasAnyBattleFlags(BATTLE_TYPE_DOUBLE) && IsBattlerAlive(partnerBattler))
         LaunchKOAnimation(partnerBattler, ReturnAnimIdForBattler(wasPlayerSideKnockedOut, partnerBattler), wasPlayerSideKnockedOut);
 }
 
@@ -3166,9 +3146,7 @@ void BtlController_HandleSwitchInShowSubstitute(enum BattlerId battler)
         if (gBattleSpritesDataPtr->battlerData[battler].behindSubstitute)
             InitAndLaunchSpecialAnimation(battler, battler, battler, B_ANIM_MON_TO_SUBSTITUTE);
 
-        if (IsControllerOpponent(battler)
-         && IsControllerLinkOpponent(battler)
-         && IsControllerRecordedOpponent(battler))
+        if (BattlerIsOpponent(battler))
             gBattlerControllerFuncs[battler] = BtlController_HandleSwitchInSoundAndEnd;
         else
             gBattlerControllerFuncs[battler] = BtlController_HandleSwitchInWaitAndEnd;
@@ -3327,7 +3305,7 @@ void FreeShinyStars(void)
 
 enum BattleTrainer GetBattlerTrainer(enum BattlerId battler)
 {
-    if (gBattleTypeFlags & BATTLE_TYPE_LINK)
+    if (HasAnyBattleFlags(BATTLE_TYPE_LINK))
     {
         switch (gBattlerBattleController[battler])
         {
@@ -3340,7 +3318,7 @@ enum BattleTrainer GetBattlerTrainer(enum BattlerId battler)
         case BATTLE_CONTROLLER_LINK_OPPONENT:
         case BATTLE_CONTROLLER_RECORDED_OPPONENT:
         case BATTLE_CONTROLLER_OPPONENT:
-            if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
+            if (HasAnyBattleFlags(BATTLE_TYPE_MULTI))
                 return (battler & BIT_FLANK) ? B_TRAINER_OPPONENT_B : B_TRAINER_OPPONENT_A;
             return B_TRAINER_OPPONENT_A;
         default:
@@ -3359,9 +3337,9 @@ enum BattleTrainer GetTrainerFromBattlePosition(enum BattlerPosition position)
 bool32 BattleSideHasTwoTrainers(enum BattleSide side)
 {
     if (side == B_SIDE_PLAYER)
-        return gBattleTypeFlags & BATTLE_TYPE_MULTI;
+        return HasAnyBattleFlags(BATTLE_TYPE_MULTI);
     else
-        return ((gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS && TRAINER_BATTLE_PARAM.opponentB != 0xFFFF) || (gBattleTypeFlags & BATTLE_TYPE_LINK && gBattleTypeFlags & BATTLE_TYPE_MULTI));
+        return ((HasAnyBattleFlags(BATTLE_TYPE_TWO_OPPONENTS) && TRAINER_BATTLE_PARAM.opponentB != 0xFFFF) || HasAllBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_MULTI));
 }
 
 bool32 BattlersShareParty(enum BattlerId battler1, enum BattlerId battler2)

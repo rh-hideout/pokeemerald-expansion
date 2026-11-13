@@ -11,6 +11,7 @@
 #include "intro_frlg.h"
 #include "malloc.h"
 #include "menu.h"
+#include "multiboot_pokemon_colosseum.h"
 #include "new_game.h"
 #include "palette.h"
 #include "random.h"
@@ -245,9 +246,6 @@ static void SpriteCB_NidorinoCry(struct Sprite *sprite);
 static void SpriteCB_NidorinoRecoil(struct Sprite *sprite);
 static void SpriteCB_NidorinoHop(struct Sprite *sprite);
 static void SpriteCB_NidorinoAttack(struct Sprite *sprite);
-
-extern const u32 gMultiBootProgram_PokemonColosseum_Start[];
-extern const u32 gMultiBootProgram_PokemonColosseum_End[];
 
 static const u16 sCopyright_Pal[] = INCGFX_U16("graphics/intro_frlg/copyright.pal", ".gbapal");
 static const u32 sCopyright_Gfx[]  = INCGFX_U32("graphics/intro_frlg/copyright.png", ".4bpp.smol");
@@ -976,7 +974,7 @@ bool8 SetUpCopyrightScreenFrlg(void)
                 {
                     if (*(u32 *)(EWRAM_START + 0xAC) == COLOSSEUM_GAME_CODE)
                     {
-                        CpuCopy16(gMultiBootProgram_PokemonColosseum_Start, (void *)EWRAM_START, 0x28000);
+                        CpuCopy16(&gMultiBootProgram_PokemonColosseum_Start, (void *)EWRAM_START, sizeof(gMultiBootProgram_PokemonColosseum_Start));
                         *(u32 *)(EWRAM_START + 0xAC) = COLOSSEUM_GAME_CODE;
                     }
                     GameCubeMultiBoot_ExecuteProgram(&sGcmb);

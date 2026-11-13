@@ -117,7 +117,7 @@ static enum ItemEffect TryBerserkGene(enum BattlerId battler)
     return ITEM_STATS_CHANGE;
 }
 
-static enum ItemEffect RestoreWhiteHerbStats(enum BattlerId battler)
+static enum ItemEffect RestoreWhiteHerbStats(enum BattlerId battler, ActivationTiming timing)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -131,7 +131,11 @@ static enum ItemEffect RestoreWhiteHerbStats(enum BattlerId battler)
     }
 
     if (effect != ITEM_NO_EFFECT)
+    {
+        if (timing != IsOnFlingActivation)
+            BattleScriptCall(BattleScript_RemoveItem);
         BattleScriptCall(BattleScript_WhiteHerbRet);
+    }
 
     return effect;
 }
@@ -440,8 +444,13 @@ static enum ItemEffect TryMentalHerb(enum BattlerId battler, ActivationTiming ti
         }
     }
 
-    if (effect)
+    
+    if (effect != ITEM_NO_EFFECT)
+    {
+        if (timing != IsOnFlingActivation)
+            BattleScriptCall(BattleScript_RemoveItem);
         BattleScriptCall(BattleScript_MentalHerbCureRet);
+    }
 
     return effect;
 }
@@ -570,7 +579,11 @@ static enum ItemEffect TryToxicOrb(enum BattlerId battler)
     enum ItemEffect effect = ITEM_NO_EFFECT;
     enum Ability ability = GetBattlerAbility(battler);
 
-    if (CanBePoisoned(battler, battler, ability, ability)) // Corrosion bypasses Poison/Steel-type poison immunity
+    gBattleStruct->ignoreOrbFailure = TRUE;
+    bool32 canBePoisoned = CanBePoisoned(battler, battler, ability, ability);
+    gBattleStruct->ignoreOrbFailure = FALSE;
+
+    if (canBePoisoned) // Corrosion bypasses Poison/Steel-type poison immunity
     {
         gBattleMons[battler].status1 = STATUS1_TOXIC_POISON;
         gEffectBattler = battler;
@@ -587,7 +600,11 @@ static enum ItemEffect TryFlameOrb(enum BattlerId battler)
     enum ItemEffect effect = ITEM_NO_EFFECT;
     enum Ability ability = GetBattlerAbility(battler);
 
-    if (CanBeBurned(battler, battler, ability))
+    gBattleStruct->ignoreOrbFailure = TRUE;
+    bool32 canBeBurned = CanBeBurned(battler, battler, ability);
+    gBattleStruct->ignoreOrbFailure = FALSE;
+
+    if (canBeBurned)
     {
         gBattleMons[battler].status1 = STATUS1_BURN;
         gEffectBattler = battler;
@@ -1044,7 +1061,7 @@ enum ItemEffect ItemBattleEffects(enum BattlerId itemBattler, enum BattlerId bat
         effect = TryBoosterEnergy(itemBattler, GetBattlerAbility(itemBattler));
         break;
     case HOLD_EFFECT_WHITE_HERB:
-        effect = RestoreWhiteHerbStats(itemBattler);
+        effect = RestoreWhiteHerbStats(itemBattler, timing);
         break;
     case HOLD_EFFECT_MIRROR_HERB:
         effect = TryConsumeMirrorHerb(itemBattler);
