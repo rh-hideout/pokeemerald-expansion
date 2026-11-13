@@ -2779,31 +2779,45 @@ bool32 HasBattlerSideMoveWithEffect(enum BattlerId battler, enum BattleMoveEffec
     return FALSE;
 }
 
-static bool32 HasDamagingMoveSuperEffectiveAgainstType(enum BattlerId battler, enum Type defType)
+static bool32 HasDamagingMoveSuperEffectiveAgainstType(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Type newType)
 {
-    enum Move *moves = GetMovesArray(battler);
+    enum Move *moves = GetMovesArray(battlerAtk);
+    enum Type savedTypes[3];
+    u32 moveLimitations = gAiLogicData->moveLimitations[battlerAtk];
+    bool32 result = FALSE;
+
+    // Change target to the new type
+    AI_StoreBattlerTypes(battlerDef, savedTypes);
+    gBattleMons[battlerDef].types[0] = newType;
+    gBattleMons[battlerDef].types[1] = newType;
+    gBattleMons[battlerDef].types[2] = TYPE_MYSTERY;
 
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
         enum Move move = moves[moveIndex];
 
-        if (!IsMoveValid(move) || IsBattleMoveStatus(move))
+        if (IsMoveUnusable(moveIndex, moves[moveIndex], moveLimitations) || IsBattleMoveStatus(move))
             continue;
-        if (GetTypeModifier(GetMoveType(move), defType) >= UQ_4_12(2.0))
-            return TRUE;
-        if (GetMoveEffect(move) == EFFECT_SUPER_EFFECTIVE_ON_ARG && GetMoveArgType(move) == defType) //Super effective moves that overwrite type chart (Freeze Dry)
-            return TRUE;
+        if (AI_GetMoveEffectiveness(move, battlerAtk, battlerDef) >= UQ_4_12(2.0))
+        {
+            result = TRUE;
+            break;
+        }
     }
 
-    return FALSE;
+    AI_RestoreBattlerTypes(battlerDef, savedTypes);
+
+    return result;
 }
 
-// Checks if the user or its partner has a damaging super-effective move against the given type 
-bool32 HasBattlerSideMoveSuperEffectiveAgainstType(enum BattlerId battler, enum Type defType)
+// Checks if the user or its partner has a damaging super-effective move against the given type
+bool32 HasBattlerSideMoveSuperEffectiveAgainstType(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Type newType)
 {
-    if (HasDamagingMoveSuperEffectiveAgainstType(battler, defType))
+    enum BattlerId partner = GetPartnerBattler(battlerAtk);
+
+    if (HasDamagingMoveSuperEffectiveAgainstType(battlerAtk, battlerDef, newType))
         return TRUE;
-    if (HasPartnerIgnoreFlags(battler) && HasDamagingMoveSuperEffectiveAgainstType(GetPartnerBattler(battler), defType))
+    if (IsBattlerAlive(partner) && HasDamagingMoveSuperEffectiveAgainstType(partner, battlerDef, newType))
         return TRUE;
     return FALSE;
 }

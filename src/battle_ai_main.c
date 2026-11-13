@@ -2791,7 +2791,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         GetBattlerTypes(battlerDef, FALSE, types);
         if (PartnerMoveIsSameAsAttacker(GetPartnerBattler(battlerAtk), battlerDef, move, aiData->partnerMove)
             || (types[0] == typeArg && types[1] == typeArg && types[2] == TYPE_MYSTERY))
-            ADJUST_SCORE(-10);    // target is already water-only
+            ADJUST_SCORE(-10);    // target type is already the same
         break;
     }
     case EFFECT_THIRD_TYPE:
@@ -5444,7 +5444,7 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
             ADJUST_SCORE(DECENT_EFFECT);
         break;
     case EFFECT_SOAK:
-        if (HasBattlerSideMoveSuperEffectiveAgainstType(battlerAtk, GetMoveArgType(move)))
+        if (HasBattlerSideMoveSuperEffectiveAgainstType(battlerAtk, battlerDef, GetMoveArgType(move)))
             ADJUST_SCORE(DECENT_EFFECT); // Get some super effective moves
         break;
     case EFFECT_THIRD_TYPE:
