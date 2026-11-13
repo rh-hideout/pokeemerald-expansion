@@ -69,13 +69,6 @@ bool32 ShouldTrainerBattlerUseGimmick(enum BattlerId battler, enum Gimmick gimmi
     return gimmick == TestRunner_Battle_GetChosenGimmick(GetBattlerTrainer(battler), gBattlerPartyIndexes[battler]);
     #else
 
-    // Wild pokemon gimmicks
-    if (!(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
-    {
-        if (gimmick == GIMMICK_TERA || gimmick == GIMMICK_DYNAMAX)
-            return FALSE;
-    }
-
     // The player can bypass these checks because they can choose through the controller.
     if (IsOnPlayerSide(battler) && !((gBattleTypeFlags & BATTLE_TYPE_MULTI) && GetBattlerPosition(battler) == B_POSITION_PLAYER_RIGHT))
         return TRUE;
