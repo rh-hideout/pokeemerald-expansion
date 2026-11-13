@@ -1430,7 +1430,7 @@ void Task_UseHoneyOnField(u8 taskId)
 
 static void ItemUseOnFieldCB_Honey(u8 taskId)
 {
-    Overworld_ResetStateAfterDigEscRope();
+    ResetInitialPlayerAvatarState();
     RemoveBagItem(gSpecialVar_ItemId, 1);
     CopyItemName(gSpecialVar_ItemId, gStringVar2);
     StringExpandPlaceholders(gStringVar4, gText_PlayerUsedVar2);
