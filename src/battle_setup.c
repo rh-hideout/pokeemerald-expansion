@@ -696,7 +696,6 @@ static void CB2_EndWildBattle(void)
 
     if (IsNPCFollowerWildBattle())
     {
-        RestorePartyAfterFollowerNPCBattle();
         if (FNPC_FLAG_HEAL_AFTER_FOLLOWER_BATTLE != 0
          && (FNPC_FLAG_HEAL_AFTER_FOLLOWER_BATTLE == FNPC_ALWAYS
          || FlagGet(FNPC_FLAG_HEAL_AFTER_FOLLOWER_BATTLE)))

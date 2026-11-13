@@ -8213,9 +8213,6 @@ static void Cmd_givecaughtmon(void)
 {
     CMD_ARGS(const u8 *passInstr);
     enum GiveCaughtMonStates state = gBattleCommunication[MULTIUSE_STATE];
-    // Restore players party in order to handle properly the case when a wild mon is caught.
-    if (IsNPCFollowerWildBattle())
-        LoadPlayerParty();
 
     switch (state)
     {
