@@ -4000,7 +4000,8 @@ static void DebugAction_Sound_MUS_SelectId(u8 taskId)
     }
 }
 
-static bool32 DebugSelection_FollowerPartner_Complete(u8 taskId) {
+static bool32 DebugSelection_FollowerPartner_Complete(u8 taskId) 
+{
     SetFollowerNPCData(FNPC_DATA_BATTLE_PARTNER, DebugSelection_GetData(taskId, 0));
     Debug_DestroyMenu_Full(taskId);
     return TRUE;
