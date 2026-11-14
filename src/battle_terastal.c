@@ -73,7 +73,7 @@ bool32 CanTerastallize(enum BattlerId battler)
     if (gBattleMons[battler].volatiles.transformed && GET_BASE_SPECIES_ID(gBattleMons[battler].species) == SPECIES_TERAPAGOS)
         return FALSE;
 
-    if (!(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
+    if (!(gBattleTypeFlags & BATTLE_TYPE_TRAINER) && GetBattlerSide(battler) == B_SIDE_OPPONENT)
         return FALSE;
 
     if (TESTING || !IsOnPlayerSide(battler))
