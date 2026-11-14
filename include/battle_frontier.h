@@ -22,11 +22,12 @@ extern const struct BattleFrontierTrainer *gFacilityTrainers;
 extern const struct TrainerMon *gFacilityTrainerMons;
 extern const struct BattleFrontierTrainer gBattleFrontierTrainers[];
 extern const struct TrainerMon gBattleFrontierMons[];
+extern const struct TrainerMon *const gFrontierBrainsMons[][2];
 
 void DoFacilityTrainerBattle(struct ScriptContext *ctx);
 void FillFrontierTrainerParty(u8 monsCount);
 void FillFrontierTrainersParties(u8 monsCount);
 void PickRandomFacilityMons(struct FacilityMonGenerator *generator, u16 trainerId, u16 *dest);
-void CreateFacilityMon(struct Pokemon *dst, struct FacilityMonGenerator *generator, u16 monIndex);
+void CreateFacilityMon(struct Pokemon *dst, struct FacilityMonGenerator *generator, const struct TrainerMon *fmon);
 
 #endif // GUARD_BATTLE_FRONTIER_H

@@ -32,6 +32,46 @@ EWRAM_DATA const struct TrainerMon *gFacilityTrainerMons = NULL;
 // IWRAM common
 COMMON_DATA u16 gFrontierTempParty[MAX_FRONTIER_PARTY_SIZE] = {0};
 
+#include "data/battle_frontier/frontier_brain_mons.h"
+
+const struct TrainerMon * const gFrontierBrainsMons[][2] =
+{
+    [FRONTIER_FACILITY_TOWER] = {
+        sBattleTowerSilverBrainParty,
+        sBattleTowerGoldBrainParty,
+    },
+    [FRONTIER_FACILITY_DOME] =
+    {
+        sBattleDomeSilverBrainParty,
+        sBattleDomeGoldBrainParty,
+    },
+    [FRONTIER_FACILITY_PALACE] =
+    {
+        sBattlePalaceSilverBrainParty,
+        sBattlePalaceGoldBrainParty,
+    },
+    [FRONTIER_FACILITY_ARENA] =
+    {
+        sBattleArenaSilverBrainParty,
+        sBattleArenaGoldBrainParty,
+    },
+    [FRONTIER_FACILITY_FACTORY] = // Because Factory's Pokémon are random, this facility's Brain also uses random Pokémon
+    {
+        NULL,
+        NULL,
+    },
+    [FRONTIER_FACILITY_PIKE] =
+    {
+        sBattlePikeSilverBrainParty,
+        sBattlePikeGoldBrainParty,
+    },
+    [FRONTIER_FACILITY_PYRAMID] =
+    {
+        sBattlePyramidSilverBrainParty,
+        sBattlePyramidGoldBrainParty,
+    },
+};
+
 static void HandleFacilityTrainerBattleEnd(void)
 {
     u8 facility = gBattleScripting.specialTrainerBattleType;
@@ -316,64 +356,119 @@ static void ModifyPartyOrder(struct FacilityMonGenerator *generator, u16 trainer
     }
 }
 
-static void FillTrainerParty(u16 trainerId, enum BattleTrainer trainer, u8 monCount)
+enum FrontierTrainerType
 {
-    s32 i, j;
+    FRONTIER_TRAINER_REGULAR,
+    FRONTIER_TRAINER_RECORDMIX_FRIEND,
+    FRONTIER_TRAINER_APPRENTICE,
+    FRONTIER_TRAINER_EREADER,
+    FRONTIER_TRAINER_BRAIN,
+    NO_FRONTIER_TRAINER_FOUND
+};
 
-    struct FacilityMonGenerator generator = GetFacilityMonGenerator(trainerId);
+static enum FrontierTrainerType GetFrontierTrainerType(struct FacilityMonGenerator *generator, u16 trainerId)
+{
+    if (generator->facility == FRONTIER_FACILITY_FACTORY)
+        return FRONTIER_TRAINER_REGULAR;
     if (trainerId < FRONTIER_TRAINERS_COUNT)
-    {
-        ;
-    }
-    else if (trainerId == TRAINER_EREADER)
-    {
-    #if FREE_BATTLE_TOWER_E_READER == FALSE
-        for (i = 0; i < FRONTIER_PARTY_SIZE; i++)
-            CreateBattleTowerMon(&gParties[trainer][i], &gSaveBlock2Ptr->frontier.ereaderTrainer.party[i]);
-    #endif //FREE_BATTLE_TOWER_E_READER
-        return;
-    }
-    else if (trainerId == TRAINER_FRONTIER_BRAIN)
-    {
-        if (generator.facility != FACILITY_BATTLE_FACTORY)
-        {
-            CreateFrontierBrainPokemon();
-            return;
-        }
-    }
-    else if (trainerId < TRAINER_RECORD_MIXING_APPRENTICE)
-    {
-        // Record mixed player.
-        for (j = 0, i = 0; i < monCount; j++, i++)
-        {
-            if (gSaveBlock2Ptr->frontier.towerRecords[trainerId - TRAINER_RECORD_MIXING_FRIEND].party[j].species != SPECIES_NONE
-                && gSaveBlock2Ptr->frontier.towerRecords[trainerId - TRAINER_RECORD_MIXING_FRIEND].party[j].level <= generator.partyLevel)
-            {
-                CreateBattleTowerMon_HandleLevel(&gParties[trainer][i], &gSaveBlock2Ptr->frontier.towerRecords[trainerId - TRAINER_RECORD_MIXING_FRIEND].party[j], FALSE);
-            }
-        }
-        return;
-    }
-    else
-    {
-        // Apprentice.
-        for (i = 0; i < FRONTIER_PARTY_SIZE; i++)
-            CreateApprenticeMon(&gParties[trainer][i], &gSaveBlock2Ptr->apprentices[trainerId - TRAINER_RECORD_MIXING_APPRENTICE], i);
-        return;
-    }
+        return FRONTIER_TRAINER_REGULAR;
+    if (trainerId < TRAINER_RECORD_MIXING_APPRENTICE)
+        return FRONTIER_TRAINER_RECORDMIX_FRIEND;
+    if (trainerId < TRAINER_EREADER)
+        return FRONTIER_TRAINER_APPRENTICE;
+    if (trainerId == TRAINER_EREADER)
+        return FRONTIER_TRAINER_EREADER;
+    if (trainerId == TRAINER_FRONTIER_BRAIN)
+        return FRONTIER_TRAINER_BRAIN;
+    return NO_FRONTIER_TRAINER_FOUND;
+}
 
-    generator.partySize = monCount;
-    PickFacilityMons(&generator, trainerId);
-    ModifyPartyOrder(&generator, trainerId);
-    for (i = 0; i < generator.partySize; i++)
+static void FillRegularFrontierParty(enum BattleTrainer trainer, u16 trainerId, struct FacilityMonGenerator *generator)
+{
+    PickFacilityMons(generator, trainerId);
+    ModifyPartyOrder(generator, trainerId);
+    for (u32 i = 0; i < generator->partySize; i++)
     {
-        CreateFacilityMon(&gParties[trainer][i], &generator, gFrontierTempParty[i]);
+        u32 monIndex = gFrontierTempParty[i];
+        CreateFacilityMon(&gParties[trainer][i], generator, &generator->facilityMonList[monIndex]);
     }
 }
 
-void CreateFacilityMon(struct Pokemon *dst, struct FacilityMonGenerator *generator, u16 monIndex)
+static void FillFrontierFriendRecordParty(enum BattleTrainer trainer, u16 recordMixId, struct FacilityMonGenerator *generator)
 {
-    const struct TrainerMon *fmon = &generator->facilityMonList[monIndex];
+    for (u32 j = 0, i = 0; i < generator->partySize; j++, i++)
+    {
+        if (gSaveBlock2Ptr->frontier.towerRecords[recordMixId].party[j].species != SPECIES_NONE
+            && gSaveBlock2Ptr->frontier.towerRecords[recordMixId].party[j].level <= generator->partyLevel)
+        {
+            CreateBattleTowerMon_HandleLevel(&gParties[trainer][i], &gSaveBlock2Ptr->frontier.towerRecords[recordMixId].party[j], FALSE);
+        }
+    }
+}
+
+static void FillFrontierApprenticeParty(enum BattleTrainer trainer, u16 apprenticeId, struct FacilityMonGenerator *generator)
+{
+    for (u32 i = 0; i < generator->partySize; i++)
+    {
+        CreateApprenticeMon(&gParties[trainer][i], &gSaveBlock2Ptr->apprentices[apprenticeId], i);
+    }
+}
+
+static void FillEreaderParty(enum BattleTrainer trainer, struct FacilityMonGenerator *generator)
+{
+#if FREE_BATTLE_TOWER_E_READER == FALSE
+    for (u32 i = 0; i < generator->partySize; i++)
+        CreateBattleTowerMon(&gParties[trainer][i], &gSaveBlock2Ptr->frontier.ereaderTrainer.party[i]);
+#else
+    errorf("Trying to access ereader party but ereader data was removed from save file");
+#endif
+    return;
+}
+
+static void FillFrontierBrainParty(enum BattleTrainer trainer, struct FacilityMonGenerator *generator)
+{
+    s32 symbol = GetFronterBrainSymbol();
+    for (u32 i = 0; i < MAX_FRONTIER_PARTY_SIZE; i++)
+    {
+        gFrontierTempParty[i] = i;
+    }
+    ModifyPartyOrder(generator, FRONTIER_TRAINER_BRAIN);
+    for (u32 i = 0; i < generator->partySize; i++)
+    {
+        u32 j = gFrontierTempParty[i];
+        CreateFacilityMon(&gParties[trainer][i], generator, &gFrontierBrainsMons[generator->facility][symbol][j]);
+    }
+}
+
+static void FillTrainerParty(u16 trainerId, enum BattleTrainer trainer, u8 monCount)
+{
+    struct FacilityMonGenerator generator = GetFacilityMonGenerator(trainerId);
+    generator.partySize = monCount;
+    switch(GetFrontierTrainerType(&generator, trainerId))
+    {
+    case FRONTIER_TRAINER_REGULAR:
+        FillRegularFrontierParty(trainer, trainerId, &generator);
+        break;
+    case FRONTIER_TRAINER_RECORDMIX_FRIEND:
+        FillFrontierFriendRecordParty(trainer, trainerId - TRAINER_RECORD_MIXING_FRIEND, &generator);
+        break;
+    case FRONTIER_TRAINER_APPRENTICE:
+        FillFrontierApprenticeParty(trainer, trainerId - TRAINER_RECORD_MIXING_APPRENTICE, &generator);
+        break;
+    case FRONTIER_TRAINER_EREADER:
+        FillEreaderParty(trainer, &generator);
+        break;
+    case FRONTIER_TRAINER_BRAIN:
+        FillFrontierBrainParty(trainer, &generator);
+        break;
+    case NO_FRONTIER_TRAINER_FOUND:
+        errorf("trainerId %d is not a valid id for a frontier trainer", trainerId);
+        break;
+    }
+}
+
+void CreateFacilityMon(struct Pokemon *dst, struct FacilityMonGenerator *generator, const struct TrainerMon *fmon)
+{
     enum PokeBall ball = (fmon->ball == 0xFF) ? Random() % POKEBALL_COUNT : fmon->ball;
     enum Move move;
     u32 friendship, j, data;
@@ -390,6 +485,9 @@ void CreateFacilityMon(struct Pokemon *dst, struct FacilityMonGenerator *generat
 
     ModifyPersonalityForNature(&personality, fmon->nature);
     CreateMonWithIVs(dst, fmon->species, generator->partyLevel, personality, OTID_STRUCT_PRESET(generator->otId), generator->fixedIV);
+
+    if (generator->fixedIV == DO_NOT_USE_FACILITY_IVS)
+        SetMonData(dst, MON_DATA_IVS, &fmon->iv);
 
     friendship = MAX_FRIENDSHIP;
     // Give the chosen Pokémon its specified moves.
