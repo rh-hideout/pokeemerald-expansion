@@ -1142,7 +1142,7 @@ static void UpdateHpTextInHealthboxInDoubles(u32 healthboxSpriteId, u32 maxOrCur
         {
             if (B_HP_PERCENTAGE_DISPLAY)
                 PrintHPPercentageOnHealthbox(healthboxSpriteId, currHp, maxHp, HEALTHBOX_BG_INDEX, -8, 8);
-            else 
+            else
                 PrintHpOnHealthbox(healthboxSpriteId, currHp, maxHp, HEALTHBOX_BG_INDEX, -8, 8); // debug only
 
             // Clears the end of the healthbar gfx.
@@ -3439,20 +3439,51 @@ void CategoryIcons_LoadSpritesGfx(void)
 #define INDICATOR_STATE_SLIDE_OUT   4
 #define INDICATOR_STATE_REMOVE      5
 
-static const u32 sWeatherIndicatorGfx[] = INCGFX_U32("graphics/battle_interface/weather_indicators.png", ".4bpp.smol");
-static const u16 sWeatherIndicatorPal[] = INCGFX_U16("graphics/battle_interface/weather_indicators.png", ".gbapal");
+static const u32 sSunIndicatorGfx[] = INCGFX_U32("graphics/battle_interface/weather_indicators/sun.png", ".4bpp.smol");
+static const u16 sSunIndicatorPal[] = INCGFX_U16("graphics/battle_interface/weather_indicators/sun.png", ".gbapal");
+static const u32 sRainIndicatorGfx[] = INCGFX_U32("graphics/battle_interface/weather_indicators/rain.png", ".4bpp.smol");
+static const u16 sRainIndicatorPal[] = INCGFX_U16("graphics/battle_interface/weather_indicators/rain.png", ".gbapal");
+static const u32 sSandstormIndicatorGfx[] = INCGFX_U32("graphics/battle_interface/weather_indicators/sandstorm.png", ".4bpp.smol");
+static const u16 sSandstormIndicatorPal[] = INCGFX_U16("graphics/battle_interface/weather_indicators/sandstorm.png", ".gbapal");
+static const u32 sSnowIndicatorGfx[] = INCGFX_U32("graphics/battle_interface/weather_indicators/snow.png", ".4bpp.smol");
+static const u16 sSnowIndicatorPal[] = INCGFX_U16("graphics/battle_interface/weather_indicators/snow.png", ".gbapal");
+static const u32 sHailIndicatorGfx[] = INCGFX_U32("graphics/battle_interface/weather_indicators/hail.png", ".4bpp.smol");
+static const u16 sHailIndicatorPal[] = INCGFX_U16("graphics/battle_interface/weather_indicators/hail.png", ".gbapal");
+static const u32 sFogIndicatorGfx[] = INCGFX_U32("graphics/battle_interface/weather_indicators/fog.png", ".4bpp.smol");
+static const u16 sFogIndicatorPal[] = INCGFX_U16("graphics/battle_interface/weather_indicators/fog.png", ".gbapal");
+static const u32 sIntenseSunIndicatorGfx[] = INCGFX_U32("graphics/battle_interface/weather_indicators/intense_sun.png", ".4bpp.smol");
+static const u16 sIntenseSunIndicatorPal[] = INCGFX_U16("graphics/battle_interface/weather_indicators/intense_sun.png", ".gbapal");
+static const u32 sHeavyRainIndicatorGfx[] = INCGFX_U32("graphics/battle_interface/weather_indicators/heavy_rain.png", ".4bpp.smol");
+static const u16 sHeavyRainIndicatorPal[] = INCGFX_U16("graphics/battle_interface/weather_indicators/heavy_rain.png", ".gbapal");
+static const u32 sStrongWindIndicatorGfx[] = INCGFX_U32("graphics/battle_interface/weather_indicators/strong_wind.png", ".4bpp.smol");
+static const u16 sStrongWindIndicatorPal[] = INCGFX_U16("graphics/battle_interface/weather_indicators/strong_wind.png", ".gbapal");
 
-static const struct CompressedSpriteSheet sSpriteSheet_WeatherIndicator =
+static const struct CompressedSpriteSheet sSpriteSheet_WeatherIndicators[] =
 {
-    .data = sWeatherIndicatorGfx,
-    .size = 0x400,
-    .tag = TAG_WEATHER_INDICATOR_GFX,
+    [BATTLE_WEATHER_RAIN - 1]          = {sRainIndicatorGfx,       0x200, TAG_WEATHER_INDICATOR_GFX},
+    [BATTLE_WEATHER_RAIN_PRIMAL - 1]   = {sHeavyRainIndicatorGfx,  0x200, TAG_WEATHER_INDICATOR_GFX},
+    [BATTLE_WEATHER_RAIN_DOWNPOUR - 1] = {sRainIndicatorGfx,       0x200, TAG_WEATHER_INDICATOR_GFX},
+    [BATTLE_WEATHER_SUN - 1]           = {sSunIndicatorGfx,        0x200, TAG_WEATHER_INDICATOR_GFX},
+    [BATTLE_WEATHER_SUN_PRIMAL - 1]    = {sIntenseSunIndicatorGfx, 0x200, TAG_WEATHER_INDICATOR_GFX},
+    [BATTLE_WEATHER_SANDSTORM - 1]     = {sSandstormIndicatorGfx,  0x200, TAG_WEATHER_INDICATOR_GFX},
+    [BATTLE_WEATHER_HAIL - 1]          = {sHailIndicatorGfx,       0x200, TAG_WEATHER_INDICATOR_GFX},
+    [BATTLE_WEATHER_SNOW - 1]          = {sSnowIndicatorGfx,       0x200, TAG_WEATHER_INDICATOR_GFX},
+    [BATTLE_WEATHER_FOG - 1]           = {sFogIndicatorGfx,        0x200, TAG_WEATHER_INDICATOR_GFX},
+    [BATTLE_WEATHER_STRONG_WINDS - 1]  = {sStrongWindIndicatorGfx, 0x200, TAG_WEATHER_INDICATOR_GFX}
 };
 
-static const struct SpritePalette sSpritePalette_WeatherIndicator =
+static const struct SpritePalette sSpritePalette_WeatherIndicators[] =
 {
-    .data = sWeatherIndicatorPal,
-    .tag = TAG_WEATHER_INDICATOR_PAL,
+    [BATTLE_WEATHER_RAIN - 1]          = {sRainIndicatorPal,       TAG_WEATHER_INDICATOR_PAL},
+    [BATTLE_WEATHER_RAIN_PRIMAL - 1]   = {sHeavyRainIndicatorPal,  TAG_WEATHER_INDICATOR_PAL},
+    [BATTLE_WEATHER_RAIN_DOWNPOUR - 1] = {sRainIndicatorPal,       TAG_WEATHER_INDICATOR_PAL},
+    [BATTLE_WEATHER_SUN - 1]           = {sSunIndicatorPal,        TAG_WEATHER_INDICATOR_PAL},
+    [BATTLE_WEATHER_SUN_PRIMAL - 1]    = {sIntenseSunIndicatorPal, TAG_WEATHER_INDICATOR_PAL},
+    [BATTLE_WEATHER_SANDSTORM - 1]     = {sSandstormIndicatorPal,  TAG_WEATHER_INDICATOR_PAL},
+    [BATTLE_WEATHER_HAIL - 1]          = {sHailIndicatorPal,       TAG_WEATHER_INDICATOR_PAL},
+    [BATTLE_WEATHER_SNOW - 1]          = {sSnowIndicatorPal,       TAG_WEATHER_INDICATOR_PAL},
+    [BATTLE_WEATHER_FOG - 1]           = {sFogIndicatorPal,        TAG_WEATHER_INDICATOR_PAL},
+    [BATTLE_WEATHER_STRONG_WINDS - 1]  = {sStrongWindIndicatorPal, TAG_WEATHER_INDICATOR_PAL}
 };
 
 static const struct OamData sOamData_WeatherIndicator =
@@ -3486,17 +3517,11 @@ static void Task_WeatherIndicatorHandler(u8 taskId)
     switch (gTasks[taskId].tState)
     {
     case INDICATOR_STATE_DRAW_SPRITE:
-        LoadCompressedSpriteSheet(&sSpriteSheet_WeatherIndicator);
-        LoadSpritePalette(&sSpritePalette_WeatherIndicator);
-        gTasks[taskId].tSpriteId = CreateSprite(&sSpriteTemplate_WeatherIndicator, 120, -8, 0);
+        enum BattleWeather currBattleWeather = GetBattleWeather(gTasks[taskId].tWeather) - 1;
 
-        //  Sun already has correct offset
-        if (gTasks[taskId].tWeather & B_WEATHER_RAIN)
-            gSprites[gTasks[taskId].tSpriteId].oam.tileNum += 8;
-        else if (gTasks[taskId].tWeather & B_WEATHER_SANDSTORM)
-            gSprites[gTasks[taskId].tSpriteId].oam.tileNum += 16;
-        else if (gTasks[taskId].tWeather & (B_WEATHER_SNOW | B_WEATHER_HAIL))
-            gSprites[gTasks[taskId].tSpriteId].oam.tileNum += 24;
+        LoadCompressedSpriteSheet(&sSpriteSheet_WeatherIndicators[currBattleWeather]);
+        LoadSpritePalette(&sSpritePalette_WeatherIndicators[currBattleWeather]);
+        gTasks[taskId].tSpriteId = CreateSprite(&sSpriteTemplate_WeatherIndicator, 120, -8, 0);
 
         gTasks[taskId].tState++;
         break;
