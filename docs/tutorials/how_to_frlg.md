@@ -13,6 +13,10 @@ For Porymap to work with FRLG maps you need to adjust a few settings (`Options >
 
 ![porymap_general](./img/frlg/porymap_general.png)
 
+-  in the `Tilesets` tab change the metatile attribute size to `2` bytes
+
+![porymap_general](./img/frlg/porymap_tileests.png)
+
 - in the `Identifiers` tab change the following attributes:
   - define_tiles_primary: `NUM_TILES_IN_PRIMARY_FRLG`
   - define_metatiles_primary: `NUM_METATILES_IN_PRIMARY_FRLG`
@@ -143,51 +147,26 @@ python3 migration_scripts/add_region_hoenn_attribute_to_hoenn_maps.py
 
 Make sure to run `make clean` after running this script
 
-## Fix CI if you are building FRLG by default
-If you make these I would also reccomend fixing your CI too to match these changes
-
-Make the following changes to your `.github/workflows/build.yml`
+## Make empty layout version defaults to frlg
+Also change your `tools/mapjson/mapjson.cpp` so the new maps you add without `frlg` as the layout also work fine
 
 ```diff
-# build-essential and git are already installed
+string layout_version = json_to_string(layout, "layout_version", true);
 
--      - name: ROM (Emerald)
-+      - name: ROM (Leafgreen)
-        env:
-          COMPARE: 0
--          GAME_VERSION: EMERALD
-+          GAME_VERSION: LEAFGREEN
-        run: make -j${nproc} -O all
-
-      - name: Release
-        env:
--          GAME_VERSION: EMERALD
-+          GAME_VERSION: LEAFGREEN
-        run: |
-          make tidy
-          make -j${nproc} release
-        # make tidy to purge previous build
-
-      - name: Test
-        env:
--          GAME_VERSION: EMERALD
-+          GAME_VERSION: LEAFGREEN
-          TEST: 1
-        run: |
-          make -j${nproc} check
-
-      - name: ROM (Firered)
-        env:
-          COMPARE: 0
-        run: |
-          make clean
-          make firered -j${nproc} -O
-
--      - name: ROM (Leafgreen)
-+      - name: ROM (Emerald)
-        env:
-          COMPARE: 0
-        run: |
--          make leafgreen -j${nproc} -O
-+          make emerald -j${nproc} -O
+        if (layout_version.empty()) {
+-            layout_version = "emerald";
++            layout_version = "frlg";
+        }
+        if ((version == "emerald" && layout_version != "emerald")
+         || (version == "firered" && layout_version != "frlg"))
+            continue;
+```
+```diff
+string layout_version = json_to_string(layout, "layout_version", true);
+        if (layout_version.empty()) {
+-            layout_version = "emerald";
++            layout_version = "frlg";
+        }
+        if ((version == "emerald" && layout_version != "emerald") || (version == "firered" && layout_version != "frlg")) {
+            text << "\t.4byte NULL\n";
 ```
