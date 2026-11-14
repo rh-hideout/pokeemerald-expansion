@@ -1,0 +1,105 @@
+{{ doNotModifyHeader }}
+
+
+static const u16 sStonePal[] = INCGFX_U16("graphics/mining_minigame/stones/stones.pal", ".gbapal");
+## for stone in stones
+static const u32 s{{ stone.label }}Gfx[] = INCGFX_U32("{{ stone.path }}", ".4bpp.smol");
+## endfor
+
+## for item in items
+static const u32 s{{ item.label }}Gfx[] = INCGFX_U32("{{ item.path }}", ".4bpp.smol");
+static const u16 s{{ item.label }}Pal[] = INCGFX_U16("{{ item.path }}", ".gbapal");
+
+## endfor
+
+
+## for stone in stones
+static const struct CompressedSpriteSheet sSpriteSheet_{{ stone.label }} =
+{
+    .data = s{{ stone.label }}Gfx,
+    .size = 2048,
+    .tag = MINING_TAG_{{ stone.id }}
+};
+
+## endfor
+
+static const struct SpritePalette sSpritePal_Stone =
+{
+    .data = sStonePal,
+    .tag = MINING_TAG_STONE_PAL
+};
+
+## for item in items
+static const struct CompressedSpriteSheet sSpriteSheet_{{ item.label }} =
+{
+    .data = s{{ item.label }}Gfx,
+    .size = 2048,
+    .tag = MINING_TAG_{{ item.id }}
+};
+
+static const struct SpritePalette sSpritePal_{{ item.label }} =
+{
+    .data = s{{ item.label }}Pal,
+    .tag = MINING_TAG_{{ item.id }}
+};
+
+## endfor
+
+## for stone in stones
+static const struct SpriteTemplate sSprite{{ stone.label }} =
+{
+    .tileTag = MINING_TAG_{{ stone.id }},
+    .paletteTag = MINING_TAG_STONE_PAL,
+    .oam = &sOamItem64x64,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = SpriteCallbackDummy,
+};
+
+## endfor
+
+## for item in items
+static const struct SpriteTemplate sSprite{{ item.label }} =
+{
+    .tileTag = MINING_TAG_{{ item.id }},
+    .paletteTag = MINING_TAG_{{ item.id }},
+    .oam = &sOamItem64x64,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = SpriteCallbackDummy,
+};
+
+## endfor
+
+static const struct MiningObject sMiningObjectList[] =
+{
+    [MININGID_NONE] =
+    {
+        .itemId = ITEM_NONE,
+        .tag = 0,
+        .sheet = NULL,
+        .palette = NULL,
+    },
+## for stone in stones
+    [MININGID_{{ stone.id }}] =
+    {
+        .itemId = ITEM_NONE,
+        .tag = MINING_TAG_{{ stone.id }},
+        .sheet = &sSpriteSheet_{{ stone.label }},
+        .palette = &sSpritePal_Stone,
+        .template = &sSprite{{ stone.label }}
+    },
+## endfor
+## for item in items
+    [MININGID_{{ item.id }}] =
+    {
+        .itemId = {{ item.item }},
+        .tag = MINING_TAG_{{ item.id }},
+        .sheet = &sSpriteSheet_{{ item.label }},
+        .palette = &sSpritePal_{{ item.label }},
+        .template = &sSprite{{ item.label }}
+    },
+## endfor
+};
