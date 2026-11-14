@@ -30,6 +30,14 @@ struct Sfc32State {
 
 typedef struct Sfc32State rng_value_t;
 
+struct WeightedArray
+{
+    u32 sum;
+    u32 count;
+    u16 weights[];
+};
+
+
 #define RNG_VALUE_EMPTY {0}
 
 // Calling this function directly is discouraged.
@@ -278,6 +286,20 @@ enum RandomTag
         RandomWeightedArray(tag, sum, ARRAY_COUNT(weights), weights); \
     })
 
+#define _WEIGHTS_ARG_PLUS(a) (a) +
+
+#define WEIGHTED_ARRAY(...) {                                            \
+    .sum = RECURSIVELY(R_FOR_EACH(_WEIGHTS_ARG_PLUS, __VA_ARGS__)) 0,    \
+    .count = (sizeof((u16[]){__VA_ARGS__})/sizeof(u16)),                 \
+    .weights = {__VA_ARGS__}                                             \
+}
+
+#define UNIFORM_WEIGHTS(size) {     \
+    .sum = 0,                       \
+    .count = size,                  \
+    .weights = NULL                 \
+}
+
 #define RandomChance(tag, successes, total) (RandomWeighted(tag, total - successes, successes))
 
 #define RandomPercentage(tag, t) \
@@ -312,6 +334,7 @@ enum RandomTag
 u32 RandomUniform(enum RandomTag, u32 lo, u32 hi);
 u32 RandomUniformExcept(enum RandomTag, u32 lo, u32 hi, bool32 (*reject)(u32));
 u32 RandomWeightedArray(enum RandomTag, u32 sum, u32 n, const u16 *weights);
+u16 RandomWeightedStruct(enum RandomTag tag, const struct WeightedArray *array);
 const void *RandomElementArray(enum RandomTag, const void *array, size_t size, size_t count);
 
 u32 RandomUniformDefault(enum RandomTag, u32 lo, u32 hi);
