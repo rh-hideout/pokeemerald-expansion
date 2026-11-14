@@ -59,9 +59,9 @@ The `additionalEffects` field represents effects that are applied at the `setadd
 ### src/battle_move_resolution.c
 As the name implies this is where the move resolution happens for a move. In the majority of cases this can be ignored but if a move needs to have very specific failure checks there are a couple functions that help with that. 
 * `CancelerMoveFailure` Handles moves that would fail because of certain user conditions. For example Fake Out `EFFECT_FIRST_TURN_ONLY`. The move will fail independent of the target if it isn't the first turn
-* `CancelerMoveEffectFailureTarget` Looks at target specific failure such as Poltergeist when target has no item. Note: the function is build in a way to handle spread moves meaning if one check is successfulthe move wont fail 
-* `CancelerStatusEffects` This can be largely treated as a blackbox but noteworthy is that for status move the decision whether the move fails or not is handled here. When the move fails no animation is played and we handle the failure later. 
-* A couple other things notable things are `CancelerCharging`, `CancelerExplosion`, `CancelerPledgeAttack`. For more information see the correspondings functions or that table `sMoveSuccessOrderCancelers`. 
+* `CancelerMoveEffectFailureTarget` Looks at target specific failure such as Poltergeist when target has no item. Note: the function is build in a way to handle spread moves meaning if one check is successful the move wont fail 
+* `CancelerStatusEffects` This can be largely treated as a blackbox but noteworthy is that for status moves the decision whether the move fails or not is handled here. When the move fails no animation is played then the failure is handled. 
+* A couple other notable things are `CancelerCharging`, `CancelerExplosion`, `CancelerPledgeAttack`. For more information see the correspondings functions or that table `sMoveSuccessOrderCancelers`. 
 
 You could call the file the heart of a move. It can be ignored but it can be useful to know how it works when a move needs to be more complicated like the pledges.
 
