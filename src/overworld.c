@@ -561,6 +561,8 @@ void LoadObjEventTemplatesFromHeader(void)
             gSaveBlock1Ptr->objectEventTemplates[i] = gMapHeader.events->objectEvents[i];
         }
     }
+
+    RotatingGate_InitMap();
 }
 
 void LoadSaveblockObjEventScripts(void)
@@ -2612,6 +2614,7 @@ static void InitObjectEventsLink(void)
     gTotalCameraPixelOffsetY = 0;
     ResetObjectEvents();
     TrySpawnObjectEvents(0, 0);
+    RotatingGate_InitGraphics(0, 0);
     TryRunOnWarpIntoMapScript();
 }
 
@@ -2631,13 +2634,14 @@ static void InitObjectEventsLocal(void)
     TrySpawnObjectEvents(0, 0);
     FollowerNPC_HandleSprite();
     UpdateFollowingPokemon();
+    RotatingGate_InitGraphics(0, 0);
     TryRunOnWarpIntoMapScript();
 }
 
 static void InitObjectEventsReturnToField(void)
 {
     SpawnObjectEventsOnReturnToField(0, 0);
-    RotatingGate_InitPuzzleAndGraphics();
+    RotatingGate_InitGraphics(0, 0);
     RunOnReturnToFieldMapScript();
 }
 

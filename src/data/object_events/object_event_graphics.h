@@ -463,6 +463,14 @@ const u32 gFieldEffectObjectPic_CaveDust[] = INCGFX_U32("graphics/field_effects/
 const u16 gFieldEffectObjectPalette_CaveDust[] = INCGFX_U16("graphics/field_effects/palettes/cave_dust.pal", ".gbapal");
 
 const u32 gObjectEventPic_ApricornTree[] = INCGFX_U32("graphics/object_events/pics/misc/apricorn_tree.png", ".4bpp", "-mwidth 2 -mheight 2");
+const u32 gObjectEventPic_RotatingGateL1[] = INCGFX_U32("graphics/rotating_gates/l1.png", ".4bpp", "-mwidth 4 -mheight 4");
+const u32 gObjectEventPic_RotatingGateL2[] = INCGFX_U32("graphics/rotating_gates/l2.png", ".4bpp", "-mwidth 8 -mheight 8");
+const u32 gObjectEventPic_RotatingGateL3[] = INCGFX_U32("graphics/rotating_gates/l3.png", ".4bpp", "-mwidth 8 -mheight 8");
+const u32 gObjectEventPic_RotatingGateL4[] = INCGFX_U32("graphics/rotating_gates/l4.png", ".4bpp", "-mwidth 8 -mheight 8");
+const u32 gObjectEventPic_RotatingGateT1[] = INCGFX_U32("graphics/rotating_gates/t1.png", ".4bpp", "-mwidth 4 -mheight 4");
+const u32 gObjectEventPic_RotatingGateT2[] = INCGFX_U32("graphics/rotating_gates/t2.png", ".4bpp", "-mwidth 8 -mheight 8");
+const u32 gObjectEventPic_RotatingGateT3[] = INCGFX_U32("graphics/rotating_gates/t3.png", ".4bpp", "-mwidth 8 -mheight 8");
+const u32 gObjectEventPic_RotatingGateT4[] = INCGFX_U32("graphics/rotating_gates/t4.png", ".4bpp", "-mwidth 8 -mheight 8");
 
 const u32 gFieldEffectObjectPic_ShinySparkle[] = INCGFX_U32("graphics/field_effects/pics/shiny_sparkle.png", ".4bpp", "-mwidth 2 -mheight 4");
 
