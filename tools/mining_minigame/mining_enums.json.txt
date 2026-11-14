@@ -1,5 +1,5 @@
 {{ doNotModifyHeader }}
-enum MiningId
+enum MiningEntity
 {
     MININGID_NONE,
 ## for stone in stones
