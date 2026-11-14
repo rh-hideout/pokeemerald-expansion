@@ -1027,6 +1027,7 @@ void CancelMultiTurnMoves(enum BattlerId battler)
     gBattleMons[battler].volatiles.bideTurns = 0;
     gBattleMons[battler].volatiles.rolloutTimer = 0;
     gBattleMons[battler].volatiles.furyCutterCounter = 0;
+    gBattleMons[battler].volatiles.chargeTurn = FALSE;
 
     if (B_RAMPAGE_CONFUSION < GEN_5
      || gBattleMons[battler].volatiles.rampageTurns != 1) // Will be confused at the end of the turn
@@ -9823,7 +9824,7 @@ bool32 MoveHasChargeTurnAdditionalEffect(enum Move move)
     u32 numAdditionalEffects = GetMoveAdditionalEffectCount(move);
     for (i = 0; i < numAdditionalEffects; i++)
     {
-        if (GetMoveAdditionalEffectById(move, i)->onChargeTurnOnly)
+        if (GetMoveAdditionalEffectById(move, i)->timing == TIMING_EFFECT_CHARGE_TURN)
             return TRUE;
     }
     return FALSE;

@@ -396,7 +396,6 @@ static void Cmd_tryselfconfusiondmgformchange(void);
 static void Cmd_return(void);
 static void Cmd_end(void);
 static void Cmd_end3(void);
-static void Cmd_setchargingturn(void);
 static void Cmd_call(void);
 static void Cmd_jumpifabilitypresent(void);
 static void Cmd_endselectionscript(void);
@@ -548,7 +547,6 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_RETURN]                                = Cmd_return,
     [B_SCR_OP_END]                                   = Cmd_end,
     [B_SCR_OP_END3]                                  = Cmd_end3,
-    [B_SCR_OP_SETCHARGINGTURN]                       = Cmd_setchargingturn,
     [B_SCR_OP_CALL]                                  = Cmd_call,
     [B_SCR_OP_JUMPIFABILITYPRESENT]                  = Cmd_jumpifabilitypresent,
     [B_SCR_OP_ENDSELECTIONSCRIPT]                    = Cmd_endselectionscript,
@@ -742,6 +740,7 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_UNUSED_95]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_96]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_97]                             = Cmd_dummy,
+    [B_SCR_OP_UNUSED_98]                             = Cmd_dummy,
 
     [B_SCR_OP_CALLNATIVE]                            = Cmd_callnative,
 };
@@ -910,19 +909,6 @@ static void Cmd_attackcanceler(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-static void Cmd_setchargingturn(void)
-{
-    CMD_ARGS();
-
-    if (!gBattleMons[gBattlerAttacker].volatiles.multipleTurns)
-    {
-        gBattleMons[gBattlerAttacker].volatiles.multipleTurns = TRUE;
-        gLockedMoves[gBattlerAttacker] = gCurrentMove;
-        gBattleMons[gBattlerAttacker].volatiles.chargeTurn = TRUE;
-    }
-    gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
 static void Cmd_printattackstring(void)
 {
     CMD_ARGS();
@@ -931,11 +917,14 @@ static void Cmd_printattackstring(void)
         return;
 
     PrepareStringBattle(STRINGID_USEDMOVE, gBattlerAttacker);
-    gBattleCommunication[MSG_DISPLAY] = MSG_DISPLAY_CONTINUE;
     if (gBattleMoveEffects[GetMoveEffect(gCurrentMove)].twoTurnEffect
      && !gBattleMons[gBattlerAttacker].volatiles.multipleTurns)
     {
         gBattleCommunication[MSG_DISPLAY] = MSG_DISPLAY_WAIT;
+    }
+    else
+    {
+        gBattleCommunication[MSG_DISPLAY] = MSG_DISPLAY_CONTINUE;
     }
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
@@ -1406,8 +1395,6 @@ static void Cmd_clearvolatile(void)
     enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
 
     SetMonVolatile(battler, cmd->_volatile, 0);
-    if (cmd->_volatile == VOLATILE_MULTIPLETURNS)
-        gBattleMons[battler].volatiles.chargeTurn = FALSE;
 
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
@@ -4673,13 +4660,15 @@ static void Cmd_forcerandomswitch(void)
 {
     CMD_ARGS(const u8 *failInstr);
 
+    enum BattlerId battlerCausedSwitch = gBattleScripting.battler;
+    enum BattlerId battlerForcedToSwitch = gEffectBattler;
     bool32 redCardForcedSwitch = FALSE;
 
     // Red card checks against wild Pokémon. If we have reached here, the player has a mon to switch into
     // Red card swaps attacker with target to get the animation correct, so here we check attacker which is really the target. Thanks GF...
     if (gBattleScripting.switchCase == B_SWITCH_RED_CARD
       && !IsTrainerBattle()
-      && !IsOnPlayerSide(gBattlerAttacker))   // Check opponent's red card activating
+      && !IsOnPlayerSide(battlerCausedSwitch))   // Check opponent's red card activating
     {
         if (!IsWildDoubleBattle())
         {
@@ -4690,7 +4679,7 @@ static void Cmd_forcerandomswitch(void)
         else
         {
             // Wild double battle, wild mon red card activation on player
-            if (IsWholeSideAlive(gBattlerTarget))
+            if (IsWholeSideAlive(battlerForcedToSwitch))
             {
                 // Both player's battlers are alive
                 redCardForcedSwitch = FALSE;
@@ -4709,19 +4698,19 @@ static void Cmd_forcerandomswitch(void)
     // wild double battle when a player Pokémon uses it against its partner
     if ((IsTrainerBattle())
         || (IsWildDoubleBattle()
-            && !IsOnPlayerSide(gBattlerAttacker)
-            && IsOnPlayerSide(gBattlerTarget)
-            && IsWholeSideAlive(gBattlerTarget))
+            && !IsOnPlayerSide(battlerCausedSwitch)
+            && IsOnPlayerSide(battlerForcedToSwitch)
+            && IsWholeSideAlive(battlerForcedToSwitch))
         || (IsWildDoubleBattle()
-            && IsOnPlayerSide(gBattlerAttacker)
-            && IsOnPlayerSide(gBattlerTarget))
+            && IsOnPlayerSide(battlerCausedSwitch)
+            && IsOnPlayerSide(battlerForcedToSwitch))
         || redCardForcedSwitch
        )
     {
         enum PartySlot validMons[PARTY_SIZE];
         s32 validMonsCount = 0;
 
-        enum BattlerId battlerIn1 = gBattlerTarget;
+        enum BattlerId battlerIn1 = battlerForcedToSwitch;
         enum BattlerId battlerIn2 = IsDoubleBattle() ? GetPartnerBattler(battlerIn1) : battlerIn1;
 
         struct Pokemon *party = GetBattlerParty(battlerIn1);
@@ -4746,30 +4735,31 @@ static void Cmd_forcerandomswitch(void)
         {
             for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
                 gBattleMons[battler].volatiles.tryEjectPack = FALSE; // Disable Eject Pack activations
-            gBattleStruct->battlerPartyIndexes[gBattlerTarget] = gBattlerPartyIndexes[gBattlerTarget];
-            gBattlescriptCurrInstr = BattleScript_RoarSuccessSwitch;
-            gProtectStructs[gBattlerTarget].forcedSwitch = TRUE;
-            gBattleStruct->monToSwitchIntoId[gBattlerTarget] = validMons[RandomUniform(RNG_FORCE_RANDOM_SWITCH, 0, validMonsCount - 1)];
+            gBattleStruct->battlerPartyIndexes[battlerForcedToSwitch] = gBattlerPartyIndexes[battlerForcedToSwitch];
+            gProtectStructs[battlerForcedToSwitch].forcedSwitch = TRUE;
+            gBattleStruct->monToSwitchIntoId[battlerForcedToSwitch] = validMons[RandomUniform(RNG_FORCE_RANDOM_SWITCH, 0, validMonsCount - 1)];
             if (!IsMultiBattle())
-                SwitchPartyOrder(gBattlerTarget);
+                SwitchPartyOrder(battlerForcedToSwitch);
 
             if (HasAllBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_BATTLE_TOWER)
                 || HasAllBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_MULTI)
                 || HasAllBattleFlags(BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_BATTLE_TOWER)
                 || HasAllBattleFlags(BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_MULTI))
             {
-                SwitchPartyOrderLinkMulti(gBattlerTarget, gBattleStruct->monToSwitchIntoId[gBattlerTarget], PARTY_BATTLE_ORDER_0);
-                SwitchPartyOrderLinkMulti(GetPartnerBattler(gBattlerTarget), gBattleStruct->monToSwitchIntoId[gBattlerTarget], PARTY_BATTLE_ORDER_1);
+                SwitchPartyOrderLinkMulti(battlerForcedToSwitch, gBattleStruct->monToSwitchIntoId[battlerForcedToSwitch], PARTY_BATTLE_ORDER_0);
+                SwitchPartyOrderLinkMulti(GetPartnerBattler(battlerForcedToSwitch), gBattleStruct->monToSwitchIntoId[battlerForcedToSwitch], PARTY_BATTLE_ORDER_1);
             }
 
             if (HasAnyBattleFlags(BATTLE_TYPE_INGAME_PARTNER))
-                SwitchPartyOrderInGameMulti(gBattlerTarget, gBattleStruct->monToSwitchIntoId[gBattlerTarget]);
+                SwitchPartyOrderInGameMulti(battlerForcedToSwitch, gBattleStruct->monToSwitchIntoId[battlerForcedToSwitch]);
+
+            gBattlescriptCurrInstr = BattleScript_RoarSuccessSwitch;
         }
     }
     else
     {
         // In normal wild doubles, Roar will always fail if the user's level is less than the target's.
-        if (gBattleMons[gBattlerAttacker].level >= gBattleMons[gBattlerTarget].level)
+        if (gBattleMons[battlerCausedSwitch].level >= gBattleMons[battlerForcedToSwitch].level)
             gBattlescriptCurrInstr = BattleScript_RoarSuccessEndBattle;
         else
             gBattlescriptCurrInstr = cmd->failInstr;
@@ -8844,11 +8834,11 @@ void BS_UpdateDynamax(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-// Goes to the jump instruction if the target is Dynamaxed.
+// Goes to the jump instruction if the effect battler is Dynamaxed. Used by Red Card
 void BS_JumpIfDynamaxed(void)
 {
     NATIVE_ARGS(const u8 *jumpInstr);
-    if ((GetActiveGimmick(gBattlerTarget) == GIMMICK_DYNAMAX))
+    if ((GetActiveGimmick(gEffectBattler) == GIMMICK_DYNAMAX))
         gBattlescriptCurrInstr = cmd->jumpInstr;
     else
         gBattlescriptCurrInstr = cmd->nextInstr;

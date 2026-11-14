@@ -635,13 +635,8 @@ static void HandleSetEffectIncinerate(struct BattleCalcValues *cv, struct SetEff
 
 static void HandleSetEffectBugBite(struct BattleCalcValues *cv, struct SetEffect *se)
 {
-    if (cv->holdEffects[se->effectBattler] == HOLD_EFFECT_JABOCA_BERRY || gSpecialStatuses[se->effectBattler].berryReduced)
-    {
-        // jaboca berry / resist berries trigger instead of being stolen
-        gBattlescriptCurrInstr = se->script;
-    }
-    else if (GetItemPocket(gBattleMons[se->effectBattler].item) == POCKET_BERRIES
-        && cv->abilities[se->effectBattler] != ABILITY_STICKY_HOLD)
+    if (GetItemPocket(gBattleMons[se->effectBattler].item) == POCKET_BERRIES
+     && cv->abilities[se->effectBattler] != ABILITY_STICKY_HOLD)
     {
         // target loses their berry
         gLastUsedItem = gBattleMons[se->effectBattler].item;
@@ -1761,6 +1756,9 @@ static void HandleSetEffectStealthRock(struct BattleCalcValues *cv, struct SetEf
 {
     enum BattleSide side = GetBattlerSide(se->effectBattler);
 
+    if (!cv->isStatusMove && !IsMaxMove(cv->move) && !IsBattlerAlive(cv->battlerAtk)) // Stone Axe doesn't activate if attacker fainted
+        return;
+
     if (IsHazardOnSide(side, HAZARDS_STEALTH_ROCK))
     {
         SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
@@ -2050,6 +2048,9 @@ static void HandleSetEffectToxicSpikes(struct BattleCalcValues *cv, struct SetEf
 static void HandleSetEffectSpikes(struct BattleCalcValues *cv, struct SetEffect *se)
 {
     enum BattleSide side = GetBattlerSide(se->effectBattler);
+
+    if (!cv->isStatusMove && !IsBattlerAlive(cv->battlerAtk)) // Ceaseless Edge doesn't activate if attacker fainted
+        return;
 
     if (gSideTimers[side].spikesAmount == 3)
     {
@@ -4147,6 +4148,206 @@ static void HandleSetEffectDragonCheer(struct BattleCalcValues *cv, struct SetEf
     }
 }
 
+static void HandleSetEffectRemoveTerrain(struct BattleCalcValues *cv, struct SetEffect * se)
+{
+    // Use self
+    if (gFieldTimers.terrain == B_TERRAIN_NONE)
+        SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
+
+    if (cv->onlyChecking || se->effectFailed)
+        return;
+
+    // Steel Roller activates regardless of the conditions below, Ice Spinner checks for them
+    if (cv->moveEffect != EFFECT_STEEL_ROLLER)
+    {
+        if (!IsBattlerAlive(cv->battlerAtk) && GetConfig(B_FAINT_MOVE_EFFECT_TIMING) < GEN_CHAMPIONS)
+            return;
+
+        if (gBattleStruct->battlerState[cv->battlerAtk].originalBattlerPartyId != PARTY_SIZE) // Red Card forced attacker out
+            return;
+    }
+
+    BattleScriptPushAndSet(se->script, BattleScript_RemoveTerrain);
+}
+
+static void HandleSetEffectSmackDown(struct BattleCalcValues *cv, struct SetEffect * se)
+{
+    enum SemiInvulnerableState state = gBattleMons[se->effectBattler].volatiles.semiInvulnerable;
+    bool32 onAir = state == STATE_ON_AIR;
+
+    if (state == STATE_SKY_DROP_ATTACKER || state == STATE_SKY_DROP_TARGET)
+        SetEffectFail(BattleScript_ButItFailed, cv->isStatusMove);
+    else if (IsBattlerGrounded(se->effectBattler, cv->abilities[se->effectBattler], cv->holdEffects[se->effectBattler])
+     && !onAir)
+        SetEffectFail(BattleScript_ButItFailed, cv->isStatusMove);
+
+    if (cv->onlyChecking || se->effectFailed)
+        return;
+
+    gBattleMons[se->effectBattler].volatiles.smackDown = TRUE;
+    gBattleMons[se->effectBattler].volatiles.telekinesis = FALSE;
+    gBattleMons[se->effectBattler].volatiles.magnetRiseTimer = FALSE;
+
+    if (onAir)
+    {
+        gBattleMons[se->effectBattler].volatiles.semiInvulnerable = STATE_NONE;
+        gBattleMons[se->effectBattler].volatiles.multipleTurns = FALSE;
+    }
+    PrepareStringBattleWithWait(STRINGID_FELLSTRAIGHTDOWN, se->effectBattler);
+    BattleScriptPushAndSet(se->script, BattleScript_WaitMessage);
+}
+
+static void HandleSetEffectHitSwitchTarget(struct BattleCalcValues *cv, struct SetEffect * se)
+{
+    if (!IsBattlerAlive(cv->battlerAtk)
+     || gBattleStruct->battlerState[se->effectBattler].commanderSpecies != SPECIES_NONE
+     || cv->abilities[se->effectBattler] == ABILITY_GUARD_DOG)
+        SetEffectFail(BattleScript_ButItFailed, cv->isStatusMove);
+
+    if (cv->onlyChecking || se->effectFailed)
+        return;
+
+    if (cv->abilities[se->effectBattler] == ABILITY_SUCTION_CUPS)
+    {
+        gBattlerAbility = se->effectBattler;
+        BattleScriptPushAndSet(se->script, BattleScript_AbilityPreventsPhasingOut);
+    }
+    else if (gBattleMons[se->effectBattler].volatiles.root)
+    {
+        BattleScriptPushAndSet(se->script, BattleScript_PrintMonIsRooted);
+    }
+    else if (GetActiveGimmick(se->effectBattler) == GIMMICK_DYNAMAX)
+    {
+        BattleScriptPushAndSet(se->script, BattleScript_HitSwitchTargetDynamaxed);
+    }
+    else
+    {
+        gBattleScripting.switchCase = B_SWITCH_HIT;
+        BattleScriptPushAndSet(se->script, BattleScript_TryHitSwitchTarget);
+    }
+}
+
+static void HandleSetEffectKnockOff(struct BattleCalcValues *cv, struct SetEffect *se)
+{
+    if (gBattleMons[se->effectBattler].item == ITEM_NONE
+     || (B_KNOCK_OFF_REMOVAL >= GEN_5 && GetBattlerSide(se->effectBattler) == B_SIDE_PLAYER && !IsTrainerBattle())
+     || !CanBattlerGetOrLoseItem(se->effectBattler, cv->battlerAtk, gBattleMons[se->effectBattler].item)
+     || NoAliveMonsForEitherParty()
+     || (!IsBattlerAlive(cv->battlerAtk) && GetConfig(B_FAINT_MOVE_EFFECT_TIMING) < GEN_CHAMPIONS))
+        SetEffectFail(BattleScript_ButItFailed, cv->isStatusMove);
+
+    if (cv->onlyChecking || se->effectFailed)
+        return;
+
+    if (cv->abilities[se->effectBattler] == ABILITY_STICKY_HOLD)
+    {
+        gBattlerAbility = se->effectBattler;
+        SetEffectFail(BattleScript_StickyHoldActivatesRet);
+        return;
+    }
+
+    gLastUsedItem = gBattleMons[se->effectBattler].item;
+    gBattleMons[se->effectBattler].item = ITEM_NONE;
+    if (gBattleMons[se->effectBattler].ability != ABILITY_GORILLA_TACTICS)
+        gBattleStruct->choicedMove[se->effectBattler] = MOVE_NONE;
+    CheckSetUnburden(se->effectBattler);
+
+    // In Gen 5+, Knock Off removes the target's item rather than rendering it unusable
+    if (B_KNOCK_OFF_REMOVAL >= GEN_5)
+    {
+        BtlController_EmitSetMonData(se->effectBattler, B_COMM_TO_CONTROLLER, REQUEST_HELDITEM_BATTLE, 0, sizeof(gBattleMons[se->effectBattler].item), &gBattleMons[se->effectBattler].item);
+        MarkBattlerForControllerExec(se->effectBattler);
+        // Mark item as stolen so it will be restored after battle
+        GetLostItemState(GetBattlerTrainer(se->effectBattler), gBattlerPartyIndexes[se->effectBattler])->stolen = TRUE;
+    }
+    else
+    {
+        GetBattlerPartyState(se->effectBattler)->isKnockedOff = TRUE;
+    }
+
+    BattleScriptPushAndSet(se->script, BattleScript_KnockedOff);
+}
+
+static void HandleSetEffectStealItem(struct BattleCalcValues *cv, struct SetEffect *se)
+{
+    if (!IsBattlerTurnDamaged(se->effectBattler, EXCLUDING_SUBSTITUTES)
+     || gBattleMons[cv->battlerAtk].item != ITEM_NONE
+     || gBattleMons[se->effectBattler].item == ITEM_NONE
+     || (!IsBattlerAlive(cv->battlerAtk) && GetConfig(B_FAINT_MOVE_EFFECT_TIMING) < GEN_CHAMPIONS)
+     || !CanStealItem(cv->battlerAtk, se->effectBattler, gBattleMons[se->effectBattler].item))
+        SetEffectFail(BattleScript_ButItFailed, cv->isStatusMove);
+
+    if (cv->onlyChecking || se->effectFailed)
+        return;
+
+    if (cv->abilities[se->effectBattler] == ABILITY_STICKY_HOLD)
+    {
+        BattleScriptPushAndSet(se->script, BattleScript_StickyHoldActivatesRet);
+        gBattlerAbility = se->effectBattler;
+        gLastUsedAbility = gBattleMons[se->effectBattler].ability;
+        RecordAbilityBattle(se->effectBattler, gLastUsedAbility);
+    }
+    else
+    {
+        bool32 addStolenWildItemToBag = GetConfig(B_STEAL_WILD_ITEMS) >= GEN_9 && !HasAnyBattleFlags(BATTLE_TYPE_TRAINER | BATTLE_TYPE_PALACE);
+        StealTargetItem(cv->battlerAtk, se->effectBattler, ITEM_NONE, addStolenWildItemToBag);  // Attacker steals target item
+
+        struct LostItem *lostItem = GetLostItemState(GetBattlerTrainer(se->effectBattler), gBattlerPartyIndexes[se->effectBattler]);
+
+        if (addStolenWildItemToBag && !IsOnPlayerSide(se->effectBattler))
+        {
+            lostItem->wildItemPending = TRUE;
+        }
+        else
+        {
+            gBattleMons[cv->battlerAtk].item = gLastUsedItem;
+        }
+
+        if (B_RETURN_STOLEN_NPC_ITEMS >= GEN_5 && IsTrainerBattle())
+        {
+            lostItem->stolen = TRUE;
+        }
+
+        if (IsBattlerAlive(cv->battlerAtk))
+            BattleScriptPushAndSet(se->script, BattleScript_ItemSteal);
+        else
+            BattleScriptPushAndSet(se->script, BattleScript_ItemStealNoAnim);
+
+    }
+}
+
+static void HandleSetEffectFellStinger(struct BattleCalcValues *cv, struct SetEffect *se)
+{
+    bool32 anyStat = FALSE;
+
+    if (IsBattlerAlive(cv->battlerDef))
+        return;
+
+    for (enum Stat i = STAT_ATK; i < NUM_BATTLE_STATS; i++)
+    {
+        enum Stat stat = sAccurateStatOrder[i];
+        s32 stage = GetStatStage(stat, se->additionalEffect);
+
+        if (stage == 0)
+            continue;
+
+        anyStat = TRUE;
+
+        if (se->additionalEffect->moveEffect == MOVE_EFFECT_STAT_MINUS)
+            stage = -1 * stage;
+
+        SetStatChange(se->effectBattler, stat, stage);
+    }
+
+    if (!anyStat) // Fell Stinger by default for config
+    {
+        s32 stage = GetConfig(B_FELL_STINGER_STAT_RAISE) >= GEN_7 ? 3 : 2;
+        SetStatChange(se->effectBattler, STAT_ATK, stage);
+    }
+
+    BattleScriptPushAndSet(se->script, BattleScript_MoveEffectStatChange);
+}
+
 static void (*const sSetEffectHandlers[])(struct BattleCalcValues *cv, struct SetEffect *se) =
 {
     [MOVE_EFFECT_NONE] = HandleSetEffectNone,
@@ -4294,6 +4495,12 @@ static void (*const sSetEffectHandlers[])(struct BattleCalcValues *cv, struct Se
     [MOVE_EFFECT_HEAL_PULSE] = HandleSetEffectHealPulse,
     [MOVE_EFFECT_POLLEN_PUFF] = HandleSetEffectPollenPuff,
     [MOVE_EFFECT_FLORAL_HEALING] = HandleSetEffectHealPulse,
+    [MOVE_EFFECT_REMOVE_TERRAIN] = HandleSetEffectRemoveTerrain,
+    [MOVE_EFFECT_SMACK_DOWN] = HandleSetEffectSmackDown,
+    [MOVE_EFFECT_HIT_SWITCH_TARGET] = HandleSetEffectHitSwitchTarget,
+    [MOVE_EFFECT_KNOCK_OFF] = HandleSetEffectKnockOff,
+    [MOVE_EFFECT_STEAL_ITEM] = HandleSetEffectStealItem,
+    [MOVE_EFFECT_FELL_STINGER] = HandleSetEffectFellStinger,
     [MOVE_EFFECT_SUN] = HandleSetEffectWeather,
     [MOVE_EFFECT_RAIN] = HandleSetEffectWeather,
     [MOVE_EFFECT_SANDSTORM] = HandleSetEffectWeather,
@@ -4414,6 +4621,7 @@ static inline bool32 IgnoreTargetingForMoveEffect(enum MoveEffect moveEffect) //
     case MOVE_EFFECT_BUG_BITE:
     case MOVE_EFFECT_FLAME_BURST:
     case MOVE_EFFECT_STEALTH_ROCK:
+    case MOVE_EFFECT_SPIKES:
     case MOVE_EFFECT_STEELSURGE:
     case MOVE_EFFECT_SUN:
     case MOVE_EFFECT_RAIN:
@@ -4438,6 +4646,9 @@ static inline bool32 IgnoreTargetingForMoveEffect(enum MoveEffect moveEffect) //
     case MOVE_EFFECT_SWAMP:
     case MOVE_EFFECT_ABSORB:
     case MOVE_EFFECT_STICKY_WEB:
+    case MOVE_EFFECT_KNOCK_OFF:
+    case MOVE_EFFECT_REMOVE_TERRAIN:
+    case MOVE_EFFECT_STEAL_ITEM:
         return TRUE;
     default:
         return FALSE;
@@ -4449,13 +4660,13 @@ static bool32 DoesSubstituteBlockMoveEffectOnTarget(enum BattlerId battlerAtk, e
     if (battlerAtk == battlerDef)
         return FALSE;
 
-    if (moveEffect != MOVE_EFFECT_BUG_BITE && IgnoreTargetingForMoveEffect(moveEffect))
+    if (moveEffect != MOVE_EFFECT_BUG_BITE && moveEffect != MOVE_EFFECT_KNOCK_OFF && IgnoreTargetingForMoveEffect(moveEffect))
         return FALSE;
 
     if (moveEffect == MOVE_EFFECT_BREAK_SCREEN)
         return FALSE;
 
-    if (DoesSubstituteBlockMove(battlerAtk, battlerDef, gCurrentMove))
+    if (DoesSubstituteBlockMove(battlerAtk, battlerDef, gCurrentMove) || gBattleStruct->battlerState[battlerDef].substituteBlocked)
         return TRUE;
 
     return FALSE;
