@@ -135,7 +135,7 @@ static u8 GetOpposingNPCTournamentIdByRound(u8, u8);
 static void DrawTourneyAdvancementLine(u8, u8);
 static void SpriteCB_HorizontalScrollArrow(struct Sprite *);
 static void SpriteCB_VerticalScrollArrow(struct Sprite *);
-static void InitDomeChallenge(void);
+static void Unused_InitDomeChallenge(void);
 static void GetDomeData(void);
 static void SetDomeData(void);
 static void BufferDomeRoundText(void);
@@ -149,7 +149,7 @@ static void SetDomeOpponentGraphicsId(void);
 static void ShowNonInteractiveDomeTourneyTree(void);
 static void ResolveDomeRoundWinners(void);
 static void SaveDomeChallenge(void);
-static void IncrementDomeStreaks(void);
+static void Unused_IncrementDomeStreaks(void);
 static void ResetSketchedMoves(void);
 static void RestoreDomePlayerPartyHeldItems(void);
 static void ReduceDomePlayerPartyToSelectedMons(void);
@@ -748,7 +748,7 @@ static const u8 sTourneyTreeTrainerIds[DOME_TOURNAMENT_TRAINERS_COUNT] = {0, 8, 
 
 static void (*const sBattleDomeFunctions[])(void) =
 {
-    [BATTLE_DOME_FUNC_INIT]                     = InitDomeChallenge,
+    [BATTLE_DOME_FUNC_INIT]                     = Unused_InitDomeChallenge,
     [BATTLE_DOME_FUNC_GET_DATA]                 = GetDomeData,
     [BATTLE_DOME_FUNC_SET_DATA]                 = SetDomeData,
     [BATTLE_DOME_FUNC_GET_ROUND_TEXT]           = BufferDomeRoundText,
@@ -762,7 +762,7 @@ static void (*const sBattleDomeFunctions[])(void) =
     [BATTLE_DOME_FUNC_SHOW_STATIC_TOURNEY_TREE] = ShowNonInteractiveDomeTourneyTree,
     [BATTLE_DOME_FUNC_RESOLVE_WINNERS]          = ResolveDomeRoundWinners,
     [BATTLE_DOME_FUNC_SAVE]                     = SaveDomeChallenge,
-    [BATTLE_DOME_FUNC_INCREMENT_STREAK]         = IncrementDomeStreaks,
+    [BATTLE_DOME_FUNC_INCREMENT_STREAK]         = Unused_IncrementDomeStreaks,
     [BATTLE_DOME_FUNC_SET_TRAINERS]             = SetFacilityTrainerAndMonPtrs,
     [BATTLE_DOME_FUNC_RESET_SKETCH]             = ResetSketchedMoves,
     [BATTLE_DOME_FUNC_RESTORE_HELD_ITEMS]       = RestoreDomePlayerPartyHeldItems,
@@ -771,18 +771,6 @@ static void (*const sBattleDomeFunctions[])(void) =
     [BATTLE_DOME_FUNC_GET_WINNER_NAME]          = BufferLastDomeWinnerName,
     [BATTLE_DOME_FUNC_INIT_RESULTS_TREE]        = InitRandomTourneyTreeResults,
     [BATTLE_DOME_FUNC_INIT_TRAINERS]            = InitDomeTrainers,
-};
-
-static const u32 sWinStreakFlags[][2] =
-{
-    {STREAK_DOME_SINGLES_50, STREAK_DOME_SINGLES_OPEN},
-    {STREAK_DOME_DOUBLES_50, STREAK_DOME_DOUBLES_OPEN},
-};
-
-static const u32 sWinStreakMasks[][2] =
-{
-    {~(STREAK_DOME_SINGLES_50), ~(STREAK_DOME_SINGLES_OPEN)},
-    {~(STREAK_DOME_DOUBLES_50), ~(STREAK_DOME_DOUBLES_OPEN)},
 };
 
 // TODO: The below two arrays probably need better names. The one below for example is only true of sIdToOpponentId[i][0]
@@ -1756,35 +1744,17 @@ void CallBattleDomeFunction(void)
     sBattleDomeFunctions[gSpecialVar_0x8004]();
 }
 
-static void InitDomeChallenge(void)
+static void Unused_InitDomeChallenge(void)
 {
-    enum FrontierLevelMode lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
-    u32 battleMode = VarGet(VAR_FRONTIER_BATTLE_MODE);
 
-    gSaveBlock2Ptr->frontier.challengeStatus = 0;
-    gSaveBlock2Ptr->frontier.curChallengeBattleNum = 0;
-    gSaveBlock2Ptr->frontier.challengePaused = FALSE;
-    gSaveBlock2Ptr->frontier.disableRecordBattle = FALSE;
-    if (!(gSaveBlock2Ptr->frontier.winStreakActiveFlags & sWinStreakFlags[battleMode][lvlMode]))
-        gSaveBlock2Ptr->frontier.domeWinStreaks[battleMode][lvlMode] = 0;
-
-    SetDynamicWarp(0, gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum, WARP_ID_NONE);
-    TRAINER_BATTLE_PARAM.opponentA = 0;
 }
 
 static void GetDomeData(void)
 {
     enum FrontierLevelMode lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
-    u32 battleMode = VarGet(VAR_FRONTIER_BATTLE_MODE);
 
     switch (gSpecialVar_0x8005)
     {
-    case DOME_DATA_WIN_STREAK:
-        gSpecialVar_Result = gSaveBlock2Ptr->frontier.domeWinStreaks[battleMode][lvlMode];
-        break;
-    case DOME_DATA_WIN_STREAK_ACTIVE:
-        gSpecialVar_Result = ((gSaveBlock2Ptr->frontier.winStreakActiveFlags & sWinStreakFlags[battleMode][lvlMode]) != 0);
-        break;
     case DOME_DATA_ATTEMPTED_SINGLES_50:
         gSpecialVar_Result = gSaveBlock2Ptr->frontier.domeAttemptedSingles50;
         break;
@@ -1843,19 +1813,9 @@ static void GetDomeData(void)
 static void SetDomeData(void)
 {
     enum FrontierLevelMode lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
-    u32 battleMode = VarGet(VAR_FRONTIER_BATTLE_MODE);
 
     switch (gSpecialVar_0x8005)
     {
-    case DOME_DATA_WIN_STREAK:
-        gSaveBlock2Ptr->frontier.domeWinStreaks[battleMode][lvlMode] = gSpecialVar_0x8006;
-        break;
-    case DOME_DATA_WIN_STREAK_ACTIVE:
-        if (gSpecialVar_0x8006)
-            gSaveBlock2Ptr->frontier.winStreakActiveFlags |= sWinStreakFlags[battleMode][lvlMode];
-        else
-            gSaveBlock2Ptr->frontier.winStreakActiveFlags &= sWinStreakMasks[battleMode][lvlMode];
-        break;
     case DOME_DATA_ATTEMPTED_SINGLES_50:
         gSaveBlock2Ptr->frontier.domeAttemptedSingles50 = gSpecialVar_0x8006;
         break;
@@ -2482,18 +2442,9 @@ static void SaveDomeChallenge(void)
     SaveGameFrontier();
 }
 
-static void IncrementDomeStreaks(void)
+static void Unused_IncrementDomeStreaks(void)
 {
-    enum FrontierLevelMode lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
-    u8 battleMode = VarGet(VAR_FRONTIER_BATTLE_MODE);
 
-    if (gSaveBlock2Ptr->frontier.domeWinStreaks[battleMode][lvlMode] < 999)
-        gSaveBlock2Ptr->frontier.domeWinStreaks[battleMode][lvlMode]++;
-    if (gSaveBlock2Ptr->frontier.domeTotalChampionships[battleMode][lvlMode] < 999)
-        gSaveBlock2Ptr->frontier.domeTotalChampionships[battleMode][lvlMode]++;
-
-    if (gSaveBlock2Ptr->frontier.domeWinStreaks[battleMode][lvlMode] > gSaveBlock2Ptr->frontier.domeRecordWinStreaks[battleMode][lvlMode])
-        gSaveBlock2Ptr->frontier.domeRecordWinStreaks[battleMode][lvlMode] = gSaveBlock2Ptr->frontier.domeWinStreaks[battleMode][lvlMode];
 }
 
 // For showing the opponent info card of the upcoming trainer

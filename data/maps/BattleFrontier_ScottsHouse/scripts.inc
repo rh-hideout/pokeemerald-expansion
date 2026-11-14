@@ -84,12 +84,13 @@ BattleFrontier_ScottsHouse_EventScript_ArtisanCaveComment::
 	end
 
 BattleFrontier_ScottsHouse_EventScript_CheckGiveSilverShield::
+	setvar VAR_FRONTIER_FACILITY, FRONTIER_FACILITY_TOWER
 	setvar VAR_FRONTIER_BATTLE_MODE, FRONTIER_MODE_SINGLES
 	frontier_set FRONTIER_DATA_LVL_MODE, FRONTIER_LVL_50
-	tower_get TOWER_DATA_WIN_STREAK
+	frontier_getwinstreak
 	goto_if_ge VAR_RESULT, 50, BattleFrontier_ScottsHouse_EventScript_GiveSilverShield
 	frontier_set FRONTIER_DATA_LVL_MODE, FRONTIER_LVL_OPEN
-	tower_get TOWER_DATA_WIN_STREAK
+	frontier_getwinstreak
 	goto_if_ge VAR_RESULT, 50, BattleFrontier_ScottsHouse_EventScript_GiveSilverShield
 	goto BattleFrontier_ScottsHouse_EventScript_RandomComment
 	end
@@ -114,12 +115,13 @@ BattleFrontier_ScottsHouse_EventScript_GivenShield::
 	end
 
 BattleFrontier_ScottsHouse_EventScript_CheckGiveGoldShield::
+	setvar VAR_FRONTIER_FACILITY, FRONTIER_FACILITY_TOWER
 	setvar VAR_FRONTIER_BATTLE_MODE, FRONTIER_MODE_SINGLES
 	frontier_set FRONTIER_DATA_LVL_MODE, FRONTIER_LVL_50
-	tower_get TOWER_DATA_WIN_STREAK
+	frontier_getwinstreak
 	goto_if_ge VAR_RESULT, 100, BattleFrontier_ScottsHouse_EventScript_GiveGoldShield
 	frontier_set FRONTIER_DATA_LVL_MODE, FRONTIER_LVL_OPEN
-	tower_get TOWER_DATA_WIN_STREAK
+	frontier_getwinstreak
 	goto_if_ge VAR_RESULT, 100, BattleFrontier_ScottsHouse_EventScript_GiveGoldShield
 	goto BattleFrontier_ScottsHouse_EventScript_RandomComment
 	end

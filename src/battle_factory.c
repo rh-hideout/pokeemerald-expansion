@@ -22,7 +22,7 @@
 
 static bool8 sPerformedRentalSwap;
 
-static void InitFactoryChallenge(void);
+static void Unused_InitFactoryChallenge(void);
 static void GetBattleFactoryData(void);
 static void SetBattleFactoryData(void);
 static void SaveFactoryChallenge(void);
@@ -53,7 +53,7 @@ static const u8 sRequiredMoveCounts[FACTORY_NUM_STYLES - 1] = {
 
 static void (*const sBattleFactoryFunctions[])(void) =
 {
-    [BATTLE_FACTORY_FUNC_INIT]                   = InitFactoryChallenge,
+    [BATTLE_FACTORY_FUNC_INIT]                   = Unused_InitFactoryChallenge,
     [BATTLE_FACTORY_FUNC_GET_DATA]               = GetBattleFactoryData,
     [BATTLE_FACTORY_FUNC_SET_DATA]               = SetBattleFactoryData,
     [BATTLE_FACTORY_FUNC_SAVE]                   = SaveFactoryChallenge,
@@ -70,18 +70,6 @@ static void (*const sBattleFactoryFunctions[])(void) =
     [BATTLE_FACTORY_FUNC_GET_OPPONENT_MON_TYPE]  = GetOpponentMostCommonMonType,
     [BATTLE_FACTORY_FUNC_GET_OPPONENT_STYLE]     = GetOpponentBattleStyle,
     [BATTLE_FACTORY_FUNC_RESET_HELD_ITEMS]       = RestorePlayerPartyHeldItems,
-};
-
-static const u32 sWinStreakFlags[][2] =
-{
-    {STREAK_FACTORY_SINGLES_50, STREAK_FACTORY_SINGLES_OPEN},
-    {STREAK_FACTORY_DOUBLES_50, STREAK_FACTORY_DOUBLES_OPEN},
-};
-
-static const u32 sWinStreakMasks[][2] =
-{
-    {~(STREAK_FACTORY_SINGLES_50), ~(STREAK_FACTORY_SINGLES_OPEN)},
-    {~(STREAK_FACTORY_DOUBLES_50), ~(STREAK_FACTORY_DOUBLES_OPEN)},
 };
 
 static const u8 sFixedIVTable[][2] =
@@ -138,30 +126,9 @@ void CallBattleFactoryFunction(void)
     sBattleFactoryFunctions[gSpecialVar_0x8004]();
 }
 
-static void InitFactoryChallenge(void)
+static void Unused_InitFactoryChallenge(void)
 {
-    u8 i;
-    enum FrontierLevelMode lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
-    u32 battleMode = VarGet(VAR_FRONTIER_BATTLE_MODE);
 
-    gSaveBlock2Ptr->frontier.challengeStatus = 0;
-    gSaveBlock2Ptr->frontier.curChallengeBattleNum = 0;
-    gSaveBlock2Ptr->frontier.challengePaused = FALSE;
-    gSaveBlock2Ptr->frontier.disableRecordBattle = FALSE;
-    if (!(gSaveBlock2Ptr->frontier.winStreakActiveFlags & sWinStreakFlags[battleMode][lvlMode]))
-    {
-        gSaveBlock2Ptr->frontier.factoryWinStreaks[battleMode][lvlMode] = 0;
-        gSaveBlock2Ptr->frontier.factoryRentsCount[battleMode][lvlMode] = 0;
-    }
-
-    sPerformedRentalSwap = FALSE;
-    for (i = 0; i < ARRAY_COUNT(gSaveBlock2Ptr->frontier.rentalMons); i++)
-        gSaveBlock2Ptr->frontier.rentalMons[i].monId = 0xFFFF;
-    for (i = 0; i < FRONTIER_PARTY_SIZE; i++)
-        gFrontierTempParty[i] = 0xFFFF;
-
-    SetDynamicWarp(0, gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum, WARP_ID_NONE);
-    TRAINER_BATTLE_PARAM.opponentA = 0;
 }
 
 static void GetBattleFactoryData(void)
@@ -171,12 +138,6 @@ static void GetBattleFactoryData(void)
 
     switch (gSpecialVar_0x8005)
     {
-    case FACTORY_DATA_WIN_STREAK:
-        gSpecialVar_Result = gSaveBlock2Ptr->frontier.factoryWinStreaks[battleMode][lvlMode];
-        break;
-    case FACTORY_DATA_WIN_STREAK_ACTIVE:
-        gSpecialVar_Result = ((gSaveBlock2Ptr->frontier.winStreakActiveFlags & sWinStreakFlags[battleMode][lvlMode]) != 0);
-        break;
     case FACTORY_DATA_WIN_STREAK_SWAPS:
         gSpecialVar_Result = gSaveBlock2Ptr->frontier.factoryRentsCount[battleMode][lvlMode];
         break;
@@ -190,15 +151,6 @@ static void SetBattleFactoryData(void)
 
     switch (gSpecialVar_0x8005)
     {
-    case FACTORY_DATA_WIN_STREAK:
-        gSaveBlock2Ptr->frontier.factoryWinStreaks[battleMode][lvlMode] = gSpecialVar_0x8006;
-        break;
-    case FACTORY_DATA_WIN_STREAK_ACTIVE:
-        if (gSpecialVar_0x8006)
-            gSaveBlock2Ptr->frontier.winStreakActiveFlags |= sWinStreakFlags[battleMode][lvlMode];
-        else
-            gSaveBlock2Ptr->frontier.winStreakActiveFlags &= sWinStreakMasks[battleMode][lvlMode];
-        break;
     case FACTORY_DATA_WIN_STREAK_SWAPS:
         if (sPerformedRentalSwap == TRUE)
         {

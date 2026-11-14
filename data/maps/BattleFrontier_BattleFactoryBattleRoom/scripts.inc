@@ -95,7 +95,7 @@ BattleFrontier_BattleFactoryBattleRoom_EventScript_DefeatedOpponent::
 	setorcopyvar VAR_0x8006, VAR_RESULT
 	factory_set FACTORY_DATA_WIN_STREAK_SWAPS  @ uses VAR_0x8006 above
 BattleFrontier_BattleFactoryBattleRoom_EventScript_IncrementWinStreak::
-	call BattleFrontier_EventScript_IncrementWinStreak
+	frontier_incrementstreak
 BattleFrontier_BattleFactoryBattleRoom_EventScript_IncrementBattleNum::
 	frontier_get FRONTIER_DATA_BATTLE_NUM
 	addvar VAR_RESULT, 1
@@ -179,12 +179,7 @@ BattleFrontier_BattleFactoryBattleRoom_EventScript_DefeatedNoland::
 	addvar VAR_RESULT, 1
 	setorcopyvar VAR_0x8006, VAR_RESULT
 	factory_set FACTORY_DATA_WIN_STREAK_SWAPS  @ uses VAR_0x8006 above
-	factory_get FACTORY_DATA_WIN_STREAK
-	goto_if_eq VAR_RESULT, MAX_STREAK, BattleFrontier_BattleFactoryBattleRoom_EventScript_IncrementBattleNum
-	addvar VAR_RESULT, 1
-	factory_set FACTORY_DATA_WIN_STREAK, VAR_RESULT
-	frontier_get FRONTIER_DATA_BATTLE_NUM
-	addvar VAR_RESULT, 1
+	frontier_incrementstreak
 	goto BattleFrontier_BattleFactoryBattleRoom_EventScript_WarpToLobbyWon
 	end
 

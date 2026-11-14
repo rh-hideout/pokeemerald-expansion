@@ -75,7 +75,7 @@ static void SetHealingroomTypesDisabled(void);
 static void IsPartyFullHealed(void);
 static void SaveMonHeldItems(void);
 static void RestoreMonHeldItems(void);
-static void InitPikeChallenge(void);
+static void Unused_InitPikeChallenge(void);
 static u8 GetNextRoomType(void);
 static void PrepareOneTrainer(bool8 difficult);
 static u16 GetNPCRoomGraphicsId(void);
@@ -494,7 +494,7 @@ static void (*const sBattlePikeFunctions[])(void) =
     [BATTLE_PIKE_FUNC_IS_PARTY_FULL_HEALTH]    = IsPartyFullHealed,
     [BATTLE_PIKE_FUNC_SAVE_HELD_ITEMS]         = SaveMonHeldItems,
     [BATTLE_PIKE_FUNC_RESET_HELD_ITEMS]        = RestoreMonHeldItems,
-    [BATTLE_PIKE_FUNC_INIT]                    = InitPikeChallenge
+    [BATTLE_PIKE_FUNC_INIT]                    = Unused_InitPikeChallenge
 };
 
 static const u8 sRoomTypeHints[] = {
@@ -523,8 +523,6 @@ static bool8 (*const sStatusInflictionScreenFlashFuncs[])(struct Task *) =
 {
     StatusInflictionFadeOut, StatusInflictionFadeIn
 };
-
-static const u32 sWinStreakFlags[] = {STREAK_PIKE_50, STREAK_PIKE_OPEN};
 
 // code
 void CallBattlePikeFunction(void)
@@ -605,67 +603,21 @@ static void SetupRoomObjectEvents(void)
 
 static void GetBattlePikeData(void)
 {
-    enum FrontierLevelMode lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
-
     switch (gSpecialVar_0x8005)
     {
-    case PIKE_DATA_PRIZE:
-        gSpecialVar_Result = gSaveBlock2Ptr->frontier.pikePrize;
-        break;
-    case PIKE_DATA_WIN_STREAK:
-        gSpecialVar_Result = gSaveBlock2Ptr->frontier.pikeWinStreaks[gSaveBlock2Ptr->frontier.lvlMode];
-        break;
-    case PIKE_DATA_RECORD_STREAK:
-        gSpecialVar_Result = gSaveBlock2Ptr->frontier.pikeRecordStreaks[gSaveBlock2Ptr->frontier.lvlMode];
-        break;
-    case PIKE_DATA_TOTAL_STREAKS:
+    case PIKE_DATA_TOTAL_SERIES:
         gSpecialVar_Result = gSaveBlock2Ptr->frontier.pikeTotalStreaks[gSaveBlock2Ptr->frontier.lvlMode];
-        break;
-    case PIKE_DATA_WIN_STREAK_ACTIVE:
-        if (lvlMode != FRONTIER_LVL_50)
-            gSpecialVar_Result = gSaveBlock2Ptr->frontier.winStreakActiveFlags & STREAK_PIKE_OPEN;
-        else
-            gSpecialVar_Result = gSaveBlock2Ptr->frontier.winStreakActiveFlags & STREAK_PIKE_50;
         break;
     }
 }
 
 static void SetBattlePikeData(void)
 {
-    enum FrontierLevelMode lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
-
     switch (gSpecialVar_0x8005)
     {
-    case PIKE_DATA_PRIZE:
-        gSaveBlock2Ptr->frontier.pikePrize = gSpecialVar_0x8006;
-        break;
-    case PIKE_DATA_WIN_STREAK:
-        if (gSpecialVar_0x8006 <= MAX_STREAK)
-            gSaveBlock2Ptr->frontier.pikeWinStreaks[gSaveBlock2Ptr->frontier.lvlMode] = gSpecialVar_0x8006;
-        break;
-    case PIKE_DATA_RECORD_STREAK:
-        if (gSpecialVar_0x8006 <= MAX_STREAK && gSaveBlock2Ptr->frontier.pikeRecordStreaks[gSaveBlock2Ptr->frontier.lvlMode] < gSpecialVar_0x8006)
-            gSaveBlock2Ptr->frontier.pikeRecordStreaks[gSaveBlock2Ptr->frontier.lvlMode] = gSpecialVar_0x8006;
-        break;
-    case PIKE_DATA_TOTAL_STREAKS:
+    case PIKE_DATA_TOTAL_SERIES:
         if (gSpecialVar_0x8006 <= MAX_STREAK)
             gSaveBlock2Ptr->frontier.pikeTotalStreaks[gSaveBlock2Ptr->frontier.lvlMode] = gSpecialVar_0x8006;
-        break;
-    case PIKE_DATA_WIN_STREAK_ACTIVE:
-        if (lvlMode != FRONTIER_LVL_50)
-        {
-            if (gSpecialVar_0x8006)
-                gSaveBlock2Ptr->frontier.winStreakActiveFlags |= STREAK_PIKE_OPEN;
-            else
-                gSaveBlock2Ptr->frontier.winStreakActiveFlags &= ~(STREAK_PIKE_OPEN);
-        }
-        else
-        {
-            if (gSpecialVar_0x8006)
-                gSaveBlock2Ptr->frontier.winStreakActiveFlags |= STREAK_PIKE_50;
-            else
-                gSaveBlock2Ptr->frontier.winStreakActiveFlags &= ~(STREAK_PIKE_50);
-        }
         break;
     }
 }
@@ -1591,18 +1543,9 @@ static void RestoreMonHeldItems(void)
     }
 }
 
-static void InitPikeChallenge(void)
+static void Unused_InitPikeChallenge(void)
 {
-    enum FrontierLevelMode lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
 
-    gSaveBlock2Ptr->frontier.challengeStatus = 0;
-    gSaveBlock2Ptr->frontier.curChallengeBattleNum = 0;
-    gSaveBlock2Ptr->frontier.challengePaused = FALSE;
-    if (!(gSaveBlock2Ptr->frontier.winStreakActiveFlags & sWinStreakFlags[lvlMode]))
-        gSaveBlock2Ptr->frontier.pikeWinStreaks[lvlMode] = 0;
-
-    TRAINER_BATTLE_PARAM.opponentA = 0;
-    gBattleOutcome = 0;
 }
 
 static bool8 CanEncounterWildMon(u8 enemyMonLevel)
