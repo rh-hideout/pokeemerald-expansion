@@ -4095,9 +4095,28 @@ static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef,
 
                 ADJUST_SCORE(WORST_EFFECT);
                 break;
-            default:
+            }
+            case EFFECT_SPITE:
+            {
+                if (partnerEffect == EFFECT_TRUMP_CARD && GetMoveEffect(gLastMoves[battlerDef]) == EFFECT_TRUMP_CARD)
+                {
+                    enum MoveSlot partnerSlot = GetMoveIndex(battlerDef, aiData->partnerMove);
+                    u32 pp = gBattleMons[battlerDef].pp[partnerSlot];
+                    u32 ppToDeduct = GetConfig(B_PP_REDUCED_BY_SPITE) >= GEN_4 ? 4 : 5; // Assume max deduction if Gen3-
+
+                    if (AI_IsSlower(battlerAtk, battlerDef, move, aiData->partnerMove, CONSIDER_PRIORITY))
+                    {
+                        ppToDeduct++;
+                    }
+                    if (pp - ppToDeduct >= 1)
+                    {
+                        ADJUST_SCORE(DECENT_EFFECT);
+                    }
+                }
                 break;
             }
+            default:
+                break;
             } // attacker move effects
         } // check partner protecting
 
@@ -4548,7 +4567,7 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
     enum Move incomingMove = GetIncomingMove(battlerAtk, battlerDef, aiData);
     enum Move predictedMove = GetPredictedMove(battlerAtk, battlerDef, aiData);
     enum Type predictedType = GetMoveType(incomingMove);
-    u32 predictedMoveSlot = GetMoveSlot(GetMovesArray(battlerDef), incomingMove);
+    enum MoveSlot predictedMoveSlot = GetMoveSlot(GetMovesArray(battlerDef), incomingMove);
     bool32 isBattle1v1 = IsBattle1v1();
     bool32 hasTwoOpponents = HasTwoOpponents(battlerAtk);
     bool32 hasPartner = HasPartner(battlerAtk);
@@ -5006,8 +5025,42 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
             ADJUST_SCORE(GOOD_EFFECT);
         break;
     case EFFECT_SPITE:
-        //TODO - predicted move
+    {
+        u32 pp = gBattleMons[battlerDef].pp[predictedMoveSlot];
+        u32 ppToDeduct = GetConfig(B_PP_REDUCED_BY_SPITE) >= GEN_4 ? 4 : 2; // Assume min deduction if Gen3-
+    
+        if (AI_IsFaster(battlerAtk, battlerDef, move, incomingMove, CONSIDER_PRIORITY) && !CanAIFaintTarget(battlerAtk, battlerDef, 1))
+        {
+            if (pp <= ppToDeduct && pp > 0)
+            {
+                ADJUST_SCORE(WEAK_EFFECT);
+                if (incomingMove == gLastMoves[battlerDef])
+                {
+                    if (CanIndexMoveFaintTarget(battlerDef, battlerAtk, predictedMoveSlot, AI_DEFENDING))
+                    {
+                        ADJUST_SCORE(BEST_EFFECT);
+                    }
+                    else if (HasPartner(battlerAtk) && CanIndexMoveFaintTarget(battlerDef, GetPartnerBattler(battlerAtk), predictedMoveSlot, AI_DEFENDING))
+                    {
+                        ADJUST_SCORE(BEST_EFFECT);
+                    }
+                    else
+                    {
+                        ADJUST_SCORE(DECENT_EFFECT);
+                    }
+                }
+            }
+        }
+        else
+        {
+            ppToDeduct++;
+            if (pp <= ppToDeduct && pp > 1)
+            {
+                ADJUST_SCORE(DECENT_EFFECT);
+            }
+        }
         break;
+    }
     case EFFECT_WISH:
     case EFFECT_HEAL_BELL:
         if (ShouldUseWishAromatherapy(battlerAtk, battlerDef, move))

@@ -1704,4 +1704,91 @@ AI_SINGLE_BATTLE_TEST("Ice Spinner can be chosen by AI regardless if there is a 
     }
 }
 
+AI_SINGLE_BATTLE_TEST("Spite: AI will use Spite on a slower opponent to block its move")
+{
+    enum Move playerMove, opponentMove;
+    u32 config, pp;
+
+    PARAMETRIZE { playerMove = MOVE_TRUMP_CARD; opponentMove = MOVE_SPITE;     pp = 3; config = GEN_4; }
+    PARAMETRIZE { playerMove = MOVE_TRUMP_CARD; opponentMove = MOVE_SPITE;     pp = 5; config = GEN_4; }
+    PARAMETRIZE { playerMove = MOVE_SCRATCH;    opponentMove = MOVE_WATER_GUN; pp = 6; config = GEN_4; }
+
+    PARAMETRIZE { playerMove = MOVE_TRUMP_CARD; opponentMove = MOVE_SPITE;     pp = 2; config = GEN_3; }
+    PARAMETRIZE { playerMove = MOVE_TRUMP_CARD; opponentMove = MOVE_SPITE;     pp = 3; config = GEN_3; }
+    PARAMETRIZE { playerMove = MOVE_SCRATCH;    opponentMove = MOVE_WATER_GUN; pp = 4; config = GEN_3; }
+
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { MovesWithPP({MOVE_TRUMP_CARD, pp}, {MOVE_SCRATCH, 20}); Speed(4); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_WATER_GUN, MOVE_SPITE); Speed(5); }
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        WITH_CONFIG(B_PP_REDUCED_BY_SPITE, config);
+    } WHEN {
+        TURN {
+            MOVE(player, playerMove);
+            EXPECT_MOVE(opponent, MOVE_WATER_GUN);
+        }
+        TURN {
+            MOVE(player, playerMove);
+            EXPECT_MOVE(opponent, opponentMove);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_WATER_GUN, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, playerMove, player);
+        ANIMATION(ANIM_TYPE_MOVE, opponentMove, opponent);
+
+        if (playerMove == MOVE_TRUMP_CARD) {
+            MESSAGE("Wobbuffet used Trump Card!");
+            NOT ANIMATION(ANIM_TYPE_MOVE, playerMove, player);
+            MESSAGE("But there was no PP left for the move!");
+        } else {
+            MESSAGE("Wobbuffet used Scratch!");
+            ANIMATION(ANIM_TYPE_MOVE, playerMove, player);
+        }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("Spite: AI will prioritise Spite over best damage move on a slower opponent to save itself")
+{
+    enum Move playerMove, opponentMove;
+    u32 config, pp;
+
+    PARAMETRIZE { playerMove = MOVE_DRAGON_RAGE; opponentMove = MOVE_SPITE;       pp = 3; config = GEN_4; }
+    PARAMETRIZE { playerMove = MOVE_DRAGON_RAGE; opponentMove = MOVE_SPITE;       pp = 5; config = GEN_4; }
+    PARAMETRIZE { playerMove = MOVE_DRAGON_RAGE; opponentMove = MOVE_DRAGON_RAGE; pp = 6; config = GEN_4; }
+    PARAMETRIZE { playerMove = MOVE_SONIC_BOOM;  opponentMove = MOVE_DRAGON_RAGE; pp = 5; config = GEN_4; }
+
+    PARAMETRIZE { playerMove = MOVE_DRAGON_RAGE; opponentMove = MOVE_SPITE;       pp = 2; config = GEN_3; }
+    PARAMETRIZE { playerMove = MOVE_DRAGON_RAGE; opponentMove = MOVE_SPITE;       pp = 3; config = GEN_3; }
+    PARAMETRIZE { playerMove = MOVE_DRAGON_RAGE; opponentMove = MOVE_DRAGON_RAGE; pp = 4; config = GEN_3; }
+    PARAMETRIZE { playerMove = MOVE_SONIC_BOOM;  opponentMove = MOVE_DRAGON_RAGE; pp = 4; config = GEN_3; }
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { MovesWithPP({MOVE_DRAGON_RAGE, pp}, {MOVE_SONIC_BOOM, 10}); Speed(4); HP(100); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_DRAGON_RAGE, MOVE_SPITE); Speed(5); HP(80); }
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        WITH_CONFIG(B_PP_REDUCED_BY_SPITE, config);
+    } WHEN {
+        TURN {
+            MOVE(player, playerMove);
+            EXPECT_MOVE(opponent, MOVE_DRAGON_RAGE);
+        }
+        TURN {
+            MOVE(player, playerMove);
+            EXPECT_MOVE(opponent, opponentMove);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_RAGE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, playerMove, player);
+        ANIMATION(ANIM_TYPE_MOVE, opponentMove, opponent);
+
+        if (playerMove == MOVE_DRAGON_RAGE && opponentMove == MOVE_SPITE) {
+            NOT ANIMATION(ANIM_TYPE_MOVE, playerMove, player);
+            MESSAGE("But there was no PP left for the move!");
+        } else {
+            ANIMATION(ANIM_TYPE_MOVE, playerMove, player);
+        }
+    }
+}
+
 TO_DO_BATTLE_TEST("AI doesn't see stomping tantrum as boosted for switch AI if its last move before fainting failed");

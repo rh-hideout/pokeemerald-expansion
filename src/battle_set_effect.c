@@ -1641,7 +1641,7 @@ static void HandleSetEffectSpite(struct BattleCalcValues *cv, struct SetEffect *
     }
     else if (!cv->onlyChecking)
     {
-        s32 ppToDeduct = B_PP_REDUCED_BY_SPITE >= GEN_4 ? 4 : (Random() & 3) + 2;
+        s32 ppToDeduct = B_PP_REDUCED_BY_SPITE >= GEN_4 ? 4 : (RandomUniform(RNG_SPITE_PP_REDUCTION, 0, 3) + 2);
 
         if (IsMaxMove(cv->move)) // G-Max Depletion only deducts 2 PP.
             ppToDeduct = 2;
