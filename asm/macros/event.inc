@@ -177,7 +177,7 @@
 
 	@ Copies the value of source into destination.
 	.macro copyvar destination:req, source:req, warn=TRUE
-	.if \warn && !((\source >= VARS_START && \source <= VARS_END) || (\source >= SPECIAL_VARS_START && \source <= SPECIAL_VARS_END))
+	.if \warn && (\source != 0) && !((\source >= VARS_START && \source <= VARS_END) || (\source >= SPECIAL_VARS_START && \source <= SPECIAL_VARS_END))
 	.warning "copyvar with a value that is not a VAR_ constant; did you mean setvar instead?"
 	.endif
 	.byte SCR_OP_COPYVAR
@@ -786,26 +786,14 @@
 
 	@ Starts a single trainer battle. Takes a trainer, intro text, loss text, and an optional event script.
 	@ When used with an event script, you can also pass in an optional flag to disable music
-	.macro trainerbattle_single trainer:req, intro_text:req, lose_text:req, event_script=FALSE, music=TRUE
-	.if \event_script == FALSE
-	trainerbattle LOCALID_NONE, \trainer, \intro_text, \lose_text, NULL, LOCALID_NONE, TRAINER_NONE, NULL, NULL, NULL, NULL, NULL, FALSE, TRUE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE
-	.elseif \music == TRUE
-	trainerbattle LOCALID_NONE, \trainer, \intro_text, \lose_text, \event_script, LOCALID_NONE, TRAINER_NONE, NULL, NULL, NULL, NULL, NULL, FALSE, TRUE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE
-	.else
-	trainerbattle LOCALID_NONE, \trainer, \intro_text, \lose_text, \event_script, LOCALID_NONE, TRAINER_NONE, NULL, NULL, NULL, NULL, NULL, FALSE, TRUE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE
-	.endif
+	.macro trainerbattle_single trainer:req, intro_text:req, lose_text:req, event_script=NULL, music=TRUE
+	trainerbattle LOCALID_NONE, \trainer, \intro_text, \lose_text, \event_script, LOCALID_NONE, TRAINER_NONE, NULL, NULL, NULL, NULL, NULL, FALSE, \music, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE
 	.endm
 
 	@ Starts a double trainer battle. Takes a trainer, intro text, loss text, text for when you have too few pokemon
 	@ and an optional event script. When used with an event script you can pass in an optional flag to disable music
-	.macro trainerbattle_double trainer:req, intro_text:req, lose_text:req, not_enough_pkmn_text:req, event_script=FALSE, music=TRUE
-	.if \event_script == FALSE
-	trainerbattle LOCALID_NONE, \trainer, \intro_text, \lose_text, NULL, LOCALID_NONE, TRAINER_NONE, NULL, NULL, NULL, NULL, \not_enough_pkmn_text, TRUE, TRUE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE
-	.elseif \music == TRUE
-	trainerbattle LOCALID_NONE, \trainer, \intro_text, \lose_text, \event_script, LOCALID_NONE, TRAINER_NONE, NULL, NULL, NULL, NULL, \not_enough_pkmn_text, TRUE, TRUE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE
-	.else
-	trainerbattle LOCALID_NONE, \trainer, \intro_text, \lose_text, \event_script, LOCALID_NONE, TRAINER_NONE, NULL, NULL, NULL, NULL, \not_enough_pkmn_text, TRUE, FALSE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE
-	.endif
+	.macro trainerbattle_double trainer:req, intro_text:req, lose_text:req, not_enough_pkmn_text:req, event_script=NULL, music=TRUE
+	trainerbattle LOCALID_NONE, \trainer, \intro_text, \lose_text, \event_script, LOCALID_NONE, TRAINER_NONE, NULL, NULL, NULL, NULL, \not_enough_pkmn_text, TRUE, \music, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE
 	.endm
 
 	@ Starts a rematch battle. Takes a trainer, intro text and loss text
@@ -826,7 +814,7 @@
 	@ Starts a double battle with the player against two trainers
 	@ Takes two trainers and defeat text for each
 	.macro trainerbattle_two_trainers trainer_a:req, lose_text_a:req, trainer_b:req, lose_text_b:req
-	trainerbattle OBJ_ID_NONE, \trainer_a, NULL, \lose_text_a, NULL, OBJ_ID_NONE, \trainer_b, NULL, \lose_text_b, NULL, NULL, NULL, FALSE, TRUE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE
+	trainerbattle OBJ_ID_NONE, \trainer_a, NULL, \lose_text_a, NULL, OBJ_ID_NONE, \trainer_b, NULL, \lose_text_b, NULL, NULL, NULL, FALSE, TRUE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE
 	.endm
 
 	@ Starts a trainer battle with victory text if the player loses. If flags is nonzero, the player will be healed after battle (and its assumed to be the tutorial battle)
@@ -2039,6 +2027,17 @@
 	trycompare goto_if, NOT_EQUAL, \a, \b, \c
 	.endm
 
+	.macro goto_if_between a:req, l:req, h:req, c @ BETWEEN low (l) and high (h), inclusive
+	goto_if_gt \a, \h, 1f
+	trycompare goto_if, 4, \a, \l, \c
+	1:
+	.endm
+
+	.macro goto_if_notbetween a:req, l:req, h:req, c @ NOT BETWEEN low (l) and high (h), inclusive
+	trycompare goto_if, 0, \a, \l, \c
+	trycompare goto_if, 2, \a, \h, \c
+	.endm
+
 	.macro call_if_unset flag:req, dest:req
 	checkflag \flag
 	call_if FALSE, \dest
@@ -2071,6 +2070,17 @@
 
 	.macro call_if_ne a:req, b, c
 	trycompare call_if, NOT_EQUAL, \a, \b, \c
+	.endm
+
+	.macro call_if_between a:req, l:req, h:req, c @ BETWEEN low (l) and high (h), inclusive
+	goto_if_gt \a, \h, 1f
+	trycompare call_if, 4, \a, \l, \c
+	1:
+	.endm
+
+	.macro call_if_notbetween a:req, l:req, h:req, c @ NOT BETWEEN low (l) and high (h), inclusive
+	trycompare call_if, 0, \a, \l, \c
+	trycompare call_if, 2, \a, \h, \c
 	.endm
 
 	.macro vgoto_if_eq a:req, b, c
@@ -2207,6 +2217,11 @@
 
 	.macro setdynamicswitchaifunc func:req
 	callnative ScriptSetDynamicAiSwitchFunc, requests_effects=1
+	.4byte \func
+	.endm
+
+	.macro setdynamicmonchoiceaifunc func:req
+	callnative ScriptSetDynamicAiMonChoiceFunc, requests_effects=1
 	.4byte \func
 	.endm
 
@@ -2605,6 +2620,9 @@
 	.byte \difficulty
 	.endm
 
+	@ Forces a save in the middle of scripting.
+	@ Requires `release` or `closemessage` immediately
+	@ after to clear the Save Dialogue and Save Info Window.
 	.macro forcesave
 	callnative Script_ForceSaveGame
 	waitstate
@@ -2699,7 +2717,7 @@
 	goto_if_eq VAR_RESULT, NO, \declineTradeJump
 	chooseboxmon SELECT_PC_MON_TRADE
 	waitstate
-	goto_if_eq VAR_0x8004, PARTY_MON_CANCEL, \declineTradeJump
+	goto_if_eq VAR_0x8004, PARTY_SLOT_CANCEL, \declineTradeJump
 	specialvar VAR_0x800B, GetTradeSpecies
 	goto_if_ne VAR_0x800B, VAR_0x8009, \wrongMonJump
 	special CreateInGameTradePokemon
@@ -2972,6 +2990,29 @@
 	.byte \dataField
 	.endm
 
+@ Safaris
+
+	@ sets VAR_RESULT to the currently active safariId, returns 0/SAFARI_EVENT_NONE if there is no active safari
+	.macro getactivesafari
+	callnative ScrCmd_getactivesafari
+	.endm
+
+	.macro safari_enter safariId:req
+	callnative ScrCmd_safari_enter
+	.byte \safariId
+	.endm
+
+	.macro safari_exitnowarp
+	callnative ScrCmd_safari_exit
+	.byte FALSE
+	.endm
+
+	.macro safari_exit
+	callnative ScrCmd_safari_exit
+	.byte TRUE
+	waitstate
+	.endm
+
 @ FRLG
 
 
@@ -3010,6 +3051,32 @@
 	braillemessage \text
 	getbraillestringwidth \text
 	call EventScript_BrailleCursorWaitButton
+	.endm
+
+	@ Opens party menu to select up to a maximum team size for battle (outside of Frontier)
+	.macro choosepartyforbattle size=MULTI_PARTY_SIZE
+	.if 1 <= \size && \size < PARTY_SIZE
+	setvar VAR_0x8005, \size
+	special ChoosePartyForBattle
+	.elseif \size == PARTY_SIZE
+	setvar VAR_RESULT, 1
+	.else
+	.error "choosepartyforbattle must use a value between 1 and PARTY_SIZE"
+	.endif
+	.endm
+
+	@ Opens party menu to select up to a maximum team size for battle (Frontier)
+	.macro choosepartyforbattlefrontier size:req
+	.if \size == 0 || \size >= PARTY_SIZE
+		.error "choosepartyforbattlefrontier must use a value between 1 and 5"
+	.endif
+	setvar VAR_0x8005, \size
+	special ChoosePartyForBattleFrontier
+	.endm
+
+	@ Reduces player party in line with order set in choosepartyforbattle or choosepartyforbattlefrontier 
+	.macro reduceplayerpartytoselectedmons
+	special ReducePlayerPartyToSelectedMons
 	.endm
 
 	@ Opens a UI that has the player choose a number of Pokemon (bringSize) in their party

@@ -11,7 +11,7 @@ SINGLE_BATTLE_TEST("Echoed Voice's power is multiplied for every consecutive tur
     s16 damage[6];
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_SOFT_BOILED) == EFFECT_SOFTBOILED);
+        ASSUME(GetMoveEffect(MOVE_SOFT_BOILED) == EFFECT_RESTORE_HP);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_BLISSEY);
     } WHEN {

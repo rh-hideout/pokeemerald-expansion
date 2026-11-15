@@ -1121,7 +1121,7 @@ static void AnimTask_HazeScrollingFog_Step(u8 taskId)
         ClearBattleAnimBg(1);
         ClearBattleAnimBg(2);
         gTasks[taskId].data[12]++;
-        // fall through
+        [[fallthrough]];
     case 4:
         if (!IsContest())
             SetAnimBgAttribute(1, BG_ANIM_CHAR_BASE_BLOCK, 0);
@@ -1223,7 +1223,7 @@ static void AnimTask_MistBallFog_Step(u8 taskId)
 
         gTasks[taskId].data[12]++;
 
-        // fall through
+        [[fallthrough]];
     case 4:
         if (!IsContest())
             SetAnimBgAttribute(1, BG_ANIM_CHAR_BASE_BLOCK, 0);

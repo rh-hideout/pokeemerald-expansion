@@ -32,3 +32,22 @@ SINGLE_BATTLE_TEST("Room Service decreases the holder's Speed by one stage")
         EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE - 1);
     }
 }
+
+DOUBLE_BATTLE_TEST("Room Service activates on Trick Room")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_TRICK_ROOM) == EFFECT_TRICK_ROOM);
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_ROOM_SERVICE); }
+        PLAYER(SPECIES_WYNAUT) { Item(ITEM_ROOM_SERVICE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_ROOM_SERVICE); }
+        OPPONENT(SPECIES_WYNAUT) { Item(ITEM_ROOM_SERVICE); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_TRICK_ROOM); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TRICK_ROOM, playerLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerRight);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentRight);
+    }
+}

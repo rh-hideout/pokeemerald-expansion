@@ -33,12 +33,6 @@
 	special CallBattleDomeFunction
 	.endm
 
-	@ Choose which of the opponents mons to use in battle and load them into the enemy party
-	.macro dome_initopponentparty
-	setvar VAR_0x8004, BATTLE_DOME_FUNC_INIT_OPPONENT_PARTY
-	special CallBattleDomeFunction
-	.endm
-
 	@ Show the page that gives information on the next opponent
 	.macro dome_showopponentinfo
 	setvar VAR_0x8004, BATTLE_DOME_FUNC_SHOW_OPPONENT_INFO

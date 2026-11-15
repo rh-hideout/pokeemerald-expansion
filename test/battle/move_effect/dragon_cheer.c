@@ -47,6 +47,8 @@ DOUBLE_BATTLE_TEST("Dragon Cheer increases critical hit ratio by 1 on non-Dragon
         }
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerRight);
         MESSAGE("A critical hit!");
+    } THEN {
+        EXPECT_EQ((u32)playerRight->volatiles.criticalHitBoost, useDragonCheer ? CRIT_BOOST_ONE_STAGE : CRIT_BOOST_NONE);
     }
 }
 
@@ -82,6 +84,8 @@ DOUBLE_BATTLE_TEST("Dragon Cheer increases critical hit ratio by 2 on Dragon typ
         }
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerRight);
         MESSAGE("A critical hit!");
+    } THEN {
+        EXPECT_EQ((u32)playerRight->volatiles.criticalHitBoost, useDragonCheer ? CRIT_BOOST_TWO_STAGES : CRIT_BOOST_NONE);
     }
 }
 
@@ -120,7 +124,7 @@ DOUBLE_BATTLE_TEST("Baton Pass passes Dragon Cheer's effect")
         SEND_IN_MESSAGE("Caterpie");
     } THEN {
         EXPECT_EQ(playerLeft->species, SPECIES_CATERPIE);
-        EXPECT(playerLeft->volatiles.dragonCheer);
+        EXPECT_EQ((u32)playerLeft->volatiles.criticalHitBoost, CRIT_BOOST_ONE_STAGE);
     }
 }
 

@@ -10,6 +10,7 @@
 #define B_WHITEOUT_MONEY            GEN_LATEST // In Gen4+, the amount of money dropped after losing a battle is determined by the number of Badges obtained. Previously, half of the player's money would be dropped. (While this change was also in FRLG, for the sake of simplicity, setting this to GEN_3 will result in RSE behavior.)
 #define B_LIGHT_BALL_ATTACK_BOOST   GEN_LATEST // In Gen4+, Light Ball doubles Attack in addition to Sp. Atk.
 #define B_PARALYSIS_CHANCE          GEN_LATEST // In Champions, paralysis has a 12.5% chance of not moving, instead of 25%.
+#define B_HP_RESTORATION_ROUNDING   GEN_LATEST // In Gen5+, healing moves round up
 
 // Experience settings
 #define B_EXP_CATCH                 GEN_LATEST // In Gen6+, the party gains experience when the player catches another Pokémon.
@@ -268,8 +269,6 @@
 #define B_LURE_BALL_MODIFIER        GEN_LATEST // In Gen8+, Lure Ball's catch multiplier is 4x. In Gen7, it's 5x. In Gen6 and earlier, it's 3x.
 #define B_HEAVY_BALL_MODIFIER       GEN_LATEST // Heavy Ball's ranges. See Cmd_handleballthrow.
 #define B_DREAM_BALL_MODIFIER       GEN_LATEST // In Gen8+, Dream Ball's catch multiplier is 4x when the target is asleep or has the Ability Comatose.
-#define B_SPORT_BALL_MODIFIER       GEN_LATEST // In Gen8+, Sport Ball's catch multiplier was reduced from 1.5x to 1x.
-#define B_SAFARI_BALL_MODIFIER      GEN_LATEST // In Gen8+, Safari Ball's catch multiplier is 1x. In Gens2-6, it's 1.5x. In Gen1, it's 2x.
 #define B_FRIEND_BALL_MODIFIER      GEN_LATEST // In Gen8+, the initial friendship of Pokémon caught in a Friend Ball friendship was reduced from 200 to 150.
 #define B_SERENE_GRACE_BOOST        GEN_LATEST // In Gen5+, Serene Grace boosts the added flinch chance of King's Rock and Razor Fang.
 #define B_IRON_BALL                 GEN_LATEST // In Gen5+, Flying-type Pokémon holding an Iron Ball take neutral damage from Ground-type moves regardless of their other types, except during Inverse Battles or if the Pokémon is grounded by any other effect.
@@ -338,6 +337,8 @@
 #define B_SNOW_WARNING                  GEN_LATEST // In Gen9+, Snow Warning will summon snow instead of hail.
 #define B_PREFERRED_ICE_WEATHER         B_ICE_WEATHER_BOTH // Toggles hail move effects to snow and vice versa.
 #define B_OVERWORLD_WEATHER_OVERRIDE    GEN_LATEST // In Gen9+, overworld weather cannot be overridden.
+#define B_SHOW_WEATHER_INDICATOR        TRUE       // If TRUE, shows an indicator for current weather during player move selection.
+#define B_INSTANT_WEATHER_INDICATORS    FALSE      // If TRUE, weather indicators don't slide in.
 
 // Terrain settings
 #define B_TERRAIN_BG_CHANGE         TRUE       // If set to TRUE, terrain moves permanently change the default battle background until the effect fades.
@@ -360,6 +361,7 @@
 #define B_WAIT_TIME_MULTIPLIER              16         // This determines how long text pauses for in battle. Vanilla is 16. Lower values result in faster battles.
 #define B_QUICK_MOVE_CURSOR_TO_RUN          FALSE      // If set to TRUE, pushing B in the battle menu in a wild encounter will move the cursor to the Run option.
 #define B_RUN_TRAINER_BATTLE                TRUE       // If set to TRUE, players can run from Trainer battles as in Gen9+. This is treated as a white out.
+#define B_BATTLE_INFO_BUTTON                L_BUTTON   // Button that opens the battle status menu on the main command screen.
 #define B_MOVE_DESCRIPTION_BUTTON           L_BUTTON   // If set to a button other than B_LAST_USED_BALL_BUTTON, pressing this button will open the move description menu.
 #define B_SHOW_USELESS_Z_MOVE_INFO          FALSE      // If set to TRUE, Z-Moves without additional effects, like newer generation status moves, will say "No additional effect."
 #define B_ANIMATE_MON_AFTER_KO              TRUE       // If set to TRUE, if a Pokémon on the opposing side faints, the non-fainted Pokémon will play their animations.

@@ -184,7 +184,7 @@ static void SetMenuInputHandler(struct Pokenav_Menu *menu)
     {
     case POKENAV_MENU_TYPE_DEFAULT:
         SetPokenavMode(POKENAV_MODE_NORMAL);
-        // fallthrough
+        [[fallthrough]];
     case POKENAV_MENU_TYPE_UNLOCK_RIBBONS:
     case POKENAV_MENU_TYPE_UNLOCK_MC:
     case POKENAV_MENU_TYPE_UNLOCK_MC_RIBBONS:

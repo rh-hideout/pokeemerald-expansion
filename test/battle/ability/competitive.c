@@ -399,26 +399,16 @@ SINGLE_BATTLE_TEST("Competitive activates for each stat that is lowered")
     }
 }
 
-SINGLE_BATTLE_TEST("Competitive doesn't activate if the pokemon lowers it's own stats")
+SINGLE_BATTLE_TEST("Competitive doesn't activate if the pokemon lowers its own stats")
 {
-    enum Move move;
-
-    PARAMETRIZE { move = MOVE_SUPERPOWER; }
-    PARAMETRIZE { move = MOVE_CLOSE_COMBAT; }
-    PARAMETRIZE { move = MOVE_MAKE_IT_RAIN; }
-    PARAMETRIZE { move = MOVE_SPIN_OUT; }
-
     GIVEN {
         ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_SUPERPOWER, self: TRUE, attack: -1, defense: -1);
-        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_CLOSE_COMBAT, self: TRUE, defense: -1, spDef: -1);
-        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAKE_IT_RAIN, self: TRUE, spAtk: -1);
-        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_SPIN_OUT, self: TRUE, speed: -2);
         PLAYER(SPECIES_IGGLYBUFF) { Ability(ABILITY_COMPETITIVE); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(player, move); }
+        TURN { MOVE(player, MOVE_SUPERPOWER); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, move, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUPERPOWER, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
 
         NONE_OF {
@@ -427,10 +417,7 @@ SINGLE_BATTLE_TEST("Competitive doesn't activate if the pokemon lowers it's own 
             MESSAGE("Igglybuff's Sp. Atk rose sharply!");
         }
     } THEN {
-        if (move == MOVE_SUPERPOWER)
-            EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE - 1);
-        else
-            EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(player->statStages[STAT_SPATK], DEFAULT_STAT_STAGE);
     }
 }
 

@@ -4,7 +4,7 @@
 #define BXPY_FORCE_MINIMUM_MONS                         TRUE              // When TRUE, the Player must have at least bringSize unfainted Pokémon in the Party.
 #define BXPY_CLAUSE_ITEMS                               TRUE              // When TRUE, the Player cannot have duplicate held items in their Party.
 #define BXPY_CLAUSE_SPECIES                             TRUE              // When TRUE, the Player cannot have duplicate in their Party.
-#define BXPY_CLAUSE_SPECIAL_POKEMON                     TRUE              // When TRUE, the Player cannot have Special Pokemon in their Party. Special is defined as Pokemon with the `isMythical` or `isFrontierBanned`.
+#define BXPY_CLAUSE_SPECIAL_POKEMON                     TRUE              // When TRUE, the Player cannot have Special Pokemon in their Party. Special is defined as Pokemon with the `isFrontierBanned` flag.
 
 #define BXPY_HEAL                                       BXPY_HEAL_NEVER   // Controls when the Player's party is healed, if at all. Valid values are found in BXPYHealModes in include/constants/bxpy.h.
 

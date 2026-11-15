@@ -3,6 +3,7 @@
 #include "battle.h"
 #include "battle_partner.h"
 #include "battle_frontier.h"
+#include "battle_tower.h"
 #include "data.h"
 #include "frontier_util.h"
 #include "difficulty.h"
@@ -49,7 +50,7 @@ STATIC_ASSERT(TRAINER_PARTNER(PARTNER_NONE) >= TRAINER_EREADER, OverlappingPartn
 
 static void FillPresetPartnerParty(u16 trainerId)
 {
-    s32 lastIndex = AreMultiPartiesFullTeams() ? PARTY_SIZE : MULTI_PARTY_SIZE;
+    s32 lastIndex = AreMultiPartiesHalfTeams() ? MULTI_PARTY_SIZE : PARTY_SIZE;
 
     const struct Trainer *partner = GetTrainerStructFromId(trainerId);
     struct TrainerGenerator partnerGen;
@@ -64,13 +65,11 @@ static void FillPresetPartnerParty(u16 trainerId)
 
 static void FillFrontierPartnerParty(u16 trainerId)
 {
-    u32 level = SetFacilityPtrsGetLevel();
-    u32 ivs = GetFrontierTrainerFixedIvs(trainerId);
-    u32 otID = Random32();
+    struct FacilityMonGenerator generator = GetFacilityMonGenerator(trainerId);
+    generator.partySize = FRONTIER_MULTI_PARTY_SIZE;
     for (u32 i = 0; i < FRONTIER_MULTI_PARTY_SIZE; i++)
     {
-        u32 monId = gSaveBlock2Ptr->frontier.trainerIds[i + 18];
-        CreateFacilityMon(&gFacilityTrainerMons[monId], level, ivs, otID, 0, &gParties[B_TRAINER_PARTNER][i]);
+        CreateFacilityMon(&gParties[B_TRAINER_PARTNER][i], &generator, gSaveBlock2Ptr->frontier.trainerIds[i + 18]);
         SetMonData(&gParties[B_TRAINER_PARTNER][i], MON_DATA_OT_NAME, gFacilityTrainers[trainerId].trainerName);
         enum Gender gender = IsFrontierTrainerFemale(trainerId);
         SetMonData(&gParties[B_TRAINER_PARTNER][i], MON_DATA_OT_GENDER, &gender);

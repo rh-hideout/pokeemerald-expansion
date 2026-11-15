@@ -75,7 +75,6 @@ BattleFrontier_BattleDomeBattleRoom_EventScript_BattleOpponent::
 	tower_getopponentintro 0
 	msgbox gStringVar4, MSGBOX_DEFAULT
 	closemessage
-	dome_initopponentparty
 	call BattleFrontier_BattleDomeBattleRoom_EventScript_DoDomeBattle
 	setvar VAR_TEMP_2, NO_DRAW
 	switch VAR_RESULT

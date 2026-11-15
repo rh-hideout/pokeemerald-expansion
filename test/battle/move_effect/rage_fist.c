@@ -390,11 +390,12 @@ SINGLE_BATTLE_TEST("Rage Fist number of hits is copied by Transform")
     }
 }
 
-SINGLE_BATTLE_TEST("Rage Fist base power is increased by 50 if user was hit and forces out")
+SINGLE_BATTLE_TEST("Rage Fist base power is increased by 50 if user was hit and forces out (Gen9)")
 {
     s16 timesGotHit[2];
 
     GIVEN {
+        WITH_CONFIG(B_RAGE_FIST, GEN_9);
         ASSUME(GetMoveEffect(MOVE_DRAGON_TAIL) == EFFECT_HIT_SWITCH_TARGET);
         PLAYER(SPECIES_REGIROCK);
         OPPONENT(SPECIES_REGIROCK);

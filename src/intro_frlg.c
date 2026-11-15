@@ -11,6 +11,7 @@
 #include "intro_frlg.h"
 #include "malloc.h"
 #include "menu.h"
+#include "multiboot_pokemon_colosseum.h"
 #include "new_game.h"
 #include "palette.h"
 #include "random.h"
@@ -245,9 +246,6 @@ static void SpriteCB_NidorinoCry(struct Sprite *sprite);
 static void SpriteCB_NidorinoRecoil(struct Sprite *sprite);
 static void SpriteCB_NidorinoHop(struct Sprite *sprite);
 static void SpriteCB_NidorinoAttack(struct Sprite *sprite);
-
-extern const u32 gMultiBootProgram_PokemonColosseum_Start[];
-extern const u32 gMultiBootProgram_PokemonColosseum_End[];
 
 static const u16 sCopyright_Pal[] = INCGFX_U16("graphics/intro_frlg/copyright.pal", ".gbapal");
 static const u32 sCopyright_Gfx[]  = INCGFX_U32("graphics/intro_frlg/copyright.png", ".4bpp.smol");
@@ -952,7 +950,7 @@ bool8 SetUpCopyrightScreenFrlg(void)
         SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_OBJ_1D_MAP | DISPCNT_BG0_ON);
         SetSerialCallback(SerialCB_CopyrightScreen);
         GameCubeMultiBoot_Init(&sGcmb);
-        // fallthrough
+        [[fallthrough]];
     default:
         UpdatePaletteFade();
         gMain.state++;
@@ -976,7 +974,7 @@ bool8 SetUpCopyrightScreenFrlg(void)
                 {
                     if (*(u32 *)(EWRAM_START + 0xAC) == COLOSSEUM_GAME_CODE)
                     {
-                        CpuCopy16(gMultiBootProgram_PokemonColosseum_Start, (void *)EWRAM_START, 0x28000);
+                        CpuCopy16(&gMultiBootProgram_PokemonColosseum_Start, (void *)EWRAM_START, sizeof(gMultiBootProgram_PokemonColosseum_Start));
                         *(u32 *)(EWRAM_START + 0xAC) = COLOSSEUM_GAME_CODE;
                     }
                     GameCubeMultiBoot_ExecuteProgram(&sGcmb);
@@ -1004,7 +1002,7 @@ void CB2_SetUpIntroFrlg(void)
     {
     default:
         gMain.state = 0;
-        // fallthrough
+        [[fallthrough]];
     case 0:
         SetVBlankCallback(NULL);
         SetGpuReg(REG_OFFSET_DISPCNT, 0);
@@ -1688,7 +1686,7 @@ static void SpriteCB_Grass(struct Sprite *sprite)
         sBaseX = sprite->x << 5;
         sVeloc = 160;
         sState++;
-        // fallthrough
+        [[fallthrough]];
     case 1:
         sBaseX -= sVeloc;
         sprite->x = sBaseX >> 5;
@@ -2232,7 +2230,7 @@ static void Scene3_Task_GengarEnter(u8 taskId)
     case 0:
         tSpeed = 0x400;
         tState++;
-        // fallthrough
+        [[fallthrough]];
     case 1:
         // Don't decelerate for the first 40 movements
         if (++tMoves >= 40 && tSpeed > 16)
@@ -2609,7 +2607,7 @@ static void SpriteCB_RecoilDust(struct Sprite *sprite)
         sX = sprite->x << 4;
         sY = sprite->y << 4;
         sprite->sState++;
-        // fallthrough
+        [[fallthrough]];
     case 1:
         sX -= sSpeedX;
         sY += sSpeedY;
