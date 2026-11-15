@@ -9974,6 +9974,7 @@ void BS_CheckPokeFlute(void)
         {
             gBattleMons[i].status1 &= ~STATUS1_SLEEP;
             gBattleMons[i].volatiles.nightmare = FALSE;
+            TryDeactivateSleepClause(i, gBattlerPartyIndexes[i]);
         }
     }
 
