@@ -1,0 +1,24 @@
+{{ doNotModifyHeader }}
+enum MiningEntity
+{
+    MINING_ENTITY_NONE,
+## for stone in stones
+    MINING_ENTITY_{{ stone.id }},
+## endfor
+    MINING_ENTITY_STONE_START = MINING_ENTITY_{{ first(stones).id }},
+    MINING_ENTITY_STONE_LAST = MINING_ENTITY_{{ last(stones).id }},
+## for item in items
+    MINING_ENTITY_{{ item.id }},
+## endfor
+};
+
+enum
+{
+    MINING_TAG_STONE_PAL = 12,
+## for stone in stones
+    MINING_TAG_{{ stone.id }},
+## endfor
+## for item in items
+    MINING_TAG_{{ item.id }},
+## endfor
+};
