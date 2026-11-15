@@ -752,3 +752,26 @@ DOUBLE_BATTLE_TEST("Neutralizing Gas doesn't reactivate Beads of Ruin after Chi-
         MESSAGE("The opposing Weezing fainted!");
     }
 }
+
+SINGLE_BATTLE_TEST("Neutralizing Gas leaving activates opposing Intimidate and user's Eject Pack doesn't activate from it")
+{
+    GIVEN {
+        ASSUME(GetItemHoldEffect(ITEM_EJECT_PACK) == HOLD_EFFECT_EJECT_PACK);
+        PLAYER(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); Item(ITEM_EJECT_PACK); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_INCINEROAR) { Ability(ABILITY_INTIMIDATE); }
+    } WHEN {
+        TURN { SWITCH(player, 1); }
+        TURN { SWITCH(player, 0); }
+    } SCENE {
+        ABILITY_POPUP(player, ABILITY_NEUTRALIZING_GAS);
+        MESSAGE("The effects of the neutralizing gas wore off!");
+        ABILITY_POPUP(opponent, ABILITY_INTIMIDATE);
+        NONE_OF {
+            ITEM_POPUP(player, ITEM_EJECT_PACK);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        }
+    } THEN {
+        EXPECT_EQ(player->item, ITEM_EJECT_PACK);
+    }
+}
