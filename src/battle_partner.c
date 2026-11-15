@@ -76,7 +76,7 @@ static void FillFrontierPartnerParty(u16 trainerId)
     }
 }
 
-static void FillFriendRecordPartnerParty(u16 friendRecordId)
+static void FillRecordMixingPartnerParty(u16 friendRecordId)
 {
     u8 trainerName[PLAYER_NAME_LENGTH + 1];
     struct EmeraldBattleTowerRecord *record = &gSaveBlock2Ptr->frontier.towerRecords[friendRecordId];
@@ -118,7 +118,7 @@ void FillPartnerParty(u16 trainerId)
 {
     ZeroPartyMons(gParties[B_TRAINER_PARTNER]);
 
-    switch(GetPartnerType(trainerId))
+    switch (GetPartnerType(trainerId))
     {
     case PRESET_PARTNER:
         FillPresetPartnerParty(trainerId);
@@ -141,7 +141,7 @@ void FillPartnerParty(u16 trainerId)
 enum TrainerClassID GetPartnerClass(u16 trainerId)
 {
     enum TrainerClassID trainerClass;
-    switch(GetPartnerType(trainerId))
+    switch (GetPartnerType(trainerId))
     {
     case PRESET_PARTNER:
         trainerClass = GetTrainerClassFromId(trainerId);
@@ -160,7 +160,7 @@ enum TrainerClassID GetPartnerClass(u16 trainerId)
 
 void GetInGamePartnerName(u8 *dst, u16 trainerId)
 {
-    switch(GetPartnerType(trainerId))
+    switch (GetPartnerType(trainerId))
     {
     case PRESET_PARTNER:
         StringCopy(dst, GetTrainerNameFromId(trainerId));
