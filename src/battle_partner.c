@@ -46,7 +46,7 @@ static enum PartnerType GetPartnerType(u16 trainerId)
     return NO_PARTNER_FOUND;
 }
 
-STATIC_ASSERT(TRAINER_PARTNER(PARTNER_NONE) >= TRAINER_EREADER, OverlappingPartnerIds);
+_Static_assert(TRAINER_PARTNER(PARTNER_NONE) >= TRAINER_EREADER, "Reserved partner ids are overlapping with user-defined partner ids");
 
 static void FillPresetPartnerParty(u16 trainerId)
 {
