@@ -728,9 +728,9 @@ struct BattleStruct
     enum PartySlot pursuitStoredSwitch:4; // Stored id for the Pursuit target's switch
     s32 battlerExpReward;
     enum Species prevTurnSpecies[MAX_BATTLERS_COUNT]; // Stores species the AI has in play at start of turn
-    s16 passiveHpUpdate[MAX_BATTLERS_COUNT]; // non-move damage and healing
-    s16 moveDamage[MAX_BATTLERS_COUNT];
-    u16 innardsOutHpLost[MAX_BATTLERS_COUNT];
+    s32 passiveHpUpdate[MAX_BATTLERS_COUNT]; // non-move damage and healing
+    u32 moveDamage[MAX_BATTLERS_COUNT];
+    u32 innardsOutHpLost[MAX_BATTLERS_COUNT];
     u32 moveResultFlags[MAX_BATTLERS_COUNT];
     u32 savedMoveResultFlags[MAX_BATTLERS_COUNT]; // for Bounced moves
     u8 numSpreadTargets:3;
@@ -767,7 +767,6 @@ struct BattleStruct
     u8 intimidateActivated:1;
     u8 allowPartingShot:1;
     u8 adrenalineOrbActivated:1; // prevents looping after an adrenaline stat changed
-    s32 accumulatedDamage;
 };
 
 struct AiBattleData

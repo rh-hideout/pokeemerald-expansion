@@ -444,7 +444,7 @@ static enum ItemEffect TryMentalHerb(enum BattlerId battler, ActivationTiming ti
         }
     }
 
-    
+
     if (effect != ITEM_NO_EFFECT)
     {
         if (timing != IsOnFlingActivation)
@@ -504,8 +504,9 @@ static enum ItemEffect DamagedStatBoostBerryEffect(enum BattlerId battlerDef, en
 static enum ItemEffect TryShellBell(enum BattlerId battlerAtk)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
+    u32 accumulatedDamage = GetAccumulatedDamage();
 
-    if (gBattleStruct->accumulatedDamage > 0
+    if (accumulatedDamage > 0
      && !gBattleStruct->unableToUseMove
      && GetMoveEffect(gCurrentMove) != EFFECT_FUTURE_SIGHT
      && gBattleStruct->battlerState[battlerAtk].originalBattlerPartyId == PARTY_SIZE
@@ -514,7 +515,7 @@ static enum ItemEffect TryShellBell(enum BattlerId battlerAtk)
     {
         if (EmergencyExitCanBeTriggered(battlerAtk, GetBattlerAbility(battlerAtk)))
             gSpecialStatuses[battlerAtk].shellBellEmergencyExit = TRUE;
-        SetHealAmount(battlerAtk, gBattleStruct->accumulatedDamage / GetBattlerHoldEffectParam(battlerAtk));
+        SetHealAmount(battlerAtk, accumulatedDamage / GetBattlerHoldEffectParam(battlerAtk));
         BattleScriptCall(BattleScript_ItemHealHP_Ret);
         effect = ITEM_HP_CHANGE;
     }

@@ -774,10 +774,10 @@ AI_DOUBLE_BATTLE_TEST("Trainer Slide: Doubles: Opponent Last Low Hp")
         FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);
         VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_OPPONENT_LAST_LOW_HP);
         ASSUME(GetMoveEffect(MOVE_FALSE_SWIPE) == EFFECT_FALSE_SWIPE);
-        PLAYER(SPECIES_WOBBUFFET) { Defense(1); Speed(4); }
+        PLAYER(SPECIES_WOBBUFFET) { Defense(1); Speed(4); Moves(MOVE_CELEBRATE); }
         PLAYER(SPECIES_WOBBUFFET) { Defense(1); Speed(3); Moves(MOVE_MEMENTO); }
-        OPPONENT(SPECIES_WOBBUFFET) { Attack(999); Speed(2); }
-        OPPONENT(SPECIES_WOBBUFFET) { Attack(999); Speed(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Attack(999); Speed(2); Moves(MOVE_FALSE_SWIPE, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Attack(999); Speed(1); Moves(MOVE_CELEBRATE); }
     } WHEN {
         TURN {
             MOVE(playerRight, MOVE_MEMENTO, target: playerLeft);
