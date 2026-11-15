@@ -183,7 +183,7 @@ static void TransferEggMovesFromBoxmonToBoxmon(struct BoxPokemon *receiver, stru
     if (GetBoxMonData(receiver, MON_DATA_MOVE4) != MOVE_NONE)
         return;
 
-    if (GetConfig(EGG_MOVE_TRANSFER) == GEN_8 && GET_BASE_SPECIES_ID(receiverSpecies) != GET_BASE_SPECIES_ID(giverSpecies))
+    if (GetConfig(EGG_MOVE_TRANSFER) == GEN_8 && GetBaseSpecies(receiverSpecies) != GetBaseSpecies(giverSpecies))
         return;
 
     if (GetConfig(EGG_MOVE_TRANSFER) >= GEN_9 && GetBoxMonData(receiver, MON_DATA_HELD_ITEM) != ITEM_MIRROR_HERB)
@@ -614,8 +614,9 @@ void TriggerPendingDaycareEgg(void)
 
 void InheritIVs(struct Pokemon *egg, struct DayCare *daycare)
 {
-    u32 i, iv, slot;
-    enum Stat powerStat;
+    u32 i, iv;
+    u32 slot = 0;
+    enum Stat powerStat = STAT_HP;
     u32 start = 0;
     u32 powerItemCount = 0;
     u8 selectedIvs[5] = {0};
@@ -693,7 +694,7 @@ static void InheritPokeball(struct Pokemon *egg, struct DayCare *daycare)
         enum Species species0 = GetBoxMonData(&daycare->mons[0].mon, MON_DATA_SPECIES);
         enum Species species1 = GetBoxMonData(&daycare->mons[1].mon, MON_DATA_SPECIES);
 
-        if (GET_BASE_SPECIES_ID(species0) == GET_BASE_SPECIES_ID(species1))
+        if (GetBaseSpecies(species0) == GetBaseSpecies(species1))
             ballSlot = RandomPercentage(RNG_DAYCARE_PICK_BALL_PARENT, 50);
         inheritBall = GetBoxMonData(&daycare->mons[ballSlot].mon, MON_DATA_POKEBALL);
     }
@@ -817,7 +818,7 @@ static void GiveParentSharedLevelUpMoves(struct Pokemon *egg, enum Move *fatherM
     {
         if (sharedMoves[i] == MOVE_NONE)
             break;
-        for (j = 0; levelupLearnset[j].move != LEVEL_UP_MOVE_END; i++)
+        for (j = 0; levelupLearnset[j].move != LEVEL_UP_MOVE_END; j++)
         {
             if (sharedMoves[i] == levelupLearnset[j].move)
             {
@@ -856,7 +857,7 @@ static void GiveMoveIfParentHeldItem(struct Pokemon *egg, struct BoxPokemon *fat
 
 static void BuildEggMoveset(struct Pokemon *egg, struct BoxPokemon *father, struct BoxPokemon *mother)
 {
-    enum Species eggSpecies = GetMonData(egg, MON_DATA_SPECIES); 
+    enum Species eggSpecies = GetMonData(egg, MON_DATA_SPECIES);
     enum Move fatherMoves[MAX_MON_MOVES];
     enum Move motherMoves[MAX_MON_MOVES];
 
@@ -914,13 +915,19 @@ static void AlterEggSpeciesWithIncenseItem(enum Species *species, struct DayCare
 
 STATIC_ASSERT(P_SCATTERBUG_LINE_FORM_BREED == SPECIES_SCATTERBUG_ICY_SNOW || (P_SCATTERBUG_LINE_FORM_BREED >= SPECIES_SCATTERBUG_POLAR && P_SCATTERBUG_LINE_FORM_BREED <= SPECIES_SCATTERBUG_POKEBALL), ScatterbugLineFormBreedMustBeAValidScatterbugForm);
 
+
+static const enum Species sGenderDivergentSpecies[][2] =
+{
+    {SPECIES_NIDORAN_F, SPECIES_NIDORAN_M},
+    {SPECIES_ILLUMISE, SPECIES_VOLBEAT},
+};
+
 static enum Species DetermineEggSpeciesAndParentSlots(struct DayCare *daycare, u8 *parentSlots)
 {
     u32 i;
     enum Species species[DAYCARE_MON_COUNT];
-    enum Species eggSpecies;
     bool32 hasMotherEverstone, hasFatherEverstone, motherIsForeign, fatherIsForeign;
-    bool32 motherEggSpecies, fatherEggSpecies;
+    enum Species motherEggSpecies, fatherEggSpecies, eggSpecies;
     enum Region currentRegion = GetCurrentRegion();
 
     for (i = 0; i < DAYCARE_MON_COUNT; i++)
@@ -947,28 +954,31 @@ static enum Species DetermineEggSpeciesAndParentSlots(struct DayCare *daycare, u
 
     if (hasMotherEverstone)
         eggSpecies = motherEggSpecies;
-    else if (fatherIsForeign && hasFatherEverstone)
+    else if (fatherIsForeign && hasFatherEverstone && GetBaseSpecies(motherEggSpecies) == GetBaseSpecies(fatherEggSpecies))
         eggSpecies = fatherEggSpecies;
     else if (motherIsForeign)
         eggSpecies = GetRegionalFormByRegion(motherEggSpecies, currentRegion);
     else
         eggSpecies = motherEggSpecies;
 
-    if (eggSpecies == SPECIES_NIDORAN_F && daycare->offspringPersonality & EGG_GENDER_MALE)
-        eggSpecies = SPECIES_NIDORAN_M;
-    else if (eggSpecies == SPECIES_ILLUMISE && daycare->offspringPersonality & EGG_GENDER_MALE)
-        eggSpecies = SPECIES_VOLBEAT;
-    else if (P_NIDORAN_M_DITTO_BREED >= GEN_5 && eggSpecies == SPECIES_NIDORAN_M && !(daycare->offspringPersonality & EGG_GENDER_MALE))
-        eggSpecies = SPECIES_NIDORAN_F;
-    else if (P_NIDORAN_M_DITTO_BREED >= GEN_5 && eggSpecies == SPECIES_VOLBEAT && !(daycare->offspringPersonality & EGG_GENDER_MALE))
-        eggSpecies = SPECIES_ILLUMISE;
-    else if (eggSpecies == SPECIES_MANAPHY)
+    for (u32 i = 0; i < ARRAY_COUNT(sGenderDivergentSpecies); i++)
+    {
+        if (eggSpecies == sGenderDivergentSpecies[i][0]
+         || (eggSpecies == sGenderDivergentSpecies[i][1] && GetConfig(NIDORAN_M_DITTO_BREED) >= GEN_5))
+        {
+            bool32 randomGender = RandomPercentage(RNG_DAYCARE_MALE_CHILD, 50);
+            eggSpecies = sGenderDivergentSpecies[i][randomGender];
+            break;
+        }
+    }
+
+    if (eggSpecies == SPECIES_MANAPHY)
         eggSpecies = SPECIES_PHIONE;
-    else if (GET_BASE_SPECIES_ID(eggSpecies) == SPECIES_ROTOM)
+    else if (GetBaseSpecies(eggSpecies) == SPECIES_ROTOM)
         eggSpecies = SPECIES_ROTOM;
-    else if (GET_BASE_SPECIES_ID(eggSpecies) == SPECIES_SCATTERBUG)
+    else if (GetBaseSpecies(eggSpecies) == SPECIES_SCATTERBUG)
         eggSpecies = P_SCATTERBUG_LINE_FORM_BREED;
-    else if (GET_BASE_SPECIES_ID(eggSpecies) == SPECIES_FURFROU)
+    else if (GetBaseSpecies(eggSpecies) == SPECIES_FURFROU)
         eggSpecies = SPECIES_FURFROU;
     else if (eggSpecies == SPECIES_SINISTEA_ANTIQUE)
         eggSpecies = SPECIES_SINISTEA_PHONY;

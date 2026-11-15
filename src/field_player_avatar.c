@@ -805,9 +805,9 @@ static void WindUpSpinTimer(enum Direction direction)
 
 bool32 CanTriggerSpinEvolution()
 {
-    gSpecialVar_0x8000 = EVO_NONE;
     if (gPlayerSpinData.triggerEvo)
     {
+        gSpecialVar_0x8000 = SPIN_NONE;
         u32 seconds = gPlayerSpinData.VBlanksSpinning / 60;
         u32 direction = gPlayerSpinData.spinDirection;
         if (seconds >= 10)
@@ -830,9 +830,10 @@ bool32 CanTriggerSpinEvolution()
                 gSpecialVar_0x8000 = SPIN_CCW_SHORT;
         }
         gPlayerSpinData.triggerEvo = FALSE;
+
+        if (gSpecialVar_0x8000 != SPIN_NONE)
+            return TRUE;
     }
-    if (gSpecialVar_0x8000 != EVO_NONE)
-        return TRUE;
 
     return FALSE;
 }
@@ -1703,6 +1704,7 @@ void InitPlayerAvatar(s16 x, s16 y, enum Direction direction, enum Gender gender
     u8 objectEventId;
     struct ObjectEvent *objectEvent;
 
+    playerObjEventTemplate.kind = OBJ_KIND_NORMAL;
     playerObjEventTemplate.localId = LOCALID_PLAYER;
     playerObjEventTemplate.graphicsId = GetPlayerAvatarGraphicsIdByStateIdAndGender(PLAYER_AVATAR_STATE_NORMAL, gender);
     playerObjEventTemplate.x = x - MAP_OFFSET;
@@ -2070,6 +2072,7 @@ static void Task_DoPlayerSpinExit(u8 taskId)
         sprite->subpriority = 0;
         sprite->subspriteMode = SUBSPRITES_OFF;
         tState++;
+        [[fallthrough]];
     case 1: // Spin while rising
         TrySpinPlayerForWarp(object, &tSpinDelayTimer);
 
@@ -2139,6 +2142,7 @@ static void Task_DoPlayerSpinEntrance(u8 taskId)
         sprite->subpriority = 0;
         sprite->subspriteMode = SUBSPRITES_OFF;
         tState++;
+        [[fallthrough]];
     case 1: // Spin while descending
         TrySpinPlayerForWarp(object, &tSpinDelayTimer);
 

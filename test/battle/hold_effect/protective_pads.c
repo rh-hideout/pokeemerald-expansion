@@ -57,7 +57,7 @@ SINGLE_BATTLE_TEST("Protective Pads doesn't invalid unseen fist")
     }
 }
 
-SINGLE_BATTLE_TEST("Protective Pads protects from Rocly Helmet Damage")
+SINGLE_BATTLE_TEST("Protective Pads protects from Rocky Helmet damage")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_PROTECTIVE_PADS); }
@@ -68,8 +68,8 @@ SINGLE_BATTLE_TEST("Protective Pads protects from Rocly Helmet Damage")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         HP_BAR(opponent);
         NONE_OF {
+            ITEM_POPUP(opponent, ITEM_ROCKY_HELMET);
             HP_BAR(player);
-            MESSAGE("Wobbuffet was hurt by the opposing Wobbuffet's Rocky Helmet!");
         }
     }
 }

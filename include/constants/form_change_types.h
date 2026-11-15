@@ -19,6 +19,12 @@ enum FormChangeItemUseArguments
     DAY = 1,
     NIGHT,
 };
+// FORM_CHANGE_FAINT param2 Arguments
+enum FormChangeFaintedArguments
+{
+    REVERT_FORM_AFTER_FAINTING_IN_BATTLE,
+    DONT_REVERT_FORM_AFTER_FAINTING_IN_BATTLE,
+};
 
 #define FUSION_TERMINATOR                       0xFF
 
@@ -47,7 +53,9 @@ enum FormChanges
     // - No parameters.
     FORM_CHANGE_WITHDRAW,
     // Form change that activates when the Pokémon faints, either in battle or in the overworld by poison.
-    // - No parameters.
+    // param1:
+    // - REVERT_FORM_AFTER_FAINTING_IN_BATTLE if the Form should revert upon fainting in battle
+    // - DONT_REVERT_FORM_AFTER_FAINTING_IN_BATTLE if the Form should not revert upon fainting in battle (relevant for Revival Blessing)
     FORM_CHANGE_FAINT,
     // Form change that activates when the Pokémon is sent out at the beginning of a battle
     // param1: item to hold, optional

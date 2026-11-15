@@ -749,14 +749,14 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: Switchin move data is reset be
     } THEN {
         enum BattlerId battlerAtk = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
         enum BattlerId battlerDef = GetBattlerAtPosition(B_POSITION_PLAYER_LEFT);
-        u32 moveIndex = 0;
+        enum MoveSlot moveIndex = MOVESLOT_0;
         EXPECT_GT(gAiLogicData->simulatedDmg[battlerAtk][battlerDef][moveIndex].median, 0);
         EXPECT_GT(gAiLogicData->effectiveness[battlerAtk][battlerDef][moveIndex], 0);
         EXPECT_GT(gAiLogicData->moveAccuracy[battlerAtk][battlerDef][moveIndex], 0);
 
         gAiLogicData->resistBerryAffected[battlerAtk][battlerDef][moveIndex] = TRUE;
         gAiLogicData->moveLimitations[battlerAtk] |= 1u << moveIndex;
-        CalcBattlerAiMovesData(gAiLogicData, battlerAtk, battlerDef, AI_GetWeather(), gFieldStatuses);
+        CalcBattlerAiMovesData(gAiLogicData, battlerAtk, battlerDef, AI_GetWeather(), gFieldTimers.terrain);
 
         EXPECT_EQ(gAiLogicData->simulatedDmg[battlerAtk][battlerDef][moveIndex].median, 0);
         EXPECT_EQ(gAiLogicData->effectiveness[battlerAtk][battlerDef][moveIndex], 0);

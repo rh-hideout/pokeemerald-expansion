@@ -5,7 +5,7 @@
 
 void ClearTVShowData(void);
 void TryPutBreakingNewsOnAir(void);
-void TryPutBattleSeminarOnAir(enum Species foeSpecies, enum Species species, u8 moveIndex, const u16 *movePtr, enum Move betterMove);
+void TryPutBattleSeminarOnAir(enum Species foeSpecies, enum Species species, enum MoveSlot moveIndex, const u16 *movePtr, enum Move betterMove);
 void TryPutFrontierTVShowOnAir(u16 winStreak, u8 facilityAndMode);
 void DoTVShow(void);
 void DoTVShowInSearchOfTrainers(void);
@@ -22,7 +22,6 @@ u32 GetPlayerIDAsU32(void);
 bool8 IsPokeNewsActive(u8 newsKind);
 void SanitizeTVShowLocationsForRuby(TVShow *shows);
 size_t CountDigits(int value);
-u8 GetRibbonCount(struct Pokemon *pokemon);
 void AlertTVThatPlayerPlayedSlotMachine(u16 nCoinsSpent);
 void AlertTVThatPlayerPlayedRoulette(u16 nCoinsSpent);
 void TryPutFindThatGamerOnAir(u16 nCoinsPaidOut);

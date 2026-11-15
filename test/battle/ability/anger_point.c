@@ -47,6 +47,7 @@ SINGLE_BATTLE_TEST("Anger Point does not trigger when already at maximum Attack 
 
 SINGLE_BATTLE_TEST("Anger Point triggers when a substitute takes the hit (Gen4)")
 {
+    KNOWN_FAILING; // Gen4 behavior isn't implemented
     GIVEN {
         WITH_CONFIG(B_UPDATED_ABILITY_DATA, GEN_4);
         ASSUME(GetMoveEffect(MOVE_SUBSTITUTE) == EFFECT_SUBSTITUTE);

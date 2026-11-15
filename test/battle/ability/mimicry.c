@@ -126,3 +126,35 @@ DOUBLE_BATTLE_TEST("Mimicry triggers after Skill Swap")
         EXPECT_EQ(playerRight->types[1], TYPE_GRASS);
     }
 }
+
+MULTI_BATTLE_TEST("Mimicry does not activate if there is no terrain active")
+{
+    GIVEN {
+        PLAYER(SPECIES_STUNFISK_GALAR);
+        PARTNER(SPECIES_STUNFISK_GALAR);
+        OPPONENT_A(SPECIES_STUNFISK_GALAR);
+        OPPONENT_B(SPECIES_STUNFISK_GALAR);
+    } WHEN {
+        TURN {}
+    } SCENE {
+        NONE_OF {
+            ABILITY_POPUP(playerLeft, ABILITY_MIMICRY);
+            ABILITY_POPUP(opponentLeft, ABILITY_MIMICRY);
+            ABILITY_POPUP(playerRight, ABILITY_MIMICRY);
+            ABILITY_POPUP(opponentRight, ABILITY_MIMICRY);
+        }
+    } THEN {
+        EXPECT_EQ(playerLeft->types[0], TYPE_GROUND);
+        EXPECT_EQ(playerLeft->types[1], TYPE_STEEL);
+        EXPECT_EQ(playerLeft->types[2], TYPE_MYSTERY);
+        EXPECT_EQ(opponentLeft->types[0], TYPE_GROUND);
+        EXPECT_EQ(opponentLeft->types[1], TYPE_STEEL);
+        EXPECT_EQ(opponentLeft->types[2], TYPE_MYSTERY);
+        EXPECT_EQ(playerRight->types[0], TYPE_GROUND);
+        EXPECT_EQ(playerRight->types[1], TYPE_STEEL);
+        EXPECT_EQ(playerRight->types[2], TYPE_MYSTERY);
+        EXPECT_EQ(opponentRight->types[0], TYPE_GROUND);
+        EXPECT_EQ(opponentRight->types[1], TYPE_STEEL);
+        EXPECT_EQ(opponentRight->types[2], TYPE_MYSTERY);
+    }
+}

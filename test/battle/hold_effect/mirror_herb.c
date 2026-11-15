@@ -63,6 +63,7 @@ DOUBLE_BATTLE_TEST("Mirror Herb does not trigger for Ally's Soul Heart's stat ra
         MESSAGE("The opposing Wobbuffet fainted!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
         NONE_OF {
+            ITEM_POPUP(playerLeft, ITEM_MIRROR_HERB);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
             MESSAGE("Wobbuffet used its Mirror Herb to mirror its opponent's stat changes!");
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
@@ -83,6 +84,7 @@ SINGLE_BATTLE_TEST("Mirror Herb copies the boost gained by an ability")
         TURN {}
     } SCENE {
         ABILITY_POPUP(player, ABILITY_INTREPID_SWORD);
+        ITEM_POPUP(opponent, ITEM_MIRROR_HERB);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 1);
@@ -103,6 +105,7 @@ DOUBLE_BATTLE_TEST("Mirror Herb activates after a Mega Evolution")
         ABILITY_POPUP(playerLeft, ABILITY_INTIMIDATE);
         ABILITY_POPUP(opponentLeft, ABILITY_DEFIANT);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
+        ITEM_POPUP(playerRight, ITEM_MIRROR_HERB);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerRight);
     } THEN {
         EXPECT_EQ(playerRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 2);
@@ -125,7 +128,10 @@ SINGLE_BATTLE_TEST("Mirror Herb does not activate or get consumed if no copied s
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, opponent);
-        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        NONE_OF {
+            ITEM_POPUP(player, ITEM_MIRROR_HERB);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        }
     } THEN {
         EXPECT_EQ(player->item, ITEM_MIRROR_HERB);
         EXPECT_EQ(player->statStages[STAT_ATK], MAX_STAT_STAGE);
@@ -143,7 +149,10 @@ SINGLE_BATTLE_TEST("Mirror Herb does not copy stat increases gained via Mirror H
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
-        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        NONE_OF {
+            ITEM_POPUP(player, ITEM_MIRROR_HERB);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        }
     } THEN {
         EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 2);
         EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 2);
@@ -169,6 +178,7 @@ SINGLE_BATTLE_TEST("Mirror Herb activates with Contrary if stat is at +6")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SKILL_SWAP, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, opponent);
+        ITEM_POPUP(player, ITEM_MIRROR_HERB);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
     } THEN {
         EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 4);
@@ -184,6 +194,7 @@ SINGLE_BATTLE_TEST("Mirror Herb copies the stats boosted by Speed Boost")
         TURN {}
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_SPEED_BOOST);
+        ITEM_POPUP(player, ITEM_MIRROR_HERB);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + 1);

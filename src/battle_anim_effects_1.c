@@ -6656,7 +6656,7 @@ static void TrySwapStickyWebBattlerId(enum BattlerId battlerAtk, enum BattlerId 
 
 static void TrySwapWishBattlerIds(enum BattlerId battlerAtk, enum BattlerId battlerPartner)
 {
-    u32 temp;
+    enum PartySlot temp;
 
     // if used future sight on opposing side, properly track who used it
     if (gBattleStruct->futureSight[GetBattlerLeftFoe(battlerAtk)].counter > 0
@@ -6718,10 +6718,11 @@ static void TrySwapAttractBattlerIds(enum BattlerId battlerAtk, enum BattlerId b
 static void SwapBattlerMoveData(enum BattlerId battler1, enum BattlerId battler2)
 {
     u32 temp;
-    SWAP(gBattleStruct->chosenMovePositions[battler1], gBattleStruct->chosenMovePositions[battler2], temp);
+    enum MoveSlot moveSlotTemp;
+    SWAP(gBattleStruct->chosenMovePositions[battler1], gBattleStruct->chosenMovePositions[battler2], moveSlotTemp);
     SWAP(gChosenMoveByBattler[battler1], gChosenMoveByBattler[battler2], temp);
     SWAP(gBattleStruct->moveTarget[battler1], gBattleStruct->moveTarget[battler2], temp);
-    SWAP(gMoveSelectionCursor[battler1], gMoveSelectionCursor[battler2], temp);
+    SWAP(gMoveSelectionCursor[battler1], gMoveSelectionCursor[battler2], moveSlotTemp);
     SWAP(gLockedMoves[battler1], gLockedMoves[battler2], temp);
 
     // update last moves
@@ -6736,7 +6737,6 @@ static void SwapBattlerMoveData(enum BattlerId battler1, enum BattlerId battler2
 
 static void AnimTask_AllySwitchDataSwap(u8 taskId)
 {
-    enum BattlerId i, j;
     struct Pokemon *party;
     u32 temp;
     enum BattlerId battlerAtk = gBattlerAttacker;
@@ -6767,17 +6767,18 @@ static void AnimTask_AllySwitchDataSwap(u8 taskId)
 
     // Swap turn order, so that all the battlers take action
     SWAP(gChosenActionByBattler[battlerAtk], gChosenActionByBattler[battlerPartner], temp);
-    for (i = 0; i < gBattlersCount; i++)
+    for (u32 turnOrderIndex = 0; turnOrderIndex < gBattlersCount; turnOrderIndex++)
     {
-        if (gBattlerByTurnOrder[i] == battlerAtk || gBattlerByTurnOrder[i] == battlerPartner)
+        if (gBattlerByTurnOrder[turnOrderIndex] == battlerAtk || gBattlerByTurnOrder[turnOrderIndex] == battlerPartner)
         {
-            for (j = i + 1; j < gBattlersCount; j++)
+            u32 otherTurnOrderIndex;
+            for (otherTurnOrderIndex = turnOrderIndex + 1; otherTurnOrderIndex < gBattlersCount; otherTurnOrderIndex++)
             {
-                if (gBattlerByTurnOrder[j] == battlerAtk || gBattlerByTurnOrder[j] == battlerPartner)
+                if (gBattlerByTurnOrder[otherTurnOrderIndex] == battlerAtk || gBattlerByTurnOrder[otherTurnOrderIndex] == battlerPartner)
                     break;
             }
-            SWAP(gBattlerByTurnOrder[i], gBattlerByTurnOrder[j], temp);
-            SWAP(gActionsByTurnOrder[i], gActionsByTurnOrder[j], temp);
+            SWAP(gBattlerByTurnOrder[turnOrderIndex], gBattlerByTurnOrder[otherTurnOrderIndex], temp);
+            SWAP(gActionsByTurnOrder[turnOrderIndex], gActionsByTurnOrder[otherTurnOrderIndex], temp);
             break;
         }
     }
@@ -6791,15 +6792,15 @@ static void AnimTask_AllySwitchDataSwap(u8 taskId)
     TrySwapAttractBattlerIds(battlerAtk, battlerPartner);
 
     // For Snipe Shot and abilities Stalwart/Propeller Tail - keep the original target.
-    for (i = 0; i < gBattlersCount; i++)
+    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
     {
-        enum Ability ability = GetBattlerAbility(i);
+        enum Ability ability = GetBattlerAbility(battler);
         // if not targeting a slot that got switched, continue
-        if (!IsBattlerAlly(gBattleStruct->moveTarget[i], battlerAtk))
+        if (!IsBattlerAlly(gBattleStruct->moveTarget[battler], battlerAtk))
             continue;
 
-        if (GetMoveEffect(gChosenMoveByBattler[i]) == EFFECT_SNIPE_SHOT || ability == ABILITY_PROPELLER_TAIL || ability == ABILITY_STALWART)
-            gBattleStruct->moveTarget[i] ^= BIT_FLANK;
+        if (GetMoveEffect(gChosenMoveByBattler[battler]) == EFFECT_SNIPE_SHOT || ability == ABILITY_PROPELLER_TAIL || ability == ABILITY_STALWART)
+            gBattleStruct->moveTarget[battler] ^= BIT_FLANK;
     }
 
     // For some reason the order in which the sprites are created matters. Looks like an issue with the sprite system, potentially with the Sprite Template.

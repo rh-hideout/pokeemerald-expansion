@@ -414,7 +414,7 @@ AI_SINGLE_BATTLE_TEST("First Impression is preferred on the first turn of the sp
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_FIRST_IMPRESSION) == EFFECT_FIRST_TURN_ONLY);
-        ASSUME(GetMovePower(MOVE_FIRST_IMPRESSION) == 90);
+        ASSUME(GetMovePower(MOVE_FIRST_IMPRESSION) > 80);
         ASSUME(GetMovePower(MOVE_LUNGE) == 80);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_KANGASKHAN);
@@ -1676,6 +1676,117 @@ AI_DOUBLE_BATTLE_TEST("AI sees Dragon Darts damage redirecting if one target is 
 
             SCORE_EQ_VAL(opponentLeft, MOVE_DRAGON_DARTS, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE + SLOW_KILL, target: playerRight);
             SCORE_EQ_VAL(opponentLeft, MOVE_FIRE_PUNCH, AI_SCORE_DEFAULT, target: playerRight);
+        }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("Ice Spinner can be chosen by AI regardless if there is a terrain or not")
+{
+    enum Move move;
+
+    PARAMETRIZE { move = MOVE_ELECTRIC_TERRAIN; }
+    PARAMETRIZE { move = MOVE_NONE; }
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_ICE_SPINNER) == EFFECT_ICE_SPINNER);
+        ASSUME(GetMoveEffect(MOVE_ELECTRIC_TERRAIN) == EFFECT_TERRAIN);
+        ASSUME(GetMoveTerrainType(MOVE_ELECTRIC_TERRAIN) == B_TERRAIN_ELECTRIC);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_ICE_SPINNER, MOVE_ICE_SHARD); }
+    } WHEN {
+        if (move == MOVE_ELECTRIC_TERRAIN) {
+            TURN { MOVE(player, MOVE_ELECTRIC_TERRAIN); EXPECT_MOVE(opponent, MOVE_ICE_SPINNER); }
+            TURN { EXPECT_MOVE(opponent, MOVE_ICE_SPINNER); }
+        } else {
+            TURN { EXPECT_MOVE(opponent, MOVE_ICE_SPINNER); }
+        }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("Spite: AI will use Spite on a slower opponent to block its move")
+{
+    enum Move playerMove, opponentMove;
+    u32 config, pp;
+
+    PARAMETRIZE { playerMove = MOVE_TRUMP_CARD; opponentMove = MOVE_SPITE;     pp = 3; config = GEN_4; }
+    PARAMETRIZE { playerMove = MOVE_TRUMP_CARD; opponentMove = MOVE_SPITE;     pp = 5; config = GEN_4; }
+    PARAMETRIZE { playerMove = MOVE_SCRATCH;    opponentMove = MOVE_WATER_GUN; pp = 6; config = GEN_4; }
+
+    PARAMETRIZE { playerMove = MOVE_TRUMP_CARD; opponentMove = MOVE_SPITE;     pp = 2; config = GEN_3; }
+    PARAMETRIZE { playerMove = MOVE_TRUMP_CARD; opponentMove = MOVE_SPITE;     pp = 3; config = GEN_3; }
+    PARAMETRIZE { playerMove = MOVE_SCRATCH;    opponentMove = MOVE_WATER_GUN; pp = 4; config = GEN_3; }
+
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { MovesWithPP({MOVE_TRUMP_CARD, pp}, {MOVE_SCRATCH, 20}); Speed(4); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_WATER_GUN, MOVE_SPITE); Speed(5); }
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        WITH_CONFIG(B_PP_REDUCED_BY_SPITE, config);
+    } WHEN {
+        TURN {
+            MOVE(player, playerMove);
+            EXPECT_MOVE(opponent, MOVE_WATER_GUN);
+        }
+        TURN {
+            MOVE(player, playerMove);
+            EXPECT_MOVE(opponent, opponentMove);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_WATER_GUN, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, playerMove, player);
+        ANIMATION(ANIM_TYPE_MOVE, opponentMove, opponent);
+
+        if (playerMove == MOVE_TRUMP_CARD) {
+            MESSAGE("Wobbuffet used Trump Card!");
+            NOT ANIMATION(ANIM_TYPE_MOVE, playerMove, player);
+            MESSAGE("But there was no PP left for the move!");
+        } else {
+            MESSAGE("Wobbuffet used Scratch!");
+            ANIMATION(ANIM_TYPE_MOVE, playerMove, player);
+        }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("Spite: AI will prioritise Spite over best damage move on a slower opponent to save itself")
+{
+    enum Move playerMove, opponentMove;
+    u32 config, pp;
+
+    PARAMETRIZE { playerMove = MOVE_DRAGON_RAGE; opponentMove = MOVE_SPITE;       pp = 3; config = GEN_4; }
+    PARAMETRIZE { playerMove = MOVE_DRAGON_RAGE; opponentMove = MOVE_SPITE;       pp = 5; config = GEN_4; }
+    PARAMETRIZE { playerMove = MOVE_DRAGON_RAGE; opponentMove = MOVE_DRAGON_RAGE; pp = 6; config = GEN_4; }
+    PARAMETRIZE { playerMove = MOVE_SONIC_BOOM;  opponentMove = MOVE_DRAGON_RAGE; pp = 5; config = GEN_4; }
+
+    PARAMETRIZE { playerMove = MOVE_DRAGON_RAGE; opponentMove = MOVE_SPITE;       pp = 2; config = GEN_3; }
+    PARAMETRIZE { playerMove = MOVE_DRAGON_RAGE; opponentMove = MOVE_SPITE;       pp = 3; config = GEN_3; }
+    PARAMETRIZE { playerMove = MOVE_DRAGON_RAGE; opponentMove = MOVE_DRAGON_RAGE; pp = 4; config = GEN_3; }
+    PARAMETRIZE { playerMove = MOVE_SONIC_BOOM;  opponentMove = MOVE_DRAGON_RAGE; pp = 4; config = GEN_3; }
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { MovesWithPP({MOVE_DRAGON_RAGE, pp}, {MOVE_SONIC_BOOM, 10}); Speed(4); HP(100); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_DRAGON_RAGE, MOVE_SPITE); Speed(5); HP(80); }
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        WITH_CONFIG(B_PP_REDUCED_BY_SPITE, config);
+    } WHEN {
+        TURN {
+            MOVE(player, playerMove);
+            EXPECT_MOVE(opponent, MOVE_DRAGON_RAGE);
+        }
+        TURN {
+            MOVE(player, playerMove);
+            EXPECT_MOVE(opponent, opponentMove);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_RAGE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, playerMove, player);
+        ANIMATION(ANIM_TYPE_MOVE, opponentMove, opponent);
+
+        if (playerMove == MOVE_DRAGON_RAGE && opponentMove == MOVE_SPITE) {
+            NOT ANIMATION(ANIM_TYPE_MOVE, playerMove, player);
+            MESSAGE("But there was no PP left for the move!");
+        } else {
+            ANIMATION(ANIM_TYPE_MOVE, playerMove, player);
         }
     }
 }

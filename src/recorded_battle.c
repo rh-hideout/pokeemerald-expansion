@@ -106,7 +106,7 @@ void RecordedBattle_SetTrainerInfo(void)
         gRngValue = gRecordedBattleRngSeed;
     }
 
-    if (gBattleTypeFlags & BATTLE_TYPE_LINK)
+    if (HasAnyBattleFlags(BATTLE_TYPE_LINK))
     {
         // Link recorded battle, record info for all trainers
         u8 linkPlayersCount;
@@ -217,7 +217,7 @@ void RecordedBattle_RecordAllBattlerData(u8 *src)
     u8 idx = 2;
     u8 size;
 
-    if (!(gBattleTypeFlags & BATTLE_TYPE_LINK))
+    if (!HasAnyBattleFlags(BATTLE_TYPE_LINK))
         return;
 
     for (i = 0; i < GetLinkPlayerCount(); i++)
@@ -226,7 +226,7 @@ void RecordedBattle_RecordAllBattlerData(u8 *src)
             return;
     }
 
-    if (!(gBattleTypeFlags & BATTLE_TYPE_IS_MASTER))
+    if (!HasAnyBattleFlags(BATTLE_TYPE_IS_MASTER))
     {
         for (size = *src; size != 0;)
         {
@@ -289,7 +289,7 @@ bool32 MoveRecordedBattleToSaveData(void)
     battleSave = AllocZeroed(sizeof(struct RecordedBattleSave));
     savSection = AllocZeroed(SECTOR_SIZE);
 
-    memcpy(battleSave->parties, gParties, sizeof(struct Pokemon[MAX_BATTLE_TRAINERS][PARTY_SIZE]));
+    memcpy(battleSave->parties, sSavedParties, sizeof(struct Pokemon[MAX_BATTLE_TRAINERS][PARTY_SIZE]));
 
     battleSave->playersGender = 0;
 
@@ -488,7 +488,7 @@ void SetPartiesFromRecordedSave(struct RecordedBattleSave *src)
     for (enum BattleTrainer trainer = B_TRAINER_PLAYER; trainer < MAX_BATTLE_TRAINERS; trainer++)
     {
         ZeroPartyMons(gParties[trainer]);
-        for (s32 i = 0; i < PARTY_SIZE; i++)
+        for (enum PartySlot i = 0; i < PARTY_SIZE; i++)
             gParties[trainer][i] = src->parties[trainer][i];
     }
 }
@@ -648,7 +648,7 @@ void RecordedBattle_CopyBattlerMoves(enum BattlerId battler)
 
     if (!IsOnPlayerSide(battler))
         return;
-    if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
+    if (HasAnyBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
         return;
     if (sRecordMode == B_RECORD_MODE_PLAYBACK)
         return;
@@ -665,7 +665,7 @@ void RecordedBattle_CheckMovesetChanges(u8 mode)
 {
     s32 j, k;
 
-    if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
+    if (HasAnyBattleFlags(BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
         return;
 
     for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
@@ -703,7 +703,7 @@ void RecordedBattle_CheckMovesetChanges(u8 mode)
                 if (sBattleRecords[battler][sBattlerRecordSizes[battler]] == ACTION_MOVE_CHANGE)
                 {
                     u8 ppBonuses[MAX_MON_MOVES];
-                    u8 moveSlots[MAX_MON_MOVES];
+                    enum MoveSlot moveSlots[MAX_MON_MOVES];
                     u8 mimickedMoveSlots[MAX_MON_MOVES];
                     struct ChooseMoveStruct movePP;
                     u8 ppBonusSet;
@@ -717,7 +717,7 @@ void RecordedBattle_CheckMovesetChanges(u8 mode)
 
                     for (j = 0; j < MAX_MON_MOVES; j++)
                     {
-                        moveSlots[j] = RecordedBattle_GetBattlerAction(RECORDED_BYTE, battler);
+                        moveSlots[j] = (enum MoveSlot)RecordedBattle_GetBattlerAction(RECORDED_BYTE, battler);
                         movePP.moves[j] = gBattleMons[battler].moves[moveSlots[j]];
                         movePP.currentPP[j] = gBattleMons[battler].pp[moveSlots[j]];
                         movePP.maxPP[j] = ppBonuses[moveSlots[j]];

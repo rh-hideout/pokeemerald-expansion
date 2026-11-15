@@ -36,6 +36,7 @@
 #include "party_menu.h"
 #include "pokeblock.h"
 #include "pokemon.h"
+#include "safari_zone.h"
 #include "script.h"
 #include "sound.h"
 #include "strings.h"
@@ -1094,6 +1095,11 @@ bool8 CanUseDigOrEscapeRopeOnCurMap(void)
     if (!CheckFollowerNPCFlag(FOLLOWER_NPC_FLAG_CAN_LEAVE_ROUTE))
         return FALSE;
 
+    if (GetSafariZoneFlag() && CannotEscapeSafari())
+    {
+        return FALSE;
+    }
+
     if (gMapHeader.allowEscaping)
         return TRUE;
     else
@@ -1186,7 +1192,7 @@ static bool32 SelectedMonHasVolatile(enum Item itemId)
 {
     if (gPartyMenu.slotId == 0)
         return IteamHealsMonVolatile(0, itemId);
-    else if (gBattleTypeFlags & (BATTLE_TYPE_DOUBLE | BATTLE_TYPE_MULTI) && gPartyMenu.slotId == 1)
+    else if (HasAnyBattleFlags(BATTLE_TYPE_DOUBLE | BATTLE_TYPE_MULTI) && gPartyMenu.slotId == 1)
         return IteamHealsMonVolatile(2, itemId);
     return FALSE;
 }
@@ -1216,7 +1222,7 @@ bool32 CannotSelectItemsInBattle(enum Item itemId, struct Pokemon *mon)
     switch (battleUsage)
     {
     case EFFECT_ITEM_ESCAPE:
-        if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
+        if (IsTrainerBattle())
             cannotUse = TRUE;
         break;
     case EFFECT_ITEM_THROW_BALL:
@@ -1283,7 +1289,7 @@ bool32 CannotUseItemsInBattle(enum Item itemId, struct Pokemon *mon, u32 slotId)
     case EFFECT_ITEM_SET_FOCUS_ENERGY:
         if (hp == 0 || slotId > 1)
             cannotUse = TRUE;
-        else if (gBattleMons[battlerTarget].volatiles.dragonCheer || gBattleMons[battlerTarget].volatiles.focusEnergy)
+        else if (gBattleMons[battlerTarget].volatiles.criticalHitBoost)
             cannotUse = TRUE;
         break;
     case EFFECT_ITEM_SET_MIST:
@@ -1371,7 +1377,7 @@ void ItemUseInBattle_BagMenu(u8 taskId)
     else
     {
         PlaySE(SE_SELECT);
-        if (!GetItemImportance(gSpecialVar_ItemId) && !(B_TRY_CATCH_TRAINER_BALL >= GEN_4 && (GetItemBattleUsage(gSpecialVar_ItemId) == EFFECT_ITEM_THROW_BALL) && (gBattleTypeFlags & BATTLE_TYPE_TRAINER)))
+        if (!GetItemImportance(gSpecialVar_ItemId) && !(B_TRY_CATCH_TRAINER_BALL >= GEN_4 && (GetItemBattleUsage(gSpecialVar_ItemId) == EFFECT_ITEM_THROW_BALL) && IsTrainerBattle()))
             RemoveUsedItem();
         ScheduleBgCopyTilemapToVram(2);
         if (CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE)
@@ -1567,9 +1573,7 @@ static void Task_PlayPokeFlute(u8 taskId)
 void ItemUseOutOfBattle_PokeFlute(u8 taskId)
 {
     bool32 wokeSomeoneUp = FALSE;
-    u32 i;
-
-    for (i = 0; i < CalculatePlayerPartyCount(); i++)
+    for (enum PartySlot i = PARTY_SLOT_0; i < CalculatePlayerPartyCount(); i++)
     {
         if (!ExecuteTableBasedItemEffect(&gParties[B_TRAINER_PLAYER][i], ITEM_AWAKENING, i, 0))
             wokeSomeoneUp = TRUE;

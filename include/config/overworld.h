@@ -13,6 +13,9 @@
 #define OW_DEFOG_FIELD_MOVE             FALSE      // If enabled, Defog can be used as a Field Move as seen in DPPt.
 #define OW_ROCK_CLIMB_FIELD_MOVE        FALSE      // If enabled, Rock Climb can be used as a Field Move as seen in DPPt.
 #define OW_CHOOSE_FROM_PC_AND_PARTY     TRUE       // If enabled, NPCs like move tutors or trainers asking for trade will let you pick a Pokémon from your PC or party instead of just your party
+#define OW_ROCK_SMASH_ITEMS             GEN_3      // From Gen4, using Rock Smash on rocks can yield items. From Gen6, using Rock Smash on rocks yields items with updated mechanics. Configure loot tables in src/data/rock_smash_items.h
+#define OW_ROCK_SMASH_ITEMS_USE_DEFAULT_CHANCE    10   // Only used when OW_ROCK_SMASH_ITEMS is set to GEN_4, assume the default value for rock smash item chance (0) means this number instead. Setting this config to 0 means no rock will give items unless given an explicit item chance
+
 
 // Item Obtain Description Box
 #define OW_ITEM_DESCRIPTIONS_OFF        0   // never show descriptions
@@ -47,12 +50,17 @@
 #define OW_BERRY_COLORS                GEN_6_ORAS // If set to GEN_6_XY or GEN_6_ORAS, the Chesto, Wiki, Bluk, Cornn, Pamtre, Belue, Ganlon, Watmel, Qualot, Spelon, Kasib, Colbur, Lansat, Kee, Payapa, Roseli, Liechi, Enigma, and Maranga will use their colors from the stated game. Other values are illegal.
 
 // Overworld Pokémon
+#define OGC_NONE  0
+#define OGC_FAST  1
+#define OGC_SMALL 2
+
 #define OW_POKEMON_OBJECT_EVENTS       TRUE       // Adds Object Event fields for every species. Can be used for NPCs using the OBJ_EVENT_GFX_SPECIES macro (eg. OBJ_EVENT_GFX_SPECIES(BULBASAUR))
 #define OW_SUBSTITUTE_PLACEHOLDER      TRUE       // Use a substitute OW for Pokémon that are missing overworld sprites
 #define OW_LARGE_OW_SUPPORT            TRUE       // If TRUE, adds a small amount of overhead to OW code so that large (48x48, 64x64) OWs will display correctly under bridges, etc.
 #define OW_PKMN_OBJECTS_SHARE_PALETTES FALSE      // [WIP!! NOT ALL PALETTES HAVE BEEN ADJUSTED FOR THIS!!] If TRUE, follower palettes are taken from battle sprites.
-#define OW_GFX_COMPRESS                TRUE       // Adds support for compressed OW graphics, (Also compresses Pokémon follower graphics).
-                                                  // IMPORTANT: Gfx are loaded into VRAM to avoid continous decompression. If you require more VRAM or want to use a lot of overworld Pokémon at once, you should disable this config.
+#define OW_GFX_COMPRESS                OGC_FAST   // Adds support for compressed OW graphics, (Also compresses Pokémon follower graphics).
+                                                  // IMPORTANT: Gfx compressed with  OGC_SMALL are loaded into VRAM to avoid continous decompression.
+                                                  // If you require more VRAM or want to use a lot of overworld Pokémon at once, you should set this config to OGC_NONE or OGC_FAST.
                                                   // Compressed gfx are incompatible with non-power-of-two sprite sizes:
                                                   // (You should not use 48x48 sprites/tables for compressed gfx)
                                                   // 16x32, 32x32, 64x64 etc are fine
@@ -165,5 +173,11 @@
 
 // Script Config
 #define OW_CHECK_FOR_TOTAL_EVS TRUE        // If FALSE, givemon and createmon will not check for total EVs when generating a new Pokemon
+
+// Safari Config
+#define OW_ALLOW_SAFARI_SAVING FALSE    // If TRUE, Safari data will be added to the savefile and you will be allowed to save during safaris
+#define OW_DISABLE_POKEFEEDERS IS_FRLG  // Make pokefeeders unusable but free 160 bytes of EWRAM (or save data if OW_ALLOW_SAFARI_SAVING if TRUE), TRUE by default for FRLG because there is no pokefeeders in that game
+#define OW_ALLOW_CRITICAL_CAPTURE_SAFARI TRUE // If TRUE, critical capture can occur during safaris (you still need the general critical capture config B_CRITICAL_CAPTURE to be enabled)
+#define OW_POKEFEEDER_FORCE_NATURE_CHANCE 80 // Percentage chance for an active pokefeeder in range to affect the nature of the encountered Pokemon
 
 #endif // GUARD_CONFIG_OVERWORLD_H

@@ -44,6 +44,7 @@
 #define AI_FLAG_ABILITY_OMNISCIENCE         AI_FLAG(34)  // AI knows the player's ability
 #define AI_FLAG_ITEM_OMNISCIENCE            AI_FLAG(35)  // AI knows the player's item
 #define AI_FLAG_MOVE_OMNISCIENCE            AI_FLAG(36)  // AI knows the player's moves
+#define AI_FLAG_DEEP_PARTNER_THINKING       AI_FLAG(37)  // AI will consider its partner's highest scoring moves as determined by looping partner scoring with each of its own moves assumed to be clicked (high impact on AI thinking time).
 
 // The following options are enough to have a basic/smart trainer. Any other addtion could make the trainer worse/better depending on the flag
 #define AI_FLAG_BASIC_TRAINER         (AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY)

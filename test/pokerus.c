@@ -201,7 +201,7 @@ TEST("(Pokerus) Test IsPokerusInParty general behavior")
     u32 enabled = 0;
     u32 partyMember = 0;
     u32 pokerus = 0;
-    for (u32 i = 0; i < PARTY_SIZE; i++)
+    for (enum PartySlot i = 0; i < PARTY_SIZE; i++)
     {
         for (u32 j = 0; j <= MAX_u8; j++)
         {
@@ -214,7 +214,7 @@ TEST("(Pokerus) Test IsPokerusInParty general behavior")
     SetConfig(CONFIG_POKERUS_ENABLED, enabled);
 
     ZeroPlayerPartyMons();
-    for (u32 i = 0; i < PARTY_SIZE; i++)
+    for (enum PartySlot i = 0; i < PARTY_SIZE; i++)
     {
         RUN_OVERWORLD_SCRIPT(
             givemon SPECIES_PIKACHU, 100
@@ -233,7 +233,7 @@ TEST("(Pokerus) Test CheckMonPokerus general behavior")
 {
     u32 enabled = 0;
     u32 pokerus = 0;
-    for (u32 i = 0; i < PARTY_SIZE; i++)
+    for (enum PartySlot i = 0; i < PARTY_SIZE; i++)
     {
         for (u32 j = 0; j <= MAX_u8; j++)
         {
@@ -262,7 +262,7 @@ TEST("(Pokerus) Test CheckMonHasHadPokerus general behavior")
 {
     u32 enabled = 0;
     u32 pokerus = 0;
-    for (u32 i = 0; i < PARTY_SIZE; i++)
+    for (enum PartySlot i = 0; i < PARTY_SIZE; i++)
     {
         for (u32 j = 1; j <= MAX_u8; j++)
         {
@@ -342,7 +342,7 @@ TEST("(Pokerus) Test PartySpreadPokerus general behavior")
     {
         if ((i & 0x0F) == 0)
             continue;
-        for (u32 k = 0; k < PARTY_SIZE; k++)
+        for (enum PartySlot k = 0; k < PARTY_SIZE; k++)
         {
             PARAMETRIZE {pokerus = i; partyMember = k;}
         }
@@ -352,7 +352,7 @@ TEST("(Pokerus) Test PartySpreadPokerus general behavior")
     SetConfig(CONFIG_POKERUS_SPREAD_ADJACENCY, GEN_3);
 
     ZeroPlayerPartyMons();
-    for (u32 i = 0; i < PARTY_SIZE; i++)
+    for (enum PartySlot i = 0; i < PARTY_SIZE; i++)
     {
         RUN_OVERWORLD_SCRIPT(
             givemon SPECIES_PIKACHU, 100
@@ -367,7 +367,7 @@ TEST("(Pokerus) Test PartySpreadPokerus general behavior")
     if (partyMember == 0)
     {
         EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][1], MON_DATA_POKERUS), pokerus);
-        for (u32 i = 2; i < PARTY_SIZE; i++)
+        for (enum PartySlot i = 2; i < PARTY_SIZE; i++)
             EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_POKERUS), 0);
 
     }
@@ -379,7 +379,7 @@ TEST("(Pokerus) Test PartySpreadPokerus general behavior")
     }
     else
     {
-        for (u32 i = 0; i < PARTY_SIZE; i++)
+        for (enum PartySlot i = 0; i < PARTY_SIZE; i++)
         {
             if ((i < (partyMember - 1)) || (i > (partyMember + 1)))
                 EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_POKERUS), 0);
@@ -397,7 +397,7 @@ TEST("(Pokerus) Test PartySpreadPokerus: Pokerus can spread to and from eggs")
     {
         if ((i & 0x0F) == 0)
             continue;
-        for (u32 k = 0; k < PARTY_SIZE; k++)
+        for (enum PartySlot k = 0; k < PARTY_SIZE; k++)
         {
             PARAMETRIZE {pokerus = i; partyMember = k;}
         }
@@ -407,7 +407,7 @@ TEST("(Pokerus) Test PartySpreadPokerus: Pokerus can spread to and from eggs")
     SetConfig(CONFIG_POKERUS_SPREAD_ADJACENCY, GEN_3);
 
     ZeroPlayerPartyMons();
-    for (u32 i = 0; i < PARTY_SIZE; i++)
+    for (enum PartySlot i = 0; i < PARTY_SIZE; i++)
     {
         RUN_OVERWORLD_SCRIPT(
             givemon SPECIES_PIKACHU, 100
@@ -424,7 +424,7 @@ TEST("(Pokerus) Test PartySpreadPokerus: Pokerus can spread to and from eggs")
     if (partyMember == 0)
     {
         EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][1], MON_DATA_POKERUS), pokerus);
-        for (u32 i = 2; i < PARTY_SIZE; i++)
+        for (enum PartySlot i = 2; i < PARTY_SIZE; i++)
             EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_POKERUS), 0);
 
     }
@@ -436,7 +436,7 @@ TEST("(Pokerus) Test PartySpreadPokerus: Pokerus can spread to and from eggs")
     }
     else
     {
-        for (u32 i = 0; i < PARTY_SIZE; i++)
+        for (enum PartySlot i = 0; i < PARTY_SIZE; i++)
         {
             if ((i < (partyMember - 1)) || (i > (partyMember + 1)))
                 EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_POKERUS), 0);
@@ -454,7 +454,7 @@ TEST("(Pokerus) Test PartySpreadPokerus: do not spread inactive pokerus")
     {
         if (i & 0x0F)
             continue;
-        for (u32 k = 0; k < PARTY_SIZE; k++)
+        for (enum PartySlot k = 0; k < PARTY_SIZE; k++)
         {
             PARAMETRIZE { pokerus = i; partyMember = k; }
         }
@@ -462,7 +462,7 @@ TEST("(Pokerus) Test PartySpreadPokerus: do not spread inactive pokerus")
     SetConfig(CONFIG_POKERUS_ENABLED, TRUE);
 
     ZeroPlayerPartyMons();
-    for (u32 i = 0; i < PARTY_SIZE; i++)
+    for (enum PartySlot i = 0; i < PARTY_SIZE; i++)
     {
         RUN_OVERWORLD_SCRIPT(
             givemon SPECIES_PIKACHU, 100
@@ -473,7 +473,7 @@ TEST("(Pokerus) Test PartySpreadPokerus: do not spread inactive pokerus")
     SET_RNG(RNG_POKERUS_SPREAD, 0);
 
     EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][partyMember], MON_DATA_POKERUS), pokerus);
-    for (u32 i = 0; i < PARTY_SIZE; i++)
+    for (enum PartySlot i = 0; i < PARTY_SIZE; i++)
     {
         if (i != partyMember)
             EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_POKERUS), 0);
@@ -487,7 +487,7 @@ TEST("(Pokerus) Test PartySpreadPokerus: do not spread if POKERUS_ENABLED is fal
     u32 pokerus = 0;
     for (u32 i = 0; i <= MAX_u8; i++)
     {
-        for (u32 k = 0; k < PARTY_SIZE; k++)
+        for (enum PartySlot k = 0; k < PARTY_SIZE; k++)
         {
             PARAMETRIZE { pokerus = i; partyMember = k; }
         }
@@ -495,7 +495,7 @@ TEST("(Pokerus) Test PartySpreadPokerus: do not spread if POKERUS_ENABLED is fal
     SetConfig(CONFIG_POKERUS_ENABLED, FALSE);
 
     ZeroPlayerPartyMons();
-    for (u32 i = 0; i < PARTY_SIZE; i++)
+    for (enum PartySlot i = 0; i < PARTY_SIZE; i++)
     {
         RUN_OVERWORLD_SCRIPT(
             givemon SPECIES_PIKACHU, 100
@@ -507,7 +507,7 @@ TEST("(Pokerus) Test PartySpreadPokerus: do not spread if POKERUS_ENABLED is fal
     PartySpreadPokerus();
 
     EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][partyMember], MON_DATA_POKERUS), pokerus);
-    for (u32 i = 0; i < PARTY_SIZE; i++)
+    for (enum PartySlot i = 0; i < PARTY_SIZE; i++)
     {
         if (i != partyMember)
             EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_POKERUS), 0);
@@ -583,7 +583,7 @@ TEST("(Pokerus) Test PartySpreadPokerus when POKERUS_SPREAD_DAYS_LEFT is set to 
     {
         for (u32 j = 1; j < 16; j++)
         {
-            for (u32 k = 0; k < PARTY_SIZE; k++)
+            for (enum PartySlot k = 0; k < PARTY_SIZE; k++)
             {
                 PARAMETRIZE {strain = i; daysLeft = j; partyMember = k;}
             }
@@ -594,7 +594,7 @@ TEST("(Pokerus) Test PartySpreadPokerus when POKERUS_SPREAD_DAYS_LEFT is set to 
     SetConfig(CONFIG_POKERUS_SPREAD_ADJACENCY, GEN_3);
 
     ZeroPlayerPartyMons();
-    for (u32 i = 0; i < PARTY_SIZE; i++)
+    for (enum PartySlot i = 0; i < PARTY_SIZE; i++)
     {
         RUN_OVERWORLD_SCRIPT(
             givemon SPECIES_PIKACHU, 100
@@ -612,7 +612,7 @@ TEST("(Pokerus) Test PartySpreadPokerus when POKERUS_SPREAD_DAYS_LEFT is set to 
     {
         EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][1], MON_DATA_POKERUS_STRAIN), strain);
         EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][1], MON_DATA_POKERUS_DAYS_LEFT), GetDaysLeftBasedOnStrain(strain));
-        for (u32 i = 2; i < PARTY_SIZE; i++)
+        for (enum PartySlot i = 2; i < PARTY_SIZE; i++)
             EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_POKERUS), 0);
 
     }
@@ -625,7 +625,7 @@ TEST("(Pokerus) Test PartySpreadPokerus when POKERUS_SPREAD_DAYS_LEFT is set to 
     }
     else
     {
-        for (u32 i = 0; i < PARTY_SIZE; i++)
+        for (enum PartySlot i = 0; i < PARTY_SIZE; i++)
         {
             if ((i < (partyMember - 1)) || (i > (partyMember + 1)))
                 EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_POKERUS), 0);
@@ -647,7 +647,7 @@ TEST("(Pokerus) Test PartySpreadPokerus using gen2 adjacency")
     {
         if ((i & 0x0F) == 0)
             continue;
-        for (u32 k = 0; k < PARTY_SIZE; k++)
+        for (enum PartySlot k = 0; k < PARTY_SIZE; k++)
         {
             PARAMETRIZE { pokerus = i; partyMember = k; spreadUp = TRUE; }
             PARAMETRIZE { pokerus = i; partyMember = k; spreadUp = FALSE; }
@@ -658,7 +658,7 @@ TEST("(Pokerus) Test PartySpreadPokerus using gen2 adjacency")
     SetConfig(CONFIG_POKERUS_SPREAD_ADJACENCY, GEN_2);
 
     ZeroPlayerPartyMons();
-    for (u32 i = 0; i < PARTY_SIZE; i++)
+    for (enum PartySlot i = 0; i < PARTY_SIZE; i++)
     {
         RUN_OVERWORLD_SCRIPT(
             givemon SPECIES_PIKACHU, 100
@@ -679,7 +679,7 @@ TEST("(Pokerus) Test PartySpreadPokerus using gen2 adjacency")
             EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][1], MON_DATA_POKERUS), pokerus);
         else
             EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][1], MON_DATA_POKERUS), 0);
-        for (u32 i = 2; i < PARTY_SIZE; i++)
+        for (enum PartySlot i = 2; i < PARTY_SIZE; i++)
             EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_POKERUS), 0);
 
     }
@@ -691,7 +691,7 @@ TEST("(Pokerus) Test PartySpreadPokerus using gen2 adjacency")
     }
     else
     {
-        for (u32 i = 0; i < PARTY_SIZE; i++)
+        for (enum PartySlot i = 0; i < PARTY_SIZE; i++)
         {
             if (!spreadUp && (i == (partyMember - 1)))
                 EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_POKERUS), pokerus);

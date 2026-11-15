@@ -125,7 +125,7 @@ AI_SINGLE_BATTLE_TEST("Trainer Slide: Singles: Defender Takes First Down")
 {
     GIVEN {
         FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);
-        VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_DEFENDER_TAKES_FIRST_DOWN);
+        VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_DEFENDER_LOSES_FIRST_MON);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WYNAUT) { Moves(MOVE_CELEBRATE); }
@@ -141,7 +141,7 @@ AI_SINGLE_BATTLE_TEST("Trainer Slide: Singles: Attacker Lands First Down")
 {
     GIVEN {
         FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);
-        VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_ATTACKER_LANDS_FIRST_DOWN);
+        VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_ATTACKER_FAINTS_FIRST_MON);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
@@ -157,7 +157,7 @@ AI_SINGLE_BATTLE_TEST("Trainer Slide: Singles: Opponent Mon Unaffected")
 {
     GIVEN {
         FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);
-        VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_OPPONENT_MON_UNAFFECTED);
+        VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_ATTACKER_LANDS_FIRST_INEFFECTIVE);
         WITH_CONFIG(B_SHEER_COLD_IMMUNITY, GEN_7);
         ASSUME(GetSpeciesType(SPECIES_GLALIE, 0) == TYPE_ICE);
         PLAYER(SPECIES_GLALIE);
@@ -174,7 +174,7 @@ AI_SINGLE_BATTLE_TEST("Trainer Slide: Singles: Self Mon Unaffected")
 {
     GIVEN {
         FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);
-        VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_SELF_MON_UNAFFECTED);
+        VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_DEFENDER_TAKES_FIRST_INEFFECTIVE);
         WITH_CONFIG(B_SHEER_COLD_IMMUNITY, GEN_7);
         ASSUME(GetSpeciesType(SPECIES_GLALIE, 0) == TYPE_ICE);
         PLAYER(SPECIES_WYNAUT);
@@ -286,13 +286,13 @@ AI_SINGLE_BATTLE_TEST("Trainer Slide: Singles: Attacker Mega Evolution")
 {
     GIVEN {
         FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);
-        VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_ATTACKER_MEGA_EVOLUTION);
+        VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_SELF_MEGA_EVOLUTION);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_LOPUNNY) { Item(ITEM_LOPUNNITE); }
     } WHEN {
         TURN { EXPECT_MOVE(opponent, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
     } SCENE {
-        MESSAGE("Trainer A: This message plays before the attacker activates the Mega Evolution gimmick.{PAUSE_UNTIL_PRESS}");
+        MESSAGE("Trainer A: This message plays before the battler activates the Mega Evolution gimmick.{PAUSE_UNTIL_PRESS}");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, opponent);
         MESSAGE("The opposing Lopunny has Mega Evolved into Mega Lopunny!");
     }
@@ -302,13 +302,13 @@ AI_SINGLE_BATTLE_TEST("Trainer Slide: Singles: Attacker Z Move")
 {
     GIVEN {
         FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);
-        VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_ATTACKER_Z_MOVE);
+        VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_SELF_Z_MOVE);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
     } WHEN {
         TURN { EXPECT_MOVE(opponent, MOVE_QUICK_ATTACK, gimmick: GIMMICK_Z_MOVE); }
     } SCENE {
-        MESSAGE("Trainer A: This message plays before the attacker activates the Z-Move gimmick.{PAUSE_UNTIL_PRESS}");
+        MESSAGE("Trainer A: This message plays before the battler activates the Z-Move gimmick.{PAUSE_UNTIL_PRESS}");
         MESSAGE("The opposing Wobbuffet surrounded itself with its Z-Power!");
         MESSAGE("The opposing Wobbuffet unleashes its full-force Z-Move!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BREAKNECK_BLITZ, opponent);
@@ -319,13 +319,13 @@ AI_SINGLE_BATTLE_TEST("Trainer Slide: Singles: Attacker Dynamax")
 {
     GIVEN {
         FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);
-        VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_ATTACKER_DYNAMAX);
+        VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_SELF_DYNAMAX);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
     } WHEN {
             TURN { EXPECT_MOVE(opponent, MOVE_CELEBRATE, gimmick: GIMMICK_DYNAMAX); }
     } SCENE {
-        MESSAGE("Trainer A: This message plays before the attacker activates the Dynamax gimmick.{PAUSE_UNTIL_PRESS}");
+        MESSAGE("Trainer A: This message plays before the battler activates the Dynamax gimmick.{PAUSE_UNTIL_PRESS}");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_DYNAMAX_GROWTH, opponent);
     }
 }
@@ -334,13 +334,13 @@ AI_SINGLE_BATTLE_TEST("Trainer Slide: Singles: Attacker Tera")
 {
     GIVEN {
         FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);
-        VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_ATTACKER_TERA);
+        VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_SELF_TERA);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
     } WHEN {
             TURN { EXPECT_MOVE(opponent, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
     } SCENE {
-        MESSAGE("Trainer A: This message plays before the attacker activates the Tera gimmick.{PAUSE_UNTIL_PRESS}");
+        MESSAGE("Trainer A: This message plays before the battler activates the Tera gimmick.{PAUSE_UNTIL_PRESS}");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_CHARGE, opponent);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_ACTIVATE, opponent);
     }
@@ -578,7 +578,7 @@ AI_DOUBLE_BATTLE_TEST("Trainer Slide: Doubles: Defender Takes First Down")
 {
     GIVEN {
         FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);
-        VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_DEFENDER_TAKES_FIRST_DOWN);
+        VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_DEFENDER_LOSES_FIRST_MON);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -599,7 +599,7 @@ AI_DOUBLE_BATTLE_TEST("Trainer Slide: Doubles: Attacker Lands First Down")
 {
     GIVEN {
         FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);
-        VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_ATTACKER_LANDS_FIRST_DOWN);
+        VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_ATTACKER_FAINTS_FIRST_MON);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
         PLAYER(SPECIES_WYNAUT);
@@ -620,7 +620,7 @@ AI_DOUBLE_BATTLE_TEST("Trainer Slide: Doubles: Self Mon Unaffected")
 {
     GIVEN {
         FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);
-        VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_SELF_MON_UNAFFECTED);
+        VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_DEFENDER_TAKES_FIRST_INEFFECTIVE);
         WITH_CONFIG(B_SHEER_COLD_IMMUNITY, GEN_7);
         ASSUME(GetSpeciesType(SPECIES_GLALIE, 0) == TYPE_ICE);
         PLAYER(SPECIES_WYNAUT);
@@ -643,7 +643,7 @@ AI_DOUBLE_BATTLE_TEST("Trainer Slide: Doubles: Opponent Mon Unaffected")
 {
     GIVEN {
         FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);
-        VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_OPPONENT_MON_UNAFFECTED);
+        VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_ATTACKER_LANDS_FIRST_INEFFECTIVE);
         WITH_CONFIG(B_SHEER_COLD_IMMUNITY, GEN_7);
         ASSUME(GetSpeciesType(SPECIES_GLALIE, 0) == TYPE_ICE);
         PLAYER(SPECIES_GLALIE);
@@ -795,7 +795,7 @@ AI_DOUBLE_BATTLE_TEST("Trainer Slide: Doubles: Attacker Mega Evolution")
 {
     GIVEN {
         FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);
-        VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_ATTACKER_MEGA_EVOLUTION);
+        VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_SELF_MEGA_EVOLUTION);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_LOPUNNY) { Item(ITEM_LOPUNNITE); };
@@ -803,9 +803,9 @@ AI_DOUBLE_BATTLE_TEST("Trainer Slide: Doubles: Attacker Mega Evolution")
     } WHEN {
         TURN { EXPECT_MOVE(opponentLeft, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
     } SCENE {
-        MESSAGE("Trainer A: This message plays before the attacker activates the Mega Evolution gimmick.{PAUSE_UNTIL_PRESS}");
+        MESSAGE("Trainer A: This message plays before the battler activates the Mega Evolution gimmick.{PAUSE_UNTIL_PRESS}");
         NONE_OF {
-            MESSAGE("Trainer A: This message plays before the attacker activates the Mega Evolution gimmick.{PAUSE_UNTIL_PRESS}");
+            MESSAGE("Trainer A: This message plays before the battler activates the Mega Evolution gimmick.{PAUSE_UNTIL_PRESS}");
         }
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, opponentLeft);
         MESSAGE("The opposing Lopunny has Mega Evolved into Mega Lopunny!");
@@ -816,7 +816,7 @@ AI_DOUBLE_BATTLE_TEST("Trainer Slide: Doubles: Attacker Z Move")
 {
     GIVEN {
         FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);
-        VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_ATTACKER_Z_MOVE);
+        VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_SELF_Z_MOVE);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
@@ -824,9 +824,9 @@ AI_DOUBLE_BATTLE_TEST("Trainer Slide: Doubles: Attacker Z Move")
     } WHEN {
         TURN { EXPECT_MOVE(opponentLeft, MOVE_QUICK_ATTACK, gimmick: GIMMICK_Z_MOVE); }
     } SCENE {
-        MESSAGE("Trainer A: This message plays before the attacker activates the Z-Move gimmick.{PAUSE_UNTIL_PRESS}");
+        MESSAGE("Trainer A: This message plays before the battler activates the Z-Move gimmick.{PAUSE_UNTIL_PRESS}");
         NONE_OF {
-            MESSAGE("Trainer A: This message plays before the attacker activates the Z-Move gimmick.{PAUSE_UNTIL_PRESS}");
+            MESSAGE("Trainer A: This message plays before the battler activates the Z-Move gimmick.{PAUSE_UNTIL_PRESS}");
         }
         MESSAGE("The opposing Wobbuffet surrounded itself with its Z-Power!");
         MESSAGE("The opposing Wobbuffet unleashes its full-force Z-Move!");
@@ -838,7 +838,7 @@ AI_DOUBLE_BATTLE_TEST("Trainer Slide: Doubles: Attacker Dynamax")
 {
     GIVEN {
         FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);
-        VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_ATTACKER_DYNAMAX);
+        VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_SELF_DYNAMAX);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
@@ -846,9 +846,9 @@ AI_DOUBLE_BATTLE_TEST("Trainer Slide: Doubles: Attacker Dynamax")
     } WHEN {
             TURN { EXPECT_MOVE(opponentLeft, MOVE_CELEBRATE, gimmick: GIMMICK_DYNAMAX); }
     } SCENE {
-        MESSAGE("Trainer A: This message plays before the attacker activates the Dynamax gimmick.{PAUSE_UNTIL_PRESS}");
+        MESSAGE("Trainer A: This message plays before the battler activates the Dynamax gimmick.{PAUSE_UNTIL_PRESS}");
         NONE_OF {
-            MESSAGE("Trainer A: This message plays before the attacker activates the Dynamax gimmick.{PAUSE_UNTIL_PRESS}");
+            MESSAGE("Trainer A: This message plays before the battler activates the Dynamax gimmick.{PAUSE_UNTIL_PRESS}");
         }
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_DYNAMAX_GROWTH, opponentLeft);
     }
@@ -858,7 +858,7 @@ AI_DOUBLE_BATTLE_TEST("Trainer Slide: Doubles: Attacker Tera")
 {
     GIVEN {
         FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);
-        VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_ATTACKER_TERA);
+        VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_SELF_TERA);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
@@ -866,9 +866,9 @@ AI_DOUBLE_BATTLE_TEST("Trainer Slide: Doubles: Attacker Tera")
     } WHEN {
             TURN { EXPECT_MOVE(opponentLeft, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
     } SCENE {
-        MESSAGE("Trainer A: This message plays before the attacker activates the Tera gimmick.{PAUSE_UNTIL_PRESS}");
+        MESSAGE("Trainer A: This message plays before the battler activates the Tera gimmick.{PAUSE_UNTIL_PRESS}");
         NONE_OF {
-            MESSAGE("Trainer A: This message plays before the attacker activates the Tera gimmick.{PAUSE_UNTIL_PRESS}");
+            MESSAGE("Trainer A: This message plays before the battler activates the Tera gimmick.{PAUSE_UNTIL_PRESS}");
         }
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_CHARGE, opponentLeft);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_ACTIVATE, opponentLeft);
@@ -1163,7 +1163,7 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Defender Takes First Down")
 {
     GIVEN {
         FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);
-        VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_DEFENDER_TAKES_FIRST_DOWN);
+        VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_DEFENDER_LOSES_FIRST_MON);
         PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
         PARTNER(SPECIES_RATICATE) { Speed(2); }
         PARTNER(SPECIES_RATTATA) { Speed(2); }
@@ -1191,7 +1191,7 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Attacker Lands First Down")
 {
     GIVEN {
         FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);
-        VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_ATTACKER_LANDS_FIRST_DOWN);
+        VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_ATTACKER_FAINTS_FIRST_MON);
         PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
         PLAYER(SPECIES_WYNAUT) { Speed(4); }
         PARTNER(SPECIES_RATICATE) { Speed(3); }
@@ -1221,7 +1221,7 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Self Mon Unaffected")
 {
     GIVEN {
         FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);
-        VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_SELF_MON_UNAFFECTED);
+        VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_DEFENDER_TAKES_FIRST_INEFFECTIVE);
         PLAYER(SPECIES_GASTLY);
         PARTNER(SPECIES_GASTLY);
         OPPONENT_A(SPECIES_GENGAR);
@@ -1250,7 +1250,7 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Opponent Mon Unaffected")
 {
     GIVEN {
         FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);
-        VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_OPPONENT_MON_UNAFFECTED);
+        VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_ATTACKER_LANDS_FIRST_INEFFECTIVE);
         PLAYER(SPECIES_GASTLY);
         PARTNER(SPECIES_GASTLY);
         OPPONENT_A(SPECIES_GENGAR);
@@ -1455,7 +1455,7 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Attacker Mega Evolution")
 {
     GIVEN {
         FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);
-        VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_ATTACKER_MEGA_EVOLUTION);
+        VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_SELF_MEGA_EVOLUTION);
         PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
         PARTNER(SPECIES_AERODACTYL) { Speed(2); Item(ITEM_AERODACTYLITE); }
         OPPONENT_A(SPECIES_LOPUNNY) { Speed(3); Item(ITEM_LOPUNNITE); }
@@ -1465,15 +1465,15 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Attacker Mega Evolution")
             MOVE(playerRight, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA);
             EXPECT_MOVE(opponentRight, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
     } SCENE {
-        MESSAGE("Trainer A: This message plays before the attacker activates the Mega Evolution gimmick.{PAUSE_UNTIL_PRESS}");
+        MESSAGE("Trainer A: This message plays before the battler activates the Mega Evolution gimmick.{PAUSE_UNTIL_PRESS}");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, opponentLeft);
         MESSAGE("The opposing Lopunny has Mega Evolved into Mega Lopunny!");
 
-        MESSAGE("Trainer Partner: This message plays before the attacker activates the Mega Evolution gimmick.{PAUSE_UNTIL_PRESS}");
+        MESSAGE("Trainer Partner: This message plays before the battler activates the Mega Evolution gimmick.{PAUSE_UNTIL_PRESS}");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, playerRight);
         MESSAGE("Aerodactyl has Mega Evolved into Mega Aerodactyl!");
 
-        MESSAGE("Trainer B: This message plays before the attacker activates the Mega Evolution gimmick.{PAUSE_UNTIL_PRESS}");
+        MESSAGE("Trainer B: This message plays before the battler activates the Mega Evolution gimmick.{PAUSE_UNTIL_PRESS}");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, opponentRight);
         MESSAGE("The opposing Medicham has Mega Evolved into Mega Medicham!");
     }
@@ -1483,7 +1483,7 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Attacker Z Move")
 {
     GIVEN {
         FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);
-        VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_ATTACKER_Z_MOVE);
+        VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_SELF_Z_MOVE);
         TIE_BREAK_TARGET(TARGET_TIE_LO, 0);
         PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
         PARTNER(SPECIES_WOBBUFFET) { Speed(2); Item(ITEM_NORMALIUM_Z); }
@@ -1496,17 +1496,17 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Attacker Z Move")
             EXPECT_MOVE(opponentRight, MOVE_QUICK_ATTACK, gimmick: GIMMICK_Z_MOVE);
         }
     } SCENE {
-        MESSAGE("Trainer A: This message plays before the attacker activates the Z-Move gimmick.{PAUSE_UNTIL_PRESS}");
+        MESSAGE("Trainer A: This message plays before the battler activates the Z-Move gimmick.{PAUSE_UNTIL_PRESS}");
         MESSAGE("The opposing Wobbuffet surrounded itself with its Z-Power!");
         MESSAGE("The opposing Wobbuffet unleashes its full-force Z-Move!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BREAKNECK_BLITZ, opponentLeft);
 
-        MESSAGE("Trainer Partner: This message plays before the attacker activates the Z-Move gimmick.{PAUSE_UNTIL_PRESS}");
+        MESSAGE("Trainer Partner: This message plays before the battler activates the Z-Move gimmick.{PAUSE_UNTIL_PRESS}");
         MESSAGE("Wobbuffet surrounded itself with its Z-Power!");
         MESSAGE("Wobbuffet unleashes its full-force Z-Move!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BREAKNECK_BLITZ, playerRight);
 
-        MESSAGE("Trainer B: This message plays before the attacker activates the Z-Move gimmick.{PAUSE_UNTIL_PRESS}");
+        MESSAGE("Trainer B: This message plays before the battler activates the Z-Move gimmick.{PAUSE_UNTIL_PRESS}");
         MESSAGE("The opposing Wobbuffet surrounded itself with its Z-Power!");
         MESSAGE("The opposing Wobbuffet unleashes its full-force Z-Move!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BREAKNECK_BLITZ, opponentRight);
@@ -1522,7 +1522,7 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Attacker Dynamax")
 
     GIVEN {
         FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);
-        VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_ATTACKER_DYNAMAX);
+        VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_SELF_DYNAMAX);
         PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
         PARTNER(SPECIES_WOBBUFFET) { Speed(2); DynamaxLevel(10); }
         OPPONENT_A(SPECIES_WOBBUFFET) { Speed(3); DynamaxLevel(dynamaxLevelA); }
@@ -1544,14 +1544,14 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Attacker Dynamax")
     } SCENE {
         if (dynamaxLevelA == 10)
         {
-            MESSAGE("Trainer A: This message plays before the attacker activates the Dynamax gimmick.{PAUSE_UNTIL_PRESS}");
+            MESSAGE("Trainer A: This message plays before the battler activates the Dynamax gimmick.{PAUSE_UNTIL_PRESS}");
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_DYNAMAX_GROWTH, opponentLeft);
         }
-        MESSAGE("Trainer Partner: This message plays before the attacker activates the Dynamax gimmick.{PAUSE_UNTIL_PRESS}");
+        MESSAGE("Trainer Partner: This message plays before the battler activates the Dynamax gimmick.{PAUSE_UNTIL_PRESS}");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_DYNAMAX_GROWTH, playerRight);
         if (dynamaxLevelB == 10)
         {
-            MESSAGE("Trainer B: This message plays before the attacker activates the Dynamax gimmick.{PAUSE_UNTIL_PRESS}");
+            MESSAGE("Trainer B: This message plays before the battler activates the Dynamax gimmick.{PAUSE_UNTIL_PRESS}");
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_DYNAMAX_GROWTH, opponentRight);
         }
     }
@@ -1561,7 +1561,7 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Attacker Tera")
 {
     GIVEN {
         FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);
-        VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_ATTACKER_TERA);
+        VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_SELF_TERA);
         PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
         PARTNER(SPECIES_WOBBUFFET) { Speed(2); }
         OPPONENT_A(SPECIES_WOBBUFFET) { Speed(3); Moves(MOVE_CELEBRATE); }
@@ -1573,15 +1573,15 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Attacker Tera")
                 EXPECT_MOVE(opponentRight, MOVE_CELEBRATE, gimmick: GIMMICK_TERA);
             }
     } SCENE {
-        MESSAGE("Trainer A: This message plays before the attacker activates the Tera gimmick.{PAUSE_UNTIL_PRESS}");
+        MESSAGE("Trainer A: This message plays before the battler activates the Tera gimmick.{PAUSE_UNTIL_PRESS}");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_CHARGE, opponentLeft);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_ACTIVATE, opponentLeft);
 
-        MESSAGE("Trainer Partner: This message plays before the attacker activates the Tera gimmick.{PAUSE_UNTIL_PRESS}");
+        MESSAGE("Trainer Partner: This message plays before the battler activates the Tera gimmick.{PAUSE_UNTIL_PRESS}");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_CHARGE, playerRight);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_ACTIVATE, playerRight);
 
-        MESSAGE("Trainer B: This message plays before the attacker activates the Tera gimmick.{PAUSE_UNTIL_PRESS}");
+        MESSAGE("Trainer B: This message plays before the battler activates the Tera gimmick.{PAUSE_UNTIL_PRESS}");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_CHARGE, opponentRight);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_ACTIVATE, opponentRight);
     }
@@ -1604,10 +1604,10 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Opponent Mega Evolution")
             EXPECT_MOVE(opponentRight, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
     } SCENE {
 
-        NOT MESSAGE("Trainer Partner: This message plays before the attacker activates the Mega Evolution gimmick.{PAUSE_UNTIL_PRESS}");
+        NOT MESSAGE("Trainer Partner: This message plays before the battler activates the Mega Evolution gimmick.{PAUSE_UNTIL_PRESS}");
         MESSAGE("Trainer A: This message plays before the opponent activates the Mega Evolution gimmick.{PAUSE_UNTIL_PRESS}");
         MESSAGE("Trainer B: This message plays before the opponent activates the Mega Evolution gimmick.{PAUSE_UNTIL_PRESS}");
-        NOT MESSAGE("Trainer Partner: This message plays before the attacker activates the Mega Evolution gimmick.{PAUSE_UNTIL_PRESS}");
+        NOT MESSAGE("Trainer Partner: This message plays before the battler activates the Mega Evolution gimmick.{PAUSE_UNTIL_PRESS}");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, playerLeft);
         MESSAGE("Manectric has Mega Evolved into Mega Manectric!");
 
@@ -1623,7 +1623,7 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Opponent Mega Evolution")
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, opponentLeft);
         MESSAGE("The opposing Lopunny has Mega Evolved into Mega Lopunny!");
 
-        NOT MESSAGE("Trainer Partner: This message plays before the attacker activates the Mega Evolution gimmick.{PAUSE_UNTIL_PRESS}");
+        NOT MESSAGE("Trainer Partner: This message plays before the battler activates the Mega Evolution gimmick.{PAUSE_UNTIL_PRESS}");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, playerRight);
         MESSAGE("Aerodactyl has Mega Evolved into Mega Aerodactyl!");
 

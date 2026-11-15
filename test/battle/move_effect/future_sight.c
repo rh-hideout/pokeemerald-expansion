@@ -500,3 +500,93 @@ SINGLE_BATTLE_TEST("Toxic Chain does not trigger from Future Sight if the user i
         EXPECT(opponent->status1 == 0);
     }
 }
+
+SINGLE_BATTLE_TEST("Future Sight type is changed by Normalize when user is on field")
+{
+    bool32 switchMon = FALSE;
+
+    PARAMETRIZE { switchMon = FALSE; }
+    PARAMETRIZE { switchMon = TRUE; }
+
+    GIVEN {
+        ASSUME(GetSpeciesType(SPECIES_GASTLY, 0) == TYPE_GHOST);
+        PLAYER(SPECIES_GASTLY);
+        OPPONENT(SPECIES_SKITTY) { Ability(ABILITY_NORMALIZE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_FUTURE_SIGHT); }
+        if (switchMon) { TURN { SWITCH(opponent, 1); } }
+        TURN {}
+        if (!switchMon) { TURN {} }
+    } SCENE {
+        if (switchMon) {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, opponent);
+            HP_BAR(player);
+        }
+        else {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, opponent); // set up
+            NOT {
+                ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, opponent);
+                HP_BAR(player);
+            }
+        }
+    }
+}
+
+DOUBLE_BATTLE_TEST("Future Sight doesn't print an erroneous failure message in doubles")
+{
+    GIVEN {
+        ASSUME(GetSpeciesType(SPECIES_POOCHYENA, 0) == TYPE_DARK);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_POOCHYENA);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_FUTURE_SIGHT, target: opponentLeft); }
+        TURN {}
+        TURN {}
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, playerLeft);
+        NOT MESSAGE("It doesn't affect the opposing Poochyena…");
+    }
+}
+
+DOUBLE_BATTLE_TEST("Future Sight is redirected to partner if target slot is empty")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_FUTURE_SIGHT, target: opponentLeft); }
+        TURN { MOVE(playerLeft, MOVE_POUND, target: opponentLeft); }
+        TURN {}
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, playerLeft);
+        HP_BAR(opponentRight);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Future Sight can't be redirected by Abilities")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_PIKACHU) { Ability(ABILITY_LIGHTNING_ROD); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_FUTURE_SIGHT, target: opponentLeft); }
+        TURN {}
+        TURN { MOVE(opponentRight, MOVE_ELECTRIFY, target: playerLeft); MOVE(playerLeft, MOVE_POUND, target: opponentLeft); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRIFY, opponentRight);
+        ABILITY_POPUP(opponentRight, ABILITY_LIGHTNING_ROD); // redirection
+        ABILITY_POPUP(opponentRight, ABILITY_LIGHTNING_ROD); // absorb pound
+
+        NOT ABILITY_POPUP(opponentRight, ABILITY_LIGHTNING_ROD);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, playerLeft);
+        HP_BAR(opponentLeft);
+    }
+}

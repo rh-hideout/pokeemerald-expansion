@@ -2375,12 +2375,12 @@ static bool8 Mugshot_StartOpponentSlide(struct Task *task)
     sTransitionData->BG0HOFS_Upper += 8;
 
     SetTrainerPicSlideDirection(task->tOpponentSpriteAId, 0);
-    if (TRAINER_BATTLE_PARAM.opponentB != TRAINER_NONE && gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
+    if (TRAINER_BATTLE_PARAM.opponentB != TRAINER_NONE && HasAnyBattleFlags(BATTLE_TYPE_TWO_OPPONENTS))
     {
             SetTrainerPicSlideDirection(task->tOpponentSpriteBId, 0);
     }
     SetTrainerPicSlideDirection(task->tPlayerSpriteId, 1);
-    if (gPartnerTrainerId != TRAINER_PARTNER(PARTNER_NONE) && gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
+    if (gPartnerTrainerId != TRAINER_PARTNER(PARTNER_NONE) && HasAnyBattleFlags(BATTLE_TYPE_INGAME_PARTNER))
     {
         SetTrainerPicSlideDirection(task->tPartnerSpriteId, 1);
     }
@@ -2390,7 +2390,7 @@ static bool8 Mugshot_StartOpponentSlide(struct Task *task)
 
     PlaySE(SE_MUGSHOT);
 
-    if (TRAINER_BATTLE_PARAM.opponentB != TRAINER_NONE && gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
+    if (TRAINER_BATTLE_PARAM.opponentB != TRAINER_NONE && HasAnyBattleFlags(BATTLE_TYPE_TWO_OPPONENTS))
     {
         IncrementTrainerPicState(task->tOpponentSpriteBId);
     }
@@ -2408,7 +2408,7 @@ static bool8 Mugshot_WaitStartPlayerSlide(struct Task *task)
     if (IsTrainerPicSlideDone(task->tOpponentSpriteAId))
     {
         task->tState++;
-        if (gPartnerTrainerId != TRAINER_PARTNER(PARTNER_NONE) && gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
+        if (gPartnerTrainerId != TRAINER_PARTNER(PARTNER_NONE) && HasAnyBattleFlags(BATTLE_TYPE_INGAME_PARTNER))
         {
             IncrementTrainerPicState(task->tPartnerSpriteId);
         }
@@ -2422,7 +2422,7 @@ static bool8 Mugshot_WaitPlayerSlide(struct Task *task)
     sTransitionData->BG0HOFS_Lower -= 8;
     sTransitionData->BG0HOFS_Upper += 8;
 
-    if (gPartnerTrainerId != TRAINER_PARTNER(PARTNER_NONE) && gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
+    if (gPartnerTrainerId != TRAINER_PARTNER(PARTNER_NONE) && HasAnyBattleFlags(BATTLE_TYPE_INGAME_PARTNER))
     {
         if (IsTrainerPicSlideDone(task->tPartnerSpriteId))
         {
@@ -2589,7 +2589,7 @@ static void Mugshots_CreateTrainerPics(struct Task *task)
     s16 opponentBRotationScales = 0;
 
     gReservedSpritePaletteCount = 10;
-    if (TRAINER_BATTLE_PARAM.opponentB != TRAINER_NONE && gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
+    if (TRAINER_BATTLE_PARAM.opponentB != TRAINER_NONE && HasAnyBattleFlags(BATTLE_TYPE_TWO_OPPONENTS))
     {
         struct Coords16 mugshotCoordsB = GetTrainerFrontPicMugshotCoords(trainerBPicId);
         task->tOpponentSpriteBId = CreateTrainerSprite(trainerBPicId,
@@ -2613,7 +2613,7 @@ static void Mugshots_CreateTrainerPics(struct Task *task)
                                                   0, NULL);
 
     gReservedSpritePaletteCount = 12;
-    if (gPartnerTrainerId != TRAINER_PARTNER(PARTNER_NONE) && gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
+    if (gPartnerTrainerId != TRAINER_PARTNER(PARTNER_NONE) && HasAnyBattleFlags(BATTLE_TYPE_INGAME_PARTNER))
     {
         task->tPartnerSpriteId = CreateTrainerSprite(partnerPicId,
                                                 DISPLAY_WIDTH + 240,

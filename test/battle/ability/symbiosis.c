@@ -102,11 +102,12 @@ DOUBLE_BATTLE_TEST("Symbiosis triggers after partner flings its item")
         TURN { MOVE(playerLeft, MOVE_FLING, target: opponentLeft); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, playerLeft);
-        MESSAGE("The opposing Staravia was burned!");
-        STATUS_ICON(opponentLeft, STATUS1_BURN);
         // symbiosis triggers
         ABILITY_POPUP(playerRight, ABILITY_SYMBIOSIS);
         MESSAGE("Oranguru shared its Toxic Orb with Wobbuffet!");
+        // Probably not the right order for Gen7+ Symbiosis
+        MESSAGE("The opposing Staravia was burned!");
+        STATUS_ICON(opponentLeft, STATUS1_BURN);
         // end of turn, wobb gets poisoned
         MESSAGE("Wobbuffet was badly poisoned!");
         STATUS_ICON(playerLeft, STATUS1_TOXIC_POISON);
@@ -155,10 +156,10 @@ DOUBLE_BATTLE_TEST("A spread move does not consume items received through Symbio
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, playerRight);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, playerLeft);
-        ABILITY_POPUP(opponentRight, ABILITY_SYMBIOSIS);
-        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentLeft);
         ABILITY_POPUP(playerLeft, ABILITY_SYMBIOSIS);
         NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, playerRight);
+        ABILITY_POPUP(opponentRight, ABILITY_SYMBIOSIS);
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentLeft);
     } THEN {
         EXPECT_EQ(playerLeft->item, ITEM_NONE);
         EXPECT_EQ(playerRight->item, ITEM_POTION);

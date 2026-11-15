@@ -39,9 +39,9 @@ bool32 RubyBattleTowerRecordToEmerald(struct RSBattleTowerRecord *src, struct Em
 bool32 EmeraldBattleTowerRecordToRuby(struct EmeraldBattleTowerRecord *src, struct RSBattleTowerRecord *dst);
 void CalcApprenticeChecksum(struct Apprentice *apprentice);
 void GetBattleTowerTrainerLanguage(u8 *dst, u16 trainerId);
+struct FacilityMonGenerator GetFacilityMonGenerator(u16 trainerId);
 u8 SetTentPtrsGetLevel(void);
 void TrySetLinkBattleTowerEnemyPartyLevel(void);
-void FillTentTrainerParty(u8 monsCount);
 
 
 #endif //GUARD_BATTLE_TOWER_H
