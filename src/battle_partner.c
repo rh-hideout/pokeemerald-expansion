@@ -127,7 +127,7 @@ void FillPartnerParty(u16 trainerId)
         FillFrontierPartnerParty(trainerId);
         break;
     case RECORDMIX_FRIEND_PARTNER:
-        FillFriendRecordPartnerParty(trainerId - TRAINER_RECORD_MIXING_FRIEND);
+        FillRecordMixingPartnerParty(trainerId - TRAINER_RECORD_MIXING_FRIEND);
         break;
     case APPRENTICE_PARTNER:
         FillApprenticePartnerParty(trainerId - TRAINER_RECORD_MIXING_APPRENTICE);
