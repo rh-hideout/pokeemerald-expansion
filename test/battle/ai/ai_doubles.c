@@ -1459,3 +1459,81 @@ AI_DOUBLE_BATTLE_TEST("AI will not double target with Soak")
         }
     }
 }
+
+AI_DOUBLE_BATTLE_TEST("Spite: AI will use Spite on its ally to boost Trump Card power")
+{
+    enum Move atkMove, aiMove;
+    u32 pp, config, speed;
+
+    PARAMETRIZE { atkMove = MOVE_TRUMP_CARD; aiMove = MOVE_SPITE;     pp = 6;  config = GEN_4; speed = 6; }
+    PARAMETRIZE { atkMove = MOVE_TRUMP_CARD; aiMove = MOVE_WATER_GUN; pp = 5;  config = GEN_4; speed = 6; }
+    PARAMETRIZE { atkMove = MOVE_SCRATCH;    aiMove = MOVE_WATER_GUN; pp = 20; config = GEN_4; speed = 6; }
+    PARAMETRIZE { atkMove = MOVE_TRUMP_CARD; aiMove = MOVE_SPITE;     pp = 7;  config = GEN_4; speed = 8; }
+    PARAMETRIZE { atkMove = MOVE_TRUMP_CARD; aiMove = MOVE_WATER_GUN; pp = 6;  config = GEN_4; speed = 8; }
+
+    PARAMETRIZE { atkMove = MOVE_TRUMP_CARD; aiMove = MOVE_SPITE;     pp = 7;  config = GEN_3; speed = 6; }
+    PARAMETRIZE { atkMove = MOVE_TRUMP_CARD; aiMove = MOVE_WATER_GUN; pp = 6;  config = GEN_3; speed = 6; }
+    PARAMETRIZE { atkMove = MOVE_SCRATCH;    aiMove = MOVE_WATER_GUN; pp = 20; config = GEN_3; speed = 6; }
+    PARAMETRIZE { atkMove = MOVE_TRUMP_CARD; aiMove = MOVE_SPITE;     pp = 8;  config = GEN_3; speed = 8; }
+    PARAMETRIZE { atkMove = MOVE_TRUMP_CARD; aiMove = MOVE_WATER_GUN; pp = 7;  config = GEN_3; speed = 8; }
+
+    ASSUME(GetMoveEffect(MOVE_TRUMP_CARD) == EFFECT_TRUMP_CARD);
+    ASSUME(GetMoveEffect(MOVE_SPITE) == EFFECT_SPITE);
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(5); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_WATER_GUN, MOVE_SPITE); Speed(7); }
+        OPPONENT(SPECIES_WOBBUFFET) { MovesWithPP({atkMove, pp}); Speed(speed); }
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        WITH_CONFIG(B_PP_REDUCED_BY_SPITE, config);
+    } WHEN {
+        TURN {
+            EXPECT_MOVE(opponentLeft, MOVE_WATER_GUN);
+            EXPECT_MOVE(opponentRight, atkMove);
+        }
+        TURN {
+            EXPECT_MOVE(opponentLeft, aiMove);
+            EXPECT_MOVE(opponentRight, atkMove);
+        }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("Spite: AI will prioritise Spite over best damage move on a slower opponent to save its ally")
+{
+    enum Move playerMove, opponentMove;
+
+    PARAMETRIZE { playerMove = MOVE_DRAGON_RAGE; opponentMove = MOVE_SPITE;     }
+    PARAMETRIZE { playerMove = MOVE_SONIC_BOOM;  opponentMove = MOVE_DRAGON_RAGE; }
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { MovesWithPP({MOVE_DRAGON_RAGE, 5}, {MOVE_SONIC_BOOM, 10}); Speed(4); }
+        PLAYER(SPECIES_CARBINK) { Speed(5); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(80); Speed(6); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_DRAGON_RAGE, MOVE_SPITE); Speed(7); }
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+    } WHEN {
+        TURN {
+            MOVE(playerLeft, playerMove, target: opponentLeft);
+            EXPECT_MOVE(opponentRight, MOVE_DRAGON_RAGE, target: playerLeft);
+        }
+        TURN {
+            MOVE(playerLeft, playerMove, target: opponentLeft);
+            EXPECT_MOVE(opponentRight, opponentMove, target: playerLeft);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_RAGE, opponentRight);
+        ANIMATION(ANIM_TYPE_MOVE, playerMove, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, opponentMove, opponentRight);
+
+        if (playerMove == MOVE_DRAGON_RAGE) {
+            MESSAGE("Wobbuffet lost 4 PP from Dragon Rage!");
+            MESSAGE("Wobbuffet used Dragon Rage!");
+            NOT ANIMATION(ANIM_TYPE_MOVE, playerMove, playerLeft);
+            MESSAGE("But there was no PP left for the move!");
+        } else {
+            MESSAGE("Wobbuffet used Sonic Boom!");
+            ANIMATION(ANIM_TYPE_MOVE, playerMove, playerLeft);
+        }
+    }
+}
