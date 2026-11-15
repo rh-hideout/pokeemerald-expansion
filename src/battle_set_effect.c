@@ -4150,7 +4150,6 @@ static void HandleSetEffectDragonCheer(struct BattleCalcValues *cv, struct SetEf
 
 static void HandleSetEffectRemoveTerrain(struct BattleCalcValues *cv, struct SetEffect * se)
 {
-    // Use self
     if (gFieldTimers.terrain == B_TERRAIN_NONE)
         SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
 
