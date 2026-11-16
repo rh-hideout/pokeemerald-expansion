@@ -1572,6 +1572,20 @@
     "dos": 7
    },
    "taille": "grand"
+  },
+  "kralamoure_geant": {
+   "dofus": {
+    "id": 423,
+    "face": 3,
+    "dos": 7
+   },
+   "source": "kralamoure_geant_pose",
+   "taille": "enorme",
+   "outline": 0.4
+  },
+  "kralamoure": {
+   "taille": "petit",
+   "outline": 0.4
   }
  }
 }

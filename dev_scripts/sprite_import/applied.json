@@ -695,6 +695,18 @@
   "normal.pal": "de8ec4520e9fea9b",
   "shiny.pal": "de8ec4520e9fea9b"
  },
+ "kralamoure": {
+  "anim_front.png": "9275ab105d78681f",
+  "back.png": "87956683e28b4970",
+  "normal.pal": "7384b3c1a2035daf",
+  "shiny.pal": "204c9e2007b790e4"
+ },
+ "kralamoure_geant": {
+  "anim_front.png": "182c8f21e47833cd",
+  "back.png": "b7c7aa6f4f671cc8",
+  "normal.pal": "8f3b38b44d4686c2",
+  "shiny.pal": "7cf5646332cc4d95"
+ },
  "kwakere_feu": {
   "anim_front.png": "b28d939b2bba6cb6",
   "back.png": "61a13a22ba55f669",
