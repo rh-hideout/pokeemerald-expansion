@@ -10671,7 +10671,8 @@ FOOTPRINT(Klemor)
        .iconPalIndex = 3,
        .levelUpLearnset = sCrabeLevelUpLearnset,
        .teachableLearnset = sCrabeTeachableLearnset,
-       .evolutions = EVOLUTION({EVO_LEVEL, 30, SPECIES_CRUSTORAIL}),
+       .evolutions = EVOLUTION({EVO_LEVEL, 30, SPECIES_CRABE_YOLONISTE, CONDITIONS({IF_IN_MAPSEC, MAPSEC_ABANDONED_SHIP})},
+                               {EVO_LEVEL, 30, SPECIES_CRUSTORAIL}),
        FOOTPRINT(Crabe)
     },
     [SPECIES_CRUSTORAIL] =
@@ -10682,7 +10683,7 @@ FOOTPRINT(Klemor)
        .baseSpeed     = 70,
        .baseSpAttack  = 45,
        .baseSpDefense = 60,
-       .types = MON_TYPES(TYPE_WATER),
+       .types = MON_TYPES(TYPE_WATER, TYPE_ROCK),
        .catchRate = 60,
        .expYield = 170,
        .evYield_Attack = 2,
@@ -10730,6 +10731,62 @@ FOOTPRINT(Klemor)
        .levelUpLearnset = sCrustorailLevelUpLearnset,
        .teachableLearnset = sCrustorailTeachableLearnset,
        FOOTPRINT(Crustorail)
+    },
+    [SPECIES_CRABE_YOLONISTE] =
+    {
+       .baseHP        = 75,
+       .baseAttack    = 95,
+       .baseDefense   = 85,
+       .baseSpeed     = 90,
+       .baseSpAttack  = 55,
+       .baseSpDefense = 80,
+       .types = MON_TYPES(TYPE_WATER),
+       .catchRate = 60,
+       .expYield = 170,
+       .evYield_Attack = 1,
+       .evYield_Speed = 2,
+       .genderRatio = PERCENT_FEMALE(50),
+       .eggCycles = 15,
+       .friendship = STANDARD_FRIENDSHIP,
+       .growthRate = GROWTH_MEDIUM_FAST,
+       .eggGroups = MON_EGG_GROUPS(EGG_GROUP_WATER_3),
+       .abilities = { ABILITY_PRANKSTER, ABILITY_OWN_TEMPO, ABILITY_REGENERATOR },
+       .bodyColor = BODY_COLOR_RED,
+       .speciesName = _("Yoloniste"),
+       //pokedex
+       .natDexNum = NATIONAL_DEX_CRABE_YOLONISTE,
+       .categoryName = _("Yolo Crab"),
+       .height = 9,
+       .weight = 280,
+       .description = COMPOUND_STRING(
+           "It fiddles its claw like a violin and\n"
+           "keeps playing as the wreck sinks. Its\n"
+           "silly dance drives foes into a rage."),
+       .pokemonScale = 260,
+       .pokemonOffset = 0,
+       .trainerScale = 256,
+       .trainerOffset = 0,
+       //graphics
+       .frontPic = gMonFrontPic_CrabeYoloniste,
+       .frontPicSize = MON_COORDS_SIZE(64, 64),
+       .frontPicYOffset = 0,
+       .frontAnimFrames = ANIM_FRAMES(
+           ANIMCMD_FRAME(0, 1),
+       ),
+       .frontAnimId = ANIM_GROW_VIBRATE,
+       .frontAnimDelay = 15,
+       .enemyMonElevation = -5,
+       .backPic = gMonBackPic_CrabeYoloniste,
+       .backPicSize = MON_COORDS_SIZE(64, 64),
+       .backPicYOffset = 10,
+       .backAnimId = BACK_ANIM_CONCAVE_ARC_SMALL,
+       .palette = gMonPalette_CrabeYoloniste,
+       .shinyPalette = gMonShinyPalette_CrabeYoloniste,
+       .iconSprite = gMonIcon_CrabeYoloniste,
+       .iconPalIndex = 1,
+       .levelUpLearnset = sCrabeYolonisteLevelUpLearnset,
+       .teachableLearnset = sCrabeYolonisteTeachableLearnset,
+       FOOTPRINT(CrabeYoloniste)
     },
     [SPECIES_GAMBAF] =
     {
