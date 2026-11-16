@@ -4301,6 +4301,7 @@ static void DebugAction_DestroyFollowerNPC(u8 taskId)
     X(MUS_E_SAGE) \
     X(MUS_VS_N) \
     X(MUS_ENTRALINK) \
+    X(MUS_VS_GYMLEADER) \
 
 #define SOUND_LIST_SE               \
     X(SE_USE_ITEM)                  \
