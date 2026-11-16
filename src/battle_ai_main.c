@@ -558,16 +558,13 @@ void AI_TrySwitchOrUseItem(enum BattlerId battler)
                     }
                 }
 
-                if (monToSwitchId != PARTY_SIZE)
-                {
-                    BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_SWITCH, 0);
-                    SetAIUsingGimmick(battler, NO_GIMMICK);
-                }
                 gBattleStruct->AI_monToSwitchIntoId[battler] = monToSwitchId;
             }
 
             if (gBattleStruct->AI_monToSwitchIntoId[battler] != PARTY_SIZE)
             {
+                BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_SWITCH, 0);
+                SetAIUsingGimmick(battler, NO_GIMMICK);
                 gBattleStruct->monToSwitchIntoId[battler] = gBattleStruct->AI_monToSwitchIntoId[battler];
                 gAiLogicData->monToSwitchInId[battler] = gBattleStruct->AI_monToSwitchIntoId[battler];
                 return;
