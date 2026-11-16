@@ -517,6 +517,12 @@
   "normal.pal": "edcbd7022721b042",
   "shiny.pal": "edcbd7022721b042"
  },
+ "gelikan": {
+  "anim_front.png": "cc9a37e5aa83c211",
+  "back.png": "7f6bcd0cb783298a",
+  "normal.pal": "484d14e71ec9978c",
+  "shiny.pal": "484d14e71ec9978c"
+ },
  "germinion": {
   "anim_front.png": "8d9e7ecefda7671c",
   "back.png": "3698feca3f776073",
