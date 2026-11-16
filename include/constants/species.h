@@ -1862,8 +1862,9 @@
 #define SPECIES_TREMORSE                                1742
 #define SPECIES_GELIKAN                                 1743
 #define SPECIES_CRABE_YOLONISTE                         1744
+#define SPECIES_TOURTHON                                1745
 
-#define SPECIES_EGG                                     (SPECIES_CRABE_YOLONISTE + 1)
+#define SPECIES_EGG                                     (SPECIES_TOURTHON + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

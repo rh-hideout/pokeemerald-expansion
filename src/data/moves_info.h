@@ -21715,6 +21715,28 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .battleAnimScript = gBattleAnimMove_MysticalFire,
     },
 
+    [MOVE_ENLACEMENT] =
+    {
+        .name = COMPOUND_STRING("Embrace"),
+        .description = COMPOUND_STRING(
+            "Crushes the foe in a tight\n"
+            "hug. Lowers its Attack."),
+        .effect = EFFECT_HIT,
+        .power = 80,
+        .type = TYPE_NORMAL,
+        .accuracy = 100,
+        .pp = 15,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .makesContact = TRUE,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_ATK_MINUS_1,
+            .chance = 100,
+        }),
+        .battleAnimScript = gBattleAnimMove_Wrap,
+    },
+
     // Z-Moves
     [MOVE_BREAKNECK_BLITZ] =
     {

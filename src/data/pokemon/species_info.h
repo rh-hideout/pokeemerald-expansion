@@ -11312,4 +11312,62 @@ FOOTPRINT(Klemor)
        .teachableLearnset = sGelikanTeachableLearnset,
        FOOTPRINT(Gelikan)
     },
+
+    [SPECIES_TOURTHON] =
+    {
+       .baseHP        = 110,
+       .baseAttack    = 100,
+       .baseDefense   = 85,
+       .baseSpeed     = 50,
+       .baseSpAttack  = 90,
+       .baseSpDefense = 80,
+       .types = MON_TYPES(TYPE_WATER, TYPE_DARK),
+       .catchRate = 30,
+       .expYield = 195,
+       .evYield_HP = 2,
+       .evYield_Attack = 1,
+       .genderRatio = PERCENT_FEMALE(50),
+       .eggCycles = 20,
+       .friendship = STANDARD_FRIENDSHIP,
+       .growthRate = GROWTH_SLOW,
+       .eggGroups = MON_EGG_GROUPS(EGG_GROUP_WATER_2),
+       .abilities = { ABILITY_ILLUMINATE, ABILITY_WATER_ABSORB, ABILITY_SHADOW_TAG },
+       .bodyColor = BODY_COLOR_BROWN,
+       .speciesName = _("Tourthon"),
+       //pokedex
+       .natDexNum = NATIONAL_DEX_TOURTHON,
+       .categoryName = _("Angler"),
+       .height = 20,
+       .weight = 1600,
+       .description = COMPOUND_STRING(
+           "It lurks in abyssal trenches, its green\n"
+           "lantern swaying in the dark. Prey drawn\n"
+           "to the light is crushed in its embrace\n"
+           "before it ever sees the jaws behind."),
+       .pokemonScale = 256,
+       .pokemonOffset = 1,
+       .trainerScale = 381,
+       .trainerOffset = 7,
+       //graphics
+       .frontPic = gMonFrontPic_Tourthon,
+       .frontPicSize = MON_COORDS_SIZE(64, 64),
+       .frontPicYOffset = 0,
+       .frontAnimFrames = ANIM_FRAMES(
+           ANIMCMD_FRAME(0, 1),
+       ),
+       .frontAnimId = ANIM_GROW_VIBRATE,
+       .frontAnimDelay = 15,
+       .enemyMonElevation = 0,
+       .backPic = gMonBackPic_Tourthon,
+       .backPicSize = MON_COORDS_SIZE(64, 64),
+       .backPicYOffset = 8,
+       .backAnimId = BACK_ANIM_CONCAVE_ARC_SMALL,
+       .palette = gMonPalette_Tourthon,
+       .shinyPalette = gMonShinyPalette_Tourthon,
+       .iconSprite = gMonIcon_Tourthon,
+       .iconPalIndex = 0,
+       .levelUpLearnset = sTourthonLevelUpLearnset,
+       .teachableLearnset = sTourthonTeachableLearnset,
+       FOOTPRINT(Tourthon)
+    },
 };
