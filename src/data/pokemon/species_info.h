@@ -11198,4 +11198,61 @@ FOOTPRINT(Klemor)
        .teachableLearnset = sTremorseTeachableLearnset,
        FOOTPRINT(Tremorse)
     },
+    [SPECIES_GELIKAN] =
+    {
+       .baseHP        = 70,
+       .baseAttack    = 65,
+       .baseDefense   = 80,
+       .baseSpeed     = 70,
+       .baseSpAttack  = 85,
+       .baseSpDefense = 70,
+       .types = MON_TYPES(TYPE_WATER, TYPE_FLYING),
+       .catchRate = 120,
+       .expYield = 150,
+       .evYield_SpAttack = 1,
+       .evYield_SpDefense = 1,
+       .genderRatio = PERCENT_FEMALE(50),
+       .eggCycles = 15,
+       .friendship = STANDARD_FRIENDSHIP,
+       .growthRate = GROWTH_MEDIUM_FAST,
+       .eggGroups = MON_EGG_GROUPS(EGG_GROUP_WATER_1, EGG_GROUP_FLYING),
+       .abilities = { ABILITY_DRIZZLE, ABILITY_PICKPOCKET, ABILITY_KEEN_EYE },
+       .bodyColor = BODY_COLOR_WHITE,
+       .speciesName = _("Gélikan"),
+       //pokedex
+       .natDexNum = NATIONAL_DEX_GELIKAN,
+       .categoryName = _("Harbor Gull"),
+       .height = 9,
+       .weight = 110,
+       .description = COMPOUND_STRING(
+           "It nests on the frozen docks and brings\n"
+           "drizzle wherever it lands. It snatches\n"
+           "fish and berries from careless sailors\n"
+           "and coaxes them closer with sweet cries."),
+       .pokemonScale = 310,
+       .pokemonOffset = 5,
+       .trainerScale = 256,
+       .trainerOffset = 0,
+       //graphics
+       .frontPic = gMonFrontPic_Gelikan,
+       .frontPicSize = MON_COORDS_SIZE(64, 64),
+       .frontPicYOffset = 0,
+       .frontAnimFrames = ANIM_FRAMES(
+           ANIMCMD_FRAME(0, 1),
+       ),
+       .frontAnimId = ANIM_V_SLIDE_WOBBLE,
+       .frontAnimDelay = 0,
+       .enemyMonElevation = 0,
+       .backPic = gMonBackPic_Gelikan,
+       .backPicSize = MON_COORDS_SIZE(64, 64),
+       .backPicYOffset = 8,
+       .backAnimId = BACK_ANIM_CONVEX_DOUBLE_ARC,
+       .palette = gMonPalette_Gelikan,
+       .shinyPalette = gMonShinyPalette_Gelikan,
+       .iconSprite = gMonIcon_Gelikan,
+       .iconPalIndex = 5,
+       .levelUpLearnset = sGelikanLevelUpLearnset,
+       .teachableLearnset = sGelikanTeachableLearnset,
+       FOOTPRINT(Gelikan)
+    },
 };

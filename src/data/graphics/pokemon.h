@@ -28139,3 +28139,10 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
     const u16 gMonShinyPalette_Tremorse[] = INCBIN_U16("graphics/pokemon/tremorse/shiny.gbapal");
     const u8 gMonIcon_Tremorse[] = INCBIN_U8("graphics/pokemon/tremorse/icon.4bpp");
     const u8 gMonFootprint_Tremorse[] = INCBIN_U8("graphics/pokemon/snorlax/footprint.1bpp"); // snorlax for those who don't have footprints
+
+    const u32 gMonFrontPic_Gelikan[] = INCBIN_U32("graphics/pokemon/gelikan/anim_front.4bpp.lz");
+    const u32 gMonBackPic_Gelikan[] = INCBIN_U32("graphics/pokemon/gelikan/back.4bpp.lz");
+    const u16 gMonPalette_Gelikan[] = INCBIN_U16("graphics/pokemon/gelikan/normal.gbapal");
+    const u16 gMonShinyPalette_Gelikan[] = INCBIN_U16("graphics/pokemon/gelikan/shiny.gbapal");
+    const u8 gMonIcon_Gelikan[] = INCBIN_U8("graphics/pokemon/gelikan/icon.4bpp");
+    const u8 gMonFootprint_Gelikan[] = INCBIN_U8("graphics/pokemon/snorlax/footprint.1bpp"); // snorlax for those who don't have footprints

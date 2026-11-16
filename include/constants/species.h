@@ -1860,8 +1860,9 @@
 #define SPECIES_MASTICROC                               1740
 #define SPECIES_CYCLOPORTH                              1741
 #define SPECIES_TREMORSE                                1742
+#define SPECIES_GELIKAN                                 1743
 
-#define SPECIES_EGG                                     (SPECIES_TREMORSE + 1)
+#define SPECIES_EGG                                     (SPECIES_GELIKAN + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 
