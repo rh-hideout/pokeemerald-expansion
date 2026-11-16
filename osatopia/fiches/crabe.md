@@ -7,11 +7,17 @@
 > de la Colonie du Magistral (Plage de Corail, Grotte Hesque, niv. 36-48) qui
 > porte des tubes de corail sur le dos : *Pince de Corail* (Eau, augmente les
 > dommages des alliés autour de lui) et *Protection de Corail* (résistance Eau
-> en zone). — Évolutions : Crabe → Crustorail (niv. 30).
+> en zone). Le Crabe Yoloniste (DofusDB #4456) est un crabe violoniste des
+> ruines sous-marines (Vaisseau du Capitaine Meno, niv. 200-212) : *Gesticulation
+> Ridicule* (Eau en zone, invoque une Étoile Swagante), *Pince Écrasante* (gros
+> dégâts Neutre au corps à corps) et *Yolosouague* (échange de place, attire la
+> cible). — Évolutions : Crabe → Crustorail (niv. 30) ; Crabe → Crabe Yoloniste
+> (niv. 30, dans l'Épave abandonnée), clin d'œil aux violonistes du Titanic.
 > Constantes : `SPECIES_CRABE` (1731), `SPECIES_CRUSTORAIL` (1732), créées
-> pour cette famille (1730 est réservé à Gambaf).
+> pour cette famille (1730 est réservé à Gambaf) ; `SPECIES_CRABE_YOLONISTE`
+> (1744).
 
-**État : validée et intégrée** (`include/constants/species.h`,
+**État : validée et intégrée** (Crabe Yoloniste ajouté le 2026-11-16) (`include/constants/species.h`,
 `include/constants/pokedex.h`, `include/constants/moves.h`, `moves_info.h`,
 `species_info.h`, `gen_9.h`, `teachable_learnsets.h`, `pokedex_orders.h`,
 `pokemon.c`, `graphics/pokemon.h`, sprites Dofus).
@@ -51,18 +57,25 @@ Ce qui le distingue des autres monstres marins :
 
 ## Stades
 
-| | Crabe | Crustorail |
-|---|---|---|
-| Types | Eau | Eau |
-| PV / Att / Déf / AtqSpé / DéfSpé / Vit | 40 / 85 / 80 / 25 / 35 / 45 | 70 / 120 / 115 / 45 / 60 / 70 |
-| Total | 310 | 480 |
-| Talents | Hyper Cutter (Hyper Cutter) / Coque Armure (Shell Armor) / caché : Griffe Dure (Tough Claws) | idem |
-| Capture / Exp. | 200 / 65 | 60 / 170 |
-| EV | 1 Att | 2 Att + 1 Déf |
-| Évolution | niv. 30 | – |
+| | Crabe | Crustorail | Crabe Yoloniste |
+|---|---|---|---|
+| Types | Eau | Eau/Roche | Eau |
+| PV / Att / Déf / AtqSpé / DéfSpé / Vit | 40 / 85 / 80 / 25 / 35 / 45 | 70 / 120 / 115 / 45 / 60 / 70 | 75 / 95 / 85 / 55 / 80 / 90 |
+| Total | 310 | 480 | 480 |
+| Talents | Hyper Cutter (Hyper Cutter) / Coque Armure (Shell Armor) / caché : Griffe Dure (Tough Claws) | idem | Farceur (Prankster) / Tempo Perso (Own Tempo) / caché : Régé-Force (Regenerator) |
+| Capture / Exp. | 200 / 65 | 60 / 170 | 60 / 170 |
+| EV | 1 Att | 2 Att + 1 Déf | 2 Vit + 1 Att |
+| Évolution | niv. 30 (Yoloniste dans l'Épave abandonnée, Crustorail ailleurs) | – | – |
 
-Eau pur : faiblesses Électrik et Plante. Résistances : Feu, Eau, Glace,
-Acier. Séisme et Tunnelier répondent aux Électrik.
+Crabe (Eau pur) : faiblesses Électrik et Plante. Résistances : Feu, Eau,
+Glace, Acier.
+
+Crustorail est passé **Eau/Roche** à l'arrivée du Yoloniste, pour que les
+deux branches diffèrent : faiblesses Plante (×4), Électrik, Combat, Sol ;
+résistances Feu (×4), Normal, Vol, Poison, Glace. Séisme et Tunnelier
+répondent aux Électrik ; il partage ce typage avec **Corailleur** (même
+colonie), mais Corailleur est une forteresse lente (Vit 40, Mur de Fer) quand
+Crustorail est un attaquant à boost (Vit 70, Pince de Corail).
 
 Comparaison : Krabby 30/105/90/25/25/50 (325), Krabboss 55/130/115/50/50/75
 (475), Scalproie 65/125/100/60/70/70 (490), Corailleur 90/105/115/45/75/40
@@ -72,7 +85,7 @@ le temps de cumuler ses boosts. L'AtqSpé est sacrifiée (aucun sort à distance
 chez le Crabe), la DéfSpé reste faible (la carapace arrête les coups, pas la
 magie). Le Crabe est un monstre de plage commun, plafonné à 310.
 
-Valeurs par défaut (famille Bitouf, faute de choix) : 50 % femelle,
+Valeurs par défaut (famille Bitouf, faute de choix, reprises par le Yoloniste) : 50 % femelle,
 15 cycles d'œuf, bonheur standard, croissance moyenne-rapide (`GROWTH_MEDIUM_FAST`, comme Krabby), groupe d'œuf
 Aquatique 3 (`EGG_GROUP_WATER_3`, celui des crustacés), couleur rouge
 (Crabe, orange en réalité) et violette (Crustorail, couleur des tubes de
@@ -84,6 +97,10 @@ Pokédex : Crabe 0,4 m / 7,0 kg, catégorie « Fiddler » ; Crustorail 1,1 m /
   like a bow to scare off foes and court its mate. »
 - Crustorail : « It hides under a crown of living coral. Each time its claws
   pinch a foe, the coral glows and its next blow hits even harder. »
+- Crabe Yoloniste (nom en jeu « Yoloniste », 12 caractères maximum) :
+  0,9 m / 28,0 kg, catégorie « Yolo Crab », couleur rouge (orange en réalité) :
+  « It fiddles its claw like a violin and keeps playing as the wreck sinks.
+  Its silly dance drives foes into a rage. »
 
 ## Kit final
 
@@ -162,7 +179,7 @@ existantes.
 | 37 | Tunnelier (Drill Run) | Sol | Phys. | 80 | couverture contre Électrik |
 | 42 | Pince-Masse (Crabhammer) | Eau | Phys. | 100 | STAB Eau fort |
 | 47 | Guillotine (Guillotine) | Normal | Phys. | K.O. | coup de poker |
-| 52 | Assaut Frontal (Headlong Rush) | Sol | Phys. | 120 | couverture finale |
+| 52 | Lame de Roc (Stone Edge) | Roche | Phys. | 100 | STAB Roche (remplace Assaut Frontal depuis le passage en Eau/Roche) |
 
 17 attaques. Rien à 90+ avant le niveau 42. Contre Voltère (24, Électrik), le
 Crabe est en difficulté (Piétisol aide) ; contre Adriane (29, Feu),
@@ -172,8 +189,7 @@ Recoupements avec d'autres monstres custom : Scorpique/Scordion partagent Force
 Poigne, Plaie Croix et Tunnelier, mais pas leur ordre ni le reste (Tourbi-Sable
 et Aiguisage ont été écartés pour cette raison) ; Corailleur partage Aqua-Jet,
 Grimace et Coqui-Lame. Pince-Masse, Ancrage (sauf Vigie Pirate au niv. 1),
-Gigotage + Guillotine et Assaut Frontal + Pince de Corail sont propres à la
-lignée.
+Gigotage + Guillotine et Pince de Corail sont propres à la lignée.
 
 ## CT, CS et tuteurs
 
@@ -209,6 +225,99 @@ Repères : Krabby 225 / 65, Krabboss 60 / 166 ; Grokillage 120 / 70 → Moumoule
 pêche ; Crustorail se trouve en surf sur les routes maritimes plus tardives,
 d'où une capture un peu meilleure qu'un stade final classique (45).
 
+## Crabe Yoloniste (évolution dans l'Épave abandonnée)
+
+**État : validée et intégrée.**
+
+### Évolution selon le lieu
+
+Au niveau 30, le Crabe devient Crabe Yoloniste s'il monte de niveau dans
+l'**Épave abandonnée**, Crustorail partout ailleurs. On réutilise la condition
+`IF_IN_MAPSEC` de l'expansion (pas de code custom, contrairement à
+`IF_IN_EVO_ZONE` d'El Scarador) : les 13 cartes de l'Épave (pont, couloirs,
+cabines, étage caché, parties sous-marines) partagent `MAPSEC_ABANDONED_SHIP`.
+La branche Yoloniste est testée en premier, Crustorail sert de branche par
+défaut :
+
+```c
+.evolutions = EVOLUTION({EVO_LEVEL, 30, SPECIES_CRABE_YOLONISTE, CONDITIONS({IF_IN_MAPSEC, MAPSEC_ABANDONED_SHIP})},
+                        {EVO_LEVEL, 30, SPECIES_CRUSTORAIL}),
+```
+
+Test : « Crabe evolves into Crabe Yoloniste in the Abandoned Ship, into
+Crustorail elsewhere » (`test/pokemon.c`).
+
+### Intention
+
+Archétype : **perturbateur** (principal) + **pivot** (secondaire).
+Références : **Mimiqui / Grimalin** (Farceur, statuts gênants), **Lestombaile**
+(profil de stats). Pourquoi : là où Crustorail encaisse et monte en puissance,
+le Yoloniste ridiculise l'adversaire et change de place.
+- *Gesticulation Ridicule* → **Danse Aquatique** (la danse) et
+  **Vantardise** (l'Étoile *Swag*ante), prioritaire avec **Farceur** ;
+- *Yolosouague* (échange de place) → **Eau Revoir** (pivot), avec
+  **Régé-Force** en talent caché ;
+- *Pince Écrasante* (Neutre) → **Éclate Griffe** ;
+- **Tempo Perso** : il est immunisé contre la confusion. C'est le violoniste
+  qui continue de jouer pendant que l'épave coule, et c'est ce qui lui permet
+  d'utiliser Danse Folle.
+
+Eau pur (sorts Eau + Neutre). Stats équilibrées comme dans Dofus (800 partout,
+4 PM) : plus rapide et plus endurant en spécial que Crustorail, moins blindé
+et moins puissant. Comparaison : Lestombaile 70/103/85/60/85/82 (485),
+Lapigro 85/90/80/60/85/90 (490), Koalak 90/100/70/55/75/85 (475).
+
+### Kit final
+
+| Emplacement | Choix | Alternatives |
+|---|---|---|
+| STAB Eau, la gesticulation | Danse Aquatique (Aqua Step), Eau, phys., 80, +1 Vit | Aqua-Brèche (Liquidation) 85 ; Cascade (Waterfall) 80, CS ; Coqui-Lame (Razor Shell) 75 |
+| Pivot (*Yolosouague*) | Eau Revoir (Flip Turn), Eau, phys., 60, change de place | Relais (Baton Pass) ; Dernier Mot (Parting Shot) |
+| Perturbation (*Étoile Swagante*) | Vantardise (Swagger) | Encore (Encore) ; Provoc (Taunt), CT ; Danse Folle (Teeter Dance) ; Tourmente (Torment), CT |
+| Coup Neutre (*Pince Écrasante*) | Éclate Griffe (Crush Claw), Normal, phys., 75, −1 Déf à 50 % | Plaquage (Body Slam) 85, tuteur ; Damoclès (Double-Edge) 120, tuteur ; Façade (Facade) 70 |
+
+Pas de capacité custom : les attaques existantes couvrent les trois sorts.
+
+### Learnset
+
+Reprend les attaques du Crabe aux mêmes niveaux (Force Poigne, Groz'Yeux,
+Armure, Aqua-Jet, Grimace, Griffe Acier, Piétisol, Coqui-Lame, Plaie Croix,
+Gigotage), puis :
+
+| Niv. | Attaque | Type | Cat. | Puiss. | Rôle |
+|---|---|---|---|---|---|
+| Évo | Danse Aquatique (Aqua Step) | Eau | Phys. | 80 | *Gesticulation Ridicule* |
+| 1 | Danse Folle (Teeter Dance) | Normal | Statut | – | confusion de zone |
+| 33 | Vantardise (Swagger) | Normal | Statut | – | *Étoile Swagante* |
+| 37 | Eau Revoir (Flip Turn) | Eau | Phys. | 60 | *Yolosouague* |
+| 41 | Encore (Encore) | Normal | Statut | – | perturbation |
+| 45 | Éclate Griffe (Crush Claw) | Normal | Phys. | 75 | *Pince Écrasante* |
+| 50 | Aqua-Brèche (Liquidation) | Eau | Phys. | 85 | STAB final |
+
+17 attaques. Danse Folle n'est apprise par aucun autre monstre custom.
+
+### CT, CS et tuteurs
+
+Socle du Crabe (CT Toxik, Abri, Repos, Façade, Attraction, Reflet, Protection,
+Danse Pluie, Tempête de Sable, Larcin, Faux-Chage, Tunnel, Tomberoche ;
+tuteurs Ténacité, Blabla Dodo, Ronflement, Vantardise, Coud'Boue, Taillade,
+Vent Glace ; CS Coupe, Surf, Force, Éclate-Roc, Cascade, Plongée), plus :
+CT **Provoc, Tourmente, Casse-Brique** ; tuteurs **Plaquage, Damoclès,
+Métronome** (le « yolo ») et **Boost** (Psych Up).
+
+Exclusions volontaires : **Séisme** et **Éboulement** (identité de
+Crustorail), **Danse Lames** (pas de boost brut), tous les coups de poing.
+
+### Capture, expérience et EV
+
+Capture 60, expérience 170 (comme Crustorail), EV 2 Vit + 1 Att. Même groupe
+d'œuf, croissance et sexe que la famille.
+
+### Sprites
+
+DofusDB #4456, face direction 3, dos direction 7, taille « moyen ». Palette
+d'icône 1. Échelle du Pokédex : 260 / 0.
+
 ## Choix écartés
 
 1. **Types** : Eau/Sol (première proposition) et Eau/Acier. L'utilisateur a
@@ -219,6 +328,11 @@ d'où une capture un peu meilleure qu'un stade final classique (45).
 3. **Boost** : Danse Lames comme Krabboss, ou Pince de Corail à 50 de
    puissance et 50 % de boost.
 4. **Évolution** au niveau 28 comme Krabby (30 retenu).
+5. **Crabe Yoloniste** : types Eau/Normal (immunité Spectre dans l'Épave),
+   Eau/Fée et Eau/Spectre ; archétypes nettoyeur rapide ou musicien mixte
+   (attaques sonores) ; capacités custom *Yolosouague* et *Gesticulation
+   Ridicule*. L'utilisateur a choisi Eau pur, perturbateur + pivot, sans
+   capacité custom, et de passer Crustorail en Eau/Roche.
 
 ## Sprites
 
@@ -237,3 +351,6 @@ Pokédex : 504 / 14 (Crabe), 313 / 5 (Crustorail).
   `MOVE_BOND_METEORE` (PR Gambaf #95).
 - Rencontres : Crabe sur les plages (Route 109, sable) et à la pêche ;
   Crustorail en surf sur les routes maritimes (124-134).
+- Rencontres de l'Épave abandonnée : y placer des Crabes (et des
+  pêches/plongées) pour qu'on puisse les faire évoluer en Yoloniste
+  (`src/data/wild_encounters.json`, géré à part).

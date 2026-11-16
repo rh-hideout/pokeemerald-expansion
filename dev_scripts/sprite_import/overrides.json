@@ -1556,6 +1556,14 @@
     "dos": 7
    },
    "taille": "moyen"
+  },
+  "crabe_yoloniste": {
+   "dofus": {
+    "id": 4456,
+    "face": 3,
+    "dos": 7
+   },
+   "taille": "moyen"
   }
  }
 }

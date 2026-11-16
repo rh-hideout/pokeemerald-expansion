@@ -289,6 +289,12 @@
   "normal.pal": "2faf129908ddd4b4",
   "shiny.pal": "2faf129908ddd4b4"
  },
+ "crabe_yoloniste": {
+  "anim_front.png": "0319d4c489be056b",
+  "back.png": "70992a173eee2807",
+  "normal.pal": "01b952921291b81e",
+  "shiny.pal": "01b952921291b81e"
+ },
  "crachefoux": {
   "anim_front.png": "d166b621662465cb",
   "back.png": "089f2813c503f098",

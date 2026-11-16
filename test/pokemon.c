@@ -595,3 +595,20 @@ TEST("BoxPokemon encryption works")
     EXPECT_EQ(GetMonData(&mon, MON_DATA_DYNAMAX_LEVEL), 3);
     EXPECT_EQ(GetMonData(&mon, MON_DATA_OT_GENDER), 0);
 }
+
+TEST("Crabe evolves into Crabe Yoloniste in the Abandoned Ship, into Crustorail elsewhere")
+{
+    u32 mapsec, expected;
+    struct Pokemon mon;
+    bool32 canStopEvo = TRUE;
+    u32 savedMapsec = gMapHeader.regionMapSectionId;
+
+    PARAMETRIZE { mapsec = MAPSEC_ABANDONED_SHIP; expected = SPECIES_CRABE_YOLONISTE; }
+    PARAMETRIZE { mapsec = MAPSEC_ROUTE_108;      expected = SPECIES_CRUSTORAIL; }
+    PARAMETRIZE { mapsec = MAPSEC_SLATEPORT_CITY; expected = SPECIES_CRUSTORAIL; }
+
+    gMapHeader.regionMapSectionId = mapsec;
+    CreateMon(&mon, SPECIES_CRABE, 30, 0, FALSE, 0, OT_ID_PRESET, 0);
+    EXPECT_EQ(GetEvolutionTargetSpecies(&mon, EVO_MODE_NORMAL, ITEM_NONE, NULL, &canStopEvo, CHECK_EVO), expected);
+    gMapHeader.regionMapSectionId = savedMapsec;
+}
