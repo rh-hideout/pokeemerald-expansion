@@ -1742,3 +1742,5 @@ EventScript_PalletTown_PlayersHouse_2F_TurnOnPC::
 	.include "data/maps/ProtagHouse2F/scripts.inc"
 
 	.include "data/maps/ProtagHouse/scripts.inc"
+
+	.include "data/maps/NuvemaTown/scripts.inc"

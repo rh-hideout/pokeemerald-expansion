@@ -9343,6 +9343,16 @@
       "secondary_tileset": "gTileset_BrendansMaysHouse",
       "border_filepath": "data/layouts/ProtagHouse/border.bin",
       "blockdata_filepath": "data/layouts/ProtagHouse/map.bin"
+    },
+    {
+      "id": "LAYOUT_NUVEMATOWNOVERWORLD",
+      "name": "NuvemaTownOverworld",
+      "width": 32,
+      "height": 32,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Petalburg",
+      "border_filepath": "data/layouts/NuvemaTownOverworld/border.bin",
+      "blockdata_filepath": "data/layouts/NuvemaTownOverworld/map.bin"
     }
   ]
 }

@@ -1163,7 +1163,9 @@
   "gMapGroup_IndoorSevenIslandRoute_Frlg": [
     "SevenIsland_SevaultCanyon_House_Frlg"
   ],
-  "gMapGroup_BW_TownsAndRoutes": [],
+  "gMapGroup_BW_TownsAndRoutes": [
+    "NuvemaTownOverworld"
+  ],
   "gMapGroup_IndoorNuvemaTown": [
     "ProtagHouse",
     "ProtagHouse2F"

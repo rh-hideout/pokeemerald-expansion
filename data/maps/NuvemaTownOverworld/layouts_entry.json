@@ -1,0 +1,10 @@
+{
+    "blockdata_filepath": "data/layouts/NuvemaTownOverworld/map.bin",
+    "border_filepath": "data/layouts/NuvemaTownOverworld/border.bin",
+    "height": 32,
+    "id": "LAYOUT_NUVEMATOWNOVERWORLD",
+    "name": "NuvemaTownOverworld",
+    "primary_tileset": "gTileset_General",
+    "secondary_tileset": "gTileset_Petalburg",
+    "width": 32
+}
