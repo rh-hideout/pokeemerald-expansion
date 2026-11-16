@@ -702,3 +702,21 @@ SINGLE_BATTLE_TEST("Fling - White Herb effect should not remove the target's hel
         EXPECT_EQ(opponent->item, ITEM_RAZOR_CLAW);
     }
 }
+
+SINGLE_BATTLE_TEST("Fling - Berries removed after eating a berry don't activate Cheek Pouch")
+{
+    GIVEN {
+        ASSUME(GetItemPocket(ITEM_SITRUS_BERRY) == POCKET_BERRIES);
+        ASSUME(GetItemPocket(ITEM_FIGY_BERRY) == POCKET_BERRIES);
+        PLAYER(SPECIES_DEDENNE) { Ability(ABILITY_CHEEK_POUCH); Item(ITEM_SITRUS_BERRY); HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_FIGY_BERRY); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_TRICK); MOVE(player, MOVE_FLING); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
+        ABILITY_POPUP(player, ABILITY_CHEEK_POUCH);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TRICK, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
+        NOT ABILITY_POPUP(player, ABILITY_CHEEK_POUCH);
+    }
+}

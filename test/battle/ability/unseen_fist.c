@@ -15,7 +15,7 @@ ASSUMPTIONS
 
 TO_DO_BATTLE_TEST("TODO: Write Unseen Fist (Ability) test titles")
 
-SINGLE_BATTLE_TEST("Unseen Fist ignores Protect when user has Protective Pads, but not with Punching Glove", s16 damage)
+SINGLE_BATTLE_TEST("Unseen Fist ignores Protect when user has Protective Pads, but not with Punching Glove")
 {
     enum Item item;
 
@@ -79,6 +79,7 @@ SINGLE_BATTLE_TEST("Unseen Fist bypasses protect effects without triggering thei
 SINGLE_BATTLE_TEST("Unseen Fist continues bypassing protect effects after being replaced during a multi-strike move")
 {
     GIVEN {
+        WITH_CONFIG(B_UNSEEN_FIST_PIERCING_DRILL, GEN_9);
         ASSUME(MoveMakesContact(MOVE_SURGING_STRIKES));
         ASSUME(GetMoveStrikeCount(MOVE_SURGING_STRIKES) == 3);
         ASSUME(GetMoveEffect(MOVE_OBSTRUCT) == EFFECT_PROTECT);
@@ -98,6 +99,26 @@ SINGLE_BATTLE_TEST("Unseen Fist continues bypassing protect effects after being 
     } THEN {
         EXPECT_EQ(player->ability, ABILITY_MUMMY);
         EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Unseen Fist does not print a protection bypass message when only the target's partner used Protect")
+{
+    GIVEN {
+        PLAYER(SPECIES_URSHIFU) { Ability(ABILITY_UNSEEN_FIST); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN {
+            MOVE(opponentLeft, MOVE_PROTECT);
+            MOVE(playerLeft, MOVE_SCRATCH, target: opponentRight);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerLeft);
+        HP_BAR(opponentRight);
+        NOT MESSAGE("The opposing Wynaut couldn't fully protect itself and got hurt!");
     }
 }
 

@@ -38,21 +38,21 @@ void BXPY_SetupAIData()
 
 void BXPY_SetupBattlers()
 {
-    bool32 isLink = (gBattleTypeFlags & BATTLE_TYPE_LINK);
+    bool32 isLink = (HasAnyBattleFlags(BATTLE_TYPE_LINK));
     bool32 isDouble = IsDoubleBattle();
-    bool32 isMaster =  (gBattleTypeFlags & BATTLE_TYPE_IS_MASTER);
-    bool32 isRecorded = (gBattleTypeFlags & BATTLE_TYPE_RECORDED);
-    bool32 isRecordedMaster = (gBattleTypeFlags & BATTLE_TYPE_RECORDED_IS_MASTER);
-    bool32 isRecordedLink = (gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK);
-    bool32 isMulti = (gBattleTypeFlags & BATTLE_TYPE_MULTI);
-    bool32 isInGamePartner = (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER);
+    bool32 isMaster =  HasAnyBattleFlags(BATTLE_TYPE_IS_MASTER);
+    bool32 isRecorded = HasAnyBattleFlags(BATTLE_TYPE_RECORDED);
+    bool32 isRecordedMaster = HasAnyBattleFlags(BATTLE_TYPE_RECORDED_IS_MASTER);
+    bool32 isRecordedLink = HasAnyBattleFlags(BATTLE_TYPE_RECORDED_LINK);
+    bool32 isMulti = HasAnyBattleFlags(BATTLE_TYPE_MULTI);
+    bool32 isInGamePartner = HasAnyBattleFlags(BATTLE_TYPE_INGAME_PARTNER);
 
     if (!isDouble)
         gBattlersCount = 2;
     else
         gBattlersCount = MAX_BATTLERS_COUNT;
 
-    if ((gBattleTypeFlags & BATTLE_TYPE_BATTLE_TOWER)
+    if (HasAnyBattleFlags(BATTLE_TYPE_BATTLE_TOWER)
         || !isMulti
         || (!isLink && !isRecorded)
         || (isLink && !isDouble))
@@ -87,7 +87,7 @@ void BXPY_SetupAIFlags(void)
     else
         gAiThinkingStruct->aiFlags[B_BATTLER_3] = gAiThinkingStruct->aiFlags[B_BATTLER_1];
 
-    if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
+    if (HasAnyBattleFlags(BATTLE_TYPE_INGAME_PARTNER))
     {
         gAiThinkingStruct->aiFlags[B_BATTLER_2] = GetAiFlags(gPartnerTrainerId, B_BATTLER_2);
     }
@@ -136,7 +136,7 @@ void BXPY_ScorePartyMons(enum BattlerId battler, struct BXPYAiPartyData *bxpyAiP
     // Check all party mons
     for (u32 monIndex = 0; monIndex < lastId; monIndex++)
     {
-        if (!IsValidForBattle(&party[monIndex]))
+        if (!IsMonValidAndAliveForBattle(&party[monIndex]))
             continue;
         // Convert party data to battler data
         PokemonToBattleMon(&party[monIndex], &gBattleMons[battler]);
@@ -157,7 +157,7 @@ void BXPY_ScorePartyMons(enum BattlerId battler, struct BXPYAiPartyData *bxpyAiP
             // Check current mon against all player mons
             for (u32 opposingMonIndex = 0; opposingMonIndex < opposingLastId; opposingMonIndex++)
             {
-                if (!IsValidForBattle(&opposingParty[opposingMonIndex]))
+                if (!IsMonValidAndAliveForBattle(&opposingParty[opposingMonIndex]))
                     continue;
                 // Convert party data to battler data
                 PokemonToBattleMon(&opposingParty[opposingMonIndex], &gBattleMons[opposingBattler]);
@@ -192,14 +192,14 @@ void BXPY_GetChosenPartyMons(struct BXPYAiPartyData *bxpyAiPartyData, u32 monArr
 
     // Create an array of indexes
     u32 monIndexes[PARTY_SIZE];
-    for (u32 i = 0; i < PARTY_SIZE; i++)
+    for (enum PartySlot i = 0; i < PARTY_SIZE; i++)
         monIndexes[i] = i;
 
     bool32 shouldSwap;
     // Bubble sort indexes based on scores
-    for (u32 i = 0; i < PARTY_SIZE - 1; i++)
+    for (enum PartySlot i = 0; i < PARTY_SIZE - 1; i++)
     {
-        for (u32 j = 0; j < PARTY_SIZE - i - 1; j++)
+        for (enum PartySlot j = 0; j < PARTY_SIZE - i - 1; j++)
         {
             shouldSwap = 0;
             // Compares values at these indexes, randomly ordering ties
@@ -222,7 +222,7 @@ void BXPY_GetChosenPartyMons(struct BXPYAiPartyData *bxpyAiPartyData, u32 monArr
         }
     }
 
-    for (u32 i = 0; i < PARTY_SIZE; i++)
+    for (enum PartySlot i = 0; i < PARTY_SIZE; i++)
     {
         if (i >= monCount)
             monIndexes[i] = PARTY_SIZE;

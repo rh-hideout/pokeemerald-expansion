@@ -22,11 +22,21 @@ Buffie (Wobbuffet)
 Brave Nature
 Level: 100
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
-EVs: 252 Atk / 252 Def / 6 SpA
-- Earthquake
-- Flamethrower
-- Celebrate
-- Celebrate
+EVs: 252 Def / 252 SpD / 6 Spe
+- Brutal Swing
+- Water Gun
+- Bubble
+- Sleep Talk
+
+Wynaut
+Brave Nature
+Level: 100
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 Def / 252 SpD / 6 Spe
+- Brutal Swing
+- Fly
+- Bubble
+- Sleep Talk
 
 === DEBUG_TRAINER_AI ===
 Name: Debugger
@@ -37,32 +47,16 @@ Pic: Steven
 Gender: Male
 Music: Male
 
-Metang
+Buffie (Wobbuffet)
 Brave Nature
-Level: 42
+Level: 100
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
-EVs: 252 Atk / 252 Def / 6 SpA
-- Light Screen
-- Psychic
-- Reflect
-- Metal Claw
+EVs: 252 Def / 252 SpD / 6 Spe
+- Sleep Talk
 
-Skarmory
-Impish Nature
-Level: 43
+Wynaut
+Brave Nature
+Level: 100
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
-EVs: 252 HP / 6 SpA / 252 SpD
-- Toxic
-- Aerial Ace
-- Protect
-- Steel Wing
-
-Aggron
-Adamant Nature
-Level: 44
-IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
-EVs: 252 Atk / 252 SpA / 6 SpD
-- Thunder
-- Protect
-- Solar Beam
-- Dragon Claw
+EVs: 252 Def / 252 SpD / 6 Spe
+- Sleep Talk

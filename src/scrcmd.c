@@ -47,6 +47,7 @@
 #include "overworld.h"
 #include "rotating_tile_puzzle.h"
 #include "rtc.h"
+#include "safari_zone.h"
 #include "script.h"
 #include "script_menu.h"
 #include "script_movement.h"
@@ -461,6 +462,7 @@ bool8 ScrCmd_setvar(struct ScriptContext *ctx)
 bool8 ScrCmd_copyvar(struct ScriptContext *ctx)
 {
     u32 varId = ScriptReadHalfword(ctx);
+    assertf(varId != 0, "variable %d set to 0", varId);
     u16 *ptr = GetVarPointer(varId);
 
     Script_RequestEffects(SCREFF_V1);
@@ -2305,7 +2307,7 @@ bool8 ScrCmd_checkfieldmove(struct ScriptContext *ctx)
         return FALSE;
 
     move = FieldMove_GetMoveId(fieldMove);
-    for (enum PartyMon i = PARTY_MON_0; i < PARTY_MON_NONE; i++)
+    for (enum PartySlot i = PARTY_SLOT_0; i < PARTY_SIZE; i++)
     {
         enum Species species = GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES);
         if (!species)
@@ -3262,7 +3264,7 @@ bool8 ScrCmd_fwdweekday(struct ScriptContext *ctx)
     return FALSE;
 }
 
-static bool32 EventEvolution(enum PartyMon partyIndex)
+static bool32 EventEvolution(enum PartySlot partyIndex)
 {
     bool32 canStopEvo = gSpecialVar_0x8000;
     enum Species targetSpecies = GetEvolutionTargetSpecies(&gParties[B_TRAINER_PLAYER][partyIndex], EVO_MODE_SCRIPT_TRIGGER, gSpecialVar_0x8005, NULL, &canStopEvo, CHECK_EVO);
@@ -3280,11 +3282,12 @@ static bool32 EventEvolution(enum PartyMon partyIndex)
 
 static void TriggerMultipleEvolutions_Repeatable(void)
 {
+    u32 triedEvolvingCopy = gTriedEvolving;
     if (gSpecialVar_Result == EVO_EVENT_SUCCESSFUL)
         gSpecialVar_0x8006++;
 
     gCB2_AfterEvolution = TriggerMultipleEvolutions_Repeatable;
-    for (enum PartyMon i = PARTY_MON_0; i < gPartiesCount[B_TRAINER_PLAYER]; i++)
+    for (enum PartySlot i = PARTY_SLOT_0; i < gPartiesCount[B_TRAINER_PLAYER]; i++)
     {
         if (!(gTriedEvolving & (1u << i)))
         {
@@ -3294,9 +3297,11 @@ static void TriggerMultipleEvolutions_Repeatable(void)
         }
     }
 
-    gTriedEvolving = 0;
     gSpecialVar_Result = gSpecialVar_0x8006;
-    SetMainCallback2(CB2_ReturnToFieldContinueScript);
+    if (triedEvolvingCopy != 0)
+        SetMainCallback2(CB2_ReturnToFieldContinueScript);
+
+    gTriedEvolving = 0;
 }
 
 void Script_TriggerMultipleEvolutions(struct ScriptContext *ctx)
@@ -3308,18 +3313,18 @@ void Script_TriggerMultipleEvolutions(struct ScriptContext *ctx)
 void Script_TriggerUniqueEvolution(struct ScriptContext *ctx)
 {
     ctx->waitAfterCallNative = TRUE;
-    if (gSpecialVar_0x8004 == PARTY_MON_CANCEL)
+    if (gSpecialVar_0x8004 == PARTY_SLOT_CANCEL)
     {
         gSpecialVar_Result = EVO_EVENT_IMPOSSIBLE;
         return;
     }
-    assertf(gSpecialVar_0x8004 < PARTY_MON_NONE, "TriggerEvolution script called with invalid partyIndex %d", gSpecialVar_0x8004)
+    assertf(gSpecialVar_0x8004 < PARTY_SIZE, "TriggerEvolution script called with invalid partyIndex %d", gSpecialVar_0x8004)
     {
         gSpecialVar_Result = EVO_EVENT_IMPOSSIBLE;
         return;
     }
     gCB2_AfterEvolution = CB2_ReturnToFieldContinueScript;
-    EventEvolution((enum PartyMon)gSpecialVar_0x8004);
+    EventEvolution((enum PartySlot)gSpecialVar_0x8004);
 }
 
 void Script_EndTrainerCanSeeIf(struct ScriptContext *ctx)
@@ -3377,6 +3382,29 @@ bool8 ScrCmd_getbraillestringwidth(struct ScriptContext * ctx)
         msg = (u8 *)ctx->data[0];
 
     gSpecialVar_0x8004 = GetStringWidth(FONT_BRAILLE, msg, -1);
+    return FALSE;
+}
+
+bool8 ScrCmd_safari_enter(struct ScriptContext * ctx)
+{
+    u8 value = ScriptReadByte(ctx);
+
+    Script_RequestEffects(SCREFF_V1 | SCREFF_SAVE);
+    EnterSafariMode(value);
+    return FALSE;
+}
+
+bool8 ScrCmd_safari_exit(struct ScriptContext * ctx)
+{
+    u8 doWarp = ScriptReadByte(ctx);
+
+    ExitSafariMode();
+    if (doWarp)
+    {
+        DoWarp();
+        ResetInitialPlayerAvatarState();
+        return TRUE;
+    }
     return FALSE;
 }
 

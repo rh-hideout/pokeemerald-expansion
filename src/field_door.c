@@ -744,6 +744,22 @@ static const struct DoorGraphics sDoorAnimGraphicsTable[] =
         .palettes = sDoorAnimPalettes_BattleFrontier
     },
     {
+        .metatileNum = METATILE_BattleFrontierOutsideWest_Door,
+        .tileset = &gTileset_BattleFrontierOutsideEast,
+        .sound = DOOR_SOUND_NORMAL,
+        .size = DOOR_SIZE_1x2,
+        .tiles = sDoorAnimTiles_BattleFrontier,
+        .palettes = sDoorAnimPalettes_BattleFrontier
+    },
+    {
+        .metatileNum = METATILE_BattleFrontierOutsideWest_Door_Sliding,
+        .tileset = &gTileset_BattleFrontierOutsideEast,
+        .sound = DOOR_SOUND_SLIDING,
+        .size = DOOR_SIZE_1x2,
+        .tiles = sDoorAnimTiles_BattleFrontierSliding,
+        .palettes = sDoorAnimPalettes_BattleFrontier
+    },
+    {
         .metatileNum = METATILE_BattleDome_Door_PreBattleRoom,
         .tileset = &gTileset_BattleDome,
         .sound = DOOR_SOUND_SLIDING,

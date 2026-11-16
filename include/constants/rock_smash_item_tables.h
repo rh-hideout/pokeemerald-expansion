@@ -1,0 +1,14 @@
+#ifndef GUARD_CONSTANTS_ROCK_SMASH_ITEM_TABLES_H
+#define GUARD_CONSTANTS_ROCK_SMASH_ITEM_TABLES_H
+
+enum RockSmashTableId
+{
+    ROCK_SMASH_ITEM_TABLE_DEFAULT,
+    ROCK_SMASH_ITEM_TABLE_CLIFF,
+    ROCK_SMASH_ITEM_TABLE_RUINS,
+    ROCK_SMASH_ITEM_TABLE_FOSSIL,
+    ROCK_SMASH_ITEM_TABLE_NONE,
+    ROCK_SMASH_ITEM_TABLE_COUNT // Mapjson uses this to represent rocks without a rockSmashItemTable field. It has a default fallback behaviour.
+};
+
+#endif // GUARD_CONSTANTS_ROCK_SMASH_ITEM_TABLES_H

@@ -3,6 +3,7 @@
 #include "battle.h"
 #include "battle_partner.h"
 #include "battle_frontier.h"
+#include "battle_tower.h"
 #include "data.h"
 #include "frontier_util.h"
 #include "difficulty.h"
@@ -27,7 +28,7 @@ enum PartnerType
 {
     PRESET_PARTNER,
     FRONTIER_PARTNER,
-    FRIEND_RECORD_PARTNER,
+    RECORDMIX_FRIEND_PARTNER,
     APPRENTICE_PARTNER,
     NO_PARTNER_FOUND
 };
@@ -37,19 +38,19 @@ static enum PartnerType GetPartnerType(u16 trainerId)
     if (trainerId < FRONTIER_TRAINERS_COUNT)
         return FRONTIER_PARTNER;
     if (trainerId < TRAINER_RECORD_MIXING_APPRENTICE)
-        return FRIEND_RECORD_PARTNER;
+        return RECORDMIX_FRIEND_PARTNER;
     if (trainerId < TRAINER_EREADER)
         return APPRENTICE_PARTNER;
-    if (trainerId > TRAINER_PARTNER(PARTNER_NONE) && trainerId < TRAINER_PARTNER(PARTNER_COUNT))
+    if (IsPartnerTrainerId(trainerId))
         return PRESET_PARTNER;
     return NO_PARTNER_FOUND;
 }
 
-STATIC_ASSERT(TRAINER_PARTNER(PARTNER_NONE) >= TRAINER_EREADER, OverlappingPartnerIds);
+_Static_assert(TRAINER_PARTNER(PARTNER_NONE) >= TRAINER_EREADER, "Reserved partner ids are overlapping with user-defined partner ids");
 
 static void FillPresetPartnerParty(u16 trainerId)
 {
-    s32 lastIndex = AreMultiPartiesFullTeams() ? PARTY_SIZE : MULTI_PARTY_SIZE;
+    s32 lastIndex = AreMultiPartiesHalfTeams() ? MULTI_PARTY_SIZE : PARTY_SIZE;
 
     const struct Trainer *partner = GetTrainerStructFromId(trainerId);
     struct TrainerGenerator partnerGen;
@@ -64,20 +65,18 @@ static void FillPresetPartnerParty(u16 trainerId)
 
 static void FillFrontierPartnerParty(u16 trainerId)
 {
-    u32 level = SetFacilityPtrsGetLevel();
-    u32 ivs = GetFrontierTrainerFixedIvs(trainerId);
-    u32 otID = Random32();
+    struct FacilityMonGenerator generator = GetFacilityMonGenerator(trainerId);
+    generator.partySize = FRONTIER_MULTI_PARTY_SIZE;
     for (u32 i = 0; i < FRONTIER_MULTI_PARTY_SIZE; i++)
     {
-        u32 monId = gSaveBlock2Ptr->frontier.trainerIds[i + 18];
-        CreateFacilityMon(&gFacilityTrainerMons[monId], level, ivs, otID, 0, &gParties[B_TRAINER_PARTNER][i]);
+        CreateFacilityMon(&gParties[B_TRAINER_PARTNER][i], &generator, gSaveBlock2Ptr->frontier.trainerIds[i + 18]);
         SetMonData(&gParties[B_TRAINER_PARTNER][i], MON_DATA_OT_NAME, gFacilityTrainers[trainerId].trainerName);
         enum Gender gender = GetFrontierTrainerGender(trainerId);
         SetMonData(&gParties[B_TRAINER_PARTNER][i], MON_DATA_OT_GENDER, &gender);
     }
 }
 
-static void FillFriendRecordPartnerParty(u16 friendRecordId)
+static void FillRecordMixingPartnerParty(u16 friendRecordId)
 {
     u8 trainerName[PLAYER_NAME_LENGTH + 1];
     struct EmeraldBattleTowerRecord *record = &gSaveBlock2Ptr->frontier.towerRecords[friendRecordId];
@@ -119,40 +118,90 @@ void FillPartnerParty(u16 trainerId)
 {
     ZeroPartyMons(gParties[B_TRAINER_PARTNER]);
 
-    switch(GetPartnerType(trainerId))
+    switch (GetPartnerType(trainerId))
     {
-        case PRESET_PARTNER:
-            FillPresetPartnerParty(trainerId);
-            break;
-        case FRONTIER_PARTNER:
-            FillFrontierPartnerParty(trainerId);
-            break;
-        case FRIEND_RECORD_PARTNER:
-            FillFriendRecordPartnerParty(trainerId - TRAINER_RECORD_MIXING_FRIEND);
-            break;
-        case APPRENTICE_PARTNER:
-            FillApprenticePartnerParty(trainerId - TRAINER_RECORD_MIXING_APPRENTICE);
-            break;
-        case NO_PARTNER_FOUND:
-            errorf("trainerId %d is not a valid id for a partner", trainerId);
-            break;
+    case PRESET_PARTNER:
+        FillPresetPartnerParty(trainerId);
+        break;
+    case FRONTIER_PARTNER:
+        FillFrontierPartnerParty(trainerId);
+        break;
+    case RECORDMIX_FRIEND_PARTNER:
+        FillRecordMixingPartnerParty(trainerId - TRAINER_RECORD_MIXING_FRIEND);
+        break;
+    case APPRENTICE_PARTNER:
+        FillApprenticePartnerParty(trainerId - TRAINER_RECORD_MIXING_APPRENTICE);
+        break;
+    case NO_PARTNER_FOUND:
+        errorf("trainerId %d is not a valid id for a partner", trainerId);
+        break;
     }
 }
 
 enum TrainerClassID GetPartnerClass(u16 trainerId)
 {
     enum TrainerClassID trainerClass;
-    switch(GetPartnerType(trainerId))
+    switch (GetPartnerType(trainerId))
     {
-        case PRESET_PARTNER:
-            trainerClass = GetTrainerClassFromId(trainerId);
-        case FRONTIER_PARTNER:
-        case FRIEND_RECORD_PARTNER:
-        case APPRENTICE_PARTNER:
-            trainerClass = GetFrontierOpponentClass(trainerId);
-        case NO_PARTNER_FOUND:
-            errorf("trainerId %d is not a valid id for a partner", trainerId);
-            trainerClass = 0;
+    case PRESET_PARTNER:
+        trainerClass = GetTrainerClassFromId(trainerId);
+        break;
+    case FRONTIER_PARTNER:
+    case RECORDMIX_FRIEND_PARTNER:
+    case APPRENTICE_PARTNER:
+        trainerClass = GetFrontierOpponentClass(trainerId);
+        break;
+    case NO_PARTNER_FOUND:
+        errorf("trainerId %d is not a valid id for a partner", trainerId);
+        trainerClass = 0;
     }
     return trainerClass;
 }
+
+void GetInGamePartnerName(u8 *dst, u16 trainerId)
+{
+    switch (GetPartnerType(trainerId))
+    {
+    case PRESET_PARTNER:
+        StringCopy(dst, GetTrainerNameFromId(trainerId));
+        break;
+    case FRONTIER_PARTNER:
+    case RECORDMIX_FRIEND_PARTNER:
+    case APPRENTICE_PARTNER:
+        GetFrontierTrainerName(dst, trainerId);
+        break;
+    case NO_PARTNER_FOUND:
+        errorf("trainerId %d is not a valid id for a partner", trainerId);
+        dst[0] = EOS;
+    }
+}
+
+static void FillFriendRecordPartnerParty(u16 friendRecordId)
+{
+    u8 trainerName[PLAYER_NAME_LENGTH + 1];
+    struct EmeraldBattleTowerRecord *record = &gSaveBlock2Ptr->frontier.towerRecords[friendRecordId];
+    for (u32 i = 0; i < FRONTIER_MULTI_PARTY_SIZE; i++)
+    {
+        struct BattleTowerPokemon monData = record->party[gSaveBlock2Ptr->frontier.trainerIds[18 + i]];
+        StringCopy(trainerName, record->name);
+        if (record->language == LANGUAGE_JAPANESE)
+        {
+            if (monData.nickname[0] != EXT_CTRL_CODE_BEGIN || monData.nickname[1] != EXT_CTRL_CODE_JPN)
+            {
+                monData.nickname[5] = EOS;
+                ConvertInternationalString(monData.nickname, LANGUAGE_JAPANESE);
+            }
+        }
+        else
+        {
+            if (monData.nickname[0] == EXT_CTRL_CODE_BEGIN && monData.nickname[1] == EXT_CTRL_CODE_JPN)
+                trainerName[5] = EOS;
+        }
+        CreateBattleTowerMon_HandleLevel(&gParties[B_TRAINER_PARTNER][i], &monData, TRUE);
+        SetMonData(&gParties[B_TRAINER_PARTNER][i], MON_DATA_OT_NAME, trainerName);
+        enum Gender gender = GetFrontierTrainerGender(friendRecordId + TRAINER_RECORD_MIXING_FRIEND);
+        SetMonData(&gParties[B_TRAINER_PARTNER][i], MON_DATA_OT_GENDER, &gender);
+    }
+}
+
+

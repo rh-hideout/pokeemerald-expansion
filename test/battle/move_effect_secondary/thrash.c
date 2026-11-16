@@ -138,3 +138,38 @@ SINGLE_BATTLE_TEST("Thrash confuses the user after it finishes even if move fail
         EXPECT_EQ(player->pp[0], 9);
     }
 }
+
+DOUBLE_BATTLE_TEST("Thrash will be redirected by Lightning Rod if Electrified")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_ELECTRIFY) == EFFECT_ELECTRIFY);
+        PLAYER(SPECIES_WYNAUT);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_PIKACHU) { Ability(ABILITY_LIGHTNING_ROD); }
+    } WHEN {
+        TURN { MOVE(opponentRight, MOVE_ELECTRIFY, target: playerLeft); MOVE(playerLeft, MOVE_THRASH, target: opponentLeft); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRIFY, opponentRight);
+        ABILITY_POPUP(opponentRight, ABILITY_LIGHTNING_ROD); // redirection
+        ABILITY_POPUP(opponentRight, ABILITY_LIGHTNING_ROD); // absorbtion
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_THRASH, playerLeft);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Thrash can be redirected by Follow Me")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_FOLLOW_ME) == EFFECT_FOLLOW_ME);
+        PLAYER(SPECIES_WYNAUT);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponentRight, MOVE_FOLLOW_ME); MOVE(playerLeft, MOVE_THRASH, target: opponentLeft); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FOLLOW_ME, opponentRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_THRASH, playerLeft);
+        HP_BAR(opponentRight);
+    }
+}

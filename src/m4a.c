@@ -943,7 +943,7 @@ void CgbSound(void)
                 {
                 case 1:
                     *nrx0ptr = channels->sweep;
-                    // fallthrough
+                    [[fallthrough]];
                 case 2:
                     *nrx1ptr = ((u32)channels->wavePointer << 6) + channels->length;
                     goto init_env_step_time_dir;

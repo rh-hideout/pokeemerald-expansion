@@ -45,7 +45,7 @@ SINGLE_BATTLE_TEST("Mental Herb clears the Torment timer set by G-Max Meltdown (
 {
     GIVEN {
         WITH_CONFIG(B_MENTAL_HERB, GEN_5);
-        ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_MELTDOWN, MOVE_EFFECT_TORMENT_SIDE));
+        ASSUME(MoveHasAdditionalEffectOnSide(MOVE_G_MAX_MELTDOWN, MOVE_EFFECT_TORMENT));
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_MENTAL_HERB); }
         OPPONENT(SPECIES_MELMETAL) { GigantamaxFactor(TRUE); }
     } WHEN {
@@ -91,6 +91,7 @@ SINGLE_BATTLE_TEST("Mental Herb cures Heal Block volatile status (Gen 5+)")
         WITH_CONFIG(B_MENTAL_HERB, GEN_5);
         ASSUME(GetMoveEffect(MOVE_HEAL_BLOCK) == EFFECT_HEAL_BLOCK);
         ASSUME(MoveHasAdditionalEffect(MOVE_PSYCHIC_NOISE, MOVE_EFFECT_PSYCHIC_NOISE));
+        ASSUME(MoveHasAdditionalEffect(MOVE_HEAL_BLOCK, MOVE_EFFECT_HEAL_BLOCK));
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_MENTAL_HERB); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

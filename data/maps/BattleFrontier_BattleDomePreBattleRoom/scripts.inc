@@ -138,8 +138,7 @@ BattleFrontier_BattleDomePreBattleRoom_EventScript_ContinueChallenge::
 	fadescreen FADE_TO_BLACK
 	call BattleFrontier_EventScript_GetLvlMode
 	copyvar VAR_0x8004, VAR_RESULT
-	setvar VAR_0x8005, DOME_BATTLE_PARTY_SIZE  @ 2 of the 3 party mons are selected for battle
-	special ChoosePartyForBattleFrontier
+	choosepartyforbattlefrontier DOME_BATTLE_PARTY_SIZE  @ 2 of the 3 party mons are selected for battle
 	frontier_resetsketch
 	goto_if_eq VAR_RESULT, 0, BattleFrontier_BattleDomePreBattleRoom_EventScript_AskReadyForNextRound
 	dome_set DOME_DATA_SELECTED_MONS

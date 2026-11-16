@@ -18,7 +18,7 @@
 
 // Overworld Wild Encounters (OWEs)
 #define WE_OW_ENCOUNTERS                        FALSE   // If TRUE, OW Pokémon can spawn as Overworld Wild Encounters on the current map. Requires OW_POKEMON_OBJECT_EVENTS.
-                                                        // If WE_OW_ENCOUNTERS is TRUE, it is recommended that OW_GFX_COMPRESS be set to FALSE to prevent VRAM issues.
+                                                        // If WE_OW_ENCOUNTERS is TRUE, it is recommended that OW_GFX_COMPRESS be set to OGC_FAST or OGC_NONE to prevent VRAM issues.
 #define WE_OWE_FLAG_DISABLED                    0       // Replace 0 with a flag to use it to enable/disable generated OWEs.
 #define WE_OWE_SPECIAL_ONLY                     FALSE   // If TRUE, generated OWEs can only be special spawns.
 #define WE_OWE_BATTLE_PIKE                      TRUE    // If TRUE, OWEs can spawn in the Battle Pike, if FALSE random encounters will be enabled instead. Requires WE_OW_ENCOUNTERS to be TRUE.

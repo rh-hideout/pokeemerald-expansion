@@ -59,7 +59,7 @@ DOUBLE_BATTLE_TEST("Hurricane can hit airborne targets (Sky Drop)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SKY_DROP) == EFFECT_SKY_DROP);
-        ASSUME(GetTwoTurnMoveSemiInvulnerability(MOVE_SKY_DROP) == STATE_ON_AIR);
+        ASSUME(GetTwoTurnMoveSemiInvulnerability(MOVE_SKY_DROP) == STATE_SKY_DROP_ATTACKER);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);

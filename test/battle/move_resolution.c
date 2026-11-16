@@ -103,3 +103,20 @@ DOUBLE_BATTLE_TEST("Moves hitting into Substitute and non-Substitute trigger eff
         }
     }
 }
+
+SINGLE_BATTLE_TEST("Effectiveness strings are displayed before move effects")
+{
+    GIVEN {
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_METAL_CLAW, self: TRUE, attack: +1);
+        ASSUME(GetMoveEffect(MOVE_FOCUS_ENERGY) == EFFECT_FOCUS_ENERGY);
+        PLAYER(SPECIES_WOBBUFFET) { Attack(1); SpAttack(1); Item(ITEM_SCOPE_LENS); }
+        OPPONENT(SPECIES_GEODUDE) {};
+    } WHEN {
+        TURN { MOVE(player, MOVE_FOCUS_ENERGY); }
+        TURN { MOVE(player, MOVE_METAL_CLAW); }
+    } SCENE {
+        MESSAGE("It's super effective!");
+        MESSAGE("A critical hit!");
+        MESSAGE("Wobbuffet's Attack rose!");
+    }
+}

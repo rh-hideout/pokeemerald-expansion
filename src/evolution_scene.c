@@ -183,12 +183,12 @@ static void Task_BeginEvolutionScene(u8 taskId)
         {
             enum Species postEvoSpecies;
             bool32 canStopEvo;
-            enum PartyMon partyId;
+            enum PartySlot partyId;
 
             mon = &gParties[B_TRAINER_PLAYER][gTasks[taskId].tPartyId];
             postEvoSpecies = gTasks[taskId].tPostEvoSpecies;
             canStopEvo = gTasks[taskId].tCanStop;
-            partyId = (enum PartyMon)gTasks[taskId].tPartyId;
+            partyId = (enum PartySlot)gTasks[taskId].tPartyId;
 
             DestroyTask(taskId);
             EvolutionScene(mon, postEvoSpecies, canStopEvo, partyId);
@@ -197,7 +197,7 @@ static void Task_BeginEvolutionScene(u8 taskId)
     }
 }
 
-void BeginEvolutionScene(struct Pokemon *mon, enum Species postEvoSpecies, bool32 canStopEvo, enum PartyMon partyId)
+void BeginEvolutionScene(struct Pokemon *mon, enum Species postEvoSpecies, bool32 canStopEvo, enum PartySlot partyId)
 {
     u8 taskId = CreateTask(Task_BeginEvolutionScene, 0);
     gTasks[taskId].tState = 0;
@@ -207,7 +207,7 @@ void BeginEvolutionScene(struct Pokemon *mon, enum Species postEvoSpecies, bool3
     SetMainCallback2(CB2_BeginEvolutionScene);
 }
 
-void EvolutionScene(struct Pokemon *mon, enum Species postEvoSpecies, bool32 canStopEvo, enum PartyMon partyId)
+void EvolutionScene(struct Pokemon *mon, enum Species postEvoSpecies, bool32 canStopEvo, enum PartySlot partyId)
 {
     u8 name[POKEMON_NAME_BUFFER_SIZE];
     enum Species currSpecies;
@@ -562,7 +562,7 @@ static void CreateShedinja(enum Species preEvoSpecies, enum Species postEvoSpeci
         if (evolutions[i].method == EVO_SPLIT_FROM_EVO
          && evolutions[i].param == postEvoSpecies
          && gPartiesCount[B_TRAINER_PLAYER] < PARTY_SIZE
-         && DoesMonMeetAdditionalConditions(mon, evolutions[i].params, NULL, PARTY_MON_NONE, NULL, CHECK_EVO))
+         && DoesMonMeetAdditionalConditions(mon, evolutions[i].params, NULL, PARTY_SLOT_NONE, NULL, CHECK_EVO))
         {
             s32 j;
             struct Pokemon *shedinja = &gParties[B_TRAINER_PLAYER][gPartiesCount[B_TRAINER_PLAYER]];
@@ -921,6 +921,7 @@ static void Task_EvolutionScene(u8 taskId)
                 gTasks[taskId].tLearnMoveNoState = (P_ASK_MOVE_CONFIRMATION) ? MVSTATE_ASK_CANCEL : MVSTATE_CANCEL;
                 gTasks[taskId].tLearnMoveState++;
             }
+            [[fallthrough]];
         case MVSTATE_PRINT_YES_NO:
             if (!IsTextPrinterActiveOnWindow(0) && !IsSEPlaying())
             {
@@ -1328,6 +1329,7 @@ static void Task_TradeEvolutionScene(u8 taskId)
                 gTasks[taskId].tLearnMoveNoState = (P_ASK_MOVE_CONFIRMATION) ? T_MVSTATE_ASK_CANCEL : T_MVSTATE_CANCEL;
                 gTasks[taskId].tLearnMoveState++;
             }
+            [[fallthrough]];
         case T_MVSTATE_PRINT_YES_NO:
             if (!IsTextPrinterActiveOnWindow(0) && !IsSEPlaying())
             {

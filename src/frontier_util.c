@@ -1820,14 +1820,14 @@ void CopyFrontierTrainerText(u8 whichText, u16 trainerId)
         }
         else if (trainerId < TRAINER_RECORD_MIXING_APPRENTICE)
         {
-            if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
+            if (HasAnyBattleFlags(BATTLE_TYPE_RECORDED))
                 FrontierSpeechToString(GetRecordedBattleEasyChatSpeech());
             else
                 FrontierSpeechToString(gSaveBlock2Ptr->frontier.towerRecords[trainerId - TRAINER_RECORD_MIXING_FRIEND].speechWon);
         }
         else
         {
-            if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
+            if (HasAnyBattleFlags(BATTLE_TYPE_RECORDED))
                 FrontierSpeechToString(GetRecordedBattleEasyChatSpeech());
             else
                 FrontierSpeechToString(gSaveBlock2Ptr->apprentices[trainerId - TRAINER_RECORD_MIXING_APPRENTICE].speechWon);
@@ -1850,14 +1850,14 @@ void CopyFrontierTrainerText(u8 whichText, u16 trainerId)
         }
         else if (trainerId < TRAINER_RECORD_MIXING_APPRENTICE)
         {
-            if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
+            if (HasAnyBattleFlags(BATTLE_TYPE_RECORDED))
                 FrontierSpeechToString(GetRecordedBattleEasyChatSpeech());
             else
                 FrontierSpeechToString(gSaveBlock2Ptr->frontier.towerRecords[trainerId - TRAINER_RECORD_MIXING_FRIEND].speechLost);
         }
         else
         {
-            if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
+            if (HasAnyBattleFlags(BATTLE_TYPE_RECORDED))
             {
                 trainerId = GetRecordedBattleApprenticeId();
                 FrontierSpeechToString(gApprentices[trainerId].speechLost);
@@ -2025,7 +2025,7 @@ static void GiveFacilitySymbol(void)
 
 static void CheckBattleTypeFlag(void)
 {
-    if (gBattleTypeFlags & gSpecialVar_0x8005)
+    if (HasAnyBattleFlags(gSpecialVar_0x8005))
         gSpecialVar_Result = TRUE;
     else
         gSpecialVar_Result = FALSE;
@@ -2550,7 +2550,7 @@ enum TrainerPicID GetFrontierBrainTrainerPicIndex(void)
 {
     s32 facility;
 
-    if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
+    if (HasAnyBattleFlags(BATTLE_TYPE_RECORDED))
         facility = GetRecordedBattleFrontierFacility();
     else
         facility = VarGet(VAR_FRONTIER_FACILITY);
@@ -2562,7 +2562,7 @@ enum TrainerClassID GetFrontierBrainTrainerClass(void)
 {
     s32 facility;
 
-    if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
+    if (HasAnyBattleFlags(BATTLE_TYPE_RECORDED))
         facility = GetRecordedBattleFrontierFacility();
     else
         facility = VarGet(VAR_FRONTIER_FACILITY);
@@ -2576,7 +2576,7 @@ void CopyFrontierBrainTrainerName(u8 *dst)
     s32 facility;
     const u8 *trainerName;
 
-    if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
+    if (HasAnyBattleFlags(BATTLE_TYPE_RECORDED))
         facility = GetRecordedBattleFrontierFacility();
     else
         facility = VarGet(VAR_FRONTIER_FACILITY);
@@ -2613,7 +2613,7 @@ void CreateFrontierBrainPokemon(void)
     s32 symbol = GetFronterBrainSymbol();
 
     if (facility == FRONTIER_FACILITY_DOME)
-        selectedMonBits = GetDomeTrainerSelectedMons(TrainerIdToDomeTournamentId(TRAINER_FRONTIER_BRAIN));
+        selectedMonBits = GetDomeTrainerSelectedMons(TRAINER_FRONTIER_BRAIN);
     else
         selectedMonBits = (1 << FRONTIER_PARTY_SIZE) - 1; // all 3 mons selected
 
@@ -2714,7 +2714,7 @@ static void CopyFrontierBrainText(bool8 playerWonText)
     s32 facility;
     s32 symbol;
 
-    if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
+    if (HasAnyBattleFlags(BATTLE_TYPE_RECORDED))
     {
         facility = GetRecordedBattleFrontierFacility();
         symbol = GetRecordedBattleFronterBrainSymbol();
@@ -2841,7 +2841,7 @@ u8 GetFrontierTrainerFrontSpriteId(u16 trainerId)
 {
     if (trainerId == TRAINER_FRONTIER_BRAIN)
          return GetFrontierBrainTrainerPicIndex();
-    enum FacilitySingleClass facilityClass = GetFacilityClassFromTrainerId(trainerId, gBattleTypeFlags & BATTLE_TYPE_RECORDED);
+    enum FacilitySingleClass facilityClass = GetFacilityClassFromTrainerId(trainerId, HasAnyBattleFlags(BATTLE_TYPE_RECORDED));
     return gFacilitySingleClassList[facilityClass].trainerPic;
 }
 
@@ -2850,20 +2850,18 @@ enum TrainerClassID GetFrontierOpponentClass(u16 trainerId)
     if (trainerId == TRAINER_FRONTIER_BRAIN)
         return GetFrontierBrainTrainerClass();
 
-    enum FacilitySingleClass facilityClass = GetFacilityClassFromTrainerId(trainerId, gBattleTypeFlags & BATTLE_TYPE_RECORDED);
+    enum FacilitySingleClass facilityClass = GetFacilityClassFromTrainerId(trainerId, HasAnyBattleFlags(BATTLE_TYPE_RECORDED));
     return gFacilitySingleClassList[facilityClass].trainerClass;
-
 }
 
 enum FacilitySingleClass GetFrontierTrainerFacilityClass(u16 trainerId)
 {
-    return GetFacilityClassFromTrainerId(trainerId, gBattleTypeFlags & BATTLE_TYPE_RECORDED);
+    return GetFacilityClassFromTrainerId(trainerId, HasAnyBattleFlags(BATTLE_TYPE_RECORDED));
 }
 
 void GetFrontierTrainerName(u8 *dst, u16 trainerId)
 {
     s32 i = 0;
-    enum DifficultyLevel difficulty = GetBattlePartnerDifficultyLevel(trainerId);
     SetFacilityPtrsGetLevel();
 
     if (trainerId == TRAINER_EREADER)
@@ -2878,11 +2876,6 @@ void GetFrontierTrainerName(u8 *dst, u16 trainerId)
         CopyFrontierBrainTrainerName(dst);
         return;
     }
-    else if (trainerId > TRAINER_PARTNER(PARTNER_NONE))
-    {
-        for (i = 0; gBattlePartners[difficulty][trainerId - TRAINER_PARTNER(PARTNER_NONE)].trainerName[i] != EOS; i++)
-            dst[i] = gBattlePartners[difficulty][trainerId - TRAINER_PARTNER(PARTNER_NONE)].trainerName[i];
-    }
     else if (trainerId < FRONTIER_TRAINERS_COUNT)
     {
         for (i = 0; i < PLAYER_NAME_LENGTH; i++)
@@ -2890,7 +2883,7 @@ void GetFrontierTrainerName(u8 *dst, u16 trainerId)
     }
     else if (trainerId < TRAINER_RECORD_MIXING_APPRENTICE)
     {
-        if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
+        if (HasAnyBattleFlags(BATTLE_TYPE_RECORDED))
         {
             GetRecordedBattleRecordMixFriendName(dst);
             return;
@@ -2906,7 +2899,7 @@ void GetFrontierTrainerName(u8 *dst, u16 trainerId)
     {
         u8 id, language;
 
-        if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
+        if (HasAnyBattleFlags(BATTLE_TYPE_RECORDED))
         {
             id = GetRecordedBattleApprenticeId();
             language = GetRecordedBattleApprenticeLanguage();

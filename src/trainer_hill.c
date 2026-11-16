@@ -807,7 +807,7 @@ void SetHillTrainerFlag(void)
         }
     }
 
-    if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
+    if (HasAnyBattleFlags(BATTLE_TYPE_TWO_OPPONENTS))
     {
         for (i = 0; i < HILL_TRAINERS_PER_FLOOR; i++)
         {

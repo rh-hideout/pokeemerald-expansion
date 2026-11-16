@@ -33,7 +33,11 @@ DOUBLE_BATTLE_TEST("Flower Veil prevents status on allied Grass-types - right ta
     } WHEN {
         TURN { MOVE(playerLeft, move, target: opponentRight); }
     } SCENE {
-        NOT ANIMATION(ANIM_TYPE_MOVE, move, playerLeft);
+        if (move == MOVE_POISON_GAS && B_UPDATED_MOVE_DATA >= 5) { // spread move in gen5+
+            ANIMATION(ANIM_TYPE_MOVE, move, playerLeft);
+        } else {
+            NOT ANIMATION(ANIM_TYPE_MOVE, move, playerLeft);
+        }
         ABILITY_POPUP(opponentLeft, ABILITY_FLOWER_VEIL);
         MESSAGE("The opposing Chikorita surrounded itself with a veil of petals!");
     }
@@ -57,7 +61,11 @@ DOUBLE_BATTLE_TEST("Flower Veil prevents status on allied Grass-types - left tar
     } WHEN {
         TURN { MOVE(playerLeft, move, target: opponentLeft); }
     } SCENE {
-        NOT ANIMATION(ANIM_TYPE_MOVE, move, playerLeft);
+        if (move == MOVE_POISON_GAS && B_UPDATED_MOVE_DATA >= 5) { // spread move in gen5+
+            ANIMATION(ANIM_TYPE_MOVE, move, playerLeft);
+        } else {
+            NOT ANIMATION(ANIM_TYPE_MOVE, move, playerLeft);
+        }
         ABILITY_POPUP(opponentRight, ABILITY_FLOWER_VEIL);
         MESSAGE("The opposing Chikorita surrounded itself with a veil of petals!");
     }
@@ -139,5 +147,33 @@ DOUBLE_BATTLE_TEST("Flower Veil does not prevent self-inflicted stat drops - abi
         EXPECT_EQ(playerLeft->types[2], TYPE_GRASS);
         EXPECT_EQ(playerLeft->statStages[STAT_DEF], DEFAULT_STAT_STAGE - 1);
         EXPECT_EQ(playerLeft->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + 2);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Flower Veil has no effect on Flame Orb or Toxic Orb")
+{
+    enum Item item;
+
+    PARAMETRIZE { item = ITEM_FLAME_ORB; }
+    PARAMETRIZE { item = ITEM_TOXIC_ORB; }
+
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_FLAME_ORB].holdEffect == HOLD_EFFECT_FLAME_ORB);
+        ASSUME(gItemsInfo[ITEM_TOXIC_ORB].holdEffect == HOLD_EFFECT_TOXIC_ORB);
+        PLAYER(SPECIES_CHIKORITA) { Item(item); }
+        PLAYER(SPECIES_COMFEY) { Ability(ABILITY_FLOWER_VEIL); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN {}
+    } SCENE {
+        NOT ABILITY_POPUP(playerRight, ABILITY_FLOWER_VEIL);
+        if (item == ITEM_FLAME_ORB) {
+            ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_BRN, playerLeft);
+            STATUS_ICON(playerLeft, burn: TRUE);
+        } else {
+            ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, playerLeft);
+            STATUS_ICON(playerLeft, badPoison: TRUE);
+        }
     }
 }

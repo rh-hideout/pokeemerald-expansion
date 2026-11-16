@@ -1,14 +1,10 @@
 ProfBirch_EventScript_UpdateLocation::
 	goto_if_eq VAR_PETALBURG_GYM_STATE, 0, Common_EventScript_NopReturn
 	goto_if_set FLAG_SYS_GAME_CLEAR, ProfBirch_EventScript_MoveToLab
-	call_if_eq VAR_BIRCH_STATE, 0, ProfBirch_EventScript_MoveToLab
-	call_if_eq VAR_BIRCH_STATE, 1, ProfBirch_EventScript_MoveToLab
-	call_if_eq VAR_BIRCH_STATE, 2, ProfBirch_EventScript_MoveToRoute101
-	call_if_eq VAR_BIRCH_STATE, 3, ProfBirch_EventScript_MoveToRoute101
-	call_if_eq VAR_BIRCH_STATE, 4, ProfBirch_EventScript_MoveToRoute103
-	call_if_eq VAR_BIRCH_STATE, 5, ProfBirch_EventScript_MoveToRoute103
-	call_if_eq VAR_BIRCH_STATE, 6, ProfBirch_EventScript_MoveToLab
-	call_if_eq VAR_BIRCH_STATE, 7, ProfBirch_EventScript_MoveToLab
+	call_if_between VAR_BIRCH_STATE, 0, 1, ProfBirch_EventScript_MoveToLab
+	call_if_between VAR_BIRCH_STATE, 2, 3, ProfBirch_EventScript_MoveToRoute101
+	call_if_between VAR_BIRCH_STATE, 4, 5, ProfBirch_EventScript_MoveToRoute103
+	call_if_between VAR_BIRCH_STATE, 6, 7,ProfBirch_EventScript_MoveToLab
 	return
 
 ProfBirch_EventScript_MoveToLab::
