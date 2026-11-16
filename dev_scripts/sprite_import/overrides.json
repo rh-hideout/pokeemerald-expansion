@@ -1564,6 +1564,14 @@
     "dos": 7
    },
    "taille": "moyen"
+  },
+  "tourthon": {
+   "dofus": {
+    "id": 4439,
+    "face": 3,
+    "dos": 7
+   },
+   "taille": "grand"
   }
  }
 }

@@ -1280,6 +1280,12 @@
   "normal.pal": "052ded5a15de0cfb",
   "shiny.pal": "c6ca26e983b28bac"
  },
+ "tourthon": {
+  "anim_front.png": "1f63585795c62029",
+  "back.png": "211603dca7142b92",
+  "normal.pal": "d1ad12fc68cdc95e",
+  "shiny.pal": "d1ad12fc68cdc95e"
+ },
  "tremorse": {
   "anim_front.png": "7e89440d2b05774d",
   "back.png": "c359829c1aff31c3",

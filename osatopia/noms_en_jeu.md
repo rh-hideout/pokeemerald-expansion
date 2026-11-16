@@ -35,6 +35,7 @@ nom français de conception.
 | Nécromancie | Necromancy | `MOVE_NECROMANCIE` |
 | Lance de l'effroi | Dread Lance | `MOVE_LANCE_EFFROI` |
 | Hantâme | Soul Haunt | `MOVE_HANTAME` |
+| Enlacement | Embrace | `MOVE_ENLACEMENT` |
 
 ## Talents
 | Nom de conception (fiches) | Nom en jeu | Constante |
