@@ -327,6 +327,11 @@
                                 "species": "SPECIES_VIRUSTINE"
                             },
                             {
+                                "min_level": 20,
+                                "max_level": 30,
+                                "species": "SPECIES_GELIKAN"
+                            },
+                            {
                                 "min_level": 15,
                                 "max_level": 20,
                                 "species": "SPECIES_DAGON"
@@ -335,11 +340,6 @@
                                 "min_level": 25,
                                 "max_level": 30,
                                 "species": "SPECIES_SCARAFEUILLE_BLEU"
-                            },
-                            {
-                                "min_level": 25,
-                                "max_level": 30,
-                                "species": "SPECIES_BACTERRIB"
                             },
                             {
                                 "min_level": 25,
@@ -399,7 +399,7 @@
                             {
                                 "min_level": 35,
                                 "max_level": 40,
-                                "species": "SPECIES_GAMBAF"
+                                "species": "SPECIES_TOURTHON"
                             }
                         ]
                     }
@@ -481,6 +481,11 @@
                                 "species": "SPECIES_VIRUSTINE"
                             },
                             {
+                                "min_level": 20,
+                                "max_level": 30,
+                                "species": "SPECIES_GELIKAN"
+                            },
+                            {
                                 "min_level": 15,
                                 "max_level": 20,
                                 "species": "SPECIES_DAGON"
@@ -489,11 +494,6 @@
                                 "min_level": 25,
                                 "max_level": 30,
                                 "species": "SPECIES_SCARAFEUILLE_BLEU"
-                            },
-                            {
-                                "min_level": 25,
-                                "max_level": 30,
-                                "species": "SPECIES_BACTERRIB"
                             },
                             {
                                 "min_level": 25,
@@ -553,7 +553,7 @@
                             {
                                 "min_level": 35,
                                 "max_level": 40,
-                                "species": "SPECIES_GAMBAF"
+                                "species": "SPECIES_TOURTHON"
                             }
                         ]
                     }
@@ -570,6 +570,11 @@
                                 "species": "SPECIES_VIRUSTINE"
                             },
                             {
+                                "min_level": 20,
+                                "max_level": 30,
+                                "species": "SPECIES_GELIKAN"
+                            },
+                            {
                                 "min_level": 15,
                                 "max_level": 20,
                                 "species": "SPECIES_DAGON"
@@ -578,11 +583,6 @@
                                 "min_level": 25,
                                 "max_level": 30,
                                 "species": "SPECIES_SCARAFEUILLE_BLEU"
-                            },
-                            {
-                                "min_level": 25,
-                                "max_level": 30,
-                                "species": "SPECIES_BACTERRIB"
                             },
                             {
                                 "min_level": 25,
@@ -642,7 +642,7 @@
                             {
                                 "min_level": 35,
                                 "max_level": 40,
-                                "species": "SPECIES_GAMBAF"
+                                "species": "SPECIES_TOURTHON"
                             }
                         ]
                     }
@@ -724,6 +724,11 @@
                                 "species": "SPECIES_VIRUSTINE"
                             },
                             {
+                                "min_level": 20,
+                                "max_level": 30,
+                                "species": "SPECIES_GELIKAN"
+                            },
+                            {
                                 "min_level": 15,
                                 "max_level": 20,
                                 "species": "SPECIES_DAGON"
@@ -732,11 +737,6 @@
                                 "min_level": 25,
                                 "max_level": 30,
                                 "species": "SPECIES_SCARAFEUILLE_BLEU"
-                            },
-                            {
-                                "min_level": 25,
-                                "max_level": 30,
-                                "species": "SPECIES_BACTERRIB"
                             },
                             {
                                 "min_level": 25,
@@ -796,7 +796,7 @@
                             {
                                 "min_level": 35,
                                 "max_level": 40,
-                                "species": "SPECIES_GAMBAF"
+                                "species": "SPECIES_TOURTHON"
                             }
                         ]
                     }
@@ -1607,6 +1607,11 @@
                                 "species": "SPECIES_VIRUSTINE"
                             },
                             {
+                                "min_level": 20,
+                                "max_level": 30,
+                                "species": "SPECIES_GELIKAN"
+                            },
+                            {
                                 "min_level": 15,
                                 "max_level": 20,
                                 "species": "SPECIES_DAGON"
@@ -1615,11 +1620,6 @@
                                 "min_level": 25,
                                 "max_level": 30,
                                 "species": "SPECIES_SCARAFEUILLE_BLEU"
-                            },
-                            {
-                                "min_level": 25,
-                                "max_level": 30,
-                                "species": "SPECIES_BACTERRIB"
                             },
                             {
                                 "min_level": 25,
@@ -1679,7 +1679,7 @@
                             {
                                 "min_level": 35,
                                 "max_level": 40,
-                                "species": "SPECIES_GAMBAF"
+                                "species": "SPECIES_TOURTHON"
                             }
                         ]
                     }
@@ -1698,6 +1698,11 @@
                             {
                                 "min_level": 30,
                                 "max_level": 35,
+                                "species": "SPECIES_GELIKAN"
+                            },
+                            {
+                                "min_level": 30,
+                                "max_level": 35,
                                 "species": "SPECIES_PICHON"
                             },
                             {
@@ -1709,11 +1714,6 @@
                                 "min_level": 36,
                                 "max_level": 40,
                                 "species": "SPECIES_RAUL_MOPS"
-                            },
-                            {
-                                "min_level": 25,
-                                "max_level": 30,
-                                "species": "SPECIES_TILAMPROIE"
                             }
                         ]
                     },
@@ -1768,7 +1768,7 @@
                             {
                                 "min_level": 35,
                                 "max_level": 40,
-                                "species": "SPECIES_GAMBAF"
+                                "species": "SPECIES_TOURTHON"
                             }
                         ]
                     }
@@ -2782,6 +2782,11 @@
                                 "species": "SPECIES_VIRUSTINE"
                             },
                             {
+                                "min_level": 20,
+                                "max_level": 30,
+                                "species": "SPECIES_GELIKAN"
+                            },
+                            {
                                 "min_level": 15,
                                 "max_level": 20,
                                 "species": "SPECIES_DAGON"
@@ -2790,11 +2795,6 @@
                                 "min_level": 25,
                                 "max_level": 30,
                                 "species": "SPECIES_SCARAFEUILLE_BLEU"
-                            },
-                            {
-                                "min_level": 25,
-                                "max_level": 30,
-                                "species": "SPECIES_BACTERRIB"
                             },
                             {
                                 "min_level": 25,
@@ -2854,7 +2854,7 @@
                             {
                                 "min_level": 35,
                                 "max_level": 40,
-                                "species": "SPECIES_GAMBAF"
+                                "species": "SPECIES_TOURTHON"
                             }
                         ]
                     }
@@ -2871,6 +2871,11 @@
                                 "species": "SPECIES_VIRUSTINE"
                             },
                             {
+                                "min_level": 20,
+                                "max_level": 30,
+                                "species": "SPECIES_GELIKAN"
+                            },
+                            {
                                 "min_level": 15,
                                 "max_level": 20,
                                 "species": "SPECIES_DAGON"
@@ -2879,11 +2884,6 @@
                                 "min_level": 25,
                                 "max_level": 30,
                                 "species": "SPECIES_SCARAFEUILLE_BLEU"
-                            },
-                            {
-                                "min_level": 25,
-                                "max_level": 30,
-                                "species": "SPECIES_BACTERRIB"
                             },
                             {
                                 "min_level": 25,
@@ -2943,7 +2943,7 @@
                             {
                                 "min_level": 35,
                                 "max_level": 40,
-                                "species": "SPECIES_GAMBAF"
+                                "species": "SPECIES_TOURTHON"
                             }
                         ]
                     }
@@ -2960,6 +2960,11 @@
                                 "species": "SPECIES_VIRUSTINE"
                             },
                             {
+                                "min_level": 20,
+                                "max_level": 30,
+                                "species": "SPECIES_GELIKAN"
+                            },
+                            {
                                 "min_level": 15,
                                 "max_level": 20,
                                 "species": "SPECIES_DAGON"
@@ -2968,11 +2973,6 @@
                                 "min_level": 25,
                                 "max_level": 30,
                                 "species": "SPECIES_SCARAFEUILLE_BLEU"
-                            },
-                            {
-                                "min_level": 25,
-                                "max_level": 30,
-                                "species": "SPECIES_BACTERRIB"
                             },
                             {
                                 "min_level": 25,
@@ -3032,7 +3032,7 @@
                             {
                                 "min_level": 35,
                                 "max_level": 40,
-                                "species": "SPECIES_GAMBAF"
+                                "species": "SPECIES_TOURTHON"
                             }
                         ]
                     }
@@ -3049,6 +3049,11 @@
                                 "species": "SPECIES_VIRUSTINE"
                             },
                             {
+                                "min_level": 20,
+                                "max_level": 30,
+                                "species": "SPECIES_GELIKAN"
+                            },
+                            {
                                 "min_level": 15,
                                 "max_level": 20,
                                 "species": "SPECIES_DAGON"
@@ -3057,11 +3062,6 @@
                                 "min_level": 25,
                                 "max_level": 30,
                                 "species": "SPECIES_SCARAFEUILLE_BLEU"
-                            },
-                            {
-                                "min_level": 25,
-                                "max_level": 30,
-                                "species": "SPECIES_BACTERRIB"
                             },
                             {
                                 "min_level": 25,
@@ -3121,7 +3121,7 @@
                             {
                                 "min_level": 35,
                                 "max_level": 40,
-                                "species": "SPECIES_GAMBAF"
+                                "species": "SPECIES_TOURTHON"
                             }
                         ]
                     }
@@ -3203,6 +3203,11 @@
                                 "species": "SPECIES_VIRUSTINE"
                             },
                             {
+                                "min_level": 20,
+                                "max_level": 30,
+                                "species": "SPECIES_GELIKAN"
+                            },
+                            {
                                 "min_level": 15,
                                 "max_level": 20,
                                 "species": "SPECIES_DAGON"
@@ -3211,11 +3216,6 @@
                                 "min_level": 25,
                                 "max_level": 30,
                                 "species": "SPECIES_SCARAFEUILLE_BLEU"
-                            },
-                            {
-                                "min_level": 25,
-                                "max_level": 30,
-                                "species": "SPECIES_BACTERRIB"
                             },
                             {
                                 "min_level": 25,
@@ -3275,7 +3275,7 @@
                             {
                                 "min_level": 35,
                                 "max_level": 40,
-                                "species": "SPECIES_GAMBAF"
+                                "species": "SPECIES_TOURTHON"
                             }
                         ]
                     }
@@ -3734,6 +3734,11 @@
                                 "species": "SPECIES_VIRUSTINE"
                             },
                             {
+                                "min_level": 20,
+                                "max_level": 30,
+                                "species": "SPECIES_GELIKAN"
+                            },
+                            {
                                 "min_level": 15,
                                 "max_level": 20,
                                 "species": "SPECIES_DAGON"
@@ -3742,11 +3747,6 @@
                                 "min_level": 25,
                                 "max_level": 30,
                                 "species": "SPECIES_SCARAFEUILLE_BLEU"
-                            },
-                            {
-                                "min_level": 25,
-                                "max_level": 30,
-                                "species": "SPECIES_BACTERRIB"
                             },
                             {
                                 "min_level": 25,
@@ -3806,7 +3806,7 @@
                             {
                                 "min_level": 35,
                                 "max_level": 40,
-                                "species": "SPECIES_GAMBAF"
+                                "species": "SPECIES_TOURTHON"
                             }
                         ]
                     }
@@ -3823,6 +3823,11 @@
                                 "species": "SPECIES_VIRUSTINE"
                             },
                             {
+                                "min_level": 20,
+                                "max_level": 30,
+                                "species": "SPECIES_GELIKAN"
+                            },
+                            {
                                 "min_level": 15,
                                 "max_level": 20,
                                 "species": "SPECIES_DAGON"
@@ -3831,11 +3836,6 @@
                                 "min_level": 25,
                                 "max_level": 30,
                                 "species": "SPECIES_SCARAFEUILLE_BLEU"
-                            },
-                            {
-                                "min_level": 25,
-                                "max_level": 30,
-                                "species": "SPECIES_BACTERRIB"
                             },
                             {
                                 "min_level": 25,
@@ -3895,7 +3895,7 @@
                             {
                                 "min_level": 35,
                                 "max_level": 40,
-                                "species": "SPECIES_GAMBAF"
+                                "species": "SPECIES_TOURTHON"
                             }
                         ]
                     }
@@ -3977,6 +3977,11 @@
                                 "species": "SPECIES_VIRUSTINE"
                             },
                             {
+                                "min_level": 20,
+                                "max_level": 30,
+                                "species": "SPECIES_GELIKAN"
+                            },
+                            {
                                 "min_level": 15,
                                 "max_level": 20,
                                 "species": "SPECIES_DAGON"
@@ -3985,11 +3990,6 @@
                                 "min_level": 25,
                                 "max_level": 30,
                                 "species": "SPECIES_SCARAFEUILLE_BLEU"
-                            },
-                            {
-                                "min_level": 25,
-                                "max_level": 30,
-                                "species": "SPECIES_BACTERRIB"
                             },
                             {
                                 "min_level": 25,
@@ -4049,7 +4049,7 @@
                             {
                                 "min_level": 35,
                                 "max_level": 40,
-                                "species": "SPECIES_GAMBAF"
+                                "species": "SPECIES_TOURTHON"
                             }
                         ]
                     }
@@ -4690,7 +4690,7 @@
                             {
                                 "min_level": 35,
                                 "max_level": 40,
-                                "species": "SPECIES_GAMBAF"
+                                "species": "SPECIES_TOURTHON"
                             }
                         ]
                     }
@@ -4709,6 +4709,11 @@
                             {
                                 "min_level": 30,
                                 "max_level": 35,
+                                "species": "SPECIES_GELIKAN"
+                            },
+                            {
+                                "min_level": 30,
+                                "max_level": 35,
                                 "species": "SPECIES_PICHON"
                             },
                             {
@@ -4720,11 +4725,6 @@
                                 "min_level": 36,
                                 "max_level": 40,
                                 "species": "SPECIES_RAUL_MOPS"
-                            },
-                            {
-                                "min_level": 25,
-                                "max_level": 30,
-                                "species": "SPECIES_TILAMPROIE"
                             }
                         ]
                     },
@@ -4779,7 +4779,7 @@
                             {
                                 "min_level": 35,
                                 "max_level": 40,
-                                "species": "SPECIES_GAMBAF"
+                                "species": "SPECIES_TOURTHON"
                             }
                         ]
                     }
@@ -4798,6 +4798,11 @@
                             {
                                 "min_level": 30,
                                 "max_level": 35,
+                                "species": "SPECIES_GELIKAN"
+                            },
+                            {
+                                "min_level": 30,
+                                "max_level": 35,
                                 "species": "SPECIES_PICHON"
                             },
                             {
@@ -4809,11 +4814,6 @@
                                 "min_level": 36,
                                 "max_level": 40,
                                 "species": "SPECIES_RAUL_MOPS"
-                            },
-                            {
-                                "min_level": 25,
-                                "max_level": 30,
-                                "species": "SPECIES_TILAMPROIE"
                             }
                         ]
                     },
@@ -4868,7 +4868,7 @@
                             {
                                 "min_level": 35,
                                 "max_level": 40,
-                                "species": "SPECIES_GAMBAF"
+                                "species": "SPECIES_TOURTHON"
                             }
                         ]
                     }
@@ -4887,6 +4887,11 @@
                             {
                                 "min_level": 30,
                                 "max_level": 35,
+                                "species": "SPECIES_GELIKAN"
+                            },
+                            {
+                                "min_level": 30,
+                                "max_level": 35,
                                 "species": "SPECIES_PICHON"
                             },
                             {
@@ -4898,11 +4903,6 @@
                                 "min_level": 36,
                                 "max_level": 40,
                                 "species": "SPECIES_RAUL_MOPS"
-                            },
-                            {
-                                "min_level": 25,
-                                "max_level": 30,
-                                "species": "SPECIES_TILAMPROIE"
                             }
                         ]
                     },
@@ -4957,7 +4957,7 @@
                             {
                                 "min_level": 35,
                                 "max_level": 40,
-                                "species": "SPECIES_GAMBAF"
+                                "species": "SPECIES_TOURTHON"
                             }
                         ]
                     }
@@ -4976,6 +4976,11 @@
                             {
                                 "min_level": 30,
                                 "max_level": 35,
+                                "species": "SPECIES_GELIKAN"
+                            },
+                            {
+                                "min_level": 30,
+                                "max_level": 35,
                                 "species": "SPECIES_PICHON"
                             },
                             {
@@ -4987,11 +4992,6 @@
                                 "min_level": 36,
                                 "max_level": 40,
                                 "species": "SPECIES_RAUL_MOPS"
-                            },
-                            {
-                                "min_level": 25,
-                                "max_level": 30,
-                                "species": "SPECIES_TILAMPROIE"
                             }
                         ]
                     },
@@ -5046,7 +5046,7 @@
                             {
                                 "min_level": 35,
                                 "max_level": 40,
-                                "species": "SPECIES_GAMBAF"
+                                "species": "SPECIES_TOURTHON"
                             }
                         ]
                     }
@@ -5130,6 +5130,11 @@
                             {
                                 "min_level": 30,
                                 "max_level": 35,
+                                "species": "SPECIES_GELIKAN"
+                            },
+                            {
+                                "min_level": 30,
+                                "max_level": 35,
                                 "species": "SPECIES_PICHON"
                             },
                             {
@@ -5141,11 +5146,6 @@
                                 "min_level": 36,
                                 "max_level": 40,
                                 "species": "SPECIES_RAUL_MOPS"
-                            },
-                            {
-                                "min_level": 25,
-                                "max_level": 30,
-                                "species": "SPECIES_TILAMPROIE"
                             }
                         ]
                     },
@@ -5200,7 +5200,7 @@
                             {
                                 "min_level": 35,
                                 "max_level": 40,
-                                "species": "SPECIES_GAMBAF"
+                                "species": "SPECIES_TOURTHON"
                             }
                         ]
                     }
@@ -5219,6 +5219,11 @@
                             {
                                 "min_level": 30,
                                 "max_level": 35,
+                                "species": "SPECIES_GELIKAN"
+                            },
+                            {
+                                "min_level": 30,
+                                "max_level": 35,
                                 "species": "SPECIES_PICHON"
                             },
                             {
@@ -5230,11 +5235,6 @@
                                 "min_level": 36,
                                 "max_level": 40,
                                 "species": "SPECIES_RAUL_MOPS"
-                            },
-                            {
-                                "min_level": 25,
-                                "max_level": 30,
-                                "species": "SPECIES_TILAMPROIE"
                             }
                         ]
                     },
@@ -5289,7 +5289,7 @@
                             {
                                 "min_level": 35,
                                 "max_level": 40,
-                                "species": "SPECIES_GAMBAF"
+                                "species": "SPECIES_TOURTHON"
                             }
                         ]
                     }
@@ -5308,6 +5308,11 @@
                             {
                                 "min_level": 30,
                                 "max_level": 35,
+                                "species": "SPECIES_GELIKAN"
+                            },
+                            {
+                                "min_level": 30,
+                                "max_level": 35,
                                 "species": "SPECIES_PICHON"
                             },
                             {
@@ -5319,11 +5324,6 @@
                                 "min_level": 36,
                                 "max_level": 40,
                                 "species": "SPECIES_RAUL_MOPS"
-                            },
-                            {
-                                "min_level": 25,
-                                "max_level": 30,
-                                "species": "SPECIES_TILAMPROIE"
                             }
                         ]
                     },
@@ -5378,7 +5378,7 @@
                             {
                                 "min_level": 35,
                                 "max_level": 40,
-                                "species": "SPECIES_GAMBAF"
+                                "species": "SPECIES_TOURTHON"
                             }
                         ]
                     }
@@ -5397,6 +5397,11 @@
                             {
                                 "min_level": 30,
                                 "max_level": 35,
+                                "species": "SPECIES_GELIKAN"
+                            },
+                            {
+                                "min_level": 30,
+                                "max_level": 35,
                                 "species": "SPECIES_PICHON"
                             },
                             {
@@ -5408,11 +5413,6 @@
                                 "min_level": 36,
                                 "max_level": 40,
                                 "species": "SPECIES_RAUL_MOPS"
-                            },
-                            {
-                                "min_level": 25,
-                                "max_level": 30,
-                                "species": "SPECIES_TILAMPROIE"
                             }
                         ]
                     },
@@ -5467,7 +5467,7 @@
                             {
                                 "min_level": 35,
                                 "max_level": 40,
-                                "species": "SPECIES_GAMBAF"
+                                "species": "SPECIES_TOURTHON"
                             }
                         ]
                     }
@@ -5486,6 +5486,11 @@
                             {
                                 "min_level": 30,
                                 "max_level": 35,
+                                "species": "SPECIES_GELIKAN"
+                            },
+                            {
+                                "min_level": 30,
+                                "max_level": 35,
                                 "species": "SPECIES_PICHON"
                             },
                             {
@@ -5497,11 +5502,6 @@
                                 "min_level": 36,
                                 "max_level": 40,
                                 "species": "SPECIES_RAUL_MOPS"
-                            },
-                            {
-                                "min_level": 25,
-                                "max_level": 30,
-                                "species": "SPECIES_TILAMPROIE"
                             }
                         ]
                     },
@@ -5556,7 +5556,7 @@
                             {
                                 "min_level": 35,
                                 "max_level": 40,
-                                "species": "SPECIES_GAMBAF"
+                                "species": "SPECIES_TOURTHON"
                             }
                         ]
                     }
@@ -8284,7 +8284,7 @@
                             {
                                 "min_level": 35,
                                 "max_level": 40,
-                                "species": "SPECIES_GAMBAF"
+                                "species": "SPECIES_TOURTHON"
                             }
                         ]
                     }
@@ -8438,7 +8438,7 @@
                             {
                                 "min_level": 35,
                                 "max_level": 40,
-                                "species": "SPECIES_GAMBAF"
+                                "species": "SPECIES_TOURTHON"
                             }
                         ]
                     }
@@ -8455,6 +8455,11 @@
                                 "species": "SPECIES_VIRUSTINE"
                             },
                             {
+                                "min_level": 20,
+                                "max_level": 30,
+                                "species": "SPECIES_GELIKAN"
+                            },
+                            {
                                 "min_level": 15,
                                 "max_level": 20,
                                 "species": "SPECIES_DAGON"
@@ -8463,11 +8468,6 @@
                                 "min_level": 25,
                                 "max_level": 30,
                                 "species": "SPECIES_SCARAFEUILLE_BLEU"
-                            },
-                            {
-                                "min_level": 25,
-                                "max_level": 30,
-                                "species": "SPECIES_BACTERRIB"
                             },
                             {
                                 "min_level": 25,
@@ -8527,7 +8527,7 @@
                             {
                                 "min_level": 35,
                                 "max_level": 40,
-                                "species": "SPECIES_GAMBAF"
+                                "species": "SPECIES_TOURTHON"
                             }
                         ]
                     }
@@ -8544,6 +8544,11 @@
                                 "species": "SPECIES_VIRUSTINE"
                             },
                             {
+                                "min_level": 20,
+                                "max_level": 30,
+                                "species": "SPECIES_GELIKAN"
+                            },
+                            {
                                 "min_level": 15,
                                 "max_level": 20,
                                 "species": "SPECIES_DAGON"
@@ -8552,11 +8557,6 @@
                                 "min_level": 25,
                                 "max_level": 30,
                                 "species": "SPECIES_SCARAFEUILLE_BLEU"
-                            },
-                            {
-                                "min_level": 25,
-                                "max_level": 30,
-                                "species": "SPECIES_BACTERRIB"
                             },
                             {
                                 "min_level": 25,
@@ -8616,7 +8616,7 @@
                             {
                                 "min_level": 35,
                                 "max_level": 40,
-                                "species": "SPECIES_GAMBAF"
+                                "species": "SPECIES_TOURTHON"
                             }
                         ]
                     }
@@ -8633,6 +8633,11 @@
                                 "species": "SPECIES_VIRUSTINE"
                             },
                             {
+                                "min_level": 20,
+                                "max_level": 30,
+                                "species": "SPECIES_GELIKAN"
+                            },
+                            {
                                 "min_level": 15,
                                 "max_level": 20,
                                 "species": "SPECIES_DAGON"
@@ -8641,11 +8646,6 @@
                                 "min_level": 25,
                                 "max_level": 30,
                                 "species": "SPECIES_SCARAFEUILLE_BLEU"
-                            },
-                            {
-                                "min_level": 25,
-                                "max_level": 30,
-                                "species": "SPECIES_BACTERRIB"
                             },
                             {
                                 "min_level": 25,
@@ -8705,7 +8705,7 @@
                             {
                                 "min_level": 35,
                                 "max_level": 40,
-                                "species": "SPECIES_GAMBAF"
+                                "species": "SPECIES_TOURTHON"
                             }
                         ]
                     }
@@ -8724,6 +8724,11 @@
                             {
                                 "min_level": 30,
                                 "max_level": 35,
+                                "species": "SPECIES_GELIKAN"
+                            },
+                            {
+                                "min_level": 30,
+                                "max_level": 35,
                                 "species": "SPECIES_PICHON"
                             },
                             {
@@ -8735,11 +8740,6 @@
                                 "min_level": 36,
                                 "max_level": 40,
                                 "species": "SPECIES_RAUL_MOPS"
-                            },
-                            {
-                                "min_level": 25,
-                                "max_level": 30,
-                                "species": "SPECIES_TILAMPROIE"
                             }
                         ]
                     },
@@ -8794,7 +8794,7 @@
                             {
                                 "min_level": 35,
                                 "max_level": 40,
-                                "species": "SPECIES_GAMBAF"
+                                "species": "SPECIES_TOURTHON"
                             }
                         ]
                     }
@@ -8813,6 +8813,11 @@
                             {
                                 "min_level": 30,
                                 "max_level": 35,
+                                "species": "SPECIES_GELIKAN"
+                            },
+                            {
+                                "min_level": 30,
+                                "max_level": 35,
                                 "species": "SPECIES_PICHON"
                             },
                             {
@@ -8824,11 +8829,6 @@
                                 "min_level": 36,
                                 "max_level": 40,
                                 "species": "SPECIES_RAUL_MOPS"
-                            },
-                            {
-                                "min_level": 25,
-                                "max_level": 30,
-                                "species": "SPECIES_TILAMPROIE"
                             }
                         ]
                     },
@@ -8883,7 +8883,7 @@
                             {
                                 "min_level": 35,
                                 "max_level": 40,
-                                "species": "SPECIES_GAMBAF"
+                                "species": "SPECIES_TOURTHON"
                             }
                         ]
                     }
@@ -8902,6 +8902,11 @@
                             {
                                 "min_level": 30,
                                 "max_level": 35,
+                                "species": "SPECIES_GELIKAN"
+                            },
+                            {
+                                "min_level": 30,
+                                "max_level": 35,
                                 "species": "SPECIES_PICHON"
                             },
                             {
@@ -8913,11 +8918,6 @@
                                 "min_level": 36,
                                 "max_level": 40,
                                 "species": "SPECIES_RAUL_MOPS"
-                            },
-                            {
-                                "min_level": 25,
-                                "max_level": 30,
-                                "species": "SPECIES_TILAMPROIE"
                             }
                         ]
                     },
@@ -8972,7 +8972,7 @@
                             {
                                 "min_level": 35,
                                 "max_level": 40,
-                                "species": "SPECIES_GAMBAF"
+                                "species": "SPECIES_TOURTHON"
                             }
                         ]
                     }
@@ -9252,6 +9252,11 @@
                             {
                                 "min_level": 30,
                                 "max_level": 35,
+                                "species": "SPECIES_GELIKAN"
+                            },
+                            {
+                                "min_level": 30,
+                                "max_level": 35,
                                 "species": "SPECIES_PICHON"
                             },
                             {
@@ -9263,11 +9268,6 @@
                                 "min_level": 36,
                                 "max_level": 40,
                                 "species": "SPECIES_RAUL_MOPS"
-                            },
-                            {
-                                "min_level": 25,
-                                "max_level": 30,
-                                "species": "SPECIES_TILAMPROIE"
                             }
                         ]
                     },
@@ -9322,7 +9322,7 @@
                             {
                                 "min_level": 35,
                                 "max_level": 40,
-                                "species": "SPECIES_GAMBAF"
+                                "species": "SPECIES_TOURTHON"
                             }
                         ]
                     }
