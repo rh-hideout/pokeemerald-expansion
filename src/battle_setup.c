@@ -402,9 +402,12 @@ static void DoStandardWildBattle(bool32 isDouble)
     if (IsNPCFollowerWildBattle())
     {
         gBattleTypeFlags |= BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_DOUBLE;
+        SavePlayerParty();
     }
     else if (isDouble)
+    {
         gBattleTypeFlags |= BATTLE_TYPE_DOUBLE;
+    }
     if (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE)
     {
         VarSet(VAR_TEMP_E, 0);
