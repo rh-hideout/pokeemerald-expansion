@@ -10198,3 +10198,11 @@ DirectSoundWaveData_mistralton_18::
 	.align 2
 DirectSoundWaveData_mistralton_19::
 	.incbin "sound/direct_sound_samples/mistralton_19.bin"
+
+	.align 2
+DirectSoundWaveData_mistralton_9::
+	.incbin "sound/direct_sound_samples/mistralton_9.bin"
+
+	.align 2
+DirectSoundWaveData_mistralton_10::
+	.incbin "sound/direct_sound_samples/mistralton_10.bin"

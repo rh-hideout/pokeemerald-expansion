@@ -34,6 +34,7 @@
 .include "sound/voicegroups/keysplits/bw_15.inc"
 .include "sound/voicegroups/keysplits/bw_16.inc"
 .include "sound/voicegroups/keysplits/bw_17.inc"
+.include "sound/voicegroups/keysplits/bw_18.inc"
 .include "sound/voicegroups/keysplits/bw_19.inc"
 .include "sound/voicegroups/keysplits/bw_20.inc"
 .include "sound/voicegroups/keysplits/bw_23.inc"

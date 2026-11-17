@@ -67,6 +67,10 @@ keysplit bw_keysplit_16, 0
     split 1, 80
     split 2, 128
 
+keysplit bw_keysplit_18, 0
+    split 0, 68
+    split 1, 128
+
 keysplit bw_keysplit_19, 0
     split 0, 56
     split 1, 68

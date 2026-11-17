@@ -17,7 +17,7 @@ voice_group bw_mistralton
 	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
 	voice_keysplit voicegroup_bw_16_keysplit, keysplit_bw_keysplit_16
 	voice_keysplit voicegroup_bw_17_keysplit, keysplit_bw_keysplit_13
-	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
+	voice_keysplit voicegroup_bw_18_keysplit, keysplit_bw_keysplit_18
 	voice_keysplit voicegroup_bw_19_keysplit, keysplit_bw_keysplit_19
 	voice_keysplit voicegroup_bw_20_keysplit, keysplit_bw_keysplit_20
 	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
