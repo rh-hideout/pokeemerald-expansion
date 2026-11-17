@@ -6,6 +6,7 @@
 #include "battle_ai_field_statuses.h"
 #include "battle_ai_util.h"
 #include "battle_ai_main.h"
+#include "battle_ai_record.h"
 #include "battle_stat_change.h"
 #include "battle_controllers.h"
 #include "battle_factory.h"
@@ -368,12 +369,9 @@ void SetBattlerData(enum BattlerId battlerId)
 {
     if (!BattlerHasAi(battlerId) && gAiThinkingStruct->saved[battlerId].saved)
     {
-        enum Species species, illusionSpecies;
-        enum BattleSide side = GetBattlerSide(battlerId);
-
         // Simulate Illusion
-        species = gBattleMons[battlerId].species;
-        illusionSpecies = GetIllusionMonSpecies(battlerId);
+        enum Species species = gBattleMons[battlerId].species;
+        enum Species illusionSpecies = GetIllusionMonSpecies(battlerId);
         if (illusionSpecies != SPECIES_NONE && ShouldFailForIllusion(illusionSpecies, battlerId))
         {
             // If the battler's type has not been changed, AI assumes the types of the illusion mon.
@@ -386,23 +384,32 @@ void SetBattlerData(enum BattlerId battlerId)
             species = illusionSpecies;
         }
 
+        struct AiPartyMon *aiPartyMon = GetRecordedPartyMonData(battlerId);
+
         // Use the known battler's ability.
-        if (gAiPartyData->mons[side][gBattlerPartyIndexes[battlerId]].ability != ABILITY_NONE)
-            gBattleMons[battlerId].ability = gAiPartyData->mons[side][gBattlerPartyIndexes[battlerId]].ability;
+        if (aiPartyMon->ability != ABILITY_NONE)
+        {
+            gBattleMons[battlerId].ability = aiPartyMon->ability;
+        }
         // Check if mon can only have one ability.
-        else if (GetSpeciesAbility(species, 1) == ABILITY_NONE
-                || GetSpeciesAbility(species, 1) == GetSpeciesAbility(species, 0))
+        else if (GetSpeciesAbility(species, 1) == ABILITY_NONE || GetSpeciesAbility(species, 1) == GetSpeciesAbility(species, 0))
+        {
             gBattleMons[battlerId].ability = GetSpeciesAbility(species, 0);
+        }
         // The ability is unknown.
         else
+        {
             gBattleMons[battlerId].ability = ABILITY_NONE;
+        }
 
-        if (gAiPartyData->mons[side][gBattlerPartyIndexes[battlerId]].heldEffect == 0)
+        if (aiPartyMon->holdEffect == 0)
+        {
             gBattleMons[battlerId].item = ITEM_NONE;
+        }
 
         for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
         {
-            if (gAiPartyData->mons[side][gBattlerPartyIndexes[battlerId]].moves[moveIndex] == 0)
+            if (aiPartyMon->moves[moveIndex] == 0)
                 gBattleMons[battlerId].moves[moveIndex] = MOVE_NONE;
         }
     }
@@ -1778,8 +1785,9 @@ enum Ability AI_DecideKnownAbilityForTurn(enum BattlerId battlerId)
     if (knownAbility == ABILITY_NONE)
         return knownAbility;
 
-    if (gAiPartyData->mons[GetBattlerSide(battlerId)][gBattlerPartyIndexes[battlerId]].ability != ABILITY_NONE)
-        return gAiPartyData->mons[GetBattlerSide(battlerId)][gBattlerPartyIndexes[battlerId]].ability;
+    enum Ability recordedAbility = GetRecordedPartyMonData(battlerId)->ability;
+    if (recordedAbility != ABILITY_NONE)
+        return recordedAbility;
 
     // Abilities that prevent fleeing - treat as always known
     if (knownAbility == ABILITY_SHADOW_TAG || knownAbility == ABILITY_MAGNET_PULL || knownAbility == ABILITY_ARENA_TRAP)
@@ -1812,7 +1820,7 @@ enum HoldEffect AI_DecideHoldEffectForTurn(enum BattlerId battlerId)
         return holdEffect;
 
     if (!IsAiBattlerAware(battlerId) && !IsAiFlagPresent(AI_FLAG_ITEM_OMNISCIENCE))
-        holdEffect = gAiPartyData->mons[GetBattlerSide(battlerId)][gBattlerPartyIndexes[battlerId]].heldEffect;
+        holdEffect = GetRecordedPartyMonData(battlerId)->holdEffect;
     else
         holdEffect = GetBattlerHoldEffectIgnoreNegation(battlerId);
 

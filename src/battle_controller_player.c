@@ -10,6 +10,8 @@
 #include "battle_tv.h"
 #include "battle_z_move.h"
 #include "battle_gimmick.h"
+#include "battle_ai_record.h"
+#include "battle_ai_util.h"
 #include "bg.h"
 #include "data.h"
 #include "item.h"
@@ -704,7 +706,7 @@ void HandleInputChooseMove(enum BattlerId battler)
             moveTarget = GetMoveTarget(GetMaxMove(battler, moveInfo->moves[gMoveSelectionCursor[battler]]));
 
         gMultiUsePlayerCursor = GetDefaultSelectionTarget(battler, moveTarget);
-        
+
         enum BattlerId partner = GetPartnerBattler(battler);
 
         if (gBattleResources->bufferA[battler][1]) // a double battle
@@ -2388,6 +2390,7 @@ static bool32 ShouldShowTypeEffectiveness(u32 targetId)
 static u32 CheckTypeEffectiveness(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
     struct ChooseMoveStruct *moveInfo = (struct ChooseMoveStruct *)(&gBattleResources->bufferA[battlerAtk][4]);
+
     struct DamageContext ctx = {0};
     ctx.battlerAtk = battlerAtk;
     ctx.battlerDef = battlerDef;
@@ -2397,9 +2400,19 @@ static u32 CheckTypeEffectiveness(enum BattlerId battlerAtk, enum BattlerId batt
     ctx.weather = GetWeather();
     ctx.terrain = gFieldTimers.terrain;
     ctx.abilities[ctx.battlerAtk] = GetBattlerAbility(battlerAtk);
-    ctx.abilities[ctx.battlerDef] = GetBattlerAbility(battlerDef);
     ctx.holdEffects[ctx.battlerAtk] = GetBattlerHoldEffect(battlerAtk);
-    ctx.holdEffects[ctx.battlerDef] = GetBattlerHoldEffect(battlerDef);
+
+    bool32 alwaysConsider = IsBattlerAlly(battlerAtk, battlerDef) || IsAiFlagPresent(AI_FLAG_OMNISCIENT);
+
+    if (GetRecordedPartyMonData(battlerDef)->ability != ABILITY_NONE || alwaysConsider)
+    {
+        ctx.abilities[ctx.battlerDef] = GetBattlerAbility(battlerDef);
+    }
+
+    if (GetRecordedPartyMonData(battlerDef)->holdEffect != HOLD_EFFECT_NONE || alwaysConsider)
+    {
+        ctx.holdEffects[ctx.battlerDef] = GetBattlerHoldEffect(battlerDef);
+    }
 
     uq4_12_t modifier = CalcTypeEffectivenessMultiplier(&ctx);
 
