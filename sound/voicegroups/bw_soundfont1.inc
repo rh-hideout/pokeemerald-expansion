@@ -72,7 +72,7 @@ voice_group bw_soundfont1
 	voice_directsound 60, 0, DirectSoundWaveData_title_9, 255, 0, 255, 165
 	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
 	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
-	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
+	voice_keysplit voicegroup_bw_73_keysplit, keysplit_bw_keysplit_73
 	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
 	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
 	voice_directsound 60, 0, DirectSoundWaveData_nfinal_25, 255, 0, 255, 165
@@ -85,8 +85,8 @@ voice_group bw_soundfont1
 	voice_directsound 60, 0, DirectSoundWaveData_nfinal_20, 255, 0, 255, 165
 	voice_directsound 60, 0, DirectSoundWaveData_nfinal_26, 255, 0, 255, 165
 	voice_directsound 60, 0, DirectSoundWaveData_nfinal_31, 255, 0, 255, 165
-	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
-	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
+	voice_directsound 60, 0, DirectSoundWaveData_vsgym_86, 255, 0, 255, 165
+	voice_keysplit voicegroup_bw_87_keysplit, keysplit_bw_keysplit_43
 	voice_directsound 60, 0, DirectSoundWaveData_vstrainer_5, 255, 0, 255, 165
 	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
 	voice_keysplit voicegroup_bw_90_keysplit, keysplit_bw_keysplit_90

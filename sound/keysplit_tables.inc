@@ -51,10 +51,16 @@ keysplit bw_keysplit_10, 0
     split 0, 80
     split 1, 128
 
+keysplit bw_keysplit_11, 0 @ also used for 15 in driftveil
+    split 0, 57
+    split 1, 69
+    split 2, 128
+
 keysplit bw_keysplit_13, 0 @ keysplits 6, 17, 50 as well
     split 0, 56
     split 1, 68
     split 2, 128
+
 
 keysplit bw_keysplit_16, 0
     split 0, 68
@@ -96,7 +102,7 @@ keysplit bw_keysplit_29, 0
     split 0, 43
     split 1, 128
 
-keysplit bw_keysplit_30, 0
+keysplit bw_keysplit_30, 0 @ also used for 34
     split 0, 66
     split 1, 75
     split 2, 82
@@ -136,7 +142,7 @@ keysplit bw_keysplit_42, 0
     split 1, 68
     split 2, 128
 
-keysplit bw_keysplit_43, 0
+keysplit bw_keysplit_43, 0 @ used for 87
     split 0, 77
     split 1, 127
 
@@ -164,6 +170,10 @@ keysplit bw_keysplit_56, 0
     split 0, 65
     split 1, 74
     split 2, 127
+
+keysplit bw_keysplit_73, 0
+    split 0, 87
+    split 1, 127
 
 keysplit bw_keysplit_90, 0
     split 0, 55

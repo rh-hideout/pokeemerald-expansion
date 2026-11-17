@@ -588,6 +588,11 @@
 #define MUS_VS_N                    653
 #define MUS_ENTRALINK               654
 #define MUS_VS_GYMLEADER            655
+#define MUS_STRIATON_CITY           656
+#define MUS_NACRENE_CITY            657
+#define MUS_NIMBASA_CITY            658
+#define MUS_DRIFTVEIL_CITY          659
+#define MUS_MISTRALTON_CITY         660
 #define MUS_ROUTE118                0x7FFF  // Map is split into 2 music sections. controlled by GetCurrLocationDefaultMusic().
 
 #define MUS_NONE                    0xFFFF

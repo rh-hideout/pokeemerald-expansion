@@ -10138,3 +10138,63 @@ DirectSoundWaveData_bw_general_126::
 	.align 2
 DirectSoundWaveData_sample_21::
 	.incbin "sound/direct_sound_samples/sample_21.bin"
+
+	.align 2
+DirectSoundWaveData_vsgym_86::
+	.incbin "sound/direct_sound_samples/vsgym_86.bin"
+
+	.align 2
+DirectSoundWaveData_vsgym_10::
+	.incbin "sound/direct_sound_samples/vsgym_10.bin"
+
+	.align 2
+DirectSoundWaveData_vsgym_11::
+	.incbin "sound/direct_sound_samples/vsgym_11.bin"
+
+	.align 2
+DirectSoundWaveData_vsgym_19::
+	.incbin "sound/direct_sound_samples/vsgym_19.bin"
+
+	.align 2
+DirectSoundWaveData_vsgym_20::
+	.incbin "sound/direct_sound_samples/vsgym_20.bin"
+
+	.align 2
+DirectSoundWaveData_driftveil_16::
+	.incbin "sound/direct_sound_samples/driftveil_16.bin"
+
+	.align 2
+DirectSoundWaveData_driftveil_17::
+	.incbin "sound/direct_sound_samples/driftveil_17.bin"
+
+	.align 2
+DirectSoundWaveData_driftveil_18::
+	.incbin "sound/direct_sound_samples/driftveil_18.bin"
+
+	.align 2
+DirectSoundWaveData_driftveil_9::
+	.incbin "sound/direct_sound_samples/driftveil_9.bin"
+
+	.align 2
+DirectSoundWaveData_driftveil_10::
+	.incbin "sound/direct_sound_samples/driftveil_10.bin"
+
+	.align 2
+DirectSoundWaveData_driftveil_11::
+	.incbin "sound/direct_sound_samples/driftveil_11.bin"
+
+	.align 2
+DirectSoundWaveData_mistralton_16::
+	.incbin "sound/direct_sound_samples/mistralton_16.bin"
+
+	.align 2
+DirectSoundWaveData_mistralton_17::
+	.incbin "sound/direct_sound_samples/mistralton_17.bin"
+
+	.align 2
+DirectSoundWaveData_mistralton_18::
+	.incbin "sound/direct_sound_samples/mistralton_18.bin"
+
+	.align 2
+DirectSoundWaveData_mistralton_19::
+	.incbin "sound/direct_sound_samples/mistralton_19.bin"

@@ -662,6 +662,11 @@ gSongTable::
 	song mus_vs_n, MUSIC_PLAYER_BGM, 0
 	song mus_entralink, MUSIC_PLAYER_BGM, 0
 	song mus_vs_gymleader, MUSIC_PLAYER_BGM, 0
+	song mus_striaton_city, MUSIC_PLAYER_BGM, 0
+	song mus_nacrene_city, MUSIC_PLAYER_BGM, 0
+	song mus_nimbasa_city, MUSIC_PLAYER_BGM, 0
+	song mus_driftveil_city, MUSIC_PLAYER_BGM, 0
+	song mus_mistralton_city, MUSIC_PLAYER_BGM, 0
 
 	.align 2
 dummy_song_header:
