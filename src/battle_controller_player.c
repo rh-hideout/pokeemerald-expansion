@@ -310,7 +310,6 @@ static void HandleInputChooseAction(enum BattlerId battler)
      && JOY_NEW(B_BATTLE_INFO_BUTTON)
      && !(B_BATTLE_INFO_BUTTON == L_BUTTON && gSaveBlock2Ptr->optionsButtonMode == OPTIONS_BUTTON_MODE_L_EQUALS_A))
     {
-        TryToHideBattleStatusHint();
         PlaySE(SE_SELECT);
         TryHideLastUsedBallAndBattleInfoMenu();
         BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 0x10, RGB_BLACK);
@@ -321,7 +320,6 @@ static void HandleInputChooseAction(enum BattlerId battler)
 
     if (JOY_NEW(A_BUTTON))
     {
-        TryToHideBattleStatusHint();
         PlaySE(SE_SELECT);
         TryHideLastUsedBallAndBattleInfoMenu();
 
@@ -2157,7 +2155,7 @@ void PlayerHandleChooseMove(enum BattlerId battler)
     {
         struct ChooseMoveStruct *moveInfo = (struct ChooseMoveStruct *)(&gBattleResources->bufferA[battler][4]);
 
-        TryToHideBattleStatusHint();
+        TryHideLastUsedBallAndBattleInfoMenu();
         InitMoveSelectionsVarsAndStrings(battler);
         gBattleStruct->gimmick.playerSelect = FALSE;
         TryToAddMoveInfoWindow();
@@ -2194,7 +2192,7 @@ static void PlayerHandleChooseItem(enum BattlerId battler)
 {
     s32 i;
 
-    TryToHideBattleStatusHint();
+    TryHideLastUsedBallAndBattleInfoMenu();
     BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 0x10, RGB_BLACK);
     gBattlerControllerFuncs[battler] = OpenBagAndChooseItem;
     gBattlerInMenuId = battler;
@@ -2207,7 +2205,7 @@ static void PlayerHandleChoosePokemon(enum BattlerId battler)
 {
     s32 i;
 
-    TryToHideBattleStatusHint();
+    TryHideLastUsedBallAndBattleInfoMenu();
     for (i = 0; i < ARRAY_COUNT(gBattlePartyCurrentOrder); i++)
         gBattlePartyCurrentOrder[i] = gBattleResources->bufferA[battler][4 + i];
 

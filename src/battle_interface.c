@@ -3151,12 +3151,6 @@ void TryToAddBattleStatusHint(void)
     }
 }
 
-void TryToHideBattleStatusHint(void)
-{
-    if (gBattleStruct->battleStatusHintSpriteId != MAX_SPRITES)
-        gSprites[gBattleStruct->battleStatusHintSpriteId].sHide = TRUE;
-}
-
 static void DestroyMoveInfoWinGfx(struct Sprite *sprite)
 {
     FreeSpriteTilesByTag(MOVE_INFO_WINDOW_TAG);
@@ -3276,28 +3270,16 @@ static void TryHideOrRestoreLastUsedBall(u8 caseId)
         ArrowsChangeColorLastBallCycle(0); //Default the arrows to be invisible
 }
 
-static void TryHideOrRestoreBattleInfoMenu(u8 caseId)
+static void TryHideBattleInfoMenu()
 {
     if (B_INFO_ENABLED == FALSE)
         return;
     if (gBattleStruct->battleStatusHintSpriteId == MAX_SPRITES)
         return;
-
-    switch (caseId)
-    {
-    case 0: // hide
-        if (gBattleStruct->ballSpriteIds[0] != MAX_SPRITES)
-            gSprites[gBattleStruct->battleStatusHintSpriteId].sHide = TRUE;
-        if (gBattleStruct->ballSpriteIds[1] != MAX_SPRITES)
-            gSprites[gBattleStruct->battleStatusHintSpriteId].sHide = TRUE;
-        break;
-    case 1: // restore
-        if (gBattleStruct->ballSpriteIds[0] != MAX_SPRITES)
-            gSprites[gBattleStruct->battleStatusHintSpriteId].sHide = FALSE;
-        if (gBattleStruct->ballSpriteIds[1] != MAX_SPRITES)
-            gSprites[gBattleStruct->battleStatusHintSpriteId].sHide = FALSE;
-        break;
-    }
+    if (gBattleStruct->battleStatusHintSpriteId != MAX_SPRITES)
+        gSprites[gBattleStruct->battleStatusHintSpriteId].sHide = TRUE;
+    if (gBattleStruct->battleStatusHintSpriteId != MAX_SPRITES)
+        gSprites[gBattleStruct->battleStatusHintSpriteId].sHide = TRUE;
 }
 
 void TryHideLastUsedBallAndBattleInfoMenu(void)
@@ -3309,7 +3291,7 @@ void TryHideLastUsedBallAndBattleInfoMenu(void)
         TryHideOrRestoreLastUsedBall(0);
 
     if (B_INFO_ENABLED == TRUE)
-        TryHideOrRestoreBattleInfoMenu(0);
+        TryHideBattleInfoMenu();
 }
 
 void TryRestoreLastUsedBall(void)
