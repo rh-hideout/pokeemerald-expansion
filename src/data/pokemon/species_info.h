@@ -11370,4 +11370,120 @@ FOOTPRINT(Klemor)
        .teachableLearnset = sTourthonTeachableLearnset,
        FOOTPRINT(Tourthon)
     },
+
+    [SPECIES_KRALAMOURE] =
+    {
+       .baseHP        = 30,
+       .baseAttack    = 15,
+       .baseDefense   = 60,
+       .baseSpeed     = 60,
+       .baseSpAttack  = 15,
+       .baseSpDefense = 30,
+       .types = MON_TYPES(TYPE_WATER),
+       .catchRate = 255,
+       .expYield = 40,
+       .evYield_Speed = 1,
+       .genderRatio = PERCENT_FEMALE(50),
+       .eggCycles = 5,
+       .friendship = STANDARD_FRIENDSHIP,
+       .growthRate = GROWTH_SLOW,
+       .eggGroups = MON_EGG_GROUPS(EGG_GROUP_WATER_2, EGG_GROUP_DRAGON),
+       .abilities = { ABILITY_COLOR_CHANGE, ABILITY_MULTISCALE, ABILITY_OCRE },
+       .bodyColor = BODY_COLOR_PURPLE,
+       .speciesName = _("Kralamoure"),
+       //pokedex
+       .natDexNum = NATIONAL_DEX_KRALAMOURE,
+       .categoryName = _("Octopus"),
+       .height = 4,
+       .weight = 60,
+       .description = COMPOUND_STRING(
+           "A feeble octopus that drifts with the\n"
+           "tide. It bites at any hook, so every\n"
+           "fisher knows it well, yet all it can do\n"
+           "is flail its tentacles about."),
+       .pokemonScale = 585,
+       .pokemonOffset = 16,
+       .trainerScale = 256,
+       .trainerOffset = 0,
+       //graphics
+       .frontPic = gMonFrontPic_Kralamoure,
+       .frontPicSize = MON_COORDS_SIZE(64, 64),
+       .frontPicYOffset = 0,
+       .frontAnimFrames = ANIM_FRAMES(
+           ANIMCMD_FRAME(0, 1),
+       ),
+       .frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
+       .frontAnimDelay = 0,
+       .enemyMonElevation = 0,
+       .backPic = gMonBackPic_Kralamoure,
+       .backPicSize = MON_COORDS_SIZE(64, 64),
+       .backPicYOffset = 8,
+       .backAnimId = BACK_ANIM_V_SHAKE,
+       .palette = gMonPalette_Kralamoure,
+       .shinyPalette = gMonShinyPalette_Kralamoure,
+       .iconSprite = gMonIcon_Kralamoure,
+       .iconPalIndex = 2,
+       .levelUpLearnset = sKralamoureLevelUpLearnset,
+       .teachableLearnset = sKralamoureTeachableLearnset,
+       .evolutions = EVOLUTION({EVO_LEVEL, 20, SPECIES_KRALAMOURE_GEANT}),
+       FOOTPRINT(Kralamoure)
+    },
+
+    [SPECIES_KRALAMOURE_GEANT] =
+    {
+       .baseHP        = 110,
+       .baseAttack    = 130,
+       .baseDefense   = 80,
+       .baseSpeed     = 55,
+       .baseSpAttack  = 50,
+       .baseSpDefense = 100,
+       .types = MON_TYPES(TYPE_WATER),
+       .catchRate = 45,
+       .expYield = 189,
+       .evYield_HP = 1,
+       .evYield_Attack = 2,
+       .genderRatio = PERCENT_FEMALE(50),
+       .eggCycles = 5,
+       .friendship = STANDARD_FRIENDSHIP,
+       .growthRate = GROWTH_SLOW,
+       .eggGroups = MON_EGG_GROUPS(EGG_GROUP_WATER_2, EGG_GROUP_DRAGON),
+       .abilities = { ABILITY_COLOR_CHANGE, ABILITY_MULTISCALE, ABILITY_OCRE },
+       .bodyColor = BODY_COLOR_PURPLE,
+       .speciesName = _("Kralagéant"),
+       //pokedex
+       .natDexNum = NATIONAL_DEX_KRALAMOURE_GEANT,
+       .categoryName = _("Kraken"),
+       .height = 70,
+       .weight = 4000,
+       .description = COMPOUND_STRING(
+           "It lurks in the peat bogs of Otomai and\n"
+           "guards the Ochre Dofus. Its hide shrugs\n"
+           "off the first blow, and its mood shifts\n"
+           "with each element that strikes it."),
+       .pokemonScale = 256,
+       .pokemonOffset = 1,
+       .trainerScale = 1412,
+       .trainerOffset = 20,
+       //graphics
+       .frontPic = gMonFrontPic_KralamoureGeant,
+       .frontPicSize = MON_COORDS_SIZE(64, 64),
+       .frontPicYOffset = 0,
+       .frontAnimFrames = ANIM_FRAMES(
+           ANIMCMD_FRAME(0, 1),
+       ),
+       .frontAnimId = ANIM_GROW_VIBRATE,
+       .frontAnimDelay = 0,
+       .enemyMonElevation = 0,
+       .backPic = gMonBackPic_KralamoureGeant,
+       .backPicSize = MON_COORDS_SIZE(64, 64),
+       .backPicYOffset = 8,
+       .backAnimId = BACK_ANIM_CONCAVE_ARC_SMALL,
+       .palette = gMonPalette_KralamoureGeant,
+       .shinyPalette = gMonShinyPalette_KralamoureGeant,
+       .iconSprite = gMonIcon_KralamoureGeant,
+       .iconPalIndex = 0,
+       .levelUpLearnset = sKralamoureGeantLevelUpLearnset,
+       .teachableLearnset = sKralamoureGeantTeachableLearnset,
+       FOOTPRINT(KralamoureGeant)
+    },
 };

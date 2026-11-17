@@ -25753,3 +25753,27 @@ static const struct LevelUpMove sTourthonLevelUpLearnset[] = {
     LEVEL_UP_MOVE(45, MOVE_HYDRO_PUMP),
     LEVEL_UP_END
 };
+
+static const struct LevelUpMove sKralamoureLevelUpLearnset[] = {
+    LEVEL_UP_MOVE( 1, MOVE_SPLASH),
+    LEVEL_UP_MOVE(15, MOVE_WRAP),
+    LEVEL_UP_MOVE(25, MOVE_FLAIL),
+    LEVEL_UP_END
+};
+
+static const struct LevelUpMove sKralamoureGeantLevelUpLearnset[] = {
+    LEVEL_UP_MOVE( 0, MOVE_KRACHEAU),
+    LEVEL_UP_MOVE( 1, MOVE_SPLASH),
+    LEVEL_UP_MOVE(15, MOVE_WRAP),
+    LEVEL_UP_MOVE(22, MOVE_SMOKESCREEN),
+    LEVEL_UP_MOVE(25, MOVE_FLAIL),
+    LEVEL_UP_MOVE(26, MOVE_BITE),
+    LEVEL_UP_MOVE(29, MOVE_AQUA_RING),
+    LEVEL_UP_MOVE(32, MOVE_WATERFALL),
+    LEVEL_UP_MOVE(35, MOVE_OCTOLOCK),
+    LEVEL_UP_MOVE(38, MOVE_BULK_UP),
+    LEVEL_UP_MOVE(41, MOVE_CRUNCH),
+    LEVEL_UP_MOVE(45, MOVE_LIQUIDATION),
+    LEVEL_UP_MOVE(52, MOVE_WAVE_CRASH),
+    LEVEL_UP_END
+};

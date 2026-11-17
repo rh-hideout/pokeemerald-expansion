@@ -2502,4 +2502,11 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .cantBeSuppressed = TRUE,
         .cantBeOverwritten = TRUE,
     },
+
+    [ABILITY_OCRE] =
+    {
+        .name = _("Ocre"),
+        .description = COMPOUND_STRING("Moves first on 1st turn."),
+        .aiRating = 6,
+    },
 };

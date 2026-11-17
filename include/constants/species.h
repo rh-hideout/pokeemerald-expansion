@@ -1863,8 +1863,10 @@
 #define SPECIES_GELIKAN                                 1743
 #define SPECIES_CRABE_YOLONISTE                         1744
 #define SPECIES_TOURTHON                                1745
+#define SPECIES_KRALAMOURE                              1746
+#define SPECIES_KRALAMOURE_GEANT                        1747
 
-#define SPECIES_EGG                                     (SPECIES_TOURTHON + 1)
+#define SPECIES_EGG                                     (SPECIES_KRALAMOURE_GEANT + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

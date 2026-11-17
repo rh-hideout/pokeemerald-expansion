@@ -41742,3 +41742,40 @@ static const u16 sTourthonTeachableLearnset[] = {
     MOVE_WATER_PULSE,
     MOVE_UNAVAILABLE,
 };
+
+static const u16 sKralamoureTeachableLearnset[] = {
+    MOVE_UNAVAILABLE,
+};
+
+static const u16 sKralamoureGeantTeachableLearnset[] = {
+    MOVE_ATTRACT,
+    MOVE_BODY_SLAM,
+    MOVE_BULK_UP,
+    MOVE_DIG,
+    MOVE_DIVE,
+    MOVE_DOUBLE_EDGE,
+    MOVE_DOUBLE_TEAM,
+    MOVE_EARTHQUAKE,
+    MOVE_ENDURE,
+    MOVE_FACADE,
+    MOVE_ICY_WIND,
+    MOVE_PROTECT,
+    MOVE_RAIN_DANCE,
+    MOVE_REST,
+    MOVE_ROAR,
+    MOVE_ROCK_SLIDE,
+    MOVE_ROCK_SMASH,
+    MOVE_ROCK_TOMB,
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_STRENGTH,
+    MOVE_SURF,
+    MOVE_SWAGGER,
+    MOVE_TAUNT,
+    MOVE_THIEF,
+    MOVE_TORMENT,
+    MOVE_TOXIC,
+    MOVE_WATERFALL,
+    MOVE_WATER_PULSE,
+    MOVE_UNAVAILABLE,
+};

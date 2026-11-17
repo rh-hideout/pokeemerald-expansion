@@ -21737,6 +21737,29 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .battleAnimScript = gBattleAnimMove_Wrap,
     },
 
+    [MOVE_KRACHEAU] =
+    {
+        .name = COMPOUND_STRING("Inkspit"),
+        .description = COMPOUND_STRING(
+            "Spits draining ink. Heals\n"
+            "and lowers foe's Speed."),
+        .effect = EFFECT_ABSORB,
+        .power = 75,
+        .type = TYPE_WATER,
+        .accuracy = 100,
+        .pp = 10,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .argument = { .absorbPercentage = 50 },
+        .healingMove = B_HEAL_BLOCKING >= GEN_6,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_SPD_MINUS_1,
+            .chance = 100,
+        }),
+        .battleAnimScript = gBattleAnimMove_Octazooka,
+    },
+
     // Z-Moves
     [MOVE_BREAKNECK_BLITZ] =
     {

@@ -347,6 +347,7 @@ enum __attribute__((packed)) Ability
     ABILITY_HEMORRAGIE,
     ABILITY_VULBIS,
     ABILITY_REAWAKENING,
+    ABILITY_OCRE,
     ABILITIES_COUNT,
 };
 

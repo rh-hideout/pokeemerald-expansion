@@ -36,6 +36,7 @@ nom français de conception.
 | Lance de l'effroi | Dread Lance | `MOVE_LANCE_EFFROI` |
 | Hantâme | Soul Haunt | `MOVE_HANTAME` |
 | Enlacement | Embrace | `MOVE_ENLACEMENT` |
+| Kracheau | Inkspit | `MOVE_KRACHEAU` |
 
 ## Talents
 | Nom de conception (fiches) | Nom en jeu | Constante |
@@ -52,6 +53,7 @@ nom français de conception.
 | Ébène | Ébène (Dofus) | `ABILITY_EBENE` |
 | Vulbis | Vulbis (Dofus) | `ABILITY_VULBIS` |
 | Réveil | Reawakening | `ABILITY_REAWAKENING` |
+| Ocre | Ocre (Dofus) | `ABILITY_OCRE` |
 
 ## Statut et objets
 | Nom de conception | Nom en jeu |
@@ -59,3 +61,8 @@ nom français de conception.
 | Saignement (icône) | bleeding (icône **BLD**) |
 | Pierre Vent | Wind Stone |
 | Pierre Terre | Earth Stone |
+
+## Espèces (noms raccourcis à 12 caractères)
+| Nom de conception | Nom en jeu | Constante |
+|---|---|---|
+| Kralamoure Géant | Kralagéant | `SPECIES_KRALAMOURE_GEANT` |

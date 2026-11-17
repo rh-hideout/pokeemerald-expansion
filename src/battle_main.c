@@ -4875,6 +4875,10 @@ s32 GetBattleMovePriority(u32 battler, enum Ability ability, u32 move)
     {
         priority += 3;
     }
+    else if (ability == ABILITY_OCRE && gDisableStructs[battler].isFirstTurn) // Osatopia : +1 PA du Dofus Ocre
+    {
+        priority++;
+    }
 
     return priority;
 }

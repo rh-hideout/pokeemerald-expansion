@@ -200,12 +200,17 @@
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_CRABE"
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_BIBLOP"
+                                "species": "SPECIES_CRABE"
+                            },
+                            {
+                                "min_level": 10,
+                                "max_level": 19,
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 10,
@@ -216,11 +221,6 @@
                                 "min_level": 10,
                                 "max_level": 30,
                                 "species": "SPECIES_GROKILLAGE"
-                            },
-                            {
-                                "min_level": 10,
-                                "max_level": 30,
-                                "species": "SPECIES_BIBLOP"
                             },
                             {
                                 "min_level": 25,
@@ -354,17 +354,17 @@
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_CRABE"
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_VIRUSTINE"
+                                "species": "SPECIES_CRABE"
                             },
                             {
                                 "min_level": 10,
-                                "max_level": 30,
-                                "species": "SPECIES_CRABE"
+                                "max_level": 19,
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 10,
@@ -508,17 +508,17 @@
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_CRABE"
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_VIRUSTINE"
+                                "species": "SPECIES_CRABE"
                             },
                             {
                                 "min_level": 10,
-                                "max_level": 30,
-                                "species": "SPECIES_CRABE"
+                                "max_level": 19,
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 10,
@@ -597,17 +597,17 @@
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_CRABE"
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_VIRUSTINE"
+                                "species": "SPECIES_CRABE"
                             },
                             {
                                 "min_level": 10,
-                                "max_level": 30,
-                                "species": "SPECIES_CRABE"
+                                "max_level": 19,
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 10,
@@ -751,17 +751,17 @@
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_CRABE"
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_VIRUSTINE"
+                                "species": "SPECIES_CRABE"
                             },
                             {
                                 "min_level": 10,
-                                "max_level": 30,
-                                "species": "SPECIES_CRABE"
+                                "max_level": 19,
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 10,
@@ -935,12 +935,17 @@
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_CRABE"
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_BIBLOP"
+                                "species": "SPECIES_CRABE"
+                            },
+                            {
+                                "min_level": 10,
+                                "max_level": 19,
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 10,
@@ -951,11 +956,6 @@
                                 "min_level": 10,
                                 "max_level": 30,
                                 "species": "SPECIES_GROKILLAGE"
-                            },
-                            {
-                                "min_level": 10,
-                                "max_level": 30,
-                                "species": "SPECIES_BIBLOP"
                             },
                             {
                                 "min_level": 25,
@@ -1257,12 +1257,17 @@
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_CRABE"
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_BIBLOP"
+                                "species": "SPECIES_CRABE"
+                            },
+                            {
+                                "min_level": 10,
+                                "max_level": 19,
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 10,
@@ -1273,11 +1278,6 @@
                                 "min_level": 10,
                                 "max_level": 30,
                                 "species": "SPECIES_GROKILLAGE"
-                            },
-                            {
-                                "min_level": 10,
-                                "max_level": 30,
-                                "species": "SPECIES_BIBLOP"
                             },
                             {
                                 "min_level": 25,
@@ -1480,12 +1480,17 @@
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_CRABE"
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_BIBLOP"
+                                "species": "SPECIES_CRABE"
+                            },
+                            {
+                                "min_level": 10,
+                                "max_level": 19,
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 10,
@@ -1496,11 +1501,6 @@
                                 "min_level": 10,
                                 "max_level": 30,
                                 "species": "SPECIES_GROKILLAGE"
-                            },
-                            {
-                                "min_level": 10,
-                                "max_level": 30,
-                                "species": "SPECIES_BIBLOP"
                             },
                             {
                                 "min_level": 25,
@@ -1634,17 +1634,17 @@
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_CRABE"
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_VIRUSTINE"
+                                "species": "SPECIES_CRABE"
                             },
                             {
                                 "min_level": 10,
-                                "max_level": 30,
-                                "species": "SPECIES_CRABE"
+                                "max_level": 19,
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 10,
@@ -1723,17 +1723,17 @@
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_CRABE"
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_VIRUSTINE"
+                                "species": "SPECIES_CRABE"
                             },
                             {
                                 "min_level": 10,
-                                "max_level": 30,
-                                "species": "SPECIES_CRABE"
+                                "max_level": 19,
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 10,
@@ -2809,17 +2809,17 @@
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_CRABE"
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_VIRUSTINE"
+                                "species": "SPECIES_CRABE"
                             },
                             {
                                 "min_level": 10,
-                                "max_level": 30,
-                                "species": "SPECIES_CRABE"
+                                "max_level": 19,
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 10,
@@ -2898,17 +2898,17 @@
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_CRABE"
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_VIRUSTINE"
+                                "species": "SPECIES_CRABE"
                             },
                             {
                                 "min_level": 10,
-                                "max_level": 30,
-                                "species": "SPECIES_CRABE"
+                                "max_level": 19,
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 10,
@@ -2987,17 +2987,17 @@
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_CRABE"
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_VIRUSTINE"
+                                "species": "SPECIES_CRABE"
                             },
                             {
                                 "min_level": 10,
-                                "max_level": 30,
-                                "species": "SPECIES_CRABE"
+                                "max_level": 19,
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 10,
@@ -3076,17 +3076,17 @@
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_CRABE"
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_VIRUSTINE"
+                                "species": "SPECIES_CRABE"
                             },
                             {
                                 "min_level": 10,
-                                "max_level": 30,
-                                "species": "SPECIES_CRABE"
+                                "max_level": 19,
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 10,
@@ -3230,17 +3230,17 @@
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_CRABE"
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_VIRUSTINE"
+                                "species": "SPECIES_CRABE"
                             },
                             {
                                 "min_level": 10,
-                                "max_level": 30,
-                                "species": "SPECIES_CRABE"
+                                "max_level": 19,
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 10,
@@ -3453,12 +3453,17 @@
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_CRABE"
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_BIBLOP"
+                                "species": "SPECIES_CRABE"
+                            },
+                            {
+                                "min_level": 10,
+                                "max_level": 19,
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 10,
@@ -3469,11 +3474,6 @@
                                 "min_level": 10,
                                 "max_level": 30,
                                 "species": "SPECIES_GROKILLAGE"
-                            },
-                            {
-                                "min_level": 10,
-                                "max_level": 30,
-                                "species": "SPECIES_BIBLOP"
                             },
                             {
                                 "min_level": 25,
@@ -3607,12 +3607,17 @@
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_CRABE"
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_BIBLOP"
+                                "species": "SPECIES_CRABE"
+                            },
+                            {
+                                "min_level": 10,
+                                "max_level": 19,
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 10,
@@ -3623,11 +3628,6 @@
                                 "min_level": 10,
                                 "max_level": 30,
                                 "species": "SPECIES_GROKILLAGE"
-                            },
-                            {
-                                "min_level": 10,
-                                "max_level": 30,
-                                "species": "SPECIES_BIBLOP"
                             },
                             {
                                 "min_level": 25,
@@ -3761,17 +3761,17 @@
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_CRABE"
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_VIRUSTINE"
+                                "species": "SPECIES_CRABE"
                             },
                             {
                                 "min_level": 10,
-                                "max_level": 30,
-                                "species": "SPECIES_CRABE"
+                                "max_level": 19,
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 10,
@@ -3850,17 +3850,17 @@
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_CRABE"
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_VIRUSTINE"
+                                "species": "SPECIES_CRABE"
                             },
                             {
                                 "min_level": 10,
-                                "max_level": 30,
-                                "species": "SPECIES_CRABE"
+                                "max_level": 19,
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 10,
@@ -4004,17 +4004,17 @@
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_CRABE"
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_VIRUSTINE"
+                                "species": "SPECIES_CRABE"
                             },
                             {
                                 "min_level": 10,
-                                "max_level": 30,
-                                "species": "SPECIES_CRABE"
+                                "max_level": 19,
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 10,
@@ -4645,17 +4645,17 @@
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_CRABE"
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_VIRUSTINE"
+                                "species": "SPECIES_CRABE"
                             },
                             {
                                 "min_level": 10,
-                                "max_level": 30,
-                                "species": "SPECIES_CRABE"
+                                "max_level": 19,
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 10,
@@ -4734,17 +4734,17 @@
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_CRABE"
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_VIRUSTINE"
+                                "species": "SPECIES_CRABE"
                             },
                             {
                                 "min_level": 10,
-                                "max_level": 30,
-                                "species": "SPECIES_CRABE"
+                                "max_level": 19,
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 10,
@@ -4823,17 +4823,17 @@
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_CRABE"
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_VIRUSTINE"
+                                "species": "SPECIES_CRABE"
                             },
                             {
                                 "min_level": 10,
-                                "max_level": 30,
-                                "species": "SPECIES_CRABE"
+                                "max_level": 19,
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 10,
@@ -4912,17 +4912,17 @@
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_CRABE"
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_VIRUSTINE"
+                                "species": "SPECIES_CRABE"
                             },
                             {
                                 "min_level": 10,
-                                "max_level": 30,
-                                "species": "SPECIES_CRABE"
+                                "max_level": 19,
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 10,
@@ -5001,17 +5001,17 @@
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_CRABE"
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_VIRUSTINE"
+                                "species": "SPECIES_CRABE"
                             },
                             {
                                 "min_level": 10,
-                                "max_level": 30,
-                                "species": "SPECIES_CRABE"
+                                "max_level": 19,
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 10,
@@ -5155,17 +5155,17 @@
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_CRABE"
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_VIRUSTINE"
+                                "species": "SPECIES_CRABE"
                             },
                             {
                                 "min_level": 10,
-                                "max_level": 30,
-                                "species": "SPECIES_CRABE"
+                                "max_level": 19,
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 10,
@@ -5244,17 +5244,17 @@
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_CRABE"
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_VIRUSTINE"
+                                "species": "SPECIES_CRABE"
                             },
                             {
                                 "min_level": 10,
-                                "max_level": 30,
-                                "species": "SPECIES_CRABE"
+                                "max_level": 19,
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 10,
@@ -5333,17 +5333,17 @@
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_CRABE"
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_VIRUSTINE"
+                                "species": "SPECIES_CRABE"
                             },
                             {
                                 "min_level": 10,
-                                "max_level": 30,
-                                "species": "SPECIES_CRABE"
+                                "max_level": 19,
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 10,
@@ -5422,17 +5422,17 @@
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_CRABE"
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_VIRUSTINE"
+                                "species": "SPECIES_CRABE"
                             },
                             {
                                 "min_level": 10,
-                                "max_level": 30,
-                                "species": "SPECIES_CRABE"
+                                "max_level": 19,
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 10,
@@ -5511,17 +5511,17 @@
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_CRABE"
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_VIRUSTINE"
+                                "species": "SPECIES_CRABE"
                             },
                             {
                                 "min_level": 10,
-                                "max_level": 30,
-                                "species": "SPECIES_CRABE"
+                                "max_level": 19,
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 10,
@@ -8239,17 +8239,17 @@
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_CRABE"
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_VIRUSTINE"
+                                "species": "SPECIES_CRABE"
                             },
                             {
                                 "min_level": 10,
-                                "max_level": 30,
-                                "species": "SPECIES_CRABE"
+                                "max_level": 19,
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 10,
@@ -8393,17 +8393,17 @@
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_CRABE"
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_VIRUSTINE"
+                                "species": "SPECIES_CRABE"
                             },
                             {
                                 "min_level": 10,
-                                "max_level": 30,
-                                "species": "SPECIES_CRABE"
+                                "max_level": 19,
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 10,
@@ -8482,17 +8482,17 @@
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_CRABE"
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_VIRUSTINE"
+                                "species": "SPECIES_CRABE"
                             },
                             {
                                 "min_level": 10,
-                                "max_level": 30,
-                                "species": "SPECIES_CRABE"
+                                "max_level": 19,
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 10,
@@ -8571,17 +8571,17 @@
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_CRABE"
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_VIRUSTINE"
+                                "species": "SPECIES_CRABE"
                             },
                             {
                                 "min_level": 10,
-                                "max_level": 30,
-                                "species": "SPECIES_CRABE"
+                                "max_level": 19,
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 10,
@@ -8660,17 +8660,17 @@
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_CRABE"
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_VIRUSTINE"
+                                "species": "SPECIES_CRABE"
                             },
                             {
                                 "min_level": 10,
-                                "max_level": 30,
-                                "species": "SPECIES_CRABE"
+                                "max_level": 19,
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 10,
@@ -8749,17 +8749,17 @@
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_CRABE"
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_VIRUSTINE"
+                                "species": "SPECIES_CRABE"
                             },
                             {
                                 "min_level": 10,
-                                "max_level": 30,
-                                "species": "SPECIES_CRABE"
+                                "max_level": 19,
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 10,
@@ -8838,17 +8838,17 @@
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_CRABE"
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_VIRUSTINE"
+                                "species": "SPECIES_CRABE"
                             },
                             {
                                 "min_level": 10,
-                                "max_level": 30,
-                                "species": "SPECIES_CRABE"
+                                "max_level": 19,
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 10,
@@ -8927,17 +8927,17 @@
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_CRABE"
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_VIRUSTINE"
+                                "species": "SPECIES_CRABE"
                             },
                             {
                                 "min_level": 10,
-                                "max_level": 30,
-                                "species": "SPECIES_CRABE"
+                                "max_level": 19,
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 10,
@@ -9016,12 +9016,17 @@
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_CRABE"
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_BIBLOP"
+                                "species": "SPECIES_CRABE"
+                            },
+                            {
+                                "min_level": 10,
+                                "max_level": 19,
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 10,
@@ -9032,11 +9037,6 @@
                                 "min_level": 10,
                                 "max_level": 30,
                                 "species": "SPECIES_GROKILLAGE"
-                            },
-                            {
-                                "min_level": 10,
-                                "max_level": 30,
-                                "species": "SPECIES_BIBLOP"
                             },
                             {
                                 "min_level": 25,
@@ -9277,17 +9277,17 @@
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_CRABE"
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 5,
                                 "max_level": 10,
-                                "species": "SPECIES_VIRUSTINE"
+                                "species": "SPECIES_CRABE"
                             },
                             {
                                 "min_level": 10,
-                                "max_level": 30,
-                                "species": "SPECIES_CRABE"
+                                "max_level": 19,
+                                "species": "SPECIES_KRALAMOURE"
                             },
                             {
                                 "min_level": 10,
