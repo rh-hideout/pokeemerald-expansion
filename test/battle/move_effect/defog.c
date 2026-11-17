@@ -763,3 +763,26 @@ SINGLE_BATTLE_TEST("Defog is used on the correct side if opposing mon is behind 
             EXPECT_EQ(opponent->statStages[STAT_EVASION], DEFAULT_STAT_STAGE - 1);
     }
 }
+
+DOUBLE_BATTLE_TEST("Defog removes Stealth Rock from the user and target side, not both sides")
+{
+    GIVEN {
+        WITH_CONFIG(B_DEFOG_EFFECT_CLEARING, GEN_6);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {
+            MOVE(playerLeft, MOVE_STEALTH_ROCK);
+            MOVE(opponentLeft, MOVE_STEALTH_ROCK);
+            MOVE(playerRight, MOVE_DEFOG, target: playerLeft);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STEALTH_ROCK, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STEALTH_ROCK, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DEFOG, playerRight);
+        MESSAGE("The pointed stones disappeared from your side!");
+        NOT MESSAGE("The pointed stones disappeared from your opposing side!");
+    }
+}

@@ -4955,17 +4955,35 @@ static bool32 DefogClearHazards(enum BattleSide side, bool32 clear)
     return FALSE;
 }
 
+bool32 ShouldClearHazards(enum BattlerId battlerAtk, enum BattleSide side)
+{
+    bool32 isDefog = GetMoveEffect(gCurrentMove) == EFFECT_DEFOG;
+
+    if (isDefog && GetConfig(B_DEFOG_EFFECT_CLEARING) < GEN_6)
+        return FALSE;
+
+    enum BattleSide atkSide = GetBattlerSide(battlerAtk);
+    enum BattleSide defSide = GetBattlerSide(gBattlerTarget);
+
+    if (atkSide == side)
+        return TRUE;
+
+    // Defog clears user's and target's side only unlike Tidy Up
+    if (isDefog && defSide != side)
+        return FALSE;
+
+    return TRUE;
+}
+
 bool32 TryDefogClear(enum BattlerId battlerAtk, bool32 clear)
 {
-    s32 i;
-
-    for (i = 0; i < NUM_BATTLE_SIDES; i++)
+    for (enum BattleSide side = 0; side < NUM_BATTLE_SIDES; side++)
     {
-        struct SideTimer *sideTimer = &gSideTimers[i];
-        u32 *sideStatuses = &gSideStatuses[i];
-        gBattleScripting.battler = i;
+        struct SideTimer *sideTimer = &gSideTimers[side];
+        u32 *sideStatuses = &gSideStatuses[side];
+        gBattleScripting.battler = (enum BattlerId) side;
 
-        if (GetBattlerSide(battlerAtk) != i)
+        if (GetBattlerSide(battlerAtk) != side)
         {
             DEFOG_CLEAR(SIDE_STATUS_REFLECT, reflectTimer, BattleScript_SideStatusWoreOff, MOVE_REFLECT);
             DEFOG_CLEAR(SIDE_STATUS_LIGHTSCREEN, lightscreenTimer, BattleScript_SideStatusWoreOff, MOVE_LIGHT_SCREEN);
@@ -4973,9 +4991,9 @@ bool32 TryDefogClear(enum BattlerId battlerAtk, bool32 clear)
             DEFOG_CLEAR(SIDE_STATUS_AURORA_VEIL, auroraVeilTimer, BattleScript_SideStatusWoreOff, MOVE_AURORA_VEIL);
             DEFOG_CLEAR(SIDE_STATUS_SAFEGUARD, safeguardTimer, BattleScript_SideStatusWoreOff, MOVE_SAFEGUARD);
         }
-        if (GetConfig(B_DEFOG_EFFECT_CLEARING) >= GEN_6)
+        if (ShouldClearHazards(battlerAtk, side))
         {
-            if (DefogClearHazards(i, clear))
+            if (DefogClearHazards(side, clear))
                 return TRUE;
         }
         if (gBattleWeather & B_WEATHER_FOG)
