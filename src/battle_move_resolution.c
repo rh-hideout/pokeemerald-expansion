@@ -1019,12 +1019,14 @@ static enum CancelerResult CancelerPPDeduction(struct BattleCalcValues *cv)
         for (u32 i = 0; i < gBattlersCount; i++)
         {
             if (!IsBattlerAlly(i, cv->battlerAtk))
-                ppToDeduct += (GetBattlerAbility(i) == ABILITY_PRESSURE);
+                ppToDeduct += (cv->abilities[i] == ABILITY_PRESSURE);
         }
     }
     else if (moveTarget != TARGET_OPPONENTS_FIELD)
     {
-        if (!IsBattlerAlly(cv->battlerAtk, cv->battlerDef) && GetBattlerAbility(cv->battlerDef) == ABILITY_PRESSURE)
+        if (cv->battlerAtk != cv->battlerDef
+         && (GetConfig(B_PRESSURE_ALLIES) < GEN_5 || !IsBattlerAlly(cv->battlerAtk, cv->battlerDef))
+         && cv->abilities[cv->battlerDef] == ABILITY_PRESSURE)
             ppToDeduct++;
     }
 

@@ -13,9 +13,10 @@ SINGLE_BATTLE_TEST("Pressure causes opponent's moves to use up 1 additional PP")
     }
 }
 
-DOUBLE_BATTLE_TEST("Pressure does not increase allies' PP usage")
+DOUBLE_BATTLE_TEST("Pressure does not increase allies' PP usage (Gen 5+)")
 {
     GIVEN {
+        WITH_CONFIG(B_PRESSURE_ALLIES, GEN_5);
         PLAYER(SPECIES_WOBBUFFET) { MovesWithPP({MOVE_HEAL_PULSE, 10}); }
         PLAYER(SPECIES_ENTEI) { Ability(ABILITY_PRESSURE); HP(1); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -24,6 +25,21 @@ DOUBLE_BATTLE_TEST("Pressure does not increase allies' PP usage")
         TURN { MOVE(playerLeft, MOVE_HEAL_PULSE, target: playerRight); }
     } THEN {
         EXPECT_EQ(playerLeft->pp[0], 9);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Pressure increases allies' PP usage (Gen 3-4)")
+{
+    GIVEN {
+        WITH_CONFIG(B_PRESSURE_ALLIES, GEN_4);
+        PLAYER(SPECIES_WOBBUFFET) { MovesWithPP({MOVE_HEAL_PULSE, 10}); }
+        PLAYER(SPECIES_ENTEI) { Ability(ABILITY_PRESSURE); HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_HEAL_PULSE, target: playerRight); }
+    } THEN {
+        EXPECT_EQ(playerLeft->pp[0], 8);
     }
 }
 
