@@ -1,7 +1,7 @@
 #include "global.h"
 #include "test/battle.h"
 
-SINGLE_BATTLE_TEST("Freeze has a 25% chance of being thawed (Gen9-)")
+SINGLE_BATTLE_TEST("Freeze has a 20% chance of being thawed (Gen9-)")
 {
     PASSES_RANDOMLY(20, 100, RNG_FROZEN);
     GIVEN {
@@ -15,7 +15,24 @@ SINGLE_BATTLE_TEST("Freeze has a 25% chance of being thawed (Gen9-)")
     }
 }
 
-SINGLE_BATTLE_TEST("Freeze has a 20% chance of being thawed (Champions)")
+SINGLE_BATTLE_TEST("Newly inflicted freeze blocks the first action when random thawing fails (Gen9-)")
+{
+    GIVEN {
+        WITH_CONFIG(B_FREEZE_TURNS, GEN_9);
+        ASSUME(MoveHasAdditionalEffect(MOVE_ICE_BEAM, MOVE_EFFECT_FREEZE));
+        PLAYER(SPECIES_WOBBUFFET) { Speed(2); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_ICE_BEAM, WITH_RNG(RNG_SECONDARY_EFFECT, TRUE)); MOVE(opponent, MOVE_CELEBRATE, WITH_RNG(RNG_FROZEN, FALSE)); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ICE_BEAM, player);
+        HP_BAR(opponent);
+        STATUS_ICON(opponent, freeze: TRUE);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+    }
+}
+
+SINGLE_BATTLE_TEST("Freeze has a 25% chance of being thawed (Champions)")
 {
     PASSES_RANDOMLY(25, 100, RNG_FROZEN);
     GIVEN {
@@ -264,55 +281,41 @@ SINGLE_BATTLE_TEST("Freeze isn't thawed if opponent is asleep during thawing att
     }
 }
 
-SINGLE_BATTLE_TEST("Freeze has a 25% chance of being thawed (Champions)")
+SINGLE_BATTLE_TEST("Freeze thaws on the third action when random thawing fails (Champions)")
 {
-    PASSES_RANDOMLY(25, 100, RNG_FROZEN);
     GIVEN {
         WITH_CONFIG(B_FREEZE_TURNS, GEN_CHAMPIONS);
         PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_FREEZE); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(player, MOVE_CELEBRATE); }
-    } SCENE {
-        STATUS_ICON(player, none: TRUE);
-    }
-}
-
-SINGLE_BATTLE_TEST("Freeze has a guaranteed chance of thawing on the third turn (Champions)")
-{
-    PASSES_RANDOMLY(75, 100, RNG_FROZEN);
-    GIVEN {
-        WITH_CONFIG(B_FREEZE_TURNS, GEN_CHAMPIONS);
-        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_FREEZE); }
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(player, MOVE_CELEBRATE); }
-        TURN { MOVE(player, MOVE_CELEBRATE); }
-        TURN { MOVE(player, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_CELEBRATE, WITH_RNG(RNG_FROZEN, FALSE)); }
+        TURN { MOVE(player, MOVE_CELEBRATE, WITH_RNG(RNG_FROZEN, FALSE)); }
+        TURN { MOVE(player, MOVE_CELEBRATE, WITH_RNG(RNG_FROZEN, FALSE)); }
     } SCENE {
         MESSAGE("Wobbuffet is frozen solid!");
         MESSAGE("Wobbuffet is frozen solid!");
         STATUS_ICON(player, none: TRUE);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
     }
 }
 
 SINGLE_BATTLE_TEST("Freeze timer persists even if the user switches out (Champions)")
 {
-    PASSES_RANDOMLY(75, 100, RNG_FROZEN);
     GIVEN {
         WITH_CONFIG(B_FREEZE_TURNS, GEN_CHAMPIONS);
         PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_FREEZE); }
         PLAYER(SPECIES_WOBBUFFET) {};
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(player, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_CELEBRATE, WITH_RNG(RNG_FROZEN, FALSE)); }
         TURN { SWITCH(player, 1); }
         TURN { SWITCH(player, 0); }
-        TURN { MOVE(player, MOVE_CELEBRATE); }
-        TURN { MOVE(player, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_CELEBRATE, WITH_RNG(RNG_FROZEN, FALSE)); }
+        TURN { MOVE(player, MOVE_CELEBRATE, WITH_RNG(RNG_FROZEN, FALSE)); }
     } SCENE {
         MESSAGE("Wobbuffet is frozen solid!");
         MESSAGE("Wobbuffet is frozen solid!");
         STATUS_ICON(player, none: TRUE);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
     }
 }
