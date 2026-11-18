@@ -1,6 +1,11 @@
 #include "global.h"
 #include "test/battle.h"
 
+ASSUMPTIONS
+{
+    ASSUME(GetMoveEffect(MOVE_NATURAL_GIFT) == EFFECT_NATURAL_GIFT);
+}
+
 SINGLE_BATTLE_TEST("Natural Gift removes berry if move fails due to an immunity")
 {
     GIVEN {
@@ -18,6 +23,7 @@ SINGLE_BATTLE_TEST("Natural Gift removes berry if move fails due to an immunity"
 SINGLE_BATTLE_TEST("Natural Gift does not remove berry if user is ejected out")
 {
     GIVEN {
+        ASSUME(gItemsInfo[ITEM_RED_CARD].holdEffect == HOLD_EFFECT_RED_CARD);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_PECHA_BERRY); }
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_RED_CARD); }
@@ -29,6 +35,23 @@ SINGLE_BATTLE_TEST("Natural Gift does not remove berry if user is ejected out")
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
     } THEN {
         EXPECT(player->item == ITEM_PECHA_BERRY);
+    }
+}
+
+SINGLE_BATTLE_TEST("Natural Gift does not consume the replacement's berry after Red Card activates")
+{
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_RED_CARD].holdEffect == HOLD_EFFECT_RED_CARD);
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_PECHA_BERRY); }
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_LUM_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_RED_CARD); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_NATURAL_GIFT); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_NATURAL_GIFT, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+    } THEN {
+        EXPECT_EQ(player->item, ITEM_LUM_BERRY);
     }
 }
 
