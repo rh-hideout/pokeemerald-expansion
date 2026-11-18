@@ -103,12 +103,6 @@ def reservations():
     # Each future area has two entrances. Both remain locked until a later
     # event explicitly sets the corresponding persistent flag.
     cases=[
-        ('GoldenrodCity_UndergroundTunnel_hns',(12,12),
-         'FLAG_POX_KIMONO_GATE_OPEN',(K.KEY_UP,K.KEY_UP),
-         'GoldenrodCity_UndergroundSwitches_hns'),
-        ('GoldenrodCity_UndergroundStorage_hns',(4,11),
-         'FLAG_POX_KIMONO_GATE_OPEN',(K.KEY_LEFT,K.KEY_LEFT),
-         'GoldenrodCity_UndergroundSwitches_hns'),
         ('GoldenrodCity_RadioTower_4F_hns',(19,6),
          'FLAG_POX_RADIO_TOP_OPEN',(K.KEY_UP,K.KEY_RIGHT),
          'GoldenrodCity_RadioTower_5F_hns'),

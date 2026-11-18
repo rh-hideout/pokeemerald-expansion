@@ -92,7 +92,7 @@ One long commercial street on a slope, entered from `Route33_hns` in the south a
 ## Open questions
 
 - Keep `GoldenrodCity_Gym_hns` as Gym 2 and delete `PlasticOx_WhitneyGym`, or move `Pox_Whitney` into the empty new room and repoint `(39,13)`? Today the badge lives in the legacy room.
-- Should the switch chamber stay open — a Max Revive and a Max Potion before badge 2 — or does the Kimono guard's line become a real gate?
+- RESOLVED (pox-2ma.7): the switch chamber stays open; the story bible has no Steel Tablet/kimono gate, so the dead flags were retired. Revisit only if the bible adds a Registeel beat.
 - Where does the bitter-herb counter belong: the Tunnel, where the Lavaridge clerk stands, or the Department Store basement, where the street voice at `(30,39)` sends people?
 - Does the coast train ever run again? That answer decides whether Bill's mother says "ferry" and whether the station gets a second state.
 - Claim the Train Station, Bike Shop and Radio Tower here, or leave them for a separate service-buildings note?

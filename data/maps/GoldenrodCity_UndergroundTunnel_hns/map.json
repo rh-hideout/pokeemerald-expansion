@@ -168,7 +168,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "PoxGoldenrod_GoldenrodCity_UndergroundTunnel_hns_11",
-      "flag": "FLAG_POX_KIMONO_GATE_OPEN",
+      "flag": "0",
       "local_id": "LOCALID_GOLDENROD_UNDERGROUND_KIMONO"
     }
   ],
