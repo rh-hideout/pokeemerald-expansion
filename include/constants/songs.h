@@ -593,6 +593,9 @@
 #define MUS_NIMBASA_CITY            658
 #define MUS_DRIFTVEIL_CITY          659
 #define MUS_MISTRALTON_CITY         660
+#define MUS_ICIRRUS_CITY            661
+#define MUS_OPELUCID_CITY_B         662
+#define MUS_OPELUCID_CITY_W         663
 #define MUS_ROUTE118                0x7FFF  // Map is split into 2 music sections. controlled by GetCurrLocationDefaultMusic().
 
 #define MUS_NONE                    0xFFFF
