@@ -767,6 +767,7 @@ UNUSED static const struct BoxPokemon sBoxPokemonConstantsFit =
 };
 
 STATIC_ASSERT(MAX_LEVEL <= 100, PokemonSubstruct0_experience_PotentiallyTooSmall); // Maximum of ~2 million exp.
+STATIC_ASSERT(NUM_ASSIGNED_RIBBON_VALUES <= (1 << ASSIGNED_RIBBON_BITS), PokemonSubstruct0_assignedRibbon_PotentiallyTooSmall);
 
 static u32 CompressStatus(u32 status)
 {
@@ -2425,6 +2426,9 @@ u32 GetBoxMonData3(struct BoxPokemon *boxMon, s32 field, u8 *data)
                 }.combinedValue;
             }
             break;
+        case MON_DATA_ASSIGNED_RIBBON:
+            retVal = GetSubstruct0(boxMon)->assignedRibbon;
+            break;
         default:
             break;
         }
@@ -2857,6 +2861,9 @@ void SetBoxMonData(struct BoxPokemon *boxMon, s32 field, const void *dataArg)
             substruct1->evolutionTracker2 = evoTracker.tracker2;
             break;
         }
+        case MON_DATA_ASSIGNED_RIBBON:
+            SET8(GetSubstruct0(boxMon)->assignedRibbon);
+            break;
         default:
             break;
         }
