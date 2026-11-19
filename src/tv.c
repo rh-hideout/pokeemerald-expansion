@@ -1455,6 +1455,7 @@ static void StartMassOutbreakFromShow(TVShow *show)
 {
     if (show->massOutbreak.outbreakIndex == 0) //This condition is only necessary for legacy save files
     {
+        ResetMassOutbreakProgress();
         gSaveBlock1Ptr->outbreakPokemonSpecies = show->massOutbreak.species;
         gSaveBlock1Ptr->outbreakLocationMapNum = show->massOutbreak.locationMapNum;
         gSaveBlock1Ptr->outbreakLocationMapGroup = show->massOutbreak.locationMapGroup;
