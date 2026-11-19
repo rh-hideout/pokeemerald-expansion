@@ -6,7 +6,7 @@ All contributions are encouraged and valued. Please make sure to read the releva
 
 ## Large Language Models (AI) Policy
 - All contributions must not be generated or assisted by a large language model (AI). 
-- Your code and text must be made by a human, not an large langage model (LLM). LLM-generated assets (graphics, music, etc.) are also not permitted.
+- Your code and text must be made by a human, not a large langage model (LLM). LLM-generated assets (graphics, music, etc.) are also not permitted.
 - If a maintainer believes something was written with LLM assistance, it will be closed.
 - All communication to reviewers (PR descriptions, review responses) must be written by the contributor, not an LLM.
 - Repeat violators of this policy will be banned.
