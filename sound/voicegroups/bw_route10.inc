@@ -47,7 +47,7 @@ voice_group bw_route10
 	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
 	voice_directsound 60, 0, DirectSoundWaveData_vsrival_26, 255, 0, 255, 165
 	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
-	voice_keysplit voicegroup_bw_48_keysplit, keysplit_bw_keysplit_48
+	voice_keysplit voicegroup_bw_47_keysplit, keysplit_bw_keysplit_47
 	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
 	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
 	voice_directsound 60, 0, DirectSoundWaveData_poketheme_12, 255, 0, 255, 165

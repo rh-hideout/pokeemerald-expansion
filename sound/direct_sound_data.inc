@@ -10206,3 +10206,7 @@ DirectSoundWaveData_mistralton_9::
 	.align 2
 DirectSoundWaveData_mistralton_10::
 	.incbin "sound/direct_sound_samples/mistralton_10.bin"
+
+	.align 2
+DirectSoundWaveData_route2_27::
+	.incbin "sound/direct_sound_samples/route2_27.bin"

@@ -596,6 +596,11 @@
 #define MUS_ICIRRUS_CITY            661
 #define MUS_OPELUCID_CITY_B         662
 #define MUS_OPELUCID_CITY_W         663
+#define MUS_BW_ROUTE1               664
+#define MUS_BW_ROUTE2               665
+#define MUS_BW_ROUTE4               666
+#define MUS_BW_ROUTE6               667
+#define MUS_BW_ROUTE13              668
 #define MUS_ROUTE118                0x7FFF  // Map is split into 2 music sections. controlled by GetCurrLocationDefaultMusic().
 
 #define MUS_NONE                    0xFFFF

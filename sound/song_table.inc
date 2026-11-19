@@ -670,6 +670,11 @@ gSongTable::
 	song mus_icirrus_city, MUSIC_PLAYER_BGM, 0
 	song mus_opelucid_city_b, MUSIC_PLAYER_BGM, 0
 	song mus_opelucid_city_w, MUSIC_PLAYER_BGM, 0
+	song mus_bw_route1, MUSIC_PLAYER_BGM, 0
+	song mus_bw_route2, MUSIC_PLAYER_BGM, 0
+	song mus_bw_route4, MUSIC_PLAYER_BGM, 0
+	song mus_bw_route6, MUSIC_PLAYER_BGM, 0
+	song mus_bw_route13, MUSIC_PLAYER_BGM, 0
 
 	.align 2
 dummy_song_header:

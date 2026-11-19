@@ -10,10 +10,10 @@ voice_group bw_soundfont1
 	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
 	voice_directsound 60, 0, DirectSoundWaveData_poketheme_11, 255, 0, 255, 165
 	voice_keysplit voicegroup_bw_10_keysplit, keysplit_bw_keysplit_10
-	voice_directsound 60, 0, DirectSoundWaveData_vsrival_15, 255, 0, 255, 165
+	voice_keysplit voicegroup_bw_11_keysplit, keysplit_bw_keysplit_11
 	voice_square_1_alt 60, 0, 0, 2, 0, 0, 15, 0
 	voice_keysplit voicegroup_bw_13_keysplit, keysplit_bw_keysplit_13
-	voice_directsound 60, 0, DirectSoundWaveData_poketheme_25, 255, 0, 255, 165
+	voice_directsound 60, 0, DirectSoundWaveData_poketheme_25, 255, 240, 0, 165
 	voice_square_1 60, 0, 0, 2, 0, 0, 15, 0
 	voice_keysplit voicegroup_bw_16_keysplit, keysplit_bw_keysplit_16
 	voice_keysplit voicegroup_bw_17_keysplit, keysplit_bw_keysplit_13

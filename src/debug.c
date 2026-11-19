@@ -4310,6 +4310,11 @@ static void DebugAction_DestroyFollowerNPC(u8 taskId)
     X(MUS_ICIRRUS_CITY) \
     X(MUS_OPELUCID_CITY_B) \
     X(MUS_OPELUCID_CITY_W) \
+    X(MUS_BW_ROUTE1) \
+    X(MUS_BW_ROUTE2) \
+    X(MUS_BW_ROUTE4) \
+    X(MUS_BW_ROUTE6) \
+    X(MUS_BW_ROUTE13) \
 
 #define SOUND_LIST_SE               \
     X(SE_USE_ITEM)                  \

@@ -265,3 +265,4 @@
 .include "sound/voicegroups/skyarrowbridge.inc"
 .include "sound/voicegroups/bw_driftveil.inc"
 .include "sound/voicegroups/bw_mistralton.inc"
+.include "sound/voicegroups/bw_route2.inc"
