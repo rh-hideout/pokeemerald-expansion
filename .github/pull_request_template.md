@@ -13,8 +13,8 @@
 <!--- If any of the above are not true, submit the PR as a draft. --->
 
 <!-- ⚠️ WARNING ⚠️ -->
-<!-- All contributions must not be generated or assisted by a large language model (AI). --!>
-<!-- You can learn more by reading CONTRIBUTING.md. https://github.com/rh-hideout/pokeemerald-expansion/wiki/CONTRIBUTING.md --!>
+<!-- All contributions must not be generated or assisted by a large language model (AI). --->
+<!-- You can learn more by reading CONTRIBUTING.md. https://github.com/rh-hideout/pokeemerald-expansion/wiki/CONTRIBUTING.md --->
 
 ## Description
 <!-- Detail the changes made, why they were made, and any important context. -->
