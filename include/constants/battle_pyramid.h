@@ -50,14 +50,7 @@
 #define BATTLE_PYRAMID_FUNC_START_MENU          16 // unused
 #define BATTLE_PYRAMID_FUNC_RESTORE_PARTY       17
 
-#define PYRAMID_DATA_PRIZE                   0
-#define PYRAMID_DATA_WIN_STREAK              1
-#define PYRAMID_DATA_WIN_STREAK_ACTIVE       2
-#define PYRAMID_DATA_WIN_STREAK_50           3 // the below streak data are redundant with the above when frontier.lvlMode is correct
-#define PYRAMID_DATA_WIN_STREAK_OPEN         4
-#define PYRAMID_DATA_WIN_STREAK_ACTIVE_50    5
-#define PYRAMID_DATA_WIN_STREAK_ACTIVE_OPEN  6
-#define PYRAMID_DATA_TRAINER_FLAGS           7
+#define PYRAMID_DATA_TRAINER_FLAGS           0
 
 #define PYRAMID_LIGHT_SET_RADIUS  0
 #define PYRAMID_LIGHT_INCR_RADIUS 1

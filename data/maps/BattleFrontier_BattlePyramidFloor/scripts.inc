@@ -86,7 +86,7 @@ BattleFrontier_BattlePyramidFloor_EventScript_SetLightRadius::
 	return
 
 BattlePyramid_WarpToNextFloor::
-	call BattleFrontier_EventScript_IncrementWinStreak
+	frontier_incrementstreak
 	frontier_get FRONTIER_DATA_BATTLE_NUM  @ Floor number
 	addvar VAR_RESULT, 1
 	frontier_set FRONTIER_DATA_BATTLE_NUM, VAR_RESULT

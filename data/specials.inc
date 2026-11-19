@@ -263,7 +263,6 @@ gSpecials::
 	def_special CallSlateportTentFunction
 	def_special ChoosePartyForBattleFrontier, waitstate=1
 	def_special ValidateEReaderTrainer
-	def_special GetBattleTowerSinglesStreak
 	def_special ReducePlayerPartyToSelectedMons
 	def_special BedroomPC, waitstate=1
 	def_special PlayerPC, waitstate=1

@@ -182,9 +182,7 @@ BattleFrontier_BattlePikeRoomNormal_EventScript_DefeatedLucy::
 	waitmovement 0
 	applymovement LOCALID_PLAYER, BattleFrontier_BattlePikeRoomNormal_Movement_PlayerWalkUp2
 	waitmovement 0
-	pike_get PIKE_DATA_WIN_STREAK
-	addvar VAR_RESULT, 1
-	pike_set PIKE_DATA_WIN_STREAK, VAR_RESULT
+	frontier_incrementstreak
 	call BattleFrontier_BattlePikeRoom_EventScript_WarpToFinalRoom
 	waitstate
 	end
