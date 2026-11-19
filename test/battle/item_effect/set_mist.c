@@ -17,3 +17,21 @@ SINGLE_BATTLE_TEST("Guard Spec. sets Mist effect on the battlers side")
         MESSAGE("Wobbuffet is protected by the mist!");
     }
 }
+
+SINGLE_BATTLE_TEST("Guard Spec. has no effect if mist is already set")
+{
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_GUARD_SPEC].battleUsage == EFFECT_ITEM_SET_MIST);
+        WITH_CONFIG(B_SELECT_NO_EFFECT_ITEMS, GEN_5);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        GIVE_PLAYER_ITEM(ITEM_GUARD_SPEC, 1);
+    } WHEN {
+        TURN { MOVE(player, MOVE_MIST); }
+        TURN { USE_ITEM(player, ITEM_GUARD_SPEC); }
+    } SCENE {
+        MESSAGE("But it had no effect!");
+    } THEN {
+        EXPECT(CheckBagHasItem(ITEM_GUARD_SPEC, 1));
+    }
+}
