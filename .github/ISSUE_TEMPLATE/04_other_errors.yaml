@@ -11,7 +11,7 @@ body:
         All contributions must not be generated or assisted by a large language model (AI). 
         Your code and text must be made by a human, not a large langage model (LLM). LLM-generated assets (graphics, music, etc.) are also not permitted.
         If a maintainer believes something was written with LLM assistance, it will be closed.
-        For more information, please read [`CONTRIBUTING.md`](https://github.com/rh-hideout/pokeemerald-expansion/wiki/CONTRIBUTING.md).
+        For more information, please read [`CONTRIBUTING.md`](../../CONTRIBUTING.md).
   - type: textarea
     id: description
     attributes:
