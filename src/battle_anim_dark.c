@@ -986,7 +986,7 @@ static void AnimTask_MetallicShine_Step(u8 taskId)
         {
             spriteId = GetAnimBattlerSpriteId(ANIM_ATTACKER);
             paletteNum = 16 + gSprites[spriteId].oam.paletteNum;
-            if (gTasks[taskId].data[1] == 0)
+            if (gTasks[taskId].data[1] == FALSE)
                 SetGrayscaleOrOriginalPalette(paletteNum, TRUE);
 
             DestroySprite(&gSprites[gTasks[taskId].data[0]]);
