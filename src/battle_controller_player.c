@@ -298,7 +298,7 @@ static void HandleInputChooseAction(enum BattlerId battler)
                 gBattleStruct->ackBallUseBtn = FALSE;
                 PlaySE(SE_SELECT);
                 ArrowsChangeColorLastBallCycle(FALSE);
-                TryHideLastUsedBall();
+                TryHideLastUsedBallAndBattleInfoMenu();
                 BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_THROW_BALL, 0);
                 BtlController_Complete(battler);
             }
@@ -310,9 +310,8 @@ static void HandleInputChooseAction(enum BattlerId battler)
      && JOY_NEW(B_BATTLE_INFO_BUTTON)
      && !(B_BATTLE_INFO_BUTTON == L_BUTTON && gSaveBlock2Ptr->optionsButtonMode == OPTIONS_BUTTON_MODE_L_EQUALS_A))
     {
-        TryToHideBattleStatusHint();
         PlaySE(SE_SELECT);
-        TryHideLastUsedBall();
+        TryHideLastUsedBallAndBattleInfoMenu();
         BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 0x10, RGB_BLACK);
         gBattlerControllerFuncs[battler] = OpenBattleStatusMenu;
         gBattlerInMenuId = battler;
@@ -321,9 +320,8 @@ static void HandleInputChooseAction(enum BattlerId battler)
 
     if (JOY_NEW(A_BUTTON))
     {
-        TryToHideBattleStatusHint();
         PlaySE(SE_SELECT);
-        TryHideLastUsedBall();
+        TryHideLastUsedBallAndBattleInfoMenu();
 
         switch (gActionSelectionCursor[battler])
         {
@@ -422,7 +420,7 @@ static void HandleInputChooseAction(enum BattlerId battler)
              && JOY_NEW(B_LAST_USED_BALL_BUTTON) && CanThrowLastUsedBall())
     {
         PlaySE(SE_SELECT);
-        TryHideLastUsedBall();
+        TryHideLastUsedBallAndBattleInfoMenu();
         BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_THROW_BALL, 0);
         BtlController_Complete(battler);
     }
@@ -481,7 +479,7 @@ void HandleInputChooseTarget(enum BattlerId battler)
         else
             BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, gMoveSelectionCursor[battler] | (gMultiUsePlayerCursor << 8));
         EndBounceEffect(gMultiUsePlayerCursor, BOUNCE_HEALTHBOX);
-        TryHideLastUsedBall();
+        TryHideLastUsedBallAndBattleInfoMenu();
         HideGimmickTriggerSprite();
         BtlController_Complete(battler);
     }
@@ -668,7 +666,7 @@ void HandleInputShowTargets(enum BattlerId battler)
         else
             BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, gMoveSelectionCursor[battler] | (gMultiUsePlayerCursor << 8));
         HideGimmickTriggerSprite();
-        TryHideLastUsedBall();
+        TryHideLastUsedBallAndBattleInfoMenu();
         BtlController_Complete(battler);
     }
     else if (JOY_NEW(B_BUTTON) || gPlayerDpadHoldFrames > 59)
@@ -791,7 +789,7 @@ void HandleInputChooseMove(enum BattlerId battler)
             else
                 BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, gMoveSelectionCursor[battler] | (gMultiUsePlayerCursor << 8));
             HideGimmickTriggerSprite();
-            TryHideLastUsedBall();
+            TryHideLastUsedBallAndBattleInfoMenu();
             BtlController_Complete(battler);
             break;
         case 1:
@@ -2157,7 +2155,7 @@ void PlayerHandleChooseMove(enum BattlerId battler)
     {
         struct ChooseMoveStruct *moveInfo = (struct ChooseMoveStruct *)(&gBattleResources->bufferA[battler][4]);
 
-        TryToHideBattleStatusHint();
+        TryHideLastUsedBallAndBattleInfoMenu();
         InitMoveSelectionsVarsAndStrings(battler);
         gBattleStruct->gimmick.playerSelect = FALSE;
         TryToAddMoveInfoWindow();
@@ -2194,7 +2192,7 @@ static void PlayerHandleChooseItem(enum BattlerId battler)
 {
     s32 i;
 
-    TryToHideBattleStatusHint();
+    TryHideLastUsedBallAndBattleInfoMenu();
     BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 0x10, RGB_BLACK);
     gBattlerControllerFuncs[battler] = OpenBagAndChooseItem;
     gBattlerInMenuId = battler;
@@ -2207,7 +2205,7 @@ static void PlayerHandleChoosePokemon(enum BattlerId battler)
 {
     s32 i;
 
-    TryToHideBattleStatusHint();
+    TryHideLastUsedBallAndBattleInfoMenu();
     for (i = 0; i < ARRAY_COUNT(gBattlePartyCurrentOrder); i++)
         gBattlePartyCurrentOrder[i] = gBattleResources->bufferA[battler][4 + i];
 
