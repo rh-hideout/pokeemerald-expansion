@@ -14,7 +14,7 @@
 
 <!-- ⚠️ WARNING ⚠️ -->
 <!-- All contributions must not be generated or assisted by a large language model (AI). --->
-<!-- You can learn more by reading CONTRIBUTING.md. https://github.com/rh-hideout/pokeemerald-expansion/wiki/CONTRIBUTING.md --->
+<!-- You can learn more about our AI policy by reading CONTRIBUTING.md, linked above. --->
 
 ## Description
 <!-- Detail the changes made, why they were made, and any important context. -->
