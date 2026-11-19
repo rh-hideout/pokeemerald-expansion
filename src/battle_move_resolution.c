@@ -3382,7 +3382,7 @@ static enum MoveEndResult MoveEndQueueDancerToxicChain(struct BattleCalcValues *
          && IsBattlerAlive(effectBattler)
          && CanBePoisoned(cv->battlerAtk, effectBattler, cv->abilities[cv->battlerAtk], cv->abilities[effectBattler])
          && IsBattlerTurnDamaged(effectBattler, EXCLUDING_SUBSTITUTES)
-         && RandomWeighted(RNG_TOXIC_CHAIN, 7, 3))
+         && RandomPercentage(RNG_TOXIC_CHAIN, 30))
             gBattleStruct->battlerState[effectBattler].toxicChainActivates = TRUE;
     }
 

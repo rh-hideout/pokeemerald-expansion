@@ -26,9 +26,7 @@
 
 struct RockSmashItemTable {
     const enum Item *table;
-    const u16 *weights; //if NULL, there will be equal chance to roll any item on the table
-    u16 size;
-    u16 weightsSum;
+    struct WeightedArray weights;
 };
 
 #include "data/rock_smash_items.h"
@@ -204,19 +202,13 @@ static enum Item GetRockSmashRandomItem(void)
         return ITEM_NONE;
     }
 
-    u32 randomIndex;
-    if (sRockSmashTables[itemTable].weightsSum)// I.e. if using Gen 4 mechanics
+    u32 randomIndex = RandomWeightedStruct(RNG_ROCK_SMASH_ITEM_DROP, &sRockSmashTables[itemTable].weights);
+    if (OW_ROCK_SMASH_ITEMS < GEN_6 && randomIndex < sRockSmashTables[itemTable].weights.count - 1)
     {
-        randomIndex = RandomWeightedArray(RNG_ROCK_SMASH_ITEM_DROP, sRockSmashTables[itemTable].weightsSum, sRockSmashTables[itemTable].size, sRockSmashTables[itemTable].weights);
-        if (randomIndex < sRockSmashTables[itemTable].size - 1)
-        {
-            u32 partySlot = VarGet(VAR_0x8006);
-            if (DoesRockSmashUserHaveIncreasedItemRarity(partySlot))// Check for serene grace and super luck's impact on a weighted table.
-                randomIndex++;
-        }
+        u32 partySlot = VarGet(VAR_0x8006);
+        if (DoesRockSmashUserHaveIncreasedItemRarity(partySlot))// Check for serene grace and super luck's impact on a weighted table.
+            randomIndex++;
     }
-    else // Gen 6 mechanics
-        randomIndex = RandomUniform(RNG_ROCK_SMASH_ITEM_DROP, 0, sRockSmashTables[itemTable].size - 1);
 
     return sRockSmashTables[itemTable].table[randomIndex];
 }
