@@ -3314,7 +3314,9 @@ static void Cmd_switchinanim(void)
 
     gAbsentBattlerFlags &= ~(1u << battler);
 
-    BtlController_EmitSwitchInAnim(battler, B_COMM_TO_CONTROLLER, gBattlerPartyIndexes[battler], cmd->dontClearTransform, cmd->dontClearSubstitute);
+    bool32 shouldClearSub = cmd->dontClearSubstitute && gBattleMons[battler].volatiles.substitute;
+
+    BtlController_EmitSwitchInAnim(battler, B_COMM_TO_CONTROLLER, gBattlerPartyIndexes[battler], cmd->dontClearTransform, shouldClearSub);
     MarkBattlerForControllerExec(battler);
 
     gBattlescriptCurrInstr = cmd->nextInstr;
