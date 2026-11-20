@@ -266,3 +266,4 @@
 .include "sound/voicegroups/bw_driftveil.inc"
 .include "sound/voicegroups/bw_mistralton.inc"
 .include "sound/voicegroups/bw_route2.inc"
+.include "sound/voicegroups/bw_vsrival.inc"

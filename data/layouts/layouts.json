@@ -9346,7 +9346,7 @@
     },
     {
       "id": "LAYOUT_NUVEMATOWNOVERWORLD",
-      "name": "NuvemaTownOverworld",
+      "name": "NuvemaTownOverworld_Layout",
       "width": 32,
       "height": 32,
       "primary_tileset": "gTileset_General",

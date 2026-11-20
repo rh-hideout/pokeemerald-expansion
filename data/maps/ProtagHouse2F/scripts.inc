@@ -99,7 +99,6 @@ ProtagHouse2F_EventScript_OpenGiftBox::
 	msgbox ProtagHouse2F_Text_11, MSGBOX_DEFAULT
 	msgbox ProtagHouse2F_Text_12, MSGBOX_DEFAULT
 	special ChooseStarterNoBattle
-	waitstate
 	switch VAR_STARTER_MON
 	case 0, ProtagHouse2F_EventScript_GiveSnivy
 	case 1, ProtagHouse2F_EventScript_GiveTepig
@@ -159,15 +158,15 @@ ProtagHouse2F_EventScript_RivalsPick::
 @ ---------------------------------------------------------------- battle 1: Bianca
 
 ProtagHouse2F_EventScript_BiancaBattle_VsSnivy::
-	trainerbattle_earlyrival TRAINER_BIANCA_VS_SNIVY_NUVEMA_TOWN, RIVAL_BATTLE_HEAL_AFTER, ProtagHouse2F_Text_37, NULL
+	trainerbattle_earlyrival TRAINER_BIANCA_VS_SNIVY_NUVEMA_TOWN, RIVAL_BATTLE_HEAL_AFTER, ProtagHouse2F_Text_37, gText_EmptyString2
 	goto ProtagHouse2F_EventScript_AfterBiancaBattle
 
 ProtagHouse2F_EventScript_BiancaBattle_VsTepig::
-	trainerbattle_earlyrival TRAINER_BIANCA_VS_TEPIG_NUVEMA_TOWN, RIVAL_BATTLE_HEAL_AFTER, ProtagHouse2F_Text_37, NULL
+	trainerbattle_earlyrival TRAINER_BIANCA_VS_TEPIG_NUVEMA_TOWN, RIVAL_BATTLE_HEAL_AFTER, ProtagHouse2F_Text_37, gText_EmptyString2
 	goto ProtagHouse2F_EventScript_AfterBiancaBattle
 
 ProtagHouse2F_EventScript_BiancaBattle_VsOshawott::
-	trainerbattle_earlyrival TRAINER_BIANCA_VS_OSHAWOTT_NUVEMA_TOWN, RIVAL_BATTLE_HEAL_AFTER, ProtagHouse2F_Text_37, NULL
+	trainerbattle_earlyrival TRAINER_BIANCA_VS_OSHAWOTT_NUVEMA_TOWN, RIVAL_BATTLE_HEAL_AFTER, ProtagHouse2F_Text_37, gText_EmptyString2
 	goto ProtagHouse2F_EventScript_AfterBiancaBattle
 
 ProtagHouse2F_EventScript_AfterBiancaBattle::
@@ -214,19 +213,19 @@ ProtagHouse2F_SkipText46::
 ProtagHouse2F_EventScript_CherenHasTepig2::
 	bufferspeciesname STR_VAR_1, SPECIES_TEPIG
 	msgbox ProtagHouse2F_Text_53, MSGBOX_DEFAULT
-	trainerbattle_earlyrival TRAINER_CHEREN_VS_TEPIG_NUVEMA_TOWN, RIVAL_BATTLE_HEAL_AFTER, ProtagHouse2F_Text_55, NULL
+	trainerbattle_earlyrival TRAINER_CHEREN_VS_TEPIG_NUVEMA_TOWN, RIVAL_BATTLE_HEAL_AFTER, ProtagHouse2F_Text_55, gText_EmptyString2
 	goto ProtagHouse2F_EventScript_AfterCherenBattle
 
 ProtagHouse2F_EventScript_CherenHasOshawott2::
 	bufferspeciesname STR_VAR_1, SPECIES_OSHAWOTT
 	msgbox ProtagHouse2F_Text_53, MSGBOX_DEFAULT
-	trainerbattle_earlyrival TRAINER_CHEREN_VS_OSHAWOTT_NUVEMA_TOWN, RIVAL_BATTLE_HEAL_AFTER, ProtagHouse2F_Text_55, NULL
+	trainerbattle_earlyrival TRAINER_CHEREN_VS_OSHAWOTT_NUVEMA_TOWN, RIVAL_BATTLE_HEAL_AFTER, ProtagHouse2F_Text_55, gText_EmptyString2
 	goto ProtagHouse2F_EventScript_AfterCherenBattle
 
 ProtagHouse2F_EventScript_CherenHasSnivy2::
 	bufferspeciesname STR_VAR_1, SPECIES_SNIVY
 	msgbox ProtagHouse2F_Text_53, MSGBOX_DEFAULT
-	trainerbattle_earlyrival TRAINER_CHEREN_VS_SNIVY_NUVEMA_TOWN, RIVAL_BATTLE_HEAL_AFTER, ProtagHouse2F_Text_55, NULL
+	trainerbattle_earlyrival TRAINER_CHEREN_VS_SNIVY_NUVEMA_TOWN, RIVAL_BATTLE_HEAL_AFTER, ProtagHouse2F_Text_55, gText_EmptyString2
 	goto ProtagHouse2F_EventScript_AfterCherenBattle
 @ ---------------------------------------------------------------- battle 2 aftermath
 
