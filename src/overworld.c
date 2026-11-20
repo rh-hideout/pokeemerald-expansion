@@ -392,11 +392,10 @@ static void (*const sMovementStatusHandler[])(struct LinkPlayerObjectEvent *, st
 // code
 void DoWhiteOut(void)
 {
-    #if IS_FRLG
+    if (IS_FRLG)
         RunScriptImmediately(EventScript_ResetEliteFourEnd);
-    #else
+    else
         RunScriptImmediately(EventScript_WhiteOut);
-    #endif
     HealPlayerParty();
     Overworld_ResetStateAfterWhiteOut();
     SetWarpDestinationToLastHealLocation();
