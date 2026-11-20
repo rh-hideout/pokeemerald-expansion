@@ -232,18 +232,6 @@ static bool32 HandleEndTurnAffection(enum BattlerId battler)
     return effect;
 }
 
-static bool32 IsFutureSightAttackerInParty(enum BattlerId battlerAtk, enum BattlerId battlerDef)
-{
-    struct Pokemon *party = GetBattlerParty(battlerAtk);
-    if (IsDoubleBattle())
-    {
-        return &party[gBattleStruct->futureSight[battlerDef].partyIndex] != &party[gBattlerPartyIndexes[battlerAtk]]
-            && &party[gBattleStruct->futureSight[battlerDef].partyIndex] != &party[gBattlerPartyIndexes[GetPartnerBattler(battlerAtk)]];
-    }
-
-    return &party[gBattleStruct->futureSight[battlerDef].partyIndex] != &party[gBattlerPartyIndexes[battlerAtk]];
-}
-
 // Note: Technically Future Sight, Doom Desire and Wish need a queue but
 // I think we should accept this slight inconsistency so custom moves don't have to touch this code
 static bool32 HandleEndTurnFutureSight(enum BattlerId battler)
@@ -252,8 +240,8 @@ static bool32 HandleEndTurnFutureSight(enum BattlerId battler)
 
     gBattleStruct->eventState.endTurnBattler++;
 
-    if (gBattleStruct->futureSight[battler].counter > 0
-     && --gBattleStruct->futureSight[battler].counter == 0)
+    // battler is the target that Future Sight was set on
+    if (gBattleStruct->futureSight[battler].counter > 0 && --gBattleStruct->futureSight[battler].counter == 0)
     {
         if (!IsBattlerPresent(battler)) // Looks like a bug in doubles?
             return effect;
@@ -265,15 +253,33 @@ static bool32 HandleEndTurnFutureSight(enum BattlerId battler)
 
         PREPARE_MOVE_BUFFER(gBattleTextBuff1, gBattleStruct->futureSight[battler].move);
 
+        bool32 isOnField = FALSE;
+        u32 originalAttacker = gBattleStruct->futureSight[battler].battlerIndex;
+        u32 monPartySlot = gBattleStruct->futureSight[battler].partyIndex;
+
+        for (enum BattlerId fieldAttacker = 0; fieldAttacker < gBattlersCount; fieldAttacker++)
+        {
+            if (!BattlersShareParty(originalAttacker, fieldAttacker))
+                continue;
+
+            if (gBattlerPartyIndexes[fieldAttacker] == monPartySlot)
+            {
+                isOnField = TRUE;
+                gBattlerAttacker = fieldAttacker;
+                break;
+            }
+
+            gBattlerAttacker = originalAttacker; // mon not on field. use original field slot
+        }
+
         gBattlerTarget = battler;
-        gBattlerAttacker = gBattleStruct->futureSight[battler].battlerIndex;
         gCurrentMove = gBattleStruct->futureSight[battler].move;
         gBattleStruct->eventState.atkCanceler = CANCELER_TARGET_FAILURE;
 
-        if (IsFutureSightAttackerInParty(gBattlerAttacker, gBattlerTarget))
-            gSpecialStatuses[gBattlerAttacker].attackerInParty = TRUE;
-        else
+        if (isOnField)
             SetTypeBeforeUsingMove(gCurrentMove, gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker));
+        else
+            gSpecialStatuses[gBattlerAttacker].attackerInParty = TRUE;
 
         gBattleScripting.animTurn = 1; // to play correct anim
         BattleScriptCall(BattleScript_MonTookFutureAttack);
