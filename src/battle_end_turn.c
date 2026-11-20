@@ -258,6 +258,10 @@ static bool32 HandleEndTurnFutureSight(enum BattlerId battler)
         u32 originalAttacker = futureSightTarget->battlerIndex;
         u32 monPartySlot = futureSightTarget->partyIndex;
 
+        gBattlerAttacker = originalAttacker; // initialize with original attacker
+        gBattlerTarget = battler;
+        gCurrentMove = futureSightTarget->move;
+
         for (enum BattlerId fieldAttacker = 0; fieldAttacker < gBattlersCount; fieldAttacker++)
         {
             if (!BattlersShareParty(originalAttacker, fieldAttacker))
@@ -270,11 +274,8 @@ static bool32 HandleEndTurnFutureSight(enum BattlerId battler)
                 break;
             }
 
-            gBattlerAttacker = originalAttacker; // mon not on field. use original field slot
         }
 
-        gBattlerTarget = battler;
-        gCurrentMove = futureSightTarget->move;
         gBattleStruct->eventState.atkCanceler = CANCELER_TARGET_FAILURE;
 
         if (isOnField)
