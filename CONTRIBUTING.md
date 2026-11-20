@@ -4,6 +4,18 @@ First off, thanks for helping improve `pokeemerald-expansion`! ❤️
 
 All contributions are encouraged and valued. Please make sure to read the relevant section before making your contribution! It will make it a lot easier for you and the maintainers. We're excited to see your contributions. 🎉
 
+## Large Language Models (AI) Policy
+- All contributions must not be generated or assisted by a large language model (AI). 
+- Your code and text must be made by a human, not a large langage model (LLM). LLM-generated assets (graphics, music, etc.) are also not permitted.
+- If a maintainer believes something was written with LLM assistance, it will be closed.
+- All communication to reviewers (PR descriptions, review responses) must be written by the contributor, not an LLM.
+- Repeat violators of this policy will be banned.
+
+> What constitutes LLM-assistance?
+- Banned "LLM-assistance" entails using the LLM to write your text and code, or to create assets such as music or graphics.
+- Using an LLM in other ways related to your submission is not encouraged. As this is undetectable, we are asking contributors to be honest. If you do not believe the work involved in the contribution was overwhelmingly performed by humans, do not open a PR.
+- We actively encourage members of the community to learn how they can. While we do not recommend using an LLM to do so, learning is learning, and we have no intention of preventing your contributions.
+
 ## Bug Reports
 
 We use [GitHub](https://github.com/rh-hideout/pokeemerald-expansion/issues?q=sort%3Aupdated-desc+is%3Aissue+is%3Aopen+label%3Abug) issues to track bugs.

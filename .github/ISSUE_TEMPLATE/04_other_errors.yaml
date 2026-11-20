@@ -7,6 +7,14 @@ body:
       value: |
         Please fill in all fields with as many details as possible.
         Once your bug is posted, make sure you and your collaborators are added to `CREDITS.md` by [tagging the bot on GitHub](https://github.com/rh-hideout/pokeemerald-expansion/wiki/CREDITS.md-Frequently-Asked-Questions). EVERY contribution matters, even creating issues!
+  - type: markdown
+    attributes:
+      value: |
+        ## Large Language Model (AI) Policy
+        All contributions must not be generated or assisted by a large language model (AI). 
+        Your code and text must be made by a human, not a large langage model (LLM). LLM-generated assets (graphics, music, etc.) are also not permitted.
+        If a maintainer believes something was written with LLM assistance, it will be closed.
+        For more information, please read [`CONTRIBUTING.md`](../../CONTRIBUTING.md).
   - type: textarea
     id: description
     attributes:
