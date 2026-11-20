@@ -240,22 +240,23 @@ static bool32 HandleEndTurnFutureSight(enum BattlerId battler)
 
     gBattleStruct->eventState.endTurnBattler++;
 
-    // battler is the target that Future Sight was set on
-    if (gBattleStruct->futureSight[battler].counter > 0 && --gBattleStruct->futureSight[battler].counter == 0)
+    struct FutureSight *futureSightTarget = &gBattleStruct->futureSight[battler];
+
+    if (futureSightTarget->counter > 0 && --futureSightTarget->counter == 0)
     {
         if (!IsBattlerPresent(battler)) // Looks like a bug in doubles?
             return effect;
 
-        if (gBattleStruct->futureSight[battler].move == MOVE_FUTURE_SIGHT)
+        if (futureSightTarget->move == MOVE_FUTURE_SIGHT)
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_FUTURE_SIGHT;
         else
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_DOOM_DESIRE;
 
-        PREPARE_MOVE_BUFFER(gBattleTextBuff1, gBattleStruct->futureSight[battler].move);
+        PREPARE_MOVE_BUFFER(gBattleTextBuff1, futureSightTarget->move);
 
         bool32 isOnField = FALSE;
-        u32 originalAttacker = gBattleStruct->futureSight[battler].battlerIndex;
-        u32 monPartySlot = gBattleStruct->futureSight[battler].partyIndex;
+        u32 originalAttacker = futureSightTarget->battlerIndex;
+        u32 monPartySlot = futureSightTarget->partyIndex;
 
         for (enum BattlerId fieldAttacker = 0; fieldAttacker < gBattlersCount; fieldAttacker++)
         {
@@ -273,7 +274,7 @@ static bool32 HandleEndTurnFutureSight(enum BattlerId battler)
         }
 
         gBattlerTarget = battler;
-        gCurrentMove = gBattleStruct->futureSight[battler].move;
+        gCurrentMove = futureSightTarget->move;
         gBattleStruct->eventState.atkCanceler = CANCELER_TARGET_FAILURE;
 
         if (isOnField)
