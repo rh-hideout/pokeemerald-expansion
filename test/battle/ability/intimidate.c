@@ -342,7 +342,7 @@ DOUBLE_BATTLE_TEST("Intimidate activates when it's no longer affected by Neutral
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_FELL_STINGER) == EFFECT_FELL_STINGER);
-        ASSUME(MoveHasAdditionalEffect(MOVE_FELL_STINGER, MOVE_EFFECT_FELL_STINGER));
+        ASSUME(MoveHasAdditionalEffectSelf(MOVE_FELL_STINGER, MOVE_EFFECT_FELL_STINGER));
         PLAYER(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); HP(1); }
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
