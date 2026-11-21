@@ -274,7 +274,7 @@ SINGLE_BATTLE_TEST("Acupressure increases one of its stats by 2 stages at random
     }
 }
 
-DOUBLE_BATTLE_TEST("Acupressure called by Sleep Talk raises the user's own stats -")
+DOUBLE_BATTLE_TEST("Acupressure called by Sleep Talk raises the user's own stats")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SLEEP_TALK) == EFFECT_SLEEP_TALK);
