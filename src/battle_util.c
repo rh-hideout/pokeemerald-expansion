@@ -10159,7 +10159,6 @@ void ClearDamageCalcResults(void)
     gBattleStruct->numSpreadTargets = 0;
     gBattleStruct->unableToUseMove = FALSE;
     gBattleStruct->attackAnimPlayed = FALSE;
-    gBattleStruct->accumulatedDamage = 0;
     if (gCurrentMove != MOVE_NONE)
         gBattleStruct->moldBreakerActive = IsMoldBreakerTypeAbility(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), gCurrentMove) || MoveIgnoresTargetAbility(gCurrentMove);
     else
@@ -11513,4 +11512,21 @@ bool32 IsBattlerJawLocked(enum BattlerId battler)
     }
 
     return FALSE;
+}
+
+u32 GetAccumulatedDamage(void)
+{
+    u32 accumulatedDamage = 0;
+
+    for (enum BattlerId battlerDef = B_BATTLER_0; battlerDef < gBattlersCount; battlerDef++)
+    {
+        u32 damage = gBattleStruct->moveDamage[battlerDef];
+
+        if (damage > INT32_MAX - accumulatedDamage)
+            return INT32_MAX;
+
+        accumulatedDamage += damage;
+    }
+
+    return accumulatedDamage;
 }
