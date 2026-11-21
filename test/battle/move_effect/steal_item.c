@@ -4,7 +4,9 @@
 ASSUMPTIONS
 {
     ASSUME(GetMoveEffect(MOVE_THIEF) == EFFECT_STEAL_ITEM);
+    ASSUME(MoveHasAdditionalEffect(MOVE_THIEF, MOVE_EFFECT_STEAL_ITEM));
     ASSUME(GetMoveEffect(MOVE_COVET) == EFFECT_STEAL_ITEM);
+    ASSUME(MoveHasAdditionalEffect(MOVE_COVET, MOVE_EFFECT_STEAL_ITEM));
 }
 
 SINGLE_BATTLE_TEST("Thief and Covet steal target's held item")

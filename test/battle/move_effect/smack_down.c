@@ -4,6 +4,7 @@
 ASSUMPTIONS
 {
     ASSUME(GetMoveEffect(MOVE_SMACK_DOWN) == EFFECT_SMACK_DOWN);
+    ASSUME(MoveHasAdditionalEffect(MOVE_SMACK_DOWN, MOVE_EFFECT_SMACK_DOWN));
 }
 
 SINGLE_BATTLE_TEST("Smack Down doesn't affect pokemon behind Substitute")
@@ -123,6 +124,7 @@ DOUBLE_BATTLE_TEST("Thousand Arrows will ground both targets")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_THOUSAND_ARROWS) == EFFECT_SMACK_DOWN);
+        ASSUME(MoveHasAdditionalEffect(MOVE_THOUSAND_ARROWS, MOVE_EFFECT_SMACK_DOWN));
         ASSUME(IsSpeciesOfType(SPECIES_PIDGEY, TYPE_FLYING));
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);

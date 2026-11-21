@@ -4,6 +4,7 @@
 ASSUMPTIONS
 {
     ASSUME(GetMoveEffect(MOVE_STEEL_ROLLER) == EFFECT_STEEL_ROLLER);
+    ASSUME(MoveHasAdditionalEffect(MOVE_STEEL_ROLLER, MOVE_EFFECT_REMOVE_TERRAIN));
 }
 
 // Covered in ice_spinner.c

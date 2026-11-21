@@ -152,6 +152,12 @@ enum __attribute__((packed)) MoveEffect
     MOVE_EFFECT_INSTRUCT,
     MOVE_EFFECT_FOCUS_ENERGY,
     MOVE_EFFECT_DRAGON_CHEER,
+    MOVE_EFFECT_REMOVE_TERRAIN,
+    MOVE_EFFECT_SMACK_DOWN,
+    MOVE_EFFECT_HIT_SWITCH_TARGET,
+    MOVE_EFFECT_KNOCK_OFF,
+    MOVE_EFFECT_STEAL_ITEM,
+    MOVE_EFFECT_FELL_STINGER,
 
     // Max move effects happen earlier in the execution chain.
     // For example stealth rock from G-Max Stonesurge is set up before abilities but from Stone Axe after.
@@ -177,7 +183,7 @@ enum __attribute__((packed)) MoveEffect
     MOVE_EFFECT_SAND_TOMB_SIDE,
     MOVE_EFFECT_AROMATHERAPY,
     MOVE_EFFECT_STEELSURGE, // Steel type rocks
-    MOVE_EFFECT_STEALTH_ROCK, // Max Move rocks, not to be confused with rocks set up from Ceasless Edge (same but differ in execution order)
+    MOVE_EFFECT_STEALTH_ROCK,
     MOVE_EFFECT_FIRE_SPIN_SIDE,
     MOVE_EFFECT_RESTORE_HP_DYNAMAX,
     MOVE_EFFECT_FIXED_POWER, // This has no real use outside of dmax moves
@@ -187,7 +193,7 @@ enum __attribute__((packed)) MoveEffect
     STAT_CHANGE_EFFECT_PLUS,
     STAT_CHANGE_EFFECT_MINUS,
 
-    // Move effects that happen before the move hits. Set in SetPreAttackMoveEffect
+    // Move effects that happen before the move hits. Set in CancelerBeforeAttackMoveEffect
     MOVE_EFFECT_BREAK_SCREEN,
     MOVE_EFFECT_STEAL_STATS,
     MOVE_EFFECT_BEAT_UP_MESSAGE, // Handles the message printing for gen2, 3 and 4
@@ -217,6 +223,16 @@ enum SetMoveEffectFlags
     EFFECT_CERTAIN    = (1 << 1),
     EFFECT_ON_SIDE    = (1 << 2),
     EFFECT_BYPASS_SHEER_FORCE = (1 << 3),
+};
+
+enum SetEffectTimings
+{
+    TIMING_EFFECT_ADDITIONAL_EFFECT,
+    TIMING_EFFECT_BEFORE_ATTACK,
+    TIMING_EFFECT_CHARGE_TURN,
+    TIMING_EFFECT_FIRST_BLOCK, // Just before Sheer Force's jump
+    TIMING_EFFECT_SECOND_BLOCK, // Just after Sheer Force's jump
+    TIMING_EFFECT_THIRD_BLOCK, // After switching effects, Pickpocket and Opportunist
 };
 
 #endif // GUARD_CONSTANTS_BATTLE_SET_EFFECT_H

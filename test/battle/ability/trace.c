@@ -115,6 +115,7 @@ SINGLE_BATTLE_TEST("Trace doesn't try to reactivate if activation was prevented 
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_KNOCK_OFF) == EFFECT_KNOCK_OFF);
+        ASSUME(MoveHasAdditionalEffect(MOVE_KNOCK_OFF, MOVE_EFFECT_KNOCK_OFF));
         ASSUME(GetItemHoldEffect(ITEM_ABILITY_SHIELD) == HOLD_EFFECT_ABILITY_SHIELD);
         ASSUME(!gAbilitiesInfo[ABILITY_BLAZE].cantBeTraced);
         PLAYER(SPECIES_RALTS) { Ability(ABILITY_TRACE); Item(ITEM_ABILITY_SHIELD); }
@@ -136,6 +137,7 @@ SINGLE_BATTLE_TEST("Trace can activate if it couldn't copy opponent's ability ev
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_KNOCK_OFF) == EFFECT_KNOCK_OFF);
+        ASSUME(MoveHasAdditionalEffect(MOVE_KNOCK_OFF, MOVE_EFFECT_KNOCK_OFF));
         ASSUME(GetItemHoldEffect(ITEM_ABILITY_SHIELD) == HOLD_EFFECT_ABILITY_SHIELD);
         ASSUME(gAbilitiesInfo[ABILITY_FLOWER_GIFT].cantBeTraced);
         ASSUME(!gAbilitiesInfo[ABILITY_BLAZE].cantBeTraced);

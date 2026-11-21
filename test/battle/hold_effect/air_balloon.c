@@ -130,6 +130,7 @@ SINGLE_BATTLE_TEST("Air Balloon pops before it can be stolen by Thief")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_THIEF) == EFFECT_STEAL_ITEM);
+        ASSUME(MoveHasAdditionalEffect(MOVE_THIEF, MOVE_EFFECT_STEAL_ITEM));
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_AIR_BALLOON); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
