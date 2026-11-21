@@ -4957,15 +4957,16 @@ static bool32 DefogClearHazards(enum BattleSide side, bool32 clear)
 
 bool32 TryDefogClear(enum BattlerId battlerAtk, bool32 clear)
 {
-    s32 i;
+    enum BattleSide atkSide = GetBattlerSide(battlerAtk);
+    enum BattleSide targetSide = GetBattlerSide(gBattlerTarget);
 
-    for (i = 0; i < NUM_BATTLE_SIDES; i++)
+    for (enum BattleSide side = 0; side < NUM_BATTLE_SIDES; side++)
     {
-        struct SideTimer *sideTimer = &gSideTimers[i];
-        u32 *sideStatuses = &gSideStatuses[i];
-        gBattleScripting.battler = i;
+        struct SideTimer *sideTimer = &gSideTimers[side];
+        u32 *sideStatuses = &gSideStatuses[side];
+        gBattleScripting.battler = (enum BattlerId) side;
 
-        if (GetBattlerSide(battlerAtk) != i)
+        if (targetSide == side)
         {
             DEFOG_CLEAR(SIDE_STATUS_REFLECT, reflectTimer, BattleScript_SideStatusWoreOff, MOVE_REFLECT);
             DEFOG_CLEAR(SIDE_STATUS_LIGHTSCREEN, lightscreenTimer, BattleScript_SideStatusWoreOff, MOVE_LIGHT_SCREEN);
@@ -4973,11 +4974,13 @@ bool32 TryDefogClear(enum BattlerId battlerAtk, bool32 clear)
             DEFOG_CLEAR(SIDE_STATUS_AURORA_VEIL, auroraVeilTimer, BattleScript_SideStatusWoreOff, MOVE_AURORA_VEIL);
             DEFOG_CLEAR(SIDE_STATUS_SAFEGUARD, safeguardTimer, BattleScript_SideStatusWoreOff, MOVE_SAFEGUARD);
         }
-        if (GetConfig(B_DEFOG_EFFECT_CLEARING) >= GEN_6)
+
+        if (GetConfig(B_DEFOG_EFFECT_CLEARING) >= GEN_6 && (atkSide == side || targetSide == side))
         {
-            if (DefogClearHazards(i, clear))
+            if (DefogClearHazards(side, clear))
                 return TRUE;
         }
+
         if (gBattleWeather & B_WEATHER_FOG)
         {
             if (clear)
