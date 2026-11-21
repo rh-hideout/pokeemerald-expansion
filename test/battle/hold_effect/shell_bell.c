@@ -296,7 +296,9 @@ SINGLE_BATTLE_TEST("A Pokémon that steals a Shell Bell with Thief or Covet reco
     PARAMETRIZE { move = MOVE_COVET; }
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_THIEF) == EFFECT_STEAL_ITEM);
+        ASSUME(MoveHasAdditionalEffect(MOVE_THIEF, MOVE_EFFECT_STEAL_ITEM));
         ASSUME(GetMoveEffect(MOVE_COVET) == EFFECT_STEAL_ITEM);
+        ASSUME(MoveHasAdditionalEffect(MOVE_COVET, MOVE_EFFECT_STEAL_ITEM));
         PLAYER(SPECIES_WOBBUFFET) { HP(1); }
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_SHELL_BELL); }
     } WHEN {

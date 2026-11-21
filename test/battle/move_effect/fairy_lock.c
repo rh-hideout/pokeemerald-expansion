@@ -27,6 +27,7 @@ SINGLE_BATTLE_TEST("Fairy Lock does not prevent switch out via Dragon Tail")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_DRAGON_TAIL) == EFFECT_HIT_SWITCH_TARGET);
+        ASSUME(MoveHasAdditionalEffect(MOVE_DRAGON_TAIL, MOVE_EFFECT_HIT_SWITCH_TARGET));
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WYNAUT);

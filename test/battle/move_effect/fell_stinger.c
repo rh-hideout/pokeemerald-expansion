@@ -1,6 +1,12 @@
 #include "global.h"
 #include "test/battle.h"
 
+ASSUMPTIONS
+{
+    ASSUME(GetMoveEffect(MOVE_FELL_STINGER) == EFFECT_FELL_STINGER);
+    ASSUME(MoveHasAdditionalEffect(MOVE_FELL_STINGER, MOVE_EFFECT_FELL_STINGER));
+}
+
 SINGLE_BATTLE_TEST("Fell Stinger raises user's Attack by 2 stages (Gen6) or 3 stages (Gen7+) if it faints target")
 {
     u32 config;
