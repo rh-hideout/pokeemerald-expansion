@@ -3454,7 +3454,10 @@ static void TryDoEventsBeforeFirstTurn(void)
                 gBattleStruct->monToSwitchIntoId[battler] = PARTY_SLOT_NONE; // Included here because switches can happen before during set ups (eg. eject pack)
                 struct Pokemon *mon = GetBattlerMon(battler);
                 if (!IsBattlerAlive(battler) || gBattleMons[battler].species == SPECIES_NONE || GetMonData(mon, MON_DATA_IS_EGG))
+                {
                     gAbsentBattlerFlags |= 1u << battler;
+                    gBattleStruct->battlerState[battler].notOnField = TRUE;
+                }
             }
         }
 
