@@ -500,3 +500,82 @@ SINGLE_BATTLE_TEST("Toxic Chain does not trigger from Future Sight if the user i
         EXPECT(opponent->status1 == 0);
     }
 }
+
+MULTI_BATTLE_TEST("Future Sight: Partner trainer mons are not used for damage calculations", s16 damage)
+{
+    bool32 switched;
+    PARAMETRIZE { switched = FALSE; }
+    PARAMETRIZE { switched = TRUE; }
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        PARTNER(SPECIES_ABRA);
+        OPPONENT_A(SPECIES_WOBBUFFET);
+        OPPONENT_B(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_FUTURE_SIGHT, target: opponentLeft); }
+        TURN { if (switched) SWITCH(playerLeft, 1); }
+        TURN {}
+    } SCENE {
+        HP_BAR(opponentLeft, captureDamage: &results[i].damage);
+    } FINALLY {
+        EXPECT_EQ(results[0].damage, results[1].damage);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Future Sight: Ally Switch changing slots doesn't change the original user", s16 damage)
+{
+    bool32 allySwitch, inParty;
+
+    PARAMETRIZE { allySwitch = FALSE; inParty = FALSE; }
+    PARAMETRIZE { allySwitch = TRUE; inParty = FALSE; }
+    PARAMETRIZE { allySwitch = TRUE; inParty = TRUE; }
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_FUTURE_SIGHT, target: opponentLeft); }
+        TURN {
+            if (inParty) SWITCH(playerLeft, 2);
+            if (allySwitch) MOVE(playerRight, MOVE_ALLY_SWITCH);
+        }
+        TURN {}
+    } SCENE {
+        if (allySwitch) {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_ALLY_SWITCH, playerRight);
+        }
+        HP_BAR(opponentLeft, captureDamage: &results[i].damage);
+    } FINALLY {
+        // 0 -> onField, 1 -> onField, 2 -> inParty
+        EXPECT_EQ(results[0].damage, results[1].damage);
+        EXPECT_EQ(results[0].damage, results[2].damage);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Future Sight: Changing battler slots doesn't change the original user", s16 damage)
+{
+    bool32 switchSlots;
+
+    PARAMETRIZE { switchSlots = FALSE; }
+    PARAMETRIZE { switchSlots = TRUE; }
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_FUTURE_SIGHT, target: opponentLeft); }
+        TURN { if (switchSlots) SWITCH(playerLeft, 2); }
+        TURN { if (switchSlots) SWITCH(playerRight, 0); }
+    } SCENE {
+        HP_BAR(opponentLeft, captureDamage: &results[i].damage);
+    } FINALLY {
+        EXPECT_EQ(results[0].damage, results[1].damage);
+    }
+}
