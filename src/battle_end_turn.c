@@ -255,17 +255,15 @@ static bool32 HandleEndTurnFutureSight(enum BattlerId battler)
         PREPARE_MOVE_BUFFER(gBattleTextBuff1, futureSightTarget->move);
 
         bool32 isOnField = FALSE;
-        u32 originalAttacker = futureSightTarget->battlerIndex;
-        u32 monPartySlot = futureSightTarget->partyIndex;
-
+        enum BattlerId originalAttacker = futureSightTarget->battlerIndex;
         gBattlerAttacker = originalAttacker; // initialize with original attacker
         gBattlerTarget = battler;
         gCurrentMove = futureSightTarget->move;
+        u32 monPartySlot = futureSightTarget->partyIndex;
 
         for (enum BattlerId fieldAttacker = 0; fieldAttacker < gBattlersCount; fieldAttacker++)
         {
-            if (!BattlersShareParty(originalAttacker, fieldAttacker))
-                continue;
+            if (!BattlersShareParty(originalAttacker, fieldAttacker)) continue;
 
             if (gBattlerPartyIndexes[fieldAttacker] == monPartySlot)
             {
@@ -273,7 +271,6 @@ static bool32 HandleEndTurnFutureSight(enum BattlerId battler)
                 gBattlerAttacker = fieldAttacker;
                 break;
             }
-
         }
 
         gBattleStruct->eventState.atkCanceler = CANCELER_TARGET_FAILURE;

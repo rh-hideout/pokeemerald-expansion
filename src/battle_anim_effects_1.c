@@ -6754,12 +6754,12 @@ static void AnimTask_AllySwitchDataSwap(u8 taskId)
     TrySwapStickyWebBattlerId(battlerAtk, battlerPartner);
 
     // swap wish party indices
-    if (gBattleStruct->wish[battlerAtk].counter > 0
-     || gBattleStruct->wish[battlerPartner].counter > 0)
+    if (gBattleStruct->wish[battlerAtk].counter > 0 || gBattleStruct->wish[battlerPartner].counter > 0)
+    {
         SWAP(gBattleStruct->wish[battlerAtk].partyId, gBattleStruct->wish[battlerPartner].partyId, temp);
+    }
 
     TrySwapAttractBattlerIds(battlerAtk, battlerPartner);
-
 
     // For Snipe Shot and abilities Stalwart/Propeller Tail - keep the original target.
     for (i = 0; i < gBattlersCount; i++)

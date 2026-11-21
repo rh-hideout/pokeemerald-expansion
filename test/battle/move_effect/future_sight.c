@@ -501,7 +501,7 @@ SINGLE_BATTLE_TEST("Toxic Chain does not trigger from Future Sight if the user i
     }
 }
 
-MULTI_BATTLE_TEST("Future Sight: Mons that don't belong to the same trainer party are ignored", s16 damage)
+MULTI_BATTLE_TEST("Future Sight: Partner trainer mons are not used for damage calculations", s16 damage)
 {
     bool32 switched;
     PARAMETRIZE { switched = FALSE; }
@@ -509,7 +509,7 @@ MULTI_BATTLE_TEST("Future Sight: Mons that don't belong to the same trainer part
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
-        PARTNER(SPECIES_WOBBUFFET);
+        PARTNER(SPECIES_ABRA);
         OPPONENT_A(SPECIES_WOBBUFFET);
         OPPONENT_B(SPECIES_WOBBUFFET);
     } WHEN {
