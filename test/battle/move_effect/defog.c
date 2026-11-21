@@ -764,7 +764,7 @@ SINGLE_BATTLE_TEST("Defog is used on the correct side if opposing mon is behind 
     }
 }
 
-DOUBLE_BATTLE_TEST("Defog removes Stealth Rock / Light Screen from the user and target side, not both sides")
+DOUBLE_BATTLE_TEST("Defog doesn't remove Stealth Rock / Light Screen from non-user and non-target side")
 {
     enum Move move;
 
