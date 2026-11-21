@@ -200,7 +200,7 @@ struct AiPartyMon
 {
     enum Species species;
     enum Item item;
-    enum HoldEffect heldEffect;
+    enum HoldEffect holdEffect;
     enum Ability ability;
     u16 level;
     enum Move moves[MAX_MON_MOVES];
