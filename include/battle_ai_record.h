@@ -9,5 +9,6 @@ void RecordItemEffectBattle(enum BattlerId battlerId, enum HoldEffect itemEffect
 void ClearBattlerMoveHistory(enum BattlerId battlerId);
 void ClearBattlerAbilityHistory(enum BattlerId battlerId);
 void ClearBattlerItemEffectHistory(enum BattlerId battlerId);
+struct AiPartyMon *GetRecordedPartyMonData(enum BattlerId battler);
 
 #endif // GUARD_BATTLE_AI_COMPUTE_H
