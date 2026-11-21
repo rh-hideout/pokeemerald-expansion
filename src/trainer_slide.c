@@ -356,7 +356,6 @@ enum TrainerSlideTargets ShouldDoTrainerSlide(enum BattlerId battler, enum Train
         return TRAINER_SLIDE_TARGET_NONE;
 
     enum DifficultyLevel difficulty = GetCurrentDifficultyLevel();
-    gBattleScripting.battler = battler;
 
     if (IsTrainerSlidePlayed(battler, slideId))
         return TRAINER_SLIDE_TARGET_NONE;
@@ -422,6 +421,7 @@ enum TrainerSlideTargets ShouldDoTrainerSlide(enum BattlerId battler, enum Train
 
     MarkTrainerSlideAsPlayed(battler, slideId);
     SetTrainerSlideMessage(difficulty,trainerId,slideId);
+    gBattleScripting.battler = battler;
     return retValue;
 }
 

@@ -2796,6 +2796,7 @@ static void BattleStartClearSetData(void)
         gBattleStruct->lastTakenMoveFrom[i][2] = MOVE_NONE;
         gBattleStruct->lastTakenMoveFrom[i][3] = MOVE_NONE;
         gBattleStruct->AI_monToSwitchIntoId[i] = PARTY_SLOT_NONE;
+        gBattleStruct->monToSwitchIntoId[i] = PARTY_SLOT_NONE;
     }
 
     gLastUsedMove = 0;
@@ -4799,20 +4800,16 @@ static void PopulateArrayWithBattlers(enum BattlerId *battlers)
 
 static bool32 TryTrainerSlideGimmick(enum BattlerId battler)
 {
-    bool32 doSlide = TRUE;
-    if (ShouldDoTrainerSlide(battler, gGimmicksInfo[gBattleStruct->gimmick.usableGimmick[battler]].attackerSlideType))
-        gBattleScripting.battler = battler;
-    else if (ShouldDoTrainerSlide(GetBattlerLeftFoe(battler), gGimmicksInfo[gBattleStruct->gimmick.usableGimmick[battler]].opponentSlideType))
-        gBattleScripting.battler = GetBattlerLeftFoe(battler);
-    else if (ShouldDoTrainerSlide(GetBattlerRightFoe(battler), gGimmicksInfo[gBattleStruct->gimmick.usableGimmick[battler]].opponentSlideType))
-        gBattleScripting.battler = GetBattlerRightFoe(battler);
-    else
-        doSlide = FALSE;
-    if (doSlide)
+    enum Gimmick gimmick = gBattleStruct->gimmick.usableGimmick[battler];
+
+    if (ShouldDoTrainerSlide(battler, gGimmicksInfo[gimmick].attackerSlideType)
+     || ShouldDoTrainerSlide(GetBattlerLeftFoe(battler), gGimmicksInfo[gimmick].opponentSlideType)
+     || ShouldDoTrainerSlide(GetBattlerRightFoe(battler), gGimmicksInfo[gimmick].opponentSlideType))
     {
         BattleScriptPushCursorAndCallback(BattleScript_TrainerSlideMsg);
         return TRUE;
     }
+
     return FALSE;
 }
 
@@ -5818,11 +5815,7 @@ void ScriptSetTotemBoost(struct ScriptContext *ctx)
 
 bool32 IsWildMonSmart(void)
 {
-#if WE_SMART_WILD_AI_FLAG != 0
     return (FlagGet(WE_SMART_WILD_AI_FLAG));
-#else
-    return FALSE;
-#endif
 }
 
 s32 Factorial(s32 n)
