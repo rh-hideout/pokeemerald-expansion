@@ -764,8 +764,13 @@ SINGLE_BATTLE_TEST("Defog is used on the correct side if opposing mon is behind 
     }
 }
 
-DOUBLE_BATTLE_TEST("Defog removes Stealth Rock from the user and target side, not both sides")
+DOUBLE_BATTLE_TEST("Defog removes Stealth Rock / Light Screen from the user and target side, not both sides")
 {
+    enum Move move;
+
+    PARAMETRIZE { move = MOVE_STEALTH_ROCK; }
+    PARAMETRIZE { move = MOVE_LIGHT_SCREEN; }
+
     GIVEN {
         WITH_CONFIG(B_DEFOG_EFFECT_CLEARING, GEN_6);
         PLAYER(SPECIES_WOBBUFFET);
@@ -774,15 +779,20 @@ DOUBLE_BATTLE_TEST("Defog removes Stealth Rock from the user and target side, no
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN {
-            MOVE(playerLeft, MOVE_STEALTH_ROCK);
-            MOVE(opponentLeft, MOVE_STEALTH_ROCK);
+            MOVE(playerLeft, move);
+            MOVE(opponentLeft, move);
             MOVE(playerRight, MOVE_DEFOG, target: playerLeft);
         }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_STEALTH_ROCK, playerLeft);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_STEALTH_ROCK, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, move, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, move, opponentLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DEFOG, playerRight);
-        MESSAGE("The pointed stones disappeared from your side!");
-        NOT MESSAGE("The pointed stones disappeared from your opposing side!");
+        if (move == MOVE_STEALTH_ROCK) {
+            MESSAGE("The pointed stones disappeared from your side!");
+            NOT MESSAGE("The pointed stones disappeared from your opposing side!");
+        } else {
+            MESSAGE("Your side's Light Screen wore off!");
+            NOT MESSAGE("The opposing side's Light Screen wore off!");
+        }
     }
 }
