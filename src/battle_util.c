@@ -10023,6 +10023,7 @@ void ClearDamageCalcResults(void)
         gBattleStruct->passiveHpUpdate[battler] = 0;
         gSpecialStatuses[battler].criticalHit = FALSE;
         gSpecialStatuses[battler].damagedByAttack = FALSE;
+        gBattleStruct->battlerState[gBattlerAttacker].targetsDone[battler] = FALSE;
     }
 
     gBattleStruct->numSpreadTargets = 0;
