@@ -104,7 +104,12 @@ static void HandleSetEffectNonVolatile(struct BattleCalcValues *cv, struct SetEf
 
     if (!cv->onlyChecking)
     {
-        if (!se->effectFailed)
+        // If Toxic Chain will activate it blocks all other non volatile effects
+        if (gBattleStruct->battlerState[se->effectBattler].toxicChainActivates)
+        {
+            gBattlescriptCurrInstr = se->script;
+        }
+        else if (!se->effectFailed)
         {
             SetNonVolatileStatus(cv->battlerAtk, se->effectBattler, se->moveEffect, se->script, TRIGGER_ON_MOVE);
         }
