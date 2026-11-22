@@ -55,7 +55,7 @@ SINGLE_BATTLE_TEST("Poison Touch doesn't prevent move's non-volatile status addi
         PLAYER(SPECIES_GRIMER) { Ability(ABILITY_POISON_TOUCH); }
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_LUM_BERRY); }
     } WHEN {
-        TURN { MOVE(player, MOVE_NUZZLE, WITH_RNG(RNG_POISON_TOUCH, TRUE)); MOVE(opponent, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_NUZZLE, WITH_RNG(RNG_POISON_TOUCH, TRUE)); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_NUZZLE, player);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PRZ, opponent);

@@ -60,7 +60,7 @@ SINGLE_BATTLE_TEST("Toxic Chain doesn't prevent move's additional effect except 
         PLAYER(SPECIES_OKIDOGI) { Ability(ABILITY_TOXIC_CHAIN); }
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_LUM_BERRY); }
     } WHEN {
-        TURN { MOVE(player, MOVE_FIRE_FANG, WITH_RNG(RNG_TOXIC_CHAIN, TRUE)); }
+        TURN { MOVE(player, MOVE_FIRE_FANG, WITH_RNG(RNG_TOXIC_CHAIN, TRUE)); MOVE(opponent, MOVE_CELEBRATE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FIRE_FANG, player);
         NONE_OF {
