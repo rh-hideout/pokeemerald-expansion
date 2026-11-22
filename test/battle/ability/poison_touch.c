@@ -20,7 +20,7 @@ SINGLE_BATTLE_TEST("Poison Touch has a 30% chance to poison when attacking with 
     }
 }
 
-SINGLE_BATTLE_TEST("Poison Touch is checked after the move's additional effect")
+SINGLE_BATTLE_TEST("Poison Touch is applied after the move's additional effect")
 {
     GIVEN {
         ASSUME(GetMovePower(MOVE_NUZZLE) > 0);
@@ -41,6 +41,29 @@ SINGLE_BATTLE_TEST("Poison Touch is checked after the move's additional effect")
         STATUS_ICON(opponent, paralysis: TRUE);
     } THEN {
         EXPECT(opponent->status1 & STATUS1_PARALYSIS);
+    }
+}
+
+SINGLE_BATTLE_TEST("Poison Touch doesn't prevent move's non-volatile status additional effect, unlike Toxic Chain")
+{
+    GIVEN {
+        ASSUME(GetMoveCategory(MOVE_NUZZLE) != DAMAGE_CATEGORY_STATUS);
+        ASSUME(GetMovePower(MOVE_NUZZLE) > 0);
+        ASSUME(MoveMakesContact(MOVE_NUZZLE));
+        ASSUME(MoveHasAdditionalEffectWithChance(MOVE_NUZZLE, MOVE_EFFECT_PARALYSIS, 100) == TRUE);
+        ASSUME(GetItemHoldEffect(ITEM_LUM_BERRY) == HOLD_EFFECT_CURE_STATUS);
+        PLAYER(SPECIES_GRIMER) { Ability(ABILITY_POISON_TOUCH); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_LUM_BERRY); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_NUZZLE, WITH_RNG(RNG_POISON_TOUCH, TRUE)); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_NUZZLE, player);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PRZ, opponent);
+        STATUS_ICON(opponent, paralysis: TRUE);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
+        ABILITY_POPUP(player, ABILITY_POISON_TOUCH);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
+        STATUS_ICON(opponent, poison: TRUE);
     }
 }
 
