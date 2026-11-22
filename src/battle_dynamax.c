@@ -75,8 +75,7 @@ bool32 CanDynamax(enum BattlerId battler)
     enum Species species = GetBattlerVisualSpecies(battler);
     enum HoldEffect holdEffect = GetBattlerHoldEffectIgnoreNegation(battler);
 
-    // Prevents Zigzagoon from dynamaxing in vanilla.
-    if (HasAnyBattleFlags(BATTLE_TYPE_FIRST_BATTLE) && !IsOnPlayerSide(battler))
+    if (!HasAnyBattleFlags(BATTLE_TYPE_TRAINER) && !IsOnPlayerSide(battler))
         return FALSE;
 
     // Check if Player has a Dynamax Band.

@@ -274,6 +274,59 @@ SINGLE_BATTLE_TEST("Acupressure increases one of its stats by 2 stages at random
     }
 }
 
+DOUBLE_BATTLE_TEST("Acupressure called by Sleep Talk raises the user's own stats")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SLEEP_TALK) == EFFECT_SLEEP_TALK);
+        ASSUME(GetMoveTarget(MOVE_ACUPRESSURE) == TARGET_USER_OR_ALLY);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP); Moves(MOVE_SLEEP_TALK, MOVE_ACUPRESSURE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_SLEEP_TALK); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SLEEP_TALK, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ACUPRESSURE, opponentLeft);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
+        }
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
+    }
+}
+
+SINGLE_BATTLE_TEST("Acupressure is affected by Contrary and Simple")
+{
+    u32 boostedStats = 0;
+    enum Species species;
+    enum Ability ability;
+    s32 stages;
+
+    PARAMETRIZE { species = SPECIES_WOBBUFFET; ability = ABILITY_SHADOW_TAG; stages = 2; }
+    PARAMETRIZE { species = SPECIES_BIBAREL;   ability = ABILITY_SIMPLE;     stages = 4; }
+    PARAMETRIZE { species = SPECIES_SNIVY;     ability = ABILITY_CONTRARY;   stages = -2; }
+
+    GIVEN {
+        PLAYER(species) { Ability(ability); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_ACUPRESSURE, target: player); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ACUPRESSURE, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+    } THEN {
+        for (enum Stat stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
+        {
+            if (player->statStages[stat] == DEFAULT_STAT_STAGE + stages)
+                boostedStats++;
+            else
+                EXPECT_EQ(player->statStages[stat], DEFAULT_STAT_STAGE);
+        }
+        EXPECT_EQ(boostedStats, 1);
+    }
+}
+
 // Triple Battles required to test
 //TO_DO_BATTLE_TEST("Acupressure works on the ally if the user targeted itself but switched positions via Triple Battle shift before execution");
 //TO_DO_BATTLE_TEST("Acupressure fails on the user if it targeted its ally but switched positions via Triple Battle shift before execution");
