@@ -3272,12 +3272,6 @@ static void TryHideOrRestoreLastUsedBall(u8 caseId)
 
 static void TryHideBattleInfoMenu()
 {
-    if (B_INFO_ENABLED == FALSE)
-        return;
-    if (gBattleStruct->battleStatusHintSpriteId == MAX_SPRITES)
-        return;
-    if (gBattleStruct->battleStatusHintSpriteId != MAX_SPRITES)
-        gSprites[gBattleStruct->battleStatusHintSpriteId].sHide = TRUE;
     if (gBattleStruct->battleStatusHintSpriteId != MAX_SPRITES)
         gSprites[gBattleStruct->battleStatusHintSpriteId].sHide = TRUE;
 }
