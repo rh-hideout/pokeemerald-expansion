@@ -92,3 +92,21 @@ SINGLE_BATTLE_TEST("Baton Pass passes Substitutes")
         EXPECT_EQ((u32)player->volatiles.substituteHP, 99);
     }
 }
+
+SINGLE_BATTLE_TEST("Substitute does not block Stealth Rock")
+{
+    KNOWN_FAILING;
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+
+    } WHEN {
+        TURN { MOVE(player, MOVE_SUBSTITUTE); MOVE(opponent, MOVE_STEALTH_ROCK); }
+        TURN { SWITCH(player, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STEALTH_ROCK, player);
+        HP_BAR(player);
+    }
+}

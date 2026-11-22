@@ -992,6 +992,69 @@ SINGLE_BATTLE_TEST("Z-Move: Z-Belch can be selected without eating a Berry")
     }
 }
 
+SINGLE_BATTLE_TEST("Z-Move: Z-Moves of special moves are special attacks")
+{
+    KNOWN_FAILING;
+    GIVEN {
+        ASSUME(GetMoveCategory(MOVE_FLAMETHROWER) == DAMAGE_CATEGORY_SPECIAL);
+        PLAYER(SPECIES_ARCANINE) { Item(ITEM_FIRIUM_Z); Moves(MOVE_FLAMETHROWER, MOVE_FIRE_FANG); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_FLAMETHROWER, gimmick: GIMMICK_Z_MOVE); MOVE(opponent, MOVE_MIRROR_COAT); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_MIRROR_COAT, opponent);
+        HP_BAR(player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Z-Move: Z-Moves of physical moves are physical attacks")
+{
+    GIVEN {
+        ASSUME(GetMoveCategory(MOVE_FIRE_FANG) == DAMAGE_CATEGORY_PHYSICAL);
+        PLAYER(SPECIES_ARCANINE) { Item(ITEM_FIRIUM_Z); Moves(MOVE_FLAMETHROWER, MOVE_FIRE_FANG); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_FIRE_FANG, gimmick: GIMMICK_Z_MOVE); MOVE(opponent, MOVE_COUNTER); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_COUNTER, opponent);
+        HP_BAR(player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Z-Move: Z-SleepTalk triggers the z-move of the randomly chosen move")
+{
+    enum Type type;
+    enum Move move;
+    PARAMETRIZE { move = MOVE_SCRATCH; type = TYPE_NORMAL; }
+    PARAMETRIZE { move = MOVE_ROCK_SMASH; type = TYPE_FIGHTING; }
+    PARAMETRIZE { move = MOVE_AIR_CUTTER; type = TYPE_FLYING; }
+    PARAMETRIZE { move = MOVE_POISON_TAIL; type = TYPE_POISON; }
+    PARAMETRIZE { move = MOVE_EARTHQUAKE; type = TYPE_GROUND; }
+    PARAMETRIZE { move = MOVE_ROCK_SLIDE; type = TYPE_ROCK; }
+    PARAMETRIZE { move = MOVE_TWINEEDLE; type = TYPE_BUG; }
+    PARAMETRIZE { move = MOVE_LICK; type = TYPE_GHOST; }
+    PARAMETRIZE { move = MOVE_STEEL_WING; type = TYPE_STEEL; }
+    PARAMETRIZE { move = MOVE_FLAMETHROWER; type = TYPE_FIRE; }
+    PARAMETRIZE { move = MOVE_SURF; type = TYPE_WATER; }
+    PARAMETRIZE { move = MOVE_MAGICAL_LEAF; type = TYPE_GRASS; }
+    PARAMETRIZE { move = MOVE_THUNDER; type = TYPE_ELECTRIC; }
+    PARAMETRIZE { move = MOVE_PSYCHIC; type = TYPE_PSYCHIC; }
+    PARAMETRIZE { move = MOVE_ICE_BEAM; type = TYPE_ICE; }
+    PARAMETRIZE { move = MOVE_DRAGON_CLAW; type = TYPE_DRAGON; }
+    PARAMETRIZE { move = MOVE_CRUNCH; type = TYPE_DARK; }
+    PARAMETRIZE { move = MOVE_MOONBLAST; type = TYPE_FAIRY; }
+
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); Moves(MOVE_SLEEP_TALK, move); Status1(STATUS1_SLEEP); };
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SLEEP_TALK, gimmick: GIMMICK_Z_MOVE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, gTypesInfo[type].zMove, player);
+    }
+}
+
 TO_DO_BATTLE_TEST("(Z-MOVE) Stat changes from status Z-Moves are not inverted by Contrary")
 TO_DO_BATTLE_TEST("(Z-MOVE) Stat changes from Extreme Evoboost are inverted by Contrary")
 TO_DO_BATTLE_TEST("(Z-MOVE) Stat changes from Clangorous Soulblaze are inverted by Contrary")
