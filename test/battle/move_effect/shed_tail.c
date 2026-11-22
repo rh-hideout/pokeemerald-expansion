@@ -127,7 +127,7 @@ SINGLE_BATTLE_TEST("Shed Tail creates a Substitute with 1/4 of user maximum heal
 
 SINGLE_BATTLE_TEST("Shed Tail's substitute does not protect switchin mon from entry hazard damage")
 {
-    u32 hazard;
+    enum Move hazard;
     PARAMETRIZE { hazard = MOVE_STEALTH_ROCK; }
     PARAMETRIZE { hazard = MOVE_SPIKES; }
 
