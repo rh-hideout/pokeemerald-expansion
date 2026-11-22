@@ -2409,7 +2409,11 @@ static enum CancelerResult CancelerMultihitMoves(struct BattleCalcValues *cv)
 
 static enum CancelerResult CancelerSubstitute(struct BattleCalcValues *cv)
 {
+    enum MoveTarget moveTarget = GetBattlerMoveTargetType(cv->battlerAtk, cv->move);
+
     if (!IsBattleMoveStatus(cv->move)
+     || moveTarget == TARGET_OPPONENTS_FIELD
+     || moveTarget == TARGET_FIELD
      || IsStatChangeMove(cv->move)
      || (cv->moveEffect == EFFECT_TRANSFORM && GetConfig(B_TRANSFORM_SUBSTITUTE_FAIL) < GEN_5))
         return CANCELER_RESULT_SUCCESS;
