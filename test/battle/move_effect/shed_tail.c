@@ -124,3 +124,21 @@ SINGLE_BATTLE_TEST("Shed Tail creates a Substitute with 1/4 of user maximum heal
             NOT MESSAGE("Bulbasaur's substitute faded!");
     }
 }
+
+SINGLE_BATTLE_TEST("Shed Tail's substitute does not protect switchin mon from entry hazard damage")
+{
+    enum Move hazard;
+    PARAMETRIZE { hazard = MOVE_STEALTH_ROCK; }
+    PARAMETRIZE { hazard = MOVE_SPIKES; }
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, hazard); MOVE(player, MOVE_SHED_TAIL); SEND_OUT(player, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SHED_TAIL, player);
+        HP_BAR(player);
+    }
+}
