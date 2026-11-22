@@ -21,14 +21,15 @@ SINGLE_BATTLE_TEST("Toxic Chain inflicts bad poison when attacking")
     }
 }
 
-SINGLE_BATTLE_TEST("Toxic Chain is checked before the move's additional effect")
+SINGLE_BATTLE_TEST("Toxic Chain is applied instead of the move's non-volatile status additional effect")
 {
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_NUZZLE) != DAMAGE_CATEGORY_STATUS);
         ASSUME(GetMovePower(MOVE_NUZZLE) > 0);
         ASSUME(MoveHasAdditionalEffectWithChance(MOVE_NUZZLE, MOVE_EFFECT_PARALYSIS, 100) == TRUE);
+        ASSUME(GetItemHoldEffect(ITEM_LUM_BERRY) == HOLD_EFFECT_CURE_STATUS);
         PLAYER(SPECIES_OKIDOGI) { Ability(ABILITY_TOXIC_CHAIN); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_LUM_BERRY); }
     } WHEN {
         TURN { MOVE(player, MOVE_NUZZLE, WITH_RNG(RNG_TOXIC_CHAIN, TRUE)); }
     } SCENE {
@@ -39,9 +40,64 @@ SINGLE_BATTLE_TEST("Toxic Chain is checked before the move's additional effect")
         }
         ABILITY_POPUP(player, ABILITY_TOXIC_CHAIN);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
-        STATUS_ICON(opponent, badPoison: TRUE);    
-    } THEN {
-        EXPECT(opponent->status1 & STATUS1_TOXIC_POISON);
+        STATUS_ICON(opponent, badPoison: TRUE);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PRZ, opponent);
+            STATUS_ICON(opponent, paralysis: TRUE);
+        }
+    }
+}
+
+SINGLE_BATTLE_TEST("Toxic Chain doesn't prevent move's additional effect except non-volatile status effects")
+{
+    GIVEN {
+        ASSUME(GetMoveCategory(MOVE_FIRE_FANG) != DAMAGE_CATEGORY_STATUS);
+        ASSUME(GetMovePower(MOVE_FIRE_FANG) > 0);
+        ASSUME(MoveHasAdditionalEffect(MOVE_FIRE_FANG, MOVE_EFFECT_BURN));
+        ASSUME(MoveHasAdditionalEffect(MOVE_FIRE_FANG, MOVE_EFFECT_FLINCH));
+        ASSUME(GetItemHoldEffect(ITEM_LUM_BERRY) == HOLD_EFFECT_CURE_STATUS);
+        PLAYER(SPECIES_OKIDOGI) { Ability(ABILITY_TOXIC_CHAIN); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_LUM_BERRY); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_FIRE_FANG, WITH_RNG(RNG_TOXIC_CHAIN, TRUE)); MOVE(opponent, MOVE_CELEBRATE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FIRE_FANG, player);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_BRN, opponent);
+            STATUS_ICON(opponent, burn: TRUE);
+        }
+        ABILITY_POPUP(player, ABILITY_TOXIC_CHAIN);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
+        STATUS_ICON(opponent, badPoison: TRUE);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_BRN, opponent);
+            STATUS_ICON(opponent, burn: TRUE);
+        }
+        MESSAGE("The opposing Wobbuffet flinched and couldn't move!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Toxic Chain doesn't prevent move's non-volatile status additional effect if it wouldn't activate")
+{
+    GIVEN {
+        ASSUME(GetMoveCategory(MOVE_NUZZLE) != DAMAGE_CATEGORY_STATUS);
+        ASSUME(GetMovePower(MOVE_NUZZLE) > 0);
+        ASSUME(MoveHasAdditionalEffectWithChance(MOVE_NUZZLE, MOVE_EFFECT_PARALYSIS, 100) == TRUE);
+        PLAYER(SPECIES_OKIDOGI) { Ability(ABILITY_TOXIC_CHAIN); }
+        OPPONENT(SPECIES_SWALOT);
+    } WHEN {
+        TURN { MOVE(player, MOVE_NUZZLE, WITH_RNG(RNG_TOXIC_CHAIN, TRUE)); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_NUZZLE, player);
+        NONE_OF {
+            ABILITY_POPUP(player, ABILITY_TOXIC_CHAIN);
+            ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
+            STATUS_ICON(opponent, badPoison: TRUE);
+        }
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PRZ, opponent);
+        STATUS_ICON(opponent, paralysis: TRUE);
     }
 }
 

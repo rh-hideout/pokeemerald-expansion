@@ -6654,41 +6654,6 @@ static void TrySwapStickyWebBattlerId(enum BattlerId battlerAtk, enum BattlerId 
 }
 #undef TRY_SIDE_TIMER_BATTLER_ID_SWAP
 
-static void TrySwapWishBattlerIds(enum BattlerId battlerAtk, enum BattlerId battlerPartner)
-{
-    u32 temp;
-
-    // if used future sight on opposing side, properly track who used it
-    if (gBattleStruct->futureSight[GetBattlerLeftFoe(battlerAtk)].counter > 0
-     || gBattleStruct->futureSight[GetBattlerRightFoe(battlerAtk)].counter > 0)
-    {
-        for (enum BattlerId i = 0; i < gBattlersCount; i++)
-        {
-            if (IsBattlerAlly(i, battlerAtk))
-                continue;   // only on opposing side
-
-            if (gBattleStruct->futureSight[i].battlerIndex == battlerAtk)
-            {
-                // if target was attacked with future sight from us, now they'll be the partner slot
-                gBattleStruct->futureSight[i].battlerIndex = battlerPartner;
-                gBattleStruct->futureSight[i].partyIndex = gBattlerPartyIndexes[battlerPartner];
-                break;
-            }
-            else if (gBattleStruct->futureSight[i].battlerIndex == battlerPartner)
-            {
-                gBattleStruct->futureSight[i].battlerIndex = battlerAtk;
-                gBattleStruct->futureSight[i].partyIndex = gBattlerPartyIndexes[battlerAtk];
-                break;
-            }
-        }
-    }
-
-    // swap wish party indices
-    if (gBattleStruct->wish[battlerAtk].counter > 0
-     || gBattleStruct->wish[battlerPartner].counter > 0)
-        SWAP(gBattleStruct->wish[battlerAtk].partyId, gBattleStruct->wish[battlerPartner].partyId, temp);
-}
-
 static void TrySwapAttractBattlerIds(enum BattlerId battlerAtk, enum BattlerId battlerPartner)
 {
     u32 attractedTo;
@@ -6787,7 +6752,13 @@ static void AnimTask_AllySwitchDataSwap(u8 taskId)
     SWAP(gBattlerPartyIndexes[battlerAtk], gBattlerPartyIndexes[battlerPartner], temp);
 
     TrySwapStickyWebBattlerId(battlerAtk, battlerPartner);
-    TrySwapWishBattlerIds(battlerAtk, battlerPartner);
+
+    // swap wish party indices
+    if (gBattleStruct->wish[battlerAtk].counter > 0 || gBattleStruct->wish[battlerPartner].counter > 0)
+    {
+        SWAP(gBattleStruct->wish[battlerAtk].partyId, gBattleStruct->wish[battlerPartner].partyId, temp);
+    }
+
     TrySwapAttractBattlerIds(battlerAtk, battlerPartner);
 
     // For Snipe Shot and abilities Stalwart/Propeller Tail - keep the original target.

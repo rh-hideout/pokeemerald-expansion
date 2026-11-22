@@ -1546,9 +1546,11 @@ static void SetOpponentsBerryData(enum Item playerBerryItemId, u8 playersNum, st
     }
     else
     {
+        // opponentSetId is an sOpponentBerrySets index that go between 0 and 9 (2 * NUM_NPC_BERRIES - 1)
         opponentSetId = ItemIdToBerryType(playerBerryItemId);
         if (opponentSetId > NUM_NPC_BERRIES)
-            opponentSetId = ((opponentSetId - 1) % NUM_NPC_BERRIES) + NUM_NPC_BERRIES;
+            opponentSetId = (opponentSetId % NUM_NPC_BERRIES) + NUM_NPC_BERRIES;
+        opponentSetId -= 1;
     }
     for (i = 0; i < playersNum - 1; i++)
     {
