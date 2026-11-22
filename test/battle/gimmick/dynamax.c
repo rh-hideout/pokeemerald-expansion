@@ -532,6 +532,37 @@ DOUBLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon are immune to Instruct")
     }
 }
 
+SINGLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon are immune to Encore")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) {Moves(MOVE_SCRATCH, MOVE_PROTECT);}
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_DYNAMAX); MOVE(opponent, MOVE_ENCORE); }
+        TURN { MOVE(player, MOVE_PROTECT); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_MAX_STRIKE, player);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_ENCORE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_MAX_GUARD, player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon are not affected by Encore effect started before they Dynamaxed")
+{
+    KNOWN_FAILING;
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) {Moves(MOVE_SCRATCH, MOVE_PROTECT);}
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); MOVE(opponent, MOVE_ENCORE); }
+        TURN { MOVE(player, MOVE_PROTECT, gimmick: GIMMICK_DYNAMAX); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ENCORE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_MAX_GUARD, player);
+    }
+}
+
 SINGLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon are not affected by Choice items", s16 damage)
 {
     enum Item item;
