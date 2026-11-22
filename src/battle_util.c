@@ -1617,15 +1617,17 @@ u32 CheckMoveLimitations(enum BattlerId battler, u8 unusableMoves, u32 check)
     enum Move move;
     enum BattleMoveEffects moveEffect;
     enum HoldEffect holdEffect = GetBattlerHoldEffect(battler);
+    enum Ability ability = GetBattlerAbility(battler);
+
     u16 *choicedMove = &gBattleStruct->choicedMove[battler];
-    s32 i;
 
     gPotentialItemEffectBattler = battler;
 
-    for (i = 0; i < MAX_MON_MOVES; i++)
+    for (u32 i = 0; i < MAX_MON_MOVES; i++)
     {
         move = gBattleMons[battler].moves[i];
         moveEffect = GetMoveEffect(move);
+
         // No move
         if (check & MOVE_LIMITATION_ZEROMOVE && move == MOVE_NONE)
             unusableMoves |= 1u << i;
@@ -1675,7 +1677,7 @@ u32 CheckMoveLimitations(enum BattlerId battler, u8 unusableMoves, u32 check)
         else if (check & MOVE_LIMITATION_STUFF_CHEEKS && moveEffect == EFFECT_STUFF_CHEEKS && GetItemPocket(gBattleMons[battler].item) != POCKET_BERRIES && GetConfig(B_STUFF_CHEEKS_SELECTABLE) < GEN_CHAMPIONS)
             unusableMoves |= 1u << i;
         // Gorilla Tactics
-        else if (check & MOVE_LIMITATION_CHOICE_ITEM && GetBattlerAbility(battler) == ABILITY_GORILLA_TACTICS && IsMoveValid(*choicedMove) && *choicedMove != move)
+        else if (check & MOVE_LIMITATION_CHOICE_ITEM && ability == ABILITY_GORILLA_TACTICS && IsMoveValid(*choicedMove) && *choicedMove != move)
             unusableMoves |= 1u << i;
         // Can't Use Twice flag
         else if (check & MOVE_LIMITATION_CANT_USE_TWICE && MoveCantBeUsedTwice(move) && move == gLastResultingMoves[battler])
@@ -9120,10 +9122,6 @@ void SetDynamicMoveCategory(enum BattlerId battlerAtk, enum BattlerId battlerDef
             else
                 gBattleStruct->dynamicMoveCategory = DAMAGE_CATEGORY_SPECIAL;
         }
-        else
-        {
-            gBattleStruct->dynamicMoveCategory = DAMAGE_CATEGORY_NONE;
-        }
         break;
     case EFFECT_TERA_STARSTORM:
         if (GetActiveGimmick(battlerAtk) == GIMMICK_TERA && GET_BASE_SPECIES_ID(GetMonData(GetBattlerMon(battlerAtk), MON_DATA_SPECIES)) == SPECIES_TERAPAGOS)
@@ -9132,10 +9130,6 @@ void SetDynamicMoveCategory(enum BattlerId battlerAtk, enum BattlerId battlerDef
                 gBattleStruct->dynamicMoveCategory = DAMAGE_CATEGORY_PHYSICAL;
             else
                 gBattleStruct->dynamicMoveCategory = DAMAGE_CATEGORY_SPECIAL;
-        }
-        else
-        {
-            gBattleStruct->dynamicMoveCategory = DAMAGE_CATEGORY_NONE;
         }
         break;
     case EFFECT_PRESENT:
@@ -9153,9 +9147,15 @@ void SetDynamicMoveCategory(enum BattlerId battlerAtk, enum BattlerId battlerDef
         break;
     }
     default:
-        if (GetActiveGimmick(battlerAtk) == GIMMICK_DYNAMAX)
+        switch (GetActiveGimmick(battlerAtk))
+        {
+        case GIMMICK_DYNAMAX:
+        case GIMMICK_Z_MOVE:
             gBattleStruct->dynamicMoveCategory = GetMoveCategory(GetBattlerChosenMove(battlerAtk));
-        break;
+            break;
+        default:
+            break;
+        }
     }
 }
 

@@ -179,6 +179,9 @@ void ActivateDynamax(enum BattlerId battler)
     // Choiced Moves are reset upon Dynamaxing.
     gBattleStruct->choicedMove[battler] = MOVE_NONE;
 
+    gBattleMons[battler].volatiles.encoreTimer = 0;
+    gBattleMons[battler].volatiles.encoredMove = MOVE_NONE;
+
     // Try Gigantamax form change.
     if (!gBattleMons[battler].volatiles.transformed) // Ditto cannot Gigantamax.
         TryBattleFormChange(battler, FORM_CHANGE_BATTLE_GIGANTAMAX, GetBattlerAbility(battler));

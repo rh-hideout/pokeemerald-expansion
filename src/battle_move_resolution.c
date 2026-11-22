@@ -2188,8 +2188,10 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
 
             if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, cv->battlerDef))
                 continue;
+            if (IsSemiInvulnerable(cv->battlerDef, CHECK_ALL))
+                continue;
 
-            if (!IsSemiInvulnerable(cv->battlerDef, CHECK_ALL) && CanBattlerBounceBackMove(cv))
+            if (CanBattlerBounceBackMove(cv))
             {
                 gBattleStruct->moveResultFlags[cv->battlerDef] |= MOVE_RESULT_FAILED;
                 gLastLandedMoves[cv->battlerDef] = 0;
@@ -5192,16 +5194,19 @@ static bool32 ShouldSetStompingTantrumTimer(void)
 
 static enum MoveEndResult MoveEndClearBits(struct BattleCalcValues *cv)
 {
-    // go to next Bouncer or original attacker if possible
     if (gBattleStruct->bouncedMoveIsUsed)
     {
         RestoreAttacker();
         RestoreTarget();
-        gBattleStruct->bouncedMoveIsUsed = FALSE;
-        gBattleScripting.moveendState = MOVEEND_BOUNCED_MOVE;
-        for (enum BattlerId battler = B_BATTLER_0; battler < gBattlersCount; battler++)
-            gBattleStruct->moveResultFlags[battler] = gBattleStruct->savedMoveResultFlags[battler];
-        return MOVEEND_RESULT_RUN_SCRIPT;
+        // go to next Bouncer or original attacker if possible
+        if (gBattleStruct->magicBouncePending || gBattleStruct->magicCoatPending)
+        {
+            gBattleStruct->bouncedMoveIsUsed = FALSE;
+            gBattleScripting.moveendState = MOVEEND_BOUNCED_MOVE;
+            for (enum BattlerId battler = B_BATTLER_0; battler < gBattlersCount; battler++)
+                gBattleStruct->moveResultFlags[battler] = gBattleStruct->savedMoveResultFlags[battler];
+            return MOVEEND_RESULT_RUN_SCRIPT;
+        }
     }
 
     ValidateBattlers();
