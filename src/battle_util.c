@@ -485,6 +485,7 @@ void HandleAction_UseMove(void)
         return;
     }
 
+    enum Gimmick gimmick = GetActiveGimmick(gBattlerAttacker);
     gCurrMovePos = gChosenMovePos = gBattleStruct->chosenMovePositions[gBattlerAttacker];
 
     // choose move
@@ -499,8 +500,10 @@ void HandleAction_UseMove(void)
         gCurrentMove = gChosenMove = gLockedMoves[gBattlerAttacker];
     }
     // encore forces you to use the same move
-    else if (GetActiveGimmick(gBattlerAttacker) != GIMMICK_Z_MOVE && gBattleMons[gBattlerAttacker].volatiles.encoredMove != MOVE_NONE
-             && gBattleMons[gBattlerAttacker].volatiles.encoredMove == gBattleMons[gBattlerAttacker].moves[gBattleMons[gBattlerAttacker].volatiles.encoredMovePos])
+    else if (gimmick != GIMMICK_Z_MOVE
+          && gimmick != GIMMICK_DYNAMAX
+          && gBattleMons[gBattlerAttacker].volatiles.encoredMove != MOVE_NONE
+          && gBattleMons[gBattlerAttacker].volatiles.encoredMove == gBattleMons[gBattlerAttacker].moves[gBattleMons[gBattlerAttacker].volatiles.encoredMovePos])
     {
         gCurrentMove = gChosenMove = gBattleMons[gBattlerAttacker].volatiles.encoredMove;
         gCurrMovePos = gChosenMovePos = gBattleMons[gBattlerAttacker].volatiles.encoredMovePos;
@@ -508,7 +511,9 @@ void HandleAction_UseMove(void)
             gBattleStruct->moveTarget[gBattlerAttacker] = GetBattleMoveTarget(gCurrentMove, TARGET_NONE);
     }
     // check if the encored move wasn't overwritten
-    else if (GetActiveGimmick(gBattlerAttacker) != GIMMICK_Z_MOVE && gBattleMons[gBattlerAttacker].volatiles.encoredMove != MOVE_NONE
+    else if (gimmick != GIMMICK_Z_MOVE
+          && gimmick != GIMMICK_DYNAMAX
+          && gBattleMons[gBattlerAttacker].volatiles.encoredMove != MOVE_NONE
           && gBattleMons[gBattlerAttacker].volatiles.encoredMove != gBattleMons[gBattlerAttacker].moves[gBattleMons[gBattlerAttacker].volatiles.encoredMovePos])
     {
         gCurrMovePos = gChosenMovePos = gBattleMons[gBattlerAttacker].volatiles.encoredMovePos;
@@ -540,14 +545,14 @@ void HandleAction_UseMove(void)
     gBattleStruct->baseMove = gCurrentMove;
 
     // check Z-Move used
-    if (GetActiveGimmick(gBattlerAttacker) == GIMMICK_Z_MOVE
+    if (gimmick == GIMMICK_Z_MOVE
      && GetMoveCategory(gCurrentMove) != DAMAGE_CATEGORY_STATUS // Check the actual type, not the dynamic one
      && !IsZMove(gCurrentMove))
     {
         gCurrentMove = gChosenMove = GetUsableZMove(gBattlerAttacker, gCurrentMove);
     }
     // check Max Move used
-    else if (GetActiveGimmick(gBattlerAttacker) == GIMMICK_DYNAMAX)
+    else if (gimmick == GIMMICK_DYNAMAX)
     {
         gCurrentMove = gChosenMove = GetMaxMove(gBattlerAttacker, gCurrentMove);
     }
