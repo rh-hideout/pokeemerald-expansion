@@ -101,7 +101,6 @@ bool32 CanPsychicTerrainProtectTarget(struct DamageContext *ctx, s32 movePriorit
 bool32 CanMoveBeBlockedByTarget(struct DamageContext *ctx, s32 movePriority);
 bool32 CanAbilityAbsorbMove(struct DamageContext *ctx);
 bool32 TryFieldEffects(enum FieldEffectCases caseId);
-u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum Ability ability, enum Move move, bool32 shouldAbilityTrigger);
 bool32 TryPrimalReversion(enum BattlerId battler);
 bool32 IsNeutralizingGasOnField(void);
 bool32 IsMoldBreakerTypeAbility(enum BattlerId battler, enum Ability ability, enum Move move);
@@ -162,6 +161,7 @@ bool32 IsBattlerMegaEvolved(enum BattlerId battler);
 bool32 IsBattlerPrimalReverted(enum BattlerId battler);
 bool32 IsBattlerUltraBursted(enum BattlerId battler);
 enum Species GetBattleFormChangeTargetSpecies(enum BattlerId battler, enum FormChanges method, enum Ability ability);
+bool32 CanBattlerFormChange(enum BattlerId battler, enum FormChanges method);
 bool32 TryRevertPartyMonFormChange(enum PartySlot partyIndex);
 bool32 TryBattleFormChange(enum BattlerId battler, enum FormChanges method, enum Ability ability);
 bool32 DoBattlersShareType(enum BattlerId battler1, enum BattlerId battler2);

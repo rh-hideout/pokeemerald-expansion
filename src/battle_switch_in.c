@@ -1,5 +1,6 @@
 #include "global.h"
 #include "battle.h"
+#include "battle_abilities.h"
 #include "battle_hold_effects.h"
 #include "battle_stat_change.h"
 #include "battle_util.h"
