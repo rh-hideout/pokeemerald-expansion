@@ -130,7 +130,7 @@ static bool32 HandleEndTurnWeatherDamage(struct BattleCalcValues *cv, enum Battl
     case BATTLE_WEATHER_RAIN_DOWNPOUR:
         if (ability == ABILITY_DRY_SKIN || ability == ABILITY_RAIN_DISH)
         {
-            if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN, battler, ability, MOVE_NONE, TRUE))
+            if (AbilityBattleEffects(cv, ABILITYEFFECT_ENDTURN, TRUE))
                 effect = TRUE;
         }
         break;
@@ -138,7 +138,7 @@ static bool32 HandleEndTurnWeatherDamage(struct BattleCalcValues *cv, enum Battl
     case BATTLE_WEATHER_SUN_PRIMAL:
         if (ability == ABILITY_DRY_SKIN || ability == ABILITY_SOLAR_POWER)
         {
-            if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN, battler, ability, MOVE_NONE, TRUE))
+            if (AbilityBattleEffects(cv, ABILITYEFFECT_ENDTURN, TRUE))
                 effect = TRUE;
         }
         break;
@@ -163,7 +163,7 @@ static bool32 HandleEndTurnWeatherDamage(struct BattleCalcValues *cv, enum Battl
     case BATTLE_WEATHER_SNOW:
         if (ability == ABILITY_ICE_BODY)
         {
-            if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN, battler, ability, MOVE_NONE, TRUE))
+            if (AbilityBattleEffects(cv, ABILITYEFFECT_ENDTURN, TRUE))
                 effect = TRUE;
         }
         else if (currBattleWeather == BATTLE_WEATHER_HAIL)
@@ -420,13 +420,12 @@ static bool32 HandleEndTurnFirstEventBlock(struct BattleCalcValues *cv, enum Bat
         break;
     case FIRST_EVENT_BLOCK_ABILITIES:
     {
-        enum Ability ability = cv->abilities[battler];
-        switch (ability)
+        switch (cv->abilities[battler])
         {
         case ABILITY_HEALER:
         case ABILITY_HYDRATION:
         case ABILITY_SHED_SKIN:
-            if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN, battler, ability, MOVE_NONE, TRUE))
+            if (AbilityBattleEffects(cv, ABILITYEFFECT_ENDTURN, TRUE))
                 effect = TRUE;
             break;
         default:
@@ -1336,13 +1335,11 @@ static bool32 HandleEndTurnThirdEventBlock(struct BattleCalcValues *cv, enum Bat
         gBattleStruct->eventState.endTurnBlock++;
         break;
     case THIRD_EVENT_BLOCK_ABILITIES:
-    {
-        enum Ability ability = cv->abilities[battler];
-        switch (ability)
+        switch (cv->abilities[battler])
         {
         case ABILITY_TRUANT:
             if (GetConfig(B_TRUANT) <= GEN_4
-             && AbilityBattleEffects(ABILITYEFFECT_ENDTURN, battler, ability, MOVE_NONE, TRUE))
+             && AbilityBattleEffects(cv, ABILITYEFFECT_ENDTURN, TRUE))
                 effect = TRUE;
             break;
         case ABILITY_CUD_CHEW:
@@ -1353,7 +1350,7 @@ static bool32 HandleEndTurnThirdEventBlock(struct BattleCalcValues *cv, enum Bat
         case ABILITY_MOODY:
         case ABILITY_PICKUP:
         case ABILITY_SPEED_BOOST:
-            if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN, battler, ability, MOVE_NONE, TRUE))
+            if (AbilityBattleEffects(cv, ABILITYEFFECT_ENDTURN, TRUE))
                 effect = TRUE;
             break;
         default:
@@ -1361,7 +1358,6 @@ static bool32 HandleEndTurnThirdEventBlock(struct BattleCalcValues *cv, enum Bat
         }
         gBattleStruct->eventState.endTurnBlock++;
         break;
-    }
     case THIRD_EVENT_BLOCK_ITEMS:
         if (ItemBattleEffects(battler, 0, cv->holdEffects[battler], IsOrbsWhiteHerbActivation))
             effect = TRUE;
@@ -1377,7 +1373,7 @@ static bool32 HandleEndTurnOpportunist(struct BattleCalcValues *cv, enum Battler
 {
     bool32 effect = FALSE;
 
-    if (IsBattlerPresent(battler) && AbilityBattleEffects(ABILITYEFFECT_OPPORTUNIST, battler, cv->abilities[battler], MOVE_NONE, TRUE))
+    if (IsBattlerPresent(battler) && AbilityBattleEffects(cv, ABILITYEFFECT_OPPORTUNIST, TRUE))
         effect = TRUE;
 
     gBattleStruct->eventState.endTurnBattler++;
@@ -1689,7 +1685,7 @@ bool32 DoEndTurnEffects(void)
         if (gBattleStruct->eventState.endTurn == ENDTURN_COUNT)
             return FALSE;
 
-        battler = gBattlerAttacker = gBattlerByTurnOrder[gBattleStruct->eventState.endTurnBattler];
+        battler = cv.battlerAtk = gBattlerAttacker = gBattlerByTurnOrder[gBattleStruct->eventState.endTurnBattler];
 
         if (sEndTurnEffectHandlers[gBattleStruct->eventState.endTurn](&cv, battler))
             return TRUE;

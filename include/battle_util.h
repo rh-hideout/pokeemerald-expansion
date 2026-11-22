@@ -173,7 +173,6 @@ struct Pokemon *GetIllusionMonPtr(enum BattlerId battler);
 void ClearIllusionMon(enum BattlerId battler);
 enum PartySlot GetIllusionMonPartyId(struct Pokemon *party, struct Pokemon *mon, struct Pokemon *partnerMon, enum BattlerId battler);
 void SetIllusionMon(struct Pokemon *mon, enum BattlerId battler);
-enum ImmunityHealStatusOutcome TryImmunityAbilityHealStatus(enum BattlerId battler);
 bool32 ShouldGetStatBadgeBoost(u16 flagId, enum BattlerId battler);
 uq4_12_t GetBadgeBoostModifier(void);
 enum DamageCategory GetBattleMoveCategory(enum Move move);

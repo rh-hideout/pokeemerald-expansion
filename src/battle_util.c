@@ -6910,125 +6910,6 @@ void SetIllusionMon(struct Pokemon *mon, enum BattlerId battler)
     }
 }
 
-enum ImmunityHealStatusOutcome TryImmunityAbilityHealStatus(enum BattlerId battler)
-{
-    enum ImmunityHealStatusOutcome outcome = IMMUNITY_NO_EFFECT;
-    switch (GetBattlerAbilityIgnoreMoldBreaker(battler))
-    {
-    case ABILITY_IMMUNITY:
-    case ABILITY_PASTEL_VEIL:
-        if (gBattleMons[battler].status1 & (STATUS1_POISON | STATUS1_TOXIC_POISON | STATUS1_TOXIC_COUNTER))
-        {
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CURED_POISON;
-            outcome = IMMUNITY_STATUS_CLEARED;
-        }
-        break;
-    case ABILITY_OWN_TEMPO:
-        if (gBattleMons[battler].volatiles.confusionTimer > 0)
-        {
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CURED_CONFUSION;
-            outcome = IMMUNITY_CONFUSION_CLEARED;
-        }
-        break;
-    case ABILITY_LIMBER:
-        if (gBattleMons[battler].status1 & STATUS1_PARALYSIS)
-        {
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CURED_PARALYSIS;
-            outcome = IMMUNITY_STATUS_CLEARED;
-        }
-        break;
-    case ABILITY_INSOMNIA:
-    case ABILITY_VITAL_SPIRIT:
-        if (gBattleMons[battler].status1 & STATUS1_SLEEP)
-        {
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CURED_SLEEP;
-            TryDeactivateSleepClause(battler, gBattlerPartyIndexes[battler]);
-            gBattleMons[battler].volatiles.nightmare = FALSE;
-            outcome = IMMUNITY_STATUS_CLEARED;
-        }
-        break;
-    case ABILITY_WATER_VEIL:
-    case ABILITY_WATER_BUBBLE:
-    case ABILITY_THERMAL_EXCHANGE:
-        if (gBattleMons[battler].status1 & STATUS1_BURN)
-        {
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CURED_BURN;
-            outcome = IMMUNITY_STATUS_CLEARED;
-        }
-        break;
-    case ABILITY_MAGMA_ARMOR:
-        if (gBattleMons[battler].status1 & STATUS1_FREEZE)
-        {
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CURED_FREEZE;
-            outcome = IMMUNITY_STATUS_CLEARED;
-        }
-        else if (gBattleMons[battler].status1 & STATUS1_FROSTBITE)
-        {
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CURED_FROSTBITE;
-            outcome = IMMUNITY_STATUS_CLEARED;
-        }
-        break;
-    case ABILITY_OBLIVIOUS:
-    {
-        bool32 infatuationHeal = gBattleMons[battler].volatiles.infatuation;
-        bool32 tauntHeal = GetConfig(B_OBLIVIOUS_TAUNT) >= GEN_6 && gBattleMons[battler].volatiles.tauntTimer != 0;
-
-        if (infatuationHeal && tauntHeal)
-        {
-            outcome = IMMUNITY_INFATUATION_TAUNT_CLEARED;
-        }
-        else if (infatuationHeal)
-        {
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CURED_INFATUATION;
-            outcome = IMMUNITY_INFATUATION_CLEARED;
-        }
-        else if (tauntHeal)
-        {
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CURED_TAUNT;
-            outcome = IMMUNITY_TAUNT_CLEARED;
-        }
-        break;
-    }
-    default:
-        break;
-    }
-
-    switch (outcome)
-    {
-    case IMMUNITY_STATUS_CLEARED:
-        gBattleMons[battler].status1 = 0;
-        BattleScriptCall(BattleScript_AbilityCuredStatus);
-        break;
-    case IMMUNITY_CONFUSION_CLEARED:
-        gBattleMons[battler].volatiles.confusionTimer = 0;
-        BattleScriptCall(BattleScript_AbilityCuredStatus);
-        break;
-    case IMMUNITY_INFATUATION_CLEARED:
-        gBattleMons[battler].volatiles.infatuation = 0;
-        BattleScriptCall(BattleScript_AbilityCuredStatus);
-        break;
-    case IMMUNITY_TAUNT_CLEARED:
-        gBattleMons[battler].volatiles.tauntTimer = 0;
-        BattleScriptCall(BattleScript_AbilityCuredStatus);
-        break;
-    case IMMUNITY_INFATUATION_TAUNT_CLEARED:
-        gBattleMons[battler].volatiles.infatuation = 0;
-        gBattleMons[battler].volatiles.tauntTimer = 0;
-        BattleScriptCall(BattleScript_AbilityCuredInfatuationAndTaunt);
-        break;
-    case IMMUNITY_NO_EFFECT:
-        return IMMUNITY_NO_EFFECT;
-    }
-
-    gBattleScripting.battler = gBattlerAbility = battler;
-    if (outcome == IMMUNITY_STATUS_CLEARED)
-    {
-        BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, 4, &gBattleMons[battler].status1);
-        MarkBattlerForControllerExec(battler);
-    }
-    return outcome;
-}
-
 uq4_12_t GetBadgeBoostModifier(void)
 {
     if (GetConfig(B_BADGE_BOOST) < GEN_3)
@@ -9261,14 +9142,28 @@ bool32 IsBattlerInvolvedInSkyDrop(enum BattlerId battler)
 
 const u8 *GetRestFailureScript(enum BattlerId battler, enum Ability ability)
 {
-    if (IsAsleepOrComatose(battler, ability))
-        return BattleScript_RestIsAlreadyAsleep;
     if (gBattleMons[battler].hp == gBattleMons[battler].maxHP)
         return BattleScript_AlreadyAtFullHp;
+
+    if (IsAsleepOrComatose(battler, ability))
+    {
+        if (ability == ABILITY_COMATOSE)
+        {
+            gBattlerAbility = battler;
+            gLastUsedAbility = ability;
+        }
+        return BattleScript_RestIsAlreadyAsleep;
+    }
+
     if (ability == ABILITY_INSOMNIA
      || ability == ABILITY_VITAL_SPIRIT
      || ability == ABILITY_PURIFYING_SALT)
+    {
+        gBattlerAbility = battler;
+        gLastUsedAbility = ability;
         return BattleScript_InsomniaProtects;
+    }
+
     return NULL;
 }
 
