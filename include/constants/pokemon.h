@@ -103,8 +103,8 @@ enum __attribute__((packed)) Stat
 #define DEFAULT_STAT_STAGE 6
 #define MAX_STAT_STAGE    12
 
-// Shiny odds
-#define SHINY_ODDS 8 // Actual probability is SHINY_ODDS/65536
+// This threshold is part of the saved Pokémon format. Configure creation odds with P_SHINY_THRESHOLD instead.
+#define SHINY_STORAGE_THRESHOLD 8
 
 // Ribbon IDs used by TV and Pokénav
 #define CHAMPION_RIBBON       0

@@ -1,14 +1,157 @@
 #include "global.h"
 #include "battle.h"
+#include "config_changes.h"
+#include "dexnav.h"
 #include "egg_hatch.h"
 #include "event_data.h"
+#include "item.h"
 #include "new_game.h"
 #include "pokemon.h"
+#include "random.h"
+#include "wild_encounter.h"
 #include "test/overworld_script.h"
 #include "test/test.h"
 #include "constants/characters.h"
 #include "constants/daycare.h"
+#include "constants/item.h"
 #include "constants/move_relearner.h"
+
+static void PrepareShinyTest(void)
+{
+    ClearBag();
+    AddBagItem(ITEM_POKE_BALL, 1);
+    VarSet(VAR_REPEL_STEP_COUNT, 0);
+    FlagClear(P_FLAG_FORCE_SHINY);
+    FlagClear(P_FLAG_FORCE_NO_SHINY);
+    FlagClear(WE_FLAG_NO_CATCHING);
+    gDexNavSpecies = SPECIES_NONE;
+    gIsFishingEncounter = FALSE;
+    SetTrainerId(0, gSaveBlock2Ptr->playerTrainerId);
+}
+
+TEST("Shiny creation uses configurable thresholds without changing PID or OTID")
+{
+    u32 threshold = 0, personality = 0;
+    bool32 expected = FALSE;
+    struct Pokemon mon;
+    PARAMETRIZE { threshold = 0; personality = 0; expected = FALSE; }
+    PARAMETRIZE { threshold = 8; personality = 7; expected = TRUE; }
+    PARAMETRIZE { threshold = 8; personality = 8; expected = FALSE; }
+    PARAMETRIZE { threshold = 16; personality = 8; expected = TRUE; }
+    PARAMETRIZE { threshold = 16; personality = 15; expected = TRUE; }
+    PARAMETRIZE { threshold = 16; personality = 16; expected = FALSE; }
+    PARAMETRIZE { threshold = 32; personality = 31; expected = TRUE; }
+    PARAMETRIZE { threshold = 32; personality = 32; expected = FALSE; }
+    PARAMETRIZE { threshold = 65536; personality = 65535; expected = TRUE; }
+
+    PrepareShinyTest();
+    SetConfig(CONFIG_SHINY_THRESHOLD, threshold);
+    CreateMon(&mon, SPECIES_WOBBUFFET, 5, personality, OTID_STRUCT_PLAYER_ID);
+    EXPECT_EQ(IsMonShiny(&mon), expected);
+    EXPECT_EQ(GetMonData(&mon, MON_DATA_PERSONALITY), personality);
+    EXPECT_EQ(GetMonData(&mon, MON_DATA_OT_ID), 0);
+}
+
+TEST("Shiny rerolls use the configured threshold and preserve the original personality")
+{
+    u32 threshold = 0;
+    bool32 expected = FALSE;
+    struct Pokemon mon;
+    PARAMETRIZE { threshold = 8; expected = FALSE; }
+    PARAMETRIZE { threshold = 16; expected = TRUE; }
+
+    PrepareShinyTest();
+    SetConfig(CONFIG_SHINY_THRESHOLD, threshold);
+    VarSet(VAR_REPEL_STEP_COUNT, REPEL_LURE_MASK | 1);
+    // The lure supplies one reroll, whose shiny value is 8 with OTID 0.
+    gRngValue = (rng_value_t){.a = 8};
+    CreateMon(&mon, SPECIES_WOBBUFFET, 5, 16, OTID_STRUCT_PLAYER_ID);
+    EXPECT_EQ(IsMonShiny(&mon), expected);
+    EXPECT_EQ(GetMonData(&mon, MON_DATA_PERSONALITY), 16);
+    EXPECT_EQ(GetMonData(&mon, MON_DATA_OT_ID), 0);
+    VarSet(VAR_REPEL_STEP_COUNT, 0);
+}
+
+TEST("Shiny Charm rerolls can make a Pokémon Shiny without replacing its personality")
+{
+    bool32 hasCharm = FALSE;
+    struct Pokemon mon;
+    PARAMETRIZE { hasCharm = FALSE; }
+    PARAMETRIZE { hasCharm = TRUE; }
+    ASSUME(I_SHINY_CHARM_ADDITIONAL_ROLLS == 2);
+
+    PrepareShinyTest();
+    SetConfig(CONFIG_SHINY_THRESHOLD, 16);
+    if (hasCharm)
+        AddBagItem(ITEM_SHINY_CHARM, 1);
+
+    // Neither the initial value 16 nor the first reroll 24 is Shiny; the second reroll is 9.
+    gRngValue = (rng_value_t){.a = 16, .b = 8};
+    CreateMon(&mon, SPECIES_WOBBUFFET, 5, 16, OTID_STRUCT_PLAYER_ID);
+    EXPECT_EQ(IsMonShiny(&mon), hasCharm);
+    EXPECT_EQ(GetMonData(&mon, MON_DATA_PERSONALITY), 16);
+    EXPECT_EQ(GetMonData(&mon, MON_DATA_OT_ID), 0);
+    ClearBag();
+}
+
+TEST("Shiny storage remains stable when creation odds change")
+{
+    u32 personality = 0;
+    bool32 shiny = FALSE;
+    struct Pokemon mon;
+    PARAMETRIZE { personality = 0; shiny = FALSE; }
+    PARAMETRIZE { personality = 0; shiny = TRUE; }
+    PARAMETRIZE { personality = 8; shiny = FALSE; }
+    PARAMETRIZE { personality = 8; shiny = TRUE; }
+    PARAMETRIZE { personality = 16; shiny = FALSE; }
+    PARAMETRIZE { personality = 16; shiny = TRUE; }
+
+    PrepareShinyTest();
+    SetConfig(CONFIG_SHINY_THRESHOLD, 16);
+    CreateMon(&mon, SPECIES_WOBBUFFET, 5, personality, OTID_STRUCT_PLAYER_ID);
+    SetMonData(&mon, MON_DATA_IS_SHINY, &shiny);
+    struct BoxPokemon savedMon = mon.box;
+
+    SetConfig(CONFIG_SHINY_THRESHOLD, 8);
+    EXPECT_EQ(IsMonShiny(&mon), shiny);
+    SetConfig(CONFIG_SHINY_THRESHOLD, 0);
+    EXPECT_EQ(GetBoxMonData(&savedMon, MON_DATA_IS_SHINY), shiny);
+    SetConfig(CONFIG_SHINY_THRESHOLD, 65536);
+    EXPECT_EQ(GetBoxMonData(&savedMon, MON_DATA_IS_SHINY), shiny);
+    SetBoxMonData(&savedMon, MON_DATA_IS_SHINY, &shiny);
+    SetConfig(CONFIG_SHINY_THRESHOLD, 16);
+    EXPECT_EQ(GetBoxMonData(&savedMon, MON_DATA_IS_SHINY), shiny);
+    EXPECT_EQ(GetBoxMonData(&savedMon, MON_DATA_PERSONALITY), personality);
+    EXPECT_EQ(GetBoxMonData(&savedMon, MON_DATA_OT_ID), 0);
+}
+
+TEST("Shiny configuration preserves preset OTIDs and random non-Shiny creation")
+{
+    u32 threshold = 0;
+    struct Pokemon mon;
+    PARAMETRIZE { threshold = 0; }
+    PARAMETRIZE { threshold = 65536; }
+
+    SetConfig(CONFIG_SHINY_THRESHOLD, threshold);
+    CreateMon(&mon, SPECIES_WOBBUFFET, 5, 7, OTID_STRUCT_PRESET(0));
+    EXPECT_EQ(IsMonShiny(&mon), TRUE);
+    CreateMon(&mon, SPECIES_WOBBUFFET, 5, 8, OTID_STRUCT_PRESET(0));
+    EXPECT_EQ(IsMonShiny(&mon), FALSE);
+    CreateMon(&mon, SPECIES_WOBBUFFET, 5, 0, OTID_STRUCT_RANDOM_NO_SHINY);
+    EXPECT_EQ(IsMonShiny(&mon), FALSE);
+}
+
+TEST("Shiny script overrides take precedence over creation odds")
+{
+    SetConfig(CONFIG_SHINY_THRESHOLD, 0);
+    ZeroPlayerPartyMons();
+    RUN_OVERWORLD_SCRIPT(givemon SPECIES_WOBBUFFET, 5, shinyMode=SHINY_MODE_ALWAYS;);
+    EXPECT_EQ(IsMonShiny(&gParties[B_TRAINER_PLAYER][0]), TRUE);
+
+    SetConfig(CONFIG_SHINY_THRESHOLD, 65536);
+    RUN_OVERWORLD_SCRIPT(givemon SPECIES_WOBBUFFET, 5, shinyMode=SHINY_MODE_NEVER;);
+    EXPECT_EQ(IsMonShiny(&gParties[B_TRAINER_PLAYER][1]), FALSE);
+}
 
 TEST("Nature independent from Hidden Nature")
 {
@@ -92,7 +235,7 @@ TEST("Shininess independent from PID and OTID")
 
 TEST("Shininess set on an Egg persists after hatching")
 {
-    u32 personality = SHINY_ODDS;
+    u32 personality = SHINY_STORAGE_THRESHOLD;
     u32 trainerId = 0;
     bool32 isShiny = TRUE;
     bool8 isEgg = TRUE;
