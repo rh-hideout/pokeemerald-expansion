@@ -1293,13 +1293,26 @@ static enum CancelerResult CancelerMoveFailure(struct BattleCalcValues *cv)
         break;
     case EFFECT_REST:
         if (IsAsleepOrComatose(cv->battlerDef, cv->abilities[cv->battlerDef]))
+        {
+            if (cv->abilities[cv->battlerDef] == ABILITY_COMATOSE)
+            {
+                gBattlerAbility = cv->battlerDef;
+                gLastUsedAbility = cv->abilities[cv->battlerDef];
+            }
             battleScript = BattleScript_RestIsAlreadyAsleep;
+        }
         else if (gBattleMons[cv->battlerAtk].hp == gBattleMons[cv->battlerAtk].maxHP)
+        {
             battleScript = BattleScript_AlreadyAtFullHp;
+        }
         else if (cv->abilities[cv->battlerAtk] == ABILITY_INSOMNIA
               || cv->abilities[cv->battlerAtk] == ABILITY_VITAL_SPIRIT
               || cv->abilities[cv->battlerAtk] == ABILITY_PURIFYING_SALT)
+        {
+            gBattlerAbility = cv->battlerAtk;
+            gLastUsedAbility = cv->abilities[cv->battlerAtk];
             battleScript = BattleScript_InsomniaProtects;
+        }
         break;
     case EFFECT_SNORE:
         if (!(gBattleMons[cv->battlerAtk].status1 & STATUS1_SLEEP)
