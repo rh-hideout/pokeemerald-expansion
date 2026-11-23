@@ -432,7 +432,7 @@ SINGLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon lose their Minimized status")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MINIMIZE, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MAX_STRIKE, player);
     } THEN {
-        EXPECT_EQ(player->volatiles.minimize, FALSE);
+        EXPECT(!player->volatiles.minimize);
     }
 }
 
