@@ -419,6 +419,23 @@ SINGLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon lose their substitutes")
     }
 }
 
+SINGLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon lose their Minimized status")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_MINIMIZE) == EFFECT_MINIMIZE);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_MINIMIZE); MOVE(opponent, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_DYNAMAX); MOVE(opponent, MOVE_SCRATCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_MINIMIZE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_MAX_STRIKE, player);
+    } THEN {
+        EXPECT(!player->volatiles.minimize);
+    }
+}
+
 SINGLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon that changes forms does not gain HP")
 {
     u16 capturedHP, finalHP;
