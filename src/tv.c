@@ -1885,7 +1885,7 @@ static void SecretBaseVisit_CalculatePartyData(TVShow *show)
     } secretBaseVisitMonsTemp[PARTY_SIZE] = {0};
 
     u8 numPokemon = 0;
-    for (u32 i = 0; i < PARTY_SIZE; i++)
+    for (enum PartySlot i = 0; i < PARTY_SIZE; i++)
     {
         if (GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES) != SPECIES_NONE && !GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_IS_EGG))
         {

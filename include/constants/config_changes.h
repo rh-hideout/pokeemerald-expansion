@@ -65,7 +65,7 @@
     F(B_RECALC_TURN_AFTER_ACTIONS, recalcTurnAfterActions,  (u32, GEN_COUNT - 1)) \
     F(B_FAINT_SWITCH_IN,           faintSwitchIn,           (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_MEGA_EVO_SPEED_SWAP,       megaEvoSpeedSwap,        (u32, GEN_COUNT - 1)) \
-    F(B_FREEZE_TURNS,              freezeTurns,             (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
+    F(B_FREEZE_TURNS,              freezeTurns,             (u32, GEN_COUNT - 1)) \
     /* Move data settings */ \
     F(B_UPDATED_MOVE_DATA,         updatedMoveData,         (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_UPDATED_MOVE_TYPES,        updatedMoveTypes,        (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
@@ -174,6 +174,7 @@
     F(B_MOODY_ACC_EVASION,         moodyAccEvasion,         (u32, GEN_COUNT - 1)) \
     F(B_FLASH_FIRE_FROZEN,         flashFireFrozen,         (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_SYNCHRONIZE_TOXIC,         synchronizeToxic,        (u32, GEN_COUNT - 1)) \
+    F(B_PRESSURE_ALLIES,           pressureAllies,          (u32, GEN_COUNT - 1)) \
     F(B_UPDATED_INTIMIDATE,        updatedIntimidate,       (u32, GEN_COUNT - 1)) \
     F(B_OBLIVIOUS_TAUNT,           obliviousTaunt,          (u32, GEN_COUNT - 1)) \
     F(B_STURDY,                    sturdy,                  (u32, GEN_COUNT - 1)) \

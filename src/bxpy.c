@@ -195,11 +195,12 @@ static void BXPY_ErrorCheck_ClauseSpecies(void)
     u32 uniqueDuplicates[PARTY_SIZE] = {0};
     u32 partyCount = 0;
 
-    for (u32 i = 0; i < PARTY_SIZE; i++)
+    for (enum PartySlot i = 0; i < PARTY_SIZE; i++)
     {
-        enum Species species = GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES_OR_EGG);
-        if (species != SPECIES_NONE && species != SPECIES_EGG)
-            speciesList[partyCount++] = species;
+        struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][i];
+
+        if (IsMonValidForBattle(mon))
+            speciesList[partyCount++] = GetMonData(mon, MON_DATA_SPECIES_OR_EGG);
     }
 
     u32 duplicateCount = BXPY_GetUniqueDuplicates(speciesList, partyCount, uniqueDuplicates);
@@ -221,7 +222,7 @@ static void BXPY_ErrorCheck_ClauseItem(void)
     u32 uniqueDuplicates[PARTY_SIZE] = {0};
     u32 itemCount = 0;
 
-    for (u32 i = 0; i < PARTY_SIZE; i++)
+    for (enum PartySlot i = 0; i < PARTY_SIZE; i++)
     {
         enum Item item = GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_HELD_ITEM);
         if (item != ITEM_NONE)
@@ -246,12 +247,14 @@ static void BXPY_ErrorCheck_ClauseSpecialPokemon(void)
     u32 bannedMons[PARTY_SIZE];
     u32 bannedCount = 0;
 
-    for (u32 i = 0; i < PARTY_SIZE; i++)
+    for (enum PartySlot i = 0; i < PARTY_SIZE; i++)
     {
-        enum Species species = GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES_OR_EGG);
+        struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][i];
 
-        if (species == SPECIES_NONE || species == SPECIES_EGG)
+        if (!IsMonValidForBattle(mon))
             continue;
+
+        enum Species species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG);
 
         if (!gSpeciesInfo[species].isFrontierBanned)
             continue;
@@ -279,7 +282,7 @@ void BXPY_Init(enum BXPYBattleTypes battleType, u32 bringSize, u32 pickSize, u32
 
     u8 playerEnteredMons[PARTY_SIZE];
 
-    for (u32 monsIndex = 0; monsIndex < PARTY_SIZE; monsIndex++)
+    for (enum PartySlot monsIndex = 0; monsIndex < PARTY_SIZE; monsIndex++)
         playerEnteredMons[monsIndex] = BXPY_EMPTY_MON;
 
     BXPY_PreparePartiesAndInit(bringSize, pickSize, battleFlags, playerEnteredMons, 0, BXPY_PAGE_OPPONENT_A,TRUE);
@@ -321,10 +324,10 @@ static void BXPY_PrepareEnemyParty(u32 bringSize, u32 battleFlags)
 
 void BXPY_GetEnemyEnterMons(enum BattlerId battler, u8* enteredMons, u32 pickSize)
 {
-    for (u32 partyIndex = 0; partyIndex < PARTY_SIZE; partyIndex++)
+    for (enum PartySlot partyIndex = 0; partyIndex < PARTY_SIZE; partyIndex++)
         enteredMons[partyIndex] = BXPY_EMPTY_MON;
 
-    for (u32 i = 0; i < PARTY_SIZE; i++)
+    for (enum PartySlot i = 0; i < PARTY_SIZE; i++)
         enteredMons[i] = PARTY_SIZE;
 
     struct BXPYAiPartyData *bxpyAiPartyData = Alloc(sizeof(struct BXPYAiPartyData));
@@ -337,7 +340,7 @@ void BXPY_GetEnemyEnterMons(enum BattlerId battler, u8* enteredMons, u32 pickSiz
     u32 scoredMons[PARTY_SIZE];
     BXPY_GetChosenPartyMons(bxpyAiPartyData, scoredMons, pickSize);
 
-    for (u32 i = 0; i < PARTY_SIZE; i++)
+    for (enum PartySlot i = 0; i < PARTY_SIZE; i++)
         enteredMons[i] = (i < pickSize) ? scoredMons[i] : PARTY_SIZE;
 
     Free(bxpyAiPartyData);
@@ -356,15 +359,11 @@ static void BXPY_PrepareParty(u32 pickSize)
 
 static void BXPY_DeleteNonAliveMons(void)
 {
-    for (u32 i = 0; i < PARTY_SIZE; i++)
+    for (enum PartySlot i = 0; i < PARTY_SIZE; i++)
     {
-        enum Species species = GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES_OR_EGG);
-        if (species == SPECIES_NONE || species == SPECIES_EGG)
-            ZeroMonData(&gParties[B_TRAINER_PLAYER][i]);
-
-        u32 hp = GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_HP);
-        if (hp == 0)
-            ZeroMonData(&gParties[B_TRAINER_PLAYER][i]);
+        if (IsMonValidAndAliveForBattle(&gParties[B_TRAINER_PLAYER][i]))
+            continue;
+        ZeroMonData(&gParties[B_TRAINER_PLAYER][i]);
     }
     CompactPartySlots();
 }
@@ -379,7 +378,7 @@ void BXPY_SelectPartyMembers(struct Pokemon *party, u8* enteredMons, enum Battle
 
     ZeroPartyMons(tempParty);
 
-    for (u32 i = 0; i < PARTY_SIZE; i++)
+    for (enum PartySlot i = 0; i < PARTY_SIZE; i++)
     {
         u8 slot = enteredMons[i];
         if (slot == BXPY_EMPTY_MON)
@@ -396,7 +395,7 @@ void BXPY_SelectPartyMembers(struct Pokemon *party, u8* enteredMons, enum Battle
 
     ZeroPartyMons(party);
 
-    for (u32 i = 0; i < PARTY_SIZE; i++)
+    for (enum PartySlot i = 0; i < PARTY_SIZE; i++)
         CopyMon(&party[i], &tempParty[i], sizeof(struct Pokemon));
 }
 

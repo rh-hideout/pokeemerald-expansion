@@ -1774,7 +1774,7 @@ bool32 HasNoMonsToSwitch(enum BattlerId battler, enum PartySlot partyIdBattlerOn
         {
             u8 count = 0;
             for (i = 0; i < lastId; i++)
-                if (IsValidForBattle(&party[i]))
+                if (IsMonValidAndAliveForBattle(&party[i]))
                     count++;
 
             if (count < 2)
@@ -1788,7 +1788,7 @@ bool32 HasNoMonsToSwitch(enum BattlerId battler, enum PartySlot partyIdBattlerOn
 
         for (i = 0; i < lastId; i++)
         {
-            if (IsValidForBattle(&party[i])
+            if (IsMonValidAndAliveForBattle(&party[i])
              && i != partyIdBattlerOn1 && i != partyIdBattlerOn2
              && i != gBattleStruct->monToSwitchIntoId[flankId] && i != playerId[gBattleStruct->monToSwitchIntoId])
                 break;
@@ -1809,7 +1809,7 @@ bool32 HasNoMonsToSwitch(enum BattlerId battler, enum PartySlot partyIdBattlerOn
 
             for (i = 0; i < lastId; i++)
             {
-                if (IsValidForBattle(&party[i])
+                if (IsMonValidAndAliveForBattle(&party[i])
                  && i != partyIdBattlerOn1 && i != partyIdBattlerOn2
                  && i != gBattleStruct->monToSwitchIntoId[flankId] && i != playerId[gBattleStruct->monToSwitchIntoId])
                     break;
@@ -1820,7 +1820,7 @@ bool32 HasNoMonsToSwitch(enum BattlerId battler, enum PartySlot partyIdBattlerOn
         {
             for (i = 0; i < lastId; i++)
             {
-                if (IsValidForBattle(&party[i]))
+                if (IsMonValidAndAliveForBattle(&party[i]))
                     break;
             }
             return (i == lastId);
@@ -1830,7 +1830,7 @@ bool32 HasNoMonsToSwitch(enum BattlerId battler, enum PartySlot partyIdBattlerOn
     {
         for (i = 0; i < lastId; i++)
         {
-            if (IsValidForBattle(&party[i]))
+            if (IsMonValidAndAliveForBattle(&party[i]))
                 break;
         }
         return (i == lastId);
@@ -1839,7 +1839,7 @@ bool32 HasNoMonsToSwitch(enum BattlerId battler, enum PartySlot partyIdBattlerOn
     {
         for (i = 0; i < lastId; i++)
         {
-            if (IsValidForBattle(&party[i]))
+            if (IsMonValidAndAliveForBattle(&party[i]))
                 break;
         }
         return (i == lastId);
@@ -1864,7 +1864,7 @@ bool32 HasNoMonsToSwitch(enum BattlerId battler, enum PartySlot partyIdBattlerOn
 
         for (i = 0; i < lastId; i++)
         {
-            if (IsValidForBattle(&party[i])
+            if (IsMonValidAndAliveForBattle(&party[i])
              && i != partyIdBattlerOn1 && i != partyIdBattlerOn2
              && i != gBattleStruct->monToSwitchIntoId[flankId] && i != playerId[gBattleStruct->monToSwitchIntoId])
                 break;
@@ -3632,7 +3632,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                 }
                 break;
             case ABILITY_CUD_CHEW:
-                if (--gBattleMons[battler].volatiles.cudChewTimer == 0)
+                if (gBattleMons[battler].volatiles.cudChewTimer > 0 && --gBattleMons[battler].volatiles.cudChewTimer == 0)
                 {
                     gBattleScripting.battler = battler;
                     gLastUsedItem = GetBattlerPartyState(battler)->usedHeldItem;
@@ -6585,7 +6585,7 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
         break;
     case EFFECT_MAGNITUDE:
     case EFFECT_EARTHQUAKE:
-        if (ctx->terrain == B_TERRAIN_GRASSY && !IsSemiInvulnerable(battlerDef, CHECK_ALL))
+        if (IsGrassyTerrainAffected(battlerDef, ctx->abilities[battlerDef], ctx->holdEffects[battlerDef], ctx->terrain))
             modifier = uq4_12_multiply(modifier, UQ_4_12(0.5));
         break;
     case EFFECT_KNOCK_OFF:
@@ -10160,7 +10160,6 @@ void ClearDamageCalcResults(void)
     gBattleStruct->numSpreadTargets = 0;
     gBattleStruct->unableToUseMove = FALSE;
     gBattleStruct->attackAnimPlayed = FALSE;
-    gBattleStruct->accumulatedDamage = 0;
     if (gCurrentMove != MOVE_NONE)
         gBattleStruct->moldBreakerActive = IsMoldBreakerTypeAbility(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), gCurrentMove) || MoveIgnoresTargetAbility(gCurrentMove);
     else
@@ -11514,4 +11513,21 @@ bool32 IsBattlerJawLocked(enum BattlerId battler)
     }
 
     return FALSE;
+}
+
+u32 GetAccumulatedDamage(void)
+{
+    u32 accumulatedDamage = 0;
+
+    for (enum BattlerId battlerDef = B_BATTLER_0; battlerDef < gBattlersCount; battlerDef++)
+    {
+        u32 damage = gBattleStruct->moveDamage[battlerDef];
+
+        if (damage > INT32_MAX - accumulatedDamage)
+            return INT32_MAX;
+
+        accumulatedDamage += damage;
+    }
+
+    return accumulatedDamage;
 }

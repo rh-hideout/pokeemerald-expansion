@@ -290,7 +290,7 @@ static bool32 ShouldRunTrainerSlideLastLowHp(u32 lastId, enum BattlerId battler,
             return FALSE;
 
         return ((oppositeLastMon && BattlerHPPercentage(oppositeBattler, LESS_THAN_OR_EQUAL, 4))
-         || (partnerLastMon && BattlerHPPercentage(oppositePartner, LESS_THAN_OR_EQUAL, 4)));
+             || (partnerLastMon && BattlerHPPercentage(oppositePartner, LESS_THAN_OR_EQUAL, 4)));
     }
     else
     {
@@ -356,7 +356,6 @@ enum TrainerSlideTargets ShouldDoTrainerSlide(enum BattlerId battler, enum Train
         return TRAINER_SLIDE_TARGET_NONE;
 
     enum DifficultyLevel difficulty = GetCurrentDifficultyLevel();
-    gBattleScripting.battler = battler;
 
     if (IsTrainerSlidePlayed(battler, slideId))
         return TRAINER_SLIDE_TARGET_NONE;
@@ -422,6 +421,7 @@ enum TrainerSlideTargets ShouldDoTrainerSlide(enum BattlerId battler, enum Train
 
     MarkTrainerSlideAsPlayed(battler, slideId);
     SetTrainerSlideMessage(difficulty,trainerId,slideId);
+    gBattleScripting.battler = battler;
     return retValue;
 }
 

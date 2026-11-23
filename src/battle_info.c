@@ -3924,8 +3924,8 @@ static enum BattlerId GetBattlerFromSlot(u32 slot)
     {
         switch (slot)
         {
-        case 0: return B_BATTLER_1;
-        case 1: return B_BATTLER_3;
+        case 0: return B_BATTLER_3;
+        case 1: return B_BATTLER_1;
         case 2: return B_BATTLER_0;
         case 3: return B_BATTLER_2;
         }

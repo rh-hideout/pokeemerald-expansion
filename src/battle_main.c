@@ -1352,7 +1352,7 @@ static void SetMultiPartnerMenuParty(enum BattleTrainer trainer)
     struct Pokemon *mon = NULL;
     struct MultiPartnerMenuPokemon *partnerMon = NULL;
 
-    for (s32 i = 0; i < PARTY_SIZE; i++)
+    for (enum PartySlot i = 0; i < PARTY_SIZE; i++)
     {
         partnerMon = &gMultiPartnerParty[i];
         mon = &gParties[trainer][i];
@@ -2796,6 +2796,7 @@ static void BattleStartClearSetData(void)
         gBattleStruct->lastTakenMoveFrom[i][2] = MOVE_NONE;
         gBattleStruct->lastTakenMoveFrom[i][3] = MOVE_NONE;
         gBattleStruct->AI_monToSwitchIntoId[i] = PARTY_SLOT_NONE;
+        gBattleStruct->monToSwitchIntoId[i] = PARTY_SLOT_NONE;
     }
 
     gLastUsedMove = 0;
@@ -3239,9 +3240,7 @@ static void DoBattleIntro(void)
 
                 for (i = 0; i < PARTY_SIZE; i++)
                 {
-                    if (GetMonData(&gParties[trainer][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_NONE
-                     || GetMonData(&gParties[trainer][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_EGG
-                     || i >= lastId)
+                    if (!IsMonValidForBattle(&gParties[trainer][i]) || i >= lastId)
                     {
                         hpStatus[trainer][i].hp = HP_EMPTY_SLOT;
                         hpStatus[trainer][i].status = 0;
@@ -3456,7 +3455,10 @@ static void TryDoEventsBeforeFirstTurn(void)
                 gBattleStruct->monToSwitchIntoId[battler] = PARTY_SLOT_NONE; // Included here because switches can happen before during set ups (eg. eject pack)
                 struct Pokemon *mon = GetBattlerMon(battler);
                 if (!IsBattlerAlive(battler) || gBattleMons[battler].species == SPECIES_NONE || GetMonData(mon, MON_DATA_IS_EGG))
+                {
                     gAbsentBattlerFlags |= 1u << battler;
+                    gBattleStruct->battlerState[battler].notOnField = TRUE;
+                }
             }
         }
 
@@ -4801,20 +4803,16 @@ static void PopulateArrayWithBattlers(enum BattlerId *battlers)
 
 static bool32 TryTrainerSlideGimmick(enum BattlerId battler)
 {
-    bool32 doSlide = TRUE;
-    if (ShouldDoTrainerSlide(battler, gGimmicksInfo[gBattleStruct->gimmick.usableGimmick[battler]].attackerSlideType))
-        gBattleScripting.battler = battler;
-    else if (ShouldDoTrainerSlide(GetBattlerLeftFoe(battler), gGimmicksInfo[gBattleStruct->gimmick.usableGimmick[battler]].opponentSlideType))
-        gBattleScripting.battler = GetBattlerLeftFoe(battler);
-    else if (ShouldDoTrainerSlide(GetBattlerRightFoe(battler), gGimmicksInfo[gBattleStruct->gimmick.usableGimmick[battler]].opponentSlideType))
-        gBattleScripting.battler = GetBattlerRightFoe(battler);
-    else
-        doSlide = FALSE;
-    if (doSlide)
+    enum Gimmick gimmick = gBattleStruct->gimmick.usableGimmick[battler];
+
+    if (ShouldDoTrainerSlide(battler, gGimmicksInfo[gimmick].attackerSlideType)
+     || ShouldDoTrainerSlide(GetBattlerLeftFoe(battler), gGimmicksInfo[gimmick].opponentSlideType)
+     || ShouldDoTrainerSlide(GetBattlerRightFoe(battler), gGimmicksInfo[gimmick].opponentSlideType))
     {
         BattleScriptPushCursorAndCallback(BattleScript_TrainerSlideMsg);
         return TRUE;
     }
+
     return FALSE;
 }
 
@@ -5820,11 +5818,7 @@ void ScriptSetTotemBoost(struct ScriptContext *ctx)
 
 bool32 IsWildMonSmart(void)
 {
-#if WE_SMART_WILD_AI_FLAG != 0
     return (FlagGet(WE_SMART_WILD_AI_FLAG));
-#else
-    return FALSE;
-#endif
 }
 
 s32 Factorial(s32 n)

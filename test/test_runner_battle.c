@@ -71,7 +71,7 @@ STATIC_ASSERT(sizeof(struct BattleTestRunnerState) <= sizeof(sBackupMapData), sB
 static void CB2_BattleTest_NextParameter(void);
 static void CB2_BattleTest_NextTrial(void);
 static void PushBattlerAction(u32 sourceLine, enum BattlerId battlerId, u32 actionType, u32 byte);
-static void PrintAiMoveLog(enum BattlerId battlerId, enum MoveSlot moveSlot, enum Move moveId, s32 totalScore);
+static void PrintAiMoveLog(enum BattlerId battlerId, enum MoveSlot moveSlot, enum BattlerId targetId, enum Move moveId, s32 totalScore);
 static void ClearAiLog(enum BattlerId battlerId);
 static const char *BattlerIdentifier(enum BattlerId battlerId);
 
@@ -1356,7 +1356,7 @@ static u32 CountAiExpectMoves(struct ExpectedAIAction *expectedAction, enum Batt
         if ((1u << i) & expectedAction->moveSlots)
         {
             if (printLog)
-                PrintAiMoveLog(battlerId, i, gBattleMons[battlerId].moves[i], gAiBattleData->finalScore[battlerId][expectedAction->target][i]);
+                PrintAiMoveLog(battlerId, i, expectedAction->target, gBattleMons[battlerId].moves[i], gAiBattleData->finalScore[battlerId][expectedAction->target][i]);
             countExpected++;
         }
     }
@@ -1421,7 +1421,7 @@ void TestRunner_Battle_CheckChosenMove(enum BattlerId battlerId, enum Move moveI
         if (!expectedAction->notMove && !movePasses)
         {
             enum MoveSlot moveSlot = GetMoveSlot(gBattleMons[battlerId].moves, moveId);
-            PrintAiMoveLog(battlerId, moveSlot, moveId, gAiBattleData->finalScore[battlerId][expectedAction->target][moveSlot]);
+            PrintAiMoveLog(battlerId, moveSlot, expectedAction->target, moveId, gAiBattleData->finalScore[battlerId][expectedAction->target][moveSlot]);
             if (countExpected > 1)
                 Test_ExitWithResult(TEST_RESULT_FAIL, SourceLine(0), "%s:%d: Unmatched EXPECT_MOVES %S, got %S", filename, expectedAction->sourceLine, GetMoveName(expectedMoveId), GetMoveName(moveId));
             else
@@ -1525,18 +1525,19 @@ static void CheckIfMaxScoreEqualExpectMove(enum BattlerId battlerId, s32 target,
     }
 }
 
-static void PrintAiMoveLog(enum BattlerId battlerId, enum MoveSlot moveSlot, enum Move moveId, s32 totalScore)
+static void PrintAiMoveLog(enum BattlerId battlerId, enum MoveSlot moveSlot, enum BattlerId targetId, enum Move moveId, s32 totalScore)
 {
-    s32 i, scoreFromLogs = 0;
+    s32 i;
+    s32 scoreFromLogs = AI_SCORE_DEFAULT;
 
     if (!DATA.logAI) return;
-    if (DATA.aiLogPrintedForMove[battlerId] & (1u << moveSlot)) return;
 
-    DATA.aiLogPrintedForMove[battlerId] |= 1u << moveSlot;
     Test_MgbaPrintf("Score Log for move %S:\n", GetMoveName(moveId));
     for (i = 0; i < MAX_AI_LOG_LINES; i++)
     {
         struct AILogLine *log = &DATA.aiLogLines[battlerId][moveSlot][i];
+        if (targetId != log->target)
+            continue;
         if (log->file)
         {
             if (log->set)
@@ -1597,7 +1598,7 @@ void TestRunner_Battle_CheckAiMoveScores(enum BattlerId battlerId)
 
             if (scoreCtx->toValue)
             {
-                PrintAiMoveLog(battlerId, scoreCtx->moveSlot1, moveId1, scores[scoreCtx->moveSlot1]);
+                PrintAiMoveLog(battlerId, scoreCtx->moveSlot1, target, moveId1, scores[scoreCtx->moveSlot1]);
                 if (!CheckComparision(scores[scoreCtx->moveSlot1], scoreCtx->value, scoreCtx->cmp))
                 {
                     Test_ExitWithResult(TEST_RESULT_FAIL, SourceLine(0), "%s:%d: Unmatched SCORE_%s_VAL %S %d, got %d",
@@ -1607,8 +1608,8 @@ void TestRunner_Battle_CheckAiMoveScores(enum BattlerId battlerId)
             else
             {
                 enum Move moveId2 = gBattleMons[battlerId].moves[scoreCtx->moveSlot2];
-                PrintAiMoveLog(battlerId, scoreCtx->moveSlot1, moveId1, scores[scoreCtx->moveSlot1]);
-                PrintAiMoveLog(battlerId, scoreCtx->moveSlot2, moveId2, scores[scoreCtx->moveSlot2]);
+                PrintAiMoveLog(battlerId, scoreCtx->moveSlot1, target, moveId1, scores[scoreCtx->moveSlot1]);
+                PrintAiMoveLog(battlerId, scoreCtx->moveSlot2, target, moveId2, scores[scoreCtx->moveSlot2]);
                 if (!CheckComparision(scores[scoreCtx->moveSlot1], scores[scoreCtx->moveSlot2], scoreCtx->cmp))
                 {
                     Test_ExitWithResult(TEST_RESULT_FAIL, SourceLine(0), "%s:%d: Unmatched SCORE_%s, got %S: %d, %S: %d",
@@ -3887,7 +3888,7 @@ struct AILogLine *GetLogLine(enum BattlerId battlerId, enum MoveSlot moveIndex)
     return NULL;
 }
 
-void TestRunner_Battle_AILogScore(const char *file, u32 line, enum BattlerId battlerId, enum MoveSlot moveIndex, s32 score, bool32 setScore)
+void TestRunner_Battle_AILogScore(const char *file, u32 line, enum BattlerId battlerId, enum MoveSlot moveIndex, enum BattlerId targetId, s32 score, bool32 setScore)
 {
     struct AILogLine *log;
 
@@ -3898,16 +3899,17 @@ void TestRunner_Battle_AILogScore(const char *file, u32 line, enum BattlerId bat
     log->line = line;
     log->score = score;
     log->set = setScore;
+    log->target = targetId;
 }
 
 void TestRunner_Battle_AISetScore(const char *file, u32 line, enum BattlerId battlerId, enum MoveSlot moveIndex, s32 score)
 {
-    TestRunner_Battle_AILogScore(file, line, battlerId, moveIndex, score, TRUE);
+    TestRunner_Battle_AILogScore(file, line, battlerId, moveIndex, 0xFF, score, TRUE);
 }
 
-void TestRunner_Battle_AIAdjustScore(const char *file, u32 line, enum BattlerId battlerId, enum MoveSlot moveIndex, s32 score)
+void TestRunner_Battle_AIAdjustScore(const char *file, u32 line, enum BattlerId battlerId, enum MoveSlot moveIndex, enum BattlerId targetId, s32 score)
 {
-    TestRunner_Battle_AILogScore(file, line, battlerId, moveIndex, score, FALSE);
+    TestRunner_Battle_AILogScore(file, line, battlerId, moveIndex, targetId, score, FALSE);
 }
 
 void QueueEffectivenessSound(u32 sourceLine, struct BattlePokemon *battler, struct EffectivenessEventContext ctx)
@@ -3946,7 +3948,7 @@ static s32 TryEffectivenessSound(s32 i, s32 n, u32 battlerId, u32 soundId)
     return -1;
 }
 
-void TestRunner_Battle_RecordEffectivenessSound(u32 battlerId, u32 soundId)
+void TestRunner_Battle_RecordEffectivenessSound(enum BattlerId battlerId, u32 soundId)
 {
     s32 queuedEvent;
     s32 match;

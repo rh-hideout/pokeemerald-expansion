@@ -2850,7 +2850,7 @@ static bool8 ShouldUseChooseMonText(void)
     if (gPartyMenu.action == PARTY_ACTION_SEND_OUT)
         return TRUE;
 
-    for (u32 slot = 0; slot < PARTY_SIZE; slot++)
+    for (enum PartySlot slot = 0; slot < PARTY_SIZE; slot++)
     {
         struct Pokemon *mon = GetPartyMonFromPartyMenuId(slot);
 
@@ -8428,9 +8428,17 @@ void CursorCb_MoveItemCallback(u8 taskId)
             CopyItemName(item1, gStringVar2);
             StringExpandPlaceholders(buffer, gText_XsYAnd);
 
-            StringAppend(buffer, gText_XsYWereSwapped);
             GetMonNickname(&gParties[B_TRAINER_PLAYER][gPartyMenu.slotId2], gStringVar1);
             CopyItemName(item2, gStringVar2);
+            StringExpandPlaceholders(gStringVar4, gText_XsYWereSwapped);
+            if (GetStringWidth(FONT_NORMAL, gStringVar4, 0) > GetWindowAttribute(WIN_MSG, WINDOW_WIDTH) * TILE_WIDTH)
+            {
+                StringAppend(buffer, COMPOUND_STRING("{STR_VAR_1}'s {STR_VAR_2}\lwere swapped!{PAUSE_UNTIL_PRESS}"));
+            }
+            else
+            {
+                StringAppend(buffer, gText_XsYWereSwapped);
+            }
             StringExpandPlaceholders(gStringVar4, buffer);
         }
 
@@ -8572,7 +8580,7 @@ static void RestoreMultiPartyFromSummaryScreen(void)
     gParties[B_TRAINER_PLAYER][2] = gParties[B_TRAINER_PLAYER][3];
 
     // Clear partner mons from back of player party
-    for (u32 i = MULTI_PARTY_SIZE; i < PARTY_SIZE; i++)
+    for (enum PartySlot i = MULTI_PARTY_SIZE; i < PARTY_SIZE; i++)
     {
         ZeroMonData(&gParties[B_TRAINER_PLAYER][i]);
     }

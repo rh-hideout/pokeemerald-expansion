@@ -1920,3 +1920,24 @@ MULTI_BATTLE_TEST("Sleep Clause remains active when a partner's Chesto Berry cur
         }
     }
 }
+
+SINGLE_BATTLE_TEST("Sleep Clause: Poke Flute allows a Pokemon to be put to sleep again")
+{
+    GIVEN {
+        FLAG_SET(B_FLAG_SLEEP_CLAUSE);
+        ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_NON_VOLATILE_STATUS);
+        ASSUME(GetMoveNonVolatileStatus(MOVE_SPORE) == MOVE_EFFECT_SLEEP);
+        ASSUME(gItemsInfo[ITEM_POKE_FLUTE].battleUsage == EFFECT_ITEM_USE_POKE_FLUTE);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SPORE); }
+        TURN { USE_ITEM(opponent, ITEM_POKE_FLUTE, partyIndex: 0); MOVE(player, MOVE_SPORE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPORE, player);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, opponent);
+        MESSAGE("The Pokémon hearing the flute awoke!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPORE, player);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, opponent);
+    }
+}

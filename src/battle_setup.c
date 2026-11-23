@@ -405,9 +405,12 @@ static void DoStandardWildBattle(bool32 isDouble)
     if (IsNPCFollowerWildBattle())
     {
         gBattleTypeFlags |= BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_DOUBLE;
+        SavePlayerParty();
     }
     else if (isDouble)
+    {
         gBattleTypeFlags |= BATTLE_TYPE_DOUBLE;
+    }
     if (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE)
     {
         VarSet(VAR_TEMP_E, 0);
@@ -851,16 +854,12 @@ static enum TransitionType GetBattleTransitionTypeByMap(void)
 
 static u16 GetSumOfPlayerPartyLevel(u8 numMons)
 {
-    u8 sum = 0;
-    int i;
-
-    for (i = 0; i < PARTY_SIZE; i++)
+    u32 sum = 0;
+    for (enum PartySlot slot = 0; slot < PARTY_SIZE; slot++)
     {
-        enum Species species = GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES_OR_EGG);
-
-        if (species != SPECIES_EGG && species != SPECIES_NONE && GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_HP) != 0)
+        if (IsMonValidAndAliveForBattle(&gParties[B_TRAINER_PLAYER][slot]))
         {
-            sum += GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_LEVEL);
+            sum += GetMonData(&gParties[B_TRAINER_PLAYER][slot], MON_DATA_LEVEL);
             if (--numMons == 0)
                 break;
         }

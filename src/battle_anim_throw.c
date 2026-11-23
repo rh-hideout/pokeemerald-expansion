@@ -2163,7 +2163,7 @@ void TryShinyAnimation(enum BattlerId battler, struct Pokemon *mon)
     if (illusionMon != NULL)
         mon = illusionMon;
 
-    if (IsBattlerSpriteVisible(battler) && IsValidForBattle(mon) && (!gTestRunnerHeadless || gBattleTestRunnerState->forceMoveAnim))
+    if (IsBattlerSpriteVisible(battler) && IsMonValidAndAliveForBattle(mon) && (!gTestRunnerHeadless || gBattleTestRunnerState->forceMoveAnim))
     {
         if (isShiny)
         {

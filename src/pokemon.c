@@ -6,6 +6,7 @@
 #include "battle_anim.h"
 #include "battle_controllers.h"
 #include "battle_message.h"
+#include "battle_partner.h"
 #include "battle_pike.h"
 #include "battle_pyramid.h"
 #include "battle_setup.h"
@@ -814,20 +815,20 @@ void ZeroMonData(struct Pokemon *mon)
 
 void ZeroPartyMons(struct Pokemon *party)
 {
-    for (s32 i = 0; i < PARTY_SIZE; i++)
+    for (enum PartySlot i = 0; i < PARTY_SIZE; i++)
         ZeroMonData(&party[i]);
 }
 
 void ZeroPlayerPartyMons(void)
 {
-    for (s32 i = 0; i < PARTY_SIZE; i++)
+    for (enum PartySlot i = 0; i < PARTY_SIZE; i++)
         ZeroMonData(&gParties[B_TRAINER_PLAYER][i]);
     gPartiesCount[B_TRAINER_PLAYER] = 0;
 }
 
 void ZeroEnemyPartyMons(void)
 {
-    for (s32 i = 0; i < PARTY_SIZE; i++)
+    for (enum PartySlot i = 0; i < PARTY_SIZE; i++)
     {
         ZeroMonData(&gParties[B_TRAINER_OPPONENT_A][i]);
         ZeroMonData(&gParties[B_TRAINER_OPPONENT_B][i]);
@@ -3043,9 +3044,7 @@ u8 GetMonsStateToDoubles(void)
 
     for (i = 0; i < gPartiesCount[B_TRAINER_PLAYER]; i++)
     {
-        if (GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES_OR_EGG) != SPECIES_EGG
-         && GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_HP) != 0
-         && GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES_OR_EGG) != SPECIES_NONE)
+        if (IsMonValidAndAliveForBattle(&gParties[B_TRAINER_PLAYER][i]))
             aliveCount++;
     }
 
@@ -5467,7 +5466,7 @@ const u8 *GetTrainerPartnerName(void)
 {
     if (HasAnyBattleFlags(BATTLE_TYPE_INGAME_PARTNER))
     {
-        GetFrontierTrainerName(gStringVar1, gPartnerTrainerId);
+        GetInGamePartnerName(gStringVar1, gPartnerTrainerId);
         return gStringVar1;
     }
     else
@@ -6320,7 +6319,7 @@ static struct PartyState *GetBattlerPartyStateByPokemon(struct Pokemon *partyMon
 {
     struct Pokemon *party = GetTrainerParty(trainer);
 
-    for (int i = 0; i < PARTY_SIZE; i++)
+    for (enum PartySlot i = 0; i < PARTY_SIZE; i++)
     {
         struct Pokemon *mon = &party[i];
         if (partyMon == mon)
@@ -6331,8 +6330,7 @@ static struct PartyState *GetBattlerPartyStateByPokemon(struct Pokemon *partyMon
 
 bool32 TryFormChange(struct Pokemon *mon, enum FormChanges method, enum BattleTrainer trainer)
 {
-    if (GetMonData(mon, MON_DATA_SPECIES_OR_EGG, 0) == SPECIES_NONE
-     || GetMonData(mon, MON_DATA_SPECIES_OR_EGG, 0) == SPECIES_EGG)
+    if (!IsMonValidForBattle(mon))
         return FALSE;
 
     enum Species currentSpecies = GetMonData(mon, MON_DATA_SPECIES);
@@ -7029,4 +7027,15 @@ void CreateMonFromTemplate(struct Pokemon *mon, const struct PokemonTemplate *mo
 
     CalculateMonStats(mon);
     TryFormChange(mon, FORM_CHANGE_ITEM_HOLD, B_TRAINER_PLAYER);
+}
+
+bool32 IsMonValidAndAliveForBattle(struct Pokemon *mon)
+{
+    return IsMonValidForBattle(mon) && GetMonData(mon, MON_DATA_HP) != 0;
+}
+
+bool32 IsMonValidForBattle(struct Pokemon *mon)
+{
+    enum Species species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG);
+    return species != SPECIES_NONE && species != SPECIES_EGG;
 }

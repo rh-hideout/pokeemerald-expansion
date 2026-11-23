@@ -6,6 +6,7 @@
 #include "battle_ai_field_statuses.h"
 #include "battle_ai_util.h"
 #include "battle_ai_main.h"
+#include "battle_ai_record.h"
 #include "battle_stat_change.h"
 #include "battle_controllers.h"
 #include "battle_factory.h"
@@ -368,12 +369,9 @@ void SetBattlerData(enum BattlerId battlerId)
 {
     if (!BattlerHasAi(battlerId) && gAiThinkingStruct->saved[battlerId].saved)
     {
-        enum Species species, illusionSpecies;
-        enum BattleSide side = GetBattlerSide(battlerId);
-
         // Simulate Illusion
-        species = gBattleMons[battlerId].species;
-        illusionSpecies = GetIllusionMonSpecies(battlerId);
+        enum Species species = gBattleMons[battlerId].species;
+        enum Species illusionSpecies = GetIllusionMonSpecies(battlerId);
         if (illusionSpecies != SPECIES_NONE && ShouldFailForIllusion(illusionSpecies, battlerId))
         {
             // If the battler's type has not been changed, AI assumes the types of the illusion mon.
@@ -386,23 +384,32 @@ void SetBattlerData(enum BattlerId battlerId)
             species = illusionSpecies;
         }
 
+        struct AiPartyMon *aiPartyMon = GetRecordedPartyMonData(battlerId);
+
         // Use the known battler's ability.
-        if (gAiPartyData->mons[side][gBattlerPartyIndexes[battlerId]].ability != ABILITY_NONE)
-            gBattleMons[battlerId].ability = gAiPartyData->mons[side][gBattlerPartyIndexes[battlerId]].ability;
+        if (aiPartyMon->ability != ABILITY_NONE)
+        {
+            gBattleMons[battlerId].ability = aiPartyMon->ability;
+        }
         // Check if mon can only have one ability.
-        else if (GetSpeciesAbility(species, 1) == ABILITY_NONE
-                || GetSpeciesAbility(species, 1) == GetSpeciesAbility(species, 0))
+        else if (GetSpeciesAbility(species, 1) == ABILITY_NONE || GetSpeciesAbility(species, 1) == GetSpeciesAbility(species, 0))
+        {
             gBattleMons[battlerId].ability = GetSpeciesAbility(species, 0);
+        }
         // The ability is unknown.
         else
+        {
             gBattleMons[battlerId].ability = ABILITY_NONE;
+        }
 
-        if (gAiPartyData->mons[side][gBattlerPartyIndexes[battlerId]].heldEffect == 0)
+        if (aiPartyMon->holdEffect == 0)
+        {
             gBattleMons[battlerId].item = ITEM_NONE;
+        }
 
         for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
         {
-            if (gAiPartyData->mons[side][gBattlerPartyIndexes[battlerId]].moves[moveIndex] == 0)
+            if (aiPartyMon->moves[moveIndex] == 0)
                 gBattleMons[battlerId].moves[moveIndex] = MOVE_NONE;
         }
     }
@@ -1801,9 +1808,9 @@ enum Ability AI_DecideKnownAbilityForTurn(enum BattlerId battlerId)
     if (knownAbility == ABILITY_NONE)
         return knownAbility;
 
-    enum Ability partyMonAbility = gAiPartyData->mons[GetBattlerSide(battlerId)][gBattlerPartyIndexes[battlerId]].ability;
-    if (partyMonAbility != ABILITY_NONE)
-        return partyMonAbility;
+    enum Ability recordedAbility = GetRecordedPartyMonData(battlerId)->ability;
+    if (recordedAbility != ABILITY_NONE)
+        return recordedAbility;
 
     // Abilities that prevent fleeing - treat as always known
     if (knownAbility == ABILITY_SHADOW_TAG || knownAbility == ABILITY_MAGNET_PULL || knownAbility == ABILITY_ARENA_TRAP)
@@ -1836,7 +1843,7 @@ enum HoldEffect AI_DecideHoldEffectForTurn(enum BattlerId battlerId)
         return holdEffect;
 
     if (!IsAiBattlerAware(battlerId) && !IsAiFlagPresent(AI_FLAG_ITEM_OMNISCIENCE))
-        holdEffect = gAiPartyData->mons[GetBattlerSide(battlerId)][gBattlerPartyIndexes[battlerId]].heldEffect;
+        holdEffect = GetRecordedPartyMonData(battlerId)->holdEffect;
     else
         holdEffect = GetBattlerHoldEffectIgnoreNegation(battlerId);
 
@@ -2441,6 +2448,7 @@ bool32 CanLowerStat(enum BattlerId battlerAtk, enum BattlerId battlerDef, struct
 enum AIScore IncreaseStatDownScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Stat stat)
 {
     enum AIScore tempScore = NO_INCREASE;
+    enum BattlerId partnerAtk = GetPartnerBattler(battlerAtk);
 
     // Don't increase score if target is already -3 stat stage
     if (stat != STAT_SPEED && gBattleMons[battlerDef].statStages[stat] <= DEFAULT_STAT_STAGE - 3)
@@ -2469,14 +2477,14 @@ enum AIScore IncreaseStatDownScore(enum BattlerId battlerAtk, enum BattlerId bat
         break;
     case STAT_DEF:
         if (HasMoveWithCategory(battlerAtk, DAMAGE_CATEGORY_PHYSICAL)
-         || HasMoveWithCategory(GetPartnerBattler(battlerAtk), DAMAGE_CATEGORY_PHYSICAL))
+         || (IsBattlerAlive(partnerAtk) && HasMoveWithCategory(partnerAtk, DAMAGE_CATEGORY_PHYSICAL)))
             tempScore += DECENT_EFFECT;
         break;
     case STAT_SPEED:
     {
         enum Move predictedMove = GetPredictedMove(battlerAtk, battlerDef, gAiLogicData);
         if (AI_IsSlower(battlerAtk, battlerDef, MOVE_NONE, predictedMove, DONT_CONSIDER_PRIORITY)
-        || AI_IsSlower(GetPartnerBattler(battlerAtk), battlerDef, MOVE_NONE, predictedMove, DONT_CONSIDER_PRIORITY))
+        || (IsBattlerAlive(partnerAtk) && AI_IsSlower(partnerAtk, battlerDef, MOVE_NONE, predictedMove, DONT_CONSIDER_PRIORITY)))
             tempScore += DECENT_EFFECT;
         break;
     }
@@ -2486,7 +2494,7 @@ enum AIScore IncreaseStatDownScore(enum BattlerId battlerAtk, enum BattlerId bat
         break;
     case STAT_SPDEF:
         if (HasMoveWithCategory(battlerAtk, DAMAGE_CATEGORY_SPECIAL)
-         || HasMoveWithCategory(GetPartnerBattler(battlerAtk), DAMAGE_CATEGORY_SPECIAL))
+         || (IsBattlerAlive(partnerAtk) && HasMoveWithCategory(partnerAtk, DAMAGE_CATEGORY_SPECIAL)))
             tempScore += DECENT_EFFECT;
         break;
     case STAT_ACC:
@@ -2812,6 +2820,49 @@ bool32 HasBattlerSideMoveWithEffect(enum BattlerId battler, enum BattleMoveEffec
     if (HasMoveWithEffect(battler, effect))
         return TRUE;
     if (HasPartnerIgnoreFlags(battler) && HasMoveWithEffect(GetPartnerBattler(battler), effect))
+        return TRUE;
+    return FALSE;
+}
+
+static bool32 HasDamagingMoveSuperEffectiveAgainstType(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Type newType)
+{
+    enum Move *moves = GetMovesArray(battlerAtk);
+    enum Type savedTypes[3];
+    u32 moveLimitations = gAiLogicData->moveLimitations[battlerAtk];
+    bool32 result = FALSE;
+
+    // Change target to the new type
+    AI_StoreBattlerTypes(battlerDef, savedTypes);
+    gBattleMons[battlerDef].types[0] = newType;
+    gBattleMons[battlerDef].types[1] = newType;
+    gBattleMons[battlerDef].types[2] = TYPE_MYSTERY;
+
+    for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
+    {
+        enum Move move = moves[moveIndex];
+
+        if (IsMoveUnusable(moveIndex, move, moveLimitations) || IsBattleMoveStatus(move))
+            continue;
+        if (AI_GetMoveEffectiveness(move, battlerAtk, battlerDef) >= UQ_4_12(2.0))
+        {
+            result = TRUE;
+            break;
+        }
+    }
+
+    AI_RestoreBattlerTypes(battlerDef, savedTypes);
+
+    return result;
+}
+
+// Checks if the user or its partner has a damaging super-effective move against the given type
+bool32 HasBattlerSideMoveSuperEffectiveAgainstType(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Type newType)
+{
+    enum BattlerId partner = GetPartnerBattler(battlerAtk);
+
+    if (HasDamagingMoveSuperEffectiveAgainstType(battlerAtk, battlerDef, newType))
+        return TRUE;
+    if (IsBattlerAlive(partner) && HasDamagingMoveSuperEffectiveAgainstType(partner, battlerDef, newType))
         return TRUE;
     return FALSE;
 }
@@ -4610,10 +4661,9 @@ s32 CountUsablePartyMons(enum BattlerId battlerId)
     s32 lastId = GetAILastPartyIndex(battlerId); // + 1
     for (enum PartySlot monIndex = PARTY_SLOT_0; monIndex < lastId; monIndex++)
     {
-        if (monIndex != battlerOnField1 && monIndex != battlerOnField2
-         && GetMonData(&party[monIndex], MON_DATA_HP) != 0
-         && GetMonData(&party[monIndex], MON_DATA_SPECIES_OR_EGG) != SPECIES_NONE
-         && GetMonData(&party[monIndex], MON_DATA_SPECIES_OR_EGG) != SPECIES_EGG)
+        if (monIndex != battlerOnField1
+         && monIndex != battlerOnField2
+         && IsMonValidAndAliveForBattle(&party[monIndex]))
         {
             ret++;
         }
@@ -4637,9 +4687,7 @@ bool32 IsPartyFullyHealedExceptBattler(enum BattlerId battlerId)
     for (enum PartySlot monIndex = PARTY_SLOT_0; monIndex < PARTY_SIZE; monIndex++)
     {
         if (monIndex != gBattlerPartyIndexes[battlerId]
-         && GetMonData(&party[monIndex], MON_DATA_HP) != 0
-         && GetMonData(&party[monIndex], MON_DATA_SPECIES_OR_EGG) != SPECIES_NONE
-         && GetMonData(&party[monIndex], MON_DATA_SPECIES_OR_EGG) != SPECIES_EGG
+         && IsMonValidAndAliveForBattle(&party[monIndex])
          && GetMonData(&party[monIndex], MON_DATA_HP) < GetMonData(&party[monIndex], MON_DATA_MAX_HP))
             return FALSE;
     }
@@ -5458,11 +5506,10 @@ enum AIConsiderGimmick ShouldTeraFromCalcs(enum BattlerId battler, enum BattlerI
     int numPossibleTera = 0;
     for (enum PartySlot monIndex = PARTY_SLOT_0; monIndex < PARTY_SIZE; monIndex++)
     {
-        if (GetMonData(&party[monIndex], MON_DATA_HP) != 0
-         && GetMonData(&party[monIndex], MON_DATA_SPECIES_OR_EGG) != SPECIES_NONE
-         && GetMonData(&party[monIndex], MON_DATA_SPECIES_OR_EGG) != SPECIES_EGG
-         && GetMonData(&party[monIndex], MON_DATA_TERA_TYPE) > 0)
+        if (IsMonValidAndAliveForBattle(&party[monIndex]) && GetMonData(&party[monIndex], MON_DATA_TERA_TYPE) > 0)
+        {
             numPossibleTera++;
+        }
     }
 
     u32 aiHp = gBattleMons[battler].hp;
@@ -6332,14 +6379,16 @@ u32 GetActiveBattlerIds(enum BattlerId battler, enum BattlerId *battlerIn1, enum
     return opposingBattler;
 }
 
-bool32 IsPartyMonOnFieldOrChosenToSwitch(enum BattlerId battler, enum PartySlot partyIndex, enum BattlerId battlerIn1, enum BattlerId battlerIn2)
+bool32 IsPartyMonOnFieldOrChosenToSwitch(enum BattlerId battler, enum PartySlot slot, enum BattlerId battlerIn1, enum BattlerId battlerIn2)
 {
-    if ((partyIndex == gBattlerPartyIndexes[battlerIn1] && BattlersShareParty(battler, battlerIn1))
-            || (partyIndex == gBattlerPartyIndexes[battlerIn2] && BattlersShareParty(battler, battlerIn2)))
+    if ((slot == gBattlerPartyIndexes[battlerIn1] && BattlersShareParty(battler, battlerIn1))
+     || (slot == gBattlerPartyIndexes[battlerIn2] && BattlersShareParty(battler, battlerIn2)))
         return TRUE;
-    if ((partyIndex == gBattleStruct->monToSwitchIntoId[battlerIn1] && BattlersShareParty(battler, battlerIn1))
-            || (partyIndex == gBattleStruct->monToSwitchIntoId[battlerIn2] && BattlersShareParty(battler, battlerIn2)))
+
+    if ((slot == gBattleStruct->monToSwitchIntoId[battlerIn1] && BattlersShareParty(battler, battlerIn1))
+     || (slot == gBattleStruct->monToSwitchIntoId[battlerIn2] && BattlersShareParty(battler, battlerIn2)))
         return TRUE;
+
     return FALSE;
 }
 

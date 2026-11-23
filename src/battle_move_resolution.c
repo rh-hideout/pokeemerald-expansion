@@ -986,7 +986,7 @@ static enum CancelerResult CancelerSetTargets(struct BattleCalcValues *cv)
         {
             cv->battlerDef = cv->battlerAtk;
         }
-        else if (isDoubleBattle && moveTarget == TARGET_USER_OR_ALLY && !IsBattlerAlive(cv->battlerDef))
+        else if (isDoubleBattle && moveTarget == TARGET_USER_OR_ALLY && (!IsBattlerAlive(cv->battlerDef) || !IsBattlerAlly(cv->battlerAtk, cv->battlerDef)))
         {
             cv->battlerDef = cv->battlerAtk;
         }
@@ -1044,13 +1044,15 @@ static enum CancelerResult CancelerPPDeduction(struct BattleCalcValues *cv)
         for (u32 i = 0; i < gBattlersCount; i++)
         {
             if (!IsBattlerAlly(i, cv->battlerAtk))
-                ppToDeduct += (GetBattlerAbility(i) == ABILITY_PRESSURE);
+                ppToDeduct += (cv->abilities[i] == ABILITY_PRESSURE);
         }
     }
     else if (moveTarget != TARGET_OPPONENTS_FIELD)
     {
-        if (cv->battlerAtk != cv->battlerDef && GetBattlerAbility(cv->battlerDef) == ABILITY_PRESSURE)
-             ppToDeduct++;
+        if (cv->battlerAtk != cv->battlerDef
+         && (GetConfig(B_PRESSURE_ALLIES) < GEN_5 || !IsBattlerAlly(cv->battlerAtk, cv->battlerDef))
+         && cv->abilities[cv->battlerDef] == ABILITY_PRESSURE)
+            ppToDeduct++;
     }
 
     // For item Metronome, echoed voice
@@ -2422,14 +2424,10 @@ static enum CancelerResult CancelerMultihitMoves(struct BattleCalcValues *cv)
 
         for (i = 0; i < PARTY_SIZE; i++)
         {
-            enum Species species = GetMonData(&party[i], MON_DATA_SPECIES);
-            if (species != SPECIES_NONE
-             && GetMonData(&party[i], MON_DATA_HP)
-             && !GetMonData(&party[i], MON_DATA_IS_EGG)
-             && !GetMonData(&party[i], MON_DATA_STATUS))
+            if (IsMonValidAndAliveForBattle(&party[i]) && !GetMonData(&party[i], MON_DATA_STATUS))
             {
                 if (GetConfig(B_BEAT_UP) >= GEN_5)
-                    gBattleStruct->beatUpSpecies[gMultiHitCounter] = species;
+                    gBattleStruct->beatUpSpecies[gMultiHitCounter] = GetMonData(&party[i], MON_DATA_SPECIES);
                 else
                     gBattleStruct->beatUpSpecies[gMultiHitCounter] = i;
                 gMultiHitCounter++;
@@ -3343,11 +3341,6 @@ enum CancelerResult DoAttackCanceler(void)
 
 static enum MoveEndResult MoveEndSetValues(struct BattleCalcValues *cv)
 {
-    for (enum BattlerId battlerDef = B_BATTLER_0; battlerDef < gBattlersCount; battlerDef++)
-    {
-        gBattleStruct->accumulatedDamage += gBattleStruct->moveDamage[battlerDef];
-    }
-
     gBattleStruct->eventState.moveEndBattler = 0;
     gBattleStruct->eventState.moveEndBlock = 0;
     gBattleStruct->additionalEffectsCounter = 0;
@@ -4952,7 +4945,7 @@ static enum MoveEndResult MoveEndFirstMoveBlock(struct BattleCalcValues *cv)
             }
             else
             {
-                SetPassiveDamageAmount(cv->battlerAtk, gBattleStruct->accumulatedDamage * max(1, GetMoveRecoil(cv->move)) / 100);
+                SetPassiveDamageAmount(cv->battlerAtk, GetAccumulatedDamage() * max(1, GetMoveRecoil(cv->move)) / 100);
             }
             TryUpdateEvolutionTracker(IF_RECOIL_DAMAGE_GE, gBattleStruct->passiveHpUpdate[cv->battlerAtk], MOVE_NONE);
             BattleScriptCall(BattleScript_MoveEffectRecoil);
@@ -6144,6 +6137,11 @@ static void TryAcupressureStatChange(struct BattleCalcValues *cv)
             bits |= 1u << stat;
     }
 
+    struct StatChange st = {
+        .onlyChecking = TRUE,
+        .ignoreCertainFailure = TRUE,
+    };
+
     if (bits)
     {
         enum Stat statId;
@@ -6152,7 +6150,12 @@ static void TryAcupressureStatChange(struct BattleCalcValues *cv)
             statId = (Random() % (NUM_BATTLE_STATS - 1)) + 1;
         } while (!(bits & (1u << statId)));
 
-        SetStatChange(cv->battlerDef, statId, 2);
+        st.certain = cv->battlerAtk == cv->battlerDef;
+        st.stat = statId;
+        st.stage = 2;
+
+        AdjustStatStage(cv, &st);
+        SetStatChange(cv->battlerDef, st.stat, st.stage);
         gBattleStruct->moveResultFlags[cv->battlerDef] = MOVE_RESULT_ATTEMPT_STAT_CHANGE;
     }
     else
@@ -6686,9 +6689,7 @@ static enum Move GetAssistMove(void)
     {
         if (monId == gBattlerPartyIndexes[gBattlerAttacker])
             continue;
-        if (GetMonData(&party[monId], MON_DATA_SPECIES_OR_EGG) == SPECIES_NONE)
-            continue;
-        if (GetMonData(&party[monId], MON_DATA_SPECIES_OR_EGG) == SPECIES_EGG)
+        if (!IsMonValidForBattle(&party[monId]))
             continue;
 
         for (u32 moveId = 0; moveId < MAX_MON_MOVES; moveId++)

@@ -610,7 +610,7 @@ extern const u8 BattleScript_MoveEffectIonDeluge[];
 extern const u8 BattleScript_WaitMessage[];
 
 // Used for when a battler was already marked for controller execution.
-// It not possible not use PrepareStringBattleWithWait because the write would get out of synch
+// It's not possible to use PrepareStringBattleWithWait in this case because the write would get out of synch
 extern const u8 BattleScript_PrintSavedMessage[];
 
 extern const u8 BattleScript_MoveEffectTeatime[];

@@ -10,7 +10,7 @@
 
 static void SetTestPartySize(enum BattleTrainer trainer, u8 partySize)
 {
-    for (u32 i = 0; i < PARTY_SIZE; i++)
+    for (enum PartySlot i = 0; i < PARTY_SIZE; i++)
         ZeroMonData(&gParties[trainer][i]);
 
     for (u32 i = 0; i < partySize; i++)
