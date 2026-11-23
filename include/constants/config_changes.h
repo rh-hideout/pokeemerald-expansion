@@ -204,6 +204,8 @@
     F(B_SHEER_FORCE_TIMING,        sheerForceTiming,        (u32, GEN_COUNT - 1)) \
     F(B_RUN_AWAY,                  runAway,                 (u32, GEN_COUNT - 1)) \
     F(B_EMERGENCY_EXIT,            emergencyExit,           (u32, GEN_COUNT - 1)) \
+    F(B_FLASH_FIRE_PERSISTS,       flashFirePersists,       (u32, GEN_COUNT - 1)) \
+    F(B_STALWART_SUBSTITUTE,       stalwartSubstitute,      (u32, GEN_COUNT - 1)) \
     /* Item settings */ \
     F(B_CONFUSE_BERRIES_HEAL,      confuseBerriesHeal,      (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_X_ITEMS_BUFF,              xItemsBuff,              (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \

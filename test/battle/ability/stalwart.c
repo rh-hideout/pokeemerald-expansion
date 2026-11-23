@@ -57,3 +57,28 @@ DOUBLE_BATTLE_TEST("Stalwart stops Lightning Rod and Storm Drain from redirectin
         }
     }
 }
+
+SINGLE_BATTLE_TEST("Stalwart bypasses the opponent's Substitute (post-Champs 1.3.0)")
+{
+    u32 config;
+
+    PARAMETRIZE { config = GEN_9; }
+    PARAMETRIZE { config = GEN_CHAMPIONS; }
+
+    GIVEN {
+        WITH_CONFIG(B_STALWART_SUBSTITUTE, config);
+        ASSUME(GetMoveEffect(MOVE_SUBSTITUTE) == EFFECT_SUBSTITUTE);
+        ASSUME(!MoveIgnoresSubstitute(MOVE_SCRATCH));
+        PLAYER(SPECIES_ARCHALUDON) { Ability(ABILITY_STALWART); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SUBSTITUTE); MOVE(player, MOVE_SCRATCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, opponent);
+        if (config == GEN_CHAMPIONS) {
+            NOT SUB_HIT(opponent);
+        } else {
+            SUB_HIT(opponent);
+        }
+    }
+}

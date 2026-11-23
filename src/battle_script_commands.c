@@ -5379,11 +5379,11 @@ bool32 IsSubstituteProtected(enum BattlerId battlerAtk, enum BattlerId battlerDe
         return FALSE;
     else if (MoveIgnoresSubstitute(move))
         return FALSE;
-    else if (GetConfig(B_INFILTRATOR_SUBSTITUTE) < GEN_6)
-        return TRUE;
     else if (GetMoveEffect(move) == EFFECT_TRANSFORM || GetMoveEffect(move) == EFFECT_SKY_DROP)
         return TRUE;
-    else if (IsAbilityAndRecord(battlerAtk, abilityAtk, ABILITY_INFILTRATOR))
+    else if (IsAbilityAndRecord(battlerAtk, abilityAtk, ABILITY_INFILTRATOR) && GetConfig(B_INFILTRATOR_SUBSTITUTE) >= GEN_6)
+        return FALSE;
+    else if (IsAbilityAndRecord(battlerAtk, abilityAtk, ABILITY_STALWART) && GetConfig(B_STALWART_SUBSTITUTE) >= GEN_CHAMPIONS)
         return FALSE;
     else
         return TRUE;

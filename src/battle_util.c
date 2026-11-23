@@ -8878,6 +8878,9 @@ bool32 TryBattleFormChange(enum BattlerId battler, enum FormChanges method, enum
         gBattleMons[battler].species = targetSpecies;
         if (GetConfig(B_AUTOTOMIZE_FORM_CHANGE) >= GEN_6)
             gBattleMons[battler].volatiles.autotomizeCount = 0;
+        if (GetConfig(B_FLASH_FIRE_PERSISTS) != GEN_CHAMPIONS
+             && (method == FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM || method == FORM_CHANGE_BATTLE_MEGA_EVOLUTION_MOVE))
+            gBattleMons[battler].volatiles.flashFireBoosted = FALSE;
         RecalcBattlerStats(battler, mon, method == FORM_CHANGE_BATTLE_GIGANTAMAX);
         UpdateTruantToggleForAbilityChange(battler, oldAbility);
         return TRUE;

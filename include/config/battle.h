@@ -230,6 +230,8 @@
                                                    // In Champions, Unseen Fist/Piercing Drill nerfs damage dealt against protected targets to 25%. It also no longer bypasses the contact effects of protect moves.
 #define B_RUN_AWAY                      GEN_LATEST // In Champions, Run Away allows the user to ignore trapping effects like Shadow Tag.
 #define B_EMERGENCY_EXIT                GEN_LATEST // In Champions, multiple instances of Emergency Exit can activate in a single move instance rather than one.
+#define B_FLASH_FIRE_PERSISTS           GEN_LATEST // In Champions, Flash Fire boost stays upon Mega Evolution.
+#define B_STALWART_SUBSTITUTE           GEN_LATEST // In Champions, Stalwart ignores Substitute.
 
 // Various volatile timers
 #define B_CONFUSION_TURNS    5
