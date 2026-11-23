@@ -1292,12 +1292,12 @@ static enum CancelerResult CancelerMoveFailure(struct BattleCalcValues *cv)
         }
         break;
     case EFFECT_REST:
-        if (IsAsleepOrComatose(cv->battlerDef, cv->abilities[cv->battlerDef]))
+        if (IsAsleepOrComatose(cv->battlerAtk, cv->abilities[cv->battlerAtk]))
         {
-            if (cv->abilities[cv->battlerDef] == ABILITY_COMATOSE)
+            if (cv->abilities[cv->battlerAtk] == ABILITY_COMATOSE)
             {
-                gBattlerAbility = cv->battlerDef;
-                gLastUsedAbility = cv->abilities[cv->battlerDef];
+                gBattlerAbility = cv->battlerAtk;
+                gLastUsedAbility = cv->abilities[cv->battlerAtk];
             }
             battleScript = BattleScript_RestIsAlreadyAsleep;
         }
