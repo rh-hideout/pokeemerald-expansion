@@ -2188,8 +2188,10 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
 
             if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, cv->battlerDef))
                 continue;
+            if (IsSemiInvulnerable(cv->battlerDef, CHECK_ALL))
+                continue;
 
-            if (!IsSemiInvulnerable(cv->battlerDef, CHECK_ALL) && CanBattlerBounceBackMove(cv))
+            if (CanBattlerBounceBackMove(cv))
             {
                 gBattleStruct->moveResultFlags[cv->battlerDef] |= MOVE_RESULT_FAILED;
                 gLastLandedMoves[cv->battlerDef] = 0;
@@ -2407,7 +2409,11 @@ static enum CancelerResult CancelerMultihitMoves(struct BattleCalcValues *cv)
 
 static enum CancelerResult CancelerSubstitute(struct BattleCalcValues *cv)
 {
+    enum MoveTarget moveTarget = GetBattlerMoveTargetType(cv->battlerAtk, cv->move);
+
     if (!IsBattleMoveStatus(cv->move)
+     || moveTarget == TARGET_OPPONENTS_FIELD
+     || moveTarget == TARGET_FIELD
      || IsStatChangeMove(cv->move)
      || (cv->moveEffect == EFFECT_TRANSFORM && GetConfig(B_TRANSFORM_SUBSTITUTE_FAIL) < GEN_5))
         return CANCELER_RESULT_SUCCESS;
@@ -3971,7 +3977,6 @@ static enum MoveEndResult MoveEndBouncedMove(struct BattleCalcValues *cv)
             for (enum BattlerId i = B_BATTLER_0; i < gBattlersCount; i++)
             {
                 gBattleStruct->savedMoveResultFlags[i] = gBattleStruct->moveResultFlags[i];
-                gBattleStruct->battlerState[cv->battlerAtk].targetsDone[i] = FALSE;
             }
 
             ClearDamageCalcResults();
@@ -5198,9 +5203,11 @@ static enum MoveEndResult MoveEndClearBits(struct BattleCalcValues *cv)
         RestoreAttacker();
         RestoreTarget();
         gBattleStruct->bouncedMoveIsUsed = FALSE;
-        gBattleScripting.moveendState = MOVEEND_BOUNCED_MOVE;
         for (enum BattlerId battler = B_BATTLER_0; battler < gBattlersCount; battler++)
+        {
             gBattleStruct->moveResultFlags[battler] = gBattleStruct->savedMoveResultFlags[battler];
+        }
+        gBattleScripting.moveendState = MOVEEND_BOUNCED_MOVE;
         return MOVEEND_RESULT_RUN_SCRIPT;
     }
 

@@ -93,9 +93,8 @@ SINGLE_BATTLE_TEST("Baton Pass passes Substitutes")
     }
 }
 
-SINGLE_BATTLE_TEST("Substitute does not block Stealth Rock")
+SINGLE_BATTLE_TEST("Substitute does not block moves that target the field")
 {
-    KNOWN_FAILING;
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
@@ -106,7 +105,7 @@ SINGLE_BATTLE_TEST("Substitute does not block Stealth Rock")
         TURN { SWITCH(player, 1); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, player);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_STEALTH_ROCK, player);
-        HP_BAR(player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STEALTH_ROCK, opponent);
+        HP_BAR(player); // rocks damage
     }
 }

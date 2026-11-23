@@ -549,7 +549,6 @@ SINGLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon are immune to Encore")
 
 SINGLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon are not affected by Encore effect started before they Dynamaxed")
 {
-    KNOWN_FAILING;
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) {Moves(MOVE_SCRATCH, MOVE_PROTECT);}
         OPPONENT(SPECIES_WOBBUFFET);

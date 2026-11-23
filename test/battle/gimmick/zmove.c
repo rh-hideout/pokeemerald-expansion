@@ -994,7 +994,6 @@ SINGLE_BATTLE_TEST("Z-Move: Z-Belch can be selected without eating a Berry")
 
 SINGLE_BATTLE_TEST("Z-Move: Z-Moves of special moves are special attacks")
 {
-    KNOWN_FAILING;
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_FLAMETHROWER) == DAMAGE_CATEGORY_SPECIAL);
         PLAYER(SPECIES_ARCANINE) { Item(ITEM_FIRIUM_Z); Moves(MOVE_FLAMETHROWER, MOVE_FIRE_FANG); }

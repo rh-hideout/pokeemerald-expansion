@@ -270,7 +270,6 @@ DOUBLE_BATTLE_TEST("Magic Bounce will trigger after all valid targets have been 
 
 SINGLE_BATTLE_TEST("Magic Bounce does not prevent damage after your move was bounced")
 {
-    KNOWN_FAILING;
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_NON_VOLATILE_STATUS);
         ASSUME(GetMoveNonVolatileStatus(MOVE_SPORE) == MOVE_EFFECT_SLEEP);
