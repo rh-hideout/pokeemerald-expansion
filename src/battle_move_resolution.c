@@ -5677,8 +5677,7 @@ static inline bool32 TryEjectPack(enum BattlerId battlerAtk, enum BattlerId ejec
      || HasAnyBattlerQueuedSwitch()
      || IsPursuitTargetSet()
      || !CanBattlerSwitch(ejectPackBattler)
-     || IsBattlerInvolvedInSkyDrop(ejectPackBattler)
-     || (GetMoveEffect(gCurrentMove) == EFFECT_PARTING_SHOT && CanBattlerSwitch(battlerAtk)))
+     || IsBattlerInvolvedInSkyDrop(ejectPackBattler))
         return FALSE;
 
     gBattleScripting.battler = ejectPackBattler;
