@@ -176,6 +176,9 @@ void ActivateDynamax(enum BattlerId battler)
     gBattleMons[battler].volatiles.substitute = FALSE;
     ClearBehindSubstituteBit(battler);
 
+    // Minimized status is removed upon Dynamaxing.
+    gBattleMons[battler].volatiles.minimize = FALSE;
+
     // Choiced Moves are reset upon Dynamaxing.
     gBattleStruct->choicedMove[battler] = MOVE_NONE;
 
