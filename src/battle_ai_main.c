@@ -585,8 +585,7 @@ u32 BattleAI_ChooseMoveIndex(enum BattlerId battler)
     SetAIUsingGimmick(battler, USE_GIMMICK);
     SetupRandomRollsForAIMoveSelection(battler);
 
-    if (gBattleStruct->gimmick.usableGimmick[battler] == GIMMICK_TERA && (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_SMART_TERA))
-        DecideTerastal(battler);
+    DecideTerastal(battler);
 
     struct ChosenAction chosen = ChooseMoveOrAction(battler);
     gAiBattleData->chosenTarget[battler] = chosen.target;

@@ -5339,6 +5339,9 @@ enum AIConsiderGimmick ShouldTeraFromCalcs(enum BattlerId battler, enum BattlerI
 
 void DecideTerastal(enum BattlerId battler)
 {
+    if (!CanTerastallize(battler))
+        return;
+
     if (gBattleStruct->gimmick.usableGimmick[battler] != GIMMICK_TERA)
         return;
 
