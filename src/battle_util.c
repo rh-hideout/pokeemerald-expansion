@@ -9630,7 +9630,11 @@ void RecalcBattlerStats(enum BattlerId battler, struct Pokemon *mon, bool32 isDy
         CopyMonLevelAndBaseStatsToBattleMon(battler, mon, FALSE);
     else
         CopyMonLevelAndBaseStatsToBattleMon(battler, mon, TRUE);
-    CopyMonAbilityAndTypesToBattleMon(battler, mon);
+
+    if (!isDynamaxing)
+    {
+        CopyMonAbilityAndTypesToBattleMon(battler, mon);
+    }
 }
 
 u32 GetBattlerGender(enum BattlerId battler)
