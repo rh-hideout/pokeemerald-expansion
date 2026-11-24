@@ -4331,7 +4331,7 @@ static enum MoveEndResult MoveEndDamagedEffectsBlock(struct BattleCalcValues *cv
                 break;
             case DAMAGED_EFFECTS_BLOCK_TARGET_ABILITY:
                 cv->battlerDef = battlerDef;
-                if (AbilityBattleEffects(cv, ABILITYEFFECT_MOVE_END, TRUE)
+                if (AbilityBattleEffects(cv, ABILITYEFFECT_MOVE_END_HIT_TARGET, TRUE)
                  || TryClearIllusion(battlerDef, abilityDef))
                     result = MOVEEND_RESULT_RUN_SCRIPT;
                 cv->battlerDef = GetTargetForMoveEnd(cv->battlerAtk);

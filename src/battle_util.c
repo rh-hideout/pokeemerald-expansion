@@ -3271,7 +3271,7 @@ bool32 CanSetNonVolatileStatus(enum BattlerId battlerAtk, enum BattlerId battler
     const u8 *battleScript = NULL;
     u32 sideBattler = 0;
     bool32 abilityAffected = FALSE;
-    gBattlerAbility = battlerDef;
+    gBattlerAbility = battlerDef; // TODO: not great
 
     // Move specific checks
     switch (effect)
@@ -7294,26 +7294,6 @@ bool32 BlocksPrankster(enum Move move, enum BattlerId battlerPrankster, enum Bat
         return FALSE;
 
     return TRUE;
-}
-
-// Not enum BattlerId to allow using it with RandomUniformExcept
-bool32 CantPickupItem(u32 _battler)
-{
-    enum BattlerId battler = _battler;
-    // Used by RandomUniformExcept() for RNG_PICKUP
-    if (battler == gBattlerAttacker && (GetConfig(B_PICKUP_WILD) < GEN_9 || HasAnyBattleFlags(BATTLE_TYPE_TRAINER | BATTLE_TYPE_LINK)))
-        return TRUE;
-    return !(IsBattlerAlive(battler) && GetBattlerPartyState(battler)->usedHeldItem && gBattleStruct->battlerState[battler].canPickupItem);
-}
-
-bool32 PickupHasValidTarget(enum BattlerId battler)
-{
-    for (enum BattlerId i = 0; i < gBattlersCount; i++)
-    {
-        if (!CantPickupItem(i))
-            return TRUE;
-    }
-    return FALSE;
 }
 
 u32 GetWeather(void)

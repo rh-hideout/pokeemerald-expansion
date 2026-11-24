@@ -51,6 +51,7 @@ struct BattleCalcValues
     enum HoldEffect holdEffects[MAX_BATTLERS_COUNT];
     u32 onlyChecking:1;
     u32 isStatusMove:1;
+    u32 shouldAbilityTrigger:1;
 };
 
 void HandleAction_ThrowBall(void);
@@ -198,8 +199,6 @@ bool32 IsBattlerAffectedByHazards(enum BattlerId battler, enum HoldEffect holdEf
 void SortBattlersByRawSpeed(enum BattlerId battlers[]);
 void SortBattlersBySpeed(enum BattlerId *battlers, bool32 slowToFast);
 bool32 BlocksPrankster(enum Move move, enum BattlerId battlerPrankster, enum BattlerId battlerDef, bool32 checkTarget);
-bool32 PickupHasValidTarget(enum BattlerId battler);
-bool32 CantPickupItem(u32 battler);
 u32 GetWeather(void);
 u32 GetAttackerWeather(enum HoldEffect holdEffect, enum Ability ability, u32 weather);
 bool32 IsBattlerWeatherAffected(enum HoldEffect holdEffect, u32 weather, u32 weatherFlags);
