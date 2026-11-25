@@ -807,12 +807,6 @@ void TurnOnTVScreen(void)
     DrawWholeMapView();
 }
 
-// gSpecialVar_0x8004 here is set from GetRandomActiveShowIdx in EventScript_TryDoTVShow
-u8 GetSelectedTVShow(void)
-{
-    return gSaveBlock1Ptr->tvShows[gSpecialVar_0x8004].common.kind;
-}
-
 // IN SEARCH OF TRAINERS
 
 void ResetGabbyAndTy(void)
@@ -3982,107 +3976,113 @@ void SanitizeTVShowLocationsForRuby(TVShow *shows)
 // gSpecialVar_0x8004 here is set from GetRandomActiveShowIdx in EventScript_TryDoTVShow
 void DoTVShow(void)
 {
-    if (gSaveBlock1Ptr->tvShows[gSpecialVar_0x8004].common.active)
+    assertf(gSaveBlock1Ptr->tvShows[gSpecialVar_0x8004].common.active, "Trying to start inactive tv show")
     {
-        switch (gSaveBlock1Ptr->tvShows[gSpecialVar_0x8004].common.kind)
-        {
-        case TVSHOW_FAN_CLUB_LETTER:
-            DoTVShowPokemonFanClubLetter();
-            break;
-        case TVSHOW_RECENT_HAPPENINGS:
-            DoTVShowRecentHappenings();
-            break;
-        case TVSHOW_PKMN_FAN_CLUB_OPINIONS:
-            DoTVShowPokemonFanClubOpinions();
-            break;
-        case TVSHOW_DUMMY:
-            DoTVShowDummiedOut();
-            break;
-        case TVSHOW_MASS_OUTBREAK:
-            DoTVShowPokemonNewsMassOutbreak();
-            break;
-        case TVSHOW_BRAVO_TRAINER_POKEMON_PROFILE:
-            DoTVShowBravoTrainerPokemonProfile();
-            break;
-        case TVSHOW_BRAVO_TRAINER_BATTLE_TOWER_PROFILE:
-            DoTVShowBravoTrainerBattleTower();
-            break;
-        case TVSHOW_POKEMON_TODAY_CAUGHT:
-            DoTVShowPokemonTodaySuccessfulCapture();
-            break;
-        case TVSHOW_SMART_SHOPPER:
-            DoTVShowTodaysSmartShopper();
-            break;
-        case TVSHOW_NAME_RATER_SHOW:
-            DoTVShowTheNameRaterShow();
-            break;
-        case TVSHOW_CONTEST_LIVE_UPDATES:
-            DoTVShowPokemonContestLiveUpdates();
-            break;
-        case TVSHOW_BATTLE_UPDATE:
-            DoTVShowPokemonBattleUpdate();
-            break;
-        case TVSHOW_3_CHEERS_FOR_POKEBLOCKS:
-            DoTVShow3CheersForPokeblocks();
-            break;
-        case TVSHOW_POKEMON_TODAY_FAILED:
-            DoTVShowPokemonTodayFailedCapture();
-            break;
-        case TVSHOW_FISHING_ADVICE:
-            DoTVShowPokemonAngler();
-            break;
-        case TVSHOW_WORLD_OF_MASTERS:
-            DoTVShowTheWorldOfMasters();
-            break;
-        case TVSHOW_TODAYS_RIVAL_TRAINER:
-            DoTVShowTodaysRivalTrainer();
-            break;
-        case TVSHOW_TREND_WATCHER:
-            DoTVShowDewfordTrendWatcherNetwork();
-            break;
-        case TVSHOW_TREASURE_INVESTIGATORS:
-            DoTVShowHoennTreasureInvestigators();
-            break;
-        case TVSHOW_FIND_THAT_GAMER:
-            DoTVShowFindThatGamer();
-            break;
-        case TVSHOW_BREAKING_NEWS:
-            DoTVShowBreakingNewsTV();
-            break;
-        case TVSHOW_SECRET_BASE_VISIT:
-            DoTVShowSecretBaseVisit();
-            break;
-        case TVSHOW_LOTTO_WINNER:
-            DoTVShowPokemonLotteryWinnerFlashReport();
-            break;
-        case TVSHOW_BATTLE_SEMINAR:
-            DoTVShowThePokemonBattleSeminar();
-            break;
-        case TVSHOW_FAN_CLUB_SPECIAL:
-            DoTVShowTrainerFanClubSpecial();
-            break;
-        case TVSHOW_TRAINER_FAN_CLUB:
-            DoTVShowTrainerFanClub();
-            break;
-        case TVSHOW_CUTIES:
-            DoTVShowSpotTheCuties();
-            break;
-        case TVSHOW_FRONTIER:
-            DoTVShowPokemonNewsBattleFrontier();
-            break;
-        case TVSHOW_NUMBER_ONE:
-            DoTVShowWhatsNo1InHoennToday();
-            break;
-        case TVSHOW_SECRET_BASE_SECRETS:
-            DoTVShowSecretBaseSecrets();
-            break;
-        case TVSHOW_SAFARI_FAN_CLUB:
-            DoTVShowSafariFanClub();
-            break;
-        case TVSHOW_LILYCOVE_CONTEST_LADY:
-            DoTVShowLilycoveContestLady();
-            break;
-        }
+        TVShowDone();
+        return;
+    }
+    switch (gSaveBlock1Ptr->tvShows[gSpecialVar_0x8004].common.kind)
+    {
+    case TVSHOW_FAN_CLUB_LETTER:
+        DoTVShowPokemonFanClubLetter();
+        break;
+    case TVSHOW_RECENT_HAPPENINGS:
+        DoTVShowRecentHappenings();
+        break;
+    case TVSHOW_PKMN_FAN_CLUB_OPINIONS:
+        DoTVShowPokemonFanClubOpinions();
+        break;
+    case TVSHOW_DUMMY:
+        DoTVShowDummiedOut();
+        break;
+    case TVSHOW_MASS_OUTBREAK:
+        DoTVShowPokemonNewsMassOutbreak();
+        break;
+    case TVSHOW_BRAVO_TRAINER_POKEMON_PROFILE:
+        DoTVShowBravoTrainerPokemonProfile();
+        break;
+    case TVSHOW_BRAVO_TRAINER_BATTLE_TOWER_PROFILE:
+        DoTVShowBravoTrainerBattleTower();
+        break;
+    case TVSHOW_POKEMON_TODAY_CAUGHT:
+        DoTVShowPokemonTodaySuccessfulCapture();
+        break;
+    case TVSHOW_SMART_SHOPPER:
+        DoTVShowTodaysSmartShopper();
+        break;
+    case TVSHOW_NAME_RATER_SHOW:
+        DoTVShowTheNameRaterShow();
+        break;
+    case TVSHOW_CONTEST_LIVE_UPDATES:
+        DoTVShowPokemonContestLiveUpdates();
+        break;
+    case TVSHOW_BATTLE_UPDATE:
+        DoTVShowPokemonBattleUpdate();
+        break;
+    case TVSHOW_3_CHEERS_FOR_POKEBLOCKS:
+        DoTVShow3CheersForPokeblocks();
+        break;
+    case TVSHOW_POKEMON_TODAY_FAILED:
+        DoTVShowPokemonTodayFailedCapture();
+        break;
+    case TVSHOW_FISHING_ADVICE:
+        DoTVShowPokemonAngler();
+        break;
+    case TVSHOW_WORLD_OF_MASTERS:
+        DoTVShowTheWorldOfMasters();
+        break;
+    case TVSHOW_TODAYS_RIVAL_TRAINER:
+        DoTVShowTodaysRivalTrainer();
+        break;
+    case TVSHOW_TREND_WATCHER:
+        DoTVShowDewfordTrendWatcherNetwork();
+        break;
+    case TVSHOW_TREASURE_INVESTIGATORS:
+        DoTVShowHoennTreasureInvestigators();
+        break;
+    case TVSHOW_FIND_THAT_GAMER:
+        DoTVShowFindThatGamer();
+        break;
+    case TVSHOW_BREAKING_NEWS:
+        DoTVShowBreakingNewsTV();
+        break;
+    case TVSHOW_SECRET_BASE_VISIT:
+        DoTVShowSecretBaseVisit();
+        break;
+    case TVSHOW_LOTTO_WINNER:
+        DoTVShowPokemonLotteryWinnerFlashReport();
+        break;
+    case TVSHOW_BATTLE_SEMINAR:
+        DoTVShowThePokemonBattleSeminar();
+        break;
+    case TVSHOW_FAN_CLUB_SPECIAL:
+        DoTVShowTrainerFanClubSpecial();
+        break;
+    case TVSHOW_TRAINER_FAN_CLUB:
+        DoTVShowTrainerFanClub();
+        break;
+    case TVSHOW_CUTIES:
+        DoTVShowSpotTheCuties();
+        break;
+    case TVSHOW_FRONTIER:
+        DoTVShowPokemonNewsBattleFrontier();
+        break;
+    case TVSHOW_NUMBER_ONE:
+        DoTVShowWhatsNo1InHoennToday();
+        break;
+    case TVSHOW_SECRET_BASE_SECRETS:
+        DoTVShowSecretBaseSecrets();
+        break;
+    case TVSHOW_SAFARI_FAN_CLUB:
+        DoTVShowSafariFanClub();
+        break;
+    case TVSHOW_LILYCOVE_CONTEST_LADY:
+        DoTVShowLilycoveContestLady();
+        break;
+    default:
+        errorf("Trying to start unknown tv show %d", gSaveBlock1Ptr->tvShows[gSpecialVar_0x8004].common.kind);
+        TVShowDone();
+        break;
     }
 }
 
