@@ -3319,12 +3319,7 @@ enum CancelerResult DoAttackCanceler(void)
 
     cv.moveEffect = GetMoveEffect(cv.move);
     cv.isStatusMove = IsBattleMoveStatus(cv.move);
-
-    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
-    {
-        cv.abilities[battler] = GetBattlerAbility(battler);
-        cv.holdEffects[battler] = GetBattlerHoldEffect(battler);
-    }
+    SetBattleCalcAbilitiesAndHoldEffects(&cv);
 
     while (gBattleStruct->eventState.atkCanceler < CANCELER_END && result == CANCELER_RESULT_SUCCESS)
     {
@@ -4183,7 +4178,7 @@ static enum MoveEndResult MoveEndStatusImmunityAbilities(struct BattleCalcValues
         if (ShouldSkipBattlerForMoveEnd(cv->battlerAtk, cv))
             continue;
 
-        if (AbilityBattleEffects(cv, ABILITYEFFECT_IMMUNITY, TRUE))
+        if (AbilityBattleEffects(ABILITYEFFECT_IMMUNITY, cv))
             return MOVEEND_RESULT_RUN_SCRIPT;
     }
 
@@ -4324,14 +4319,14 @@ static enum MoveEndResult MoveEndDamagedEffectsBlock(struct BattleCalcValues *cv
                 break;
             case DAMAGED_EFFECTS_BLOCK_ATTACKER_ABILITY: // Exclusively passes defender as the argument instead of ability battler
                 cv->battlerDef = battlerDef;
-                if (AbilityBattleEffects(cv, ABILITYEFFECT_MOVE_END_ATTACKER, TRUE))
+                if (AbilityBattleEffects(ABILITYEFFECT_MOVE_END_ATTACKER, cv))
                     result = MOVEEND_RESULT_RUN_SCRIPT;
                 cv->battlerDef = GetTargetForMoveEnd(cv->battlerAtk);
                 gBattleStruct->eventState.moveEndBlock++;
                 break;
             case DAMAGED_EFFECTS_BLOCK_TARGET_ABILITY:
                 cv->battlerDef = battlerDef;
-                if (AbilityBattleEffects(cv, ABILITYEFFECT_MOVE_END_HIT_TARGET, TRUE)
+                if (AbilityBattleEffects(ABILITYEFFECT_MOVE_END_HIT_TARGET, cv)
                  || TryClearIllusion(battlerDef, abilityDef))
                     result = MOVEEND_RESULT_RUN_SCRIPT;
                 cv->battlerDef = GetTargetForMoveEnd(cv->battlerAtk);
@@ -4367,7 +4362,7 @@ static enum MoveEndResult MoveEndDamagedEffectsBlock(struct BattleCalcValues *cv
                 break;
             case DAMAGED_EFFECTS_BLOCK_FORM_CHANGE_AFTER_HIT:
                 cv->battlerDef = battlerDef;
-                if (AbilityBattleEffects(cv, ABILITYEFFECT_FORM_CHANGE_ON_HIT, TRUE))
+                if (AbilityBattleEffects(ABILITYEFFECT_FORM_CHANGE_ON_HIT, cv))
                     result = MOVEEND_RESULT_RUN_SCRIPT;
                 cv->battlerDef = GetTargetForMoveEnd(cv->battlerAtk);
                 gBattleStruct->eventState.moveEndBlock++;
@@ -5297,7 +5292,7 @@ static enum MoveEndResult MoveEndAbilityEffectFoesFainted(struct BattleCalcValue
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
-    if (AbilityBattleEffects(cv, ABILITYEFFECT_MOVE_END_FOES_FAINTED, TRUE))
+    if (AbilityBattleEffects(ABILITYEFFECT_MOVE_END_FOES_FAINTED, cv))
         result = MOVEEND_RESULT_RUN_SCRIPT;
 
     gBattleScripting.moveendState++;
@@ -5355,7 +5350,7 @@ static enum MoveEndResult MoveEndColorChange(struct BattleCalcValues *cv)
         if (cv->battlerDef == cv->battlerAtk)
             continue;
 
-        if (AbilityBattleEffects(cv, ABILITYEFFECT_COLOR_CHANGE, TRUE))
+        if (AbilityBattleEffects(ABILITYEFFECT_COLOR_CHANGE, cv))
         {
             cv->battlerDef = GetTargetForMoveEnd(cv->battlerAtk);
             return MOVEEND_RESULT_RUN_SCRIPT;
@@ -5793,7 +5788,7 @@ static enum MoveEndResult MoveEndOpportunist(struct BattleCalcValues *cv)
     {
         cv->battlerAtk = (enum BattlerId)gBattleStruct->eventState.moveEndBattler++;
 
-        if (AbilityBattleEffects(cv, ABILITYEFFECT_OPPORTUNIST, TRUE))
+        if (AbilityBattleEffects(ABILITYEFFECT_OPPORTUNIST, cv))
             return MOVEEND_RESULT_RUN_SCRIPT;
     }
 
@@ -6118,7 +6113,7 @@ static enum MoveEndResult MoveEndDancer(struct BattleCalcValues *cv)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
-    if (AbilityBattleEffects(cv, ABILITYEFFECT_DANCER, TRUE))
+    if (AbilityBattleEffects(ABILITYEFFECT_DANCER, cv))
         result = MOVEEND_RESULT_RUN_SCRIPT;
 
     gBattleScripting.moveendState++;
@@ -6237,12 +6232,7 @@ enum MoveEndResult DoMoveEnd(enum MoveEndState endMode, enum MoveEndState endSta
         .moveEffect = GetMoveEffect(gCurrentMove),
         .isStatusMove = IsBattleMoveStatus(gCurrentMove)
     };
-
-    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
-    {
-        cv.abilities[battler] = GetBattlerAbility(battler);
-        cv.holdEffects[battler] = GetBattlerHoldEffect(battler);
-    }
+    SetBattleCalcAbilitiesAndHoldEffects(&cv);
 
     cv.battlerDef = GetTargetForMoveEnd(cv.battlerAtk);
 

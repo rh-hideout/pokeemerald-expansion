@@ -1634,7 +1634,7 @@ static void HandleSetEffectSpite(struct BattleCalcValues *cv, struct SetEffect *
     u32 moveSlot = MAX_MON_MOVES;
     enum Move lastMove = gLastMoves[se->effectBattler];
 
-    if (!IsMoveValid(gLastMoves[se->effectBattler]) 
+    if (!IsMoveValid(gLastMoves[se->effectBattler])
      || !HasValidMoveToReducePP(se->effectBattler, &moveSlot, lastMove))
     {
         SetEffectFail(BattleScript_ButItFailedRet, cv->isStatusMove);
@@ -3500,6 +3500,7 @@ static void HandleSetEffectQuash(struct BattleCalcValues *cv, struct SetEffect *
         gProtectStructs[se->effectBattler].quash = TRUE;
 
         struct BattleCalcValues calcValues = {0};
+
         for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
         {
             calcValues.abilities[battler] = cv->abilities[battler];
@@ -4382,12 +4383,7 @@ void SetMoveEffectHelper(enum BattlerId battlerAtk, enum BattlerId effectBattler
     cv.battlerAtk = battlerAtk;
     cv.battlerDef = gBattlerTarget;
     cv.move = gCurrentMove; // Should be set to None eventually. When Cmd_seteffectprimary is gone
-
-    for (enum BattlerId battler = B_BATTLER_0; battler < gBattlersCount; battler++)
-    {
-        cv.abilities[battler] = GetBattlerAbility(battler);
-        cv.holdEffects[battler] = GetBattlerHoldEffect(battler);
-    }
+    SetBattleCalcAbilitiesAndHoldEffects(&cv);
 
     struct SetEffect se = {0};
     se.moveEffect = moveEffect;

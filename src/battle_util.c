@@ -872,11 +872,8 @@ void HandleAction_ActionFinished(void)
         // taken action. It's been previously increased, which we want in order to not recalculate the turn of the mon that just finished its action
 
         struct BattleCalcValues calcValues = {0};
-        for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
-        {
-            calcValues.abilities[battler] = GetBattlerAbility(battler);
-            calcValues.holdEffects[battler] = GetBattlerHoldEffect(battler);
-        }
+        SetBattleCalcAbilitiesAndHoldEffects(&calcValues);
+
         for (i = gCurrentTurnActionNumber; i < gBattlersCount - 1; i++)
         {
             for (j = i + 1; j < gBattlersCount; j++)
@@ -9253,4 +9250,13 @@ u32 GetAccumulatedDamage(void)
     }
 
     return accumulatedDamage;
+}
+
+void SetBattleCalcAbilitiesAndHoldEffects(struct BattleCalcValues *cv)
+{
+    for (enum BattlerId battler = B_BATTLER_0; battler < gBattlersCount; battler++)
+    {
+        cv->abilities[battler] = GetBattlerAbility(battler);
+        cv->holdEffects[battler] = GetBattlerHoldEffectInternal(battler, cv->abilities[battler]);
+    }
 }

@@ -29,7 +29,7 @@ enum AbilityEffect
     ABILITYEFFECT_OPPORTUNIST,
 };
 
-bool32 AbilityBattleEffects(struct BattleCalcValues *cv, enum AbilityEffect caseID, bool32 shouldAbilityTrigger);
-bool32 AbilityBattleEffects2(enum AbilityEffect caseID, enum BattlerId battler, enum Ability ability, enum Move move, bool32 shouldAbilityTrigger);
+bool32 AbilityBattleEffects(enum AbilityEffect caseID, struct BattleCalcValues *cv);
+bool32 AbilityBattleEffectsHelper(enum AbilityEffect caseID, enum BattlerId battler, enum Ability ability, enum Move move, bool32 shouldAbilityTrigger);
 
 #endif // GUARD_BATTLE_ABILITIES

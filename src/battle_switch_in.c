@@ -18,11 +18,7 @@ static bool32 SecondEventBlockEvents(struct BattleCalcValues *calcValues);
 bool32 DoSwitchInEvents(void)
 {
     struct BattleCalcValues calcValues = {0};
-    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
-    {
-        calcValues.abilities[battler] = GetBattlerAbility(battler);
-        calcValues.holdEffects[battler] = GetBattlerHoldEffect(battler);
-    }
+    SetBattleCalcAbilitiesAndHoldEffects(&calcValues);
 
     switch (gBattleStruct->eventState.switchIn)
     {
@@ -40,7 +36,8 @@ bool32 DoSwitchInEvents(void)
         while (gBattleStruct->switchInBattlerCounter < gBattlersCount)
         {
             calcValues.battlerAtk = gBattlersByRawSpeed[gBattleStruct->switchInBattlerCounter++];
-            if (AbilityBattleEffects(&calcValues, ABILITYEFFECT_TERA_SHIFT, gBattleStruct->battlerState[calcValues.battlerAtk].switchIn))
+            calcValues.shouldAbilityTrigger = gBattleStruct->battlerState[calcValues.battlerAtk].switchIn;
+            if (AbilityBattleEffects(ABILITYEFFECT_TERA_SHIFT, &calcValues))
                 return TRUE;
         }
         gBattleStruct->switchInBattlerCounter = 0;
@@ -50,7 +47,8 @@ bool32 DoSwitchInEvents(void)
         while (gBattleStruct->switchInBattlerCounter < gBattlersCount)
         {
             calcValues.battlerAtk = gBattlersByRawSpeed[gBattleStruct->switchInBattlerCounter++];
-            if (AbilityBattleEffects(&calcValues, ABILITYEFFECT_NEUTRALIZINGGAS, gBattleStruct->battlerState[calcValues.battlerAtk].switchIn))
+            calcValues.shouldAbilityTrigger = gBattleStruct->battlerState[calcValues.battlerAtk].switchIn;
+            if (AbilityBattleEffects(ABILITYEFFECT_NEUTRALIZINGGAS, &calcValues))
                 return TRUE;
         }
         gBattleStruct->switchInBattlerCounter = 0;
@@ -60,7 +58,8 @@ bool32 DoSwitchInEvents(void)
         while (gBattleStruct->switchInBattlerCounter < gBattlersCount)
         {
             calcValues.battlerAtk = gBattlersByRawSpeed[gBattleStruct->switchInBattlerCounter++];
-            if (AbilityBattleEffects(&calcValues, ABILITYEFFECT_UNNERVE, gBattleStruct->battlerState[calcValues.battlerAtk].switchIn))
+            calcValues.shouldAbilityTrigger = gBattleStruct->battlerState[calcValues.battlerAtk].switchIn;
+            if (AbilityBattleEffects(ABILITYEFFECT_UNNERVE, &calcValues))
                 return TRUE;
         }
         gBattleStruct->switchInBattlerCounter = 0;
@@ -94,7 +93,8 @@ bool32 DoSwitchInEvents(void)
         while (gBattleStruct->switchInBattlerCounter < gBattlersCount)
         {
             calcValues.battlerAtk = gBattlersByRawSpeed[gBattleStruct->switchInBattlerCounter++];
-            if (AbilityBattleEffects(&calcValues, ABILITYEFFECT_SWITCH_IN_FORM_CHANGE, gBattleStruct->battlerState[calcValues.battlerAtk].switchIn))
+            calcValues.shouldAbilityTrigger = gBattleStruct->battlerState[calcValues.battlerAtk].switchIn;
+            if (AbilityBattleEffects(ABILITYEFFECT_SWITCH_IN_FORM_CHANGE, &calcValues))
                 return TRUE;
         }
         gBattleStruct->switchInBattlerCounter = 0;
@@ -139,7 +139,8 @@ bool32 DoSwitchInEvents(void)
         while (gBattleStruct->switchInBattlerCounter < gBattlersCount)
         {
             calcValues.battlerAtk = gBattlersByRawSpeed[gBattleStruct->switchInBattlerCounter++];
-            if (AbilityBattleEffects(&calcValues, ABILITYEFFECT_OPPORTUNIST, TRUE))
+            calcValues.shouldAbilityTrigger = TRUE;
+            if (AbilityBattleEffects(ABILITYEFFECT_OPPORTUNIST, &calcValues))
                 return TRUE;
         }
         gBattleStruct->switchInBattlerCounter = 0;
@@ -269,14 +270,16 @@ static bool32 FirstEventBlockEvents(struct BattleCalcValues *calcValues)
         }
         break;
     case FIRST_EVENT_BLOCK_GENERAL_ABILITIES:
+        calcValues->shouldAbilityTrigger = gBattleStruct->battlerState[battler].switchIn;
         if (TryPrimalReversion(battler)
-         || AbilityBattleEffects(calcValues, ABILITYEFFECT_ON_SWITCHIN, gBattleStruct->battlerState[battler].switchIn)
+         || AbilityBattleEffects(ABILITYEFFECT_ON_SWITCHIN, calcValues)
          || TryClearIllusion(battler, calcValues->abilities[battler]))
             effect = TRUE;
         gBattleStruct->eventState.battlerSwitchIn++;
         break;
     case FIRST_EVENT_BLOCK_IMMUNITY_ABILITIES:
-        if (AbilityBattleEffects(calcValues, ABILITYEFFECT_IMMUNITY, TRUE))
+        calcValues->shouldAbilityTrigger = TRUE;
+        if (AbilityBattleEffects(ABILITYEFFECT_IMMUNITY, calcValues))
             effect = TRUE;
         gBattleStruct->eventState.battlerSwitchIn++;
         break;
@@ -405,9 +408,13 @@ static bool32 SecondEventBlockEvents(struct BattleCalcValues *calcValues)
     switch (gBattleStruct->eventState.battlerSwitchIn)
     {
     case SECOND_EVENT_ABILITIES:
-        if (AbilityBattleEffects(calcValues, ABILITYEFFECT_ON_WEATHER, TRUE)
-         || AbilityBattleEffects(calcValues, ABILITYEFFECT_ON_TERRAIN, TRUE)
-         || AbilityBattleEffects(calcValues, ABILITYEFFECT_DEPENDS_ON_ALLY, gBattleStruct->battlerState[battler].switchIn))
+        calcValues->shouldAbilityTrigger = TRUE;
+        if (AbilityBattleEffects(ABILITYEFFECT_ON_WEATHER, calcValues)
+         || AbilityBattleEffects(ABILITYEFFECT_ON_TERRAIN, calcValues))
+            effect = TRUE;
+
+        calcValues->shouldAbilityTrigger = gBattleStruct->battlerState[battler].switchIn;
+        if (AbilityBattleEffects(ABILITYEFFECT_DEPENDS_ON_ALLY, calcValues))
             effect = TRUE;
         gBattleStruct->eventState.battlerSwitchIn++;
         break;

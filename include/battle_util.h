@@ -332,6 +332,7 @@ bool32 IsCommanderActive(enum BattlerId battler);
 bool32 IsWholeSideAlive(enum BattlerId sideBattler);
 bool32 IsBattlerJawLocked(enum BattlerId battler);
 u32 GetAccumulatedDamage(void);
+void SetBattleCalcAbilitiesAndHoldEffects(struct BattleCalcValues *cv);
 
 // Damage calc modifiers
 uq4_12_t GetBurnOrFrostBiteModifier(struct DamageContext *ctx);

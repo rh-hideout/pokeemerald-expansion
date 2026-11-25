@@ -2198,14 +2198,12 @@ static bool32 TryOpportunistAbility(struct BattleCalcValues *cv)
     return FALSE;
 }
 
-bool32 AbilityBattleEffects(struct BattleCalcValues *cv, enum AbilityEffect caseID, bool32 shouldAbilityTrigger)
+bool32 AbilityBattleEffects(enum AbilityEffect caseID, struct BattleCalcValues *cv)
 {
     bool32 effect = FALSE;
 
     if (HasAnyBattleFlags(BATTLE_TYPE_SAFARI))
         return 0;
-
-    cv->shouldAbilityTrigger = shouldAbilityTrigger;
 
     switch (caseID)
     {
@@ -2280,6 +2278,24 @@ bool32 AbilityBattleEffects(struct BattleCalcValues *cv, enum AbilityEffect case
     }
 
     return effect;
+}
+
+bool32 AbilityBattleEffectsHelper(enum AbilityEffect caseID, enum BattlerId abilityBattler, enum Ability ability, enum Move move, bool32 shouldAbilityTrigger)
+{
+    struct BattleCalcValues cv = {
+        .move = move,
+        .battlerAtk = abilityBattler,
+        .shouldAbilityTrigger = shouldAbilityTrigger,
+    };
+    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
+    {
+        if (battler == abilityBattler)
+            cv.abilities[battler] = ability;
+        else
+            cv.abilities[battler] = GetBattlerAbility(battler);
+        cv.holdEffects[battler] = GetBattlerHoldEffectInternal(battler, cv.abilities[battler]);
+    }
+    return AbilityBattleEffects(caseID, &cv);
 }
 
 static bool32 IsRestrictedAbility(enum BattlerId battler, enum Ability ability)
@@ -2459,24 +2475,6 @@ u32 NumFaintedBattlersByAttacker(enum BattlerId battlerAtk)
     }
 
     return numMonsFainted;
-}
-
-bool32 AbilityBattleEffects2(enum AbilityEffect caseID, enum BattlerId abilityBattler, enum Ability ability, enum Move move, bool32 shouldAbilityTrigger)
-{
-    struct BattleCalcValues cv = {
-        .move = move,
-        .battlerAtk = abilityBattler,
-    };
-    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
-    {
-        if (battler == abilityBattler)
-            cv.abilities[battler] = ability;
-        else
-            cv.abilities[battler] = GetBattlerAbility(battler);
-
-        cv.holdEffects[battler] = GetBattlerHoldEffect(battler);
-    }
-    return AbilityBattleEffects(&cv, caseID, shouldAbilityTrigger);
 }
 
 // Not enum BattlerId to allow using it with RandomUniformExcept
