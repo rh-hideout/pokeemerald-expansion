@@ -15,8 +15,7 @@ EventScript_TV::
 EventScript_TryDoTVShow::
 	specialvar VAR_0x8004, GetRandomActiveShowIdx
 	goto_if_eq VAR_0x8004, 255, EventScript_MomDadMightLikeThis2
-	specialvar VAR_0x8004, GetSelectedTVShow
-	goto_if_ne VAR_0x8004, 0, EventScript_DoTVShow
+	goto EventScript_DoTVShow
 	end
 
 EventScript_MomDadMightLikeThis1::
