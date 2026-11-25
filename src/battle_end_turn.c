@@ -128,19 +128,10 @@ static bool32 HandleEndTurnWeatherDamage(struct BattleCalcValues *cv, enum Battl
     case BATTLE_WEATHER_RAIN:
     case BATTLE_WEATHER_RAIN_PRIMAL:
     case BATTLE_WEATHER_RAIN_DOWNPOUR:
-        if (ability == ABILITY_DRY_SKIN || ability == ABILITY_RAIN_DISH)
-        {
-            if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN, cv))
-                effect = TRUE;
-        }
-        break;
     case BATTLE_WEATHER_SUN:
     case BATTLE_WEATHER_SUN_PRIMAL:
-        if (ability == ABILITY_DRY_SKIN || ability == ABILITY_SOLAR_POWER)
-        {
-            if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN, cv))
-                effect = TRUE;
-        }
+        if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN_WEATHER_HP_CHANGE, cv))
+            effect = TRUE;
         break;
     case BATTLE_WEATHER_SANDSTORM:
         if (ability != ABILITY_SAND_VEIL
@@ -163,7 +154,7 @@ static bool32 HandleEndTurnWeatherDamage(struct BattleCalcValues *cv, enum Battl
     case BATTLE_WEATHER_SNOW:
         if (ability == ABILITY_ICE_BODY)
         {
-            if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN, cv))
+            if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN_WEATHER_HP_CHANGE, cv))
                 effect = TRUE;
         }
         else if (currBattleWeather == BATTLE_WEATHER_HAIL)
@@ -420,17 +411,8 @@ static bool32 HandleEndTurnFirstEventBlock(struct BattleCalcValues *cv, enum Bat
         break;
     case FIRST_EVENT_BLOCK_ABILITIES:
     {
-        switch (cv->abilities[battler])
-        {
-        case ABILITY_HEALER:
-        case ABILITY_HYDRATION:
-        case ABILITY_SHED_SKIN:
-            if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN, cv))
-                effect = TRUE;
-            break;
-        default:
-            break;
-        }
+        if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN_STATUS_HEAL, cv))
+            effect = TRUE;
         gBattleStruct->eventState.endTurnBlock++;
         break;
     }
@@ -1335,27 +1317,8 @@ static bool32 HandleEndTurnThirdEventBlock(struct BattleCalcValues *cv, enum Bat
         gBattleStruct->eventState.endTurnBlock++;
         break;
     case THIRD_EVENT_BLOCK_ABILITIES:
-        switch (cv->abilities[battler])
-        {
-        case ABILITY_TRUANT:
-            if (GetConfig(B_TRUANT) <= GEN_4
-             && AbilityBattleEffects(ABILITYEFFECT_ENDTURN, cv))
-                effect = TRUE;
-            break;
-        case ABILITY_CUD_CHEW:
-        case ABILITY_SLOW_START:
-        case ABILITY_BAD_DREAMS:
-        case ABILITY_BALL_FETCH:
-        case ABILITY_HARVEST:
-        case ABILITY_MOODY:
-        case ABILITY_PICKUP:
-        case ABILITY_SPEED_BOOST:
-            if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN, cv))
-                effect = TRUE;
-            break;
-        default:
-            break;
-        }
+        if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN_OTHER, cv))
+            effect = TRUE;
         gBattleStruct->eventState.endTurnBlock++;
         break;
     case THIRD_EVENT_BLOCK_ITEMS:

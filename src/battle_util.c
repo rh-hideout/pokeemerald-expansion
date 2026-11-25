@@ -6827,18 +6827,6 @@ enum Species GetBattlerVisualSpecies(enum BattlerId battler)
     return gBattleMons[battler].species;
 }
 
-bool32 TryClearIllusion(enum BattlerId battler, enum Ability ability)
-{
-    if (gBattleStruct->illusion[battler].state != ILLUSION_ON)
-        return FALSE;
-    if (ability == ABILITY_ILLUSION && !IsBattlerTurnDamaged(battler, EXCLUDING_SUBSTITUTES))
-        return FALSE;
-
-    gBattleScripting.battler = battler;
-    BattleScriptCall(BattleScript_IllusionOff);
-    return TRUE;
-}
-
 struct Pokemon *GetIllusionMonPtr(enum BattlerId battler)
 {
     if (gBattleStruct->illusion[battler].state == ILLUSION_NOT_SET)

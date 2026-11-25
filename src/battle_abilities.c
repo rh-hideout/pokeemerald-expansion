@@ -29,32 +29,13 @@ u32 NumFaintedBattlersByAttacker(enum BattlerId battlerAtk);
 static bool32 CantPickupItem(u32 _battler);
 static bool32 PickupHasValidTarget(enum BattlerId battler);
 
-static bool32 TryEndturnAbility(struct BattleCalcValues *cv)
+static bool32 TryEndturnWeatherHPChangeAbility(struct BattleCalcValues *cv)
 {
     enum BattlerId battler = gBattlerAbility = cv->battlerAtk;
     enum Ability ability = gLastUsedAbility = cv->abilities[cv->battlerAtk];
 
     switch (ability)
     {
-    case ABILITY_PICKUP:
-        if (gBattleMons[battler].item == ITEM_NONE && PickupHasValidTarget(battler))
-        {
-            gBattlerTarget = RandomUniformExcept(RNG_PICKUP, 0, gBattlersCount - 1, CantPickupItem);
-            gLastUsedItem = GetBattlerPartyState(gBattlerTarget)->usedHeldItem;
-            BattleScriptCall(BattleScript_PickupActivates);
-            return TRUE;
-        }
-        break;
-    case ABILITY_HARVEST:
-        if ((IsBattlerWeatherAffected(cv->holdEffects[battler], GetWeather(), B_WEATHER_SUN) || RandomPercentage(RNG_HARVEST, 50))
-         && gBattleMons[battler].item == ITEM_NONE
-         && GetItemPocket(GetBattlerPartyState(battler)->usedHeldItem) == POCKET_BERRIES)
-        {
-            gLastUsedItem = GetBattlerPartyState(battler)->usedHeldItem;
-            BattleScriptCall(BattleScript_HarvestActivates);
-            return TRUE;
-        }
-        break;
     case ABILITY_ICE_BODY:
         if (IsBattlerWeatherAffected(cv->holdEffects[battler], GetWeather(), B_WEATHER_ICY_ANY)
          && !IsBattlerAtMaxHp(battler)
@@ -80,6 +61,39 @@ static bool32 TryEndturnAbility(struct BattleCalcValues *cv)
             s32 healAmount = ability == ABILITY_RAIN_DISH ? 16 : 8;
             SetHealAmount(battler, GetNonDynamaxMaxHP(battler) / healAmount);
             BattleScriptCall(BattleScript_AbilityHpHeal);
+            return TRUE;
+        }
+        break;
+    case ABILITY_SOLAR_POWER:
+        if (IsBattlerWeatherAffected(cv->holdEffects[battler], GetWeather(), B_WEATHER_SUN))
+        {
+        SOLAR_POWER_HP_DROP:
+            SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 8);
+            BattleScriptCall(BattleScript_SolarPowerActivates);
+            return TRUE;
+        }
+        break;
+    default:
+        break;
+    }
+
+    return FALSE;
+}
+
+static bool32 TryEndturnStatusHealAbility(struct BattleCalcValues *cv)
+{
+    enum BattlerId battler = gBattlerAbility = cv->battlerAtk;
+    enum Ability ability = gLastUsedAbility = cv->abilities[cv->battlerAtk];
+
+    switch (ability)
+    {
+    case ABILITY_HEALER:
+        gBattleScripting.battler = GetPartnerBattler(battler);
+        if (IsBattlerAlive(gBattleScripting.battler)
+         && gBattleMons[gBattleScripting.battler].status1 & STATUS1_ANY
+         && RandomPercentage(RNG_HEALER, 30))
+        {
+            BattleScriptCall(BattleScript_HealerActivates);
             return TRUE;
         }
         break;
@@ -117,6 +131,39 @@ static bool32 TryEndturnAbility(struct BattleCalcValues *cv)
             BattleScriptCall(BattleScript_ShedSkinActivates);
             BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, 4, &gBattleMons[battler].status1);
             MarkBattlerForControllerExec(battler);
+            return TRUE;
+        }
+        break;
+    default:
+        break;
+    }
+
+    return FALSE;
+}
+
+static bool32 TryEndturnOtherAbility(struct BattleCalcValues *cv)
+{
+    enum BattlerId battler = gBattlerAbility = cv->battlerAtk;
+    enum Ability ability = gLastUsedAbility = cv->abilities[cv->battlerAtk];
+
+    switch (ability)
+    {
+    case ABILITY_PICKUP:
+        if (gBattleMons[battler].item == ITEM_NONE && PickupHasValidTarget(battler))
+        {
+            gBattlerTarget = RandomUniformExcept(RNG_PICKUP, 0, gBattlersCount - 1, CantPickupItem);
+            gLastUsedItem = GetBattlerPartyState(gBattlerTarget)->usedHeldItem;
+            BattleScriptCall(BattleScript_PickupActivates);
+            return TRUE;
+        }
+        break;
+    case ABILITY_HARVEST:
+        if ((IsBattlerWeatherAffected(cv->holdEffects[battler], GetWeather(), B_WEATHER_SUN) || RandomPercentage(RNG_HARVEST, 50))
+         && gBattleMons[battler].item == ITEM_NONE
+         && GetItemPocket(GetBattlerPartyState(battler)->usedHeldItem) == POCKET_BERRIES)
+        {
+            gLastUsedItem = GetBattlerPartyState(battler)->usedHeldItem;
+            BattleScriptCall(BattleScript_HarvestActivates);
             return TRUE;
         }
         break;
@@ -175,25 +222,6 @@ static bool32 TryEndturnAbility(struct BattleCalcValues *cv)
     case ABILITY_BAD_DREAMS:
         BattleScriptCall(BattleScript_BadDreamsActivates);
         return TRUE;
-    case ABILITY_SOLAR_POWER:
-        if (IsBattlerWeatherAffected(cv->holdEffects[battler], GetWeather(), B_WEATHER_SUN))
-        {
-        SOLAR_POWER_HP_DROP:
-            SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 8);
-            BattleScriptCall(BattleScript_SolarPowerActivates);
-            return TRUE;
-        }
-        break;
-    case ABILITY_HEALER:
-        gBattleScripting.battler = GetPartnerBattler(battler);
-        if (IsBattlerAlive(gBattleScripting.battler)
-         && gBattleMons[gBattleScripting.battler].status1 & STATUS1_ANY
-         && RandomPercentage(RNG_HEALER, 30))
-        {
-            BattleScriptCall(BattleScript_HealerActivates);
-            return TRUE;
-        }
-        break;
     case ABILITY_BALL_FETCH:
         if (!HasAnyBattleFlags(BATTLE_TYPE_RAID)
          && gBattleMons[battler].item == ITEM_NONE
@@ -2207,8 +2235,14 @@ bool32 AbilityBattleEffects(enum AbilityEffect caseID, struct BattleCalcValues *
 
     switch (caseID)
     {
-    case ABILITYEFFECT_ENDTURN:
-        effect = TryEndturnAbility(cv);
+    case ABILITYEFFECT_ENDTURN_WEATHER_HP_CHANGE:
+        effect = TryEndturnWeatherHPChangeAbility(cv);
+        break;
+    case ABILITYEFFECT_ENDTURN_STATUS_HEAL:
+        effect = TryEndturnStatusHealAbility(cv);
+        break;
+    case ABILITYEFFECT_ENDTURN_OTHER:
+        effect = TryEndturnOtherAbility(cv);
         break;
     case ABILITYEFFECT_MOVE_END_ATTACKER:
         effect = TryMoveEndAttackerAbility(cv);
@@ -2296,6 +2330,18 @@ bool32 AbilityBattleEffectsHelper(enum AbilityEffect caseID, enum BattlerId abil
         cv.holdEffects[battler] = GetBattlerHoldEffectInternal(battler, cv.abilities[battler]);
     }
     return AbilityBattleEffects(caseID, &cv);
+}
+
+bool32 TryClearIllusion(enum BattlerId battler, enum Ability ability)
+{
+    if (gBattleStruct->illusion[battler].state != ILLUSION_ON)
+        return FALSE;
+    if (ability == ABILITY_ILLUSION && !IsBattlerTurnDamaged(battler, EXCLUDING_SUBSTITUTES))
+        return FALSE;
+
+    gBattleScripting.battler = battler;
+    BattleScriptCall(BattleScript_IllusionOff);
+    return TRUE;
 }
 
 static bool32 IsRestrictedAbility(enum BattlerId battler, enum Ability ability)

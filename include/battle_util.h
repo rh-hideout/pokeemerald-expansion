@@ -168,7 +168,6 @@ bool32 TryBattleFormChange(enum BattlerId battler, enum FormChanges method, enum
 bool32 DoBattlersShareType(enum BattlerId battler1, enum BattlerId battler2);
 bool32 CanBattlerGetOrLoseItem(enum BattlerId fromBattler, enum BattlerId battler, enum Item itemId);
 enum Species GetBattlerVisualSpecies(enum BattlerId battler);
-bool32 TryClearIllusion(enum BattlerId battler, enum Ability ability);
 enum Species GetIllusionMonSpecies(enum BattlerId battler);
 struct Pokemon *GetIllusionMonPtr(enum BattlerId battler);
 void ClearIllusionMon(enum BattlerId battler);

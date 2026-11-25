@@ -3,7 +3,10 @@
 
 enum AbilityEffect
 {
-    ABILITYEFFECT_ENDTURN,
+    ABILITYEFFECT_ENDTURN_WEATHER_HP_CHANGE, // Dry Skin / Rain Dish / Solar Power
+    ABILITYEFFECT_ENDTURN_STATUS_HEAL, // Healer / Hydration / Shed Skin
+    ABILITYEFFECT_ENDTURN_OTHER, // usually "state" modifiers like Moody, Cud Chew, etc.
+
     ABILITYEFFECT_MOVE_END_ATTACKER,
     ABILITYEFFECT_COLOR_CHANGE, // Color Change / Berserk / Anger Shell
     ABILITYEFFECT_MOVE_END_HIT_TARGET,
@@ -31,5 +34,6 @@ enum AbilityEffect
 
 bool32 AbilityBattleEffects(enum AbilityEffect caseID, struct BattleCalcValues *cv);
 bool32 AbilityBattleEffectsHelper(enum AbilityEffect caseID, enum BattlerId battler, enum Ability ability, enum Move move, bool32 shouldAbilityTrigger);
+bool32 TryClearIllusion(enum BattlerId battler, enum Ability ability);
 
 #endif // GUARD_BATTLE_ABILITIES
