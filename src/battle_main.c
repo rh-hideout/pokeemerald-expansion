@@ -3706,7 +3706,7 @@ u8 IsRunningFromBattleImpossible(enum BattlerId battler)
 
     if ((i = IsAbilityPreventingEscape(battler)))
     {
-        gBattleScripting.battler = i - 1;
+        gBattleScripting.battler = gBattlerAbility = i - 1;
         gLastUsedAbility = gBattleMons[i - 1].ability;
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_PREVENTS_ESCAPE;
         return BATTLE_RUN_FAILURE;
