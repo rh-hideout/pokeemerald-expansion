@@ -3729,7 +3729,7 @@ u8 IsRunningFromBattleImpossible(enum BattlerId battler)
 
     if ((i = IsAbilityPreventingEscape(battler)))
     {
-        gBattleScripting.battler = i - 1;
+        gBattleScripting.battler = gBattlerAbility = i - 1;
         gLastUsedAbility = gBattleMons[i - 1].ability;
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_PREVENTS_ESCAPE;
         return BATTLE_RUN_FAILURE;
@@ -4721,11 +4721,8 @@ static void SetActionsAndBattlersTurnOrder(void)
                 }
             }
             struct BattleCalcValues calcValues = {0};
-            for (battler = 0; battler < gBattlersCount; battler++)
-            {
-                calcValues.abilities[battler] = GetBattlerAbility(battler);
-                calcValues.holdEffects[battler] = GetBattlerHoldEffect(battler);
-            }
+            SetBattleCalcAbilitiesAndHoldEffects(&calcValues);
+
             for (u32 turnOrderIndex = 0; turnOrderIndex < gBattlersCount - 1; turnOrderIndex++)
             {
                 for (u32 otherTurnOrderIndex = turnOrderIndex + 1; otherTurnOrderIndex < gBattlersCount; otherTurnOrderIndex++)
@@ -4906,11 +4903,8 @@ static bool32 TryDoMoveEffectsBeforeMoves(void)
 static void TryChangeTurnOrder(void)
 {
     struct BattleCalcValues calcValues = {0};
-    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
-    {
-        calcValues.abilities[battler] = GetBattlerAbility(battler);
-        calcValues.holdEffects[battler] = GetBattlerHoldEffect(battler);
-    }
+    SetBattleCalcAbilitiesAndHoldEffects(&calcValues);
+
     for (u32 turnOrderIndex = gCurrentTurnActionNumber; turnOrderIndex < gBattlersCount - 1; turnOrderIndex++)
     {
         for (u32 otherTurnOrderIndex = turnOrderIndex + 1; otherTurnOrderIndex < gBattlersCount; otherTurnOrderIndex++)

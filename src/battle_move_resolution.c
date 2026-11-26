@@ -1,5 +1,6 @@
 #include "global.h"
 #include "battle.h"
+#include "battle_abilities.h"
 #include "battle_arena.h"
 #include "battle_environment.h"
 #include "battle_hold_effects.h"
@@ -46,6 +47,7 @@ static bool32 ShouldApplyAfterHitEffects(enum BattlerId battlerAtk, enum Battler
 static bool32 CanApplyAdditionalEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, const struct AdditionalEffect *additionalEffect);
 static void TryTriggerAdditionalEffect(struct BattleCalcValues *cv, const struct AdditionalEffect *additionalEffect, enum BattlerId effectBattler);
 static bool32 IsDamageMoveSelfStatChange(bool32 self, enum MoveEffect moveEffect);
+static enum BattlerId GetTargetForMoveEnd(enum BattlerId battler);
 
 static bool32 ShouldApplyProtectLikeEffects(enum BattlerId battlerDef, struct BattleCalcValues *cv);
 static bool32 ShouldPrintCritMessage(enum BattlerId battler);
@@ -3317,12 +3319,7 @@ enum CancelerResult DoAttackCanceler(void)
 
     cv.moveEffect = GetMoveEffect(cv.move);
     cv.isStatusMove = IsBattleMoveStatus(cv.move);
-
-    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
-    {
-        cv.abilities[battler] = GetBattlerAbility(battler);
-        cv.holdEffects[battler] = GetBattlerHoldEffect(battler);
-    }
+    SetBattleCalcAbilitiesAndHoldEffects(&cv);
 
     while (gBattleStruct->eventState.atkCanceler < CANCELER_END && result == CANCELER_RESULT_SUCCESS)
     {
@@ -4175,16 +4172,17 @@ static enum MoveEndResult MoveEndStatusImmunityAbilities(struct BattleCalcValues
 {
     while (gBattleStruct->eventState.moveEndBattler < gBattlersCount)
     {
-        enum BattlerId battlerDef = GetTargetBySlot(cv->battlerAtk, gBattleStruct->eventState.moveEndBattler);
+        cv->battlerAtk = GetTargetBySlot(cv->battlerAtk, gBattleStruct->eventState.moveEndBattler);
         gBattleStruct->eventState.moveEndBattler++;
 
-        if (ShouldSkipBattlerForMoveEnd(battlerDef, cv))
+        if (ShouldSkipBattlerForMoveEnd(cv->battlerAtk, cv))
             continue;
 
-        if (AbilityBattleEffects(ABILITYEFFECT_IMMUNITY, battlerDef, 0, 0, TRUE))
+        if (AbilityBattleEffects(ABILITYEFFECT_IMMUNITY, cv))
             return MOVEEND_RESULT_RUN_SCRIPT;
     }
 
+    cv->battlerAtk = gBattlerAttacker;
     gBattleStruct->eventState.moveEndBattler = 0;
     gBattleScripting.moveendState++;
     return MOVEEND_RESULT_CONTINUE;
@@ -4320,14 +4318,18 @@ static enum MoveEndResult MoveEndDamagedEffectsBlock(struct BattleCalcValues *cv
                 gBattleStruct->eventState.moveEndBlock++;
                 break;
             case DAMAGED_EFFECTS_BLOCK_ATTACKER_ABILITY: // Exclusively passes defender as the argument instead of ability battler
-                if (AbilityBattleEffects(ABILITYEFFECT_MOVE_END_ATTACKER, battlerDef, cv->abilities[cv->battlerAtk], 0, TRUE))
+                cv->battlerDef = battlerDef;
+                if (AbilityBattleEffects(ABILITYEFFECT_MOVE_END_ATTACKER, cv))
                     result = MOVEEND_RESULT_RUN_SCRIPT;
+                cv->battlerDef = GetTargetForMoveEnd(cv->battlerAtk);
                 gBattleStruct->eventState.moveEndBlock++;
                 break;
             case DAMAGED_EFFECTS_BLOCK_TARGET_ABILITY:
-                if (AbilityBattleEffects(ABILITYEFFECT_MOVE_END, battlerDef, abilityDef, 0, TRUE)
+                cv->battlerDef = battlerDef;
+                if (AbilityBattleEffects(ABILITYEFFECT_MOVE_END_HIT_TARGET, cv)
                  || TryClearIllusion(battlerDef, abilityDef))
                     result = MOVEEND_RESULT_RUN_SCRIPT;
+                cv->battlerDef = GetTargetForMoveEnd(cv->battlerAtk);
                 gBattleStruct->eventState.moveEndBlock++;
                 break;
             case DAMAGED_EFFECTS_BLOCK_RESIST_BERRY_MESSAGE:
@@ -4359,8 +4361,10 @@ static enum MoveEndResult MoveEndDamagedEffectsBlock(struct BattleCalcValues *cv
                 gBattleStruct->eventState.moveEndBlock++;
                 break;
             case DAMAGED_EFFECTS_BLOCK_FORM_CHANGE_AFTER_HIT:
-                if (AbilityBattleEffects(ABILITYEFFECT_FORM_CHANGE_ON_HIT, battlerDef, abilityDef, 0, TRUE))
+                cv->battlerDef = battlerDef;
+                if (AbilityBattleEffects(ABILITYEFFECT_FORM_CHANGE_ON_HIT, cv))
                     result = MOVEEND_RESULT_RUN_SCRIPT;
+                cv->battlerDef = GetTargetForMoveEnd(cv->battlerAtk);
                 gBattleStruct->eventState.moveEndBlock++;
                 break;
             case DAMAGED_EFFECTS_BLOCK_PROTECT_LIKE_EFFECTS:
@@ -5288,7 +5292,7 @@ static enum MoveEndResult MoveEndAbilityEffectFoesFainted(struct BattleCalcValue
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
-    if (AbilityBattleEffects(ABILITYEFFECT_MOVE_END_FOES_FAINTED, cv->battlerAtk, cv->abilities[cv->battlerAtk], cv->move, TRUE))
+    if (AbilityBattleEffects(ABILITYEFFECT_MOVE_END_FOES_FAINTED, cv))
         result = MOVEEND_RESULT_RUN_SCRIPT;
 
     gBattleScripting.moveendState++;
@@ -5341,14 +5345,19 @@ static enum MoveEndResult MoveEndColorChange(struct BattleCalcValues *cv)
 {
     while (gBattleStruct->eventState.moveEndBattler < gBattlersCount)
     {
-        enum BattlerId battler = (enum BattlerId)gBattleStruct->eventState.moveEndBattler++;
+        cv->battlerDef = (enum BattlerId)gBattleStruct->eventState.moveEndBattler++;
 
-        if (battler == cv->battlerAtk)
+        if (cv->battlerDef == cv->battlerAtk)
             continue;
-        if (AbilityBattleEffects(ABILITYEFFECT_COLOR_CHANGE, battler, cv->abilities[battler], 0, TRUE))
+
+        if (AbilityBattleEffects(ABILITYEFFECT_COLOR_CHANGE, cv))
+        {
+            cv->battlerDef = GetTargetForMoveEnd(cv->battlerAtk);
             return MOVEEND_RESULT_RUN_SCRIPT;
+        }
     }
 
+    cv->battlerDef = GetTargetForMoveEnd(cv->battlerAtk);
     gBattleStruct->eventState.moveEndBattler = 0;
     gBattleScripting.moveendState++;
     return MOVEEND_RESULT_CONTINUE;
@@ -5777,12 +5786,13 @@ static enum MoveEndResult MoveEndOpportunist(struct BattleCalcValues *cv)
 {
     while (gBattleStruct->eventState.moveEndBattler < gBattlersCount)
     {
-        enum BattlerId battler = gBattlersByRawSpeed[gBattleStruct->eventState.moveEndBattler++];
+        cv->battlerAtk = (enum BattlerId)gBattleStruct->eventState.moveEndBattler++;
 
-        if (AbilityBattleEffects(ABILITYEFFECT_OPPORTUNIST, battler, cv->abilities[battler], 0, TRUE))
+        if (AbilityBattleEffects(ABILITYEFFECT_OPPORTUNIST, cv))
             return MOVEEND_RESULT_RUN_SCRIPT;
     }
 
+    cv->battlerAtk = gBattlerAttacker;
     gBattleStruct->eventState.moveEndBattler = 0;
     gBattleScripting.moveendState++;
     return MOVEEND_RESULT_CONTINUE;
@@ -6103,7 +6113,7 @@ static enum MoveEndResult MoveEndDancer(struct BattleCalcValues *cv)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
-    if (AbilityBattleEffects(ABILITYEFFECT_DANCER, cv->battlerAtk, ABILITY_DANCER, cv->move, TRUE))
+    if (AbilityBattleEffects(ABILITYEFFECT_DANCER, cv))
         result = MOVEEND_RESULT_RUN_SCRIPT;
 
     gBattleScripting.moveendState++;
@@ -6222,17 +6232,9 @@ enum MoveEndResult DoMoveEnd(enum MoveEndState endMode, enum MoveEndState endSta
         .moveEffect = GetMoveEffect(gCurrentMove),
         .isStatusMove = IsBattleMoveStatus(gCurrentMove)
     };
+    SetBattleCalcAbilitiesAndHoldEffects(&cv);
 
-    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
-    {
-        cv.abilities[battler] = GetBattlerAbility(battler);
-        cv.holdEffects[battler] = GetBattlerHoldEffect(battler);
-    }
-
-    if (gBattleScripting.moveendState < MOVEEND_SET_VALUES_FOR_OPPOSING_SIDE)
-        cv.battlerDef = cv.battlerAtk;
-    else
-        cv.battlerDef = GetBattlerLeftFoe(cv.battlerAtk);
+    cv.battlerDef = GetTargetForMoveEnd(cv.battlerAtk);
 
     do
     {
@@ -6246,6 +6248,13 @@ enum MoveEndResult DoMoveEnd(enum MoveEndState endMode, enum MoveEndState endSta
     } while (gBattleScripting.moveendState != MOVEEND_COUNT && result == MOVEEND_RESULT_CONTINUE);
 
     return result;
+}
+
+static enum BattlerId GetTargetForMoveEnd(enum BattlerId battler)
+{
+    if (gBattleScripting.moveendState < MOVEEND_SET_VALUES_FOR_OPPOSING_SIDE)
+        return battler;
+    return GetBattlerLeftFoe(battler);
 }
 
 // ======================

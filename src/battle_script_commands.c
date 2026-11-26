@@ -1,5 +1,6 @@
 #include "global.h"
 #include "battle.h"
+#include "battle_abilities.h"
 #include "battle_hold_effects.h"
 #include "battle_message.h"
 #include "battle_anim.h"
@@ -6394,11 +6395,14 @@ static void Cmd_tryabilityonstatuschange(void)
         return;
     }
 
+    struct BattleCalcValues cv = {0};
+    SetBattleCalcAbilitiesAndHoldEffects(&cv);
+
     for (u32 i = 0; i < gBattlersCount; i++)
     {
-        enum BattlerId battler = gBattlersByRawSpeed[i];
+        cv.battlerAtk = gBattlersByRawSpeed[i];
 
-        if (AbilityBattleEffects(ABILITYEFFECT_ON_STATUS_CHANGE, battler, GetBattlerAbility(battler), MOVE_NONE, TRUE))
+        if (AbilityBattleEffects(ABILITYEFFECT_ON_STATUS_CHANGE, &cv))
             return;
     }
 
@@ -6440,7 +6444,11 @@ static void TryClearPrimalWeather(void)
 
 static bool32 DoFaintedEffectsBlock(void)
 {
-    enum Ability abilityFainted = GetBattlerAbility(gBattlerFainted);
+    struct BattleCalcValues cv = {
+        .battlerAtk = gBattlerFainted,
+        .battlerDef = GetPartnerBattler(gBattlerFainted),
+    };
+    SetBattleCalcAbilitiesAndHoldEffects(&cv);
 
     while (gBattleStruct->eventState.faintedEffects < FAINTED_EFFECTS_BLOCK_COUNT)
     {
@@ -6460,7 +6468,7 @@ static bool32 DoFaintedEffectsBlock(void)
             gBattleStruct->eventState.faintedEffects++;
             break;
         case FAINTED_EFFECTS_BLOCK_END_ILLUSION:
-            if (TryClearIllusion(gBattlerFainted, abilityFainted))
+            if (TryClearIllusion(gBattlerFainted, cv.abilities[gBattlerFainted]))
                 return TRUE;
 
             gBattleStruct->eventState.faintedEffects++;
@@ -6553,11 +6561,11 @@ static bool32 DoFaintedEffectsBlock(void)
             return TRUE;
         case FAINTED_EFFECTS_BLOCK_RECEIVER:
         {
-            enum BattlerId faintedPartner = GetPartnerBattler(gBattlerFainted);
             gBattleStruct->eventState.faintedEffects++;
 
-            if (AbilityBattleEffects(ABILITYEFFECT_RECEIVER, faintedPartner, GetBattlerAbility(faintedPartner), MOVE_NONE, TRUE))
+            if (AbilityBattleEffects(ABILITYEFFECT_RECEIVER, &cv))
                 return TRUE;
+
             break;
         }
         case FAINTED_EFFECTS_BLOCK_SAVE_ORDER_INDEX:
@@ -6568,9 +6576,8 @@ static bool32 DoFaintedEffectsBlock(void)
         case FAINTED_EFFECTS_BLOCK_SOUL_HEART_BLOCK:
             while (gBattlerOrderIndex < gBattlersCount)
             {
-                enum BattlerId battler = gBattlerOrderIndex++;
-
-                if (AbilityBattleEffects(ABILITYEFFECT_ON_FAINT, battler, GetBattlerAbility(battler), MOVE_NONE, TRUE))
+                cv.battlerAtk = gBattlerOrderIndex++;
+                if (AbilityBattleEffects(ABILITYEFFECT_ON_FAINT, &cv))
                     return TRUE;
             }
             RestoreBattlerOrderIndex();
@@ -6650,12 +6657,7 @@ static void Cmd_trymovestatchanges(void)
         .moveEffect = GetMoveEffect(gCurrentMove),
         .isStatusMove = IsBattleMoveStatus(gCurrentMove),
     };
-
-    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
-    {
-        cv.abilities[battler] = GetBattlerAbility(battler);
-        cv.holdEffects[battler] = GetBattlerHoldEffect(battler);
-    }
+    SetBattleCalcAbilitiesAndHoldEffects(&cv);
 
     enum MoveResult result = DoStatChange(&cv);
 
@@ -6689,15 +6691,9 @@ static void Cmd_trystatchanges(void)
         .battlerAtk = GetBattlerForBattleScript(cmd->battler),
         .move = MOVE_NONE,
     };
-
-    for (enum BattlerId battler = B_BATTLER_0; battler < gBattlersCount; battler++)
-    {
-        cv.abilities[battler] = GetBattlerAbility(battler);
-        cv.holdEffects[battler] = GetBattlerHoldEffect(battler);
-    }
+    SetBattleCalcAbilitiesAndHoldEffects(&cv);
 
     struct StatChange st = {0};
-
     SetStatChangeFlags(&st, cmd->statChangeFlags);
 
     while (gBattleStruct->statChangeBattler < gBattlersCount)
@@ -6760,13 +6756,8 @@ static void Cmd_trybattlerstatchange(void)
         return;
 
     struct BattleCalcValues cv = {0};
+    SetBattleCalcAbilitiesAndHoldEffects(&cv);
     cv.battlerAtk = cv.battlerDef = GetBattlerForBattleScript(cmd->battler);
-
-    for (enum BattlerId battler = B_BATTLER_0; battler < gBattlersCount; battler++)
-    {
-        cv.abilities[battler] = GetBattlerAbility(battler);
-        cv.holdEffects[battler] = GetBattlerHoldEffect(battler);
-    }
 
     struct StatChange st = {0};
 
@@ -7449,7 +7440,7 @@ void BS_TryWindRiderPower(void)
             // Starting Status Tailwind causes the Wind Rider boost to go off twice
             if (gBattleStruct->eventState.beforeFirstTurn != FIRST_TURN_EVENTS_STARTING_STATUS)
             {
-                AbilityBattleEffects(ABILITYEFFECT_ON_SWITCHIN, battler, ABILITY_WIND_RIDER, MOVE_NONE, TRUE);
+                AbilityBattleEffectsHelper(ABILITYEFFECT_ON_SWITCHIN, battler, ABILITY_WIND_RIDER, MOVE_NONE, TRUE);
             }
             break;
         case ABILITY_WIND_POWER:
@@ -7468,7 +7459,7 @@ void BS_ActivateWeatherChangeAbilities(void)
 
     enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
     gBattlescriptCurrInstr = cmd->nextInstr;
-    AbilityBattleEffects(ABILITYEFFECT_ON_WEATHER, battler, GetBattlerAbility(battler), MOVE_NONE, TRUE);
+    AbilityBattleEffectsHelper(ABILITYEFFECT_ON_WEATHER, battler, GetBattlerAbility(battler), MOVE_NONE, TRUE);
 }
 
 void BS_ActivateTerrainChangeAbilities(void)
@@ -7477,7 +7468,7 @@ void BS_ActivateTerrainChangeAbilities(void)
 
     enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
     gBattlescriptCurrInstr = cmd->nextInstr;
-    AbilityBattleEffects(ABILITYEFFECT_ON_TERRAIN, battler, GetBattlerAbility(battler), MOVE_NONE, TRUE);
+    AbilityBattleEffectsHelper(ABILITYEFFECT_ON_TERRAIN, battler, GetBattlerAbility(battler), MOVE_NONE, TRUE);
 }
 
 void BS_ResetTerrainAbilityFlags(void)
@@ -8108,19 +8099,26 @@ void BS_StatTextBuffer(void)
 void BS_SwitchinAbilities(void)
 {
     NATIVE_ARGS(u8 battler);
-    enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
-    enum Ability ability = GetBattlerAbility(battler);
+
+    struct BattleCalcValues cv = {
+        .battlerAtk = GetBattlerForBattleScript(cmd->battler),
+        .shouldAbilityTrigger = TRUE,
+    };
+    SetBattleCalcAbilitiesAndHoldEffects(&cv);
+
     gBattlescriptCurrInstr = cmd->nextInstr;
-    if (AbilityBattleEffects(ABILITYEFFECT_TERA_SHIFT, battler, ability, MOVE_NONE, TRUE)
-     || AbilityBattleEffects(ABILITYEFFECT_NEUTRALIZINGGAS, battler, ability, MOVE_NONE, TRUE)
-     || AbilityBattleEffects(ABILITYEFFECT_UNNERVE, battler, ability, MOVE_NONE, TRUE)
-     || AbilityBattleEffects(ABILITYEFFECT_ON_SWITCHIN, battler, ability, MOVE_NONE, TRUE)
-     || AbilityBattleEffects(ABILITYEFFECT_IMMUNITY, battler, ability, MOVE_NONE, TRUE)
-     || AbilityBattleEffects(ABILITYEFFECT_DEPENDS_ON_ALLY, battler, ability, MOVE_NONE, TRUE)
-     || AbilityBattleEffects(ABILITYEFFECT_ON_WEATHER, battler, ability, MOVE_NONE, TRUE)
-     || AbilityBattleEffects(ABILITYEFFECT_ON_TERRAIN, battler, ability, MOVE_NONE, TRUE)
-     || AbilityBattleEffects(ABILITYEFFECT_OPPORTUNIST, battler, ability, MOVE_NONE, TRUE))
+    if (AbilityBattleEffects(ABILITYEFFECT_TERA_SHIFT, &cv)
+     || AbilityBattleEffects(ABILITYEFFECT_NEUTRALIZINGGAS, &cv)
+     || AbilityBattleEffects(ABILITYEFFECT_UNNERVE, &cv)
+     || AbilityBattleEffects(ABILITYEFFECT_ON_SWITCHIN, &cv)
+     || AbilityBattleEffects(ABILITYEFFECT_IMMUNITY, &cv)
+     || AbilityBattleEffects(ABILITYEFFECT_DEPENDS_ON_ALLY, &cv)
+     || AbilityBattleEffects(ABILITYEFFECT_ON_WEATHER, &cv)
+     || AbilityBattleEffects(ABILITYEFFECT_ON_TERRAIN, &cv)
+     || AbilityBattleEffects(ABILITYEFFECT_OPPORTUNIST, &cv))
+    {
         return;
+    }
 }
 
 void BS_EffectsAfterFormChange(void)
@@ -8128,14 +8126,7 @@ void BS_EffectsAfterFormChange(void)
     NATIVE_ARGS();
 
     struct BattleCalcValues cv = {0};
-
-    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
-    {
-        if (!IsBattlerAlive(battler))
-            continue;
-        cv.abilities[battler] = GetBattlerAbility(battler);
-        cv.holdEffects[battler] = GetBattlerHoldEffect(battler);
-    }
+    SetBattleCalcAbilitiesAndHoldEffects(&cv);
 
     for (u32 i = 0; i < gBattlersCount; i++)
     {
@@ -8146,8 +8137,8 @@ void BS_EffectsAfterFormChange(void)
 
     for (u32 i = 0; i < gBattlersCount; i++)
     {
-        enum BattlerId battler = gBattlersByRawSpeed[i];
-        if (AbilityBattleEffects(ABILITYEFFECT_OPPORTUNIST, battler, cv.abilities[battler], 0, TRUE))
+        cv.battlerAtk = gBattlersByRawSpeed[i];
+        if (AbilityBattleEffects(ABILITYEFFECT_OPPORTUNIST, &cv))
             return;
     }
 
@@ -8170,7 +8161,7 @@ void BS_AbilityOnFormChange(void)
     enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
     enum Ability ability = GetBattlerAbility(battler);
     gBattlescriptCurrInstr = cmd->nextInstr;
-    if (AbilityBattleEffects(ABILITYEFFECT_ON_FORM_CHANGE, battler, ability, MOVE_NONE, TRUE))
+    if (AbilityBattleEffectsHelper(ABILITYEFFECT_ON_FORM_CHANGE, battler, ability, MOVE_NONE, TRUE))
         return;
 }
 

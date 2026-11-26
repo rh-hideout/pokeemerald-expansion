@@ -1,5 +1,6 @@
 #include "global.h"
 #include "battle.h"
+#include "battle_abilities.h"
 #include "battle_hold_effects.h"
 #include "battle_setup.h"
 #include "battle_util.h"
@@ -127,19 +128,10 @@ static bool32 HandleEndTurnWeatherDamage(struct BattleCalcValues *cv, enum Battl
     case BATTLE_WEATHER_RAIN:
     case BATTLE_WEATHER_RAIN_PRIMAL:
     case BATTLE_WEATHER_RAIN_DOWNPOUR:
-        if (ability == ABILITY_DRY_SKIN || ability == ABILITY_RAIN_DISH)
-        {
-            if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN, battler, ability, MOVE_NONE, TRUE))
-                effect = TRUE;
-        }
-        break;
     case BATTLE_WEATHER_SUN:
     case BATTLE_WEATHER_SUN_PRIMAL:
-        if (ability == ABILITY_DRY_SKIN || ability == ABILITY_SOLAR_POWER)
-        {
-            if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN, battler, ability, MOVE_NONE, TRUE))
-                effect = TRUE;
-        }
+        if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN_WEATHER_HP_CHANGE, cv))
+            effect = TRUE;
         break;
     case BATTLE_WEATHER_SANDSTORM:
         if (ability != ABILITY_SAND_VEIL
@@ -162,7 +154,7 @@ static bool32 HandleEndTurnWeatherDamage(struct BattleCalcValues *cv, enum Battl
     case BATTLE_WEATHER_SNOW:
         if (ability == ABILITY_ICE_BODY)
         {
-            if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN, battler, ability, MOVE_NONE, TRUE))
+            if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN_WEATHER_HP_CHANGE, cv))
                 effect = TRUE;
         }
         else if (currBattleWeather == BATTLE_WEATHER_HAIL)
@@ -419,18 +411,8 @@ static bool32 HandleEndTurnFirstEventBlock(struct BattleCalcValues *cv, enum Bat
         break;
     case FIRST_EVENT_BLOCK_ABILITIES:
     {
-        enum Ability ability = cv->abilities[battler];
-        switch (ability)
-        {
-        case ABILITY_HEALER:
-        case ABILITY_HYDRATION:
-        case ABILITY_SHED_SKIN:
-            if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN, battler, ability, MOVE_NONE, TRUE))
-                effect = TRUE;
-            break;
-        default:
-            break;
-        }
+        if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN_STATUS_HEAL, cv))
+            effect = TRUE;
         gBattleStruct->eventState.endTurnBlock++;
         break;
     }
@@ -1335,32 +1317,10 @@ static bool32 HandleEndTurnThirdEventBlock(struct BattleCalcValues *cv, enum Bat
         gBattleStruct->eventState.endTurnBlock++;
         break;
     case THIRD_EVENT_BLOCK_ABILITIES:
-    {
-        enum Ability ability = cv->abilities[battler];
-        switch (ability)
-        {
-        case ABILITY_TRUANT:
-            if (GetConfig(B_TRUANT) <= GEN_4
-             && AbilityBattleEffects(ABILITYEFFECT_ENDTURN, battler, ability, MOVE_NONE, TRUE))
-                effect = TRUE;
-            break;
-        case ABILITY_CUD_CHEW:
-        case ABILITY_SLOW_START:
-        case ABILITY_BAD_DREAMS:
-        case ABILITY_BALL_FETCH:
-        case ABILITY_HARVEST:
-        case ABILITY_MOODY:
-        case ABILITY_PICKUP:
-        case ABILITY_SPEED_BOOST:
-            if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN, battler, ability, MOVE_NONE, TRUE))
-                effect = TRUE;
-            break;
-        default:
-            break;
-        }
+        if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN_OTHER, cv))
+            effect = TRUE;
         gBattleStruct->eventState.endTurnBlock++;
         break;
-    }
     case THIRD_EVENT_BLOCK_ITEMS:
         if (ItemBattleEffects(battler, 0, cv->holdEffects[battler], IsOrbsWhiteHerbActivation))
             effect = TRUE;
@@ -1376,7 +1336,7 @@ static bool32 HandleEndTurnOpportunist(struct BattleCalcValues *cv, enum Battler
 {
     bool32 effect = FALSE;
 
-    if (IsBattlerPresent(battler) && AbilityBattleEffects(ABILITYEFFECT_OPPORTUNIST, battler, cv->abilities[battler], MOVE_NONE, TRUE))
+    if (IsBattlerPresent(battler) && AbilityBattleEffects(ABILITYEFFECT_OPPORTUNIST, cv))
         effect = TRUE;
 
     gBattleStruct->eventState.endTurnBattler++;
@@ -1649,11 +1609,7 @@ bool32 DoEndTurnEffects(void)
         gBattleStruct->eventState.endTurn = ENDTURN_TRAINER_A_SLIDES;
 
     struct BattleCalcValues cv = {0};
-    for (battler = 0; battler < gBattlersCount; battler++)
-    {
-        cv.abilities[battler] = GetBattlerAbility(battler);
-        cv.holdEffects[battler] = GetBattlerHoldEffect(battler);
-    }
+    SetBattleCalcAbilitiesAndHoldEffects(&cv);
 
     for (;;)
     {
@@ -1688,7 +1644,7 @@ bool32 DoEndTurnEffects(void)
         if (gBattleStruct->eventState.endTurn == ENDTURN_COUNT)
             return FALSE;
 
-        battler = gBattlerAttacker = gBattlerByTurnOrder[gBattleStruct->eventState.endTurnBattler];
+        battler = cv.battlerAtk = gBattlerAttacker = gBattlerByTurnOrder[gBattleStruct->eventState.endTurnBattler];
 
         if (sEndTurnEffectHandlers[gBattleStruct->eventState.endTurn](&cv, battler))
             return TRUE;
