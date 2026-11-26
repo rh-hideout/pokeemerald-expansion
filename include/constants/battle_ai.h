@@ -34,7 +34,7 @@
 #define AI_FLAG_PREDICT_INCOMING_MON        AI_FLAG(24)  // AI will score against the predicting incoming mon if it predicts the player to switch. Requires AI_FLAG_PREDICT_SWITCH
 #define AI_FLAG_PP_STALL_PREVENTION         AI_FLAG(25)  // AI keeps track of the player's switches where the incoming mon is immune to the chosen move
 #define AI_FLAG_PREDICT_MOVE                AI_FLAG(26)  // AI will predict the player's move based on what move it would use in the same situation. Recommend using AI_FLAG_OMNISCIENT
-#define AI_FLAG_SMART_TERA                  AI_FLAG(27)  // AI will make smarter decisions when choosing whether to terrastalize (default is to always tera whenever available).
+#define AI_FLAG_SMART_TERA                  AI_FLAG(27)  // AI will make smarter decisions when choosing whether to terrastalize (default is to always tera whenever available as long as a tera is set in the trainer mon data).
 #define AI_FLAG_ASSUME_STAB                 AI_FLAG(28)  // AI knows player's STAB moves, but nothing else. Restricted version of AI_FLAG_OMNISCIENT.
 #define AI_FLAG_ASSUME_STATUS_MOVES         AI_FLAG(29)  // AI has a chance to know certain non-damaging moves, and also Fake Out and Super Fang. Restricted version of AI_FLAG_OMNISCIENT.
 #define AI_FLAG_ATTACKS_PARTNER             AI_FLAG(30)  // AI specific to double battles; AI can deliberately attack its 'partner.'
