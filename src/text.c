@@ -1734,9 +1734,11 @@ static u32 UNUSED GetStringWidthFixedWidthFont(const u8 *str, u8 fontId, u8 lett
             case EXT_CTRL_CODE_COLOR_HIGHLIGHT_SHADOW:
             case EXT_CTRL_CODE_TEXT_COLORS:
                 ++strPos;
+            [[fallthrough]];
             case EXT_CTRL_CODE_PLAY_BGM:
             case EXT_CTRL_CODE_PLAY_SE:
                 ++strPos;
+            [[fallthrough]];
             case EXT_CTRL_CODE_BACKGROUND:
             case EXT_CTRL_CODE_COLOR:
             case EXT_CTRL_CODE_SHADOW:
@@ -1775,6 +1777,7 @@ static u32 UNUSED GetStringWidthFixedWidthFont(const u8 *str, u8 fontId, u8 lett
         case CHAR_KEYPAD_ICON:
         case CHAR_EXTRA_SYMBOL:
             ++strPos;
+            [[fallthrough]];
         default:
             ++width;
             break;

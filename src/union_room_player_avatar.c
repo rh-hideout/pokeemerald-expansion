@@ -324,7 +324,7 @@ static void AnimateUnionRoomPlayer(u32 leaderId, struct UnionRoomObject *object)
         {
             break;
         }
-        // fallthrough
+        [[fallthrough]];
     case 2:
         if (!IsUnionRoomPlayerInvisible(leaderId, 0) && object->schedAnim == UNION_ROOM_SPAWN_OUT)
         {
@@ -343,7 +343,7 @@ static void AnimateUnionRoomPlayer(u32 leaderId, struct UnionRoomObject *object)
             break;
         object->state = 3;
         object->animState = 0;
-        // fallthrough
+        [[fallthrough]];
     case 3:
         if (AnimateUnionRoomPlayerDespawn(&object->animState, leaderId, object) == 1)
             object->state = 0;

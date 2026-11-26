@@ -1253,7 +1253,7 @@ static bool32 HandleSwingRound(void)
             sPokemonJump->helperState++;
         else
             break;
-        // fall through
+        [[fallthrough]];
     case 1:
         if (JOY_NEW(A_BUTTON))
         {
@@ -3435,6 +3435,7 @@ static bool32 RemoveMessageWindow(void)
         }
         else
             break;
+        [[fallthrough]];
     case 1:
         return FALSE;
     }
