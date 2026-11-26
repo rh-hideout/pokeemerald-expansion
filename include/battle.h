@@ -731,6 +731,7 @@ struct BattleStruct
     s32 passiveHpUpdate[MAX_BATTLERS_COUNT]; // non-move damage and healing
     u32 moveDamage[MAX_BATTLERS_COUNT];
     u32 innardsOutHpLost[MAX_BATTLERS_COUNT];
+    u32 accumulatedDamage;
     u32 moveResultFlags[MAX_BATTLERS_COUNT];
     u32 savedMoveResultFlags[MAX_BATTLERS_COUNT]; // for Bounced moves
     u8 numSpreadTargets:3;

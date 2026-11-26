@@ -24,7 +24,7 @@ SINGLE_BATTLE_TEST("Shell Bell recovers 1/8 of HP from after the last hit from a
             HP_BAR(opponent, captureDamage: &multiHitDamage[i]);
             totalDamage += multiHitDamage[i];
         }
-        HP_BAR(player, captureDamage: &shellBellRecovery);
+        HP_BAR(player, captureDamage: &recover);
     } THEN {
         EXPECT_EQ(totalDamage / 8, -1 * shellBellRecovery);
     }
