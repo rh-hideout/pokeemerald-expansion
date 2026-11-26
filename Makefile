@@ -207,6 +207,11 @@ override CFLAGS := $(filter-out -O1 -Og -O2,$(CFLAGS))
 override CFLAGS += -O0
 endif
 
+# This warning is spurious at low optimization levels
+ifneq ($(filter -O0 -O1 -Og,$(CFLAGS)),)
+override CFLAGS += -Wno-error=maybe-uninitialized
+endif
+
 # Variable filled out in other make files
 AUTO_GEN_TARGETS :=
 include make_tools.mk

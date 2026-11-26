@@ -1604,7 +1604,7 @@ static void CB2_HandleStartMultiBattle(void)
         {
             break;
         }
-        // fall through
+        [[fallthrough]];
     case 3:
         if (IsLinkTaskFinished())
         {

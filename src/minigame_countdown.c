@@ -269,6 +269,7 @@ static void SpriteCB_StaticCountdown(struct Sprite *sprite)
     {
     case ANIM_THREE:
         sprite->invisible = FALSE;
+        [[fallthrough]];
     case ANIM_TWO:
     case ANIM_ONE:
         // Set sprite to a number

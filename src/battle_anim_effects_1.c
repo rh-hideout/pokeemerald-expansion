@@ -5882,7 +5882,7 @@ static void AnimTipMon_Step(struct Sprite *sprite)
         sprite->data[5] = 0;
         PrepareBattlerSpriteForRotScale(sprite->data[2], ST_OAM_OBJ_NORMAL);
         sprite->data[0]++;
-        // fall through
+        [[fallthrough]];
     case 1:
         sprite->data[5] += sprite->data[4];
         SetSpriteRotScale(sprite->data[2], 0x100, 0x100, sprite->data[5]);

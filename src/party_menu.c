@@ -5814,7 +5814,7 @@ static void Task_HandleStopLearningMoveYesNoInput(u8 taskId)
         break;
     case MENU_B_PRESSED:
         PlaySE(SE_SELECT);
-        // fallthrough
+        [[fallthrough]];
     case 1:
         GetMonNickname(mon, gStringVar1);
         StringCopy(gStringVar2, GetMoveName(gPartyMenu.data1));
