@@ -3348,6 +3348,16 @@ enum CancelerResult DoAttackCanceler(void)
 
 static enum MoveEndResult MoveEndSetValues(struct BattleCalcValues *cv)
 {
+    for (enum BattlerId battlerDef = B_BATTLER_0; battlerDef < gBattlersCount; battlerDef++)
+    {
+        u32 damage = gBattleStruct->moveDamage[battlerDef];
+
+        if (damage > INT32_MAX - gBattleStruct->accumulatedDamage)
+            gBattleStruct->accumulatedDamage = INT32_MAX;
+
+        gBattleStruct->accumulatedDamage += damage;
+    }
+
     gBattleStruct->eventState.moveEndBattler = 0;
     gBattleStruct->eventState.moveEndBlock = 0;
     gBattleStruct->additionalEffectsCounter = 0;
@@ -4925,7 +4935,7 @@ static enum MoveEndResult MoveEndMoveBlockRecoil(struct BattleCalcValues *cv)
             }
             else
             {
-                SetPassiveDamageAmount(cv->battlerAtk, GetAccumulatedDamage() * max(1, GetMoveRecoil(cv->move)) / 100);
+                SetPassiveDamageAmount(cv->battlerAtk, gBattleStruct->accumulatedDamage * max(1, GetMoveRecoil(cv->move)) / 100);
             }
             TryUpdateEvolutionTracker(IF_RECOIL_DAMAGE_GE, gBattleStruct->passiveHpUpdate[cv->battlerAtk], MOVE_NONE);
             BattleScriptCall(BattleScript_MoveEffectRecoil);

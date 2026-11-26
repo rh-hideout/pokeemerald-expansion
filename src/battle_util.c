@@ -10154,6 +10154,7 @@ void ClearDamageCalcResults(void)
         gSpecialStatuses[battler].berryReducedMessagePrinted = FALSE;
     }
 
+    gBattleStruct->accumulatedDamage = 0;
     gBattleStruct->statusMoveFailed = FALSE;
     gBattleStruct->messagePrinted = FALSE;
     gBattleStruct->numSpreadTargets = 0;
@@ -11512,21 +11513,4 @@ bool32 IsBattlerJawLocked(enum BattlerId battler)
     }
 
     return FALSE;
-}
-
-u32 GetAccumulatedDamage(void)
-{
-    u32 accumulatedDamage = 0;
-
-    for (enum BattlerId battlerDef = B_BATTLER_0; battlerDef < gBattlersCount; battlerDef++)
-    {
-        u32 damage = gBattleStruct->moveDamage[battlerDef];
-
-        if (damage > INT32_MAX - accumulatedDamage)
-            return INT32_MAX;
-
-        accumulatedDamage += damage;
-    }
-
-    return accumulatedDamage;
 }
