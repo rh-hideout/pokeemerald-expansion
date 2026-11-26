@@ -6,7 +6,7 @@
 
 #include "constants/songs.h"
 
-static const u8 *sSafariControllerMenuString[] = {
+static const u8 *const sSafariControllerMenuString[] = {
     [SAFARI_ACTIONS_RSE] = gText_SafariZoneMenu,
     [SAFARI_ACTIONS_FRLG] = gText_SafariZoneMenuFrlg,
 };
