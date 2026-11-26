@@ -2665,23 +2665,20 @@ static u8 CalcBerryYieldInternal(u16 max, u16 min, u8 water)
     u32 rand;
     u32 extraYield;
 
-    if (water == 0 || OW_BERRY_MOISTURE)
-    {
+    if (water == 0)
         return min;
-    }
-    else
-    {
-        randMin = (max - min) * (water - 1);
-        randMax = (max - min) * (water);
-        rand = randMin + Random() % (randMax - randMin + 1);
 
-        // Round upwards
-        if ((rand % NUM_WATER_STAGES) >= NUM_WATER_STAGES / 2)
-            extraYield = rand / NUM_WATER_STAGES + 1;
-        else
-            extraYield = rand / NUM_WATER_STAGES;
-        return extraYield + min;
-    }
+    randMin = (max - min) * (water - 1);
+    randMax = (max - min) * (water);
+    rand = randMin + Random() % (randMax - randMin + 1);
+
+    // Round upwards
+    if ((rand % NUM_WATER_STAGES) >= NUM_WATER_STAGES / 2)
+        extraYield = rand / NUM_WATER_STAGES + 1;
+    else
+        extraYield = rand / NUM_WATER_STAGES;
+    return extraYield + min;
+
 }
 
 static u8 CalcBerryYield(struct BerryTree *tree)
@@ -2689,17 +2686,16 @@ static u8 CalcBerryYield(struct BerryTree *tree)
     const struct BerryInfo *berryInfo = GetBerryInfo(tree->berry);
     u8 min = tree->berryYield;
     u8 max = berryInfo->maxYield;
-    u8 result;
+
     if (OW_BERRY_MULCH_USAGE && (tree->mulch == ITEM_TO_MULCH(ITEM_RICH_MULCH) || tree->mulch == ITEM_TO_MULCH(ITEM_AMAZE_MULCH)))
         min += 2;
     if (!(OW_BERRY_MOISTURE && OW_BERRY_ALWAYS_WATERABLE))
         min += berryInfo->minYield;
     if (min >= max)
-        result = max;
-    else
-        result = CalcBerryYieldInternal(max, min, BerryTreeGetNumStagesWatered(tree));
-
-    return result;
+        return max;
+    if (OW_BERRY_MOISTURE)//A bonus is instead given each time the berry is watered
+        return min;
+    return CalcBerryYieldInternal(max, min, BerryTreeGetNumStagesWatered(tree));
 }
 
 static u32 GetBerryTreeAge(u8 id, u8 stage)
@@ -2795,10 +2791,9 @@ void ObjectEventInteractionGetBerryCountString(void)
     gSpecialVar_0x8006 = BerryTypeToItemId(berry);
     CopyItemNameHandlePlural(gSpecialVar_0x8006, gStringVar1, count);
     berry = GetTreeMutationValue(treeId);
-    if (berry > 0)
+    if (berry != BERRY_ID_NONE)
     {
-        count = 1;
-        CopyItemNameHandlePlural(BerryTypeToItemId(berry), gStringVar3, count);
+        StringCopy(gStringVar3, GetItemName(BerryTypeToItemId(berry)));
         gSpecialVar_Result = TRUE;
     }
     else
@@ -3034,15 +3029,15 @@ static u8 GetTreeMutationValue(u8 id)
     struct BerryTree *tree = GetBerryTreeInfo(id);
     union TreeMutation myMutation;
     if (tree->stopGrowth) // Pre-generated trees shouldn't have mutations
-        return 0;
+        return BERRY_ID_NONE;
     myMutation.asField.a = tree->mutationA;
     myMutation.asField.b = tree->mutationB;
     myMutation.asField.unused = 0;
     if (myMutation.value == 0) // no mutation
-        return 0;
+        return BERRY_ID_NONE;
     return sBerryMutations[myMutation.value - 1][2];
 #else
-    return 0;
+    return BERRY_ID_NONE;
 #endif
 }
 
@@ -3110,23 +3105,18 @@ static void TryForPests(struct BerryTree *tree)
         tree->pests = TRUE;
 }
 
+#if OW_BERRY_MOISTURE
+#define tenthsOfBonus watered
+#else
+#define tenthsOfBonus moistureLevel
+#endif
+
 static void AddTreeBonus(struct BerryTree *tree, u8 bonus)
 {
-    if (OW_BERRY_MOISTURE)
-    {
-        if (tree->watered < 10) // use watered field to save track of intermediate bonuses
-            bonus += tree->watered;
-        tree->watered = bonus % 10;
-    }
-    else
-    {
-        if (tree->moistureLevel < 10)
-            bonus += tree->moistureLevel; // use moistureLevel field to save track of intermediate bonuses
-        tree->moistureLevel = bonus % 10;
-    }
+    if (tree->tenthsOfBonus < 10) // use watered or moistureLevel field to save track of intermediate bonuses
+        bonus += tree->tenthsOfBonus;
+    tree->tenthsOfBonus = bonus % 10;
     bonus /= 10;
-    if (bonus + tree->berryYield > GetBerryInfo(tree->berry)->maxYield)
-        tree->berryYield = GetBerryInfo(tree->berry)->maxYield;
-    else
-        tree->berryYield += bonus;
+
+    tree->berryYield = min(bonus + tree->berryYield, GetBerryInfo(tree->berry)->maxYield);
 }
