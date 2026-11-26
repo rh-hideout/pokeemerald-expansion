@@ -53,7 +53,8 @@ static const struct LevelUpMove sVenusaurLevelUpLearnset[] = {
 #if P_FAMILY_CHARMANDER
 static const struct LevelUpMove sCharmanderLevelUpLearnset[] = {
     LEVEL_UP_MOVE( 1, MOVE_SCRATCH),
-    LEVEL_UP_MOVE( 1, MOVE_GROWL),
+    LEVEL_UP_MOVE( 1, MOVE_BUBBLE),
+    LEVEL_UP_MOVE( 6, MOVE_ICE_BEAM),
     LEVEL_UP_MOVE( 9, MOVE_EMBER),
     LEVEL_UP_MOVE(15, MOVE_LEER),
     LEVEL_UP_MOVE(22, MOVE_RAGE),
