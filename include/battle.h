@@ -137,7 +137,7 @@ struct SpecialStatus
     u8 multiHitOn:1;
     u8 teraShellAbilityDone:1;
     u8 backUpTarget:3;
-    u8 padding1:1;
+    u8 ateBerry:1;
     // End of byte
     enum QueuedSwitch queuedSwitch;
     struct StatStages statStageQueue[NUM_BATTLE_STATS];
@@ -549,7 +549,7 @@ struct PartyState
 {
     u32 intrepidSwordBoost:1;
     u32 dauntlessShieldBoost:1;
-    u32 ateBerry:1;
+    u32 belchActive:1;
     u32 battleBondBoost:1;
     u32 transformZeroToHero:1;
     u32 supersweetSyrup:1;
