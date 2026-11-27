@@ -402,7 +402,7 @@ SINGLE_BATTLE_TEST("Eject Pack will trigger after a Mega Evolution")
 SINGLE_BATTLE_TEST("Eject Pack does not cause a Magic Bounce user to skip the turn")
 {
     GIVEN {
-        PLAYER(SPECIES_ESPEON { Speed(1); Ability(ABILITY_MAGIC_BOUNCE); }
+        PLAYER(SPECIES_ESPEON) { Speed(1); Ability(ABILITY_MAGIC_BOUNCE); }
         OPPONENT(SPECIES_WYNAUT) { Speed(2); Item(ITEM_EJECT_PACK); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(3); };
     } WHEN {
