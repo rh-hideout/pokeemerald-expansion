@@ -48,7 +48,7 @@ This applies to code that comes from other branches or games.
 Without labels, the CHANGELOG will not be properly formatted. For specifically the `bugfix` label, an additional label, detailing what area the bug exists in is required.
 
 ## Is `pokeemerald-expansion` free from a merge freeze?
-Our [release schedule](schedule.md) prevents us from merging Big Features and non-bugfixes within certain dates close to a release. Please use `/release` in the RHH Discord to clarify when these are occuring.
+Our [release schedule](schedule.md) prevents us from merging Big Features, non-graphics and non-bugfixes within certain dates close to a release. Please use `/release` in the RHH Discord to clarify when these are occuring.
 
 # Merging
 
