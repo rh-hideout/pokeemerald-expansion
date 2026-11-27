@@ -449,6 +449,15 @@ u32 CreateSpriteUnchecked(const struct SpriteTemplate *template, s16 x, s16 y, u
         if (!gSprites[i].inUse)
             return CreateSpriteAt(i, template, x, y, subpriority);
 
+    for (u32 i = 0; i < MAX_SPRITES; i++)
+    {
+        if (gSprites[i].freeable && gSprites[i].freeFunction != NULL)
+        {
+            gSprites[i].freeFunction(&gSprites[i]);
+            return CreateSpriteAt(i, template, x, y, subpriority);
+        }
+    }
+
     return MAX_SPRITES;
 }
 
@@ -512,6 +521,8 @@ u32 CreateSpriteAt(u32 index, const struct SpriteTemplate *template, s16 x, s16 
     sprite->x = x;
     sprite->y = y;
     sprite->compressedFast = template->compressedFast;
+    sprite->freeable = template->freeable;
+    sprite->freeFunction = template->freeFunction;
 
     CalcCenterToCornerVec(sprite, sprite->oam.shape, sprite->oam.size, sprite->oam.affineMode);
 
