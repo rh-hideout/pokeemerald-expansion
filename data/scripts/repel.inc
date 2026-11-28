@@ -4,8 +4,8 @@
 .set LOCAL_VAR_NEW_SPRAY, VAR_0x8007
 
 EventScript_BufferSprayName::
-.if VAR_LAST_REPEL_LURE_USED != 0
-	bufferitemname STR_VAR_1, VAR_LAST_REPEL_LURE_USED
+.if I_VAR_LAST_REPEL_LURE_USED != 0
+	bufferitemname STR_VAR_1, I_VAR_LAST_REPEL_LURE_USED
 	return
 .endif
 	specialvar LOCAL_VAR_SPRAY_TYPE, GetLastUsedSprayType
@@ -46,10 +46,10 @@ EventScript_SprayWoreOffMessage::
 
 
 EventScript_UseSingleSpray::
-.if VAR_LAST_REPEL_LURE_USED == 0
+.if I_VAR_LAST_REPEL_LURE_USED == 0
 	call EventScript_UseDifferentSpray
 .else
-	checkitem VAR_LAST_REPEL_LURE_USED, 1
+	checkitem I_VAR_LAST_REPEL_LURE_USED, 1
 	compare VAR_RESULT, TRUE
 	goto_if_eq EventScript_UseSingleSpray_2
 	call EventScript_UseDifferentSpray
@@ -59,7 +59,7 @@ EventScript_UseSingleSpray_1:
 	releaseall
 	end
 
-.if VAR_LAST_REPEL_LURE_USED != 0
+.if I_VAR_LAST_REPEL_LURE_USED != 0
 EventScript_UseSingleSpray_2:
 	call EventScript_UseLastUsedSpray
 	goto EventScript_UseSingleSpray_1
@@ -87,7 +87,7 @@ EventScript_UseDifferentSpray_2:
 	goto EventScript_UseDifferentSpray_1
 
 
-.if VAR_LAST_REPEL_LURE_USED != 0
+.if I_VAR_LAST_REPEL_LURE_USED != 0
 EventScript_UseLastUsedSpray::
 	msgbox Text_SprayWoreOffAskUseAnother, MSGBOX_YESNO
 	compare VAR_RESULT, YES
@@ -96,7 +96,7 @@ EventScript_UseLastUsedSpray_1:
 	return
 
 EventScript_UseLastUsedSpray_2:
-	copyvar LOCAL_VAR_SPRAY, VAR_LAST_REPEL_LURE_USED
+	copyvar LOCAL_VAR_SPRAY, I_VAR_LAST_REPEL_LURE_USED
 	call EventScript_SetSingleSprayAndUse
 	goto EventScript_UseLastUsedSpray_1
 .endif
