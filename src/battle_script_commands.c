@@ -6654,6 +6654,8 @@ static void Cmd_tryactivateitem(void)
     case ACTIVATION_ON_STUFF_CHEEKS:
         gLastUsedItem = gBattleMons[battler].item;
         gBattleScripting.overrideBerryRequirements = 1;
+        GetBattlerPartyState(battler)->belchActive = TRUE;
+        gSpecialStatuses[itemBattler].ateBerry = TRUE;
         ItemBattleEffects(battler, 0, GetItemHoldEffect(gBattleMons[battler].item), IsOnBerryActivation);
         gBattleScripting.overrideBerryRequirements = 0;
         break;
