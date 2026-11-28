@@ -22707,7 +22707,7 @@ const u32 gObjectEventPic_Substitute[] = INCGFX_COMP("graphics/pokemon/question_
     const u8 gMonFootprint_Drampa[] = INCGFX_U8("graphics/pokemon/drampa/footprint.png", ".1bpp");
 #endif //P_FOOTPRINTS
 #if OW_POKEMON_OBJECT_EVENTS
-    const u32 gObjectEventPic_Drampa[] = INCGFX_COMP("graphics/pokemon/drampa/overworld.png", ".4bpp", "-mwidth 4 -mheight 4");
+    const u32 gObjectEventPic_Drampa[] = INCGFX_COMP("graphics/pokemon/drampa/overworld.png", ".4bpp", "-mwidth 8 -mheight 8");
 #if OW_PKMN_OBJECTS_SHARE_PALETTES == FALSE
     const u16 gOverworldPalette_Drampa[] = INCGFX_U16("graphics/pokemon/drampa/overworld_normal.pal", ".gbapal");
     const u16 gShinyOverworldPalette_Drampa[] = INCGFX_U16("graphics/pokemon/drampa/overworld_shiny.pal", ".gbapal");
@@ -23780,7 +23780,7 @@ const u32 gObjectEventPic_Substitute[] = INCGFX_COMP("graphics/pokemon/question_
 #endif //P_FAMILY_GOSSIFLEUR
 
 #if P_FAMILY_WOOLOO
-    const u32 gMonFrontPic_Wooloo[] = INCGFX_U32("graphics/pokemon/wooloo/front.png", ".4bpp.smol");
+    const u32 gMonFrontPic_Wooloo[] = INCGFX_U32("graphics/pokemon/wooloo/anim_front.png", ".4bpp.smol");
     const u16 gMonPalette_Wooloo[] = INCGFX_U16("graphics/pokemon/wooloo/normal.pal", ".gbapal");
     const u32 gMonBackPic_Wooloo[] = INCGFX_U32("graphics/pokemon/wooloo/back.png", ".4bpp.smol");
     const u16 gMonShinyPalette_Wooloo[] = INCGFX_U16("graphics/pokemon/wooloo/shiny.pal", ".gbapal");
