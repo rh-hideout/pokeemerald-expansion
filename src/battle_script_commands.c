@@ -4390,7 +4390,7 @@ static bool32 TryCheekPouch(enum BattlerId battler, enum Item itemId, const u8 *
     if (GetItemPocket(itemId) == POCKET_BERRIES
         && GetBattlerAbility(battler) == ABILITY_CHEEK_POUCH
         && !gBattleMons[battler].volatiles.healBlockTimer
-        && GetBattlerPartyState(battler)->ateBerry
+        && gSpecialStatuses[battler].ateBerry
         && !IsBattlerAtMaxHp(battler))
     {
         gBattlerAbility = battler;
@@ -6654,7 +6654,8 @@ static void Cmd_tryactivateitem(void)
     case ACTIVATION_ON_STUFF_CHEEKS:
         gLastUsedItem = gBattleMons[battler].item;
         gBattleScripting.overrideBerryRequirements = 1;
-        GetBattlerPartyState(battler)->ateBerry = TRUE;
+        GetBattlerPartyState(battler)->belchActive = TRUE;
+        gSpecialStatuses[battler].ateBerry = TRUE;
         ItemBattleEffects(battler, 0, GetItemHoldEffect(gBattleMons[battler].item), IsOnBerryActivation);
         gBattleScripting.overrideBerryRequirements = 0;
         break;
@@ -11789,12 +11790,16 @@ void BS_ConsumeBerry(void)
         return;
     }
     gBattleScripting.overrideBerryRequirements = 1;
-    GetBattlerPartyState(battler)->ateBerry = TRUE;
+
+    GetBattlerPartyState(battler)->belchActive = TRUE;
+    gSpecialStatuses[battler].ateBerry = TRUE;
+
     if (ItemBattleEffects(battler, 0, GetItemHoldEffect(gLastUsedItem), IsOnBerryActivation))
     {
         gBattleScripting.overrideBerryRequirements = 2;
         return;
     }
+
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 

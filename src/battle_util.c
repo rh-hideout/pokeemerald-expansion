@@ -1399,7 +1399,7 @@ bool32 IsBelchPreventingMove(enum BattlerId battler, enum Move move)
     if (GetMoveEffect(move) != EFFECT_BELCH)
         return FALSE;
 
-    return (!GetBattlerPartyState(battler)->ateBerry && GetConfig(B_BELCH_SELECTABLE) < GEN_CHAMPIONS);
+    return (!GetBattlerPartyState(battler)->belchActive && GetConfig(B_BELCH_SELECTABLE) < GEN_CHAMPIONS);
 }
 
 static bool32 SetCantSelectScript(enum BattlerId battler, enum Move move, const u8 *palaceScript, const u8 *script)

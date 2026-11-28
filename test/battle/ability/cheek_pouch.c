@@ -175,7 +175,9 @@ SINGLE_BATTLE_TEST("Cheek Pouch activation doesn't mutate damage when restoring 
     s16 damage, healing;
 
     GIVEN {
+        ASSUME(GetMoveType(MOVE_KARATE_CHOP) == TYPE_FIGHTING);
         ASSUME(GetItemHoldEffect(ITEM_CHOPLE_BERRY) == HOLD_EFFECT_RESIST_BERRY);
+        ASSUME(GetItemHoldEffectParam(ITEM_CHOPLE_BERRY) == TYPE_FIGHTING);
         PLAYER(SPECIES_GREEDENT) { Ability(ABILITY_CHEEK_POUCH); Item(ITEM_CHOPLE_BERRY); HP(100); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -189,5 +191,51 @@ SINGLE_BATTLE_TEST("Cheek Pouch activation doesn't mutate damage when restoring 
     } THEN {
         EXPECT_LT(healing, 0);
         EXPECT_GT(damage, 0);
+    }
+}
+
+SINGLE_BATTLE_TEST("Cheek Pouch doesn't activate on Corrosive Gas after previously eating a berry")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_CORROSIVE_GAS) == EFFECT_CORROSIVE_GAS);
+        ASSUME(GetMoveEffect(MOVE_RECYCLE) == EFFECT_RECYCLE);
+        PLAYER(SPECIES_GREEDENT) { Ability(ABILITY_CHEEK_POUCH); MaxHP(60); HP(31); Item(ITEM_ORAN_BERRY); Speed(5); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(10); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SUPER_FANG); }
+        TURN { MOVE(player, MOVE_RECYCLE); }
+        TURN { MOVE(opponent, MOVE_CORROSIVE_GAS); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUPER_FANG, opponent);
+        ABILITY_POPUP(player, ABILITY_CHEEK_POUCH);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_RECYCLE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CORROSIVE_GAS, opponent);
+        NOT ABILITY_POPUP(player, ABILITY_CHEEK_POUCH);
+    } THEN {
+        EXPECT_EQ(player->hp, 46);
+        EXPECT_EQ(player->item, ITEM_NONE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Cheek Pouch doesn't activate when user flings a berry restored by Recycle")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_FLING) == EFFECT_FLING);
+        ASSUME(GetMoveEffect(MOVE_RECYCLE) == EFFECT_RECYCLE);
+        PLAYER(SPECIES_GREEDENT) { Ability(ABILITY_CHEEK_POUCH); MaxHP(60); HP(31); Item(ITEM_ORAN_BERRY); Speed(10); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(5); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SUPER_FANG); }
+        TURN { MOVE(player, MOVE_RECYCLE); }
+        TURN { MOVE(player, MOVE_FLING); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUPER_FANG, opponent);
+        ABILITY_POPUP(player, ABILITY_CHEEK_POUCH);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_RECYCLE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
+        NOT ABILITY_POPUP(player, ABILITY_CHEEK_POUCH);
+    } THEN {
+        EXPECT_EQ(player->hp, 46);
+        EXPECT_EQ(player->item, ITEM_NONE);
     }
 }
