@@ -199,6 +199,7 @@ SINGLE_BATTLE_TEST("Pickpocket activates after Thief or Covet steals an item")
     PARAMETRIZE { move = MOVE_COVET; }
     GIVEN {
         ASSUME(GetMoveEffect(move) == EFFECT_STEAL_ITEM);
+        ASSUME(MoveHasAdditionalEffect(move, MOVE_EFFECT_STEAL_ITEM));
         ASSUME(MoveMakesContact(move));
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_SNEASEL) { Ability(ABILITY_PICKPOCKET); Item(ITEM_MAGOST_BERRY); }
@@ -345,6 +346,7 @@ SINGLE_BATTLE_TEST("Pickpocket activates after an Item was knocked off")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_KNOCK_OFF) == EFFECT_KNOCK_OFF);
+        ASSUME(MoveHasAdditionalEffect(MOVE_KNOCK_OFF, MOVE_EFFECT_KNOCK_OFF));
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_POTION); }
         OPPONENT(SPECIES_SNEASEL) { Item(ITEM_POTION); Ability(ABILITY_PICKPOCKET); }
     } WHEN {

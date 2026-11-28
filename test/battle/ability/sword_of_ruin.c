@@ -117,6 +117,7 @@ SINGLE_BATTLE_TEST("Sword of Ruin doesn't activate when dragged out by Mold Brea
 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_DRAGON_TAIL) == EFFECT_HIT_SWITCH_TARGET);
+        ASSUME(MoveHasAdditionalEffect(MOVE_DRAGON_TAIL, MOVE_EFFECT_HIT_SWITCH_TARGET));
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_CHIEN_PAO) { Ability(ABILITY_SWORD_OF_RUIN); }
         OPPONENT(SPECIES_EXCADRILL) { Ability(ability); }

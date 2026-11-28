@@ -667,9 +667,8 @@ struct BattleStruct
     } multiBuffer;
     u8 battlerKOAnimsRunning:3;
     u8 ignoreOrbFailure:1; // Toxic / Flame orb aren't prevented by Safeguard / Flower Veil
-    u8 toxicChainPriority:1; // If Toxic Chain will trigger on target, all other non volatiles will be blocked
     u8 messagePrinted:1; // To prevented repeated attackmessages (Perish Song)
-    u8 padding4:2;
+    u8 padding4:3;
     struct BattleTvMovePoints tvMovePoints;
     struct BattleTv tv;
     enum PartySlot AI_monToSwitchIntoId[MAX_BATTLERS_COUNT];

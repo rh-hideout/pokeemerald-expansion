@@ -27,6 +27,7 @@ SINGLE_BATTLE_TEST("Unburden doubles speed once user gets their item knocked off
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_KNOCK_OFF) == EFFECT_KNOCK_OFF);
+        ASSUME(MoveHasAdditionalEffect(MOVE_KNOCK_OFF, MOVE_EFFECT_KNOCK_OFF));
         PLAYER(SPECIES_DRIFBLIM) { Ability(ABILITY_UNBURDEN); Item(ITEM_POTION); Speed(5); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(7); }
     } WHEN {
@@ -47,6 +48,7 @@ SINGLE_BATTLE_TEST("Unburden doesn't activate when item is consumed in Neutraliz
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_U_TURN) == EFFECT_HIT_ESCAPE);
         ASSUME(GetMoveEffect(MOVE_KNOCK_OFF) == EFFECT_KNOCK_OFF);
+        ASSUME(MoveHasAdditionalEffect(MOVE_KNOCK_OFF, MOVE_EFFECT_KNOCK_OFF));
         PLAYER(SPECIES_DRIFBLIM) { Ability(ABILITY_UNBURDEN); Item(ITEM_POTION); Speed(5); }
         OPPONENT(SPECIES_WEEZING) { Speed(7); Ability(ABILITY_NEUTRALIZING_GAS); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(7); }
@@ -74,6 +76,7 @@ SINGLE_BATTLE_TEST("Unburden doubling speed effect is ignored by Neutralizing Ga
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_U_TURN) == EFFECT_HIT_ESCAPE);
         ASSUME(GetMoveEffect(MOVE_KNOCK_OFF) == EFFECT_KNOCK_OFF);
+        ASSUME(MoveHasAdditionalEffect(MOVE_KNOCK_OFF, MOVE_EFFECT_KNOCK_OFF));
         PLAYER(SPECIES_DRIFBLIM) { Ability(ABILITY_UNBURDEN); Item(ITEM_POTION); Speed(5); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(7); }
         OPPONENT(SPECIES_WEEZING) { Speed(7); Ability(ABILITY_NEUTRALIZING_GAS); }
@@ -105,6 +108,7 @@ SINGLE_BATTLE_TEST("Unburden doesn't activate when item is removed in Magic Room
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_MAGIC_ROOM) == EFFECT_MAGIC_ROOM);
         ASSUME(GetMoveEffect(MOVE_KNOCK_OFF) == EFFECT_KNOCK_OFF);
+        ASSUME(MoveHasAdditionalEffect(MOVE_KNOCK_OFF, MOVE_EFFECT_KNOCK_OFF));
         PLAYER(SPECIES_DRIFBLIM) { Ability(ABILITY_UNBURDEN); Item(ITEM_POTION); Speed(5); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(7); }
     } WHEN {
@@ -127,6 +131,7 @@ SINGLE_BATTLE_TEST("Unburden doesn't activate when item is removed in Embargo")
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_EMBARGO) == EFFECT_EMBARGO);
         ASSUME(GetMoveEffect(MOVE_KNOCK_OFF) == EFFECT_KNOCK_OFF);
+        ASSUME(MoveHasAdditionalEffect(MOVE_KNOCK_OFF, MOVE_EFFECT_KNOCK_OFF));
         PLAYER(SPECIES_DRIFBLIM) { Ability(ABILITY_UNBURDEN); Item(ITEM_POTION); Speed(5); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(7); }
     } WHEN {
@@ -173,6 +178,7 @@ SINGLE_BATTLE_TEST("Unburden speed boost is removed after regaining an item with
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_KNOCK_OFF) == EFFECT_KNOCK_OFF);
+        ASSUME(MoveHasAdditionalEffect(MOVE_KNOCK_OFF, MOVE_EFFECT_KNOCK_OFF));
         ASSUME(GetMoveEffect(MOVE_TRICK) == EFFECT_TRICK);
         PLAYER(SPECIES_DRIFBLIM) { Ability(ABILITY_UNBURDEN); Item(ITEM_POTION); Speed(5); }
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_POTION); Speed(7); }
@@ -195,7 +201,9 @@ SINGLE_BATTLE_TEST("Unburden speed boost is removed after regaining an item with
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_KNOCK_OFF) == EFFECT_KNOCK_OFF);
+        ASSUME(MoveHasAdditionalEffect(MOVE_KNOCK_OFF, MOVE_EFFECT_KNOCK_OFF));
         ASSUME(GetMoveEffect(MOVE_THIEF) == EFFECT_STEAL_ITEM);
+        ASSUME(MoveHasAdditionalEffect(MOVE_THIEF, MOVE_EFFECT_STEAL_ITEM));
         PLAYER(SPECIES_DRIFBLIM) { Ability(ABILITY_UNBURDEN); Item(ITEM_POTION); Speed(5); }
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_POTION); Speed(7); }
     } WHEN {

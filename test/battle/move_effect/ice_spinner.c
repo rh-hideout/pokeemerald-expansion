@@ -4,6 +4,7 @@
 ASSUMPTIONS
 {
     ASSUME(GetMoveEffect(MOVE_ICE_SPINNER) == EFFECT_ICE_SPINNER);
+    ASSUME(MoveHasAdditionalEffect(MOVE_ICE_SPINNER, MOVE_EFFECT_REMOVE_TERRAIN));
 }
 
 SINGLE_BATTLE_TEST("Ice Spinner and Steel Roller remove a terrain from field")
@@ -33,6 +34,7 @@ SINGLE_BATTLE_TEST("Ice Spinner and Steel Roller remove a terrain from field")
         ASSUME(GetMoveTerrainType(MOVE_GRASSY_TERRAIN) == B_TERRAIN_GRASSY);
         ASSUME(GetMoveTerrainType(MOVE_MISTY_TERRAIN) == B_TERRAIN_MISTY);
         ASSUME(GetMoveEffect(MOVE_STEEL_ROLLER) == EFFECT_STEEL_ROLLER);
+        ASSUME(MoveHasAdditionalEffect(MOVE_STEEL_ROLLER, MOVE_EFFECT_REMOVE_TERRAIN));
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -70,6 +72,7 @@ SINGLE_BATTLE_TEST("Ice Spinner and Steel Roller cancel the removed terrain's ti
         ASSUME(GetMoveEffect(MOVE_GRASSY_TERRAIN) == EFFECT_TERRAIN);
         ASSUME(GetMoveTerrainType(MOVE_GRASSY_TERRAIN) == B_TERRAIN_GRASSY);
         ASSUME(GetMoveEffect(MOVE_STEEL_ROLLER) == EFFECT_STEEL_ROLLER);
+        ASSUME(MoveHasAdditionalEffect(MOVE_STEEL_ROLLER, MOVE_EFFECT_REMOVE_TERRAIN));
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

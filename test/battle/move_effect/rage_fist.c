@@ -397,6 +397,7 @@ SINGLE_BATTLE_TEST("Rage Fist base power is increased by 50 if user was hit and 
     GIVEN {
         WITH_CONFIG(B_RAGE_FIST, GEN_9);
         ASSUME(GetMoveEffect(MOVE_DRAGON_TAIL) == EFFECT_HIT_SWITCH_TARGET);
+        ASSUME(MoveHasAdditionalEffect(MOVE_DRAGON_TAIL, MOVE_EFFECT_HIT_SWITCH_TARGET));
         PLAYER(SPECIES_REGIROCK);
         OPPONENT(SPECIES_REGIROCK);
         OPPONENT(SPECIES_WYNAUT);

@@ -647,6 +647,7 @@ DOUBLE_BATTLE_TEST("Commander prevent Dondozo from switch out by Dragon Tail")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_DRAGON_TAIL) == EFFECT_HIT_SWITCH_TARGET);
+        ASSUME(MoveHasAdditionalEffect(MOVE_DRAGON_TAIL, MOVE_EFFECT_HIT_SWITCH_TARGET));
         PLAYER(SPECIES_DONDOZO);
         PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_COMMANDER); }
         PLAYER(SPECIES_WOBBUFFET);
@@ -870,6 +871,7 @@ DOUBLE_BATTLE_TEST("Commander still blocks forced switch after swallowed Tatsugi
 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_DRAGON_TAIL) == EFFECT_HIT_SWITCH_TARGET);
+        ASSUME(MoveHasAdditionalEffect(MOVE_DRAGON_TAIL, MOVE_EFFECT_HIT_SWITCH_TARGET));
         ASSUME(GetMoveEffect(MOVE_WHIRLWIND) == EFFECT_ROAR);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);

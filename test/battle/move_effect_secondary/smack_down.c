@@ -4,6 +4,7 @@
 ASSUMPTIONS
 {
     ASSUME(GetMoveEffect(MOVE_SMACK_DOWN) == EFFECT_SMACK_DOWN);
+    ASSUME(MoveHasAdditionalEffect(MOVE_SMACK_DOWN, MOVE_EFFECT_SMACK_DOWN));
 }
 
 SINGLE_BATTLE_TEST("Smack Down doesn't affect pokemon behind Substitute")
@@ -31,6 +32,7 @@ SINGLE_BATTLE_TEST("Thousand Arrows does not ground mons behind substitutes")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_THOUSAND_ARROWS) == EFFECT_SMACK_DOWN);
+        ASSUME(MoveHasAdditionalEffect(MOVE_THOUSAND_ARROWS, MOVE_EFFECT_SMACK_DOWN));
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_SKARMORY);
     } WHEN {

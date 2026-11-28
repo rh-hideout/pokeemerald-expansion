@@ -290,6 +290,7 @@ DOUBLE_BATTLE_TEST("Opposing Symbiosis ignores the player's stolen-item record")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_KNOCK_OFF) == EFFECT_KNOCK_OFF);
+        ASSUME(MoveHasAdditionalEffect(MOVE_KNOCK_OFF, MOVE_EFFECT_KNOCK_OFF));
         ASSUME(GetMoveEffect(MOVE_TRICK_ROOM) == EFFECT_TRICK_ROOM);
         ASSUME(GetItemHoldEffect(ITEM_ROOM_SERVICE) == HOLD_EFFECT_ROOM_SERVICE);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_LEFTOVERS); }
