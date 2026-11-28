@@ -1,9 +1,3 @@
-	@ Initialize the Battle Pyramid challenge
-	.macro pyramid_init
-	setvar VAR_0x8004, BATTLE_PYRAMID_FUNC_INIT
-	special CallBattlePyramidFunction
-	.endm
-
 	@ Get the value of some PYRAMID_DATA_*. See GetBattlePyramidData for the data types that can be retrieved
 	.macro pyramid_get data:req
 	setvar VAR_0x8004, BATTLE_PYRAMID_FUNC_GET_DATA
@@ -29,12 +23,6 @@
 	@ Set the prize item to give from one of two lists of possible prizes, depending on streak.
 	.macro pyramid_setprize
 	setvar VAR_0x8004, BATTLE_PYRAMID_FUNC_SET_PRIZE
-	special CallBattlePyramidFunction
-	.endm
-
-	@ Unused. Give the set prize item to the player. TRUE if room in Bag for prize, FALSE otherwise
-	.macro pyramid_giveprize
-	setvar VAR_0x8004, BATTLE_PYRAMID_FUNC_GIVE_PRIZE
 	special CallBattlePyramidFunction
 	.endm
 

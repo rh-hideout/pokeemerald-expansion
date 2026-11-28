@@ -1,3 +1,20 @@
+	.macro frontier_init
+	callnative Script_InitFrontierSeries
+	.endm
+
+	.macro frontier_endseries data:req
+	setvar VAR_0x8005, \data
+	callnative Script_EndFrontierSeries
+	.endm
+
+	.macro frontier_getwinstreak
+	callnative Script_FrontierGetWinStreak
+	.endm
+
+	.macro frontier_iswinstreakactive
+	callnative Script_FrontierIsWinStreakActive
+	.endm
+
 	@ Get the status (CHALLENGE_STATUS_*) of the current challenge and store the result in VAR_TEMP_CHALLENGE_STATUS
 	.macro frontier_getstatus
 	setvar VAR_0x8004, FRONTIER_UTIL_FUNC_GET_STATUS
@@ -57,12 +74,6 @@
 	.if \mode != 0xFF
 	setvar VAR_0x8006, \mode
 	.endif
-	special CallFrontierUtilFunc
-	.endm
-
-	@ Checks if the Battle Frontier TV special should air, and if so attempts to set it up
-	.macro frontier_checkairshow
-	setvar VAR_0x8004, FRONTIER_UTIL_FUNC_CHECK_AIR_TV_SHOW
 	special CallFrontierUtilFunc
 	.endm
 

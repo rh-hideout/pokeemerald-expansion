@@ -6,25 +6,34 @@
 #define FRONTIER_CHALLENGE(facility, mode) ((facility << 8) + mode)
 
 // Battle Frontier facility ids.
-#define FRONTIER_FACILITY_TOWER    0
-#define FRONTIER_FACILITY_DOME     1
-#define FRONTIER_FACILITY_PALACE   2  // also Verdanturf Tent
-#define FRONTIER_FACILITY_ARENA    3  // also Fallarbor Tent
-#define FRONTIER_FACILITY_FACTORY  4  // also Slateport Tent
-#define FRONTIER_FACILITY_PIKE     5
-#define FRONTIER_FACILITY_PYRAMID  6
-#define NUM_FRONTIER_FACILITIES    7
-// VAR_FRONTIER_FACILITY is re-used for the below facilities as well
-#define FACILITY_LINK_CONTEST      7
-#define FACILITY_UNION_ROOM        8
-#define FACILITY_MULTI_OR_EREADER  9  // Direct Corner multi battles, multi battle with Steven, and e-Reader battles
+enum FrontierFacility {
+    FRONTIER_FACILITY_TOWER,
+    FRONTIER_FACILITY_DOME,
+    FRONTIER_FACILITY_PALACE,  // also Verdanturf Tent
+    FRONTIER_FACILITY_ARENA,  // also Fallarbor Tent
+    FRONTIER_FACILITY_FACTORY,  // also Slateport Tent
+    FRONTIER_FACILITY_PIKE,
+    FRONTIER_FACILITY_PYRAMID,
+    NUM_FRONTIER_FACILITIES,
+    // VAR_FRONTIER_FACILITY is re-used for the below facilities as well
+    FACILITY_LINK_CONTEST = NUM_FRONTIER_FACILITIES,
+    FACILITY_UNION_ROOM,
+    FACILITY_MULTI_OR_EREADER,  // Direct Corner multi battles, multi battle with Steven, and e-Reader battles
+};
 
-// Battle Frontier battle modes.
-#define FRONTIER_MODE_SINGLES      0
-#define FRONTIER_MODE_DOUBLES      1
-#define FRONTIER_MODE_MULTIS       2
-#define FRONTIER_MODE_LINK_MULTIS  3
-#define FRONTIER_MODE_COUNT        4
+enum FrontierBattleMode {
+    FRONTIER_MODE_SINGLES,
+    FRONTIER_MODE_DOUBLES,
+    FRONTIER_MODE_MULTIS,
+    FRONTIER_MODE_LINK_MULTIS,
+    FRONTIER_MODE_COUNT,
+};
+
+enum FrontierSeriesResult {
+    FRONTIER_SERIES_DISQUALIFIED,
+    FRONTIER_SERIES_LOST,
+    FRONTIER_SERIES_WON,
+};
 
 // Challenge Statuses
 #define CHALLENGE_STATUS_SAVING   1

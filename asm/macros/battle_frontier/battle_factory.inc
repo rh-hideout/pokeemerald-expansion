@@ -1,9 +1,3 @@
-	@ Initialize the Battle Factory challenge
-	.macro factory_init
-	setvar VAR_0x8004, BATTLE_FACTORY_FUNC_INIT
-	special CallBattleFactoryFunction
-	.endm
-
 	@ Get the value of some FACTORY_DATA_*. See GetBattleFactoryData for the data types that can be retrieved
 	.macro factory_get data:req
 	setvar VAR_0x8004, BATTLE_FACTORY_FUNC_GET_DATA

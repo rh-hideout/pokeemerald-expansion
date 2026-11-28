@@ -663,7 +663,6 @@ static void ReceiveBattleTowerData(void *records, size_t recordSize, u8 multipla
         {
             battleTowerRecord = (void *)records + recordSize * multiplayerId;
             battleTowerRecord->language = gLinkPlayers[mixIndices[multiplayerId]].language;
-            CalcEmeraldBattleTowerChecksum(battleTowerRecord);
         }
     }
     else
@@ -676,7 +675,6 @@ static void ReceiveBattleTowerData(void *records, size_t recordSize, u8 multipla
             if (btPokemon->species != SPECIES_NONE && IsStringJapanese(btPokemon->nickname))
                 ConvertInternationalString(btPokemon->nickname, LANGUAGE_JAPANESE);
         }
-        CalcEmeraldBattleTowerChecksum(battleTowerRecord);
     }
     PutNewBattleTowerRecord((void *)records + recordSize * multiplayerId);
 }
@@ -1137,10 +1135,10 @@ void GetPlayerHallRecords(struct PlayerHallRecords *dst)
         dst->onePlayer[RANKING_HALL_TOWER_MULTIS][i].winStreak = gSaveBlock2Ptr->frontier.towerRecordWinStreaks[FRONTIER_MODE_MULTIS][i];
         dst->onePlayer[RANKING_HALL_DOME][i].winStreak = gSaveBlock2Ptr->frontier.domeRecordWinStreaks[FRONTIER_MODE_SINGLES][i];
         dst->onePlayer[RANKING_HALL_PALACE][i].winStreak = gSaveBlock2Ptr->frontier.palaceRecordWinStreaks[FRONTIER_MODE_SINGLES][i];
-        dst->onePlayer[RANKING_HALL_ARENA][i].winStreak = gSaveBlock2Ptr->frontier.arenaRecordStreaks[i];
+        dst->onePlayer[RANKING_HALL_ARENA][i].winStreak = gSaveBlock2Ptr->frontier.arenaRecordWinStreaks[i];
         dst->onePlayer[RANKING_HALL_FACTORY][i].winStreak = gSaveBlock2Ptr->frontier.factoryRecordWinStreaks[FRONTIER_MODE_SINGLES][i];
-        dst->onePlayer[RANKING_HALL_PIKE][i].winStreak = gSaveBlock2Ptr->frontier.pikeRecordStreaks[i];
-        dst->onePlayer[RANKING_HALL_PYRAMID][i].winStreak = gSaveBlock2Ptr->frontier.pyramidRecordStreaks[i];
+        dst->onePlayer[RANKING_HALL_PIKE][i].winStreak = gSaveBlock2Ptr->frontier.pikeRecordWinStreaks[i];
+        dst->onePlayer[RANKING_HALL_PYRAMID][i].winStreak = gSaveBlock2Ptr->frontier.pyramidRecordWinStreaks[i];
 
         dst->twoPlayers[i].winStreak = gSaveBlock2Ptr->frontier.towerRecordWinStreaks[FRONTIER_MODE_LINK_MULTIS][i];
     }
@@ -1402,6 +1400,4 @@ static void SanitizeEmeraldBattleTowerRecord(struct EmeraldBattleTowerRecord *ds
         if (towerMon->species != SPECIES_NONE)
             StripExtCtrlCodes(towerMon->nickname);
     }
-
-    CalcEmeraldBattleTowerChecksum(dst);
 }

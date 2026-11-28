@@ -1892,8 +1892,8 @@ static u16 GetFrontierStreakInfo(u16 facilityId, u32 *topicTextId)
     case MATCH_CALL_PIKE:
         for (i = 0; i < FRONTIER_LVL_MODE_COUNT; i++)
         {
-            if (streak < gSaveBlock2Ptr->frontier.pikeRecordStreaks[i])
-                streak = gSaveBlock2Ptr->frontier.pikeRecordStreaks[i];
+            if (streak < gSaveBlock2Ptr->frontier.pikeRecordWinStreaks[i])
+                streak = gSaveBlock2Ptr->frontier.pikeRecordWinStreaks[i];
         }
         *topicTextId = GEN_TOPIC_B_PIKE - 1;
         break;
@@ -1933,16 +1933,16 @@ static u16 GetFrontierStreakInfo(u16 facilityId, u32 *topicTextId)
     case FRONTIER_FACILITY_ARENA:
         for (i = 0; i < FRONTIER_LVL_MODE_COUNT; i++)
         {
-            if (streak < gSaveBlock2Ptr->frontier.arenaRecordStreaks[i])
-                streak = gSaveBlock2Ptr->frontier.arenaRecordStreaks[i];
+            if (streak < gSaveBlock2Ptr->frontier.arenaRecordWinStreaks[i])
+                streak = gSaveBlock2Ptr->frontier.arenaRecordWinStreaks[i];
         }
         *topicTextId = GEN_TOPIC_STREAK_RECORD - 1;
         break;
     case FRONTIER_FACILITY_PYRAMID:
         for (i = 0; i < FRONTIER_LVL_MODE_COUNT; i++)
         {
-            if (streak < gSaveBlock2Ptr->frontier.pyramidRecordStreaks[i])
-                streak = gSaveBlock2Ptr->frontier.pyramidRecordStreaks[i];
+            if (streak < gSaveBlock2Ptr->frontier.pyramidRecordWinStreaks[i])
+                streak = gSaveBlock2Ptr->frontier.pyramidRecordWinStreaks[i];
         }
         *topicTextId = GEN_TOPIC_B_PYRAMID - 1;
         break;

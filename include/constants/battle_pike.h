@@ -65,10 +65,6 @@
 #define BATTLE_PIKE_FUNC_RESET_HELD_ITEMS          27
 #define BATTLE_PIKE_FUNC_INIT                      28
 
-#define PIKE_DATA_PRIZE             0
-#define PIKE_DATA_WIN_STREAK        1
-#define PIKE_DATA_RECORD_STREAK     2
-#define PIKE_DATA_TOTAL_STREAKS     3
-#define PIKE_DATA_WIN_STREAK_ACTIVE 4
+#define PIKE_DATA_TOTAL_SERIES      0
 
 #endif // GUARD_CONSTANTS_BATTLE_PIKE_H

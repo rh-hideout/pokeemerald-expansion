@@ -21,5 +21,6 @@ void LoadBattlePyramidFloorObjectEventScripts(void);
 u8 GetNumBattlePyramidObjectEvents(void);
 u16 GetBattlePyramidPickupItemId(void);
 const u8 *GetBattlePyramidTrainerScript();
+void InitPyramidBagItems(enum FrontierLevelMode lvlMode);
 
 #endif // GUARD_BATTLE_PYRAMID_H
