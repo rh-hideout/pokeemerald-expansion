@@ -391,6 +391,7 @@ static const struct ListMenuItem sVolatileStatusListItems[] =
     {COMPOUND_STRING("Heal Block"),         VOLATILE_HEAL_BLOCK_TIMER},
     {COMPOUND_STRING("Aqua Ring"),          VOLATILE_AQUA_RING},
     {COMPOUND_STRING("Power Trick"),        VOLATILE_POWER_TRICK},
+    {COMPOUND_STRING("Flash Fire"),         VOLATILE_FLASH_FIRE_BOOSTED},
 };
 
 static const struct ListMenuItem sHazardsListItems[] =

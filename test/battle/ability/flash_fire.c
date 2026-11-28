@@ -28,3 +28,43 @@ SINGLE_BATTLE_TEST("Flash Fire boosts fire type moves by 50% but no subsequent i
         EXPECT_EQ(damage[1], damage[2]);
     }
 }
+
+DOUBLE_BATTLE_TEST("Flash Fire boost wears off upon Mega Evolution (pre-Champs 1.3.0)")
+{
+    GIVEN {
+        WITH_CONFIG(B_FLASH_FIRE_PERSISTS, GEN_LATEST);
+        ASSUME(GetMoveType(MOVE_EMBER) == TYPE_FIRE);
+        PLAYER(SPECIES_HOUNDOOM) { Ability(ABILITY_FLASH_FIRE); Item(ITEM_HOUNDOOMINITE); }
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_EMBER, target: playerLeft); }
+        TURN { MOVE(playerLeft, MOVE_EMBER, target: opponentLeft, gimmick: GIMMICK_MEGA); }
+    } SCENE {
+        ABILITY_POPUP(playerLeft, ABILITY_FLASH_FIRE);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_EMBER, playerLeft);
+    } THEN {
+        EXPECT(playerLeft->volatiles.flashFireBoosted == FALSE);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Flash Fire boost does not wear off upon Mega Evolution (post-Champs 1.3.0)")
+{
+    GIVEN {
+        WITH_CONFIG(B_FLASH_FIRE_PERSISTS, GEN_CHAMPIONS);
+        ASSUME(GetMoveType(MOVE_EMBER) == TYPE_FIRE);
+        PLAYER(SPECIES_HOUNDOOM) { Ability(ABILITY_FLASH_FIRE); Item(ITEM_HOUNDOOMINITE); }
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_EMBER, target: playerLeft); }
+        TURN { MOVE(playerLeft, MOVE_EMBER, target: opponentLeft, gimmick: GIMMICK_MEGA); }
+    } SCENE {
+        ABILITY_POPUP(playerLeft, ABILITY_FLASH_FIRE);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_EMBER, playerLeft);
+    } THEN {
+        EXPECT(playerLeft->volatiles.flashFireBoosted == TRUE);
+    }
+}
