@@ -231,6 +231,14 @@ u8 RandomWeightedIndex(u8 *weights, u8 length)
     return 0;
 }
 
+u16 RandomWeightedStruct(enum RandomTag tag, const struct WeightedArray *array)
+{
+    if (array->sum)
+        return RandomWeightedArray(tag, array->sum,  array->count, array->weights);
+    else
+        return RandomUniform(tag, 0, array->count - 1);
+}
+
 // Returns the index instead; don't call with no set bits
 u32 RandomBitIndex(enum RandomTag tag, u32 bits)
 {

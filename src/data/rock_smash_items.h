@@ -25,18 +25,26 @@ static const enum Item sGen6FossilSmashTable[] = {
     ITEM_COVER_FOSSIL,
 };
 
-#define ROCK_SMASH_TABLE_STRUCT(array)  {      \
-    .table = array,                            \
-    .size = ARRAY_COUNT(array),                \
-    .weights = NULL,                           \
-    .weightsSum = 0                            \
-}
+static const struct WeightedArray sGen6DefaultTableWeights = UNIFORM_WEIGHTS(ARRAY_COUNT(sGen6DefaultSmashTable));
+static const struct WeightedArray sGen6FossilTableWeights = UNIFORM_WEIGHTS(ARRAY_COUNT(sGen6FossilSmashTable));
 
 static const struct RockSmashItemTable sRockSmashTables[ROCK_SMASH_ITEM_TABLE_COUNT] = {
-    [ROCK_SMASH_ITEM_TABLE_DEFAULT] = ROCK_SMASH_TABLE_STRUCT(sGen6DefaultSmashTable),
-    [ROCK_SMASH_ITEM_TABLE_CLIFF] = ROCK_SMASH_TABLE_STRUCT(sGen6DefaultSmashTable),
-    [ROCK_SMASH_ITEM_TABLE_RUINS] = ROCK_SMASH_TABLE_STRUCT(sGen6DefaultSmashTable),
-    [ROCK_SMASH_ITEM_TABLE_FOSSIL] = ROCK_SMASH_TABLE_STRUCT(sGen6FossilSmashTable),
+    [ROCK_SMASH_ITEM_TABLE_DEFAULT] = {
+        .table = sGen6DefaultSmashTable,
+        .weights = &sGen6DefaultTableWeights,
+    },
+    [ROCK_SMASH_ITEM_TABLE_CLIFF] = {
+        .table = sGen6DefaultSmashTable,
+        .weights = &sGen6DefaultTableWeights,
+    },
+    [ROCK_SMASH_ITEM_TABLE_RUINS] = {
+        .table = sGen6DefaultSmashTable,
+        .weights = &sGen6DefaultTableWeights,
+    },
+    [ROCK_SMASH_ITEM_TABLE_FOSSIL] = {
+        .table = sGen6FossilSmashTable,
+        .weights = &sGen6FossilTableWeights,
+    },
 };
 
 #elif OW_ROCK_SMASH_ITEMS >= GEN_4
@@ -74,29 +82,25 @@ static const enum Item sGen4CliffCaveSmashTable[] = {
     ITEM_RARE_BONE, //5
 };
 
-static const u16 sGen4ItemTableWeights[] = {
-    25,
-    20,
-    10,
-    10,
-    10,
-    10,
-    10,
-    5,
-};
-
-#define ROCK_SMASH_TABLE_STRUCT(array)  {      \
-    .table = array,                            \
-    .size = ARRAY_COUNT(array),                \
-    .weights = sGen4ItemTableWeights,          \
-    .weightsSum = 100                          \
-}
+static const struct WeightedArray sGen4ItemTableWeights = WEIGHTED_ARRAY(25, 20, 10, 10, 10, 10, 10, 5);
 
 static const struct RockSmashItemTable sRockSmashTables[ROCK_SMASH_ITEM_TABLE_COUNT] = {
-    [ROCK_SMASH_ITEM_TABLE_DEFAULT] = ROCK_SMASH_TABLE_STRUCT(sGen4DefaultSmashTable),
-    [ROCK_SMASH_ITEM_TABLE_CLIFF] = ROCK_SMASH_TABLE_STRUCT(sGen4CliffCaveSmashTable),
-    [ROCK_SMASH_ITEM_TABLE_RUINS] = ROCK_SMASH_TABLE_STRUCT(sGen4RuinsOfAlphSmashTable),
-    [ROCK_SMASH_ITEM_TABLE_FOSSIL] = ROCK_SMASH_TABLE_STRUCT(sGen4DefaultSmashTable),
+    [ROCK_SMASH_ITEM_TABLE_DEFAULT] = {
+        .table = sGen4DefaultSmashTable,
+        .weights = &sGen4ItemTableWeights,
+    },
+    [ROCK_SMASH_ITEM_TABLE_CLIFF] = {
+        .table = sGen4CliffCaveSmashTable,
+        .weights = &sGen4ItemTableWeights,
+    },
+    [ROCK_SMASH_ITEM_TABLE_RUINS] = {
+        .table = sGen4RuinsOfAlphSmashTable,
+        .weights = &sGen4ItemTableWeights,
+    },
+    [ROCK_SMASH_ITEM_TABLE_FOSSIL] = {
+        .table = sGen4DefaultSmashTable,
+        .weights = &sGen4ItemTableWeights,
+    },
 };
 
 #else
