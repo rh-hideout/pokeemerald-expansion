@@ -1,0 +1,6 @@
+{
+    "palettes": "secondary/condominiums_frlg/palettes",
+    "tiles": "secondary/condominiums_frlg/tiles.png",
+    "metatiles": "secondary/silph_co_frlg/metatiles.bin",
+    "metatile_attributes": "secondary/silph_co_frlg/metatile_attributes.bin"
+}
