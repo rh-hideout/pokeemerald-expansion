@@ -84,68 +84,6 @@ static enum Item GetPrizeItemId(void);
 // const data
 #include "data/battle_frontier/trainer_hill.h"
 
-struct
-{
-    u8 trainerClass;
-    u8 musicId;
-} static const sTrainerClassesAndMusic[] =
-{
-    {TRAINER_CLASS_TEAM_AQUA, TRAINER_ENCOUNTER_MUSIC_AQUA},
-    {TRAINER_CLASS_AQUA_ADMIN, TRAINER_ENCOUNTER_MUSIC_AQUA},
-    {TRAINER_CLASS_AQUA_LEADER, TRAINER_ENCOUNTER_MUSIC_AQUA},
-    {TRAINER_CLASS_AROMA_LADY, TRAINER_ENCOUNTER_MUSIC_FEMALE},
-    {TRAINER_CLASS_BATTLE_GIRL, TRAINER_ENCOUNTER_MUSIC_INTENSE},
-    {TRAINER_CLASS_SWIMMER_F, TRAINER_ENCOUNTER_MUSIC_FEMALE},
-    {TRAINER_CLASS_POKEFAN, TRAINER_ENCOUNTER_MUSIC_TWINS},
-    {TRAINER_CLASS_DRAGON_TAMER, TRAINER_ENCOUNTER_MUSIC_INTENSE},
-    {TRAINER_CLASS_COOLTRAINER, TRAINER_ENCOUNTER_MUSIC_COOL},
-    {TRAINER_CLASS_GUITARIST, TRAINER_ENCOUNTER_MUSIC_INTENSE},
-    {TRAINER_CLASS_SAILOR, TRAINER_ENCOUNTER_MUSIC_MALE},
-    {TRAINER_CLASS_TWINS, TRAINER_ENCOUNTER_MUSIC_TWINS},
-    {TRAINER_CLASS_INTERVIEWER, TRAINER_ENCOUNTER_MUSIC_INTERVIEWER},
-    {TRAINER_CLASS_RUIN_MANIAC, TRAINER_ENCOUNTER_MUSIC_HIKER},
-    {TRAINER_CLASS_GENTLEMAN, TRAINER_ENCOUNTER_MUSIC_RICH},
-    {TRAINER_CLASS_SWIMMER_M, TRAINER_ENCOUNTER_MUSIC_FEMALE},
-    {TRAINER_CLASS_POKEMANIAC, TRAINER_ENCOUNTER_MUSIC_SUSPICIOUS},
-    {TRAINER_CLASS_BLACK_BELT, TRAINER_ENCOUNTER_MUSIC_INTENSE},
-    {TRAINER_CLASS_OLD_COUPLE, TRAINER_ENCOUNTER_MUSIC_INTENSE},
-    {TRAINER_CLASS_BUG_MANIAC, TRAINER_ENCOUNTER_MUSIC_SUSPICIOUS},
-    {TRAINER_CLASS_CAMPER, TRAINER_ENCOUNTER_MUSIC_MALE},
-    {TRAINER_CLASS_KINDLER, TRAINER_ENCOUNTER_MUSIC_HIKER},
-    {TRAINER_CLASS_TEAM_MAGMA, TRAINER_ENCOUNTER_MUSIC_MAGMA},
-    {TRAINER_CLASS_MAGMA_ADMIN, TRAINER_ENCOUNTER_MUSIC_MAGMA},
-    {TRAINER_CLASS_MAGMA_LEADER, TRAINER_ENCOUNTER_MUSIC_MAGMA},
-    {TRAINER_CLASS_LASS, TRAINER_ENCOUNTER_MUSIC_FEMALE},
-    {TRAINER_CLASS_BUG_CATCHER, TRAINER_ENCOUNTER_MUSIC_MALE},
-    {TRAINER_CLASS_NINJA_BOY, TRAINER_ENCOUNTER_MUSIC_SUSPICIOUS},
-    {TRAINER_CLASS_RICH_BOY, TRAINER_ENCOUNTER_MUSIC_RICH},
-    {TRAINER_CLASS_HEX_MANIAC, TRAINER_ENCOUNTER_MUSIC_SUSPICIOUS},
-    {TRAINER_CLASS_BEAUTY, TRAINER_ENCOUNTER_MUSIC_FEMALE},
-    {TRAINER_CLASS_LADY, TRAINER_ENCOUNTER_MUSIC_FEMALE},
-    {TRAINER_CLASS_PARASOL_LADY, TRAINER_ENCOUNTER_MUSIC_FEMALE},
-    {TRAINER_CLASS_PICNICKER, TRAINER_ENCOUNTER_MUSIC_GIRL},
-    {TRAINER_CLASS_PKMN_BREEDER, TRAINER_ENCOUNTER_MUSIC_FEMALE},
-    {TRAINER_CLASS_COLLECTOR, TRAINER_ENCOUNTER_MUSIC_SUSPICIOUS},
-    {TRAINER_CLASS_PKMN_RANGER, TRAINER_ENCOUNTER_MUSIC_COOL},
-    {TRAINER_CLASS_RIVAL, TRAINER_ENCOUNTER_MUSIC_MALE},
-    {TRAINER_CLASS_YOUNG_COUPLE, TRAINER_ENCOUNTER_MUSIC_GIRL},
-    {TRAINER_CLASS_PSYCHIC, TRAINER_ENCOUNTER_MUSIC_INTENSE},
-    {TRAINER_CLASS_SR_AND_JR, TRAINER_ENCOUNTER_MUSIC_TWINS},
-    {TRAINER_CLASS_ELITE_FOUR, TRAINER_ENCOUNTER_MUSIC_FEMALE},
-    {TRAINER_CLASS_YOUNGSTER, TRAINER_ENCOUNTER_MUSIC_MALE},
-    {TRAINER_CLASS_EXPERT, TRAINER_ENCOUNTER_MUSIC_INTENSE},
-    {TRAINER_CLASS_TRIATHLETE, TRAINER_ENCOUNTER_MUSIC_MALE},
-    {TRAINER_CLASS_BIRD_KEEPER, TRAINER_ENCOUNTER_MUSIC_COOL},
-    {TRAINER_CLASS_FISHERMAN, TRAINER_ENCOUNTER_MUSIC_HIKER},
-    {TRAINER_CLASS_CHAMPION, TRAINER_ENCOUNTER_MUSIC_MALE},
-    {TRAINER_CLASS_TUBER_M, TRAINER_ENCOUNTER_MUSIC_MALE},
-    {TRAINER_CLASS_TUBER_F, TRAINER_ENCOUNTER_MUSIC_GIRL},
-    {TRAINER_CLASS_SIS_AND_BRO, TRAINER_ENCOUNTER_MUSIC_SWIMMER},
-    {TRAINER_CLASS_HIKER, TRAINER_ENCOUNTER_MUSIC_HIKER},
-    {TRAINER_CLASS_LEADER, TRAINER_ENCOUNTER_MUSIC_FEMALE},
-    {TRAINER_CLASS_SCHOOL_KID, TRAINER_ENCOUNTER_MUSIC_MALE},
-};
-
 static const enum Item sPrizeListRareCandy1[]  = {ITEM_RARE_CANDY,       ITEM_ETHER, ITEM_MAX_POTION, ITEM_REVIVE, ITEM_FLUFFY_TAIL, ITEM_GREAT_BALL};
 static const enum Item sPrizeListLuxuryBall1[] = {ITEM_LUXURY_BALL,      ITEM_ETHER, ITEM_MAX_POTION, ITEM_REVIVE, ITEM_FLUFFY_TAIL, ITEM_GREAT_BALL};
 static const enum Item sPrizeListMaxRevive1[]  = {ITEM_MAX_REVIVE,       ITEM_ETHER, ITEM_MAX_POTION, ITEM_REVIVE, ITEM_FLUFFY_TAIL, ITEM_GREAT_BALL};
@@ -312,9 +250,8 @@ static u8 GetFloorId(void)
 
 enum TrainerClassID GetTrainerHillOpponentClass(u16 trainerId)
 {
-    u8 id = trainerId - 1;
-
-    return gFacilityClassToTrainerClass[sFloorTrainers->facilityClass[id]];
+    enum FacilitySingleClass facilityClass = sFloorTrainers->facilityClass[trainerId - 1];
+    return gFacilitySingleClassList[facilityClass].trainerClass;
 }
 
 void GetTrainerHillTrainerName(u8 *dst, u16 trainerId)
@@ -328,14 +265,16 @@ void GetTrainerHillTrainerName(u8 *dst, u16 trainerId)
 
 u8 GetTrainerHillTrainerFrontSpriteId(u16 trainerId)
 {
+/* NOT SURE WHY THIS IS NECESSARY, commenting it out in case it needs to be brought back
     u8 id, facilityClass;
 
     SetUpDataStruct();
     id = trainerId - 1;
     facilityClass = sHillData->floors[sHillData->floorId].trainers[id].facilityClass;
     FreeDataStruct();
-
-    return gFacilityClassToPicIndex[facilityClass];
+*/
+    enum FacilitySingleClass facilityClass = sFloorTrainers->facilityClass[trainerId - 1];
+    return gFacilitySingleClassList[facilityClass].trainerPic;
 }
 
 void InitTrainerHillBattleStruct(void)
@@ -682,7 +621,8 @@ void LoadTrainerHillObjectEventTemplates(void)
 
         eventTemplates[i] = sTrainerObjectEventTemplate;
         eventTemplates[i].localId = i + 1;
-        eventTemplates[i].graphicsId = FacilityClassToGraphicsId(sHillData->floors[floorId].trainers[i].facilityClass);
+        enum FacilitySingleClass facilityClass = sHillData->floors[floorId].trainers[i].facilityClass;
+        eventTemplates[i].graphicsId = gFacilitySingleClassList[facilityClass].gfxId;
         eventTemplates[i].x = sHillData->floors[floorId].map.trainerCoords[i] & 0xF;
         eventTemplates[i].y = ((sHillData->floors[floorId].map.trainerCoords[i] >> 4) & 0xF) + HILL_FLOOR_HEIGHT_MARGIN;
         bits = i << 2;
@@ -930,21 +870,15 @@ void FillHillTrainersParties(void)
 
 u8 GetTrainerEncounterMusicIdInTrainerHill(u16 trainerId)
 {
-    s32 i;
-    u8 trId, facilityClass;
-
+/*
     SetUpDataStruct();
     trId = trainerId - 1;
     facilityClass = sHillData->floors[sHillData->floorId].trainers[trId].facilityClass;
     FreeDataStruct();
+*/
 
-    for (i = 0; i < ARRAY_COUNT(sTrainerClassesAndMusic); i++)
-    {
-        if (sTrainerClassesAndMusic[i].trainerClass == gFacilityClassToTrainerClass[facilityClass])
-            return sTrainerClassesAndMusic[i].musicId;
-    }
-
-    return 0;
+    enum FacilitySingleClass facilityClass = sHillData->floors[sHillData->floorId].trainers[trainerId - 1].facilityClass;
+    return gFacilitySingleClassList[facilityClass].approachMusic;
 }
 
 static void SetTrainerHillMonLevel(struct Pokemon *mon, u8 level)

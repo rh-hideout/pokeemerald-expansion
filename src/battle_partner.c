@@ -71,7 +71,7 @@ static void FillFrontierPartnerParty(u16 trainerId)
     {
         CreateFacilityMon(&gParties[B_TRAINER_PARTNER][i], &generator, gSaveBlock2Ptr->frontier.trainerIds[i + 18]);
         SetMonData(&gParties[B_TRAINER_PARTNER][i], MON_DATA_OT_NAME, gFacilityTrainers[trainerId].trainerName);
-        enum Gender gender = IsFrontierTrainerFemale(trainerId);
+        enum Gender gender = GetFrontierTrainerGender(trainerId);
         SetMonData(&gParties[B_TRAINER_PARTNER][i], MON_DATA_OT_GENDER, &gender);
     }
 }
@@ -99,7 +99,7 @@ static void FillRecordMixingPartnerParty(u16 friendRecordId)
         }
         CreateBattleTowerMon_HandleLevel(&gParties[B_TRAINER_PARTNER][i], &monData, TRUE);
         SetMonData(&gParties[B_TRAINER_PARTNER][i], MON_DATA_OT_NAME, trainerName);
-        enum Gender gender = IsFrontierTrainerFemale(friendRecordId + TRAINER_RECORD_MIXING_FRIEND);
+        enum Gender gender = GetFrontierTrainerGender(friendRecordId + TRAINER_RECORD_MIXING_FRIEND);
         SetMonData(&gParties[B_TRAINER_PARTNER][i], MON_DATA_OT_GENDER, &gender);
     }
 }
@@ -109,7 +109,7 @@ static void FillApprenticePartnerParty(u16 apprenticeId)
     for (u32 i = 0; i < FRONTIER_MULTI_PARTY_SIZE; i++)
     {
         CreateApprenticeMon(&gParties[B_TRAINER_PARTNER][i], &gSaveBlock2Ptr->apprentices[apprenticeId], gSaveBlock2Ptr->frontier.trainerIds[18 + i]);
-        enum Gender gender = IsFrontierTrainerFemale(apprenticeId + TRAINER_RECORD_MIXING_APPRENTICE);
+        enum Gender gender = GetFrontierTrainerGender(apprenticeId + TRAINER_RECORD_MIXING_APPRENTICE);
         SetMonData(&gParties[B_TRAINER_PARTNER][i], MON_DATA_OT_GENDER, &gender);
     }
 }
@@ -175,3 +175,33 @@ void GetInGamePartnerName(u8 *dst, u16 trainerId)
         dst[0] = EOS;
     }
 }
+
+static void FillFriendRecordPartnerParty(u16 friendRecordId)
+{
+    u8 trainerName[PLAYER_NAME_LENGTH + 1];
+    struct EmeraldBattleTowerRecord *record = &gSaveBlock2Ptr->frontier.towerRecords[friendRecordId];
+    for (u32 i = 0; i < FRONTIER_MULTI_PARTY_SIZE; i++)
+    {
+        struct BattleTowerPokemon monData = record->party[gSaveBlock2Ptr->frontier.trainerIds[18 + i]];
+        StringCopy(trainerName, record->name);
+        if (record->language == LANGUAGE_JAPANESE)
+        {
+            if (monData.nickname[0] != EXT_CTRL_CODE_BEGIN || monData.nickname[1] != EXT_CTRL_CODE_JPN)
+            {
+                monData.nickname[5] = EOS;
+                ConvertInternationalString(monData.nickname, LANGUAGE_JAPANESE);
+            }
+        }
+        else
+        {
+            if (monData.nickname[0] == EXT_CTRL_CODE_BEGIN && monData.nickname[1] == EXT_CTRL_CODE_JPN)
+                trainerName[5] = EOS;
+        }
+        CreateBattleTowerMon_HandleLevel(&gParties[B_TRAINER_PARTNER][i], &monData, TRUE);
+        SetMonData(&gParties[B_TRAINER_PARTNER][i], MON_DATA_OT_NAME, trainerName);
+        enum Gender gender = GetFrontierTrainerGender(friendRecordId + TRAINER_RECORD_MIXING_FRIEND);
+        SetMonData(&gParties[B_TRAINER_PARTNER][i], MON_DATA_OT_GENDER, &gender);
+    }
+}
+
+
