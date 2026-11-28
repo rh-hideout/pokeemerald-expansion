@@ -11791,6 +11791,9 @@ void BS_ConsumeBerry(void)
     }
     gBattleScripting.overrideBerryRequirements = 1;
 
+    GetBattlerPartyState(battler)->belchActive = TRUE;
+    gSpecialStatuses[itemBattler].ateBerry = TRUE;
+
     if (ItemBattleEffects(battler, 0, GetItemHoldEffect(gLastUsedItem), IsOnBerryActivation))
     {
         gBattleScripting.overrideBerryRequirements = 2;
